@@ -36,7 +36,7 @@ interface SelectedCities {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -250,7 +250,9 @@ export class HomeComponent
     sharedDropoffLocation: '',
     reservedPickup: '',
     reservedDropoff: '',
-    reservedDateTime: '',
+    reservedDate: '',
+    reservedTime: '',
+    reservedPassengers: 1,
     reservedPickupLocation: '',
     reservedDropoffLocation: '',
   };
@@ -281,7 +283,8 @@ export class HomeComponent
     
     const selectors = [
       '.datecab',
-      '.datecabreserved',
+      '.datecabreserved-date',
+      '.datecabreserved-time',
       '.dateflight-departure',
       '.dateflight-return',
     ];
@@ -296,18 +299,41 @@ export class HomeComponent
           } catch {}
         }
 
-        if (selector === '.datecabreserved') {
+        if (selector === '.datecabreserved-date') {
           flatpickr(el, {
-      enableTime: true,
-      time_24hr: true,
-      dateFormat: 'Y-m-d H:i',
-      minDate: 'today',
+            enableTime: false,
+            dateFormat: 'Y-m-d',
+            minDate: 'today',
+            defaultDate: this.formValues.reservedDate || new Date(),
+            monthSelectorType: 'static',
+            prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
+            nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
+            onChange: (selectedDates, dateStr) => {
+              this.formValues.reservedDate = dateStr;
+            },
+          });
+        } else if (selector === '.datecabreserved-time') {
+          flatpickr(el, {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: 'H:i',
+            time_24hr: true,
+            defaultDate: this.formValues.reservedTime || '12:00',
+            monthSelectorType: 'static',
+            prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
+            nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
+            onChange: (selectedDates, dateStr) => {
+              this.formValues.reservedTime = dateStr;
+            },
           });
         } else if (selector === '.dateflight' || selector === '.datecab') {
           flatpickr(el, {
         enableTime: false,
         dateFormat: 'Y-m-d',
         defaultDate: this.formValues.flightDeparture || new Date(),
+        monthSelectorType: 'static',
+        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
+        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
         minDate: 'today',
         onChange: (selectedDates, dateStr) => {
           this.formValues.flightDeparture = dateStr;
@@ -327,6 +353,9 @@ export class HomeComponent
         dateFormat: 'Y-m-d',
         defaultDate: this.formValues.flightDeparture || new Date(),
         minDate: 'today',
+        monthSelectorType: 'static',
+        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
+        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
         onChange: (selectedDates, dateStr) => {
           this.formValues.flightDeparture = dateStr;
               if (
@@ -344,6 +373,9 @@ export class HomeComponent
         dateFormat: 'Y-m-d',
             defaultDate: this.formValues.flightReturn || '',
         minDate: this.formValues.flightDeparture || 'today',
+        monthSelectorType: 'static',
+        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
+        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
         onChange: (selectedDates, dateStr) => {
           this.formValues.flightReturn = dateStr;
             },
@@ -595,11 +627,13 @@ export class HomeComponent
       type: 'reserved',
       pickupCity: this.formValues.reservedPickup,
       dropoffCity: this.formValues.reservedDropoff,
-      dateTime: this.formValues.reservedDateTime,
+      reservedDate: this.formValues.reservedDate,
+      reservedTime: this.formValues.reservedTime,
+      passengers: this.formValues.reservedPassengers,
       pickupLocation: this.formValues.reservedPickupLocation,
       dropoffLocation: this.formValues.reservedDropoffLocation,
     };
-    console.log('Submitting reserved cab booking:', payload);
+    console.log('[ReservedCab] Submitting booking payload', payload);
     alert('Reserved cab booking submitted! Check console for details.');
   }
 
@@ -819,6 +853,13 @@ export class HomeComponent
     const newValue = this.formValues.sharedPassengers + delta;
     if (newValue >= 1) {
       this.formValues.sharedPassengers = newValue;
+    }
+  }
+
+  updateReservedPassengers(delta: number) {
+    const newValue = this.formValues.reservedPassengers + delta;
+    if (newValue >= 1) {
+      this.formValues.reservedPassengers = newValue;
     }
   }
 

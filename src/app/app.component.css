@@ -1,0 +1,53 @@
+::ng-deep {
+    .flatpickr-weekdays {
+      background: #f8f9fa !important;
+      border-bottom: 1px solid #e9ecef !important;
+    }
+  
+    .flatpickr-day {
+      margin: 2px !important;
+    }
+  
+    .flatpickr-day:hover {
+      background: darkcyan !important;
+      color: #ffffff !important;
+    }
+  
+    .flatpickr-day.selected {
+      background: darkcyan !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+  
+    .flatpickr-day.today:not(.selected) {
+      border-color: darkcyan !important;
+    }
+  
+    .flatpickr-time input,
+    .flatpickr-time .numInputWrapper span.arrowUp:after,
+    .flatpickr-time .numInputWrapper span.arrowDown:after {
+      color: #006666 !important;
+    }
+  
+    .flatpickr-time .numInputWrapper:hover {
+      background: rgba(0,139,139,0.06) !important;
+    }
+  
+    .flatpickr-calendar {
+      border-radius: 14px !important;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+      overflow: hidden !important;
+    }
+  
+    .flatpickr-months .flatpickr-month,
+    .flatpickr-current-month .cur-month,
+    .flatpickr-current-month input.cur-year {
+      color: #212529 !important;
+      font-weight: 600 !important;
+    }
+  
+    .flatpickr-weekdays,
+    .flatpickr-months {
+      background: #f8f9fa !important;
+    }
+  }

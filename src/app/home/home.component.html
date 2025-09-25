@@ -1,7 +1,7 @@
 <div class="container" (click)="onDocumentClick($event)">
     <div class="nav-tabs">
         <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab" (click)="switchTab(tab)">
-            <span class="icon" *ngIf="tab === 'shared-cabs'"><i class="fas fa-taxi"></i></span>
+            <span class="icon" *ngIf="tab === 'shared-cabs'"><i class="fas fa-users"></i></span>
             <span class="icon" *ngIf="tab === 'reserved-cabs'"><i class="fas fa-car"></i></span>
             <span class="icon" *ngIf="tab === 'flights'"><i class="fas fa-plane"></i></span>
             {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
@@ -21,10 +21,13 @@
                             <div class="cab-form-row">
                                 <div class="form-group city-select">
                                     <label>From</label>
-                                    <input type="text" class="form-input city-input" placeholder="Enter pick-up city"
-                                        [(ngModel)]="formValues.sharedPickup"
-                                        (input)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')"
-                                        (focus)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-location-dot input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter pick-up city" [(ngModel)]="formValues.sharedPickup"
+                                            (input)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')"
+                                            (focus)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['shared-pickup'] && activeSuggestions['shared-pickup'].length > 0">
                                         <ng-container *ngIf="isCityArray(activeSuggestions['shared-pickup'])">
@@ -46,10 +49,13 @@
 
                                 <div class="form-group city-select">
                                     <label>To</label>
-                                    <input type="text" class="form-input city-input" placeholder="Enter drop-off city"
-                                        [(ngModel)]="formValues.sharedDropoff"
-                                        (input)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')"
-                                        (focus)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-location-dot input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter drop-off city" [(ngModel)]="formValues.sharedDropoff"
+                                            (input)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')"
+                                            (focus)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['shared-dropoff'] && activeSuggestions['shared-dropoff'].length > 0">
                                         <ng-container *ngIf="isCityArray(activeSuggestions['shared-dropoff'])">
@@ -67,12 +73,15 @@
 
                                 <div class="form-group">
                                     <label>Date</label>
-                                    <input type="text" class="form-input datecab"
-                                        [(ngModel)]="formValues.sharedDateTime" placeholder="2025-09-20">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar input-icon"></i>
+                                        <input type="text" class="form-input datecab"
+                                            [(ngModel)]="formValues.sharedDateTime" placeholder="2025-09-20">
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Passengers</label>
+                                    <label>Passengers <small>(Age 2yrs & above)</small></label>
                                     <div class="passenger-counter">
                                         <button class="counter-btn" [disabled]="formValues.sharedPassengers <= 1"
                                             (click)="updateSharedPassengers(-1)">-</button>
@@ -83,8 +92,8 @@
                                 </div>
 
                                 <button class="search-btn" (click)="searchCabs('shared')">
-                                    
-                                    
+
+
                                     <span><i class="fas fa-search"></i></span>
                                 </button>
                             </div>
@@ -222,8 +231,8 @@
                                     (click)="setTripType('multi-city')">Multi City</button>
                             </div>
 
-                             <div class="travelers-dropdown mb30" *ngIf="tripType === 'multi-city'">
-                               
+                            <div class="travelers-dropdown mb30" *ngIf="tripType === 'multi-city'">
+
                                 <label>Travellers & Class</label>
                                 &nbsp;
                                 <button class="travelers-btn" (click)="toggleTravelersPanel()">
@@ -274,10 +283,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="group-booking">
-                                        <p>Planning a trip for more than 9 travellers?</p>
-                                        <a href="#" class="group-link">Contact us for group booking</a>
-                                    </div>
+                                    
 
                                     <div class="class-selection">
                                         <h4>Travel Class</h4>
@@ -312,16 +318,19 @@
                                     <span class="route-number">Route {{i + 1}}</span>
                                     <button class="remove-route-btn" (click)="removeFlightRoute(i)"
                                         [disabled]="flightRoutes.length <= 1">
-                                        <i class="fas fa-trash"></i> Remove
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
 
                                 <div class="form-group city-select">
                                     <label>From</label>
-                                    <input type="text" class="form-input city-input" placeholder="Enter departure city"
-                                        [(ngModel)]="route.from"
-                                        (input)="showCitySuggestions(route.from, 'flight-from-' + i)"
-                                        (focus)="showCitySuggestions(route.from, 'flight-from-' + i)">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-plane-departure input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter departure city" [(ngModel)]="route.from"
+                                            (input)="showCitySuggestions(route.from, 'flight-from-' + i)"
+                                            (focus)="showCitySuggestions(route.from, 'flight-from-' + i)">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="getMultiCitySuggestions('flight-from-' + i).length > 0">
                                         <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
@@ -341,10 +350,13 @@
 
                                 <div class="form-group city-select">
                                     <label>To</label>
-                                    <input type="text" class="form-input city-input"
-                                        placeholder="Enter destination city" [(ngModel)]="route.to"
-                                        (input)="showCitySuggestions(route.to, 'flight-to-' + i)"
-                                        (focus)="showCitySuggestions(route.to, 'flight-to-' + i)">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-plane-arrival input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter destination city" [(ngModel)]="route.to"
+                                            (input)="showCitySuggestions(route.to, 'flight-to-' + i)"
+                                            (focus)="showCitySuggestions(route.to, 'flight-to-' + i)">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="getMultiCitySuggestions('flight-to-' + i).length > 0">
                                         <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
@@ -360,8 +372,11 @@
 
                                 <div class="form-group">
                                     <label>Departure</label>
-                                    <input type="text" placeholder="2025-09-20" class="form-input dateflight-departure"
-                                        [(ngModel)]="route.date">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar input-icon"></i>
+                                        <input type="text" placeholder="2025-09-20"
+                                            class="form-input dateflight-departure" [(ngModel)]="route.date">
+                                    </div>
                                 </div>
 
                                 <div class="form-group return-field"
@@ -424,12 +439,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="group-booking">
-                                            <p>Planning a trip for more than 9 travellers?</p>
-                                            <a href="#" (click)="createGroupBooking(); $event.preventDefault()">Create
-                                                Group
-                                                Booking</a>
-                                        </div>
+                                        
 
                                         <div class="class-selection">
                                             <h3>Class</h3>
@@ -461,7 +471,7 @@
                             <!-- Travelers & Class for single routes -->
 
                             <!-- Single Travelers & Class for Multi City -->
-                           
+
                             <div *ngIf="tripType === 'multi-city'" class="add-route-section">
                                 <button class="add-route-btn" (click)="addFlightRoute()"
                                     [disabled]="flightRoutes.length >= 5">
@@ -474,12 +484,12 @@
                             </button>
                         </div>
 
-                        <div class="features">
+                        <!-- <div class="features">
                             <div class="feature">
                                 <span class="feature-icon">🛡️</span>
                                 <span>Priority customer service</span>
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <!-- Flight Content Section -->
@@ -542,10 +552,13 @@
                             <div class="cab-form-row">
                                 <div class="form-group city-select">
                                     <label>From</label>
-                                    <input type="text" class="form-input city-input" placeholder="Enter pick-up city"
-                                        [(ngModel)]="formValues.reservedPickup"
-                                        (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')"
-                                        (focus)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-location-dot input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter pick-up city" [(ngModel)]="formValues.reservedPickup"
+                                            (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')"
+                                            (focus)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['reserved-pickup'] && activeSuggestions['reserved-pickup'].length > 0">
                                         <ng-container *ngIf="isCityArray(activeSuggestions['reserved-pickup'])">
@@ -567,10 +580,13 @@
 
                                 <div class="form-group city-select">
                                     <label>To</label>
-                                    <input type="text" class="form-input city-input" placeholder="Enter drop-off city"
-                                        [(ngModel)]="formValues.reservedDropoff"
-                                        (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')"
-                                        (focus)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-location-dot input-icon"></i>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter drop-off city" [(ngModel)]="formValues.reservedDropoff"
+                                            (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')"
+                                            (focus)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
+                                    </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['reserved-dropoff'] && activeSuggestions['reserved-dropoff'].length > 0">
                                         <ng-container *ngIf="isCityArray(activeSuggestions['reserved-dropoff'])">
@@ -587,9 +603,31 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Date & Time</label>
-                                    <input type="text" class="form-input datecabreserved" placeholder="2025-09-24 12:00"
-                                        [(ngModel)]="formValues.reservedDateTime">
+                                    <label>Date</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar input-icon"></i>
+                                        <input type="text" class="form-input datecabreserved-date"
+                                            placeholder="2025-09-24" [(ngModel)]="formValues.reservedDate">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Time</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-clock input-icon"></i>
+                                        <input type="text" class="form-input datecabreserved-time" placeholder="12:00"
+                                            [(ngModel)]="formValues.reservedTime">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Passengers <small>(Age 2yrs & above)</small></label>
+                                    <div class="passenger-counter">
+                                        <button class="counter-btn" [disabled]="formValues.reservedPassengers <= 1"
+                                            (click)="updateReservedPassengers(-1)">-</button>
+                                        <span class="counter-value">{{formValues.reservedPassengers}}</span>
+                                        <button class="counter-btn" (click)="updateReservedPassengers(1)">+</button>
+                                    </div>
                                 </div>
 
                                 <button class="search-btn" (click)="searchCabs('reserved')">
@@ -602,9 +640,12 @@
                                 <div class="location-row">
                                     <div class="form-group">
                                         <label>Pickup Location</label>
-                                        <input type="text" class="form-input"
-                                            placeholder="Enter specific pickup location"
-                                            [(ngModel)]="formValues.reservedPickupLocation">
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-location-dot input-icon"></i>
+                                            <input type="text" class="form-input"
+                                                placeholder="Enter specific pickup location"
+                                                [(ngModel)]="formValues.reservedPickupLocation">
+                                        </div>
                                     </div>
 
                                     <!-- <button class="swap-btn" (click)="swapSpecificLocations('reserved')">
@@ -613,9 +654,12 @@
 
                                     <div class="form-group">
                                         <label>Drop-off Location</label>
-                                        <input type="text" class="form-input"
-                                            placeholder="Enter specific drop-off location"
-                                            [(ngModel)]="formValues.reservedDropoffLocation">
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-location-dot input-icon"></i>
+                                            <input type="text" class="form-input"
+                                                placeholder="Enter specific drop-off location"
+                                                [(ngModel)]="formValues.reservedDropoffLocation">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -688,38 +732,43 @@
                             </div>
                         </div>
                     </ng-container>
-<section class="services-slider-section">
-  <div class="services-header">
-    <h2>Our Services</h2>
-    <p>Discover our comprehensive range of travel solutions designed to make your journey seamless and memorable</p>
-  </div>
-  
-  <div class="services-slider-container">
-    <div class="services-slider-track">
-      <div 
-        *ngFor="let service of infiniteServices; trackBy: trackByServiceId" 
-        class="service-card">
-        <div class="service-card-inner">
-          <div class="service-image-container">
-            <div class="service-image" [style.background-image]="'url(' + service.image + ')'">
-              <div class="service-overlay"></div>
-              
-            </div>
-          </div>
-          
-          <div class="service-content">
-            <h3 class="service-title">{{ service.title }}</h3>
-            <p class="service-description">{{ service.description }}</p>
-            <a href="{{service.link}}" class="service-cta-btn">
-              <span>Learn More</span>
-              <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+                    <section class="services-slider-section">
+                        <div class="services-header">
+                            <h2>Our Services</h2>
+                            <p>Discover our comprehensive range of travel solutions designed to make your journey
+                                seamless and memorable</p>
+                        </div>
+
+                        <div class="services-slider-container">
+                            <div class="services-slider-track">
+                                <div *ngFor="let service of infiniteServices; trackBy: trackByServiceId"
+                                    class="service-card">
+                                    <div class="service-card-inner">
+                                        <div class="service-image-container">
+                                            <div class="service-image"
+                                                [style.background-image]="'url(' + service.image + ')'">
+                                                <div class="service-overlay"></div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="service-content">
+                                            <h3 class="service-title">{{ service.title }}</h3>
+                                            <p class="service-description">{{ service.description }}</p>
+                                            <a href="{{service.link}}" class="service-cta-btn">
+                                                <span>Learn More</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+</ng-container>
+</div>
+
 
 
                     <div class="phone-modal" *ngIf="showPhonePopup">
@@ -729,7 +778,7 @@
                                 placeholder="Enter phone number">
                             <div class="actions">
                                 <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
-                                <button class="swap-btn" (click)="cancelPhonePopup()">Cancel</button>
+                                <button class="search-btn" (click)="cancelPhonePopup()">Cancel</button>
                             </div>
                         </div>
                     </div>
