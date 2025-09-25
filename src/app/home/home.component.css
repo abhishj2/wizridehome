@@ -1,14 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+     font-family: "Montserrat", sans-serif !important;
+        
+
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #ffffff;
     color: #333333;
     line-height: 1.6;
+   
+}
+.fas{
+        font-family: "Font Awesome 6 Free" !important;
+}
+
+
+.fab{
+    font-family: "Font Awesome 6 Brands" !important;
+
 }
 
 .container {
@@ -37,7 +51,7 @@ body {
     padding: 10px 32px;
     border: none;
     background: #ffffff;
-    color: #6c757d;
+    color: #474747;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -103,7 +117,7 @@ body {
 .booking-form {
     background: #ffffff;
     border-radius: 20px;
-    padding: 40px 40px 10px;
+    padding: 40px 40px 0px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     border: 2px solid #f1f3f4;
@@ -137,7 +151,7 @@ body {
     padding: 12px 24px;
     border: none;
     background: transparent;
-    color: #6c757d;
+    color: #474747;
     font-weight: 600;
     cursor: pointer;
     border-radius: 8px;
@@ -160,7 +174,7 @@ body {
 /* Form Layout */
 .form-row {
     display: grid;
-    grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) minmax(200px, 1.2fr);
+    grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) minmax(240px, 1.2fr);
     gap: 20px;
     align-items: end;
     margin-bottom: 32px;
@@ -175,7 +189,7 @@ body {
     grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr) minmax(150px, 1fr) minmax(180px, 1fr) auto;
     gap: 20px;
     align-items: end;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
 /* Route Header */
@@ -270,7 +284,6 @@ body {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 10px;
-    text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 
@@ -353,7 +366,7 @@ body {
 
 .city-suggestion .city-code {
     font-size: 13px;
-    color: #6c757d;
+    color: #474747;
     margin-left: 10px;
     background: #f8f9fa;
     padding: 4px 8px;
@@ -378,10 +391,9 @@ body {
 
 .location-row {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr  1fr;
     gap: 20px;
     align-items: end;
-    margin-bottom: 20px;
 }
 
 .location-details h3 {
@@ -469,7 +481,8 @@ body {
     color: #212529;
     font-weight: 600;
     margin-bottom: 20px;
-    font-size: 18px;
+        font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+
 }
 
 .traveler-row {
@@ -492,7 +505,7 @@ body {
 }
 
 .traveler-info p {
-    color: #6c757d;
+    color: #474747;
     font-size: 14px;
 }
 
@@ -561,7 +574,7 @@ body {
     border: 2px solid #e9ecef;
     border-radius: 10px;
     background: #ffffff;
-    color: #6c757d;
+    color: #474747;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -597,7 +610,7 @@ body {
 }
 
 .group-booking p {
-    color: #6c757d;
+    color: #474747;
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -646,8 +659,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 40px;
-    margin-top: 10px;
-    padding-top: 10px;
+   padding: 22px 0 10px;
     border-top: 2px solid #f8f9fa;
     flex-wrap: wrap;
 }
@@ -656,7 +668,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #6c757d;
+    color: #474747;
     font-size: 15px;
     font-weight: 500;
 }
@@ -668,7 +680,7 @@ body {
 
 /* Search Button */
 .search-btn {
-    background: linear-gradient(135deg, darkcyan, #20b2aa);
+    background: darkcyan;
     color: #ffffff;
     border: none;
     padding: 18px 45px;
@@ -703,7 +715,7 @@ body {
 
 .content-section h2 {
     color: #212529;
-    font-size: 32px;
+    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 700;
     margin-bottom: 32px;
     text-align: center;
@@ -763,7 +775,7 @@ body {
 
 .content-card h3 {
     color: darkcyan;
-    font-size: 22px;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
     font-weight: 600;
     margin-bottom: 16px;
     display: flex;
@@ -772,9 +784,10 @@ body {
 }
 
 .content-card p {
-    color: #6c757d;
+    color: #474747;
     line-height: 1.7;
-    font-size: 15px;
+        font-size: clamp(0.8rem, 1.5vw, 1.125rem);
+
 }
 
 .content-card .card-icon {
@@ -1014,4 +1027,540 @@ body {
     background: darkcyan !important; 
     color: #ffffff !important;
     border: none !important;
+}
+.travelers-dropdown.mb30 {
+     margin-bottom:30px !important;
+}
+
+@media(min-width:767px){
+     .travelers-dropdown.mb30 {
+          width:250px !important;
+     }
+}
+
+.service-card-inner:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: var(--card-color, darkcyan);
+}
+
+/* Service Image */
+.service-image-container {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    transition: transform 0.4s ease;
+}
+
+.service-card-inner:hover .service-image {
+    transform: scale(1.1);
+}
+
+.service-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+  135deg,
+  rgba(0, 0, 0, 0.6) 0%,
+  rgba(0, 0, 0, 0.6) 100%
+);
+    opacity: 0.85;
+}
+
+
+/* Service Content */
+.service-content {
+    padding: 25px 20px 30px; /* Increased bottom padding */
+    flex: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    min-height: 200px; /* Ensure minimum content height */
+}
+
+.service-title {
+    font-size: clamp(1.1rem, 2vw, 1.375rem); /* Responsive title size */
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    position: relative;
+}
+
+.service-title::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--card-color, darkcyan);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+}
+
+.service-card-inner:hover .service-title::before {
+    width: 50px;
+}
+
+.service-description {
+    color: #474747;
+    font-size: clamp(0.8rem, 1.5vw, 1.125rem);
+    line-height: 1.5; /* Tighter line height */
+    margin-bottom: 20px;
+    flex-grow: 1;
+    display: block; /* Remove webkit-box properties that clip text */
+    overflow: visible; /* Show all text */
+    -webkit-line-clamp: none; /* Remove line clamping */
+    -webkit-box-orient: initial; /* Reset */
+}
+
+/* CTA Button */
+a.service-cta-btn {
+    background: darkcyan;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    margin-top: auto; /* Push to bottom */
+    align-self: flex-start; /* Align to left */
+}
+
+/* .service-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateY(-50%);
+    transition: left 0.6s ease;
+} */
+
+.service-card-inner:hover .service-cta-btn::before {
+    left: 100%;
+}
+
+.service-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding-right: 30px;
+}
+
+.service-cta-btn:hover i {
+    transform: translateX(5px);
+}
+
+.service-cta-btn i {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+/* Infinite Scroll Animation */
+@keyframes infiniteSlide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-400px * 8 - 30px * 8)); /* Move by one full set */
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .services-slider-track {
+        animation-duration: 80s;
+    }
+    
+    .service-card {
+        flex: 0 0 350px;
+    }
+    
+    .services-slider-track {
+        width: calc(350px * 24);
+    }
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-350px * 8 - 30px * 8));
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .services-slider-section {
+        padding: 60px 15px 80px;
+    }
+    
+    .services-header h2 {
+        font-size: 32px;
+    }
+    
+    .services-header p {
+        font-size: 16px;
+        padding: 0 10px;
+    }
+    
+    .services-slider-container {
+        height: 380px;
+    }
+    
+    .service-card {
+        flex: 0 0 300px;
+        height: 360px;
+        margin-right: 20px;
+    }
+    
+    .services-slider-track {
+        width: calc(300px * 24);
+        animation-duration: 30s;
+    }
+    
+    .service-content {
+        padding: 25px 20px;
+    }
+    
+    .service-title {
+        font-size: 20px;
+    }
+    
+    .service-description {
+        font-size: 14px;
+    }
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-300px * 8 - 20px * 8));
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .services-slider-container {
+        height: 350px;
+    }
+    
+    .service-card {
+        flex: 0 0 280px;
+        height: 330px;
+        margin-right: 15px;
+    }
+    
+    .services-slider-track {
+        width: calc(280px * 24);
+        animation-duration: 25s;
+    }
+    
+    .service-image-container {
+        height: 160px;
+    }
+    
+    .service-content {
+        height: 170px;
+        padding: 20px 15px;
+    }
+    
+   
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-280px * 8 - 15px * 8));
+        }
+    }
+}
+
+/* Enhanced Performance */
+.services-slider-track,
+.service-card-inner,
+.service-image {
+    will-change: transform;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .services-slider-track {
+        animation: none;
+    }
+    
+    .service-card-inner:hover {
+        transform: none;
+    }
+    
+    .service-card-inner:hover .service-image {
+        transform: none;
+    }
+}
+
+/* Add this CSS to your existing stylesheet - these styles are missing and causing the stacking issue */
+
+/* ======== SERVICES SLIDER STYLES - MISSING STYLES ======== */
+
+.services-slider-section {
+    padding: 80px 20px 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* .services-slider-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    pointer-events: none;
+} */
+
+.services-header {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.services-header h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.services-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    border-radius: 2px;
+}
+
+.services-header p {
+            font-size: clamp(0.8rem, 1.5vw, 1.125rem);
+
+
+    color: #474747;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    margin-top: 25px;
+}
+
+/* Slider Container - THIS IS THE KEY MISSING PART */
+.services-slider-container {
+    position: relative;
+    width: 100%;
+    height: auto; /* Changed from fixed height */
+    min-height: 480px; /* Minimum height */
+    overflow: hidden;
+ 
+    padding: 20px 0; /* Add vertical padding */
+}
+.services-slider-track {
+    display: flex;
+    width: calc(400px * 24);
+    animation: infiniteSlide 80s linear infinite;
+    height: auto; /* Changed from 100% to auto */
+    align-items: stretch; /* Ensure all cards have same height */
+}
+.services-slider-track:hover {
+    animation-play-state: paused;
+}
+
+/* Service Cards - FIXED STACKING ISSUE */
+.service-card {
+    flex: 0 0 400px;
+    height: auto; /* Changed from fixed height to auto */
+    min-height: 450px; /* Ensure minimum height */
+    margin-right: 30px;
+    position: relative;
+}
+.service-card-inner {
+    width: 100%;
+    height: 100%;
+    min-height: 450px; /* Match minimum height */
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: visible; /* Changed from hidden to visible */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Fix for the service-card-inner hover that was already in your CSS but incomplete */
+.service-card-inner:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: var(--card-color, darkcyan);
+}
+
+/* INFINITE SCROLL ANIMATION - This was missing the proper keyframes */
+@keyframes infiniteSlide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-400px * 8 - 30px * 8)); /* Move by one full set of 8 services */
+    }
+}
+
+/* Enhanced Performance - CRITICAL FOR SMOOTH ANIMATION */
+.services-slider-track,
+.service-card-inner,
+.service-image {
+    will-change: transform;
+}
+
+/* Responsive Design Updates */
+@media (max-width: 1200px) {
+    .services-slider-track {
+        animation-duration: 80s;
+        width: calc(350px * 24);
+    }
+    
+    .service-card {
+        flex: 0 0 350px;
+    }
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-350px * 8 - 30px * 8));
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .services-slider-section {
+        padding: 60px 15px 80px;
+    }
+    
+    .services-header h2 {
+        font-size: 32px;
+    }
+    
+    .services-header p {
+        font-size: 16px;
+        padding: 0 10px;
+    }
+    
+    .services-slider-container {
+        height: 380px;
+    }
+    
+    .service-card {
+        flex: 0 0 300px;
+        height: 360px;
+        margin-right: 20px;
+    }
+    
+    .services-slider-track {
+        width: calc(300px * 24);
+        animation-duration: 80s;
+    }
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-300px * 8 - 20px * 8));
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .services-slider-container {
+        height: 350px;
+        mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+        -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+    }
+    
+    .service-card {
+        flex: 0 0 280px;
+        height: 330px;
+        margin-right: 15px;
+    }
+    
+    .services-slider-track {
+        width: calc(280px * 24);
+        animation-duration: 80s;
+    }
+    
+    @keyframes infiniteSlide {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-280px * 8 - 15px * 8));
+        }
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .services-slider-track {
+        animation: none;
+    }
+    
+    .service-card-inner:hover {
+        transform: none;
+    }
+    
+    .service-card-inner:hover .service-image {
+        transform: none;
+    }
+}
+
+@media(min-width:767px){
+    
+.location-details h3{
+    margin-left: -10px;
+}
 }
