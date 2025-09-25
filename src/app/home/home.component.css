@@ -676,7 +676,7 @@ body {
     background: darkcyan;
     color: #ffffff;
     border: none;
-    padding: 18px 45px;
+    padding: 18px 30px;
     border-radius: 15px;
     font-size: 18px;
     font-weight: 700;
@@ -767,7 +767,7 @@ body {
 }
 
 .content-card h3 {
-    color: darkcyan;
+    color: #0f172a;
     font-size: clamp(1.25rem, 2.5vw, 1.5rem);
     font-weight: 600;
     margin-bottom: 16px;
@@ -777,15 +777,15 @@ body {
 }
 
 .content-card p {
-    color: #474747;
+    color: #64748b;
     line-height: 1.7;
-        font-size: clamp(0.8rem, 1.5vw, 1.125rem);
+        font-size: 14px;
 
 }
 
 .content-card .card-icon {
     font-size: 26px;
-    color: darkcyan;
+    color: #0f172a;
 }
 
 /* Highlight Stats */
