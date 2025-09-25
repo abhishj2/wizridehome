@@ -1,0 +1,697 @@
+<div class="container" (click)="onDocumentClick($event)">
+    <div class="nav-tabs">
+        <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab" (click)="switchTab(tab)">
+            <span class="icon" *ngIf="tab === 'shared-cabs'"><i class="fas fa-taxi"></i></span>
+            <span class="icon" *ngIf="tab === 'reserved-cabs'"><i class="fas fa-car"></i></span>
+            <span class="icon" *ngIf="tab === 'flights'"><i class="fas fa-plane"></i></span>
+            {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
+        </button>
+    </div>
+
+    <div class="tabs-container">
+        <ng-container *ngFor="let tab of tabs">
+            <div [id]="tab" class="tab-content" [class.active]="currentTab === tab"
+                 [class.slide-out-left]="previousTab === tab && isSliding"
+                 *ngIf="currentTab === tab || previousTab === tab">
+                <!-- Place the content for each tab here, e.g. use ng-container with ngSwitch or ngIf for each tab -->
+                <ng-container [ngSwitch]="tab">
+                    <ng-container *ngSwitchCase="'shared-cabs'">
+                        <!-- Shared Cabs tab content -->
+                        <div class="booking-form">
+                            <div class="cab-form-row">
+                                <div class="form-group city-select">
+                                    <label>From</label>
+                                    <input type="text" class="form-input city-input" placeholder="Enter pick-up city"
+                                        [(ngModel)]="formValues.sharedPickup"
+                                        (input)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')"
+                                        (focus)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')">
+                                    <div class="city-suggestions"
+                                        [class.active]="activeSuggestions['shared-pickup'] && activeSuggestions['shared-pickup'].length > 0">
+                                        <ng-container *ngIf="isCityArray(activeSuggestions['shared-pickup'])">
+                                            <div *ngFor="let city of activeSuggestions['shared-pickup']"
+                                                class="city-suggestion"
+                                                 (click)="selectCity(city.name, city.code, 'shared-pickup')">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                    {{city.state}}</div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                                <button class="swap-btn" (click)="swapCabLocations('shared')">
+                                    <span>⇄</span>
+                                </button>
+
+                                <div class="form-group city-select">
+                                    <label>To</label>
+                                    <input type="text" class="form-input city-input" placeholder="Enter drop-off city"
+                                        [(ngModel)]="formValues.sharedDropoff"
+                                        (input)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')"
+                                        (focus)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')">
+                                    <div class="city-suggestions"
+                                        [class.active]="activeSuggestions['shared-dropoff'] && activeSuggestions['shared-dropoff'].length > 0">
+                                        <ng-container *ngIf="isCityArray(activeSuggestions['shared-dropoff'])">
+                                            <div *ngFor="let city of activeSuggestions['shared-dropoff']"
+                                                class="city-suggestion"
+                                                 (click)="selectCity(city.name, city.code, 'shared-dropoff')">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                    {{city.state}}</div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="text" class="form-input datecab"
+                                        [(ngModel)]="formValues.sharedDateTime" placeholder="2025-09-20">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Passengers</label>
+                                    <div class="passenger-counter">
+                                        <button class="counter-btn" [disabled]="formValues.sharedPassengers <= 1"
+                                            (click)="updateSharedPassengers(-1)">-</button>
+                                        <span class="counter-value">{{formValues.sharedPassengers}}
+                                            </span>
+                                        <button class="counter-btn" (click)="updateSharedPassengers(1)">+</button>
+                                    </div>
+                                </div>
+
+                                <button class="search-btn" (click)="searchCabs('shared')">
+                                    Search
+                                    <span>→</span>
+                                </button>
+                            </div>
+
+                            <div class="location-details" [class.active]="locationDetailsVisible['shared']">
+                                <h3>📍 Specify Pickup & Drop-off Locations</h3>
+                                <div class="location-row">
+                                    <div class="form-group city-select">
+                                        <label>Pickup Location</label>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter specific pickup location"
+                                            [(ngModel)]="formValues.sharedPickupLocation"
+                                            (input)="showLocationSuggestions(formValues.sharedPickupLocation, 'shared-pickup-specific')"
+                                            (focus)="showLocationSuggestions(formValues.sharedPickupLocation, 'shared-pickup-specific')">
+                                        <div class="city-suggestions"
+                                            [class.active]="activeSuggestions['shared-pickup-specific'] && activeSuggestions['shared-pickup-specific'].length > 0">
+                                            <ng-container
+                                                *ngIf="!isCityArray(activeSuggestions['shared-pickup-specific'])">
+                                                <div *ngFor="let location of activeSuggestions['shared-pickup-specific']"
+                                                    class="city-suggestion"
+                                                    (click)="selectLocation(location, 'shared-pickup-specific')">
+                                                    <span class="city-name">{{location}}</span>
+                                                    <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                        {{selectedCities.shared.pickup}}</div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+
+                                    <button class="swap-btn" (click)="swapSpecificLocations('shared')">
+                                        <span>⇄</span>
+                                    </button>
+
+                                    <div class="form-group city-select">
+                                        <label>Drop-off Location</label>
+                                        <input type="text" class="form-input city-input"
+                                            placeholder="Enter specific drop-off location"
+                                            [(ngModel)]="formValues.sharedDropoffLocation"
+                                            (input)="showLocationSuggestions(formValues.sharedDropoffLocation, 'shared-dropoff-specific')"
+                                            (focus)="showLocationSuggestions(formValues.sharedDropoffLocation, 'shared-dropoff-specific')">
+                                        <div class="city-suggestions"
+                                            [class.active]="activeSuggestions['shared-dropoff-specific'] && activeSuggestions['shared-dropoff-specific'].length > 0">
+                                            <ng-container
+                                                *ngIf="!isCityArray(activeSuggestions['shared-dropoff-specific'])">
+                                                <div *ngFor="let location of activeSuggestions['shared-dropoff-specific']"
+                                                    class="city-suggestion"
+                                                    (click)="selectLocation(location, 'shared-dropoff-specific')">
+                                                    <span class="city-name">{{location}}</span>
+                                                    <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                        {{selectedCities.shared.dropoff}}</div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="features">
+                                <div class="feature">
+                                    <span class="feature-icon">💰</span>
+                                    <span>Shared rides, shared costs</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">🌍</span>
+                                    <span>Eco-friendly travel</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">👥</span>
+                                    <span>Meet fellow travelers</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shared Cabs Content Section -->
+                        <div class="content-section">
+                            <h2>Affordable Shared Cab Services</h2>
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <h3><i class="fas fa-users card-icon"></i>Share & Save</h3>
+                                    <p>Split the ride cost with fellow travelers going in the same direction. Our shared
+                                        cab service
+                                        offers
+                                        significant savings while maintaining comfort and safety standards.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-route card-icon"></i>Optimized Routes</h3>
+                                    <p>Our intelligent routing system ensures the most efficient pickup and drop-off
+                                        sequence,
+                                        minimizing
+                                        travel time while maximizing convenience for all passengers.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-leaf card-icon"></i>Eco-Friendly Travel</h3>
+                                    <p>Reduce your carbon footprint by sharing rides. Every shared journey helps
+                                        decrease traffic
+                                        congestion
+                                        and environmental impact while supporting sustainable transportation.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-comments card-icon"></i>Meet New People</h3>
+                                    <p>Connect with like-minded travelers and make new friends during your journey. Our
+                                        community-focused
+                                        approach makes every ride a potential networking opportunity.</p>
+                                </div>
+                            </div>
+                            <div class="highlight-stats">
+                                <div class="stat">
+                                    <span class="stat-number">60%</span>
+                                    <span class="stat-label">Cost Savings</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">10K+</span>
+                                    <span class="stat-label">Daily Rides</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">4.8⭐</span>
+                                    <span class="stat-label">User Rating</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">100+</span>
+                                    <span class="stat-label">Cities Covered</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'flights'">
+                        <!-- Flights tab content -->
+                        <div class="booking-form">
+                            <div class="trip-type">
+                                <button [class.active]="tripType === 'one-way'" (click)="setTripType('one-way')">One
+                                    Way</button>
+                                <button [class.active]="tripType === 'round-trip'"
+                                    (click)="setTripType('round-trip')">Round Trip</button>
+                                <button [class.active]="tripType === 'multi-city'"
+                                    (click)="setTripType('multi-city')">Multi City</button>
+                            </div>
+
+                            <!-- Flight Routes -->
+                            <div *ngFor="let route of flightRoutes; let i = index" class="form-row">
+                                <div class="route-header" *ngIf="tripType === 'multi-city'">
+                                    <span class="route-number">Route {{i + 1}}</span>
+                                    <button class="remove-route-btn" (click)="removeFlightRoute(i)"
+                                        [disabled]="flightRoutes.length <= 1">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                            </div>
+
+                                <div class="form-group city-select">
+                                    <label>From</label>
+                                    <input type="text" class="form-input city-input" placeholder="Enter departure city"
+                                        [(ngModel)]="route.from"
+                                        (input)="showCitySuggestions(route.from, 'flight-from-' + i)"
+                                        (focus)="showCitySuggestions(route.from, 'flight-from-' + i)">
+                                    <div class="city-suggestions"
+                                        [class.active]="getMultiCitySuggestions('flight-from-' + i).length > 0">
+                                        <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
+                                            class="city-suggestion"
+                                            (click)="selectMultiCity(city.name, city.code, 'flight-from-' + i)">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                            <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                {{city.state}}</div>
+                                            </div>
+                                    </div>
+                                </div>
+
+                                <button class="swap-btn" (click)="swapFlightLocations(i)">
+                                    <span>⇄</span>
+                                </button>
+
+                                <div class="form-group city-select">
+                                    <label>To</label>
+                                    <input type="text" class="form-input city-input"
+                                        placeholder="Enter destination city" [(ngModel)]="route.to"
+                                        (input)="showCitySuggestions(route.to, 'flight-to-' + i)"
+                                        (focus)="showCitySuggestions(route.to, 'flight-to-' + i)">
+                                    <div class="city-suggestions"
+                                        [class.active]="getMultiCitySuggestions('flight-to-' + i).length > 0">
+                                        <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
+                                            class="city-suggestion"
+                                            (click)="selectMultiCity(city.name, city.code, 'flight-to-' + i)">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                            <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                {{city.state}}</div>
+                                            </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Departure</label>
+                                    <input type="text" placeholder="2025-09-20" class="form-input dateflight-departure"
+                                        [(ngModel)]="route.date">
+                                </div>
+
+                                <div class="form-group return-field"
+                                    [style.display]="tripType === 'round-trip' && i === 0 ? 'block' : 'none'">
+                                    <label>Return</label>
+                                    <input type="text" class="form-input dateflight-return"
+                                        [(ngModel)]="formValues.flightReturn" placeholder="2024-10-08">
+                                </div>
+
+                                <div class="travelers-dropdown" *ngIf="tripType !== 'multi-city'">
+                                    <label>Travellers & Class</label>
+                                    <button class="travelers-btn" (click)="toggleTravelersPanel()">
+                                        <span>{{getTravelersText()}}</span>
+                                    </button>
+                                    <div class="travelers-panel" [class.active]="isTravelersOpen">
+                                        <h3>Travellers</h3>
+
+                                        <div class="traveler-row">
+                                            <div class="traveler-info">
+                                                <h4>Adults</h4>
+                                                <p>12 yrs or above</p>
+                                            </div>
+                                            <div class="counter">
+                                                <button class="counter-btn" [disabled]="!canDecrease('adults')"
+                                                    [class.active]="counts.adults > 1"
+                                                    (click)="updateCount('adults', -1)">-</button>
+                                                <span class="counter-value">{{counts.adults}}</span>
+                                                <button class="counter-btn" (click)="updateCount('adults', 1)">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="traveler-row">
+                                            <div class="traveler-info">
+                                                <h4>Children</h4>
+                                                <p>2 - 12 yrs</p>
+                                            </div>
+                                            <div class="counter">
+                                                <button class="counter-btn" [disabled]="!canDecrease('children')"
+                                                    [class.active]="counts.children > 0"
+                                                    (click)="updateCount('children', -1)">-</button>
+                                                <span class="counter-value">{{counts.children}}</span>
+                                                <button class="counter-btn" (click)="updateCount('children', 1)">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="traveler-row">
+                                            <div class="traveler-info">
+                                                <h4>Infants</h4>
+                                                <p>0 - 2 yrs</p>
+                                            </div>
+                                            <div class="counter">
+                                                <button class="counter-btn" [disabled]="!canDecrease('infants')"
+                                                    [class.active]="counts.infants > 0"
+                                                    (click)="updateCount('infants', -1)">-</button>
+                                                <span class="counter-value">{{counts.infants}}</span>
+                                                <button class="counter-btn" (click)="updateCount('infants', 1)">+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="group-booking">
+                                            <p>Planning a trip for more than 9 travellers?</p>
+                                            <a href="#" (click)="createGroupBooking(); $event.preventDefault()">Create Group
+                                                Booking</a>
+                                        </div>
+
+                                        <div class="class-selection">
+                                            <h3>Class</h3>
+                                            <div class="class-options">
+                                                <button class="class-option" [class.active]="selectedClass === 'economy'"
+                                                    (click)="updateClass('economy')">Economy</button>
+                                                <button class="class-option" [class.active]="selectedClass === 'business'"
+                                                    (click)="updateClass('business')">Business</button>
+                                                <button class="class-option" [class.active]="selectedClass === 'first'"
+                                                    (click)="updateClass('first')">First</button>
+                                            </div>
+                                        </div>
+    
+                                        <div class="panel-actions">
+                                            <button class="done-btn" (click)="closeTravelersPanel()">Done</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <!-- Add Route Button for Multi City -->
+                                 <button class="search-btn" (click)="searchFlights()" *ngIf="tripType !== 'multi-city'">
+                                    Search
+                                    <span>→</span>
+                                </button>
+                            </div>
+
+                           
+
+                            <!-- Travelers & Class for single routes -->
+                            
+                            <!-- Single Travelers & Class for Multi City -->
+                            <div class="travelers-dropdown" *ngIf="tripType === 'multi-city'">
+                                <label>Travellers & Class</label>
+                                <button class="travelers-btn" (click)="toggleTravelersPanel()">
+                                    <span>{{getTravelersText()}}</span>
+                                </button>
+                                <div class="travelers-panel" [class.active]="isTravelersOpen">
+                                    <h3>Travellers</h3>
+
+                                    <div class="traveler-row">
+                                        <div class="traveler-info">
+                                            <h4>Adults</h4>
+                                            <p>12 yrs or above</p>
+                                        </div>
+                                        <div class="counter">
+                                            <button class="counter-btn" [disabled]="!canDecrease('adults')"
+                                                [class.active]="counts.adults > 1"
+                                                (click)="updateCount('adults', -1)">-</button>
+                                            <span class="counter-value">{{counts.adults}}</span>
+                                            <button class="counter-btn" (click)="updateCount('adults', 1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="traveler-row">
+                                        <div class="traveler-info">
+                                            <h4>Children</h4>
+                                            <p>2 - 12 yrs</p>
+                                        </div>
+                                        <div class="counter">
+                                            <button class="counter-btn" [disabled]="!canDecrease('children')"
+                                                [class.active]="counts.children > 0"
+                                                (click)="updateCount('children', -1)">-</button>
+                                            <span class="counter-value">{{counts.children}}</span>
+                                            <button class="counter-btn" (click)="updateCount('children', 1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="traveler-row">
+                                        <div class="traveler-info">
+                                            <h4>Infants</h4>
+                                            <p>0 - 2 yrs</p>
+                                        </div>
+                                        <div class="counter">
+                                            <button class="counter-btn" [disabled]="!canDecrease('infants')"
+                                                [class.active]="counts.infants > 0"
+                                                (click)="updateCount('infants', -1)">-</button>
+                                            <span class="counter-value">{{counts.infants}}</span>
+                                            <button class="counter-btn" (click)="updateCount('infants', 1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="group-booking">
+                                        <p>Planning a trip for more than 9 travellers?</p>
+                                        <a href="#" class="group-link">Contact us for group booking</a>
+                                    </div>
+
+                                    <div class="class-selection">
+                                        <h4>Travel Class</h4>
+                                        <div class="class-options">
+                                            <label class="class-option">
+                                                <input type="radio" name="travelClass" value="economy"
+                                                    [(ngModel)]="selectedClass" (change)="updateClass('economy')">
+                                                <span class="class-label">Economy</span>
+                                            </label>
+                                            <label class="class-option">
+                                                <input type="radio" name="travelClass" value="business"
+                                                    [(ngModel)]="selectedClass" (change)="updateClass('business')">
+                                                <span class="class-label">Business</span>
+                                            </label>
+                                            <label class="class-option">
+                                                <input type="radio" name="travelClass" value="first"
+                                                    [(ngModel)]="selectedClass" (change)="updateClass('first')">
+                                                <span class="class-label">First</span>
+                                            </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel-actions">
+                                            <button class="done-btn" (click)="closeTravelersPanel()">Done</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+<div *ngIf="tripType === 'multi-city'" class="add-route-section">
+                                <button class="add-route-btn" (click)="addFlightRoute()"
+                                    [disabled]="flightRoutes.length >= 5">
+                                    <i class="fas fa-plus"></i> Add Another Route
+                                </button>
+                            </div>
+
+                            <button class="search-btn" (click)="searchFlights()" *ngIf="tripType === 'multi-city'">
+                                    Search
+                                    <span>→</span>
+                                </button>
+                            </div>
+
+                            <div class="features">
+                                <div class="feature">
+                                    <span class="feature-icon">🛡️</span>
+                                    <span>Priority customer service</span>
+                                </div>
+                            </div>
+
+
+                        <!-- Flight Content Section -->
+                        <div class="content-section">
+                            <h2>Why Choose Our Flight Booking Service?</h2>
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <h3><i class="fas fa-plane-departure card-icon"></i>Best Flight Deals</h3>
+                                    <p>Compare prices from multiple airlines and get the best deals on domestic and
+                                        international
+                                        flights. Our smart algorithm finds you the most affordable options without
+                                        compromising on
+                                        quality.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-shield-alt card-icon"></i>Secure Booking</h3>
+                                    <p>Your transactions are protected with bank-level security. We use advanced
+                                        encryption to
+                                        ensure your personal and payment information remains safe throughout the booking
+                                        process.
+                                    </p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-headset card-icon"></i>24/7 Support</h3>
+                                    <p>Our dedicated customer support team is available round-the-clock to assist you
+                                        with booking
+                                        queries, changes, or any travel-related concerns you might have.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-mobile-alt card-icon"></i>Easy Mobile Booking</h3>
+                                    <p>Book flights on-the-go with our mobile-optimized platform. Get instant
+                                        confirmations, mobile
+                                        boarding passes, and real-time flight updates directly to your phone.</p>
+                                </div>
+                            </div>
+                            <div class="highlight-stats">
+                                <div class="stat">
+                                    <span class="stat-number">1M+</span>
+                                    <span class="stat-label">Happy Customers</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">500+</span>
+                                    <span class="stat-label">Airlines Partners</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">99.9%</span>
+                                    <span class="stat-label">Booking Success Rate</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">Customer Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                  
+                    <ng-container *ngSwitchCase="'reserved-cabs'">
+                        <!-- Reserved Cabs tab content -->
+                        <div class="booking-form">
+                            <div class="cab-form-row">
+                                <div class="form-group city-select">
+                                    <label>From</label>
+                                    <input type="text" class="form-input city-input" placeholder="Enter pick-up city"
+                                        [(ngModel)]="formValues.reservedPickup"
+                                        (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')"
+                                        (focus)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
+                                    <div class="city-suggestions"
+                                        [class.active]="activeSuggestions['reserved-pickup'] && activeSuggestions['reserved-pickup'].length > 0">
+                                        <ng-container *ngIf="isCityArray(activeSuggestions['reserved-pickup'])">
+                                            <div *ngFor="let city of activeSuggestions['reserved-pickup']"
+                                                class="city-suggestion"
+                                                 (click)="selectCity(city.name, city.code, 'reserved-pickup')">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                    {{city.state}}</div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                                <button class="swap-btn" (click)="swapCabLocations('reserved')">
+                                    <span>⇄</span>
+                                </button>
+
+                                <div class="form-group city-select">
+                                    <label>To</label>
+                                    <input type="text" class="form-input city-input" placeholder="Enter drop-off city"
+                                        [(ngModel)]="formValues.reservedDropoff"
+                                        (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')"
+                                        (focus)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
+                                    <div class="city-suggestions"
+                                        [class.active]="activeSuggestions['reserved-dropoff'] && activeSuggestions['reserved-dropoff'].length > 0">
+                                        <ng-container *ngIf="isCityArray(activeSuggestions['reserved-dropoff'])">
+                                            <div *ngFor="let city of activeSuggestions['reserved-dropoff']"
+                                                class="city-suggestion"
+                                                 (click)="selectCity(city.name, city.code, 'reserved-dropoff')">
+                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-code">{{city.code}}</span>
+                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
+                                                    {{city.state}}</div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date & Time</label>
+                                    <input type="text" class="form-input datecabreserved" placeholder="2025-09-24 12:00"
+                                        [(ngModel)]="formValues.reservedDateTime">
+                                </div>
+
+                                <button class="search-btn" (click)="searchCabs('reserved')">
+                                    Search
+                                    <span>→</span>
+                                </button>
+                            </div>
+
+                            <div class="location-details" [class.active]="locationDetailsVisible['reserved']">
+                                <h3>📍 Specify Pickup & Drop-off Locations</h3>
+                                <div class="location-row">
+                                    <div class="form-group">
+                                        <label>Pickup Location</label>
+                                        <input type="text" class="form-input"
+                                            placeholder="Enter specific pickup location"
+                                            [(ngModel)]="formValues.reservedPickupLocation">
+                                    </div>
+
+                                    <button class="swap-btn" (click)="swapSpecificLocations('reserved')">
+                                        <span>⇄</span>
+                                    </button>
+
+                                    <div class="form-group">
+                                        <label>Drop-off Location</label>
+                                        <input type="text" class="form-input"
+                                            placeholder="Enter specific drop-off location"
+                                            [(ngModel)]="formValues.reservedDropoffLocation">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="features">
+                                <div class="feature">
+                                    <span class="feature-icon">⏰</span>
+                                    <span>On-time guarantee</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">🛡️</span>
+                                    <span>Verified drivers</span>
+                                </div>
+                                <div class="feature">
+                                    <span class="feature-icon">💳</span>
+                                    <span>Flexible payment options</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reserved Cabs Content Section -->
+                        <div class="content-section">
+                            <h2>Premium Reserved Cab Experience</h2>
+                            <div class="content-grid">
+                                <div class="content-card">
+                                    <h3><i class="fas fa-crown card-icon"></i>Exclusive & Private</h3>
+                                    <p>Enjoy your own private vehicle with no sharing required. Perfect for business
+                                        trips, family
+                                        outings,
+                                        or when you need complete privacy and comfort during your journey.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-user-tie card-icon"></i>Professional Drivers</h3>
+                                    <p>All our drivers are thoroughly vetted, professionally trained, and maintain high
+                                        standards of
+                                        courtesy and service. Experience smooth, safe, and reliable transportation.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-car-side card-icon"></i>Premium Fleet</h3>
+                                    <p>Choose from our wide range of well-maintained vehicles including hatchbacks,
+                                        sedans, SUVs, and
+                                        luxury
+                                        cars. All vehicles are regularly serviced and sanitized.</p>
+                                </div>
+                                <div class="content-card">
+                                    <h3><i class="fas fa-clock card-icon"></i>Flexible Booking</h3>
+                                    <p>Book one-way, round trips, or hourly rentals based on your needs. Our flexible
+                                        booking options
+                                        cater
+                                        to both short city rides and long-distance intercity travel.</p>
+                                </div>
+                            </div>
+                            <div class="highlight-stats">
+                                <div class="stat">
+                                    <span class="stat-number">5⭐</span>
+                                    <span class="stat-label">Service Rating</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">98%</span>
+                                    <span class="stat-label">On-Time Performance</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">500+</span>
+                                    <span class="stat-label">Premium Vehicles</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">Available Service</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+
+                    <div class="phone-modal" *ngIf="showPhonePopup">
+                        <div class="modal-content">
+                            <h3>{{ popupTitle || 'Enter your phone number' }}</h3>
+                            <input type="tel" class="form-input" [(ngModel)]="phoneNumber"
+                                placeholder="Enter phone number">
+                            <div class="actions">
+                                <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
+                                <button class="swap-btn" (click)="cancelPhonePopup()">Cancel</button>
+            </div>
+    </div>
+</div>
