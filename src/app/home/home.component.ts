@@ -46,14 +46,14 @@ export class HomeComponent
       id: 1,
       title: 'International Packages',
       description: 'Explore the world with our curated international travel packages. Hassle-free planning for your global adventures.',
-      image: 'https://wizzride.com/assets/images/wizzride_international_tour.png',
+      image: '../assets/images/international.jpg',
       link:'https://wizzride.com/ourservices/holidaystours/Wizzride-International-Holiday-Planner/'
     },
     {
       id: 2,
       title: 'Flight & Hotel Bookings',
       description: 'Simplify your travel with our flight and hotel booking services. Best deals, easy reservations, and 24/7 support.',
-      image: 'https://wizzride.com/assets/images/wizzride_flight.png',
+      image: '../assets/images/flight.jpg',
       link:'https://wizzride.com/flight-booking'
       
     },
@@ -61,25 +61,26 @@ export class HomeComponent
       id: 3,
       title: 'Luxury Shared Taxis',
       description: 'Enjoy premium shared taxi rides with top-notch comfort and convenience. On-time departures, spacious seating, and budget-friendly fares for all.',
-      image: 'https://wizzride.com/assets/images/wizzride_shared_cab.png',
+      image: 'https://wizzride.com/assets/images_new/wizcar.jpeg',
       link:'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/'
     },
+    
+   
     {
-      id: 4,
+      id:4,
+      title: 'Expert Holiday Planner',
+      description: 'Let our experts plan your dream holiday. From itineraries to bookings, we ensure a seamless and memorable travel experience.',
+      image: '../assets/images/holiday.jpg',
+      link:'https://wizzride.com/ourservices/holidaystours/'
+    },
+    {
+      id: 5,
       title: 'Private Reserved Cabs',
       description: 'Book a private cab for a personalized travel experience. Perfect for families, groups, or solo travelers seeking privacy.',
-      image: 'https://wizzride.com/assets/images/icons/bhakta.jpeg',
+      image: 'https://wizzride.com/assets/images_new/wizcar.jpeg',
       link:'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/'
      
     },
-   
-    {
-      id:5,
-      title: 'Expert Holiday Planner',
-      description: 'Let our experts plan your dream holiday. From itineraries to bookings, we ensure a seamless and memorable travel experience.',
-      image: 'https://wizzride.com/assets/images/wizzride_holiday.png',
-      link:'https://wizzride.com/ourservices/holidaystours/'
-    }
  
   ];
 
