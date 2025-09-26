@@ -43,7 +43,8 @@ body {
     top: 0;
     left: 0;
     height: 100%;
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    border:2px  solid darkcyan;
+    border-bottom-width: 0 !important;
     border-radius: 10px 10px 0 0;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;
@@ -73,7 +74,7 @@ body {
 }
 
 .nav-tab.active {
-    color: #ffffff;
+    color:darkcyan;
     background: transparent;
     border: 2px solid transparent;
 }
@@ -160,6 +161,9 @@ body {
     animation: contentSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
+/* Add border-top-left-radius for second and third tabs */
+
+
 .tab-content.active .booking-form::before {
     content: "";
     position: absolute;
@@ -175,6 +179,10 @@ body {
     animation: borderFadeIn 0.8s ease-out 0.4s both;
 }
 
+.tab-content[id="reserved-cabs"].active .booking-form::before,
+.tab-content[id="flights"].active .booking-form::before {
+    border-top-left-radius: 10px;
+}
 @keyframes borderFadeIn {
     0% {
         opacity: 0;
@@ -329,7 +337,6 @@ body {
     padding: 40px 40px 0px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 60px;
-    border: 1px solid transparent;
     position: relative;
 }
 
