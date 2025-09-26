@@ -273,6 +273,11 @@ export class HomeComponent
 
   ngAfterViewInit() {
     this.initDatepickers();
+    const currentIndex = this.tabs.indexOf(this.currentTab);
+    const navTabs = document.querySelector('.nav-tabs');
+    if (navTabs) {
+        navTabs.setAttribute('data-active', currentIndex.toString());
+    }
   }
 
   /** -------------------
@@ -446,19 +451,28 @@ export class HomeComponent
   /** -------------------
    * Tab Handling
    -------------------- */
-  switchTab(tabName: string) {
+   switchTab(tabName: string) {
     if (tabName !== this.currentTab && !this.isSliding) {
-      this.previousTab = this.currentTab;
-      this.isSliding = true;
-      setTimeout(() => {
-        this.currentTab = tabName;
-        this.previousTab = null;
-        this.isSliding = false;
-        setTimeout(() => this.initDatepickers(), 0);
-      }, 400);
-    }
-  }
+        this.previousTab = this.currentTab;
+        this.isSliding = true;
 
+        // Update nav tabs active state immediately for smooth color transition
+        const currentIndex = this.tabs.indexOf(tabName);
+        const navTabs = document.querySelector('.nav-tabs');
+        if (navTabs) {
+            navTabs.setAttribute('data-active', currentIndex.toString());
+        }
+
+        setTimeout(() => {
+            this.currentTab = tabName;
+            setTimeout(() => {
+                this.previousTab = null;
+                this.isSliding = false;
+                this.initDatepickers();
+            }, 300);
+        }, 100);
+    }
+}
   setTripType(type: string) {
     this.tripType = type;
     

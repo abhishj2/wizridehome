@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -31,10 +32,23 @@ body {
 .nav-tabs {
     display: flex;
     gap: 8px;
-    /* padding: 8px; */
-    /* margin-bottom: 10px; */
     width: fit-content;
-    /* box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08); */
+    position: relative;
+    padding-bottom: 0;
+    isolation: isolate;  /* Changed from overflow: hidden */
+}
+.nav-tabs::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    border-radius: 10px 10px 0 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
+    box-sizing: border-box;
 }
 
 .nav-tab {
@@ -43,11 +57,10 @@ body {
     gap: 12px;
     padding: 10px 32px;
     border: none;
-    background: #ffffff;
+    background: transparent;
     color: #474747;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     position: relative;
@@ -55,17 +68,18 @@ body {
     min-width: 150px;
     justify-content: center;
     border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
 }
 
 .nav-tab.active {
     color: #ffffff;
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
-    box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
-    border: 2px solid darkcyan;
+    background: transparent;
+    border: 2px solid transparent;
 }
 
 .nav-tab:not(.active):hover {
-    background: #f8f9fa;
+    background: rgba(248, 249, 250, 0.8);
     color: darkcyan;
     border: 2px solid #e9ecef;
     transform: translateY(-1px);
@@ -73,6 +87,27 @@ body {
 
 .nav-tab .icon {
     font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.nav-tab.active .icon {
+    transform: scale(1.1);
+}
+
+/* Sliding active background animation */
+.nav-tabs[data-active="0"]::before {
+    width: calc(33.333%);
+    transform: translateX(0);
+}
+
+.nav-tabs[data-active="1"]::before {
+    width: calc(33.333%);
+    transform: translateX(calc(33.333% + 142px));  /* Added + 8px for gap */
+}
+
+.nav-tabs[data-active="2"]::before {
+    width: calc(33.333%);
+    transform: translateX(calc(66.666% + 303px));
 }
 
 /* Tab Content Container */
@@ -80,63 +115,131 @@ body {
     position: relative;
     overflow: hidden;
     min-height: 600px;
+    background: #ffffff;
+    border-radius: 0 10px 10px 10px;
 }
 
 .tab-content {
-    pointer-events: none;
     position: absolute;
     width: 100%;
     left: 0;
     top: 0;
-    transition: transform 0.4s cubic-bezier(.4, 0, .2, 1);
+    opacity: 0;
     transform: translateX(100%);
-    /* hidden to the right */
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+                opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    pointer-events: none;
     z-index: 1;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 .tab-content.active {
-    pointer-events: auto;
     position: relative;
+    opacity: 1;
     transform: translateX(0);
-    /* slide into view */
+    pointer-events: auto;
     z-index: 2;
+    animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
+.tab-content.slide-out-left {
+    transform: translateX(-100%);
+    opacity: 0;
+    z-index: 1;
+    animation: slideOutToLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Booking Form Border Animation */
 .tab-content.active .booking-form {
     position: relative;
     border-radius: 10px;
     z-index: 1;
-    /* keep content above ::before */
     background: #fff;
-    /* form background */
+    animation: contentSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 .tab-content.active .booking-form::before {
     content: "";
     position: absolute;
     inset: 0;
-    /* stretch to edges */
     padding: 2px;
-    /* border thickness */
     border-radius: 0px 10px 10px 10px;
     background: linear-gradient(90deg, darkcyan, #20b2aa);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     z-index: -1;
-    /* keep border behind */
+    animation: borderFadeIn 0.8s ease-out 0.4s both;
 }
 
-.tab-content.slide-out-left {
+@keyframes borderFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes contentSlideIn {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Performance optimizations for smooth transitions */
+.tabs-container,
+.tab-content {
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+/* Hardware acceleration for smooth animations */
+.nav-tabs,
+.nav-tab,
+.tab-content,
+.booking-form {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+/* Smooth transitions for all interactive elements */
+.nav-tab,
+.tab-content,
+.booking-form,
+.form-input,
+.search-btn {
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* .tab-content.slide-out-left {
     transform: translateX(-100%);
-    /* slide out to the left */
+    opacity: 0;
     z-index: 1;
 }
 
-.tab-content.slide-in-left {
+.tab-content.slide-in-from-right {
     transform: translateX(0);
-    /* slide in from the left */
-    z-index: 2;
+    opacity: 1;
+}
+
+.tab-content.slide-in-from-left {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 .tabs-container,
@@ -144,52 +247,60 @@ body {
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
-}
+} */
 
-/* Additional smooth sliding keyframes if needed */
+/* Enhanced smooth sliding keyframes */
 @keyframes slideInFromRight {
-    from {
+    0% {
         transform: translateX(100%);
         opacity: 0;
     }
-
-    to {
+    50% {
+        opacity: 0.8;
+    }
+    100% {
         transform: translateX(0);
         opacity: 1;
     }
 }
 
 @keyframes slideInFromLeft {
-    from {
+    0% {
         transform: translateX(-100%);
         opacity: 0;
     }
-
-    to {
+    50% {
+        opacity: 0.8;
+    }
+    100% {
         transform: translateX(0);
         opacity: 1;
     }
 }
 
 @keyframes slideOutToLeft {
-    from {
+    0% {
         transform: translateX(0);
         opacity: 1;
     }
-
-    to {
+    50% {
+        opacity: 0.3;
+    }
+    100% {
         transform: translateX(-100%);
         opacity: 0;
     }
 }
 
 @keyframes slideOutToRight {
-    from {
+    0% {
         transform: translateX(0);
         opacity: 1;
     }
-
-    to {
+    50% {
+        opacity: 0.3;
+    }
+    100% {
         transform: translateX(100%);
         opacity: 0;
     }
@@ -217,7 +328,7 @@ body {
     background: #ffffff;
     padding: 40px 40px 0px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     border: 1px solid transparent;
     position: relative;
 }
@@ -1009,6 +1120,16 @@ small {
         padding: 14px 20px;
     }
 
+    /* Optimize transitions for mobile */
+    .tab-content {
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .nav-tabs::before {
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
     .features {
         flex-direction: column;
         align-items: flex-start;
@@ -1168,6 +1289,7 @@ small {
     overflow: visible;
     /* Show all text */
     -webkit-line-clamp: none;
+    line-clamp: none;
     /* Remove line clamping */
     -webkit-box-orient: initial;
     /* Reset */
@@ -1364,6 +1486,23 @@ a.service-cta-btn {
 
     .service-card-inner:hover .service-image {
         transform: none;
+    }
+
+    /* Disable smooth transitions for users who prefer reduced motion */
+    .nav-tabs::before,
+    .tab-content,
+    .booking-form,
+    .nav-tab {
+        transition: none;
+        animation: none;
+    }
+
+    .tab-content.active {
+        animation: none;
+    }
+
+    .tab-content.slide-out-left {
+        animation: none;
     }
 }
 
