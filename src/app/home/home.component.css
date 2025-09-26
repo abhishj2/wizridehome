@@ -1,28 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-     font-family: "Montserrat", sans-serif !important;
-        
-
+    font-family: "Montserrat", sans-serif !important;
 }
 
 body {
-    background: #ffffff;
+    background: #cccccc;
     color: #333333;
     line-height: 1.6;
-   
-}
-.fas{
-        font-family: "Font Awesome 6 Free" !important;
 }
 
+.fas {
+    font-family: "Font Awesome 6 Free" !important;
+}
 
-.fab{
+.fab {
     font-family: "Font Awesome 6 Brands" !important;
-
 }
 
 .container {
@@ -36,12 +31,10 @@ body {
 .nav-tabs {
     display: flex;
     gap: 8px;
-    border-radius: 10px;
     /* padding: 8px; */
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     width: fit-content;
     /* box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08); */
-    border-bottom: 1px solid #e9ecef;
 }
 
 .nav-tab {
@@ -66,10 +59,9 @@ body {
 
 .nav-tab.active {
     color: #ffffff;
-    background: darkcyan;
+    background: linear-gradient(90deg, darkcyan, #20b2aa);
     box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
     border: 2px solid darkcyan;
-    transform: translateY(-2px);
 }
 
 .nav-tab:not(.active):hover {
@@ -91,48 +83,143 @@ body {
 }
 
 .tab-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    transition: transform 0.4s cubic-bezier(.4, 0, .2, 1);
+    transform: translateX(100%);
+    /* hidden to the right */
+    z-index: 1;
 }
 
 .tab-content.active {
-    opacity: 1;
-    transform: translateX(0);
     pointer-events: auto;
     position: relative;
+    transform: translateX(0);
+    /* slide into view */
+    z-index: 2;
+}
+
+.tab-content.active .booking-form {
+    position: relative;
+    border-radius: 10px;
+    z-index: 1;
+    /* keep content above ::before */
+    background: #fff;
+    /* form background */
+}
+
+.tab-content.active .booking-form::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* stretch to edges */
+    padding: 2px;
+    /* border thickness */
+    border-radius: 0px 10px 10px 10px;
+    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    /* keep border behind */
 }
 
 .tab-content.slide-out-left {
     transform: translateX(-100%);
-    opacity: 0;
+    /* slide out to the left */
+    z-index: 1;
+}
+
+.tab-content.slide-in-left {
+    transform: translateX(0);
+    /* slide in from the left */
+    z-index: 2;
+}
+
+.tabs-container,
+.tab-content {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Additional smooth sliding keyframes if needed */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Animation classes for direction-aware sliding */
+.slide-in-right-anim {
+    animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.slide-in-left-anim {
+    animation: slideInFromLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.slide-out-left-anim {
+    animation: slideOutToLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.slide-out-right-anim {
+    animation: slideOutToRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 /* Booking Form */
 .booking-form {
     background: #ffffff;
-    border-radius: 20px;
     padding: 40px 40px 0px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
-    border: 2px solid #f1f3f4;
+    border: 1px solid transparent;
     position: relative;
-}
-
-.booking-form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
-    border-radius: 20px 20px 0 0;
 }
 
 /* Trip Type Selector */
@@ -409,7 +496,7 @@ body {
 
 .location-row {
     display: grid;
-    grid-template-columns: 1fr  1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: end;
 }
@@ -502,8 +589,7 @@ body {
     color: #212529;
     font-weight: 600;
     margin-bottom: 20px;
-        font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
 }
 
 .traveler-row {
@@ -536,12 +622,16 @@ body {
     gap: 15px;
 }
 
+small {
+    font-size: x-small;
+}
+
 .counter-btn {
-    width: 22px;
-    height: 22px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     border: 2px solid #e9ecef;
-    background:darkcyan;
+    background: darkcyan;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
@@ -620,7 +710,6 @@ body {
     display: none;
 }
 
-
 /* Panel Actions */
 .panel-actions {
     display: flex;
@@ -652,7 +741,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 40px;
-   padding: 22px 0 10px;
+    padding: 22px 0 10px;
     border-top: 2px solid #f8f9fa;
     flex-wrap: wrap;
 }
@@ -747,25 +836,10 @@ body {
     transform: translateY(-8px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
     border-color: darkcyan;
+    border-bottom-width: thick;
 }
 
-.content-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
-    border-radius: 15px 15px 0 0;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.content-card:hover::before {
-    opacity: 1;
-}
-
+/* .content-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, darkcyan, #20b2aa); border-radius: 15px 15px 0 0; opacity: 0; transition: opacity 0.3s ease; } .content-card:hover::before { opacity: 1; } */
 .content-card h3 {
     color: #0f172a;
     font-size: clamp(1.25rem, 2.5vw, 1.5rem);
@@ -779,8 +853,7 @@ body {
 .content-card p {
     color: #64748b;
     line-height: 1.7;
-        font-size: 14px;
-
+    font-size: 16px;
 }
 
 .content-card .card-icon {
@@ -827,7 +900,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 16px 20px;
+    padding: 12px 20px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
     background: #ffffff;
@@ -888,16 +961,16 @@ body {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .form-row.multi-city-route {
         grid-template-columns: 1fr;
     }
-    
+
     .cab-form-row {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .swap-btn {
         display: none;
     }
@@ -906,7 +979,7 @@ body {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .search-btn {
         justify-self: stretch;
         width: 100%;
@@ -918,24 +991,24 @@ body {
     .container {
         padding: 16px;
     }
-    
+
     .booking-form,
     .content-section {
         padding: 25px;
     }
-    
+
     .nav-tabs {
         flex-wrap: wrap;
         width: 100%;
         justify-content: center;
     }
-    
+
     .nav-tab {
         flex: 1;
         min-width: 110px;
         padding: 14px 20px;
     }
-    
+
     .features {
         flex-direction: column;
         align-items: flex-start;
@@ -950,18 +1023,18 @@ body {
     .content-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .travelers-panel {
         left: -20px;
         right: -20px;
         min-width: auto;
     }
-    
+
     .class-options {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .class-option {
         text-align: center;
     }
@@ -972,13 +1045,13 @@ body {
         padding: 14px 18px;
         font-size: 16px;
     }
-    
+
     .nav-tab {
         padding: 12px 16px;
         font-size: 14px;
         gap: 8px;
     }
-    
+
     .search-btn {
         padding: 16px 24px;
         font-size: 16px;
@@ -995,6 +1068,7 @@ body {
         opacity: 0;
         transform: translateY(-15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1002,15 +1076,14 @@ body {
 }
 
 /* Flatpickr overrides */
-
 .travelers-dropdown.mb30 {
-     margin-bottom:30px !important;
+    margin-bottom: 30px !important;
 }
 
-@media(min-width:767px){
-     .travelers-dropdown.mb30 {
-          width:250px !important;
-     }
+@media(min-width:767px) {
+    .travelers-dropdown.mb30 {
+        width: 250px !important;
+    }
 }
 
 .service-card-inner:hover {
@@ -1024,6 +1097,8 @@ body {
     height: 200px;
     position: relative;
     overflow: hidden;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
 }
 
 .service-image {
@@ -1040,34 +1115,24 @@ body {
     transform: scale(1.1);
 }
 
-.service-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-  135deg,
-  rgba(0, 0, 0, 0.6) 0%,
-  rgba(0, 0, 0, 0.6) 100%
-);
-    opacity: 0.85;
-}
-
-
+/* .service-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient( 135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100% ); opacity: 0.85; border-top-left-radius: 20px; border-top-right-radius: 20px; } */
 /* Service Content */
 .service-content {
-    padding: 25px 20px 30px; /* Increased bottom padding */
-    flex: 1; /* Take remaining space */
+    padding: 25px 20px 30px;
+    /* Increased bottom padding */
+    flex: 1;
+    /* Take remaining space */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    min-height: 200px; /* Ensure minimum content height */
+    min-height: 200px;
+    /* Ensure minimum content height */
 }
 
 .service-title {
-    font-size: clamp(1.1rem, 2vw, 1.375rem); /* Responsive title size */
+    font-size: clamp(1.1rem, 2vw, 1.375rem);
+    /* Responsive title size */
     font-weight: 700;
     color: #212529;
     margin-bottom: 15px;
@@ -1092,15 +1157,20 @@ body {
 }
 
 .service-description {
-    color: #474747;
-    font-size: clamp(0.8rem, 1.5vw, 1.125rem);
-    line-height: 1.5; /* Tighter line height */
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.5;
+    /* Tighter line height */
     margin-bottom: 20px;
     flex-grow: 1;
-    display: block; /* Remove webkit-box properties that clip text */
-    overflow: visible; /* Show all text */
-    -webkit-line-clamp: none; /* Remove line clamping */
-    -webkit-box-orient: initial; /* Reset */
+    display: block;
+    /* Remove webkit-box properties that clip text */
+    overflow: visible;
+    /* Show all text */
+    -webkit-line-clamp: none;
+    /* Remove line clamping */
+    -webkit-box-orient: initial;
+    /* Reset */
 }
 
 /* CTA Button */
@@ -1122,22 +1192,13 @@ a.service-cta-btn {
     position: relative;
     overflow: hidden;
     text-decoration: none;
-    margin-top: auto; /* Push to bottom */
-    align-self: flex-start; /* Align to left */
+    margin-top: auto;
+    /* Push to bottom */
+    align-self: flex-start;
+    /* Align to left */
 }
 
-/* .service-cta-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateY(-50%);
-    transition: left 0.6s ease;
-} */
-
+/* .service-cta-btn::before { content: ''; position: absolute; top: 50%; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transform: translateY(-50%); transition: left 0.6s ease; } */
 .service-card-inner:hover .service-cta-btn::before {
     left: 100%;
 }
@@ -1162,8 +1223,10 @@ a.service-cta-btn {
     from {
         transform: translateX(0);
     }
+
     to {
-        transform: translateX(calc(-400px * 8 - 30px * 8)); /* Move by one full set */
+        transform: translateX(calc(-400px * 8 - 30px * 8));
+        /* Move by one full set */
     }
 }
 
@@ -1172,19 +1235,20 @@ a.service-cta-btn {
     .services-slider-track {
         animation-duration: 80s;
     }
-    
+
     .service-card {
         flex: 0 0 350px;
     }
-    
+
     .services-slider-track {
         width: calc(350px * 24);
     }
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-350px * 8 - 30px * 8));
         }
@@ -1195,47 +1259,48 @@ a.service-cta-btn {
     .services-slider-section {
         padding: 60px 15px 80px;
     }
-    
+
     .services-header h2 {
         font-size: 32px;
     }
-    
+
     .services-header p {
         font-size: 16px;
         padding: 0 10px;
     }
-    
+
     .services-slider-container {
         height: 380px;
     }
-    
+
     .service-card {
         flex: 0 0 300px;
         height: 360px;
         margin-right: 20px;
     }
-    
+
     .services-slider-track {
         width: calc(300px * 24);
         animation-duration: 30s;
     }
-    
+
     .service-content {
         padding: 25px 20px;
     }
-    
+
     .service-title {
         font-size: 20px;
     }
-    
+
     .service-description {
         font-size: 14px;
     }
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-300px * 8 - 20px * 8));
         }
@@ -1246,33 +1311,34 @@ a.service-cta-btn {
     .services-slider-container {
         height: 350px;
     }
-    
+
     .service-card {
         flex: 0 0 280px;
         height: 330px;
         margin-right: 15px;
     }
-    
+
     .services-slider-track {
         width: calc(280px * 24);
         animation-duration: 25s;
     }
-    
+
     .service-image-container {
         height: 160px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
     }
-    
+
     .service-content {
         height: 170px;
         padding: 20px 15px;
     }
-    
-   
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-280px * 8 - 15px * 8));
         }
@@ -1291,37 +1357,25 @@ a.service-cta-btn {
     .services-slider-track {
         animation: none;
     }
-    
+
     .service-card-inner:hover {
         transform: none;
     }
-    
+
     .service-card-inner:hover .service-image {
         transform: none;
     }
 }
 
 /* Add this CSS to your existing stylesheet - these styles are missing and causing the stacking issue */
-
 /* ======== SERVICES SLIDER STYLES - MISSING STYLES ======== */
-
 .services-slider-section {
     padding: 80px 20px 100px;
     overflow: hidden;
     position: relative;
 }
 
-/* .services-slider-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    
-    pointer-events: none;
-} */
-
+/* .services-slider-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; } */
 .services-header {
     text-align: center;
     margin-bottom: 60px;
@@ -1351,33 +1405,42 @@ a.service-cta-btn {
 }
 
 .services-header p {
-            font-size: clamp(0.8rem, 1.5vw, 1.125rem);
-
-
-    color: #474747;
+    font-size: 16px;
+    color: #64748b;
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
     margin-top: 25px;
 }
 
+.service-description p {
+    color: #64748b;
+    font-size: 14px;
+}
+
 /* Slider Container - THIS IS THE KEY MISSING PART */
 .services-slider-container {
     position: relative;
     width: 100%;
-    height: auto; /* Changed from fixed height */
-    min-height: 480px; /* Minimum height */
+    height: auto;
+    /* Changed from fixed height */
+    min-height: 480px;
+    /* Minimum height */
     overflow: hidden;
- 
-    padding: 20px 0; /* Add vertical padding */
+    padding: 20px 0;
+    /* Add vertical padding */
 }
+
 .services-slider-track {
     display: flex;
     width: calc(400px * 24);
     animation: infiniteSlide 80s linear infinite;
-    height: auto; /* Changed from 100% to auto */
-    align-items: stretch; /* Ensure all cards have same height */
+    height: auto;
+    /* Changed from 100% to auto */
+    align-items: stretch;
+    /* Ensure all cards have same height */
 }
+
 .services-slider-track:hover {
     animation-play-state: paused;
 }
@@ -1385,18 +1448,23 @@ a.service-cta-btn {
 /* Service Cards - FIXED STACKING ISSUE */
 .service-card {
     flex: 0 0 400px;
-    height: auto; /* Changed from fixed height to auto */
-    min-height: 450px; /* Ensure minimum height */
+    height: auto;
+    /* Changed from fixed height to auto */
+    min-height: 450px;
+    /* Ensure minimum height */
     margin-right: 30px;
     position: relative;
 }
+
 .service-card-inner {
     width: 100%;
     height: 100%;
-    min-height: 450px; /* Match minimum height */
+    min-height: 450px;
+    /* Match minimum height */
     background: #ffffff;
     border-radius: 20px;
-    overflow: visible; /* Changed from hidden to visible */
+    overflow: visible;
+    /* Changed from hidden to visible */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -1404,7 +1472,6 @@ a.service-cta-btn {
     display: flex;
     flex-direction: column;
 }
-
 
 /* Fix for the service-card-inner hover that was already in your CSS but incomplete */
 .service-card-inner:hover {
@@ -1418,8 +1485,10 @@ a.service-cta-btn {
     from {
         transform: translateX(0);
     }
+
     to {
-        transform: translateX(calc(-400px * 8 - 30px * 8)); /* Move by one full set of 8 services */
+        transform: translateX(calc(-400px * 8 - 30px * 8));
+        /* Move by one full set of 8 services */
     }
 }
 
@@ -1436,15 +1505,16 @@ a.service-cta-btn {
         animation-duration: 80s;
         width: calc(350px * 24);
     }
-    
+
     .service-card {
         flex: 0 0 350px;
     }
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-350px * 8 - 30px * 8));
         }
@@ -1455,35 +1525,36 @@ a.service-cta-btn {
     .services-slider-section {
         padding: 60px 15px 80px;
     }
-    
+
     .services-header h2 {
         font-size: 32px;
     }
-    
+
     .services-header p {
         font-size: 16px;
         padding: 0 10px;
     }
-    
+
     .services-slider-container {
         height: 380px;
     }
-    
+
     .service-card {
         flex: 0 0 300px;
         height: 360px;
         margin-right: 20px;
     }
-    
+
     .services-slider-track {
         width: calc(300px * 24);
         animation-duration: 80s;
     }
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-300px * 8 - 20px * 8));
         }
@@ -1496,22 +1567,23 @@ a.service-cta-btn {
         mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
         -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
     }
-    
+
     .service-card {
         flex: 0 0 280px;
         height: 330px;
         margin-right: 15px;
     }
-    
+
     .services-slider-track {
         width: calc(280px * 24);
         animation-duration: 80s;
     }
-    
+
     @keyframes infiniteSlide {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(calc(-280px * 8 - 15px * 8));
         }
@@ -1523,74 +1595,70 @@ a.service-cta-btn {
     .services-slider-track {
         animation: none;
     }
-    
+
     .service-card-inner:hover {
         transform: none;
     }
-    
+
     .service-card-inner:hover .service-image {
         transform: none;
     }
 }
 
-@media(min-width:767px){
-    
-.location-details h3{
-    margin-left: -10px;
+@media(min-width:767px) {
+    .location-details h3 {
+        margin-left: -10px;
+    }
 }
+
+.flatpickr-weekdays {
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef !important;
 }
 
+.flatpickr-day {
+    margin: 2px !important;
+}
 
+.flatpickr-day:hover {
+    background: darkcyan !important;
+    color: #ffffff !important;
+}
 
-    .flatpickr-weekdays {
-      background: #f8f9fa !important;
-      border-bottom: 1px solid #e9ecef !important;
-    }
-  
-    .flatpickr-day {
-      margin: 2px !important;
-    }
-  
-    .flatpickr-day:hover {
-      background: darkcyan !important;
-      color: #ffffff !important;
-    }
-  
-    .flatpickr-day.selected {
-      background: darkcyan !important;
-      color: #ffffff !important;
-      border: none !important;
-    }
-  
-    .flatpickr-day.today:not(.selected) {
-      border-color: darkcyan !important;
-    }
-  
-    .flatpickr-time input,
-    .flatpickr-time .numInputWrapper span.arrowUp:after,
-    .flatpickr-time .numInputWrapper span.arrowDown:after {
-      color: #006666 !important;
-    }
-  
-    .flatpickr-time .numInputWrapper:hover {
-      background: rgba(0,139,139,0.06) !important;
-    }
-  
-    .flatpickr-calendar {
-      border-radius: 14px !important;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
-      overflow: hidden !important;
-    }
-  
-    .flatpickr-months .flatpickr-month,
-    .flatpickr-current-month .cur-month,
-    .flatpickr-current-month input.cur-year {
-      color: #212529 !important;
-      font-weight: 600 !important;
-    }
-  
-    .flatpickr-weekdays,
-    .flatpickr-months {
-      background: #f8f9fa !important;
-    }
-  
+.flatpickr-day.selected {
+    background: darkcyan !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.flatpickr-day.today:not(.selected) {
+    border-color: darkcyan !important;
+}
+
+.flatpickr-time input,
+.flatpickr-time .numInputWrapper span.arrowUp:after,
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+    color: #006666 !important;
+}
+
+.flatpickr-time .numInputWrapper:hover {
+    background: rgba(0, 139, 139, 0.06) !important;
+}
+
+.flatpickr-calendar {
+    border-radius: 14px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+    overflow: hidden !important;
+}
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .cur-month,
+.flatpickr-current-month input.cur-year {
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-weekdays,
+.flatpickr-months {
+    background: #f8f9fa !important;
+}

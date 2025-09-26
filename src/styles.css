@@ -5,6 +5,17 @@
     font-family: "Montserrat", sans-serif !important;
     background: #eee;
 }
+.flatpickr-calendar {
+    transform: scale(0.7);      /* shrink calendar */
+    transform-origin: top left; /* keep alignment */
+    /* padding: 10px; */
+}
+.flatpickr-calendar .flatpickr-month,
+.flatpickr-calendar .flatpickr-weekdays,
+.flatpickr-calendar .flatpickr-days {
+    font-size: 12px;
+}
+
 .flatpickr-weekdays {
     background: #000 !important;
     border-bottom: 1px solid #e9ecef !important;
