@@ -36,52 +36,15 @@ h2{
 
 /* Navigation Tabs */
 .nav-tabs {
-    display: flex;
-    /* gap: 8px; */
+    display: grid;
+    
+    grid-template-columns: 1fr 1fr 1fr;
     width: fit-content;
     position: relative;
     padding-bottom: 0;
     isolation: isolate;  /* Changed from overflow: hidden */
 }
-.nav-tabs::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    border: 2px solid darkcyan;
-    border-bottom-width: 0;
-    border-radius: 10px 10px 0 0;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 0;
-    box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
-    box-sizing: border-box;
-}
 
-/* Animated Border for Active Tab */
-.nav-tabs::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    height: 100%;
-    border: 2px solid transparent;
-    border-bottom-width: 0;
-    border-radius: 10px 10px 0 0;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        transparent 40%, 
-        darkcyan 45%, 
-        #20b2aa 50%, 
-        darkcyan 55%, 
-        transparent 60%, 
-        transparent 100%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    animation: borderTraverseRightToLeft 3s linear infinite;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
 
 .nav-tabs[data-active]::after {
     opacity: 1;
@@ -133,6 +96,8 @@ h2{
     color: #474747;
     font-weight: 600;
     cursor: pointer;
+    border: 2px solid darkcyan;
+  
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     position: relative;
@@ -142,12 +107,14 @@ h2{
     border: 2px solid transparent;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
+    border-left: 0px solid transparent;
+    border-right: 0px solid transparent;
 }
 
 .nav-tab.active {
     color:darkcyan;
     background: transparent;
-    border: 2px solid transparent;
+    border: 2px solid darkcyan;
 }
 
 .nav-tab:not(.active):hover {
@@ -180,28 +147,19 @@ border-bottom:2px solid darkcyan !important;
  border-bottom:0 !important;
 }
 /* Sliding active background animation */
-.nav-tabs[data-active="0"]::before {
-    width: calc(33.333%);
-    transform: translateX(0);
-}
 
-.nav-tabs[data-active="1"]::before {
-    width: calc(33.333%);
-    transform: translateX(calc(33.333% + 142px));  /* Added + 8px for gap */
-}
 .nav-tabs {
-    margin-top:40px;
-top:-22px;
+top:15px;
     position:absolute !important;
 }
 
 .container{
     margin-top:40px !important
 }
-.nav-tabs[data-active="2"]::before {
+/* .nav-tabs[data-active="2"]::before {
     width: calc(33.333%);
     transform: translateX(calc(66.666% + 280px));
-}
+} */
 /* Tab Content Container */
 .tabs-container {
     position: relative;
@@ -260,9 +218,9 @@ top:-22px;
     position: absolute;
     inset: 0;
     
-    padding: 2px;
-    border-radius: 0 10px 10px 10px;  /* Changed: no top-left radius */
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    padding: 1.5px;
+    border-radius: 0 10px 10px 0px;  
+    background: darkcyan;
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
@@ -272,13 +230,10 @@ top:-22px;
         linear-gradient(#fff 0 0);
     mask-composite: exclude;
     z-index: -1;
-    animation: borderTraverseSmooth 3s ease-out both;  /* Changed: 3s instead of 4s */
-    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); /* Show only left, right, and bottom borders - exclude top */
+    animation: borderTraverseSmooth 3s ease-out both;  
+    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
 }
-.tab-content[id="reserved-cabs"].active .booking-form::before,
-.tab-content[id="flights"].active .booking-form::before {
-    border-top-left-radius: 10px;
-}
+
 
 /* Hide border below active tab - REMOVED */
 
@@ -1128,12 +1083,13 @@ small {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5000;
+    z-index: 9999;
     padding: 20px;
+    overflow-y: auto;
 }
 
 .phone-modal .modal-content {
@@ -1144,6 +1100,9 @@ small {
     max-width: 450px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     border: 1px solid #e9ecef;
+    position: relative;
+    margin: auto;
+    transform: translateY(0);
 }
 
 .phone-modal .modal-content h3 {
@@ -1167,6 +1126,26 @@ small {
 .phone-modal .search-btn {
     padding: 12px 24px !important;
     font-size: 16px;
+}
+
+/* Modal responsive behavior */
+@media (max-width: 768px) {
+    .phone-modal {
+        padding: 10px;
+    }
+    
+    .phone-modal .modal-content {
+        max-width: 100%;
+        margin: 20px;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .phone-modal .modal-content {
+        margin: 10px;
+        padding: 20px;
+    }
 }
 
 /* Responsive Design */

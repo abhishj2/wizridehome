@@ -743,6 +743,11 @@ trackByTestimonial(index: number, testimonial: Testimonial): number {
         ? 'Enter your phone number to search shared cabs'
         : 'Enter your phone number to search reserved cabs';
     this.showPhonePopup = true;
+    
+    // Scroll to top to ensure modal is visible
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   }
 
   cancelPhonePopup() {
