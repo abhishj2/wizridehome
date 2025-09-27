@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 /* styles.scss */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body{
+  margin: 0 !important;
+}
 .flatpickr-rContainer{
     font-family: "Montserrat", sans-serif !important;
     background: #eee;

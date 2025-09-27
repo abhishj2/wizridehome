@@ -24,9 +24,9 @@
                                     <div class="input-with-icon">
                                         <i class="fas fa-location-dot input-icon"></i>
                                         <input type="text" class="form-input city-input"
+                                            [class.error]="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)"
                                             placeholder="Enter pick-up city" [(ngModel)]="formValues.sharedPickup"
-                                            (input)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')"
-                                            (focus)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')">
+                                            (focus)="showCitySuggestionsOnFocus('shared-pickup')">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['shared-pickup'] && activeSuggestions['shared-pickup'].length > 0">
@@ -41,6 +41,10 @@
                                             </div>
                                         </ng-container>
                                     </div>
+                                    <div class="validation-error"
+                                        *ngIf="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)">
+                                        {{getValidationMessage(formValues.sharedPickup, formValues.sharedDropoff)}}
+                                    </div>
                                 </div>
 
                                 <button class="swap-btn" (click)="swapCabLocations('shared')">
@@ -52,9 +56,9 @@
                                     <div class="input-with-icon">
                                         <i class="fas fa-location-dot input-icon"></i>
                                         <input type="text" class="form-input city-input"
+                                            [class.error]="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)"
                                             placeholder="Enter drop-off city" [(ngModel)]="formValues.sharedDropoff"
-                                            (input)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')"
-                                            (focus)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')">
+                                            (focus)="showCitySuggestionsOnFocus('shared-dropoff')">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['shared-dropoff'] && activeSuggestions['shared-dropoff'].length > 0">
@@ -283,7 +287,7 @@
                                         </div>
                                     </div>
 
-                                    
+
 
                                     <div class="class-selection">
                                         <h4>Travel Class</h4>
@@ -327,9 +331,9 @@
                                     <div class="input-with-icon">
                                         <i class="fas fa-plane-departure input-icon"></i>
                                         <input type="text" class="form-input city-input"
+                                            [class.error]="isSameCitySelected(route.from, route.to)"
                                             placeholder="Enter departure city" [(ngModel)]="route.from"
-                                            (input)="showCitySuggestions(route.from, 'flight-from-' + i)"
-                                            (focus)="showCitySuggestions(route.from, 'flight-from-' + i)">
+                                            (focus)="showCitySuggestionsOnFocus('flight-from-' + i)">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="getMultiCitySuggestions('flight-from-' + i).length > 0">
@@ -342,6 +346,9 @@
                                                 {{city.state}}</div>
                                         </div>
                                     </div>
+                                    <div class="validation-error" *ngIf="isSameCitySelected(route.from, route.to)">
+                                        {{getValidationMessage(route.from, route.to)}}
+                                    </div>
                                 </div>
 
                                 <button class="swap-btn" (click)="swapFlightLocations(i)">
@@ -353,9 +360,9 @@
                                     <div class="input-with-icon">
                                         <i class="fas fa-plane-arrival input-icon"></i>
                                         <input type="text" class="form-input city-input"
+                                            [class.error]="isSameCitySelected(route.from, route.to)"
                                             placeholder="Enter destination city" [(ngModel)]="route.to"
-                                            (input)="showCitySuggestions(route.to, 'flight-to-' + i)"
-                                            (focus)="showCitySuggestions(route.to, 'flight-to-' + i)">
+                                            (focus)="showCitySuggestionsOnFocus('flight-to-' + i)">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="getMultiCitySuggestions('flight-to-' + i).length > 0">
@@ -439,7 +446,7 @@
                                             </div>
                                         </div>
 
-                                        
+
 
                                         <div class="class-selection">
                                             <h3>Class</h3>
@@ -488,10 +495,10 @@
                                     <span>Priority customer service</span>
                                 </div>
                             </div>
-    
+
                         </div>
 
-                        
+
 
                         <!-- Flight Content Section -->
                         <div class="content-section">
@@ -557,8 +564,7 @@
                                         <i class="fas fa-location-dot input-icon"></i>
                                         <input type="text" class="form-input city-input"
                                             placeholder="Enter pick-up city" [(ngModel)]="formValues.reservedPickup"
-                                            (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')"
-                                            (focus)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
+                                            (focus)="showCitySuggestionsOnFocus('reserved-pickup')">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['reserved-pickup'] && activeSuggestions['reserved-pickup'].length > 0">
@@ -585,8 +591,7 @@
                                         <i class="fas fa-location-dot input-icon"></i>
                                         <input type="text" class="form-input city-input"
                                             placeholder="Enter drop-off city" [(ngModel)]="formValues.reservedDropoff"
-                                            (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')"
-                                            (focus)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
+                                            (focus)="showCitySuggestionsOnFocus('reserved-dropoff')">
                                     </div>
                                     <div class="city-suggestions"
                                         [class.active]="activeSuggestions['reserved-dropoff'] && activeSuggestions['reserved-dropoff'].length > 0">
@@ -733,53 +738,321 @@
                             </div>
                         </div>
                     </ng-container>
-                    <section class="services-slider-section">
-                        <div class="services-header">
-                            <h2>Our Services</h2>
-                            <p>Discover our comprehensive range of travel solutions designed to make your journey
-                                seamless and memorable</p>
-                        </div>
+                 
 
-                        <div class="services-slider-container">
-                            <div class="services-slider-track">
-                                <div *ngFor="let service of infiniteServices; trackBy: trackByServiceId"
-                                    class="service-card">
-                                    <div class="service-card-inner">
-                                        <div class="service-image-container">
-                                            <div class="service-image"
-                                                [style.background-image]="'url(' + service.image + ')'">
-                                                <div class="service-overlay"></div>
+                </ng-container>
+            </div>
+            <div class="phone-modal" *ngIf="showPhonePopup">
+                <div class="modal-content">
+                    <h3>{{ popupTitle || 'Enter your phone number' }}</h3>
+                    <input type="tel" class="form-input" [(ngModel)]="phoneNumber" placeholder="Enter phone number">
+                    <div class="actions">
+                        <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
+                        <button class="search-btn" (click)="cancelPhonePopup()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            </ng-container>
+            <section class="services-slider-section">
+                <div class="services-header">
+                    <h2>Our Services</h2>
+                    <p>Discover our comprehensive range of travel solutions designed to make your journey
+                        seamless and memorable</p>
+                </div>
 
-                                            </div>
-                                        </div>
+                <div class="services-slider-container">
+                    <div class="services-slider-track">
+                        <div *ngFor="let service of infiniteServices; trackBy: trackByServiceId"
+                            class="service-card">
+                            <div class="service-card-inner">
+                                <div class="service-image-container">
+                                    <div class="service-image"
+                                        [style.background-image]="'url(' + service.image + ')'">
+                                        <div class="service-overlay"></div>
 
-                                        <div class="service-content">
-                                            <h3 class="service-title">{{ service.title }}</h3>
-                                            <p class="service-description">{{ service.description }}</p>
-                                            <a href="{{service.link}}" class="service-cta-btn">
-                                                <span>Learn More</span>
-                                                <i class="fas fa-arrow-right"></i>
-                                            </a>
-                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="service-content">
+                                    <h3 class="service-title">{{ service.title }}</h3>
+                                    <p class="service-description">{{ service.description }}</p>
+                                    <a href="{{service.link}}" class="service-cta-btn">
+                                        <span>Learn More</span>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </div>
+            </section>
+            <section class="airport-connectivity-section">
+                <div class="connectivity-container">
+                    <div class="connectivity-content">
+                        <h1>Expert in Airport Connectivity</h1>
+                        <p class="subtitle">Reliable Shared Cabs from Bagdogra, Guwahati, Sikkim, Shillong & Tezpur</p>
 
-</ng-container>
-</div>
+                        <h2 class="travel-solution-title">We Offer Seamless Travel solution</h2>
+
+                        <ul class="connectivity-links">
+                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/">Bagdogra Airport to Darjeeling</a></li>
+                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/">Bagdogra Airport to Gangtok</a></li>
+                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/">Bagdogra Airport to Kalimpong</a></li>
+                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/">Guwahati Airport to Shillong and Tezpur Transfers</a></li>
+                        </ul>
+
+                        <div class="service-description">
+                            <p>Easy trips from Bagdogra Airport to Sikkim or Kalimpoong to Bagdogra Airport, or Guwahati
+                                Airport to Shillong, Guwahati Airport to Tezpur, WizzRide ensures reliable service</p>
+                        </div>
+
+                        <p class="cta-text">Start your journey with confidence and <span class="cta-highlight">book your
+                                WizzRide cab today</span> for a seamless travel experience!</p>
+                    </div>
+
+                    <div class="connectivity-illustration">
+                        <img src="https://wizzride.com/illustration1.f909f03abb56d801.svg" alt="Travel Illustration">
+                    </div>
+                </div>
+            </section>
 
 
-
-                    <div class="phone-modal" *ngIf="showPhonePopup">
-                        <div class="modal-content">
-                            <h3>{{ popupTitle || 'Enter your phone number' }}</h3>
-                            <input type="tel" class="form-input" [(ngModel)]="phoneNumber"
-                                placeholder="Enter phone number">
-                            <div class="actions">
-                                <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
-                                <button class="search-btn" (click)="cancelPhonePopup()">Cancel</button>
+            <section class="app-download-section">
+                <div class="app-download-container">
+                    <!-- Left Side - Phone Mockup with Features -->
+                    <div class="phone-mockup-section">
+                        <div class="feature-bullets">
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Data Privacy,<br>Safety & Security</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Important & Useful<br>Latest In-App features</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Never miss Important<br>Notifications & Updates</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Seamless User Experience<br>through Latest Technology</span>
                             </div>
                         </div>
+                        
+                        <div class="phone-mockup">
+                            <img src="../../assets/images/phonemockup.png" alt="WizzRide App Interface">
+                        </div>
                     </div>
+        
+                    <!-- Right Side - Content -->
+                    <div class="app-content">
+                        <span class="section-tag">Try On Mobile</span>
+                        
+                        <h1>Life's much easier on the <span class="highlight">App.</span></h1>
+                        
+                        <p class="subtitle">Download the <span class="brand">WizzRide App</span> today for <strong>seamless travel booking</strong> and a <strong>smarter travel experience.</strong></p>
+        
+                        <div class="download-section">
+                            <h3 class="download-heading">Download our app for unbeatable perks!</h3>
+                            
+                            <div class="download-cta">
+                                <div class="qr-code-container">
+                                    <div class="qr-code">
+                                        <img src="../../assets/images/qrframe.png" alt="wizrideappqr"/>
+                                    </div>
+                                    <span class="scan-text">Scan Me</span>
+                                </div>
+        
+                                <div class="store-buttons">
+                                    <a href="#" class="store-btn">
+                                        <i class="fab fa-google-play"></i>
+                                        <div class="store-btn-text">
+                                            <small>Get it on</small>
+                                            <strong>Google Play</strong>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="store-btn">
+                                        <i class="fab fa-apple"></i>
+                                        <div class="store-btn-text">
+                                            <small>Download on the</small>
+                                            <strong>App Store</strong>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+        
+                      
+                    </div>
+                </div>
+            </section>
+
+            <section class="statistics-section">
+                <div class="statistics-header">
+                    <h2>Our Numbers Say It All</h2>
+                </div>
+        
+                <div class="statistics-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--delay: 1">
+                            <img src="https://wizzride.com/assets/images/icon1.png" alt="Years of Service">
+                        </div>
+                        <span class="stat-number" data-animate>7+</span>
+                        <div class="stat-label">Years of service</div>
+                        <div class="stat-description">Trusted experience in the travel industry</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--delay: 2">
+                            <img src="https://wizzride.com/assets/images/icon2.png" alt="Passengers Served">
+                        </div>
+                        <span class="stat-number" data-animate>201,574+</span>
+                        <div class="stat-label">Passengers Served</div>
+                        <div class="stat-description">Happy customers who chose our service</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--delay: 3">
+                            <img src="https://wizzride.com/assets/images/icon3.png" alt="Trips Completed">
+                        </div>
+                        <span class="stat-number" data-animate>180,801+</span>
+                        <div class="stat-label">Trips Completed</div>
+                        <div class="stat-description">Successful journeys across destinations</div>
+                    </div>
+        
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--delay: 4">
+                            <img src="https://wizzride.com/assets/images/icon4.png" alt="Kilometers Covered">
+                        </div>
+                        <span class="stat-number" data-animate>23,401,092+</span>
+                        <div class="stat-label">Kilometers Covered</div>
+                        <div class="stat-description">Miles of safe and comfortable travel</div>
+                    </div>
+                </div>
+            </section>
+
+            
+
+            <section class="testimonials-section">
+                <div class="testimonials-header">
+                  <div class="quote-icon">"</div>
+                  <h2>What Our Customers Say</h2>
+                </div>
+              
+                <div 
+                  class="testimonials-slider-container" 
+                  (mouseenter)="onTestimonialMouseEnter()" 
+                  (mouseleave)="onTestimonialMouseLeave()"
+                  (touchstart)="onTestimonialTouchStart($event)"
+                  (touchend)="onTestimonialTouchEnd($event)"
+                  (window:resize)="onTestimonialWindowResize()">
+                  
+                  <div 
+                    class="testimonials-slider-track" 
+                    #testimonialTrack>
+                    
+                    <div 
+                      class="testimonial-card" 
+                      *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
+                      
+                      <div class="customer-info">
+                        <div class="customer-avatar">
+                          <img [src]="testimonial.avatar" [alt]="testimonial.name">
+                          <div class="verified-badge" *ngIf="testimonial.isVerified">
+                            <i class="fas fa-check"></i>
+                          </div>
+                        </div>
+                        <!-- <div class="customer-details">
+                          <h4>{{ testimonial.name }}</h4>
+                          <div class="customer-location">{{ testimonial.location }}</div>
+                        </div> -->
+                      </div>
+                      
+                      <div class="star-rating">
+                        <div class="stars">
+                          <i 
+                            class="fas fa-star star" 
+                            *ngFor="let star of getStarArray(testimonial.rating)">
+                          </i>
+                        </div>
+                        <span class="rating-text">{{ testimonial.rating }}.0</span>
+                      </div>
+              
+                      <div class="testimonial-content">
+                        <div class="testimonial-text">
+                          {{ testimonial.text }}
+                        </div>
+                        <!-- <a href="#" class="read-more-btn" (click)="$event.preventDefault()">
+                          Read More <i class="fas fa-chevron-down"></i>
+                        </a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="slider-controls">
+                  <button 
+                    class="slider-btn" 
+                    (click)="prevTestimonialSlide()"
+                    [disabled]="false">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  
+                  <div class="slider-dots">
+                    <div 
+                      class="dot" 
+                      *ngFor="let dot of getTestimonialDotArray(); let i = index"
+                      [class.active]="testimonialCurrentSlide === i"
+                      (click)="goToTestimonialSlide(i)">
+                    </div>
+                  </div>
+                  
+                  <button 
+                    class="slider-btn" 
+                    (click)="nextTestimonialSlide()"
+                    [disabled]="false">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </section>
+     </div>
+</div>
+
+              <section class="japan-experience-section">
+                <!-- Video Background -->
+                <video 
+                    class="japan-video" 
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    preload="metadata">
+                    <source src="https://wizzride.com/assets/images/JapanVideo.mp4" type="video/mp4">
+                    <!-- Fallback for browsers that don't support video -->
+                    Your browser does not support the video tag.
+                </video>
+        
+                <!-- Overlay -->
+                <div class="japan-overlay"></div>
+        
+                <!-- Decorative Elements -->
+                <div class="japan-decoration japan-decoration-1"></div>
+                <div class="japan-decoration japan-decoration-2"></div>
+                <div class="japan-decoration japan-decoration-3"></div>
+        
+                <!-- Japan Content -->
+                <div class="japan-content">
+                    <h1 class="japan-title">
+                        Experience Japan
+                    </h1>
+                    <p class="japan-subtitle">
+                        Come with Us on a 8 Days Trip of a Lifetime
+                    </p>
+                    <a href="https://wizzride.com/japantour" class="japan-cta">
+                        See More
+                    </a>
+                </div>
+            </section>
+
+    

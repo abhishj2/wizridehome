@@ -4,7 +4,7 @@ import {
   OnDestroy,
   AfterViewInit,
   Inject,
-  PLATFORM_ID,
+  PLATFORM_ID,ElementRef, ViewChild
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
@@ -23,6 +23,16 @@ interface TravelerCounts {
   adults: number;
   children: number;
   infants: number;
+}
+
+interface Testimonial {
+  id: number;
+  name: string;
+  location: string;
+  avatar: string;
+  rating: number;
+  text: string;
+  isVerified: boolean;
 }
 
 interface SelectedCities {
@@ -77,13 +87,207 @@ export class HomeComponent
       id: 5,
       title: 'Private Reserved Cabs',
       description: 'Book a private cab for a personalized travel experience. Perfect for families, groups, or solo travelers seeking privacy.',
-      image: 'https://wizzride.com/assets/images_new/wizcar.jpeg',
+      image: 'https://wizzride.com/assets/images_new/ridetoairport_3.jpg',
       link:'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/'
      
     },
  
   ];
+  testimonials: Testimonial[] = [
+    {
+      id: 1,
+      name: 'Shin Tae',
+      location: 'Guwahati, Assam',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjW9XkZcnJ9unApgswH-n9yaY9o_8wqmYTPFewdzV8cKoV1Llkhd=w60-h60-p-rp-mo-ba3-br100',
+      rating: 5,
+      text: 'Luxury ride for a reasonable price. Instead of taking the local taxis from Shillong to Guwahati, opt for WizzRide. They give u an amazing ride for the same price of the local taxis. AC, complimentary snacks and enough space for a comfortable ride.',
+      isVerified: true
+    },
+    {
+      id: 2,
+      name: 'Anisha Bafna',
+      location: 'Shillong, Meghalaya',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjVpO-1WuShjg-gRa9B32C8F8xQP8i0DWT53AFj8GWm9hXGZms1a0w=w60-h60-p-rp-mo-ba3-br100',
+      rating: 5,
+      text: 'Punctual and professional... Drivers know there job very well... Also, on customer support a special mention to Sanjay who been very helpful when asked various questions about the pickup/drop points and also Adhar who helped me to change the pickup timing. You guys are doing very well and I would recommend people to use their services.',
+      isVerified: true
+    },
+    {
+      id: 3,
+      name: 'Subrata Sen',
+      location: 'Darjeeling, West Bengal',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjUAU5-omdu4KAXKVbJ2HB3NLhv-O8yomE6H1VhL3AKxL2P4LFToPw=w60-h60-p-rp-mo-ba2-br100',
+      rating: 5,
+      text: 'Excellent services by Wizzride. I use to avail this facility from Guwahati to Shillong and vice versa. The vehicle is well maintained and drivers are well behaved. The recently introduced Home pickup & drop facility is also very much helpful. Please keep it up 👍👍',
+      isVerified: true
+    },
+    {
+      id: 4,
+      name: 'Sourav Ganguly',
+      location: 'Gangtok, Sikkim',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXdCeN4QWS1UD0s7gpW4ro13xg-c6o-cZDFiZeY2IUgfxMpIy0m=w81-h81-p-rp-mo-ba4-br100',
+      rating: 5,
+      text: 'I had a good first experience with WIZZRIDE service recently booked a cab from Siliguri to darjeeling. The booking process was simple and user-friendly. The cab arrived on time, the vehicle was clean, and the ride was smooth and comfortable. the driver was courteous and professional, felt safe throughout the journey, and the fare was reasonable too. Overall, it was a convenient and pleasant way to travel—definitely a service I’d use again.',
+      isVerified: true
+    },
+    {
+      id: 5,
+      name: 'Vinny P Mathew',
+      location: 'Bagdogra, West Bengal',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjU5Klc_GVjMjPUYCyGM9WNoqgmema4EfwAAXT55TAjgWxykf_baHw=w81-h81-p-rp-mo-ba5-br100',
+      rating: 5,
+      text: 'Amazing service from Wizzride is hands down one of the best shared cab services in the Northeast! Always on time, with soft-spoken and professional drivers, clean and well-maintained cabs, and excellent coordination with customers. The experience is smooth and hassle-free every time. Also, it’s super pocket-friendly, which makes it even better. I truly hope Wizzride expands to other states soon — we need more services like this across India. Keep up the great work!',
+      isVerified: true
+    },
+    {
+      id: 6,
+      name: 'Kapil khatiwara',
+      location: 'Kalimpong, West Bengal',
+      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXPO5HRBOfekxRFTtgC2fEbSgS8DuiENBQazOp2GElIk4FUxeCe=w81-h81-p-rp-mo-br100',
+      rating: 5,
+      text: 'The ride was incredibly comfortable, and the driver was punctual and courteous. But what truly stood out was the exceptional customer support provided by Miss Easther. She was extremely helpful, responding to all my queries in a professional and friendly manner. Her dedication to ensuring a smooth experience made all the difference. Highly recommend!',
+      isVerified: true
+    }
+  ];
+// Testimonials Slider Properties
+@ViewChild('testimonialTrack', { static: false }) testimonialTrack!: ElementRef<HTMLDivElement>;
 
+testimonialCurrentSlide = 0;
+testimonialTotalSlides = 0;
+testimonialSlideInterval: any = null;
+testimonialSlideDuration = 4000; // 4 seconds
+isTestimonialHovered = false;
+
+// Add these methods to your HomeComponent class
+
+// Initialize testimonials slider after view init
+private initTestimonialsSlider(): void {
+  this.testimonialTotalSlides = this.testimonials.length;
+  setTimeout(() => {
+    this.startTestimonialAutoPlay();
+  }, 1000);
+}
+
+// Auto-play functionality
+startTestimonialAutoPlay(): void {
+  if (this.testimonialSlideInterval) {
+    clearInterval(this.testimonialSlideInterval);
+  }
+  
+  this.testimonialSlideInterval = setInterval(() => {
+    if (!this.isTestimonialHovered) {
+      this.nextTestimonialSlide();
+    }
+  }, this.testimonialSlideDuration);
+}
+
+stopTestimonialAutoPlay(): void {
+  if (this.testimonialSlideInterval) {
+    clearInterval(this.testimonialSlideInterval);
+    this.testimonialSlideInterval = null;
+  }
+}
+
+// Slide navigation
+nextTestimonialSlide(): void {
+  this.testimonialCurrentSlide = (this.testimonialCurrentSlide + 1) % this.testimonialTotalSlides;
+  this.updateTestimonialSlider();
+}
+
+prevTestimonialSlide(): void {
+  this.testimonialCurrentSlide = this.testimonialCurrentSlide === 0 
+    ? this.testimonialTotalSlides - 1 
+    : this.testimonialCurrentSlide - 1;
+  this.updateTestimonialSlider();
+}
+
+goToTestimonialSlide(slideIndex: number): void {
+  this.testimonialCurrentSlide = slideIndex;
+  this.updateTestimonialSlider();
+  // Restart autoplay after manual navigation
+  this.startTestimonialAutoPlay();
+}
+
+// Update slider position
+updateTestimonialSlider(): void {
+  if (this.testimonialTrack) {
+    const slideWidth = this.getTestimonialSlideWidth();
+    const translateX = -this.testimonialCurrentSlide * slideWidth;
+    
+    this.testimonialTrack.nativeElement.style.transform = `translateX(${translateX}%)`;
+  }
+}
+
+// Calculate slide width based on screen size
+getTestimonialSlideWidth(): number {
+  const windowWidth = window.innerWidth;
+  
+  if (windowWidth <= 768) {
+    return 100; // Full width on mobile (1 card)
+  } else if (windowWidth <= 1024) {
+    return 50; // Half width on tablet (2 cards)
+  } else {
+    return 33.333; // Third width on desktop (3 cards)
+  }
+}
+
+// Mouse hover events
+onTestimonialMouseEnter(): void {
+  this.isTestimonialHovered = true;
+}
+
+onTestimonialMouseLeave(): void {
+  this.isTestimonialHovered = false;
+}
+
+// Helper methods for template
+getStarArray(rating: number): number[] {
+  return new Array(rating).fill(0);
+}
+
+getTestimonialDotArray(): number[] {
+  return new Array(this.testimonialTotalSlides).fill(0);
+}
+
+// Touch/Swipe functionality for mobile
+private testimonialStartX = 0;
+private testimonialEndX = 0;
+private minTestimonialSwipeDistance = 50;
+
+onTestimonialTouchStart(event: TouchEvent): void {
+  this.testimonialStartX = event.touches[0].clientX;
+}
+
+onTestimonialTouchEnd(event: TouchEvent): void {
+  this.testimonialEndX = event.changedTouches[0].clientX;
+  this.handleTestimonialSwipe();
+}
+
+private handleTestimonialSwipe(): void {
+  const diffX = this.testimonialStartX - this.testimonialEndX;
+  
+  if (Math.abs(diffX) > this.minTestimonialSwipeDistance) {
+    if (diffX > 0) {
+      // Swipe left - next slide
+      this.nextTestimonialSlide();
+    } else {
+      // Swipe right - previous slide
+      this.prevTestimonialSlide();
+    }
+    // Restart autoplay after swipe
+    this.startTestimonialAutoPlay();
+  }
+}
+
+// Responsive handling
+onTestimonialWindowResize(): void {
+  this.updateTestimonialSlider();
+}
+
+// TrackBy function for better performance
+trackByTestimonial(index: number, testimonial: Testimonial): number {
+  return testimonial.id;
+}
   // Duplicate services for infinite loop
   get infiniteServices() {
     return [...this.services, ...this.services, ...this.services];
@@ -105,8 +309,8 @@ export class HomeComponent
     date: string;
   }[] = [
     { 
-      from: 'IXC - Chandigarh', 
-      to: 'IXB - Bagdogra', 
+      from: 'Delhi', 
+      to: 'Mumbai', 
       date: ''
     }
   ];
@@ -239,18 +443,18 @@ export class HomeComponent
 
   // Form values
   formValues = {
-    flightFrom: 'IXC - Chandigarh',
-    flightTo: 'IXB - Bagdogra',
+    flightFrom: 'Delhi',
+    flightTo: 'Mumbai',
     flightDeparture: '',
     flightReturn: '',
-    sharedPickup: '',
-    sharedDropoff: '',
+    sharedPickup: 'Delhi',
+    sharedDropoff: 'Mumbai',
     sharedDateTime: '',
     sharedPassengers: 1,
     sharedPickupLocation: '',
     sharedDropoffLocation: '',
-    reservedPickup: '',
-    reservedDropoff: '',
+    reservedPickup: 'Delhi',
+    reservedDropoff: 'Mumbai',
     reservedDate: '',
     reservedTime: '',
     reservedPassengers: 1,
@@ -259,6 +463,18 @@ export class HomeComponent
   };
 
   tabs = ['shared-cabs', 'reserved-cabs', 'flights'];
+
+  // Validation methods
+  isSameCitySelected(pickup: string, dropoff: string): boolean {
+    return !!(pickup && dropoff && pickup.toLowerCase() === dropoff.toLowerCase());
+  }
+
+  getValidationMessage(pickup: string, dropoff: string): string {
+    if (this.isSameCitySelected(pickup, dropoff)) {
+      return 'From and To cities cannot be the same';
+    }
+    return '';
+  }
 
   constructor(
     private titleService: Title,
@@ -270,6 +486,11 @@ export class HomeComponent
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.next();
+  this.destroy$.complete();
+  
+  // Clean up testimonials interval
+  this.stopTestimonialAutoPlay();
   }
 
   ngAfterViewInit() {
@@ -279,6 +500,9 @@ export class HomeComponent
     if (navTabs) {
         navTabs.setAttribute('data-active', currentIndex.toString());
     }
+
+    
+  this.initTestimonialsSlider();
   }
 
   /** -------------------
@@ -481,21 +705,21 @@ export class HomeComponent
     if (type === 'multi-city') {
       this.flightRoutes = [
         { 
-          from: 'NYC - New York', 
-          to: 'LAX - Los Angeles', 
-          date: '2025-01-15'
+          from: 'Delhi', 
+          to: 'Mumbai', 
+          date: ''
         },
         { 
-          from: 'LAX - Los Angeles', 
-          to: 'SFO - San Francisco', 
-          date: '2025-01-20'
+          from: 'Mumbai', 
+          to: 'Bangalore', 
+          date: ''
         }
       ];
     } else {
       this.flightRoutes = [
         { 
-          from: 'IXC - Chandigarh', 
-          to: 'IXB - Bagdogra', 
+          from: 'Delhi', 
+          to: 'Mumbai', 
           date: ''
         }
       ];
@@ -653,23 +877,16 @@ export class HomeComponent
   }
 
   showCitySuggestions(query: string, target: string) {
+    // Only show suggestions on focus, not while typing
     if (!query.trim()) {
       delete this.activeSuggestions[target];
       return;
     }
+  }
 
-    let searchQuery = query.toLowerCase();
-    if (target.includes('flight') && query.includes(' - ')) {
-      searchQuery = query.split(' - ')[1]?.toLowerCase() || query.split(' - ')[0]?.toLowerCase();
-    }
-
-    const filteredCities = this.cities.filter(city =>
-      city.name.toLowerCase().includes(searchQuery) ||
-      city.code.toLowerCase().includes(searchQuery) ||
-      city.state.toLowerCase().includes(searchQuery)
-    ).slice(0, 8);
-
-    this.activeSuggestions[target] = filteredCities;
+  showCitySuggestionsOnFocus(target: string) {
+    // Show all cities when focusing on input
+    this.activeSuggestions[target] = this.cities.slice(0, 8);
   }
 
   getMultiCitySuggestions(target: string): City[] {
