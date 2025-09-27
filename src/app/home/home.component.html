@@ -235,10 +235,10 @@
                                     (click)="setTripType('multi-city')">Multi City</button>
                             </div>
 
-                            <div class="travelers-dropdown mb30" *ngIf="tripType === 'multi-city'">
-
+                            <div class="travelers-dropdown form-group" *ngIf="tripType === 'multi-city'">
+ 
                                 <label>Travellers & Class</label>
-                                &nbsp;
+                               
                                 <button class="travelers-btn" (click)="toggleTravelersPanel()">
                                     <span>{{getTravelersText()}}</span>
                                 </button>
@@ -393,7 +393,7 @@
                                         [(ngModel)]="formValues.flightReturn" placeholder="2024-10-08">
                                 </div>
 
-                                <div class="travelers-dropdown" *ngIf="tripType !== 'multi-city'">
+                                <div class="travelers-dropdown form-group" *ngIf="tripType !== 'multi-city'">
                                     <label>Travellers & Class</label>
                                     <button class="travelers-btn" (click)="toggleTravelersPanel()">
                                         <span>{{getTravelersText()}}</span>

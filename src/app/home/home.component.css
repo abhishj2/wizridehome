@@ -21,6 +21,12 @@ body {
     font-family: "Font Awesome 6 Brands" !important;
 }
 
+h2{
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: #212529;
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -420,22 +426,7 @@ top:-22px;
     }
 }
 
-/* Animation classes for direction-aware sliding */
-.slide-in-right-anim {
-    animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-}
 
-.slide-in-left-anim {
-    animation: slideInFromLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-}
-
-.slide-out-left-anim {
-    animation: slideOutToLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-}
-
-.slide-out-right-anim {
-    animation: slideOutToRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-}
 
 /* Booking Form */
 .booking-form {
@@ -1022,9 +1013,6 @@ small {
 }
 
 .content-section h2 {
-    color: #212529;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
     margin-bottom: 32px;
     text-align: center;
     position: relative;
@@ -1188,9 +1176,7 @@ small {
         gap: 20px;
     }
 
-    .form-row.multi-city-route {
-        grid-template-columns: 1fr;
-    }
+
 
     .cab-form-row {
         grid-template-columns: 1fr;
@@ -1638,9 +1624,6 @@ a.service-cta-btn {
 }
 
 .services-header h2 {
-    font-size: 42px;
-    font-weight: 700;
-    color: #212529;
     margin-bottom: 20px;
     position: relative;
     display: inline-block;
@@ -2432,10 +2415,7 @@ a.service-cta-btn {
                 padding: 40px 30px;
             }
 
-            .app-features {
-                grid-template-columns: 1fr;
-            }
-
+         
             .download-cta {
                 flex-direction: column;
                 align-items: flex-start;
@@ -2486,7 +2466,7 @@ a.service-cta-btn {
         }
 
         .statistics-header h2 {
-            font-size: clamp(2rem, 4vw, 2.75rem);
+           
             font-weight: 700;
             color: #212529;
             margin-bottom: 20px;
@@ -2804,7 +2784,6 @@ a.service-cta-btn {
         }
 
         .testimonials-header h2 {
-            font-size: clamp(2rem, 4vw, 2.75rem);
             color: #212529;
             margin-bottom: 20px;
             position: relative;
@@ -2906,18 +2885,7 @@ a.service-cta-btn {
             border: 2px solid white;
         }
 
-        .customer-details h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #212529;
-            margin-bottom: 3px;
-        }
-
-        .customer-location {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 500;
-        }
+       
 
         /* Star Rating */
         .star-rating {
@@ -3035,33 +3003,7 @@ a.service-cta-btn {
             transform: scale(1.1);
         }
 
-        /* Auto-play indicator */
-        .auto-play-indicator {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .play-pause-btn {
-            background: none;
-            border: none;
-            color: darkcyan;
-            cursor: pointer;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .play-pause-btn:hover {
-            color: #006666;
-        }
+        
 
         /* Decorative Background Elements */
         .testimonials-section::before {
