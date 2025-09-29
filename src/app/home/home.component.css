@@ -920,7 +920,7 @@ small {
 
 .feature {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 10px;
     color: #474747;
     font-size: 15px;
@@ -1087,7 +1087,7 @@ small {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 99999999;
     padding: 20px;
     overflow-y: auto;
 }
@@ -3366,4 +3366,36 @@ a.service-cta-btn {
             .japan-subtitle {
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
             }
+        }
+
+        .route-header {
+            margin-top:30px;
+            gap:8px
+        }
+
+        .tmult{
+            margin-bottom:40px !important;
+          }
+
+          .passenger-counter {
+            padding:14px 20px !important;
+        }
+        
+        .search-btn{
+            padding:16px 30px !important;
+        }
+        .cab-form-row {
+            margin-bottom:32px !important;
+        }
+
+        .btnrow {
+            display:flex; !important;
+            justify-content:center;
+            gap:10px;
+            align-items:center;
+        }
+        
+        .btnrow .search-btn{
+            padding:11px 20px !important;
+          transform: none !important;
         }

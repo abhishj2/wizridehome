@@ -10,9 +10,13 @@ body{
   background: #eee;
 }
 .flatpickr-calendar {
-    transform: scale(0.7);      /* shrink calendar */
-    transform-origin: top left; /* keep alignment */
-    /* padding: 10px; */
+  transform: scale(0.7) !important;
+  transform-origin: top left !important;
+}
+
+/* Prevent flatpickr from re-scaling when it opens */
+.flatpickr-calendar.open {
+  transform: scale(0.7) !important;
 }
 .flatpickr-calendar .flatpickr-month,
 .flatpickr-calendar .flatpickr-weekdays,
@@ -23,12 +27,14 @@ body{
 .flatpickr-weekdays {
     background: #000 !important;
     border-bottom: 1px solid #e9ecef !important;
+  
   }
   
   .flatpickr-day {
     margin: 2px !important;
     background: #ccc;
     border:1px solid #ccc !important;
+    font-size: 13px;
   }
   
  
@@ -90,3 +96,9 @@ body{
     font-size: 10px !important;
     
 } 
+
+
+
+.nesap{
+  align-self:anchor-center !important;
+}
