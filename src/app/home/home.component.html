@@ -21,9 +21,9 @@
                 </div>
             </div>    <div class="nav-tabs">
         <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab" (click)="switchTab(tab)">
-            <span class="icon" *ngIf="tab === 'shared-cabs'"><i class="fas fa-users"></i></span>
-            <span class="icon" *ngIf="tab === 'reserved-cabs'"><i class="fas fa-car"></i></span>
-            <span class="icon" *ngIf="tab === 'flights'"><i class="fas fa-plane"></i></span>
+            <span class="icon" *ngIf="tab === 'shared-cabs'"><img src="../../assets/images/wizsh-Photoroom.png"/></span>
+            <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/wizres-Photoroom.png"/></span>
+            <span class="icon" *ngIf="tab === 'flights'"><img src="../../assets/images/WhatsApp Image 2025-09-29 at 11.55.59 AM-Photoroom.png"/></span>
             {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
         </button>
     </div>
@@ -952,92 +952,62 @@
             </section>
 
             
-
-            <section class="testimonials-section">
-                <div class="testimonials-header">
-                  <div class="quote-icon">"</div>
-                  <h2>What Our Customers Say</h2>
-                </div>
-              
-                <div 
-                  class="testimonials-slider-container" 
-                  (mouseenter)="onTestimonialMouseEnter()" 
-                  (mouseleave)="onTestimonialMouseLeave()"
-                  (touchstart)="onTestimonialTouchStart($event)"
-                  (touchend)="onTestimonialTouchEnd($event)"
-                  (window:resize)="onTestimonialWindowResize()">
-                  
-                  <div 
-                    class="testimonials-slider-track" 
-                    #testimonialTrack>
-                    
-                    <div 
-                      class="testimonial-card" 
-                      *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
-                      
-                      <div class="customer-info">
-                        <div class="customer-avatar">
-                          <img [src]="testimonial.avatar" [alt]="testimonial.name">
-                          <div class="verified-badge" *ngIf="testimonial.isVerified">
-                            <i class="fas fa-check"></i>
-                          </div>
-                        </div>
-                        <!-- <div class="customer-details">
-                          <h4>{{ testimonial.name }}</h4>
-                          <div class="customer-location">{{ testimonial.location }}</div>
-                        </div> -->
-                      </div>
-                      
-                      <div class="star-rating">
-                        <div class="stars">
-                          <i 
-                            class="fas fa-star star" 
-                            *ngFor="let star of getStarArray(testimonial.rating)">
-                          </i>
-                        </div>
-                        <span class="rating-text">{{ testimonial.rating }}.0</span>
-                      </div>
-              
-                      <div class="testimonial-content">
-                        <div class="testimonial-text">
-                          {{ testimonial.text }}
-                        </div>
-                        <!-- <a href="#" class="read-more-btn" (click)="$event.preventDefault()">
-                          Read More <i class="fas fa-chevron-down"></i>
-                        </a> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              
-                <div class="slider-controls">
-                  <button 
-                    class="slider-btn" 
-                    (click)="prevTestimonialSlide()"
-                    [disabled]="false">
-                    <i class="fas fa-chevron-left"></i>
-                  </button>
-                  
-                  <div class="slider-dots">
-                    <div 
-                      class="dot" 
-                      *ngFor="let dot of getTestimonialDotArray(); let i = index"
-                      [class.active]="testimonialCurrentSlide === i"
-                      (click)="goToTestimonialSlide(i)">
-                    </div>
-                  </div>
-                  
-                  <button 
-                    class="slider-btn" 
-                    (click)="nextTestimonialSlide()"
-                    [disabled]="false">
-                    <i class="fas fa-chevron-right"></i>
-                  </button>
-                </div>
-              </section>
+           
      </div>
 </div>
-
+<section class="testimonials-section">
+    <div class="services-header">
+        <h2>What Our Customers Say</h2>
+        <p>Hear from our satisfied customers about their amazing travel experiences with WizzRide</p>
+    </div>
+    
+    <div class="sectnew">
+        <div class="slider-container" 
+             #testimonialSwiper
+             (mouseenter)="onMouseEnter()" 
+             (mouseleave)="onMouseLeave()"
+             (touchstart)="onTouchStart($event)"
+             (touchend)="onTouchEnd($event)"
+             (mousedown)="onMouseDown($event)"
+             (mousemove)="onMouseMove($event)"
+             (mouseup)="onMouseUp($event)"
+             (keydown)="onKeyDown($event)"
+             tabindex="0">
+            
+            <div class="slider-wrapper">
+                <div 
+                    class="slide" 
+                    [class.active]="getSlideClass(i) === 'active'"
+                    [class.prev]="getSlideClass(i) === 'prev'"
+                    [class.next]="getSlideClass(i) === 'next'"
+                    [class.far-prev]="getSlideClass(i) === 'far-prev'"
+                    [class.far-next]="getSlideClass(i) === 'far-next'"
+                    [class.hidden]="getSlideClass(i) === 'hidden'"
+                    *ngFor="let testimonial of testimonials; let i = index; trackBy: trackByTestimonial"
+                    (click)="goToSlide(i)">
+                    
+                    <div class="testimonialbox">
+                        <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="" class="quote">
+                        
+                        <div class="content">
+                            <p>{{ testimonial.text }}</p>
+                            
+                            <div class="details">
+                                <div class="imgBx">
+                                    <img [src]="testimonial.avatar" [alt]="testimonial.name"/>
+                                </div>
+                                <h3>
+                                    {{ testimonial.name }}
+                                    <!-- <strong>{{ testimonial.location }}</strong> -->
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
               <section class="japan-experience-section">
                 <!-- Video Background -->
                 <video 

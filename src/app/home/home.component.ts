@@ -149,139 +149,147 @@ export class HomeComponent
       isVerified: true
     }
   ];
-// Testimonials Slider Properties
-@ViewChild('testimonialTrack', { static: false }) testimonialTrack!: ElementRef<HTMLDivElement>;
+// 3D Testimonial Carousel Properties
+@ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
+currentSlide = 0;
+totalSlides = 0;
+autoplayInterval: any = null;
+autoplayDuration = 5000; // 5 seconds
+isHovered = false;
 
-testimonialCurrentSlide = 0;
-testimonialTotalSlides = 0;
-testimonialSlideInterval: any = null;
-testimonialSlideDuration = 4000; // 4 seconds
-isTestimonialHovered = false;
-
-// Add these methods to your HomeComponent class
-
-// Initialize testimonials slider after view init
-private initTestimonialsSlider(): void {
-  this.testimonialTotalSlides = this.testimonials.length;
+// Initialize 3D carousel
+private init3DTestimonialCarousel(): void {
+  this.totalSlides = this.testimonials.length;
   setTimeout(() => {
-    this.startTestimonialAutoPlay();
+    this.startAutoplay();
   }, 1000);
 }
 
 // Auto-play functionality
-startTestimonialAutoPlay(): void {
-  if (this.testimonialSlideInterval) {
-    clearInterval(this.testimonialSlideInterval);
+startAutoplay(): void {
+  if (this.autoplayInterval) {
+    clearInterval(this.autoplayInterval);
   }
   
-  this.testimonialSlideInterval = setInterval(() => {
-    if (!this.isTestimonialHovered) {
-      this.nextTestimonialSlide();
+  this.autoplayInterval = setInterval(() => {
+    if (!this.isHovered) {
+      this.nextSlide();
     }
-  }, this.testimonialSlideDuration);
+  }, this.autoplayDuration);
 }
 
-stopTestimonialAutoPlay(): void {
-  if (this.testimonialSlideInterval) {
-    clearInterval(this.testimonialSlideInterval);
-    this.testimonialSlideInterval = null;
+stopAutoplay(): void {
+  if (this.autoplayInterval) {
+    clearInterval(this.autoplayInterval);
+    this.autoplayInterval = null;
   }
 }
 
-// Slide navigation
-nextTestimonialSlide(): void {
-  this.testimonialCurrentSlide = (this.testimonialCurrentSlide + 1) % this.testimonialTotalSlides;
-  this.updateTestimonialSlider();
+// Navigation methods
+nextSlide(): void {
+  this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+  this.resetAutoplay();
 }
 
-prevTestimonialSlide(): void {
-  this.testimonialCurrentSlide = this.testimonialCurrentSlide === 0 
-    ? this.testimonialTotalSlides - 1 
-    : this.testimonialCurrentSlide - 1;
-  this.updateTestimonialSlider();
+prevSlide(): void {
+  this.currentSlide = this.currentSlide === 0 
+    ? this.totalSlides - 1 
+    : this.currentSlide - 1;
+  this.resetAutoplay();
 }
 
-goToTestimonialSlide(slideIndex: number): void {
-  this.testimonialCurrentSlide = slideIndex;
-  this.updateTestimonialSlider();
-  // Restart autoplay after manual navigation
-  this.startTestimonialAutoPlay();
+goToSlide(slideIndex: number): void {
+  this.currentSlide = slideIndex;
+  this.resetAutoplay();
 }
 
-// Update slider position
-updateTestimonialSlider(): void {
-  if (this.testimonialTrack) {
-    const slideWidth = this.getTestimonialSlideWidth();
-    const translateX = -this.testimonialCurrentSlide * slideWidth;
-    
-    this.testimonialTrack.nativeElement.style.transform = `translateX(${translateX}%)`;
-  }
+resetAutoplay(): void {
+  this.stopAutoplay();
+  this.startAutoplay();
 }
 
-// Calculate slide width based on screen size
-getTestimonialSlideWidth(): number {
-  const windowWidth = window.innerWidth;
+// Get slide class for positioning - exact same logic as vanilla JS
+getSlideClass(index: number): string {
+  const totalSlides = this.testimonials.length;
+  const position = (index - this.currentSlide + totalSlides) % totalSlides;
   
-  if (windowWidth <= 768) {
-    return 100; // Full width on mobile (1 card)
-  } else if (windowWidth <= 1024) {
-    return 50; // Half width on tablet (2 cards)
+  if (position === 0) {
+    return 'active';
+  } else if (position === 1 || position === totalSlides - 1) {
+    return position === 1 ? 'next' : 'prev';
+  } else if (position === 2 || position === totalSlides - 2) {
+    return position === 2 ? 'far-next' : 'far-prev';
   } else {
-    return 33.333; // Third width on desktop (3 cards)
+    return 'hidden';
   }
 }
 
 // Mouse hover events
-onTestimonialMouseEnter(): void {
-  this.isTestimonialHovered = true;
+onMouseEnter(): void {
+  this.isHovered = true;
 }
 
-onTestimonialMouseLeave(): void {
-  this.isTestimonialHovered = false;
+onMouseLeave(): void {
+  this.isHovered = false;
 }
 
-// Helper methods for template
-getStarArray(rating: number): number[] {
-  return new Array(rating).fill(0);
+// Touch/swipe functionality
+private startX = 0;
+private endX = 0;
+private minSwipeDistance = 50;
+
+onTouchStart(event: TouchEvent): void {
+  this.startX = event.touches[0].clientX;
 }
 
-getTestimonialDotArray(): number[] {
-  return new Array(this.testimonialTotalSlides).fill(0);
+onTouchEnd(event: TouchEvent): void {
+  this.endX = event.changedTouches[0].clientX;
+  this.handleSwipe();
 }
 
-// Touch/Swipe functionality for mobile
-private testimonialStartX = 0;
-private testimonialEndX = 0;
-private minTestimonialSwipeDistance = 50;
-
-onTestimonialTouchStart(event: TouchEvent): void {
-  this.testimonialStartX = event.touches[0].clientX;
-}
-
-onTestimonialTouchEnd(event: TouchEvent): void {
-  this.testimonialEndX = event.changedTouches[0].clientX;
-  this.handleTestimonialSwipe();
-}
-
-private handleTestimonialSwipe(): void {
-  const diffX = this.testimonialStartX - this.testimonialEndX;
+private handleSwipe(): void {
+  const diffX = this.startX - this.endX;
   
-  if (Math.abs(diffX) > this.minTestimonialSwipeDistance) {
+  if (Math.abs(diffX) > this.minSwipeDistance) {
     if (diffX > 0) {
-      // Swipe left - next slide
-      this.nextTestimonialSlide();
+      this.nextSlide();
     } else {
-      // Swipe right - previous slide
-      this.prevTestimonialSlide();
+      this.prevSlide();
     }
-    // Restart autoplay after swipe
-    this.startTestimonialAutoPlay();
   }
 }
 
-// Responsive handling
-onTestimonialWindowResize(): void {
-  this.updateTestimonialSlider();
+// Mouse drag functionality
+private isDragging = false;
+
+onMouseDown(event: MouseEvent): void {
+  this.isDragging = true;
+  this.startX = event.clientX;
+}
+
+onMouseMove(event: MouseEvent): void {
+  if (!this.isDragging) return;
+  event.preventDefault();
+}
+
+onMouseUp(event: MouseEvent): void {
+  if (!this.isDragging) return;
+  this.isDragging = false;
+  this.endX = event.clientX;
+  this.handleSwipe();
+}
+
+onMouseUpLeave(): void {
+  this.isDragging = false;
+}
+
+// Keyboard navigation
+onKeyDown(event: KeyboardEvent): void {
+  if (event.key === 'ArrowLeft') {
+    this.prevSlide();
+  } else if (event.key === 'ArrowRight') {
+    this.nextSlide();
+  }
 }
 
 // TrackBy function for better performance
@@ -487,10 +495,10 @@ trackByTestimonial(index: number, testimonial: Testimonial): number {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.next();
-  this.destroy$.complete();
-  
-  // Clean up testimonials interval
-  this.stopTestimonialAutoPlay();
+    this.destroy$.complete();
+    
+        // Clean up 3D carousel interval
+        this.stopAutoplay();
   }
 
   ngAfterViewInit() {
@@ -501,8 +509,8 @@ trackByTestimonial(index: number, testimonial: Testimonial): number {
         navTabs.setAttribute('data-active', currentIndex.toString());
     }
 
-    
-  this.initTestimonialsSlider();
+        // Initialize 3D testimonial carousel
+        this.init3DTestimonialCarousel();
   }
 
   /** -------------------
