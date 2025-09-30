@@ -191,6 +191,46 @@
                             </div>
                         </div>
 
+                        <section class="special-offers-section">
+                            <div class="offers-header">
+                              <h2>Special Offers</h2>
+                              <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+                            </div>
+                          
+                            <div class="offers-slider-container">
+                              <div class="offers-slider-track">
+                                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
+                                  <div class="offer-card-inner">
+                                    <!-- Top - Image Section -->
+                                    <div class="offer-image-section">
+                                      <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Bottom - Content Section -->
+                                    <div class="offer-content">
+                                      
+                                      
+                                      <h3 class="offer-title">{{ offer.title }}</h3>
+                                      <p class="offer-description">{{ offer.description }}</p>
+                                      <p class="offer-subtitle">{{ offer.subtitle }}</p>
+                                      
+                                      <div class="offer-code-section">
+                                        <span class="offer-code-label">Use Code</span>
+                                        <span class="offer-code">{{ offer.code }}</span>
+                                      </div>
+                                      
+                                      <a href="#" class="offer-cta-btn">
+                                        <span>{{ offer.ctaText }}</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+
                         <!-- Shared Cabs Content Section -->
                         <div class="content-section">
                             <h2>Affordable Shared Cab Services</h2>
@@ -525,7 +565,47 @@
 
                         </div>
 
-
+                        <!-- Special Offers Section for Flights -->
+                        <section class="special-offers-section">
+                            <div class="offers-header">
+                              <h2>Special Offers</h2>
+                              <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+                            </div>
+                          
+                            <div class="offers-slider-container">
+                              <div class="offers-slider-track">
+                                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
+                                  <div class="offer-card-inner">
+                                    <!-- Top - Image Section -->
+                                    <div class="offer-image-section">
+                                      <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
+                                      
+                                      </div>
+                                      <div class="offer-subtitle-under-image">{{ offer.subtitle }}</div>
+                                    </div>
+                                    
+                                    <!-- Bottom - Content Section -->
+                                    <div class="offer-content">
+                                     
+                                      
+                                      <h3 class="offer-title">{{ offer.title }}</h3>
+                                      <p class="offer-description">{{ offer.description }}</p>
+                                      
+                                      <div class="offer-code-section">
+                                        <span class="offer-code-label">Use Code</span>
+                                        <span class="offer-code">{{ offer.code }}</span>
+                                      </div>
+                                      
+                                      <a href="#" class="offer-cta-btn">
+                                        <span>{{ offer.ctaText }}</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
 
                         <!-- Flight Content Section -->
                         <div class="content-section">
@@ -713,6 +793,47 @@
                             </div>
                         </div>
 
+                        <!-- Special Offers Section for Reserved Cabs -->
+                        <section class="special-offers-section">
+                            <div class="offers-header">
+                              <h2>Special Offers</h2>
+                              <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+                            </div>
+                          
+                            <div class="offers-slider-container">
+                              <div class="offers-slider-track">
+                                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
+                                  <div class="offer-card-inner">
+                                    <!-- Top - Image Section -->
+                                    <div class="offer-image-section">
+                                      <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
+                                        
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Bottom - Content Section -->
+                                    <div class="offer-content">
+                                      
+                                      <h3 class="offer-title">{{ offer.title }}</h3>
+                                      <p class="offer-description">{{ offer.description }}</p>
+                                      <p class="offer-subtitle">{{ offer.subtitle }}</p>
+                                      
+                                      <div class="offer-code-section">
+                                        <span class="offer-code-label">Use Code</span>
+                                        <span class="offer-code">{{ offer.code }}</span>
+                                      </div>
+                                      
+                                      <a href="#" class="offer-cta-btn">
+                                        <span>{{ offer.ctaText }}</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+
                         <!-- Reserved Cabs Content Section -->
                         <div class="content-section">
                             <h2>Premium Reserved Cab Experience</h2>
@@ -873,7 +994,7 @@
                         <p class="subtitle">Download the <span class="brand">WizzRide App</span> today for <strong>seamless travel booking</strong> and a <strong>smarter travel experience.</strong></p>
         
                         <div class="download-section">
-                            <h3 class="download-heading">Download our app for unbeatable perks!</h3>
+                            
                             
                             <div class="download-cta">
                                 <div class="qr-code-container">

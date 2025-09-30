@@ -149,6 +149,49 @@ export class HomeComponent
       isVerified: true
     }
   ];
+
+  specialOffers = [
+    {
+      id: 1,
+      bank: 'ICICI Bank',
+      title: 'Flat 12% OFF (up to Rs.1,800)',
+      description: 'On Domestic Flights',
+      subtitle: '*Offer valid on ICICI Bank Credit Cards EMI Transactions only',
+      code: 'YTICICIEMI',
+      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg', // Add your image path
+      ctaText: 'View Details'
+    },
+    {
+      id: 2,
+      title: 'Up to Rs. 2,400 OFF',
+      description: 'On Domestic Flights',
+      subtitle: '*Offer Valid on HSBC Bank Credit Cards transaction only.',
+      code: 'YATRAHSBC',
+      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
+      ctaText: 'View Details'
+    },
+    {
+      id: 3,
+      bank: 'Malaysia Airlines',
+      title: 'Fly The Malaysian Way',
+      description: 'On International Flights',
+      subtitle: 'Up to Rs. 15,000 OFF*',
+      code: 'YTMH',
+      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
+      ctaText: 'View Details'
+    },
+    {
+      id: 4,
+      bank: 'Axis Bank',
+      title: 'Get 15% OFF',
+      description: 'On Hotel Bookings',
+      subtitle: '*Offer valid on Axis Bank Credit Cards only',
+      code: 'AXISHOTEL',
+      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
+      ctaText: 'View Details'
+    }
+  ];
+  
 // 3D Testimonial Carousel Properties
 @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
 currentSlide = 0;
@@ -295,6 +338,14 @@ onKeyDown(event: KeyboardEvent): void {
 // TrackBy function for better performance
 trackByTestimonial(index: number, testimonial: Testimonial): number {
   return testimonial.id;
+}
+
+get infiniteOffers() {
+  return [...this.specialOffers, ...this.specialOffers, ...this.specialOffers];
+}
+
+trackByOfferId(index: number, offer: any): number {
+  return offer.id;
 }
   // Duplicate services for infinite loop
   get infiniteServices() {
