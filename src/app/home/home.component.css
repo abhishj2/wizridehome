@@ -111,6 +111,7 @@ h2{
     border-right: 0px solid transparent;
 }
 
+
 .nav-tab.active {
     color:darkcyan;
     background: transparent;
@@ -213,7 +214,8 @@ top:7px;
 /* Add border-top-left-radius for second and third tabs */
 
 
-.tab-content.active .booking-form::before {
+
+.tab-content.active .booking-form.tab-1::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -233,7 +235,47 @@ top:7px;
     animation: borderTraverseSmooth 3s ease-out both;  
     clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
 }
+.tab-content.active .booking-form.tab-2::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    
+    padding: 1.5px;
+    border-radius: 10px;  
+    background: darkcyan;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+    animation: borderTraverseSmooth 3s ease-out both;  
+    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
+}
 
+.tab-content.active .booking-form.tab-3::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    
+    padding: 1.5px;
+    border-radius: 10px;  
+    background: darkcyan;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+    animation: borderTraverseSmooth 3s ease-out both;  
+    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
+}
 
 /* Hide border below active tab - REMOVED */
 
@@ -957,12 +999,48 @@ small {
     background: linear-gradient(135deg, #006666, darkcyan);
 }
 
+/* Banner Image */
+.bannerbet {
+    width: 100vw;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin: 60px 0;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.05) contrast(1.1) saturate(1.15) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bannerbet::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 139, 139, 0.1) 0%, rgba(0, 139, 139, 0.05) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.bannerbet:hover {
+    filter: brightness(1.1) contrast(1.15) saturate(1.2) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
 /* Content Sections */
 .content-section {
     background: #ffffff;
     border-radius: 20px;
-    padding: 50px;
-    margin-top: 30px;
+    padding: 60px;
+    margin: 60px 0;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     border: 1px solid #f1f3f4;
 }
@@ -1188,6 +1266,15 @@ small {
         padding: 25px;
     }
 
+    .bannerbet {
+        height: 250px;
+        margin: 40px 0;
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        border-radius: 15px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
     .nav-tabs {
         flex-wrap: wrap;
         width: 100%;
@@ -1260,6 +1347,15 @@ small {
 
     .booking-form {
         padding: 20px;
+    }
+
+    .bannerbet {
+        height: 200px;
+        margin: 30px 0;
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     }
 }
 
@@ -1450,7 +1546,7 @@ a.service-cta-btn {
 
 @media (max-width: 768px) {
     .services-slider-section {
-        padding: 60px 15px 80px;
+        padding: 60px 15px;
     }
 
     .services-header h2 {
@@ -1579,7 +1675,6 @@ a.service-cta-btn {
 
 
 .services-slider-section {
-    padding: 80px 20px 100px;
     overflow: hidden;
     position: relative;
 }
@@ -1729,7 +1824,7 @@ a.service-cta-btn {
 
 @media (max-width: 768px) {
     .services-slider-section {
-        padding: 60px 15px 80px;
+        padding: 60px 15px;
     }
 
     .services-header h2 {
@@ -2068,7 +2163,7 @@ a.service-cta-btn {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
-            padding: 80px 60px;
+            padding: 0px 60px;
             align-items: center;
         }
 
@@ -2413,13 +2508,12 @@ a.service-cta-btn {
          /* Statistics Section */
          .statistics-section {
             max-width: 1400px;
-            margin: 0px auto 60px;
+            margin: 60px auto 0px;
             background: #ffffff;
             border-radius: 30px;
             overflow: hidden;
             /* box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); */
             position: relative;
-            /* padding: 80px 60px; */
         }
 
         .statistics-header {
@@ -2714,10 +2808,11 @@ a.service-cta-btn {
             width: 100%;
             /* margin-left: calc(-50vw + 50%);
             margin-right: calc(-50vw + 50%); */
-            padding: 100px 0;
+            padding: 60px 0;
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             position: relative;
             overflow: hidden;
+            margin: 60px 0;
         }
 
        
@@ -3617,11 +3712,32 @@ button.nav-tab img{
 }
 
 .special-offers-section {
-    padding: 60px 0 30px;
     overflow: hidden;
     position: relative;
    
+
+    border-radius: 20px;
   }
+
+/* .special-offers-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 139, 139, 0.85) 0%, rgba(0, 102, 102, 0.9) 50%, rgba(0, 139, 139, 0.85) 100%);
+    z-index: 1;
+    border-radius: 20px;
+} */
+
+.special-offers-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
   
   .offers-header {
     text-align: center;
@@ -3630,15 +3746,20 @@ button.nav-tab img{
     z-index: 2;
     padding: 0 40px;
   }
-  
+
   .offers-header h2 {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    color: #000000;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 700;
-    color: #212529;
-    margin-bottom: 15px;
-    position: relative;
-    display: inline-block;
   }
+
+  .offers-header p {
+    color: #000;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    opacity: 0.95;
+  }
+  
   
   .offers-header h2::after {
     content: '';
@@ -3648,17 +3769,11 @@ button.nav-tab img{
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(90deg, darkcyan, #20b2aa);
+    background: #FFF;
     border-radius: 2px;
   }
   
-  .offers-header p {
-    font-size: 15px;
-    color: #64748b;
-    max-width: 500px;
-    margin: 20px auto 0;
-    line-height: 1.5;
-  }
+  
   
   /* Offers Slider Container */
   .offers-slider-container {
@@ -3902,8 +4017,11 @@ button.nav-tab img{
   
   @media (max-width: 768px) {
     .special-offers-section {
-      padding: 40px 0 60px;
-      margin: 0 -25px 40px;
+      padding: 60px 0;
+      margin: 60px calc(-50vw + 50%);
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      min-height: 500px;
     }
   
     .offers-slider-container {
@@ -3933,8 +4051,11 @@ button.nav-tab img{
   
   @media (max-width: 480px) {
     .special-offers-section {
-      padding: 30px 0 50px;
-      margin: 0 -20px 30px;
+      padding: 60px 0;
+      margin: 60px calc(-50vw + 50%);
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      min-height: 450px;
     }
   
     .offers-slider-container {

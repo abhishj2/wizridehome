@@ -941,11 +941,19 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   showCitySuggestions(query: string, target: string) {
-    // Only show suggestions on focus, not while typing
     if (!query.trim()) {
       delete this.activeSuggestions[target];
       return;
     }
+
+    // Filter cities based on the query
+    const filteredCities = this.cities.filter(city =>
+      city.name.toLowerCase().includes(query.toLowerCase()) ||
+      city.code.toLowerCase().includes(query.toLowerCase())
+    );
+
+    // Show up to 8 matching cities
+    this.activeSuggestions[target] = filteredCities.slice(0, 8);
   }
 
   showCitySuggestionsOnFocus(target: string) {
