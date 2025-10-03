@@ -1,0 +1,256 @@
+<!-- Wizzride Routes Section -->
+<section class="wizzride-routes">
+  <div class="routes-container">
+    <!-- Airport Routes - Shared Cabs -->
+    <div class="route-card">
+      <div class="route-header">
+        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Routes" class="route-icon">
+        <h3 class="route-title">{{ routes.airportShared.title }}</h3>
+      </div>
+      <div class="route-content">
+        <span *ngFor="let route of routes.airportShared.routes; let last = last">
+          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- City Routes - Shared Cabs -->
+    <div class="route-card">
+      <div class="route-header">
+        <img src="https://wizzride.com/assets/images/icon6.png" alt="City Routes" class="route-icon">
+        <h3 class="route-title">{{ routes.cityShared.title }}</h3>
+      </div>
+      <div class="route-content">
+        <span *ngFor="let route of routes.cityShared.routes; let last = last">
+          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Airport Connectivity - Reserved Cabs -->
+    <div class="route-card">
+      <div class="route-header">
+        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Connectivity" class="route-icon">
+        <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
+      </div>
+      <div class="route-content">
+        <span *ngFor="let route of routes.airportReserved.routes; let last = last">
+          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Airport Covered -->
+    <div class="route-card">
+      <div class="route-header">
+        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Covered" class="route-icon">
+        <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
+      </div>
+      <div class="route-content">
+        <span *ngFor="let route of routes.airportsCovered.routes; let last = last">
+          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Destinations Section -->
+<section class="popular-destinations">
+  <div class="destinations-container">
+    <!-- Top Row -->
+    <div class="destinations-top">
+      <!-- Left Section - Illustration and Title -->
+      <div class="destinations-left">
+        <h2 class="destinations-title">Popular Destinations</h2>
+        <div class="destinations-illustration">
+          <img src="https://wizzride.com/illustration2.de7e7a139a2d08b1.svg" alt="Travel Illustration" class="travel-illustration">
+          <div class="location-pins">
+            <div class="pin pin-1"></div>
+            <div class="pin pin-2"></div>
+            <div class="pin pin-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Section - Sikkim -->
+      <div class="destination-card">
+        <h3 class="destination-title">SIKKIM</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.sikkim">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Section - Darjeeling -->
+      <div class="destination-card">
+        <h3 class="destination-title">DARJEELING</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.darjeeling">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="destinations-bottom">
+      <!-- Assam -->
+      <div class="destination-card">
+        <h3 class="destination-title">ASSAM</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.assam">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Meghalaya -->
+      <div class="destination-card">
+        <h3 class="destination-title">MEGHALAYA</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.meghalaya">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Arunachal Pradesh -->
+      <div class="destination-card">
+        <h3 class="destination-title">ARUNACHAL PRADESH</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.arunachalPradesh">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Nagaland -->
+      <div class="destination-card">
+        <h3 class="destination-title">NAGALAND</h3>
+        <ul class="destination-list">
+          <li *ngFor="let destination of destinations.nagaland">
+            <i class="fas fa-angle-double-right destination-icon"></i>
+            <a [href]="destination.link"  class="destination-link">{{ destination.name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Top Section -->
+    <div class="footer-top">
+      <!-- Left Section - Branding & Social -->
+      <div class="footer-left">
+        <div class="footer-logo">
+          <img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide" class="footer-logo-image">
+        </div>
+        
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-link" [title]="social.name">
+            <i [class]="social.icon"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Middle Section - Navigation Columns -->
+      <div class="footer-middle">
+        <!-- Our Services Column -->
+        <div class="footer-column">
+          <div class="footer-column-header">
+            <i class="fas fa-car footer-column-icon"></i>
+            <h3><a class="headinga" href="https://wizzride.com/ourservices/"> Our Services</a></h3>
+          </div>
+          <ul class="footer-links">
+            <li *ngFor="let service of ourServices">
+              <a [href]="service.link">{{ service.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- About Us Column -->
+        <div class="footer-column">
+          <div class="footer-column-header">
+            <i class="fas fa-users footer-column-icon"></i>
+            <h3>About Us</h3>
+          </div>
+          <ul class="footer-links">
+            <li *ngFor="let about of aboutUs">
+              <a [href]="about.link">{{ about.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Important Links Column -->
+        <div class="footer-column">
+          <div class="footer-column-header">
+            <i class="fas fa-link footer-column-icon"></i>
+            <h3>Important Links</h3>
+          </div>
+          <ul class="footer-links">
+            <li *ngFor="let link of importantLinks">
+              <a [href]="link.link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quick Links Column -->
+        <div class="footer-column">
+          <div class="footer-column-header">
+            <i class="fas fa-bolt footer-column-icon"></i>
+            <h3>Quick Links</h3>
+          </div>
+          <ul class="footer-links">
+            <li *ngFor="let quick of quickLinks">
+              <a [href]="quick.link">{{ quick.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right Section - Contact Info -->
+      <div class="footer-right footer-links">
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-phone contact-icon"></i>
+            <span><a href="tel:{{ contactInfo.phone }}">{{ contactInfo.phone }}</a> </span>
+          </div>
+          
+          <div class="contact-item">
+            <i class="fas fa-envelope contact-icon"></i>
+            <span><a href="mailto:{{ contactInfo.customerSupport }}"> {{ contactInfo.customerSupport }}</a></span>
+          </div>
+          
+          <div class="contact-item">
+            <i class="fas fa-comment-dots contact-icon"></i>
+            <span><a href="mailto:{{ contactInfo.feedback }}">{{ contactInfo.feedback }}</a> </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <span>UI by WizzRide Technologies | Dev by WizzRide Technologies Pvt. Ltd., {{ currentYear }}</span>
+        </div>
+        
+        <div class="proudly-made">
+          <img src="https://wizzride.com/assets/images/icons/india.png" alt="India Flag" class="india-flag">
+          <span>Proudly Made in India</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

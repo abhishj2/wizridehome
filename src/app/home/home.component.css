@@ -37,12 +37,13 @@ h2{
 /* Navigation Tabs */
 .nav-tabs {
     display: grid;
-    
     grid-template-columns: 1fr 1fr 1fr;
     width: fit-content;
     position: relative;
     padding-bottom: 0;
-    isolation: isolate;  /* Changed from overflow: hidden */
+    isolation: isolate;
+    margin-top: 20px;
+    margin-bottom: 0;
 }
 
 
@@ -150,12 +151,16 @@ border-bottom:2px solid darkcyan !important;
 /* Sliding active background animation */
 
 .nav-tabs {
-top:7px;
-    position:absolute !important;
+    position: absolute !important;
+    top: 7.5px;
+    left: 20px;
+    right: 0;
+    z-index:10 !important;
 }
 
 .container{
-    margin-top:40px !important
+    margin-top: 80px !important;
+    position: relative;
 }
 /* .nav-tabs[data-active="2"]::before {
     width: calc(33.333%);
@@ -168,6 +173,7 @@ top:7px;
     min-height: 600px;
     background: #ffffff;
     border-radius: 0 10px 10px 10px;
+    margin-top: 60px;
 }
 
 .tab-content {
@@ -428,10 +434,11 @@ top:7px;
 /* Booking Form */
 .booking-form {
     background: #ffffff;
-    padding: 40px 40px 0px;
+    padding: 60px 40px 40px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 60px;
     position: relative;
+    border-radius: 0 0 10px 10px;
 }
 
 /* Trip Type Selector */

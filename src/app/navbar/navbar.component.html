@@ -1,0 +1,122 @@
+<!-- Main Navbar -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide" class="logo-image">
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Enter Search"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()">
+      </div>
+    </div>
+
+    <!-- Navigation Links (Desktop) -->
+    <div class="nav-links desktop-nav">
+      <div 
+        *ngFor="let item of navigationItems" 
+        class="nav-item"
+        [class.has-dropdown]="item.hasDropdown"
+        (mouseenter)="item.hasDropdown ? toggleDropdown(item.name) : null"
+        (mouseleave)="item.hasDropdown ? closeDropdown() : null">
+        
+        <a 
+          [href]="item.link || '#'" 
+          class="nav-link"
+          (click)="handleDesktopClick(item, $event)">
+          {{ item.name }}
+          <i *ngIf="item.hasDropdown" class="fas fa-chevron-down dropdown-icon"></i>
+        </a>
+
+        <!-- Dropdown Menu -->
+        <div 
+          *ngIf="item.hasDropdown && activeDropdown === item.name" 
+          class="dropdown-menu">
+          <a 
+            *ngFor="let dropdownItem of item.dropdownItems" 
+            [href]="dropdownItem.link" 
+            class="dropdown-item">
+            {{ dropdownItem.name }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Icon -->
+    <div class="info-section">
+      <button class="info-btn" title="Information">
+        <i class="fas fa-info"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle">
+      <button 
+        class="hamburger-btn"
+        (click)="toggleMobileMenu()"
+        [class.active]="isMobileMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav" [class.active]="isMobileMenuOpen">
+    <div class="mobile-search">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Enter Search"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()">
+      </div>
+    </div>
+
+    <div class="mobile-nav-items">
+      <div 
+        *ngFor="let item of navigationItems" 
+        class="mobile-nav-item">
+        
+        <div 
+          class="mobile-nav-link"
+          (click)="handleMobileClick(item, $event)">
+          <a [href]="item.link || '#'" class="nav-link-text">{{ item.name }}</a>
+          <i *ngIf="item.hasDropdown" 
+             class="fas fa-chevron-down mobile-dropdown-icon"
+             [class.rotated]="activeDropdown === item.name"></i>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div 
+          *ngIf="item.hasDropdown && activeDropdown === item.name" 
+          class="mobile-dropdown">
+          <a 
+            *ngFor="let dropdownItem of item.dropdownItems" 
+            [href]="dropdownItem.link" 
+            class="mobile-dropdown-item">
+            {{ dropdownItem.name }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-info">
+      <button class="info-btn" title="Information">
+        <i class="fas fa-info"></i>
+        <span>Information</span>
+      </button>
+    </div>
+  </div>
+</nav>
