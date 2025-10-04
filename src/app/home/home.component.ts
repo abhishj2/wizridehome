@@ -991,6 +991,29 @@ trackByOfferId(index: number, offer: any): number {
     this.activeSuggestions[target] = filteredLocations;
   }
 
+  showLocationSuggestionsOnFocus(target: string) {
+    let cityName = '';
+    if (target.includes('shared-pickup-specific')) {
+      cityName = this.selectedCities.shared.pickup;
+    } else if (target.includes('shared-dropoff-specific')) {
+      cityName = this.selectedCities.shared.dropoff;
+    } else if (target.includes('reserved-pickup-specific')) {
+      cityName = this.selectedCities.reserved.pickup;
+    } else if (target.includes('reserved-dropoff-specific')) {
+      cityName = this.selectedCities.reserved.dropoff;
+    }
+
+    const cityLocations = this.locations[cityName] || [];
+    this.activeSuggestions[target] = cityLocations.slice(0, 6);
+  }
+
+  hideLocationSuggestions(target: string) {
+    // Add a small delay to allow click events to register before hiding
+    setTimeout(() => {
+      delete this.activeSuggestions[target];
+    }, 200);
+  }
+
   selectCity(cityName: string, cityCode: string, target: string) {
     // Update form value
     if (target.includes('flight')) {
@@ -1085,6 +1108,7 @@ trackByOfferId(index: number, offer: any): number {
       this.formValues.reservedDropoffLocation = locationName;
     }
 
+    // Clear suggestions immediately when location is selected
     delete this.activeSuggestions[target];
   }
 
@@ -1242,7 +1266,10 @@ trackByOfferId(index: number, offer: any): number {
     }
     
     if (!target.closest('.city-select')) {
-      this.activeSuggestions = {};
+      // Only clear suggestions if not clicking on a suggestion item
+      if (!target.closest('.city-suggestion')) {
+        this.activeSuggestions = {};
+      }
     }
   }
 

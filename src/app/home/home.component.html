@@ -131,11 +131,15 @@
                                 <div class="location-row">
                                     <div class="form-group city-select">
                                         <label>Pickup Location</label>
-                                        <input type="text" class="form-input city-input"
-                                            placeholder="Enter specific pickup location"
-                                            [(ngModel)]="formValues.sharedPickupLocation"
-                                            (input)="showLocationSuggestions(formValues.sharedPickupLocation, 'shared-pickup-specific')"
-                                            (focus)="showLocationSuggestions(formValues.sharedPickupLocation, 'shared-pickup-specific')">
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-location-dot input-icon"></i>
+                                            <input type="text" class="form-input city-input"
+                                                placeholder="Enter specific pickup location"
+                                                [(ngModel)]="formValues.sharedPickupLocation"
+                                                (input)="showLocationSuggestions(formValues.sharedPickupLocation, 'shared-pickup-specific')"
+                                                (focus)="showLocationSuggestionsOnFocus('shared-pickup-specific')"
+                                                (blur)="hideLocationSuggestions('shared-pickup-specific')">
+                                        </div>
                                         <div class="city-suggestions"
                                             [class.active]="activeSuggestions['shared-pickup-specific'] && activeSuggestions['shared-pickup-specific'].length > 0">
                                             <ng-container
@@ -157,11 +161,15 @@
 
                                     <div class="form-group city-select">
                                         <label>Drop-off Location</label>
-                                        <input type="text" class="form-input city-input"
-                                            placeholder="Enter specific drop-off location"
-                                            [(ngModel)]="formValues.sharedDropoffLocation"
-                                            (input)="showLocationSuggestions(formValues.sharedDropoffLocation, 'shared-dropoff-specific')"
-                                            (focus)="showLocationSuggestions(formValues.sharedDropoffLocation, 'shared-dropoff-specific')">
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-location-dot input-icon"></i>
+                                            <input type="text" class="form-input city-input"
+                                                placeholder="Enter specific drop-off location"
+                                                [(ngModel)]="formValues.sharedDropoffLocation"
+                                                (input)="showLocationSuggestions(formValues.sharedDropoffLocation, 'shared-dropoff-specific')"
+                                                (focus)="showLocationSuggestionsOnFocus('shared-dropoff-specific')"
+                                                (blur)="hideLocationSuggestions('shared-dropoff-specific')">
+                                        </div>
                                         <div class="city-suggestions"
                                             [class.active]="activeSuggestions['shared-dropoff-specific'] && activeSuggestions['shared-dropoff-specific'].length > 0">
                                             <ng-container
