@@ -6,19 +6,6 @@
       <img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide" class="logo-image">
     </div>
 
-    <!-- Search Bar -->
-    <div class="search-section">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Enter Search"
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()">
-      </div>
-    </div>
-
     <!-- Navigation Links (Desktop) -->
     <div class="nav-links desktop-nav">
       <div 
@@ -50,6 +37,13 @@
       </div>
     </div>
 
+    <!-- Search Icon -->
+    <div class="search-section">
+      <button class="search-btn" (click)="toggleSearch()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+
     <!-- Information Icon -->
     <div class="info-section">
       <button class="info-btn" title="Information">
@@ -67,6 +61,25 @@
         <span></span>
         <span></span>
       </button>
+    </div>
+  </div>
+
+  <!-- Sliding Search Input -->
+  <div class="sliding-search" [class.active]="isSearchOpen">
+    <div class="sliding-search-container">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          class="sliding-search-input" 
+          placeholder="Enter Search"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          (blur)="onSearchBlur()">
+        <button class="search-close-btn" (click)="closeSearch()" title="Close Search">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     </div>
   </div>
 

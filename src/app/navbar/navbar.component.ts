@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class NavbarComponent {
   searchQuery: string = '';
   isMobileMenuOpen = false;
+  isSearchOpen = false;
   activeDropdown: string | null = null;
   mobileClickCount: { [key: string]: number } = {};
 
@@ -133,6 +134,32 @@ export class NavbarComponent {
         }
       }
     }
+  }
+
+  toggleSearch() {
+    this.isSearchOpen = !this.isSearchOpen;
+    if (this.isSearchOpen) {
+      // Focus the input after a short delay to allow the animation
+      setTimeout(() => {
+        const input = document.querySelector('.sliding-search-input') as HTMLInputElement;
+        if (input) {
+          input.focus();
+        }
+      }, 300);
+    }
+  }
+
+  closeSearch() {
+    this.isSearchOpen = false;
+  }
+
+  onSearchBlur() {
+    // Close search after a short delay to allow for clicking the close button
+    setTimeout(() => {
+      if (!document.querySelector('.sliding-search:hover') && !document.querySelector('.search-btn:hover')) {
+        this.isSearchOpen = false;
+      }
+    }, 200);
   }
 
   onSearch() {
