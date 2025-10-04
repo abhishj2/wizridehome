@@ -3,53 +3,61 @@
   <div class="routes-container">
     <!-- Airport Routes - Shared Cabs -->
     <div class="route-card">
-      <div class="route-header">
+      <div class="route-icon-column">
         <i class="fas fa-plane-departure route-icon"></i>
-        <h3 class="route-title">{{ routes.airportShared.title }}</h3>
       </div>
-      <div class="route-content">
-        <span *ngFor="let route of routes.airportShared.routes; let last = last">
-          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-        </span>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.airportShared.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.airportShared.routes; let last = last">
+            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- City Routes - Shared Cabs -->
     <div class="route-card">
-      <div class="route-header">
-        <i class="fas fa-city route-icon"></i>
-        <h3 class="route-title">{{ routes.cityShared.title }}</h3>
+      <div class="route-icon-column">
+        <i class="fas fa-route route-icon"></i>
       </div>
-      <div class="route-content">
-        <span *ngFor="let route of routes.cityShared.routes; let last = last">
-          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-        </span>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.cityShared.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.cityShared.routes; let last = last">
+            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- Airport Connectivity - Reserved Cabs -->
     <div class="route-card">
-      <div class="route-header">
-        <i class="fas fa-shuttle-van route-icon"></i>
-        <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
+      <div class="route-icon-column">
+        <i class="fas fa-road-circle-check route-icon"></i>
       </div>
-      <div class="route-content">
-        <span *ngFor="let route of routes.airportReserved.routes; let last = last">
-          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-        </span>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.airportReserved.routes; let last = last">
+            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- Airport Covered -->
     <div class="route-card">
-      <div class="route-header">
-        <i class="fas fa-building route-icon"></i>
-        <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
+      <div class="route-icon-column">
+        <i class="fas fa-earth-asia route-icon"></i>
       </div>
-      <div class="route-content">
-        <span *ngFor="let route of routes.airportsCovered.routes; let last = last">
-          <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-        </span>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.airportsCovered.routes; let last = last">
+            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
       </div>
     </div>
   </div>

@@ -24,6 +24,8 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #f1f3f4;
   transition: all 0.3s ease;
+  display: flex;
+  gap: 20px;
 }
 
 .route-card:hover {
@@ -31,19 +33,26 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.route-header {
+.route-icon-column {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+  flex-shrink: 0;
+}
+
+.route-content-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .route-icon {
-  width: 32px;
-  height: 32px;
-  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
   color: #666666;
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +76,6 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
-  margin-left: 47px; /* Align with the start of the header text (icon width 32px + gap 15px = 47px) */
 }
 
 .route-link {
@@ -100,6 +108,7 @@
   
   .route-card {
     padding: 20px;
+    gap: 15px;
   }
   
   .route-title {
@@ -108,13 +117,16 @@
   
   .route-content {
     font-size: 13px;
-    margin-left: 42px; /* Adjust for mobile (icon width 28px + gap 14px) */
   }
   
   .route-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+  }
+  
+  .route-icon-column {
+    padding-top: 3px;
   }
 }
 
@@ -126,11 +138,7 @@
   
   .route-card {
     padding: 15px;
-  }
-  
-  .route-header {
     gap: 12px;
-    margin-bottom: 12px;
   }
   
   .route-title {
@@ -142,8 +150,13 @@
   }
   
   .route-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+  
+  .route-icon-column {
+    padding-top: 2px;
   }
 }
 
