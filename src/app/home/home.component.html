@@ -738,11 +738,14 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Time</label>
+                                        <label>Pickup Time</label>
                                         <div class="input-with-icon">
                                             <i class="fas fa-clock input-icon"></i>
-                                            <input type="text" class="form-input datecabreserved-time"
-                                                placeholder="12:00" [(ngModel)]="formValues.reservedTime">
+                                            <input type="text" class="form-input time-input-display" 
+                                                [value]="formatTimeDisplay(formValues.reservedTime)"
+                                                placeholder="12:00 PM" 
+                                                (click)="openTimePicker()"
+                                                readonly>
                                         </div>
                                     </div>
 
@@ -1139,6 +1142,7 @@
         </div>
     </div>
 </section>
+</div>  
 <section class="japan-experience-section">
     <!-- Video Background -->
     <video class="japan-video" autoplay muted loop playsinline preload="metadata">
@@ -1168,3 +1172,74 @@
         </a>
     </div>
 </section>
+
+<!-- Time Picker Modal -->
+<div class="time-picker-overlay" [class.active]="timePickerVisible" (click)="closeTimePicker()">
+    <div class="time-picker-modal" (click)="$event.stopPropagation()">
+        <div class="time-picker-header">
+            <h3>Select Pick Up Time</h3>
+            <button class="close-btn" (click)="closeTimePicker()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="time-picker-content">
+            <div class="time-columns">
+                <!-- Hours Column -->
+                <div class="time-column">
+                    <div class="column-header">Hrs</div>
+                    <div class="time-scroll-container">
+                        <div class="time-options" #hoursContainer>
+                            <div class="time-option" 
+                                 *ngFor="let hour of hours" 
+                                 [class.selected]="selectedHour === hour"
+                                 (click)="selectHour(hour)">
+                                {{hour}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Minutes Column -->
+                <div class="time-column">
+                    <div class="column-header">Min</div>
+                    <div class="time-scroll-container">
+                        <div class="time-options">
+                            <div class="time-option" 
+                                 *ngFor="let minute of minutes" 
+                                 [class.selected]="selectedMinute === minute"
+                                 (click)="selectMinute(minute)">
+                                {{minute}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AM/PM Column -->
+                <div class="time-column">
+                    <div class="column-header">A.M/ P.M</div>
+                    <div class="time-scroll-container">
+                        <div class="time-options">
+                            <div class="time-option" 
+                                 [class.selected]="selectedPeriod === 'AM'"
+                                 (click)="selectPeriod('AM')">
+                                A.M.
+                            </div>
+                            <div class="time-option" 
+                                 [class.selected]="selectedPeriod === 'PM'"
+                                 (click)="selectPeriod('PM')">
+                                P.M.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="time-picker-footer">
+            <button class="done-btn" (click)="confirmTimeSelection()">
+                Done
+            </button>
+        </div>
+    </div>
+</div>

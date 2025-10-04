@@ -459,11 +459,13 @@
 }
 
 .footer-logo-image {
-  height: 45px;
-  width: auto;
+  width:210px !important;
+  height:auto !important;
   object-fit: contain;
   margin-bottom: 8px;
 }
+
+
 
 .footer-tagline {
   font-style: italic;
@@ -599,10 +601,11 @@
 
 .footer-bottom-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
+  gap:20px;
 }
 
 .copyright {
