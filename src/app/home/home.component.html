@@ -9,7 +9,9 @@
     </div>
 </div>
 
-<div class="container header" (click)="onDocumentClick($event)">
+<!-- Booking Form and Navigation Section -->
+<div class="booking-section-wrapper">
+    <div class="container header" (click)="onDocumentClick($event)">
 
         <div class="nav-tabs">
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
@@ -192,98 +194,6 @@
                                     <div class="feature">
                                         <span class="feature-icon">👥</span>
                                         <span>Meet fellow travelers</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <section class="special-offers-section">
-                                <div class="special-offers-content">
-                                    <div class="offers-header">
-                                        <h2>Special Offers</h2>
-                                        <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
-                                    </div>
-
-                                    <div class="offers-slider-container">
-                                        <div class="offers-slider-track">
-                                            <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                                                class="offer-card">
-                                                <div class="offer-card-inner">
-                                                    <!-- Top - Image Section -->
-                                                    <div class="offer-image-section">
-                                                        <div class="offer-image"
-                                                            [style.background-image]="'url(' + offer.image + ')'">
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Bottom - Content Section -->
-                                                    <div class="offer-content">
-
-
-                                                        <h3 class="offer-title">{{ offer.title }}</h3>
-                                                        <p class="offer-description">{{ offer.description }}</p>
-                                                        <p class="offer-subtitle">{{ offer.subtitle }}</p>
-
-                                                        <div class="offer-code-section">
-                                                            <span class="offer-code-label">Use Code</span>
-                                                            <span class="offer-code">{{ offer.code }}</span>
-                                                        </div>
-
-                                                        <a href="#" class="offer-cta-btn">
-                                                            <span>{{ offer.ctaText }}</span>
-                                                            <i class="fas fa-chevron-right"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Shared Cabs Content Section -->
-                            <div class="content-section">
-                                <h2>Affordable Shared Cab Services</h2>
-                                <div class="content-grid">
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-users card-icon"></i>Share & Save</h3>
-                                        <p>Split the ride cost with fellow travelers going in the same direction. Our
-                                            shared
-                                            cab service
-                                            offers
-                                            significant savings while maintaining comfort and safety standards.</p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-route card-icon"></i>Optimized Routes</h3>
-                                        <p>Our intelligent routing system ensures the most efficient pickup and drop-off
-                                            sequence,
-                                            minimizing
-                                            travel time while maximizing convenience for all passengers.</p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-leaf card-icon"></i>Eco-Friendly Travel</h3>
-                                        <p>Reduce your carbon footprint by sharing rides. Every shared journey helps
-                                            decrease traffic
-                                            congestion
-                                            and environmental impact while supporting sustainable transportation.</p>
-                                    </div>
-
-                                </div>
-                                <div class="highlight-stats">
-                                    <div class="stat">
-                                        <span class="stat-number">60%</span>
-                                        <span class="stat-label">Cost Savings</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">10K+</span>
-                                        <span class="stat-label">Daily Rides</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">4.8⭐</span>
-                                        <span class="stat-label">User Rating</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">100+</span>
-                                        <span class="stat-label">Cities Covered</span>
                                     </div>
                                 </div>
                             </div>
@@ -575,100 +485,6 @@
                                 </div>
 
                             </div>
-
-                            <!-- Special Offers Section for Flights -->
-                            <section class="special-offers-section">
-                                <div class="offers-header">
-                                    <h2>Special Offers</h2>
-                                    <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
-                                </div>
-
-                                <div class="offers-slider-container">
-                                    <div class="offers-slider-track">
-                                        <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                                            class="offer-card">
-                                            <div class="offer-card-inner">
-                                                <!-- Top - Image Section -->
-                                                <div class="offer-image-section">
-                                                    <div class="offer-image"
-                                                        [style.background-image]="'url(' + offer.image + ')'">
-
-                                                    </div>
-                                                    <div class="offer-subtitle-under-image">{{ offer.subtitle }}</div>
-                                                </div>
-
-                                                <!-- Bottom - Content Section -->
-                                                <div class="offer-content">
-
-
-                                                    <h3 class="offer-title">{{ offer.title }}</h3>
-                                                    <p class="offer-description">{{ offer.description }}</p>
-
-                                                    <div class="offer-code-section">
-                                                        <span class="offer-code-label">Use Code</span>
-                                                        <span class="offer-code">{{ offer.code }}</span>
-                                                    </div>
-
-                                                    <a href="#" class="offer-cta-btn">
-                                                        <span>{{ offer.ctaText }}</span>
-                                                        <i class="fas fa-chevron-right"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Flight Content Section -->
-                            <div class="content-section">
-                                <h2>Why Choose Our Flight Booking Service?</h2>
-                                <div class="content-grid">
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-plane-departure card-icon"></i>Best Flight Deals</h3>
-                                        <p>Compare prices from multiple airlines and get the best deals on domestic and
-                                            international
-                                            flights. Our smart algorithm finds you the most affordable options without
-                                            compromising on
-                                            quality.</p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-shield-alt card-icon"></i>Secure Booking</h3>
-                                        <p>Your transactions are protected with bank-level security. We use advanced
-                                            encryption to
-                                            ensure your personal and payment information remains safe throughout the
-                                            booking
-                                            process.
-                                        </p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-headset card-icon"></i>24/7 Support</h3>
-                                        <p>Our dedicated customer support team is available round-the-clock to assist
-                                            you
-                                            with booking
-                                            queries, changes, or any travel-related concerns you might have.</p>
-                                    </div>
-
-                                </div>
-                                <div class="highlight-stats">
-                                    <div class="stat">
-                                        <span class="stat-number">1M+</span>
-                                        <span class="stat-label">Happy Customers</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">500+</span>
-                                        <span class="stat-label">Airlines Partners</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">99.9%</span>
-                                        <span class="stat-label">Booking Success Rate</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">24/7</span>
-                                        <span class="stat-label">Customer Support</span>
-                                    </div>
-                                </div>
-                            </div>
                         </ng-container>
 
                         <ng-container *ngSwitchCase="'reserved-cabs'">
@@ -808,97 +624,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Special Offers Section for Reserved Cabs -->
-                            <section class="special-offers-section">
-                                <div class="offers-header">
-                                    <h2>Special Offers</h2>
-                                    <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
-                                </div>
-
-                                <div class="offers-slider-container">
-                                    <div class="offers-slider-track">
-                                        <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                                            class="offer-card">
-                                            <div class="offer-card-inner">
-                                                <!-- Top - Image Section -->
-                                                <div class="offer-image-section">
-                                                    <div class="offer-image"
-                                                        [style.background-image]="'url(' + offer.image + ')'">
-
-                                                    </div>
-                                                </div>
-
-                                                <!-- Bottom - Content Section -->
-                                                <div class="offer-content">
-
-                                                    <h3 class="offer-title">{{ offer.title }}</h3>
-                                                    <p class="offer-description">{{ offer.description }}</p>
-                                                    <p class="offer-subtitle">{{ offer.subtitle }}</p>
-
-                                                    <div class="offer-code-section">
-                                                        <span class="offer-code-label">Use Code</span>
-                                                        <span class="offer-code">{{ offer.code }}</span>
-                                                    </div>
-
-                                                    <a href="#" class="offer-cta-btn">
-                                                        <span>{{ offer.ctaText }}</span>
-                                                        <i class="fas fa-chevron-right"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Reserved Cabs Content Section -->
-                            <div class="content-section">
-                                <h2>Premium Reserved Cab Experience</h2>
-                                <div class="content-grid">
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-crown card-icon"></i>Exclusive & Private</h3>
-                                        <p>Enjoy your own private vehicle with no sharing required. Perfect for business
-                                            trips, family
-                                            outings,
-                                            or when you need complete privacy and comfort during your journey.</p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-user-tie card-icon"></i>Professional Drivers</h3>
-                                        <p>All our drivers are thoroughly vetted, professionally trained, and maintain
-                                            high
-                                            standards of
-                                            courtesy and service. Experience smooth, safe, and reliable transportation.
-                                        </p>
-                                    </div>
-                                    <div class="content-card">
-                                        <h3><i class="fas fa-car-side card-icon"></i>Premium Fleet</h3>
-                                        <p>Choose from our wide range of well-maintained vehicles including hatchbacks,
-                                            sedans, SUVs, and
-                                            luxury
-                                            cars. All vehicles are regularly serviced and sanitized.</p>
-                                    </div>
-
-                                </div>
-                                <div class="highlight-stats">
-                                    <div class="stat">
-                                        <span class="stat-number">5⭐</span>
-                                        <span class="stat-label">Service Rating</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">98%</span>
-                                        <span class="stat-label">On-Time Performance</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">500+</span>
-                                        <span class="stat-label">Premium Vehicles</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-number">24/7</span>
-                                        <span class="stat-label">Available Service</span>
-                                    </div>
-                                </div>
-                            </div>
                         </ng-container>
 
 
@@ -906,8 +631,286 @@
                 </div>
 
             </ng-container>
+        </div>
+    </div>
+</div>
+<!-- End of Booking Form and Navigation Section -->
 
-            <section class="services-slider-section">
+<!-- Special Offers and Content Sections -->
+<div class="content-sections-wrapper">
+    <!-- Shared Cabs Special Offers -->
+    <section class="special-offers-section" *ngIf="currentTab === 'shared-cabs'">
+        <div class="special-offers-content">
+            <div class="offers-header">
+                <h2>Special Offers</h2>
+                <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+            </div>
+
+            <div class="offers-slider-container">
+                <div class="offers-slider-track">
+                    <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
+                        class="offer-card">
+                        <div class="offer-card-inner">
+                            <!-- Top - Image Section -->
+                            <div class="offer-image-section">
+                                <div class="offer-image"
+                                    [style.background-image]="'url(' + offer.image + ')'">
+                                </div>
+                            </div>
+
+                            <!-- Bottom - Content Section -->
+                            <div class="offer-content">
+                                <h3 class="offer-title">{{ offer.title }}</h3>
+                                <p class="offer-description">{{ offer.description }}</p>
+                                <p class="offer-subtitle">{{ offer.subtitle }}</p>
+
+                                <div class="offer-code-section">
+                                    <span class="offer-code-label">Use Code</span>
+                                    <span class="offer-code">{{ offer.code }}</span>
+                                </div>
+
+                                <a href="#" class="offer-cta-btn">
+                                    <span>{{ offer.ctaText }}</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shared Cabs Content Section -->
+    <div class="content-section" *ngIf="currentTab === 'shared-cabs'">
+        <h2>Affordable Shared Cab Services</h2>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3><i class="fas fa-users card-icon"></i>Share & Save</h3>
+                <p>Split the ride cost with fellow travelers going in the same direction. Our
+                    shared
+                    cab service
+                    offers
+                    significant savings while maintaining comfort and safety standards.</p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-route card-icon"></i>Optimized Routes</h3>
+                <p>Our intelligent routing system ensures the most efficient pickup and drop-off
+                    sequence,
+                    minimizing
+                    travel time while maximizing convenience for all passengers.</p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-leaf card-icon"></i>Eco-Friendly Travel</h3>
+                <p>Reduce your carbon footprint by sharing rides. Every shared journey helps
+                    decrease traffic
+                    congestion
+                    and environmental impact while supporting sustainable transportation.</p>
+            </div>
+        </div>
+        <div class="highlight-stats">
+            <div class="stat">
+                <span class="stat-number">60%</span>
+                <span class="stat-label">Cost Savings</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">10K+</span>
+                <span class="stat-label">Daily Rides</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">4.8⭐</span>
+                <span class="stat-label">User Rating</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">100+</span>
+                <span class="stat-label">Cities Covered</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flights Special Offers -->
+    <section class="special-offers-section" *ngIf="currentTab === 'flights'">
+        <div class="offers-header">
+            <h2>Special Offers</h2>
+            <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+        </div>
+
+        <div class="offers-slider-container">
+            <div class="offers-slider-track">
+                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
+                    class="offer-card">
+                    <div class="offer-card-inner">
+                        <!-- Top - Image Section -->
+                        <div class="offer-image-section">
+                            <div class="offer-image"
+                                [style.background-image]="'url(' + offer.image + ')'">
+                            </div>
+                            <div class="offer-subtitle-under-image">{{ offer.subtitle }}</div>
+                        </div>
+
+                        <!-- Bottom - Content Section -->
+                        <div class="offer-content">
+                            <h3 class="offer-title">{{ offer.title }}</h3>
+                            <p class="offer-description">{{ offer.description }}</p>
+
+                            <div class="offer-code-section">
+                                <span class="offer-code-label">Use Code</span>
+                                <span class="offer-code">{{ offer.code }}</span>
+                            </div>
+
+                            <a href="#" class="offer-cta-btn">
+                                <span>{{ offer.ctaText }}</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flight Content Section -->
+    <div class="content-section" *ngIf="currentTab === 'flights'">
+        <h2>Why Choose Our Flight Booking Service?</h2>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3><i class="fas fa-plane-departure card-icon"></i>Best Flight Deals</h3>
+                <p>Compare prices from multiple airlines and get the best deals on domestic and
+                    international
+                    flights. Our smart algorithm finds you the most affordable options without
+                    compromising on
+                    quality.</p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-shield-alt card-icon"></i>Secure Booking</h3>
+                <p>Your transactions are protected with bank-level security. We use advanced
+                    encryption to
+                    ensure your personal and payment information remains safe throughout the
+                    booking
+                    process.
+                </p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-headset card-icon"></i>24/7 Support</h3>
+                <p>Our dedicated customer support team is available round-the-clock to assist
+                    you
+                    with booking
+                    queries, changes, or any travel-related concerns you might have.</p>
+            </div>
+        </div>
+        <div class="highlight-stats">
+            <div class="stat">
+                <span class="stat-number">1M+</span>
+                <span class="stat-label">Happy Customers</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Airlines Partners</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">99.9%</span>
+                <span class="stat-label">Booking Success Rate</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">Customer Support</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reserved Cabs Special Offers -->
+    <section class="special-offers-section" *ngIf="currentTab === 'reserved-cabs'">
+        <div class="offers-header">
+            <h2>Special Offers</h2>
+            <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+        </div>
+
+        <div class="offers-slider-container">
+            <div class="offers-slider-track">
+                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
+                    class="offer-card">
+                    <div class="offer-card-inner">
+                        <!-- Top - Image Section -->
+                        <div class="offer-image-section">
+                            <div class="offer-image"
+                                [style.background-image]="'url(' + offer.image + ')'">
+                            </div>
+                        </div>
+
+                        <!-- Bottom - Content Section -->
+                        <div class="offer-content">
+                            <h3 class="offer-title">{{ offer.title }}</h3>
+                            <p class="offer-description">{{ offer.description }}</p>
+                            <p class="offer-subtitle">{{ offer.subtitle }}</p>
+
+                            <div class="offer-code-section">
+                                <span class="offer-code-label">Use Code</span>
+                                <span class="offer-code">{{ offer.code }}</span>
+                            </div>
+
+                            <a href="#" class="offer-cta-btn">
+                                <span>{{ offer.ctaText }}</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reserved Cabs Content Section -->
+    <div class="content-section" *ngIf="currentTab === 'reserved-cabs'">
+        <h2>Premium Reserved Cab Experience</h2>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3><i class="fas fa-crown card-icon"></i>Exclusive & Private</h3>
+                <p>Enjoy your own private vehicle with no sharing required. Perfect for business
+                    trips, family
+                    outings,
+                    or when you need complete privacy and comfort during your journey.</p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-user-tie card-icon"></i>Professional Drivers</h3>
+                <p>All our drivers are thoroughly vetted, professionally trained, and maintain
+                    high
+                    standards of
+                    courtesy and service. Experience smooth, safe, and reliable transportation.
+                </p>
+            </div>
+            <div class="content-card">
+                <h3><i class="fas fa-car-side card-icon"></i>Premium Fleet</h3>
+                <p>Choose from our wide range of well-maintained vehicles including hatchbacks,
+                    sedans, SUVs, and
+                    luxury
+                    cars. All vehicles are regularly serviced and sanitized.</p>
+            </div>
+        </div>
+        <div class="highlight-stats">
+            <div class="stat">
+                <span class="stat-number">5⭐</span>
+                <span class="stat-label">Service Rating</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">On-Time Performance</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Premium Vehicles</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">Available Service</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Special Offers and Content Sections -->
+
+<!-- Sliding Functionality Section -->
+<div class="sliding-section-wrapper">
+    <section class="services-slider-section">
                 <div class="services-header">
                     <h2>Our Services</h2>
                     <p>Discover our comprehensive range of travel solutions designed to make your journey
@@ -938,6 +941,8 @@
                     </div>
                 </div>
             </section>
+</div>
+<!-- End of Sliding Functionality Section -->
 
             <!-- <img src="../../assets/images/banner.jpeg" alt="banner" class="bannerbet"/> -->
             <section class="airport-connectivity-section">
@@ -1096,9 +1101,6 @@
             </section>
 
 
-
-        </div>
-</div>
 
 <div class="container">
 <section class="testimonials-section">

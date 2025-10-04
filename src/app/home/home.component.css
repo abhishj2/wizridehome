@@ -153,15 +153,35 @@ border-bottom:2px solid darkcyan !important;
 .nav-tabs {
     position: absolute !important;
     top: 7.5px;
-    left: 20px;
     right: 0;
     z-index:10 !important;
+   
+        margin-top:172.5px !important;
+        left:81px !important;;
+    
 }
 
-.container{
+.booking-section-wrapper {
+    background:url('../../assets/images/mainbanner.png');
+    background-size:cover;
+    background-repeat: no-repeat;
+    padding: 80px 40px;
+    background-position: bottom center; 
+    margin-bottom: 60px;
+}
+
+
+.container.header{
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    background: none !important;
+}
+/* .container.header{
     margin-top: 80px !important;
     position: relative;
-}
+} */
+
+
 /* .nav-tabs[data-active="2"]::before {
     width: calc(33.333%);
     transform: translateX(calc(66.666% + 280px));
@@ -170,10 +190,10 @@ border-bottom:2px solid darkcyan !important;
 .tabs-container {
     position: relative;
     overflow: hidden;
-    min-height: 600px;
     background: #ffffff;
     border-radius: 0 10px 10px 10px;
     margin-top: 60px;
+    border-radius: 10px;
 }
 
 .tab-content {
@@ -436,7 +456,6 @@ border-bottom:2px solid darkcyan !important;
     background: #ffffff;
     padding: 60px 40px 40px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 60px;
     position: relative;
     border-radius: 0 0 10px 10px;
 }

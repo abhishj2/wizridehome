@@ -34,7 +34,7 @@
     <!-- Airport Connectivity - Reserved Cabs -->
     <div class="route-card">
       <div class="route-icon-column">
-        <i class="fas fa-road-circle-check route-icon"></i>
+        <i class="fas fa-car-side route-icon"></i>
       </div>
       <div class="route-content-column">
         <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
@@ -49,7 +49,7 @@
     <!-- Airport Covered -->
     <div class="route-card">
       <div class="route-icon-column">
-        <i class="fas fa-earth-asia route-icon"></i>
+        <i class="fas fa-plane route-icon"></i>
       </div>
       <div class="route-content-column">
         <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
@@ -227,9 +227,12 @@
       </div>
 
       <!-- Right Section - Contact Info -->
-      <div class="footer-right footer-links">
+      <div class="footer-column footer-links">
+        <div class="footer-column-header">
+          <i class="fas fa-phone footer-column-icon"></i>
+          <h3>Contact</h3>
+        </div>
         <div class="contact-info">
-         
           <div class="contact-item">
             <i class="fas fa-envelope contact-icon"></i>
             <span><a href="mailto:{{ contactInfo.customerSupport }}"> {{ contactInfo.customerSupport }}</a></span>
@@ -243,7 +246,6 @@
             <i class="fas fa-phone contact-icon"></i>
             <span><a href="tel:{{ contactInfo.phone }}">{{ contactInfo.phone }}</a> </span>
           </div>
-          
         </div>
       </div>
     </div>
