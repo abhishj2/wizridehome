@@ -4,7 +4,7 @@
     <!-- Airport Routes - Shared Cabs -->
     <div class="route-card">
       <div class="route-header">
-        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Routes" class="route-icon">
+        <i class="fas fa-plane-departure route-icon"></i>
         <h3 class="route-title">{{ routes.airportShared.title }}</h3>
       </div>
       <div class="route-content">
@@ -17,7 +17,7 @@
     <!-- City Routes - Shared Cabs -->
     <div class="route-card">
       <div class="route-header">
-        <img src="https://wizzride.com/assets/images/icon6.png" alt="City Routes" class="route-icon">
+        <i class="fas fa-city route-icon"></i>
         <h3 class="route-title">{{ routes.cityShared.title }}</h3>
       </div>
       <div class="route-content">
@@ -30,7 +30,7 @@
     <!-- Airport Connectivity - Reserved Cabs -->
     <div class="route-card">
       <div class="route-header">
-        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Connectivity" class="route-icon">
+        <i class="fas fa-shuttle-van route-icon"></i>
         <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
       </div>
       <div class="route-content">
@@ -43,7 +43,7 @@
     <!-- Airport Covered -->
     <div class="route-card">
       <div class="route-header">
-        <img src="https://wizzride.com/assets/images/icon5.png" alt="Airport Covered" class="route-icon">
+        <i class="fas fa-building route-icon"></i>
         <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
       </div>
       <div class="route-content">
@@ -173,7 +173,7 @@
           </div>
           <ul class="footer-links">
             <li *ngFor="let service of ourServices">
-              <a [href]="service.link">{{ service.name }}</a>
+              <i class="fas fa-angle-double-right destination-icon"></i>  <a [href]="service.link">{{ service.name }}</a>
             </li>
           </ul>
         </div>
@@ -186,7 +186,7 @@
           </div>
           <ul class="footer-links">
             <li *ngFor="let about of aboutUs">
-              <a [href]="about.link">{{ about.name }}</a>
+              <i class="fas fa-angle-double-right destination-icon"></i> <a [href]="about.link">{{ about.name }}</a>
             </li>
           </ul>
         </div>
@@ -199,7 +199,7 @@
           </div>
           <ul class="footer-links">
             <li *ngFor="let link of importantLinks">
-              <a [href]="link.link">{{ link.name }}</a>
+              <i class="fas fa-angle-double-right destination-icon"></i>  <a [href]="link.link">{{ link.name }}</a>
             </li>
           </ul>
         </div>
@@ -212,7 +212,7 @@
           </div>
           <ul class="footer-links">
             <li *ngFor="let quick of quickLinks">
-              <a [href]="quick.link">{{ quick.name }}</a>
+              <i class="fas fa-angle-double-right destination-icon"></i> <a [href]="quick.link">{{ quick.name }}</a>
             </li>
           </ul>
         </div>

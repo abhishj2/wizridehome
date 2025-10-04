@@ -41,8 +41,18 @@
 .route-icon {
   width: 32px;
   height: 32px;
-  object-fit: contain;
+  font-size: 24px;
+  color: #666666;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.route-card:hover .route-icon {
+  color: darkcyan;
+  transform: scale(1.1);
 }
 
 .route-title {
@@ -57,6 +67,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
+  margin-left: 47px; /* Align with the start of the header text (icon width 32px + gap 15px = 47px) */
 }
 
 .route-link {
@@ -97,11 +108,13 @@
   
   .route-content {
     font-size: 13px;
+    margin-left: 42px; /* Adjust for mobile (icon width 28px + gap 14px) */
   }
   
   .route-icon {
     width: 28px;
     height: 28px;
+    font-size: 20px;
   }
 }
 
@@ -740,4 +753,10 @@ font-weight: 600 !important;
 color: #ffffff !important;
 margin: 0 !important;
 text-decoration:none;
+}
+
+ul.footer-links li{
+  display:flex !important;
+  align-items:center;
+  gap:10px;
 }
