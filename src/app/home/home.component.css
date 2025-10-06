@@ -210,7 +210,6 @@ h2{
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
-    z-index: 2;
     animation: slideInFromRight 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
@@ -654,7 +653,7 @@ h2{
     border-radius: 0 0 12px 12px;
     max-height: 300px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 999999999 !important;
     display: none;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     min-height: 50px;
@@ -663,6 +662,7 @@ h2{
 .city-suggestions.active {
     display: block;
     animation: slideDown 0.3s ease-out;
+    z-index: 999999999 !important;
 }
 
 .city-suggestion {
