@@ -69,23 +69,6 @@ h2{
     }
 }
 
-/* Correct Border Traverse Animation - Moves from right to left within tab bounds */
-/* @keyframes borderTraverseRightToLeftCorrect {
-    0% {
-        background-position: 100% 0;
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        background-position: 0% 0;
-        opacity: 0;
-    }
-} */
 
 .nav-tab {
     display: flex;
@@ -120,13 +103,14 @@ h2{
     border-bottom: none;
     position: relative;
     z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
 }
 
 .nav-tab:not(.active):hover {
     background: rgba(248, 249, 250, 0.8);
     color: darkcyan;
     border: 2px solid #e9ecef;
-    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-tab .icon {
@@ -147,6 +131,7 @@ h2{
 .nav-tab:not(.active):hover .icon {
     filter: drop-shadow(0 0 8px rgba(0, 139, 139, 0.5));
     animation: iconHoverGlow 1s ease-in-out infinite alternate;
+    transform: scale(1.02);
 }
 .nav-tabs {
     /* position:absolute; */
@@ -156,9 +141,11 @@ h2{
 }
 
 .nav-tab{
-border-bottom:2px solid darkcyan !important;
-background: #fff;
-    
+    border-bottom:2px solid darkcyan !important;
+    background: #fff;
+    position: relative;
+    transition: all 0.3s ease;
+    /* transform: translateY(0); */
 }
 .nav-tab.active{
  border-bottom:0 !important;
@@ -190,16 +177,7 @@ background: #fff;
     background: none !important;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 0px 0px;
 }
-/* .container.header{
-    margin-top: 80px !important;
-    position: relative;
-} */
 
-
-/* .nav-tabs[data-active="2"]::before {
-    width: calc(33.333%);
-    transform: translateX(calc(66.666% + 280px));
-} */
 /* Tab Content Container */
 .tabs-container {
     position: relative;
@@ -292,7 +270,6 @@ background: #fff;
     opacity: 0.7;
 }
 
-/* Hide border below active tab - REMOVED */
 
 @keyframes borderReveal {
     0% {
@@ -389,29 +366,6 @@ background: #fff;
 .search-btn {
     transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
-/* .tab-content.slide-out-left {
-    transform: translateX(-100%);
-    opacity: 0;
-    z-index: 1;
-}
-
-.tab-content.slide-in-from-right {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.tab-content.slide-in-from-left {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.tabs-container,
-.tab-content {
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-} */
 
 /* Enhanced smooth sliding keyframes */
 @keyframes slideInFromRight {
@@ -1358,14 +1312,6 @@ small {
         padding: 20px;
     }
 
-    .bannerbet {
-        height: 200px;
-        margin: 30px 0;
-        margin-left: calc(-50vw + 50%);
-        margin-right: calc(-50vw + 50%);
-        border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
 }
 
 /* Animations */
@@ -4358,4 +4304,9 @@ button.nav-tab img{
 .booking-form{
         border-top-left-radius:0px !important;
 
+}
+
+
+.nav-tab{
+    width:230px;
 }
