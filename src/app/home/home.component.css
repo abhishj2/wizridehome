@@ -211,14 +211,14 @@ h2{
     transform: translateX(0);
     pointer-events: auto;
     z-index: 2;
-    animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideInFromRight 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 .tab-content.slide-out-left {
     transform: translateX(-100%);
     opacity: 0;
     z-index: 1;
-    animation: slideOutToLeft 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideOutToLeft 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 /* Booking Form Border Animation */
@@ -227,7 +227,7 @@ h2{
     border-radius: 10px;
     z-index: 1;
     background: #fff;
-    animation: contentSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: contentSlideIn 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 /* Add border-top-left-radius for second and third tabs */
@@ -238,7 +238,7 @@ h2{
 .booking-form {
     border: 2px solid transparent;
     border-radius: 0 10px 10px 10px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
     transform: scale(1);
     opacity: 1;
 }
@@ -487,6 +487,7 @@ h2{
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: end;
   }
 
   .cab-form-row .form-group,
@@ -841,7 +842,7 @@ h2{
 }
 
 small {
-    font-size: xx-small;
+    font-size: 8px;
 }
 
 .counter-btn {
@@ -4327,4 +4328,16 @@ button.nav-tab img{
 .trip-type button{
     padding:5px 10px !important;
     font-size:12px !important;
+}
+
+.form-row.multrow {
+    align-items: flex-start;
+}
+
+.booking-form.tab-2 {
+    padding-bottom:12px !important;
+}
+
+.tabs-container{
+    background:transparent !important;
 }

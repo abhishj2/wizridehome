@@ -295,7 +295,7 @@
                                 </div>
 
                                 <!-- Flight Routes -->
-                                <div *ngFor="let route of flightRoutes; let i = index" class="form-row">
+                                <div *ngFor="let route of flightRoutes; let i = index" class="form-row multrow">
                                     <div class="route-header" *ngIf="tripType === 'multi-city'">
                                         <span class="route-number">Route {{i + 1}}</span>
                                         <button class="remove-route-btn" (click)="removeFlightRoute(i)"
