@@ -114,9 +114,12 @@ h2{
 
 
 .nav-tab.active {
-    color:darkcyan;
-    background: transparent;
+    color: white;
+    background: darkcyan;
     border: 2px solid darkcyan;
+    border-bottom: none;
+    position: relative;
+    z-index: 2;
 }
 
 .nav-tab:not(.active):hover {
@@ -128,21 +131,33 @@ h2{
 
 .nav-tab .icon {
     font-size: 18px;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    filter: drop-shadow(0 0 5px rgba(0, 139, 139, 0.3));
+    animation: iconPulse 2s ease-in-out infinite;
 }
 
 .nav-tab.active .icon {
     transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 25px rgba(0, 139, 139, 0.6));
+    animation: activeIconPulse 1.5s ease-in-out infinite;
+}
+
+.nav-tab:not(.active):hover .icon {
+    filter: drop-shadow(0 0 8px rgba(0, 139, 139, 0.5));
+    animation: iconHoverGlow 1s ease-in-out infinite alternate;
 }
 .nav-tabs {
     /* position:absolute; */
     /* top:5px; */
      z-index:9999999999 !important;
-    background:#ffff;
+    
 }
 
 .nav-tab{
 border-bottom:2px solid darkcyan !important;
+background: #fff;
     
 }
 .nav-tab.active{
@@ -172,8 +187,8 @@ border-bottom:2px solid darkcyan !important;
 
 .container.header{
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     background: none !important;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 0px 0px;
 }
 /* .container.header{
     margin-top: 80px !important;
@@ -192,7 +207,6 @@ border-bottom:2px solid darkcyan !important;
     background: #ffffff;
     border-radius: 0 10px 10px 10px;
     margin-top: 60px;
-    border-radius: 10px;
 }
 
 .tab-content {
@@ -240,94 +254,102 @@ border-bottom:2px solid darkcyan !important;
 
 
 
-.tab-content.active .booking-form.tab-1::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    
-    padding: 1.5px;
-    border-radius: 0 10px 10px 0px;  
-    background: darkcyan;
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    z-index: -1;
-    animation: borderTraverseSmooth 3s ease-out both;  
-    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
-}
-.tab-content.active .booking-form.tab-2::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    
-    padding: 1.5px;
-    border-radius: 10px;  
-    background: darkcyan;
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    z-index: -1;
-    animation: borderTraverseSmooth 3s ease-out both;  
-    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
+/* Direct border styling with transformations and transitions */
+.booking-form {
+    border: 2px solid transparent;
+    border-radius: 0 10px 10px 10px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: scale(1);
+    opacity: 1;
 }
 
-.tab-content.active .booking-form.tab-3::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    
-    padding: 1.5px;
-    border-radius: 10px;  
-    background: darkcyan;
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    z-index: -1;
-    animation: borderTraverseSmooth 3s ease-out both;  
-    clip-path: polygon(0% 100%, 100% 100%, 100% 5%, 0% 5%); 
+.tab-content.active .booking-form {
+    border: 2px solid darkcyan;
+    border-top: none;
+    box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
+    animation: borderReveal 0.6s ease-out;
+    /* margin-top: -2px; */
+    position: relative;
+    z-index: 1;
+}
+
+.tab-content.active .booking-form.tab-1 {
+    border-radius: 0 10px 10px 10px;
+}
+
+.tab-content.active .booking-form.tab-2 {
+    border-radius: 10px;
+}
+
+.tab-content.active .booking-form.tab-3 {
+    border-radius: 10px;
+}
+
+/* Inactive booking forms */
+.tab-content:not(.active) .booking-form {
+    border: 2px solid transparent;
+    transform: scale(0.98);
+    opacity: 0.7;
 }
 
 /* Hide border below active tab - REMOVED */
 
-@keyframes borderTraverseSmooth {
+@keyframes borderReveal {
     0% {
-        clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
-        opacity: 0;
-    }
-    2% {
-        opacity: 1;
-    }
-    25% {
-        /* Complete right edge */
-        clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+        border-color: transparent;
+        transform: scale(0.98);
+        box-shadow: none;
     }
     50% {
-        /* Complete bottom edge */
-        clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 0% 100%);
-    }
-    75% {
-        /* Complete left edge */
-        clip-path: polygon(100% 0%, 100% 0%, 0% 100%, 0% 100%);
+        border-color: rgba(0, 139, 139, 0.5);
+        transform: scale(1.01);
     }
     100% {
-        /* Complete top edge - full border visible */
-        clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%);
-        /* opacity: 1; */
+        border-color: darkcyan;
+        transform: scale(1.02);
+        box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
+    }
+}
+
+/* Icon Glow Animations */
+@keyframes iconPulse {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(0, 139, 139, 0.3));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 10px rgba(0, 139, 139, 0.6));
+        transform: scale(1.05);
+    }
+    100% {
+        filter: drop-shadow(0 0 5px rgba(0, 139, 139, 0.3));
+        transform: scale(1);
+    }
+}
+
+@keyframes activeIconPulse {
+    0% {
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 25px rgba(0, 139, 139, 0.6));
+        transform: scale(1.1);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)) drop-shadow(0 0 35px rgba(0, 139, 139, 0.8));
+        transform: scale(1.15);
+    }
+    100% {
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 25px rgba(0, 139, 139, 0.6));
+        transform: scale(1.1);
+    }
+}
+
+@keyframes iconHoverGlow {
+    0% {
+        filter: drop-shadow(0 0 8px rgba(0, 139, 139, 0.5));
+        transform: scale(1);
+    }
+    100% {
+        filter: drop-shadow(0 0 12px rgba(0, 139, 139, 0.7));
+        transform: scale(1.05);
     }
 }
 
@@ -673,11 +695,12 @@ border-bottom:2px solid darkcyan !important;
     border: 2px solid #e9ecef;
     border-top: none;
     border-radius: 0 0 12px 12px;
-    max-height: 220px;
+    max-height: 300px;
     overflow-y: auto;
     z-index: 1000;
     display: none;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    min-height: 50px;
 }
 
 .city-suggestions.active {
@@ -1901,8 +1924,22 @@ a.service-cta-btn {
 
 
 .city-suggestions.active::-webkit-scrollbar {
-    display:none;
- }
+    width: 6px;
+}
+
+.city-suggestions.active::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.city-suggestions.active::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.city-suggestions.active::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
 
 /* Time Input Display */
 
@@ -4303,8 +4340,22 @@ button.nav-tab img{
    border-top-left-radius:10px !important;
  }
 
- .booking-form::before{
-    border-top-left-radius:0px !important;
+
+
+ .nav-tab:last-child,
+ .nav-tabs{
+    border-top-right-radius:10px !important;
+    border-top-left-radius:10px !important;
+  }
+  .tab-content.active .booking-form{
+    border:5px solid #149494 !important;
+    border-top-width:2px !important;
+        border-bottom-width:2px !important;
+    border-left-width:2px !important;
+     border-right-width:2px !important;
+
 }
+.booking-form{
+        border-top-left-radius:0px !important;
 
-
+}
