@@ -91,7 +91,7 @@ h2{
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 32px;
+    padding: 7.5px 32px;
     border: none;
     background: transparent;
     color: #474747;
@@ -152,12 +152,11 @@ border-bottom:2px solid darkcyan !important;
 
 .nav-tabs {
     position: absolute !important;
-    top: 7.5px;
-    right: 0;
+    top: 12.5px;
     z-index:10 !important;
    
         margin-top:172.5px !important;
-        left:81px !important;;
+       margin-left:0px !important;;
     
 }
 
@@ -863,7 +862,7 @@ border-bottom:2px solid darkcyan !important;
 }
 
 small {
-    font-size: x-small;
+    font-size: xx-small;
 }
 
 .counter-btn {
@@ -1026,40 +1025,8 @@ small {
 }
 
 /* Banner Image */
-.bannerbet {
-    width: 100vw;
-    height: 300px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    margin: 60px 0;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-    filter: brightness(1.05) contrast(1.1) saturate(1.15) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
 
-.bannerbet::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(0, 139, 139, 0.1) 0%, rgba(0, 139, 139, 0.05) 100%);
-    z-index: 1;
-    pointer-events: none;
-}
 
-.bannerbet:hover {
-    filter: brightness(1.1) contrast(1.15) saturate(1.2) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
-    transform: translateY(-2px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-}
 
 /* Content Sections */
 .content-section {
@@ -1292,14 +1259,7 @@ small {
         padding: 25px;
     }
 
-    .bannerbet {
-        height: 250px;
-        margin: 40px 0;
-        margin-left: calc(-50vw + 50%);
-        margin-right: calc(-50vw + 50%);
-        border-radius: 15px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
+    
 
     .nav-tabs {
         flex-wrap: wrap;
@@ -3844,7 +3804,6 @@ a.service-cta-btn {
     
     .testimonialbox p {
         font-size: 13px;
-        -webkit-line-clamp: 4;
         margin: 12px 0 15px;
     }
     
@@ -3906,7 +3865,6 @@ a.service-cta-btn {
     
     .testimonialbox p {
         font-size: 12px;
-        -webkit-line-clamp: 3;
         margin: 10px 0 12px;
     }
     
@@ -4104,25 +4062,7 @@ button.nav-tab img{
     position: relative;
   }
   
-  .offer-bank-logo {
-    width: 60px;
-    height: 28px;
-    margin-bottom: 10px;
-  }
-  
-  .offer-bank-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  
-  
-  .offer-bank-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  
+
   .offer-title {
     font-size: 17px;
     font-weight: 700;
@@ -4356,3 +4296,15 @@ button.nav-tab img{
   }
 
  
+ 
+.nav-tab:last-child,
+.nav-tabs{
+   border-top-right-radius:10px !important;
+   border-top-left-radius:10px !important;
+ }
+
+ .booking-form::before{
+    border-top-left-radius:0px !important;
+}
+
+
