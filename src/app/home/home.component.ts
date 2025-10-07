@@ -153,42 +153,35 @@ export class HomeComponent
   specialOffers = [
     {
       id: 1,
-      bank: 'ICICI Bank',
-      title: 'Flat 12% OFF (up to Rs.1,800)',
-      description: 'On Domestic Flights',
-      subtitle: '*Offer valid on ICICI Bank Credit Cards EMI Transactions only',
-      code: 'YTICICIEMI',
+      title: 'Fly & Ride Stress-Free',
+      description: 'Up to 20% OFF on Flight + Cab Packages',
+      subtitle: 'Book your flight and enjoy a private cab from your home to the airport and back. Travel hassle-free from door to destination.',
+      code: 'WRFLYCAB20',
       image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg', // Add your image path
-      ctaText: 'View Details'
     },
     {
       id: 2,
-      title: 'Up to Rs. 2,400 OFF',
-      description: 'On Domestic Flights',
-      subtitle: '*Offer Valid on HSBC Bank Credit Cards transaction only.',
-      code: 'YATRAHSBC',
+      title: 'Your Schedule, Your Comfort',
+      description: 'Flat ₹400 OFF on Intercity Flight Transfers',
+      subtitle: 'Seamless travel between your city and major airports. Perfect for business or leisure trips.',
+      code: 'WRINTER400',
       image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-      ctaText: 'View Details'
     },
     {
       id: 3,
-      bank: 'Malaysia Airlines',
-      title: 'Fly The Malaysian Way',
-      description: 'On International Flights',
-      subtitle: 'Up to Rs. 15,000 OFF*',
-      code: 'YTMH',
+      title: 'Reserve & Relax',
+      description: '15% OFF on Private Cab Reservations',
+      subtitle: ' Ideal for airport pickups, drop-offs, or connecting flights — reserve your cab and travel worry-free.',
+      code: 'WRPRIVATE15',
       image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-      ctaText: 'View Details'
     },
     {
       id: 4,
-      bank: 'Axis Bank',
-      title: 'Get 15% OFF',
-      description: 'On Hotel Bookings',
-      subtitle: '*Offer valid on Axis Bank Credit Cards only',
-      code: 'AXISHOTEL',
+      title: 'Airport Transfers Made Easy',
+      description: 'Flat ₹250 OFF on Home-to-Airport & Airport-to-Home Cabs',
+      subtitle: 'Enjoy convenient pickup and drop services along with your flight booking.',
+      code: 'WRAIRPORT250',
       image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-      ctaText: 'View Details'
     }
   ];
   

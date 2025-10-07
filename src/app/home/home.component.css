@@ -163,7 +163,7 @@ h2{
 }
 
 .booking-section-wrapper {
-    background:url('../../assets/images/mainbanner.png');
+    background:url('../../assets/images/bannerupdted.jpg');
     background-size:cover;
     background-repeat: no-repeat;
     padding: 80px 40px;
@@ -183,7 +183,6 @@ h2{
 /* Tab Content Container */
 .tabs-container {
     position: relative;
-    overflow: hidden;
     background: #ffffff;
     border-radius: 0 10px 10px 10px;
     margin-top: 0px;
@@ -3886,7 +3885,7 @@ a.service-cta-btn {
 }
 
 button.nav-tab img{
-    width:40px;
+    width:26.5px;
     height:auto;
 }
 
@@ -4341,3 +4340,39 @@ button.nav-tab img{
 .tabs-container{
     background:transparent !important;
 }
+
+.tabs-container{
+    box-shadow: none !important;
+}
+
+.tab-content.active .booking-form {
+box-shadow: 0px 13px 13px 0px #00000059 !important;
+}
+
+.features{
+padding: 50px 0 0px !important;
+}
+
+button.nav-tab img{
+
+  opacity: 0.7;
+}
+
+button.nav-tab.active img{
+  
+  filter: brightness(0) invert(1) sepia(0) saturate(100%) hue-rotate(0deg) !important;
+  opacity:1 !important;
+
+}
+
+.travelers-panel {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE and Edge */
+}
+
+.travelers-panel.active::-webkit-scrollbar {
+  display: none ;               /* Chrome, Safari, Opera */
+}
+

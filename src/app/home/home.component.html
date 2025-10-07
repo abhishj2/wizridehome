@@ -17,10 +17,10 @@
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
                 <span class="icon" *ngIf="tab === 'shared-cabs'"><img
-                        src="../../assets/images/wizsh-Photoroom.png" /></span>
-                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/shared.png" /></span>
+                        src="../../assets/images/shared-removebg-preview.png" /></span>
+                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" /></span>
                 <span class="icon" *ngIf="tab === 'flights'"><img
-                        src="../../assets/images/WhatsApp Image 2025-09-29 at 11.55.59 AM-Photoroom.png" /></span>
+                        src="../../assets/images/flight.png" /></span>
                 {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
             </button>
         </div>
@@ -59,10 +59,7 @@
                                                 </div>
                                             </ng-container>
                                         </div>
-                                        <div class="validation-error"
-                                            *ngIf="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)">
-                                            {{getValidationMessage(formValues.sharedPickup, formValues.sharedDropoff)}}
-                                        </div>
+                                        
                                     </div>
 
                                     <button class="swap-btn" (click)="swapCabLocations('shared')">
@@ -120,7 +117,10 @@
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
-
+<div class="validation-error"
+                                            *ngIf="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)">
+                                            {{getValidationMessage(formValues.sharedPickup, formValues.sharedDropoff)}}
+                                        </div>
                                 <div class="location-details" [class.active]="locationDetailsVisible['shared']">
                                     <h3>📍 Specify Pickup & Drop-off Locations</h3>
                                     <div class="location-row">
@@ -669,10 +669,7 @@
                                     <span class="offer-code">{{ offer.code }}</span>
                                 </div>
 
-                                <a href="#" class="offer-cta-btn">
-                                    <span>{{ offer.ctaText }}</span>
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
@@ -758,10 +755,7 @@
                                 <span class="offer-code">{{ offer.code }}</span>
                             </div>
 
-                            <a href="#" class="offer-cta-btn">
-                                <span>{{ offer.ctaText }}</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
+                           
                         </div>
                     </div>
                 </div>
