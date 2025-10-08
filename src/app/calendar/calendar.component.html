@@ -1,0 +1,119 @@
+<div class="custom-calendar-container">
+  <!-- Input Field -->
+  <div class="calendar-input-wrapper" (click)="toggleCalendar()" [class.disabled]="disabled" #calendarInputWrapper>
+    <div class="input-with-icon">
+      <i class="fas fa-calendar input-icon"></i>
+      <input 
+        type="text" 
+        class="calendar-input form-input"
+        [value]="getDisplayDate()"
+        [placeholder]="placeholder"
+        readonly
+        [disabled]="disabled">
+    </div>
+    <div class="calendar-arrow" [class.open]="isOpen">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+
+  <!-- Calendar Dropdown -->
+  <div 
+    class="calendar-dropdown" 
+    [class.active]="isOpen"
+    [class.open-upward]="openUpward"
+    #calendarDropdown
+    role="dialog"
+    aria-label="Date picker"
+    aria-modal="true">
+    
+    <!-- Calendar Header -->
+    <div class="calendar-header">
+      <!-- Close Button - Top Right -->
+     
+      
+      <button 
+        type="button" 
+        class="nav-btn prev-month"
+        (click)="previousMonth()"
+        [disabled]="isPrevMonthDisabled()"
+        aria-label="Previous month">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="month-year-display">
+        <h3 class="current-month-year">{{ getMonthYearDisplay() }}</h3>
+        <div class="month-year-selectors">
+          <select class="month-selector" (change)="onMonthChange($event)" [value]="displayMonth.getMonth()">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+          </select>
+          <select class="year-selector" (change)="onYearChange($event)" [value]="displayYear">
+            <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <button 
+        type="button" 
+        class="nav-btn next-month"
+        (click)="nextMonth()"
+        aria-label="Next month">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Today Button -->
+    <!-- <div class="today-button-container">
+      <button 
+        type="button" 
+        class="today-btn"
+        (click)="goToToday()"
+        aria-label="Go to today">
+        Today
+      </button>
+    </div> -->
+
+    <!-- Week Days Header -->
+    <div class="week-days">
+      <div 
+        *ngFor="let day of weekDays" 
+        class="week-day"
+        [attr.aria-label]="day">
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid" role="grid" aria-label="Calendar">
+      <button
+        *ngFor="let date of getCalendarDays(); let i = index"
+        type="button"
+        class="calendar-day"
+        [class.selected]="isDateSelected(date)"
+        [class.disabled]="isDateDisabled(date)"
+        [class.current-month]="isCurrentMonth(date)"
+        [class.other-month]="!isCurrentMonth(date)"
+        [class.today]="isToday(date)"
+        [attr.aria-label]="'Select ' + date.toLocaleDateString()"
+        [attr.aria-selected]="isDateSelected(date)"
+        [disabled]="isDateDisabled(date)"
+        (click)="selectDate(date)"
+        role="gridcell"
+        [attr.tabindex]="isDateSelected(date) ? 0 : -1">
+        {{ date.getDate() }}
+      </button>
+    </div>
+
+    <!-- Calendar Footer - Removed to save space -->
+  </div>
+</div>

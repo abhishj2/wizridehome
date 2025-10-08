@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
+import { CustomCalendarComponent } from '../calendar/calendar.component';
 
 interface City {
   name: string;
@@ -44,7 +44,7 @@ interface SelectedCities {
 @Component({
   selector: 'app-travel-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CustomCalendarComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -374,6 +374,215 @@ trackByOfferId(index: number, offer: any): number {
   phoneError = '';
   popupTitle = '';
   pendingAction: 'flights' | 'shared' | 'reserved' | null = null;
+  selectedCountryCode = '+91';
+  countryList = [
+    { code: '+1', name: 'United States' },
+    { code: '+1', name: 'Canada' },
+    { code: '+7', name: 'Russia' },
+    { code: '+20', name: 'Egypt' },
+    { code: '+27', name: 'South Africa' },
+    { code: '+30', name: 'Greece' },
+    { code: '+31', name: 'Netherlands' },
+    { code: '+32', name: 'Belgium' },
+    { code: '+33', name: 'France' },
+    { code: '+34', name: 'Spain' },
+    { code: '+36', name: 'Hungary' },
+    { code: '+39', name: 'Italy' },
+    { code: '+40', name: 'Romania' },
+    { code: '+41', name: 'Switzerland' },
+    { code: '+43', name: 'Austria' },
+    { code: '+44', name: 'United Kingdom' },
+    { code: '+45', name: 'Denmark' },
+    { code: '+46', name: 'Sweden' },
+    { code: '+47', name: 'Norway' },
+    { code: '+48', name: 'Poland' },
+    { code: '+49', name: 'Germany' },
+    { code: '+51', name: 'Peru' },
+    { code: '+52', name: 'Mexico' },
+    { code: '+53', name: 'Cuba' },
+    { code: '+54', name: 'Argentina' },
+    { code: '+55', name: 'Brazil' },
+    { code: '+56', name: 'Chile' },
+    { code: '+57', name: 'Colombia' },
+    { code: '+58', name: 'Venezuela' },
+    { code: '+60', name: 'Malaysia' },
+    { code: '+61', name: 'Australia' },
+    { code: '+62', name: 'Indonesia' },
+    { code: '+63', name: 'Philippines' },
+    { code: '+64', name: 'New Zealand' },
+    { code: '+65', name: 'Singapore' },
+    { code: '+66', name: 'Thailand' },
+    { code: '+81', name: 'Japan' },
+    { code: '+82', name: 'South Korea' },
+    { code: '+84', name: 'Vietnam' },
+    { code: '+86', name: 'China' },
+    { code: '+90', name: 'Turkey' },
+    { code: '+91', name: 'India' },
+    { code: '+92', name: 'Pakistan' },
+    { code: '+93', name: 'Afghanistan' },
+    { code: '+94', name: 'Sri Lanka' },
+    { code: '+95', name: 'Myanmar' },
+    { code: '+98', name: 'Iran' },
+    { code: '+212', name: 'Morocco' },
+    { code: '+213', name: 'Algeria' },
+    { code: '+216', name: 'Tunisia' },
+    { code: '+218', name: 'Libya' },
+    { code: '+220', name: 'Gambia' },
+    { code: '+221', name: 'Senegal' },
+    { code: '+222', name: 'Mauritania' },
+    { code: '+223', name: 'Mali' },
+    { code: '+224', name: 'Guinea' },
+    { code: '+225', name: 'Ivory Coast' },
+    { code: '+226', name: 'Burkina Faso' },
+    { code: '+227', name: 'Niger' },
+    { code: '+228', name: 'Togo' },
+    { code: '+229', name: 'Benin' },
+    { code: '+230', name: 'Mauritius' },
+    { code: '+231', name: 'Liberia' },
+    { code: '+232', name: 'Sierra Leone' },
+    { code: '+233', name: 'Ghana' },
+    { code: '+234', name: 'Nigeria' },
+    { code: '+235', name: 'Chad' },
+    { code: '+236', name: 'Central African Republic' },
+    { code: '+237', name: 'Cameroon' },
+    { code: '+238', name: 'Cape Verde' },
+    { code: '+239', name: 'São Tomé and Príncipe' },
+    { code: '+240', name: 'Equatorial Guinea' },
+    { code: '+241', name: 'Gabon' },
+    { code: '+242', name: 'Republic of the Congo' },
+    { code: '+243', name: 'Democratic Republic of the Congo' },
+    { code: '+244', name: 'Angola' },
+    { code: '+245', name: 'Guinea-Bissau' },
+    { code: '+246', name: 'British Indian Ocean Territory' },
+    { code: '+248', name: 'Seychelles' },
+    { code: '+249', name: 'Sudan' },
+    { code: '+250', name: 'Rwanda' },
+    { code: '+251', name: 'Ethiopia' },
+    { code: '+252', name: 'Somalia' },
+    { code: '+253', name: 'Djibouti' },
+    { code: '+254', name: 'Kenya' },
+    { code: '+255', name: 'Tanzania' },
+    { code: '+256', name: 'Uganda' },
+    { code: '+257', name: 'Burundi' },
+    { code: '+258', name: 'Mozambique' },
+    { code: '+260', name: 'Zambia' },
+    { code: '+261', name: 'Madagascar' },
+    { code: '+262', name: 'Réunion' },
+    { code: '+263', name: 'Zimbabwe' },
+    { code: '+264', name: 'Namibia' },
+    { code: '+265', name: 'Malawi' },
+    { code: '+266', name: 'Lesotho' },
+    { code: '+267', name: 'Botswana' },
+    { code: '+268', name: 'Eswatini' },
+    { code: '+269', name: 'Comoros' },
+    { code: '+290', name: 'Saint Helena' },
+    { code: '+291', name: 'Eritrea' },
+    { code: '+297', name: 'Aruba' },
+    { code: '+298', name: 'Faroe Islands' },
+    { code: '+299', name: 'Greenland' },
+    { code: '+350', name: 'Gibraltar' },
+    { code: '+351', name: 'Portugal' },
+    { code: '+352', name: 'Luxembourg' },
+    { code: '+353', name: 'Ireland' },
+    { code: '+354', name: 'Iceland' },
+    { code: '+355', name: 'Albania' },
+    { code: '+356', name: 'Malta' },
+    { code: '+357', name: 'Cyprus' },
+    { code: '+358', name: 'Finland' },
+    { code: '+359', name: 'Bulgaria' },
+    { code: '+370', name: 'Lithuania' },
+    { code: '+371', name: 'Latvia' },
+    { code: '+372', name: 'Estonia' },
+    { code: '+373', name: 'Moldova' },
+    { code: '+374', name: 'Armenia' },
+    { code: '+375', name: 'Belarus' },
+    { code: '+376', name: 'Andorra' },
+    { code: '+377', name: 'Monaco' },
+    { code: '+378', name: 'San Marino' },
+    { code: '+380', name: 'Ukraine' },
+    { code: '+381', name: 'Serbia' },
+    { code: '+382', name: 'Montenegro' },
+    { code: '+383', name: 'Kosovo' },
+    { code: '+385', name: 'Croatia' },
+    { code: '+386', name: 'Slovenia' },
+    { code: '+387', name: 'Bosnia and Herzegovina' },
+    { code: '+389', name: 'North Macedonia' },
+    { code: '+420', name: 'Czech Republic' },
+    { code: '+421', name: 'Slovakia' },
+    { code: '+423', name: 'Liechtenstein' },
+    { code: '+500', name: 'Falkland Islands' },
+    { code: '+501', name: 'Belize' },
+    { code: '+502', name: 'Guatemala' },
+    { code: '+503', name: 'El Salvador' },
+    { code: '+504', name: 'Honduras' },
+    { code: '+505', name: 'Nicaragua' },
+    { code: '+506', name: 'Costa Rica' },
+    { code: '+507', name: 'Panama' },
+    { code: '+508', name: 'Saint Pierre and Miquelon' },
+    { code: '+509', name: 'Haiti' },
+    { code: '+590', name: 'Guadeloupe' },
+    { code: '+591', name: 'Bolivia' },
+    { code: '+592', name: 'Guyana' },
+    { code: '+593', name: 'Ecuador' },
+    { code: '+594', name: 'French Guiana' },
+    { code: '+595', name: 'Paraguay' },
+    { code: '+596', name: 'Martinique' },
+    { code: '+597', name: 'Suriname' },
+    { code: '+598', name: 'Uruguay' },
+    { code: '+599', name: 'Netherlands Antilles' },
+    { code: '+670', name: 'East Timor' },
+    { code: '+672', name: 'Antarctica' },
+    { code: '+673', name: 'Brunei' },
+    { code: '+674', name: 'Nauru' },
+    { code: '+675', name: 'Papua New Guinea' },
+    { code: '+676', name: 'Tonga' },
+    { code: '+677', name: 'Solomon Islands' },
+    { code: '+678', name: 'Vanuatu' },
+    { code: '+679', name: 'Fiji' },
+    { code: '+680', name: 'Palau' },
+    { code: '+681', name: 'Wallis and Futuna' },
+    { code: '+682', name: 'Cook Islands' },
+    { code: '+683', name: 'Niue' },
+    { code: '+684', name: 'American Samoa' },
+    { code: '+685', name: 'Samoa' },
+    { code: '+686', name: 'Kiribati' },
+    { code: '+687', name: 'New Caledonia' },
+    { code: '+688', name: 'Tuvalu' },
+    { code: '+689', name: 'French Polynesia' },
+    { code: '+690', name: 'Tokelau' },
+    { code: '+691', name: 'Micronesia' },
+    { code: '+692', name: 'Marshall Islands' },
+    { code: '+850', name: 'North Korea' },
+    { code: '+852', name: 'Hong Kong' },
+    { code: '+853', name: 'Macau' },
+    { code: '+855', name: 'Cambodia' },
+    { code: '+856', name: 'Laos' },
+    { code: '+880', name: 'Bangladesh' },
+    { code: '+886', name: 'Taiwan' },
+    { code: '+960', name: 'Maldives' },
+    { code: '+961', name: 'Lebanon' },
+    { code: '+962', name: 'Jordan' },
+    { code: '+963', name: 'Syria' },
+    { code: '+964', name: 'Iraq' },
+    { code: '+965', name: 'Kuwait' },
+    { code: '+966', name: 'Saudi Arabia' },
+    { code: '+967', name: 'Yemen' },
+    { code: '+968', name: 'Oman' },
+    { code: '+970', name: 'Palestine' },
+    { code: '+971', name: 'United Arab Emirates' },
+    { code: '+972', name: 'Israel' },
+    { code: '+973', name: 'Bahrain' },
+    { code: '+974', name: 'Qatar' },
+    { code: '+975', name: 'Bhutan' },
+    { code: '+976', name: 'Mongolia' },
+    { code: '+977', name: 'Nepal' },
+    { code: '+992', name: 'Tajikistan' },
+    { code: '+993', name: 'Turkmenistan' },
+    { code: '+994', name: 'Azerbaijan' },
+    { code: '+995', name: 'Georgia' },
+    { code: '+996', name: 'Kyrgyzstan' },
+    { code: '+998', name: 'Uzbekistan' }
+  ];
 
   // Selected cities
   selectedCities: SelectedCities = {
@@ -532,7 +741,8 @@ trackByOfferId(index: number, offer: any): number {
   constructor(
     private titleService: Title,
     private metaService: Meta,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -547,7 +757,6 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   ngAfterViewInit() {
-    this.initDatepickers();
     const currentIndex = this.tabs.indexOf(this.currentTab);
     const navTabs = document.querySelector('.nav-tabs');
     if (navTabs) {
@@ -564,172 +773,47 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   /** -------------------
-   * Datepicker Handling
+   * Custom Calendar Event Handlers
    -------------------- */
-  private initDatepickers() {
-    // console.log('Initializing datepickers for trip type:', this.tripType);
-    
-    const selectors = [
-      '.datecab',
-      '.datecabreserved-date',
-      '.datecabreserved-time',
-      '.dateflight-departure',
-      '.dateflight-return',
-    ];
+  
+  // Shared cab date selection
+  onSharedDateSelected(date: string) {
+    this.formValues.sharedDateTime = date;
+  }
 
-    selectors.forEach((selector) => {
-      const elements = document.querySelectorAll<HTMLInputElement>(selector);
-      elements.forEach((el) => {
-        const anyEl = el as any;
-        if (anyEl._flatpickr) {
-          try {
-            anyEl._flatpickr.destroy();
-          } catch {}
-        }
+  // Reserved cab date selection
+  onReservedDateSelected(date: string) {
+    this.formValues.reservedDate = date;
+  }
 
-        if (selector === '.datecabreserved-date') {
-          flatpickr(el, {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            minDate: 'today',
-            defaultDate: this.formValues.reservedDate || new Date(),
-            monthSelectorType: 'static',
-            prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
-            nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
-            onChange: (selectedDates, dateStr) => {
-              this.formValues.reservedDate = dateStr;
-            },
-          } );
-        } else if (selector === '.datecabreserved-time') {
-          flatpickr(el, {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: 'H:i',
-            time_24hr: true,
-            defaultDate: this.formValues.reservedTime || '12:00',
-            monthSelectorType: 'static',
-            prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
-            nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
-            onChange: (selectedDates, dateStr) => {
-              this.formValues.reservedTime = dateStr;
-              this.updateClockDisplay(dateStr);
-            },
-          });
-        } else if (selector === '.dateflight' || selector === '.datecab') {
-          flatpickr(el, {
-        enableTime: false,
-        dateFormat: 'Y-m-d',
-        defaultDate: this.formValues.flightDeparture || new Date(),
-        monthSelectorType: 'static',
-        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
-        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
-        minDate: 'today',
-        onChange: (selectedDates, dateStr) => {
-          this.formValues.flightDeparture = dateStr;
-              if (
-                this.tripType === 'round-trip' &&
-                this.formValues.flightReturn < dateStr
-              ) {
-            this.formValues.flightReturn = '';
-                this.initReturnPickerMinDate();
-          }
-            },
-      });
-        } else if (selector === '.dateflight-departure' && this.tripType !== 'multi-city') {
-          // Handle single/round-trip departure dates
-          flatpickr(el, {
-        enableTime: false,
-        dateFormat: 'Y-m-d',
-        defaultDate: this.formValues.flightDeparture || new Date(),
-        minDate: 'today',
-        monthSelectorType: 'static',
-        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
-        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
-        onChange: (selectedDates, dateStr) => {
-          this.formValues.flightDeparture = dateStr;
-              if (
-                this.tripType === 'round-trip' &&
-                this.formValues.flightReturn < dateStr
-              ) {
-            this.formValues.flightReturn = '';
-                this.initReturnPickerMinDate();
-          }
-            },
-      });
-        } else if (selector === '.dateflight-return') {
-          flatpickr(el, {
-        enableTime: false,
-        dateFormat: 'Y-m-d',
-            defaultDate: this.formValues.flightReturn || '',
-        minDate: this.formValues.flightDeparture || 'today',
-        monthSelectorType: 'static',
-        prevArrow: '<span class="flatpickr-prev">&lt;</span>', // left arrow
-        nextArrow: '<span class="flatpickr-next">&gt;</span>', // right arrow
-        onChange: (selectedDates, dateStr) => {
-          this.formValues.flightReturn = dateStr;
-            },
-          });
-        }
-      });
-    });
-    
-    // Initialize multi-city datepickers only if in multi-city mode
-    if (this.tripType === 'multi-city') {
-      // console.log('Initializing multi-city datepickers');
-      this.initMultiCityDatepickers();
+  // Flight departure date selection
+  onFlightDepartureDateSelected(date: string, routeIndex?: number) {
+    if (routeIndex !== undefined) {
+      // Multi-city flight
+      this.flightRoutes[routeIndex].date = date;
+    } else {
+      // Single/round-trip flight
+      this.formValues.flightDeparture = date;
+      if (this.tripType === 'round-trip' && this.formValues.flightReturn < date) {
+        this.formValues.flightReturn = '';
+      }
     }
   }
 
-  private initMultiCityDatepickers() {
-    const multiCityDateElements = document.querySelectorAll<HTMLInputElement>('.dateflight-departure');
-    // console.log('Found multi-city date elements:', multiCityDateElements.length);
-    multiCityDateElements.forEach((el, index) => {
-      const anyEl = el as any;
-      if (anyEl._flatpickr) {
-        try {
-          anyEl._flatpickr.destroy();
-        } catch {}
-      }
-
-      // Find the corresponding route index
-      const routeIndex = this.findRouteIndexForElement(el);
-      
-      flatpickr(el, {
-        enableTime: false,
-        dateFormat: 'Y-m-d',
-        defaultDate: this.flightRoutes[routeIndex]?.date || new Date(),
-        minDate: 'today',
-        onChange: (selectedDates, dateStr) => {
-          if (routeIndex !== -1) {
-            this.flightRoutes[routeIndex].date = dateStr;
-          }
-        },
-      });
-    });
+  // Flight return date selection
+  onFlightReturnDateSelected(date: string) {
+    this.formValues.flightReturn = date;
   }
 
-  private findRouteIndexForElement(element: HTMLInputElement): number {
-    // Find the route index by looking at the parent form-row and counting previous form-rows
-    const formRow = element.closest('.form-row');
-    if (!formRow) return -1;
-    
-    const allFormRows = document.querySelectorAll('.form-row');
-    const currentIndex = Array.from(allFormRows).indexOf(formRow as Element);
-    return currentIndex;
+  // Get minimum date for return flight picker
+  getReturnMinDate(): string {
+    return this.formValues.flightDeparture || this.getTodayDate();
   }
 
-  private initReturnPickerMinDate() {
-    const returnEls =
-      document.querySelectorAll<HTMLInputElement>('.dateflight-return');
-    returnEls.forEach((el) => {
-      const anyEl = el as any;
-      if (anyEl._flatpickr) {
-        anyEl._flatpickr.set(
-          'minDate',
-          this.formValues.flightDeparture || 'today'
-        );
-      }
-    });
+  // Get today's date in YYYY-MM-DD format
+  getTodayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   }
 
   /** -------------------
@@ -752,7 +836,6 @@ trackByOfferId(index: number, offer: any): number {
             setTimeout(() => {
                 this.previousTab = null;
                 this.isSliding = false;
-                this.initDatepickers();
             }, 300);
         }, 100);
     }
@@ -785,8 +868,7 @@ trackByOfferId(index: number, offer: any): number {
     }
     
     setTimeout(() => {
-      this.initReturnPickerMinDate();
-      this.initDatepickers(); // Re-initialize datepickers after trip type change
+      // Trip type changed - no need to re-initialize datepickers
     }, 0);
   }
 
@@ -815,6 +897,98 @@ trackByOfferId(index: number, offer: any): number {
     this.phoneError = '';
     this.pendingAction = null;
   }
+
+  onModalBackdropClick(event: Event) {
+    // Close modal when clicking on backdrop
+    if (event.target === event.currentTarget) {
+      this.cancelPhonePopup();
+    }
+  }
+
+  navigateToResults(phoneNumber: string) {
+    if (!this.pendingAction) {
+      console.log('No pending action, cannot navigate');
+      return;
+    }
+
+    const searchParams = {
+      from: this.getCurrentFromLocation(),
+      to: this.getCurrentToLocation(),
+      date: this.getCurrentDate(),
+      passengers: this.getCurrentPassengers(),
+      type: this.pendingAction,
+      phoneNumber: phoneNumber
+    };
+
+    console.log('Navigating to booking results with params:', searchParams);
+    console.log('Router available:', !!this.router);
+
+    try {
+      // Store search params in localStorage as fallback
+      localStorage.setItem('bookingSearchParams', JSON.stringify(searchParams));
+      
+      // Try router navigation first
+      console.log('Attempting router navigation...');
+      this.router.navigate(['/booking-results']).then(success => {
+        console.log('Router navigation success:', success);
+        if (!success) {
+          console.log('Router navigation failed, trying window.location...');
+          // Fallback to window.location
+          window.location.href = '/booking-results';
+        }
+      }).catch(error => {
+        console.error('Router navigation error:', error);
+        console.log('Falling back to window.location...');
+        // Fallback to window.location
+        window.location.href = '/booking-results';
+      });
+    } catch (error) {
+      console.error('Error during navigation:', error);
+      // Final fallback
+      window.location.href = '/booking-results';
+    }
+  }
+
+  private getCurrentFromLocation(): string {
+    if (this.pendingAction === 'flights') {
+      return this.selectedCities.flights.from || 'Delhi';
+    } else if (this.pendingAction === 'shared') {
+      return this.selectedCities.shared.pickup || 'Delhi';
+    } else {
+      return this.selectedCities.reserved.pickup || 'Delhi';
+    }
+  }
+
+  private getCurrentToLocation(): string {
+    if (this.pendingAction === 'flights') {
+      return this.selectedCities.flights.to || 'Mumbai';
+    } else if (this.pendingAction === 'shared') {
+      return this.selectedCities.shared.dropoff || 'Mumbai';
+    } else {
+      return this.selectedCities.reserved.dropoff || 'Mumbai';
+    }
+  }
+
+  private getCurrentDate(): string {
+    if (this.pendingAction === 'flights') {
+      return this.flightRoutes[0]?.date || this.getTodayDate();
+    } else if (this.pendingAction === 'shared') {
+      return this.formValues.sharedDateTime || this.getTodayDate();
+    } else {
+      return this.formValues.reservedDate || this.getTodayDate();
+    }
+  }
+
+  private getCurrentPassengers(): number {
+    if (this.pendingAction === 'flights') {
+      return this.counts.adults + this.counts.children;
+    } else if (this.pendingAction === 'shared') {
+      return this.formValues.sharedPassengers || 1;
+    } else {
+      return this.formValues.reservedPassengers || 1;
+    }
+  }
+
 
   onPhoneInput(event: any) {
     // Clear error when user starts typing
@@ -849,28 +1023,44 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    // Validate 10-digit phone number
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(this.phoneNumber)) {
-      this.phoneError = 'Please enter a valid 10-digit mobile number starting with 6-9';
+    if (!this.selectedCountryCode) {
+      this.phoneError = 'Please select a country code!';
       return;
     }
 
-    if (this.pendingAction === 'flights') {
-      this.submitFlights();
-    } else if (this.pendingAction === 'shared' || this.pendingAction === 'reserved') {
-      this.submitCabs(this.pendingAction);
+    // Validate phone number based on country code
+    const fullPhoneNumber = this.selectedCountryCode + this.phoneNumber;
+    
+    // Basic validation - at least 7 digits after country code
+    const phoneRegex = /^\d{7,15}$/;
+    if (!phoneRegex.test(this.phoneNumber)) {
+      this.phoneError = 'Please enter a valid phone number (7-15 digits)';
+      return;
     }
 
+    // Store the full phone number with country code
+    const completePhoneNumber = this.selectedCountryCode + this.phoneNumber;
+
+    if (this.pendingAction === 'flights') {
+      this.submitFlights(completePhoneNumber);
+    } else if (this.pendingAction === 'shared' || this.pendingAction === 'reserved') {
+      this.submitCabs(this.pendingAction, completePhoneNumber);
+    }
+
+    // Navigate to booking results page FIRST (before clearing pendingAction)
+    console.log('About to navigate to booking results...');
+    this.navigateToResults(completePhoneNumber);
+    
+    // Then close the modal
     this.cancelPhonePopup();
   }
 
   /** -------------------
    * Form Submissions
    -------------------- */
-  submitFlights() {
+  submitFlights(phoneNumber?: string) {
     let payload: any = {
-      phoneNumber: this.phoneNumber,
+      phoneNumber: phoneNumber || this.phoneNumber,
     };
 
     // console.log('Current flightRoutes:', this.flightRoutes);
@@ -922,7 +1112,7 @@ trackByOfferId(index: number, offer: any): number {
     alert('Flight booking submitted! Check console for details.');
   }
 
-  submitCabs(type: 'shared' | 'reserved') {
+  submitCabs(type: 'shared' | 'reserved', phoneNumber?: string) {
     const cities = this.selectedCities[type];
     if (!cities.pickup || !cities.dropoff) {
       alert('Please select both pickup and drop-off cities first.');
@@ -945,7 +1135,7 @@ trackByOfferId(index: number, offer: any): number {
 
     if (type === 'shared') {
       const payload = {
-        phoneNumber: this.phoneNumber,
+        phoneNumber: phoneNumber || this.phoneNumber,
         type: 'shared',
         pickupCity: this.formValues.sharedPickup,
         dropoffCity: this.formValues.sharedDropoff,
@@ -961,7 +1151,7 @@ trackByOfferId(index: number, offer: any): number {
 
     // reserved
     const payload = {
-      phoneNumber: this.phoneNumber,
+      phoneNumber: phoneNumber || this.phoneNumber,
       type: 'reserved',
       pickupCity: this.formValues.reservedPickup,
       dropoffCity: this.formValues.reservedDropoff,
@@ -1114,8 +1304,7 @@ trackByOfferId(index: number, offer: any): number {
         date: ''
       });
       
-      // Re-initialize date pickers for the new route
-      setTimeout(() => this.initMultiCityDatepickers(), 100);
+      // Multi-city route added - no need to re-initialize datepickers
     }
   }
 

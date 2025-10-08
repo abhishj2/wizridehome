@@ -1,0 +1,210 @@
+
+<!-- Search Parameters Bar -->
+<div class="search-params-bar" *ngIf="searchParams">
+  <div class="container">
+    <div class="params-content">
+      <div class="param-item">
+        <span class="param-label">From:</span>
+        <span class="param-value">{{ searchParams.from }}</span>
+      </div>
+      <div class="param-item">
+        <span class="param-label">To:</span>
+        <span class="param-value">{{ searchParams.to }}</span>
+      </div>
+      <div class="param-item">
+        <span class="param-label">When:</span>
+        <span class="param-value">{{ formatDate(searchParams.date) }}</span>
+      </div>
+      <div class="param-item">
+        <span class="param-label">No. of Seats:</span>
+        <span class="param-value">{{ searchParams.passengers }}</span>
+      </div>
+      <div class="param-actions">
+        <button class="modify-btn" (click)="modifySearch()">Modify</button>
+        <button class="request-btn" (click)="requestCarAddition()">Request Car Addition</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="results-main">
+  <div class="container">
+    <div class="results-layout">
+      
+      <!-- Left Column - Vehicle Results -->
+      <div class="results-column">
+        <div class="results-header-section">
+          <h2 class="results-title">
+            {{ searchParams?.type === 'shared' ? 'Shared Cab' : 'Reserved Cab' }} Options
+          </h2>
+          <p class="results-subtitle">
+            {{ vehicleOptions.length }} vehicles available for your journey
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="isLoading">
+          <div class="loading-spinner"></div>
+          <p>Finding the best options for you...</p>
+        </div>
+
+        <!-- Vehicle Cards -->
+        <div class="vehicle-cards" *ngIf="!isLoading">
+          <div class="vehicle-card" *ngFor="let vehicle of vehicleOptions">
+            
+            <!-- Vehicle Image and Model -->
+            <div class="vehicle-image-section">
+              <img [src]="vehicle.image" [alt]="vehicle.name" class="vehicle-image">
+              <div class="vehicle-model">{{ vehicle.name }}</div>
+            </div>
+
+            <!-- Route and Timing -->
+            <div class="route-section">
+              <div class="departure-info">
+                <div class="location-tag departure-tag">{{ vehicle.route.from.code }}</div>
+                <div class="location-details">
+                  <div class="location-name">{{ vehicle.route.from.name }}</div>
+                  <div class="location-address">{{ vehicle.route.from.location }}</div>
+                </div>
+                <div class="date-time">
+                  <div class="date">{{ formatDate(searchParams?.date || '') }}</div>
+                  <div class="time-tag">{{ vehicle.departureTime }}</div>
+                </div>
+              </div>
+
+              <!-- Route Visualization -->
+              <div class="route-visualization">
+                <div class="route-line">
+                  <div class="route-node start-node"></div>
+                  <div class="route-car">
+                    <i class="fas fa-car"></i>
+                  </div>
+                  <div class="route-node end-node"></div>
+                </div>
+                <div class="duration-tag">{{ vehicle.duration }}</div>
+              </div>
+
+              <div class="arrival-info">
+                <div class="location-tag arrival-tag">{{ vehicle.route.to.code }}</div>
+                <div class="location-details">
+                  <div class="location-name">{{ vehicle.route.to.name }}</div>
+                  <div class="location-address">{{ vehicle.route.to.location }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pricing and Availability -->
+            <div class="pricing-section">
+              <div class="availability-info">
+                <div class="seats-left">
+                  <span class="seats-label">Seats Left:</span>
+                  <span class="seats-count">{{ vehicle.seatsLeft }}</span>
+                </div>
+                <div class="price-info">
+                  <span class="price-label">Starts</span>
+                  <div class="price-amount">₹ {{ vehicle.price.toFixed(2) }}</div>
+                </div>
+              </div>
+              
+              <button class="select-seat-btn" (click)="selectSeat(vehicle)">
+                Select Seat
+              </button>
+            </div>
+
+            <!-- Expandable Sections -->
+            <div class="expandable-sections">
+              <div class="expandable-item">
+                <div class="expandable-header">
+                  <span>Amenities</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="expandable-content">
+                  <div class="amenities-list">
+                    <span class="amenity-tag" *ngFor="let amenity of vehicle.amenities">
+                      {{ amenity }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="expandable-item">
+                <div class="expandable-header">
+                  <span>Important Instructions</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="expandable-content">
+                  <ul class="instructions-list">
+                    <li>Please arrive 15 minutes before departure time</li>
+                    <li>Carry valid ID proof for verification</li>
+                    <li>Luggage limit: 15 kg per passenger</li>
+                    <li>No smoking or alcohol consumption allowed</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="expandable-item">
+                <div class="expandable-header">
+                  <span>Cancellation Policy</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="expandable-content">
+                  <div class="policy-details">
+                    <p><strong>Free cancellation</strong> up to 2 hours before departure</p>
+                    <p><strong>50% refund</strong> for cancellations 1-2 hours before departure</p>
+                    <p><strong>No refund</strong> for cancellations less than 1 hour before departure</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Promotional Ads -->
+      <div class="sidebar-column">
+        <div class="promotional-ads">
+          
+          <!-- Japan Trip Ad -->
+          <div class="ad-card japan-ad">
+            <div class="ad-image">
+              <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=300&h=200&fit=crop" alt="Japan Trip">
+            </div>
+            <div class="ad-content">
+              <h3 class="ad-title">Japan Trip</h3>
+              <p class="ad-description">
+                8 Days Trip in September. Come with Us on a Trip of a Lifetime. Check more details.
+              </p>
+            </div>
+          </div>
+
+          <!-- Kazakhstan Ad -->
+          <div class="ad-card kazakhstan-ad">
+            <div class="ad-image">
+              <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop" alt="Kazakhstan">
+            </div>
+            <div class="ad-content">
+              <h3 class="ad-title">Kazakhstan</h3>
+              <p class="ad-description">
+                Explore the beautiful landscapes of Kazakhstan. 10 Days Adventure Package.
+              </p>
+            </div>
+          </div>
+
+          <!-- Europe Tour Ad -->
+          <div class="ad-card europe-ad">
+            <div class="ad-image">
+              <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=300&h=200&fit=crop" alt="Europe Tour">
+            </div>
+            <div class="ad-content">
+              <h3 class="ad-title">Europe Tour</h3>
+              <p class="ad-description">
+                Discover the charm of Europe. 15 Days Multi-Country Tour Package.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

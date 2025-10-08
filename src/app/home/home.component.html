@@ -1,18 +1,36 @@
-<div class="phone-modal" *ngIf="showPhonePopup">
-    <div class="modal-content">
-        <h3>{{ popupTitle || 'Enter your phone number' }}</h3>
+<div class="phone-modal" *ngIf="showPhonePopup" (click)="onModalBackdropClick($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Important !!!</h3>
+        <p class="instruction-text">
+            Please Enter Your Correct Phone Number below.<br>
+            You will need this later on, as your seat/seats will be<br>
+            blocked against this Number.
+        </p>
         <div class="phone-input-container">
-            <input type="tel" class="form-input phone-input" 
-                   [(ngModel)]="phoneNumber" 
-                   placeholder="Enter 10-digit mobile number"
-                   maxlength="10"
-                   (input)="onPhoneInput($event)"
-                   (keypress)="onPhoneKeyPress($event)">
+            <div class="country-phone-row">
+                <div class="country-code-dropdown">
+                    <select [(ngModel)]="selectedCountryCode" class="country-select">
+                        <option *ngFor="let country of countryList" [value]="country.code">
+                            {{ country.code }} - {{ country.name }}
+                        </option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <input type="tel" class="form-input phone-input" 
+                           [(ngModel)]="phoneNumber" 
+                           placeholder="Enter Your Phone No."
+                           maxlength="15"
+                           (input)="onPhoneInput($event)"
+                           (keypress)="onPhoneKeyPress($event)">
+                </div>
+            </div>
         </div>
         <div class="phone-error" *ngIf="phoneError">{{ phoneError }}</div>
         <div class="actions">
-            <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
-            <button class="search-btn" (click)="cancelPhonePopup()">Cancel</button>
+            <button class="search-btn proceed-btn" (click)="confirmPhonePopup()">Proceed With Search</button>
         </div>
     </div>
 </div>
@@ -101,11 +119,12 @@
 
                                     <div class="form-group">
                                         <label>Date</label>
-                                        <div class="input-with-icon">
-                                            <i class="fas fa-calendar input-icon"></i>
-                                            <input type="text" class="form-input datecab"
-                                                [(ngModel)]="formValues.sharedDateTime" placeholder="2025-09-20">
-                                        </div>
+                                        <app-custom-calendar
+                                            [selectedDate]="formValues.sharedDateTime"
+                                            [minDate]="getTodayDate()"
+                                            placeholder="Select Date"
+                                            (dateSelected)="onSharedDateSelected($event)">
+                                        </app-custom-calendar>
                                     </div>
 
                                     <div class="form-group">
@@ -368,18 +387,23 @@
 
                                     <div class="form-group">
                                         <label>Departure</label>
-                                        <div class="input-with-icon">
-                                            <i class="fas fa-calendar input-icon"></i>
-                                            <input type="text" placeholder="2025-09-20"
-                                                class="form-input dateflight-departure" [(ngModel)]="route.date">
-                                        </div>
+                                        <app-custom-calendar
+                                            [selectedDate]="route.date"
+                                            [minDate]="getTodayDate()"
+                                            placeholder="Select Date"
+                                            (dateSelected)="onFlightDepartureDateSelected($event, i)">
+                                        </app-custom-calendar>
                                     </div>
 
                                     <div class="form-group return-field"
                                         [style.display]="tripType === 'round-trip' && i === 0 ? 'block' : 'none'">
                                         <label>Return</label>
-                                        <input type="text" class="form-input dateflight-return"
-                                            [(ngModel)]="formValues.flightReturn" placeholder="2024-10-08">
+                                        <app-custom-calendar
+                                            [selectedDate]="formValues.flightReturn"
+                                            [minDate]="getReturnMinDate()"
+                                            placeholder="Select Return Date"
+                                            (dateSelected)="onFlightReturnDateSelected($event)">
+                                        </app-custom-calendar>
                                     </div>
 
                                     <div class="travelers-dropdown form-group" *ngIf="tripType !== 'multi-city'">
@@ -559,11 +583,12 @@
 
                                     <div class="form-group">
                                         <label>Date</label>
-                                        <div class="input-with-icon">
-                                            <i class="fas fa-calendar input-icon"></i>
-                                            <input type="text" class="form-input datecabreserved-date"
-                                                placeholder="2025-09-24" [(ngModel)]="formValues.reservedDate">
-                                        </div>
+                                        <app-custom-calendar
+                                            [selectedDate]="formValues.reservedDate"
+                                            [minDate]="getTodayDate()"
+                                            placeholder="Select Date"
+                                            (dateSelected)="onReservedDateSelected($event)">
+                                        </app-custom-calendar>
                                     </div>
 
                                     <div class="form-group">
