@@ -9,8 +9,12 @@ body{
   font-family: "Quicksand", sans-serif !important;
   background: #eee;
 }
+
+.flatpickr-months .flatpickr-month, .flatpickr-current-month .cur-month, .flatpickr-current-month input.cur-year{
+  font-family: "Quicksand", sans-serif !important;
+}
 .flatpickr-calendar {
-  transform: scale(0.7) !important;
+  transform: scale(0.8) !important;
   transform-origin: top left !important;
 }
 
@@ -39,11 +43,10 @@ body{
   
  
   .flatpickr-day.flatpickr-disabled{
-    color: #000 !important;
+    color: rgba(57, 57, 57, 0.3) !important;
+    background: transparent;
   }
-  .flatpickr-day.flatpickr-disabled{
-    background:#ccc !important;
-}
+
 
   .flatpickr-day:hover {
     background: darkcyan !important;
@@ -101,4 +104,42 @@ body{
 
 .nesap{
   align-self:anchor-center !important;
+}
+/* Month switcher arrows */
+.flatpickr-months{
+  align-items: center;
+    margin-top:6px;
+
+  
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  background: darkcyan !important; /* arrow background */
+  color: #fff !important;           /* arrow color */
+  border-radius: 50% !important;
+  width: 2px !important;
+  height: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 10px !important;
+  cursor: pointer;
+  transition: background 0.3s;
+    margin-top:10px;
+
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  background: #006666 !important;
+}
+
+
+
+.flatpickr-prev-month {
+  left:60px !important;          /* reduce distance from month text */
+}
+
+.flatpickr-next-month {
+  right: 60px !important;         /* reduce distance from month text */
 }

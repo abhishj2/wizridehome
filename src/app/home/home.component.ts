@@ -371,6 +371,7 @@ trackByOfferId(index: number, offer: any): number {
   isTravelersOpen = false;
   showPhonePopup = false;
   phoneNumber = '';
+  phoneError = '';
   popupTitle = '';
   pendingAction: 'flights' | 'shared' | 'reserved' | null = null;
 
@@ -499,14 +500,14 @@ trackByOfferId(index: number, offer: any): number {
     flightTo: 'Mumbai',
     flightDeparture: '',
     flightReturn: '',
-    sharedPickup: 'Delhi',
-    sharedDropoff: 'Mumbai',
+    sharedPickup: '',
+    sharedDropoff: '',
     sharedDateTime: '',
     sharedPassengers: 1,
     sharedPickupLocation: '',
     sharedDropoffLocation: '',
-    reservedPickup: 'Delhi',
-    reservedDropoff: 'Mumbai',
+    reservedPickup: '',
+    reservedDropoff: '',
     reservedDate: '',
     reservedTime: '',
     reservedPassengers: 1,
@@ -598,7 +599,7 @@ trackByOfferId(index: number, offer: any): number {
             onChange: (selectedDates, dateStr) => {
               this.formValues.reservedDate = dateStr;
             },
-          });
+          } );
         } else if (selector === '.datecabreserved-time') {
           flatpickr(el, {
             enableTime: true,
@@ -811,12 +812,47 @@ trackByOfferId(index: number, offer: any): number {
   cancelPhonePopup() {
     this.showPhonePopup = false;
     this.phoneNumber = '';
+    this.phoneError = '';
     this.pendingAction = null;
   }
 
+  onPhoneInput(event: any) {
+    // Clear error when user starts typing
+    this.phoneError = '';
+    
+    // Remove any non-digit characters
+    let value = event.target.value.replace(/\D/g, '');
+    
+    // Limit to 10 digits
+    if (value.length > 10) {
+      value = value.substring(0, 10);
+    }
+    
+    this.phoneNumber = value;
+    event.target.value = value;
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent) {
+    // Allow only digits
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
   confirmPhonePopup() {
+    // Clear previous error
+    this.phoneError = '';
+    
     if (!this.phoneNumber || !this.phoneNumber.trim()) {
-      alert('Phone number is required!');
+      this.phoneError = 'Phone number is required!';
+      return;
+    }
+
+    // Validate 10-digit phone number
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(this.phoneNumber)) {
+      this.phoneError = 'Please enter a valid 10-digit mobile number starting with 6-9';
       return;
     }
 
@@ -1116,6 +1152,12 @@ trackByOfferId(index: number, offer: any): number {
     const cities = this.selectedCities[tabType];
 
     if (cities.pickup && cities.dropoff) {
+      // For shared cabs, don't show location details if source and destination are the same
+      if (tabType === 'shared' && this.isSameCitySelected(cities.pickup, cities.dropoff)) {
+        this.locationDetailsVisible[tabType] = false;
+        return;
+      }
+      
       this.locationDetailsVisible[tabType] = true;
     }
   }
@@ -1227,6 +1269,12 @@ trackByOfferId(index: number, offer: any): number {
 
 
   searchFlights() {
+    // Validate date field
+    if (!this.formValues.flightDeparture || !this.formValues.flightDeparture.trim()) {
+      alert('Please select a departure date first.');
+      return;
+    }
+    
     this.openPhonePopup('flights');
   }
 
@@ -1235,6 +1283,13 @@ trackByOfferId(index: number, offer: any): number {
 
     if (!cities.pickup || !cities.dropoff) {
       alert('Please select both pickup and drop-off cities first.');
+      return;
+    }
+
+    // Validate date field
+    const dateField = type === 'shared' ? this.formValues.sharedDateTime : this.formValues.reservedDate;
+    if (!dateField || !dateField.trim()) {
+      alert('Please select a date first.');
       return;
     }
 

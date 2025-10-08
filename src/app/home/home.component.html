@@ -1,7 +1,15 @@
 <div class="phone-modal" *ngIf="showPhonePopup">
     <div class="modal-content">
         <h3>{{ popupTitle || 'Enter your phone number' }}</h3>
-        <input type="tel" class="form-input" [(ngModel)]="phoneNumber" placeholder="Enter phone number">
+        <div class="phone-input-container">
+            <input type="tel" class="form-input phone-input" 
+                   [(ngModel)]="phoneNumber" 
+                   placeholder="Enter 10-digit mobile number"
+                   maxlength="10"
+                   (input)="onPhoneInput($event)"
+                   (keypress)="onPhoneKeyPress($event)">
+        </div>
+        <div class="phone-error" *ngIf="phoneError">{{ phoneError }}</div>
         <div class="actions">
             <button class="search-btn" (click)="confirmPhonePopup()">Submit</button>
             <button class="search-btn" (click)="cancelPhonePopup()">Cancel</button>
@@ -42,7 +50,7 @@
                                             <i class="fas fa-location-dot input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)"
-                                                placeholder="Enter pick-up city" [(ngModel)]="formValues.sharedPickup"
+                                                placeholder="Source" [(ngModel)]="formValues.sharedPickup"
                                                 (focus)="showCitySuggestionsOnFocus('shared-pickup')"
                                                 (input)="showCitySuggestions(formValues.sharedPickup, 'shared-pickup')">
                                         </div>
@@ -72,7 +80,7 @@
                                             <i class="fas fa-location-dot input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)"
-                                                placeholder="Enter drop-off city" [(ngModel)]="formValues.sharedDropoff"
+                                                placeholder="Destination" [(ngModel)]="formValues.sharedDropoff"
                                                 (focus)="showCitySuggestionsOnFocus('shared-dropoff')"
                                                 (input)="showCitySuggestions(formValues.sharedDropoff, 'shared-dropoff')">
                                         </div>
@@ -477,14 +485,19 @@
                                 </div>
                                 <div class="features">
                                     <div class="feature">
+                                        
                                         <span class="feature-icon">🛡️</span>
                                         <span>Priority customer service</span>
-                                        <span class="feature-icon">💳</span>
+
+                                        </div>
+                                    <div class="feature">                   <span class="feature-icon">💳</span>
                                         <span>Lowest fare guaranteed</span>
+                                        </div>  
+                                        <div class="feature"><span class="feature-icon">📝</span>
+                                        <span>Web Check In</span></div>
                                     </div>
                                 </div>
 
-                            </div>
                         </ng-container>
 
                         <ng-container *ngSwitchCase="'reserved-cabs'">
@@ -496,7 +509,7 @@
                                         <div class="input-with-icon">
                                             <i class="fas fa-location-dot input-icon"></i>
                                             <input type="text" class="form-input city-input"
-                                                placeholder="Enter pick-up city" [(ngModel)]="formValues.reservedPickup"
+                                                placeholder="Source" [(ngModel)]="formValues.reservedPickup"
                                                 (focus)="showCitySuggestionsOnFocus('reserved-pickup')"
                                                 (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
                                         </div>
@@ -524,7 +537,7 @@
                                         <div class="input-with-icon">
                                             <i class="fas fa-location-dot input-icon"></i>
                                             <input type="text" class="form-input city-input"
-                                                placeholder="Enter drop-off city"
+                                                placeholder="Destination"
                                                 [(ngModel)]="formValues.reservedDropoff"
                                                 (focus)="showCitySuggestionsOnFocus('reserved-dropoff')"
                                                 (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
@@ -842,10 +855,7 @@
                                 <span class="offer-code">{{ offer.code }}</span>
                             </div>
 
-                            <a href="#" class="offer-cta-btn">
-                                <span>{{ offer.ctaText }}</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
+                           
                         </div>
                     </div>
                 </div>

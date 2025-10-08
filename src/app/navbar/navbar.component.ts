@@ -164,8 +164,12 @@ export class NavbarComponent {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      console.log('Searching for:', this.searchQuery);
-      // Implement search functionality
+    
+      console.log('Ready for API implementation - search term:', this.searchQuery.trim());
+      
+      
+    } else {
+      console.log('⚠️ Empty search query - no action taken');
     }
   }
 
