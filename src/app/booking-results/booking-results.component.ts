@@ -9,6 +9,8 @@ interface BookingSearchParams {
   passengers: number;
   type: 'shared' | 'reserved';
   phoneNumber: string;
+  pickupLocation?: string;
+  dropLocation?: string;
 }
 
 interface VehicleOption {
@@ -24,6 +26,8 @@ interface VehicleOption {
     from: { code: string; name: string; location: string };
     to: { code: string; name: string; location: string };
   };
+  pickupLocation?: string;
+  dropLocation?: string;
 }
 
 @Component({
@@ -78,7 +82,9 @@ export class BookingResultsComponent implements OnInit {
         date: new Date().toISOString().split('T')[0],
         passengers: 2,
         type: 'shared',
-        phoneNumber: '+919876543210'
+        phoneNumber: '+919876543210',
+        pickupLocation: 'Airport Terminal 3',
+        dropLocation: 'Bandra Kurla Complex'
       };
     }
     
@@ -118,7 +124,9 @@ export class BookingResultsComponent implements OnInit {
           price: 1331.43,
           seatsLeft: 1,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         },
         {
           id: 'innova-2',
@@ -129,7 +137,9 @@ export class BookingResultsComponent implements OnInit {
           price: 1331.43,
           seatsLeft: 2,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         },
         {
           id: 'innova-3',
@@ -140,7 +150,9 @@ export class BookingResultsComponent implements OnInit {
           price: 1331.43,
           seatsLeft: 3,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         }
       ];
     } else {
@@ -155,7 +167,9 @@ export class BookingResultsComponent implements OnInit {
           price: 2100.00,
           seatsLeft: 4,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         },
         {
           id: 'innova-reserved-1',
@@ -166,7 +180,9 @@ export class BookingResultsComponent implements OnInit {
           price: 2800.00,
           seatsLeft: 6,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         },
         {
           id: 'ertiga-1',
@@ -177,7 +193,9 @@ export class BookingResultsComponent implements OnInit {
           price: 3200.00,
           seatsLeft: 7,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi', 'Charging Points'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         },
         {
           id: 'fortuner-1',
@@ -188,7 +206,9 @@ export class BookingResultsComponent implements OnInit {
           price: 4500.00,
           seatsLeft: 7,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi', 'Charging Points', 'Premium Interior'],
-          route: baseRoute
+          route: baseRoute,
+          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         }
       ];
     }
