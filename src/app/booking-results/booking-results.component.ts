@@ -38,6 +38,7 @@ export class BookingResultsComponent implements OnInit {
   
   vehicleOptions: VehicleOption[] = [];
   isLoading = true;
+  expandedSections: { [key: string]: boolean } = {};
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -111,7 +112,7 @@ export class BookingResultsComponent implements OnInit {
         {
           id: 'innova-1',
           name: 'Innova Crysta',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&h=150&fit=crop',
+          image: '../../assets/images/reversed-removebg-preview.png',
           departureTime: '03:50 AM',
           duration: '5 hrs 10 mins',
           price: 1331.43,
@@ -122,7 +123,7 @@ export class BookingResultsComponent implements OnInit {
         {
           id: 'innova-2',
           name: 'Innova Crysta',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&h=150&fit=crop',
+          image: '../../assets/images/reversed-removebg-preview.png',
           departureTime: '04:50 AM',
           duration: '5 hrs 10 mins',
           price: 1331.43,
@@ -133,7 +134,7 @@ export class BookingResultsComponent implements OnInit {
         {
           id: 'innova-3',
           name: 'Innova Crysta',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&h=150&fit=crop',
+          image: '../../assets/images/reversed-removebg-preview.png',
           departureTime: '06:30 AM',
           duration: '5 hrs 10 mins',
           price: 1331.43,
@@ -229,5 +230,22 @@ export class BookingResultsComponent implements OnInit {
       day: '2-digit', 
       month: 'short' 
     });
+  }
+
+  toggleExpandableSection(vehicleId: string, sectionType: string, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    
+    const key = `${vehicleId}-${sectionType}`;
+    this.expandedSections[key] = !this.expandedSections[key];
+    
+    console.log(`Toggled ${key}: ${this.expandedSections[key]}`);
+  }
+
+  isSectionExpanded(vehicleId: string, sectionType: string): boolean {
+    const key = `${vehicleId}-${sectionType}`;
+    return this.expandedSections[key] || false;
   }
 }

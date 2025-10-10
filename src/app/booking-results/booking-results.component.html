@@ -1,27 +1,20 @@
 
-<!-- Search Parameters Bar -->
-<div class="search-params-bar" *ngIf="searchParams">
+<!-- Compact Search Summary -->
+<div class="search-summary" *ngIf="searchParams">
   <div class="container">
-    <div class="params-content">
-      <div class="param-item">
-        <span class="param-label">From:</span>
-        <span class="param-value">{{ searchParams.from }}</span>
+    <div class="summary-content">
+      <div class="summary-info">
+        <div class="route-summary">
+          <span class="from">{{ searchParams.from }}</span>
+          <i class="fas fa-arrow-right"></i>
+          <span class="to">{{ searchParams.to }}</span>
+          <span class="date">{{ formatDate(searchParams.date) }}</span>
+          <span class="passengers">{{ searchParams.passengers }} seats</span>
+        </div>
       </div>
-      <div class="param-item">
-        <span class="param-label">To:</span>
-        <span class="param-value">{{ searchParams.to }}</span>
-      </div>
-      <div class="param-item">
-        <span class="param-label">When:</span>
-        <span class="param-value">{{ formatDate(searchParams.date) }}</span>
-      </div>
-      <div class="param-item">
-        <span class="param-label">No. of Seats:</span>
-        <span class="param-value">{{ searchParams.passengers }}</span>
-      </div>
-      <div class="param-actions">
+      <div class="summary-actions">
         <button class="modify-btn" (click)="modifySearch()">Modify</button>
-        <button class="request-btn" (click)="requestCarAddition()">Request Car Addition</button>
+        <button class="request-btn" (click)="requestCarAddition()">Request for Addition</button>
       </div>
     </div>
   </div>
@@ -49,114 +42,113 @@
           <p>Finding the best options for you...</p>
         </div>
 
-        <!-- Vehicle Cards -->
+        <!-- Compact Vehicle Cards -->
         <div class="vehicle-cards" *ngIf="!isLoading">
           <div class="vehicle-card" *ngFor="let vehicle of vehicleOptions">
             
-            <!-- Vehicle Image and Model -->
-            <div class="vehicle-image-section">
-              <img [src]="vehicle.image" [alt]="vehicle.name" class="vehicle-image">
-              <div class="vehicle-model">{{ vehicle.name }}</div>
-            </div>
-
-            <!-- Route and Timing -->
-            <div class="route-section">
-              <div class="departure-info">
-                <div class="location-tag departure-tag">{{ vehicle.route.from.code }}</div>
-                <div class="location-details">
-                  <div class="location-name">{{ vehicle.route.from.name }}</div>
-                  <div class="location-address">{{ vehicle.route.from.location }}</div>
-                </div>
-                <div class="date-time">
-                  <div class="date">{{ formatDate(searchParams?.date || '') }}</div>
-                  <div class="time-tag">{{ vehicle.departureTime }}</div>
+            <!-- Compact Vehicle Header -->
+            <div class="vehicle-header">
+              <div class="vehicle-info">
+                <img [src]="vehicle.image" [alt]="vehicle.name" class="vehicle-image">
+                <div class="vehicle-details">
+                  <h3 class="vehicle-name">{{ vehicle.name }}</h3>
+                  <div class="departure-info">
+                    <span class="time">{{ vehicle.departureTime }}</span>
+                    <span class="duration">{{ formatDate(searchParams?.date || '') }}</span>
+                  </div>
                 </div>
               </div>
+              <div class="price-section">
+                <div class="price">₹{{ vehicle.price.toFixed(0) }}</div>
+                <div class="seats-left">{{ vehicle.seatsLeft }} seats left</div>
+              </div>
+            </div>
 
-              <!-- Route Visualization -->
+            <!-- Route Info with Visual Line -->
+            <div class="route-info">
+              <div class="route-point">
+                <div class="location-code">{{ vehicle.route.from.code }}</div>
+                <div class="location-name">{{ vehicle.route.from.name }}</div>
+              </div>
+              
+              <!-- Route Visualization Line -->
               <div class="route-visualization">
                 <div class="route-line">
                   <div class="route-node start-node"></div>
                   <div class="route-car">
-                    <i class="fas fa-car"></i>
+                    <!-- <i class="fas fa-car"></i>
+                      -->
+
+                      <img src="../../assets/images/bgremovecar.png"/>
                   </div>
                   <div class="route-node end-node"></div>
                 </div>
-                <div class="duration-tag">{{ vehicle.duration }}</div>
-              </div>
-
-              <div class="arrival-info">
-                <div class="location-tag arrival-tag">{{ vehicle.route.to.code }}</div>
-                <div class="location-details">
-                  <div class="location-name">{{ vehicle.route.to.name }}</div>
-                  <div class="location-address">{{ vehicle.route.to.location }}</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pricing and Availability -->
-            <div class="pricing-section">
-              <div class="availability-info">
-                <div class="seats-left">
-                  <span class="seats-label">Seats Left:</span>
-                  <span class="seats-count">{{ vehicle.seatsLeft }}</span>
-                </div>
-                <div class="price-info">
-                  <span class="price-label">Starts</span>
-                  <div class="price-amount">₹ {{ vehicle.price.toFixed(2) }}</div>
+                <div class="route-details">
+                  <div class="departure-time">{{ vehicle.departureTime }}</div>
+                  <div class="departure-date">{{ vehicle.duration }} </div>
                 </div>
               </div>
               
-              <button class="select-seat-btn" (click)="selectSeat(vehicle)">
-                Select Seat
-              </button>
+              <div class="route-point">
+                <div class="location-code">{{ vehicle.route.to.code }}</div>
+                <div class="location-name">{{ vehicle.route.to.name }}</div>
+              </div>
             </div>
 
-            <!-- Expandable Sections -->
-            <div class="expandable-sections">
-              <div class="expandable-item">
-                <div class="expandable-header">
-                  <span>Amenities</span>
-                  <i class="fas fa-chevron-down"></i>
+            <!-- Compact Expandable Sections -->
+            <div class="compact-sections">
+              <div class="section-item" 
+                   [class.expanded]="isSectionExpanded(vehicle.id, 'amenities')">
+                <div class="section-header" (click)="toggleExpandableSection(vehicle.id, 'amenities', $event)">
+                  <span class="section-title">Amenities</span>
+                  <i class="fas fa-chevron-down" [class.rotated]="isSectionExpanded(vehicle.id, 'amenities')"></i>
                 </div>
-                <div class="expandable-content">
-                  <div class="amenities-list">
+                <div class="section-content" *ngIf="isSectionExpanded(vehicle.id, 'amenities')">
+                  <div class="amenities-grid">
                     <span class="amenity-tag" *ngFor="let amenity of vehicle.amenities">
-                      {{ amenity }}
+                      <i class="fas fa-check"></i>{{ amenity }}
                     </span>
                   </div>
                 </div>
               </div>
               
-              <div class="expandable-item">
-                <div class="expandable-header">
-                  <span>Important Instructions</span>
-                  <i class="fas fa-chevron-down"></i>
+              <div class="section-item" 
+                   [class.expanded]="isSectionExpanded(vehicle.id, 'instructions')">
+                <div class="section-header" (click)="toggleExpandableSection(vehicle.id, 'instructions')">
+                  <span class="section-title">Instructions</span>
+                  <i class="fas fa-chevron-down" [class.rotated]="isSectionExpanded(vehicle.id, 'instructions')"></i>
                 </div>
-                <div class="expandable-content">
+                <div class="section-content" *ngIf="isSectionExpanded(vehicle.id, 'instructions')">
                   <ul class="instructions-list">
-                    <li>Please arrive 15 minutes before departure time</li>
-                    <li>Carry valid ID proof for verification</li>
-                    <li>Luggage limit: 15 kg per passenger</li>
-                    <li>No smoking or alcohol consumption allowed</li>
+                    <li>Arrive 15 minutes before departure</li>
+                    <li>Carry valid ID proof</li>
+                    <li>15 kg luggage limit per person</li>
+                    <li>No smoking or alcohol</li>
                   </ul>
                 </div>
               </div>
               
-              <div class="expandable-item">
-                <div class="expandable-header">
-                  <span>Cancellation Policy</span>
-                  <i class="fas fa-chevron-down"></i>
+              <div class="section-item" 
+                   [class.expanded]="isSectionExpanded(vehicle.id, 'policy')">
+                <div class="section-header" (click)="toggleExpandableSection(vehicle.id, 'policy')">
+                  <span class="section-title">Cancellation Policy</span>
+                  <i class="fas fa-chevron-down" [class.rotated]="isSectionExpanded(vehicle.id, 'policy')"></i>
                 </div>
-                <div class="expandable-content">
-                  <div class="policy-details">
-                    <p><strong>Free cancellation</strong> up to 2 hours before departure</p>
-                    <p><strong>50% refund</strong> for cancellations 1-2 hours before departure</p>
-                    <p><strong>No refund</strong> for cancellations less than 1 hour before departure</p>
+                <div class="section-content" *ngIf="isSectionExpanded(vehicle.id, 'policy')">
+                  <div class="policy-info">
+                    <p><strong>Free cancellation</strong> up to 2 hours before</p>
+                    <p><strong>50% refund</strong> for 1-2 hours before</p>
+                    <p><strong>No refund</strong> less than 1 hour before</p>
                   </div>
                 </div>
               </div>
             </div>
+            
+            <!-- Book Button -->
+            <button class="book-btn" (click)="selectSeat(vehicle)">
+              <i class="fas fa-check-circle"></i>
+              Select Seat
+            </button>
           </div>
         </div>
       </div>
