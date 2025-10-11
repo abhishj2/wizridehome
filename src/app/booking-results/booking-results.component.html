@@ -114,19 +114,38 @@
             <!-- Options -->
             <div class="options">
               <div class="option-group">
-                <div class="dropdown">Amenities
-                  <div class="dropdown-content">
-                    {{ vehicle.amenities.join(', ') }}.
+                <!-- Default Amenities Display -->
+                <div class="default-amenities">
+                  <div class="amenity-item">
+                    <i class="fas fa-snowflake"></i>
+                    <span>AC</span>
+                  </div>
+                  <div class="amenity-item">
+                    <i class="fas fa-suitcase"></i>
+                    <span>Luggage</span>
+                  </div>
+                  <div class="amenity-item">
+                    <i class="fas fa-coffee"></i>
+                    <span>Refreshment</span>
                   </div>
                 </div>
-                <div class="dropdown">Instructions
-                  <div class="dropdown-content">
-                    Arrive 15 minutes before departure. Bring a valid ID. Follow crew instructions.
+                
+                <!-- Hover Dropdowns -->
+                <div class="hover-dropdowns">
+                  <div class="dropdown">Amenities
+                    <div class="dropdown-content">
+                      {{ vehicle.amenities.join(', ') }}.
+                    </div>
                   </div>
-                </div>
-                <div class="dropdown">Cancellation Policy
-                  <div class="dropdown-content">
-                    Cancel 24 hours prior for a full refund. 50% refund within 12 hours.
+                  <div class="dropdown">Instructions
+                    <div class="dropdown-content">
+                      Arrive 15 minutes before departure. Bring a valid ID. Follow crew instructions.
+                    </div>
+                  </div>
+                  <div class="dropdown">Cancellation Policy
+                    <div class="dropdown-content">
+                      Cancel 24 hours prior for a full refund. 50% refund within 12 hours.
+                    </div>
                   </div>
                 </div>
               </div>
