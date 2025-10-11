@@ -56,47 +56,53 @@
         <div class="vehicle-cards" *ngIf="!isLoading">
           <div class="card" *ngFor="let vehicle of vehicleOptions">
             
-            <!-- Route -->
-            <div class="route">
-              <div class="route-column">
-                <div class="route-code">{{ vehicle.route.from.code }}</div>
-                <div class="location">{{ vehicle.route.from.name }} 
-                  <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
-                </div>
-                <div class="time">{{ vehicle.departureTime }}</div>
-              </div>
+    <!-- Route -->
+    <div class="route">
+      <div class="vehicle">
+        <img [src]="vehicle.image" [alt]="vehicle.name">
+        <div class="vehicle-info">
+          <h3>{{ vehicle.name }}</h3>
+        </div>
+      </div>
 
-              <div class="line">
-                <div class="car">
-                  <img src="../../assets/images/bgremovecar.png" alt="Car">
-                </div>
-              </div>
+      <div class="route-column">
+        <div class="route-code">{{ vehicle.route.from.code }}</div>
+        <div class="location">{{ vehicle.route.from.name }} 
+          <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
+        </div>
+      </div>
 
-              <div class="route-column">
-                <div class="route-code">{{ vehicle.route.to.code }}</div>
-                <div class="location">{{ vehicle.route.to.name }}
-                  <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
-                </div>
-                <div class="duration">{{ vehicle.duration }}</div>
-              </div>
-            </div>
+      <div class="route-visualization">
+        <div class="route-line">
+          <div class="route-node start-node"></div>
+          <div class="route-car">
+            <img src="../../assets/images/bgremovecar.png" alt="Car">
+          </div>
+          <div class="route-node end-node"></div>
+        </div>
+        <div class="route-details">
+          <div class="time">{{ vehicle.departureTime }}</div>
+          <div class="duration">{{ vehicle.duration }}</div>
+        </div>
+      </div>
 
-            <!-- Details -->
-            <div class="details">
-              <div class="vehicle">
-                <img [src]="vehicle.image" [alt]="vehicle.name">
-                <div class="vehicle-info">
-                  <h3>{{ vehicle.name }}</h3>
-                </div>
-              </div>
-              
-              <div class="duration">{{ formatDate(searchParams?.date || '') }}</div>
+      <div class="route-column">
+        <div class="route-code">{{ vehicle.route.to.code }}</div>
+        <div class="location">{{ vehicle.route.to.name }}
+          <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
+        </div>
+      </div>
 
-              <div class="price-info">
-                <div class="price">₹{{ vehicle.price.toFixed(0) }}</div>
-                <p>{{ vehicle.seatsLeft }} Seat Left</p>
-              </div>
-            </div>
+      <div class="price-info">
+        <div class="price">₹{{ vehicle.price.toFixed(0) }}</div>
+        <p>{{ vehicle.seatsLeft }} Seat Left</p>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <!-- <div class="details">
+      <div class="duration">{{ formatDate(searchParams?.date || '') }}</div>
+    </div> -->
 
             <!-- Options -->
             <div class="options">
