@@ -188,12 +188,12 @@
 
 /* Results Column with Neumorphic Style */
 .results-column {
-  background: #ffffff;
+  /* background: #ffffff; */
   border-radius: 28px;
   padding: 40px;
-  box-shadow: 
+  /* box-shadow: 
     20px 20px 60px rgba(0, 0, 0, 0.08),
-    -20px -20px 60px rgba(255, 255, 255, 0.9);
+    -20px -20px 60px rgba(255, 255, 255, 0.9); */
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
@@ -388,8 +388,8 @@
 .route-line:before {
   content: "";
   position: absolute;
-  left: 20px;
-  right: 20px;
+  left: 0px;
+  right: 0px;
   height: 2px;
   background: #666;
   z-index: 1;
