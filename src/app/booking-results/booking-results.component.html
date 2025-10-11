@@ -56,6 +56,13 @@
         <div class="vehicle-cards" *ngIf="!isLoading">
           <div class="card" *ngFor="let vehicle of vehicleOptions">
             
+            <!-- Date Hanger -->
+            <div class="date-hanger">
+              <div class="date-content">
+                <span class="date-text">{{ formatDate(searchParams?.date || '') }}</span>
+              </div>
+            </div>
+            
     <!-- Route -->
     <div class="route">
       <div class="vehicle">
