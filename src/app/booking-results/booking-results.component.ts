@@ -30,6 +30,13 @@ interface VehicleOption {
   dropLocation?: string;
 }
 
+interface Seat {
+  id: string;
+  number: number;
+  status: 'available' | 'booked' | 'selected';
+  price: number;
+}
+
 @Component({
   selector: 'app-booking-results',
   standalone: true,
@@ -43,6 +50,13 @@ export class BookingResultsComponent implements OnInit {
   vehicleOptions: VehicleOption[] = [];
   isLoading = true;
   expandedSections: { [key: string]: boolean } = {};
+  
+  // Seat selection popup properties
+  showSeatPopup = false;
+  selectedSeat: Seat | null = null;
+  frontSeats: Seat[] = [];
+  middleSeats: Seat[] = [];
+  backSeats: Seat[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -229,11 +243,6 @@ export class BookingResultsComponent implements OnInit {
     return codes[locationName] || locationName.substring(0, 3).toUpperCase();
   }
 
-  selectSeat(vehicle: VehicleOption) {
-    // Navigate to seat selection page or handle booking
-    console.log('Selected vehicle:', vehicle);
-    alert(`Selected ${vehicle.name} for ${vehicle.departureTime}`);
-  }
 
   modifySearch() {
     this.router.navigate(['/']);
@@ -267,5 +276,68 @@ export class BookingResultsComponent implements OnInit {
   isSectionExpanded(vehicleId: string, sectionType: string): boolean {
     const key = `${vehicleId}-${sectionType}`;
     return this.expandedSections[key] || false;
+  }
+
+  // Seat selection methods
+  selectSeat(vehicle: VehicleOption) {
+    console.log('Opening seat selection popup for vehicle:', vehicle.name);
+    this.initializeSeats(vehicle.price);
+    this.showSeatPopup = true;
+    console.log('showSeatPopup set to:', this.showSeatPopup);
+  }
+
+  initializeSeats(price: number) {
+    // Initialize seats matching the reference image
+    this.frontSeats = [
+      { id: '1', number: 1, status: 'selected', price: price }
+    ];
+
+    this.middleSeats = [
+      { id: '3', number: 3, status: 'available', price: price },
+      { id: '4', number: 4, status: 'available', price: price }
+    ];
+
+    this.backSeats = [
+      { id: '5', number: 5, status: 'available', price: price },
+      { id: '6', number: 6, status: 'available', price: price }
+    ];
+
+    // Set the initially selected seat
+    this.selectedSeat = this.frontSeats[0];
+  }
+
+  selectSeatFromPopup(seat: Seat) {
+    if (seat.status === 'booked') {
+      return; // Don't allow selection of booked seats
+    }
+
+    // Deselect previously selected seat
+    this.frontSeats.forEach(s => {
+      if (s.id !== seat.id) s.status = 'available';
+    });
+    this.middleSeats.forEach(s => {
+      if (s.id !== seat.id) s.status = 'available';
+    });
+    this.backSeats.forEach(s => {
+      if (s.id !== seat.id) s.status = 'available';
+    });
+
+    // Select new seat
+    seat.status = seat.status === 'selected' ? 'available' : 'selected';
+    this.selectedSeat = seat.status === 'selected' ? seat : null;
+  }
+
+  closeSeatPopup() {
+    this.showSeatPopup = false;
+    this.selectedSeat = null;
+  }
+
+  proceedToBooking() {
+    if (this.selectedSeat) {
+      console.log('Proceeding to booking with seat:', this.selectedSeat);
+      // Here you would navigate to the booking confirmation page
+      alert(`Booking confirmed for seat ${this.selectedSeat.number} at ₹${this.selectedSeat.price}`);
+      this.closeSeatPopup();
+    }
   }
 }
