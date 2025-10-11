@@ -322,7 +322,7 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid #764ba2;
+  border-top: 8px solid #f27121;
 }
 
 .date-text {
@@ -335,12 +335,10 @@
 /* Route Section */
 .route {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 2fr 2fr 1fr  ;
+  grid-template-columns: 1fr 2fr 3fr 2fr 1fr;
   align-items: center;
   padding: 18px 24px;
   background: #f5f7fa;
-  border-bottom: 1px solid #e0e6ed;
-  gap: 6px;
 }
 
 .route-column {
@@ -362,41 +360,43 @@
 }
 
 .location {
-  display: flex;
-  gap: 5px;
   font-size: 13px;
   color: #2e3137;
   text-align: center;
   font-weight: 600;
-  flex-direction: column;
 }
 
 .sub-location {
-  font-weight: 200;
+  font-weight: 100;
+  font-size: 12px;
+  color: gray;
 }
 
 .time {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-  color: white;
-  font-size: 10px;
+  font-size: 16px;
+  color: #009688;
   font-weight: 600;
-  padding: 3px 6px;
+  background: linear-gradient(293deg, #e94057, #f27121);
+  color: #fff;
+  padding: 4px 8px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(255, 107, 107, 0.3);
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 1px 4px #008b8b33;
   justify-content: center;
   display: flex;
 }
 
 .duration {
-  font-size: 10px;
-  color: #666;
-  font-weight: 500;
-  padding: 3px 6px;
-  background: #f8f9fa;
+  font-size: 16px;
+  background: transparent;
+  color: #474747;
+  font-weight: 600;
+  padding: 4px 8px;
   border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 1px 4px #008b8b33;
   display: flex;
   justify-content: center;
 }
@@ -416,55 +416,54 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 0 20px;
 }
 
 .route-line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 70%;
   position: relative;
-  margin-bottom: 8px;
+  padding-bottom: 20px;
 }
 
 .route-line:before {
   content: "";
   position: absolute;
-  left: 0px;
-  right: 0px;
-  height: 2px;
-  background: #666;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background: #47474770;
   z-index: 1;
-  border-radius: 1px;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px #008b8b4d;
 }
 
 .route-node {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #666;
+  width: 12px;
+  height: 12px;
+  border-radius: 60%;
+  background: #47474770;
   z-index: 2;
   position: relative;
+  animation: pulse 2s infinite;
 }
 
 .route-car {
-  background: white;
+  background: transparent;
   border-radius: 50%;
-  width: 32px;
-  height:32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 3;
   position: relative;
-  border: 2px solid #ddd;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: carMove 3s ease-in-out infinite;
 }
 
 .route-car img {
-  width: 20px;
-  /* height: 20px; */
+  width: 100%;
 }
 
 .route-details {
@@ -472,13 +471,16 @@
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
-  margin-top: 8px;
-  gap: 8px;
 }
 
 @keyframes pulse {
   0%, 100% { transform: translateX(-50%) scale(1); }
   50% { transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes carMove {
+  0%, 100% { transform: translateX(-50%); }
+  50% { transform: translateX(-30%); }
 }
 
 /* Details Section */
@@ -498,27 +500,20 @@
 
 .vehicle {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  flex-direction: column;
 }
 
 .vehicle img {
-  width: 60px;
-  height: 40px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #f8f9fa;
-  padding: 4px;
+  width: 90%;
+  height: 26%;
+  padding-bottom: 10px;
 }
 
 .vehicle-info h3 {
   margin: 0;
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.2;
+  font-size: 12.8px;
+  color: #1f2937;
 }
 
 .vehicle-info {
@@ -537,7 +532,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 20px;
 }
 
 .price-info p {
@@ -562,10 +557,10 @@
 /* Options Row */
 .options {
   display: grid;
-  grid-template-columns: 2fr 1.8fr 1fr;
+  grid-template-columns: 2fr 1.8fr 2fr;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px 10px 0;
+  padding: 10px 24px;
   background: #f9fafb;
   border-top: 1px solid #e5e7eb;
   gap: 10px;
@@ -628,7 +623,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
+  box-shadow: 0 2px 8px #008b8b33;
   width: 200px !important;
   display: flex;
   align-items: center;
