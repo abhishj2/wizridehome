@@ -938,8 +938,8 @@
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 600px;
-  width: 90%;
-  max-height: 80vh;
+  width: 100%;
+  height: 500px;
   overflow-y: auto;
   position: relative;
 }
@@ -951,6 +951,12 @@
   padding: 24px 24px 0 24px;
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 24px;
+  text-align: center;
+}
+
+.popup-title {
+  flex: 1;
+  text-align: center;
 }
 
 .popup-title h2 {
@@ -986,10 +992,31 @@
   padding: 0 24px;
 }
 
+/* Two Column Layout */
+.modal-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.car-layout-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .car-layout {
   display: flex;
   justify-content: center;
   margin-bottom: 32px;
+}
+
+.legend-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 16px;
 }
 
 .car-container {
@@ -997,29 +1024,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 320px;
-  height: 280px;
+  width: 240px;
+  height: 200px;
   margin: 0 auto;
 }
 
 .car-image {
-  width: 280px;
+  width: 220px;
   height: auto;
   z-index: 1;
   position: absolute;
-  top: 50%;
+  top: 85%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+/* Unified Seat Grid */
+.unified-seat-grid {
+  position: absolute;
+  top: 113%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 140px;
+}
+
 .seat-row {
   display: flex;
-  gap: 15px;
+  gap: 5px;
   justify-content: center;
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  transform: translateX(-50%);
+  align-items: center;
 }
 
 .seat {
@@ -1029,7 +1066,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 0px;
 }
 
 .seat img {
@@ -1038,16 +1075,19 @@
   transition: all 0.2s ease;
 }
 
-.seat-number {
-    font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+span.seat-number {
+  position:absolute;
+  top:9px;
+  left:16px;
+  font-size:12px !important;
+  font-weight:bold !important; 
+  color:#000 !important;
 }
 
-.seat-price {
-  font-size: 11px;
-  color: #6b7280;
-  font-weight: 500;
+span.seat-price {
+  font-weight: bold !important;
+  font-size:9px !important;
+  color:#000 !important;
 }
 
 .seat:hover img {
@@ -1068,37 +1108,30 @@
 }
 
 .driver-seat {
-  position: absolute;
-  top: 120px;
-  left: 15%;
   cursor: default;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.7;
 }
 
 .driver-seat img {
-  width: 28px;
-  height: 28px;
+  width: 35px;
+  height: 35px;
   filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
 }
 
-.front-row {
-  top: 110px;
-  left: 50%;
-}
-
-.middle-row {
-  top: 145px;
-  left: 50%;
-}
-
-.back-row {
-  top: 180px;
-  left: 50%;
+.driver-seat .seat-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 .seat-legend {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   margin-top: 24px;
 }
@@ -1126,7 +1159,6 @@
 
 .popup-footer {
   padding: 24px;
-  border-top: 1px solid #e5e7eb;
   display: flex;
   justify-content: flex-end;
 }
@@ -1163,44 +1195,49 @@
     margin: 20px;
   }
   
+  .modal-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
   .car-container {
-    width: 280px;
-    height: 240px;
+    width: 200px;
+    height: 160px;
   }
   
   .car-image {
-    width: 240px;
+    width: 180px;
+  }
+  
+  .unified-seat-grid {
+    width: 120px;
+    gap: 10px;
+    top: 65%;
   }
   
   .seat-row {
-    gap: 10px;
+    gap: 12px;
   }
   
-  .seat img {
+
+  .seat.passenger-seat img{
+    height: 50px !important;
+        width: 50px !important;
+}
+  
+  .driver-seat img {
     width: 28px;
     height: 28px;
   }
   
-  .driver-seat {
-    top: 100px;
-    left: 15%;
-  }
-  
-  .front-row {
-    top: 90px;
-  }
-  
-  .middle-row {
-    top: 120px;
-  }
-  
-  .back-row {
-    top: 150px;
-  }
-  
   .seat-legend {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 12px;
+  }
+  
+  .legend-column {
+    padding-left: 0;
+    padding-top: 16px;
   }
 }
 
