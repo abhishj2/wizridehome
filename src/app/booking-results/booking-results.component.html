@@ -116,43 +116,64 @@
 
             <!-- Options -->
             <div class="options">
-              <div class="option-group">
-                <!-- Default Amenities Display -->
+              <!-- Column 1: AC/Amenities -->
+              <div class="option-item">
                 <div class="default-amenities">
                   <div class="amenity-item">
                     <i class="fas fa-snowflake"></i>
                     <span>AC</span>
                   </div>
+                </div>
+                <div class="hover-dropdowns">
+                  <div class="dropdown">
+                    <i class="fas fa-list-alt"></i>
+                    <span>Amenities</span>
+                    <div class="dropdown-content">
+                      {{ vehicle.amenities.join(', ') }}.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Column 2: Luggage/Instructions -->
+              <div class="option-item">
+                <div class="default-amenities">
                   <div class="amenity-item">
                     <i class="fas fa-suitcase"></i>
                     <span>Luggage</span>
                   </div>
+                </div>
+                <div class="hover-dropdowns">
+                  <div class="dropdown">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Instructions</span>
+                    <div class="dropdown-content">
+                      Arrive 15 minutes before departure. Bring a valid ID. Follow crew instructions.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Column 3: Refreshment/Cancellation Policy -->
+              <div class="option-item">
+                <div class="default-amenities">
                   <div class="amenity-item">
                     <i class="fas fa-coffee"></i>
                     <span>Refreshment</span>
                   </div>
                 </div>
-                
-                <!-- Hover Dropdowns -->
                 <div class="hover-dropdowns">
-                  <div class="dropdown">Amenities
-                    <div class="dropdown-content">
-                      {{ vehicle.amenities.join(', ') }}.
-                    </div>
-                  </div>
-                  <div class="dropdown">Instructions
-                    <div class="dropdown-content">
-                      Arrive 15 minutes before departure. Bring a valid ID. Follow crew instructions.
-                    </div>
-                  </div>
-                  <div class="dropdown">Cancellation Policy
+                  <div class="dropdown">
+                    <i class="fas fa-ban"></i>
+                    <span>Cancellation Policy</span>
                     <div class="dropdown-content">
                       Cancel 24 hours prior for a full refund. 50% refund within 12 hours.
                     </div>
                   </div>
                 </div>
               </div>
-              <div></div>
+              
+              <!-- Column 4: Select Seat Button -->
               <div class="select-btn-card">
                 <button class="btn" (click)="selectSeat(vehicle)">Select Seat</button>
               </div>
