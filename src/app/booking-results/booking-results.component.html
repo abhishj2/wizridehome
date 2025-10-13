@@ -326,8 +326,8 @@
 
     <!-- Popup Footer -->
     <div class="popup-footer">
-      <button class="proceed-btn" (click)="proceedToBooking()" [disabled]="!selectedSeat">
-        Proceed
+      <button class="proceed-btn" (click)="proceedToBooking()" [disabled]="selectedSeats.length === 0">
+        Proceed ({{ selectedSeats.length }} seat{{ selectedSeats.length !== 1 ? 's' : '' }} selected)
       </button>
     </div>
   </div>

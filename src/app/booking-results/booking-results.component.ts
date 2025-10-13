@@ -53,7 +53,7 @@ export class BookingResultsComponent implements OnInit {
   
   // Seat selection popup properties
   showSeatPopup = false;
-  selectedSeat: Seat | null = null;
+  selectedSeats: Seat[] = [];
   frontSeats: Seat[] = [];
   middleSeats: Seat[] = [];
   backSeats: Seat[] = [];
@@ -287,14 +287,14 @@ export class BookingResultsComponent implements OnInit {
   }
 
   initializeSeats(price: number) {
-    // Initialize seats matching the reference image
+    // Initialize seats with all available (no pre-selected seats)
     this.frontSeats = [
-      { id: '1', number: 1, status: 'selected', price: price }
+      { id: '1', number: 1, status: 'available', price: price }
     ];
 
     this.middleSeats = [
       { id: '3', number: 3, status: 'available', price: price },
-      { id: '4', number: 4, status: 'available', price: price }
+      { id: '4', number: 4, status: 'booked', price: price }
     ];
 
     this.backSeats = [
@@ -302,8 +302,8 @@ export class BookingResultsComponent implements OnInit {
       { id: '6', number: 6, status: 'available', price: price }
     ];
 
-    // Set the initially selected seat
-    this.selectedSeat = this.frontSeats[0];
+    // Clear selected seats array
+    this.selectedSeats = [];
   }
 
   selectSeatFromPopup(seat: Seat) {
@@ -311,33 +311,51 @@ export class BookingResultsComponent implements OnInit {
       return; // Don't allow selection of booked seats
     }
 
-    // Deselect previously selected seat
-    this.frontSeats.forEach(s => {
-      if (s.id !== seat.id) s.status = 'available';
-    });
-    this.middleSeats.forEach(s => {
-      if (s.id !== seat.id) s.status = 'available';
-    });
-    this.backSeats.forEach(s => {
-      if (s.id !== seat.id) s.status = 'available';
-    });
-
-    // Select new seat
-    seat.status = seat.status === 'selected' ? 'available' : 'selected';
-    this.selectedSeat = seat.status === 'selected' ? seat : null;
+    // Toggle seat selection
+    if (seat.status === 'selected') {
+      // Deselect the seat
+      seat.status = 'available';
+      this.selectedSeats = this.selectedSeats.filter(s => s.id !== seat.id);
+    } else {
+      // Select the seat
+      seat.status = 'selected';
+      this.selectedSeats.push(seat);
+    }
   }
 
   closeSeatPopup() {
     this.showSeatPopup = false;
-    this.selectedSeat = null;
+    this.selectedSeats = [];
   }
 
   proceedToBooking() {
-    if (this.selectedSeat) {
-      console.log('Proceeding to booking with seat:', this.selectedSeat);
-      // Here you would navigate to the booking confirmation page
-      alert(`Booking confirmed for seat ${this.selectedSeat.number} at ₹${this.selectedSeat.price}`);
+    if (this.selectedSeats.length > 0) {
+      console.log('Proceeding to booking with seats:', this.selectedSeats);
+      
+      // Calculate total price
+      const totalPrice = this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+      
+      // Create selection details
+      const selectionDetails = {
+        selectedSeats: this.selectedSeats.map(seat => ({
+          seatNumber: seat.number,
+          price: seat.price
+        })),
+        totalSeats: this.selectedSeats.length,
+        totalPrice: totalPrice,
+        perSeatPrice: this.selectedSeats[0]?.price || 0
+      };
+      
+      // Display selection details
+      console.log('Selection Details:', selectionDetails);
+      alert(`Booking confirmed for ${this.selectedSeats.length} seat(s):\n\n` +
+            `Seats: ${this.selectedSeats.map(s => s.number).join(', ')}\n` +
+            `Total Price: ₹${totalPrice.toFixed(2)}\n` +
+            `Per Seat: ₹${this.selectedSeats[0]?.price.toFixed(2) || 0}`);
+      
       this.closeSeatPopup();
+    } else {
+      alert('Please select at least one seat to proceed.');
     }
   }
 }
