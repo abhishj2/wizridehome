@@ -288,7 +288,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #374151;
+  color: gray;
+  opacity: 0.7;
 }
 
 /* Route Section */
@@ -419,7 +420,7 @@
   justify-content: center;
   z-index: 3;
   position: relative;
-  animation: carMove 3s linear infinite;
+  /* animation: carMove 3s linear infinite; */
 }
 
 .route-car img {
@@ -433,15 +434,12 @@
   justify-content: space-between;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.1); }
-}
 
-@keyframes carMove {
+
+/* @keyframes carMove {
   0%,  100%  { transform: translateX(-50%); }
   50% { transform: translateX(-30%); }
-}
+} */
 
 /* Details Section */
 
@@ -534,13 +532,15 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: #6b7280;
-  font-weight: 500;
+  font-size: 11px;
+  color: gray;
+  font-weight: 400;
+  opacity: 0.7;
+
 }
 
 .amenity-item i {
-  font-size: 14px;
+  font-size: 11x;
   color: #4b5563;
 }
 
@@ -997,13 +997,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 280px;
-  height: 320px;
+  width: 320px;
+  height: 280px;
   margin: 0 auto;
 }
 
 .car-image {
-  width: 220px;
+  width: 280px;
   height: auto;
   z-index: 1;
   position: absolute;
@@ -1014,7 +1014,7 @@
 
 .seat-row {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   justify-content: center;
   position: absolute;
   z-index: 2;
@@ -1033,8 +1033,8 @@
 }
 
 .seat img {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   transition: all 0.2s ease;
 }
 
@@ -1069,8 +1069,8 @@
 
 .driver-seat {
   position: absolute;
-  top: 110px;
-  left: 70%;
+  top: 120px;
+  left: 15%;
   cursor: default;
   z-index: 3;
 }
@@ -1082,16 +1082,18 @@
 }
 
 .front-row {
-  top: 100px;
-  left: 35%;
+  top: 110px;
+  left: 50%;
 }
 
 .middle-row {
-  top: 160px;
+  top: 145px;
+  left: 50%;
 }
 
 .back-row {
-  top: 220px;
+  top: 180px;
+  left: 50%;
 }
 
 .seat-legend {
@@ -1161,12 +1163,17 @@
     margin: 20px;
   }
   
+  .car-container {
+    width: 280px;
+    height: 240px;
+  }
+  
   .car-image {
-    width: 150px;
+    width: 240px;
   }
   
   .seat-row {
-    gap: 8px;
+    gap: 10px;
   }
   
   .seat img {
@@ -1175,8 +1182,20 @@
   }
   
   .driver-seat {
-    top: 15px;
-    right: 30px;
+    top: 100px;
+    left: 15%;
+  }
+  
+  .front-row {
+    top: 90px;
+  }
+  
+  .middle-row {
+    top: 120px;
+  }
+  
+  .back-row {
+    top: 150px;
   }
   
   .seat-legend {
