@@ -948,7 +948,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 24px 0 24px;
+  padding: 24px;
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 24px;
   text-align: center;
@@ -1030,7 +1030,7 @@
 }
 
 .car-image {
-  width: 220px;
+  width: 215px;
   height: auto;
   z-index: 1;
   position: absolute;
@@ -1048,7 +1048,7 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px;
   width: 140px;
 }
 
@@ -1069,6 +1069,9 @@
   gap: 0px;
 }
 
+
+
+  
 .seat img {
   width: 35px;
   height: 35px;
@@ -1092,10 +1095,11 @@ span.seat-price {
 
 .seat:hover img {
   transform: scale(1.1);
+  filter: invert(44%) sepia(85%) saturate(1200%) hue-rotate(120deg) brightness(105%) contrast(104%);
 }
 
 .seat.selected img {
-  filter: invert(44%) sepia(32%) saturate(4404%) hue-rotate(340deg) brightness(105%) contrast(104%);
+  filter: invert(44%) sepia(85%) saturate(1200%) hue-rotate(120deg) brightness(105%) contrast(104%);
 }
 
 .seat.booked {
@@ -1150,7 +1154,7 @@ span.seat-price {
 }
 
 .legend-item .selected {
-  filter: invert(44%) sepia(32%) saturate(4404%) hue-rotate(340deg) brightness(105%) contrast(104%);
+  filter: invert(44%) sepia(85%) saturate(1200%) hue-rotate(120deg) brightness(105%) contrast(104%);
 }
 
 .legend-item .booked {
