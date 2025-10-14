@@ -78,6 +78,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   };
   carAdditionRequests: any[] = [];
 
+  // Time picker properties
+  timePickerVisible = false;
+  selectedHour = 12;
+  selectedMinute = '00';
+  selectedPeriod = 'PM';
+  hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  minutes = ['00', '15', '30', '45'];
+
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
@@ -277,6 +285,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   requestCarAddition() {
     this.showCarAdditionModal = true;
+    // Pre-populate phone number from searchParams
+    if (this.searchParams?.phoneNumber) {
+      this.carAdditionFormData.contactNo = this.searchParams.phoneNumber;
+    }
+    // Initialize preferred time to current time or default
+    if (!this.carAdditionFormData.preferredTime) {
+      this.carAdditionFormData.preferredTime = '12:00';
+    }
   }
 
   closeCarAdditionModal() {
@@ -561,5 +577,113 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           `Price: ₹${vehicle.price.toFixed(2)}\n\n` +
           `Pickup Location: ${vehicle.pickupLocation || 'Not specified'}\n` +
           `Drop Location: ${vehicle.dropLocation || 'Not specified'}`);
+  }
+
+  // Time Picker Methods
+  openTimePicker() {
+    this.timePickerVisible = true;
+    this.initializeTimePicker();
+  }
+
+  closeTimePicker() {
+    this.timePickerVisible = false;
+  }
+
+  initializeTimePicker() {
+    // Parse current time and set selected values
+    const currentTime = this.carAdditionFormData.preferredTime || '12:00';
+    const [hourStr, minuteStr] = currentTime.split(':');
+    const hour = parseInt(hourStr);
+    const minute = parseInt(minuteStr);
+    
+    // Convert 24-hour to 12-hour format
+    if (hour === 0) {
+      this.selectedHour = 12;
+      this.selectedPeriod = 'AM';
+    } else if (hour < 12) {
+      this.selectedHour = hour;
+      this.selectedPeriod = 'AM';
+    } else if (hour === 12) {
+      this.selectedHour = 12;
+      this.selectedPeriod = 'PM';
+    } else {
+      this.selectedHour = hour - 12;
+      this.selectedPeriod = 'PM';
+    }
+    
+    // Set closest minute
+    const closestMinute = Math.round(minute / 15) * 15;
+    this.selectedMinute = closestMinute.toString().padStart(2, '0');
+    
+    // Scroll to selected hour
+    setTimeout(() => {
+      this.scrollToSelectedHour();
+    }, 100);
+  }
+
+  scrollToSelectedHour() {
+    const hoursContainer = document.querySelector('.time-options') as HTMLElement;
+    if (hoursContainer) {
+      const selectedOption = hoursContainer.children[this.selectedHour - 1] as HTMLElement;
+      if (selectedOption) {
+        selectedOption.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
+  selectHour(hour: number) {
+    this.selectedHour = hour;
+  }
+
+  selectMinute(minute: string) {
+    this.selectedMinute = minute;
+  }
+
+  selectPeriod(period: string) {
+    this.selectedPeriod = period;
+  }
+
+  confirmTimeSelection() {
+    // Convert 12-hour to 24-hour format
+    let hour24 = this.selectedHour;
+    
+    if (this.selectedPeriod === 'AM' && this.selectedHour === 12) {
+      hour24 = 0;
+    } else if (this.selectedPeriod === 'PM' && this.selectedHour !== 12) {
+      hour24 = this.selectedHour + 12;
+    }
+    
+    // Format time as HH:mm
+    const time24 = `${hour24.toString().padStart(2, '0')}:${this.selectedMinute}`;
+    
+    this.carAdditionFormData.preferredTime = time24;
+    this.closeTimePicker();
+  }
+
+  formatTimeDisplay(time: string): string {
+    if (!time) return '12:00 PM';
+    
+    const [hourStr, minuteStr] = time.split(':');
+    const hour = parseInt(hourStr);
+    const minute = parseInt(minuteStr);
+    
+    let displayHour = hour;
+    let period = 'AM';
+    
+    if (hour === 0) {
+      displayHour = 12;
+      period = 'AM';
+    } else if (hour < 12) {
+      displayHour = hour;
+      period = 'AM';
+    } else if (hour === 12) {
+      displayHour = 12;
+      period = 'PM';
+    } else {
+      displayHour = hour - 12;
+      period = 'PM';
+    }
+    
+    return `${displayHour}:${minuteStr} ${period}`;
   }
 }
