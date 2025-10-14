@@ -18,13 +18,14 @@
         </div>
         <div class="journey-details">
           <span class="date">{{ formatDate(searchParams.date) }}</span>
+          <span class="pickup-time" *ngIf="searchParams?.type === 'reserved' && searchParams?.pickupTime">{{ formatPickupTime(searchParams.pickupTime!) }}</span>
           <span class="passengers">{{ searchParams.passengers }} seats</span>
         </div>
       </div>
     </div>
     <div class="summary-actions">
       <button class="modify-btn" (click)="modifySearch()">Modify</button>
-      <button class="request-btn" (click)="requestCarAddition()">Request for Addition</button>
+      <button class="request-btn" (click)="requestCarAddition()" *ngIf="searchParams?.type === 'shared'">Request for Addition</button>
     </div>
   </div>
   <div class="container">
@@ -91,7 +92,7 @@
                   <div class="route-node end-node"></div>
                 </div>
                 <div class="route-details">
-                  <div class="time">{{ vehicle.departureTime }}</div>
+                  <div class="time">{{ searchParams && searchParams.type === 'reserved' && searchParams.pickupTime ? formatPickupTime(searchParams.pickupTime) : vehicle.departureTime }}</div>
                   <div class="duration">{{ vehicle.duration }}</div>
                 </div>
               </div>
@@ -176,9 +177,10 @@
                 </div>
               </div>
 
-              <!-- Column 4: Select Seat Button -->
+              <!-- Column 4: Select Seat Button for Shared / Book Cab Button for Reserved -->
               <div class="select-btn-card">
-                <button class="btn" (click)="selectSeat(vehicle)">Select Seat</button>
+                <button class="btn" (click)="selectSeat(vehicle)" *ngIf="searchParams?.type === 'shared'">Select Seat</button>
+                <button class="btn" (click)="bookCab(vehicle)" *ngIf="searchParams?.type === 'reserved'">Book Cab</button>
               </div>
             </div>
           </div>

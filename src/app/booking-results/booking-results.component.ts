@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,6 +12,7 @@ interface BookingSearchParams {
   phoneNumber: string;
   pickupLocation?: string;
   dropLocation?: string;
+  pickupTime?: string;
 }
 
 interface VehicleOption {
@@ -52,7 +53,7 @@ interface CarAdditionFormData {
   templateUrl: './booking-results.component.html',
   styleUrls: ['./booking-results.component.css']
 })
-export class BookingResultsComponent implements OnInit {
+export class BookingResultsComponent implements OnInit, OnDestroy {
   @Input() searchParams: BookingSearchParams | null = null;
   
   vehicleOptions: VehicleOption[] = [];
@@ -65,6 +66,7 @@ export class BookingResultsComponent implements OnInit {
   frontSeats: Seat[] = [];
   middleSeats: Seat[] = [];
   backSeats: Seat[] = [];
+  currentSelectedVehicle: VehicleOption | null = null;
 
   // Car addition modal properties
   showCarAdditionModal = false;
@@ -99,8 +101,7 @@ export class BookingResultsComponent implements OnInit {
       if (storedParams) {
         this.searchParams = JSON.parse(storedParams);
         console.log('Received search params from localStorage:', this.searchParams);
-        // Clear localStorage after use
-        localStorage.removeItem('bookingSearchParams');
+        // Don't clear localStorage immediately to persist across refreshes
       }
     }
     
@@ -112,10 +113,11 @@ export class BookingResultsComponent implements OnInit {
         to: 'Mumbai',
         date: new Date().toISOString().split('T')[0],
         passengers: 2,
-        type: 'shared',
+        type: 'reserved',
         phoneNumber: '+919876543210',
         pickupLocation: 'Airport Terminal 3',
-        dropLocation: 'Bandra Kurla Complex'
+        dropLocation: 'Bandra Kurla Complex',
+        pickupTime: '14:30'
       };
     }
     
@@ -126,6 +128,11 @@ export class BookingResultsComponent implements OnInit {
       this.loadVehicleOptions();
       this.isLoading = false;
     }, 1000);
+  }
+
+  ngOnDestroy() {
+    // Clear localStorage when component is destroyed (optional)
+    // localStorage.removeItem('bookingSearchParams');
   }
 
   loadVehicleOptions() {
@@ -262,6 +269,8 @@ export class BookingResultsComponent implements OnInit {
 
 
   modifySearch() {
+    // Clear localStorage when navigating back to modify search
+    localStorage.removeItem('bookingSearchParams');
     this.router.navigate(['/']);
   }
 
@@ -310,6 +319,33 @@ export class BookingResultsComponent implements OnInit {
     });
   }
 
+  formatPickupTime(timeString: string): string {
+    if (!timeString) return '';
+    
+    const [hour, minute] = timeString.split(':');
+    const hourNum = parseInt(hour);
+    const minuteNum = parseInt(minute);
+    
+    let displayHour = hourNum;
+    let period = 'AM';
+    
+    if (hourNum === 0) {
+      displayHour = 12;
+      period = 'AM';
+    } else if (hourNum < 12) {
+      displayHour = hourNum;
+      period = 'AM';
+    } else if (hourNum === 12) {
+      displayHour = 12;
+      period = 'PM';
+    } else {
+      displayHour = hourNum - 12;
+      period = 'PM';
+    }
+    
+    return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
+  }
+
   toggleExpandableSection(vehicleId: string, sectionType: string, event?: Event): void {
     if (event) {
       event.stopPropagation();
@@ -330,6 +366,7 @@ export class BookingResultsComponent implements OnInit {
   // Seat selection methods
   selectSeat(vehicle: VehicleOption) {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
+    this.currentSelectedVehicle = vehicle;
     this.initializeSeats(vehicle.price);
     this.showSeatPopup = true;
     console.log('showSeatPopup set to:', this.showSeatPopup);
@@ -375,10 +412,11 @@ export class BookingResultsComponent implements OnInit {
   closeSeatPopup() {
     this.showSeatPopup = false;
     this.selectedSeats = [];
+    this.currentSelectedVehicle = null;
   }
 
   proceedToBooking() {
-    if (this.selectedSeats.length > 0) {
+    if (this.selectedSeats.length > 0 && this.currentSelectedVehicle) {
       console.log('Proceeding to booking with seats:', this.selectedSeats);
       
       // Calculate total price
@@ -395,16 +433,62 @@ export class BookingResultsComponent implements OnInit {
         perSeatPrice: this.selectedSeats[0]?.price || 0
       };
       
-      // Display selection details
+      // Display selection details with vehicle information
       console.log('Selection Details:', selectionDetails);
       alert(`Booking confirmed for ${this.selectedSeats.length} seat(s):\n\n` +
+            `Vehicle: ${this.currentSelectedVehicle.name}\n` +
+            `Route: ${this.currentSelectedVehicle.route.from.name} to ${this.currentSelectedVehicle.route.to.name}\n` +
+            `Departure: ${this.currentSelectedVehicle.departureTime}\n` +
+            `Duration: ${this.currentSelectedVehicle.duration}\n` +
             `Seats: ${this.selectedSeats.map(s => s.number).join(', ')}\n` +
             `Total Price: ₹${totalPrice.toFixed(2)}\n` +
-            `Per Seat: ₹${this.selectedSeats[0]?.price.toFixed(2) || 0}`);
+            `Per Seat: ₹${this.selectedSeats[0]?.price.toFixed(2) || 0}\n\n` +
+            `Pickup Location: ${this.currentSelectedVehicle.pickupLocation || 'Not specified'}\n` +
+            `Drop Location: ${this.currentSelectedVehicle.dropLocation || 'Not specified'}`);
       
       this.closeSeatPopup();
     } else {
       alert('Please select at least one seat to proceed.');
     }
+  }
+
+  bookCab(vehicle: VehicleOption) {
+    console.log('Booking cab:', vehicle);
+    
+    // Get the correct departure time (user's pickup time for reserved cabs)
+    const departureTime = this.searchParams && this.searchParams.type === 'reserved' && this.searchParams.pickupTime 
+      ? this.formatPickupTime(this.searchParams.pickupTime) 
+      : vehicle.departureTime;
+    
+    // Create booking details
+    const bookingDetails = {
+      vehicle: {
+        id: vehicle.id,
+        name: vehicle.name,
+        price: vehicle.price,
+        departureTime: departureTime,
+        duration: vehicle.duration
+      },
+      route: {
+        from: vehicle.route.from.name,
+        to: vehicle.route.to.name,
+        pickupLocation: vehicle.pickupLocation,
+        dropLocation: vehicle.dropLocation
+      },
+      searchParams: this.searchParams,
+      bookingTime: new Date().toISOString(),
+      totalPrice: vehicle.price
+    };
+    
+    // Store booking details (for now showing in alert)
+    console.log('Cab booking details:', bookingDetails);
+    alert(`Cab booking confirmed!\n\n` +
+          `Vehicle: ${vehicle.name}\n` +
+          `Route: ${vehicle.route.from.name} to ${vehicle.route.to.name}\n` +
+          `Departure: ${departureTime}\n` +
+          `Duration: ${vehicle.duration}\n` +
+          `Price: ₹${vehicle.price.toFixed(2)}\n\n` +
+          `Pickup Location: ${vehicle.pickupLocation || 'Not specified'}\n` +
+          `Drop Location: ${vehicle.dropLocation || 'Not specified'}`);
   }
 }

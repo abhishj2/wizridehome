@@ -917,7 +917,10 @@ trackByOfferId(index: number, offer: any): number {
       date: this.getCurrentDate(),
       passengers: this.getCurrentPassengers(),
       type: this.pendingAction,
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      pickupLocation: this.getCurrentPickupLocation(),
+      dropLocation: this.getCurrentDropLocation(),
+      pickupTime: this.getCurrentPickupTime()
     };
 
     console.log('Navigating to booking results with params:', searchParams);
@@ -987,6 +990,31 @@ trackByOfferId(index: number, offer: any): number {
     } else {
       return this.formValues.reservedPassengers || 1;
     }
+  }
+
+  private getCurrentPickupLocation(): string {
+    if (this.pendingAction === 'shared') {
+      return this.formValues.sharedPickupLocation || '';
+    } else if (this.pendingAction === 'reserved') {
+      return this.formValues.reservedPickupLocation || '';
+    }
+    return '';
+  }
+
+  private getCurrentDropLocation(): string {
+    if (this.pendingAction === 'shared') {
+      return this.formValues.sharedDropoffLocation || '';
+    } else if (this.pendingAction === 'reserved') {
+      return this.formValues.reservedDropoffLocation || '';
+    }
+    return '';
+  }
+
+  private getCurrentPickupTime(): string {
+    if (this.pendingAction === 'reserved') {
+      return this.formValues.reservedTime || '';
+    }
+    return '';
   }
 
 
