@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 interface BookingSearchParams {
@@ -37,10 +38,17 @@ interface Seat {
   price: number;
 }
 
+interface CarAdditionFormData {
+  fullName: string;
+  contactNo: string;
+  emailId: string;
+  preferredTime: string;
+}
+
 @Component({
   selector: 'app-booking-results',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './booking-results.component.html',
   styleUrls: ['./booking-results.component.css']
 })
@@ -57,6 +65,15 @@ export class BookingResultsComponent implements OnInit {
   frontSeats: Seat[] = [];
   middleSeats: Seat[] = [];
   backSeats: Seat[] = [];
+
+  // Car addition modal properties
+  showCarAdditionModal = false;
+  carAdditionFormData: CarAdditionFormData = {
+    fullName: '',
+    contactNo: '',
+    emailId: '',
+    preferredTime: ''
+  };
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -249,7 +266,39 @@ export class BookingResultsComponent implements OnInit {
   }
 
   requestCarAddition() {
-    alert('Car addition request submitted! We will contact you soon.');
+    this.showCarAdditionModal = true;
+  }
+
+  closeCarAdditionModal() {
+    this.showCarAdditionModal = false;
+    this.resetCarAdditionForm();
+  }
+
+  resetCarAdditionForm() {
+    this.carAdditionFormData = {
+      fullName: '',
+      contactNo: '',
+      emailId: '',
+      preferredTime: ''
+    };
+  }
+
+  submitCarAdditionRequest() {
+    if (this.carAdditionFormData.fullName && 
+        this.carAdditionFormData.contactNo && 
+        this.carAdditionFormData.emailId && 
+        this.carAdditionFormData.preferredTime) {
+      
+      console.log('Car addition request submitted:', this.carAdditionFormData);
+      
+      // Here you would typically send the data to your backend service
+      // For now, we'll just show a success message
+      alert(`Thank you ${this.carAdditionFormData.fullName}! Your car addition request has been submitted. We will contact you at ${this.carAdditionFormData.contactNo} regarding your preferred time: ${this.carAdditionFormData.preferredTime}`);
+      
+      this.closeCarAdditionModal();
+    } else {
+      alert('Please fill in all the required fields.');
+    }
   }
 
   formatDate(dateString: string): string {

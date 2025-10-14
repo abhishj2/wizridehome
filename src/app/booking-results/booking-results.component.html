@@ -236,6 +236,84 @@
   </div>
 </main>
 
+<!-- Car Addition Request Modal -->
+<div class="car-addition-modal-overlay" *ngIf="showCarAdditionModal" (click)="closeCarAdditionModal()">
+  <div class="car-addition-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-title">
+        <h2>Request Car Addition</h2>
+        <p>We will try our best to add a car.</p>
+      </div>
+      <button class="modal-close-btn" (click)="closeCarAdditionModal()">×</button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="modal-content">
+      <form class="car-addition-form" (ngSubmit)="submitCarAdditionRequest()" #carAdditionForm="ngForm">
+        <!-- Full Name Field -->
+        <div class="form-field">
+          <label class="field-label">Full Name :</label>
+          <input 
+            type="text" 
+            class="field-input" 
+            placeholder="Enter your Full Name."
+            [(ngModel)]="carAdditionFormData.fullName"
+            name="fullName"
+            required
+            #fullNameInput="ngModel">
+        </div>
+
+        <!-- Contact Number Field -->
+        <div class="form-field">
+          <label class="field-label">Contact No :</label>
+          <input 
+            type="tel" 
+            class="field-input" 
+            placeholder="Enter your Contact Number."
+            [(ngModel)]="carAdditionFormData.contactNo"
+            name="contactNo"
+            required
+            #contactNoInput="ngModel">
+        </div>
+
+        <!-- Email ID Field -->
+        <div class="form-field">
+          <label class="field-label">Email ID :</label>
+          <input 
+            type="email" 
+            class="field-input" 
+            placeholder="Enter your Email ID."
+            [(ngModel)]="carAdditionFormData.emailId"
+            name="emailId"
+            required
+            #emailIdInput="ngModel">
+        </div>
+
+        <!-- Preferred Time Field -->
+        <div class="form-field">
+          <label class="field-label"> Preferred Time :</label>
+          <input 
+            type="text" 
+            class="field-input" 
+            placeholder="Enter your Preferred Time."
+            [(ngModel)]="carAdditionFormData.preferredTime"
+            name="preferredTime"
+            required
+            #preferredTimeInput="ngModel">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-submit">
+          <button type="submit" class="submit-btn" [disabled]="!carAdditionForm.valid">
+            Send Timing Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Seat Selection Popup -->
 <div class="seat-popup-overlay" *ngIf="showSeatPopup" (click)="closeSeatPopup()">
   <div class="seat-popup" (click)="$event.stopPropagation()">
