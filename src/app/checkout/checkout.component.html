@@ -1,0 +1,177 @@
+<!-- Booking Summary Band -->
+<div class="booking-summary" [class.sticky]="isHeaderSticky" *ngIf="bookingData">
+  <div class="container">
+    <div class="summary-content">
+      <div class="summary-info">
+        <div class="route-summary">
+          <div class="route-locations">
+            <div class="location-group">
+              <span class="from">{{ bookingData.searchParams.from }}</span>
+              <span class="location-detail" *ngIf="bookingData.searchParams.pickupLocation">{{ bookingData.searchParams.pickupLocation }}</span>
+            </div>
+            <i class="fas fa-arrow-right"></i>
+            <div class="location-group">
+              <span class="to">{{ bookingData.searchParams.to }}</span>
+              <span class="location-detail" *ngIf="bookingData.searchParams.dropLocation">{{ bookingData.searchParams.dropLocation }}</span>
+            </div>
+          </div>
+          <div class="journey-details">
+            <span class="date">When: {{ formatDate(bookingData.searchParams.date) }}</span>
+            <span class="seats">No. of Seats: {{ bookingData.searchParams.passengers }}</span>
+            <span class="seat-selected" *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected: {{ getSelectedSeats() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="checkout-container">
+  <div class="container">
+    <div class="checkout-content">
+      
+      <!-- Left Column: Passenger Details Form -->
+      <div class="left-column">
+        <div class="form-card">
+          <h2 class="form-title">Enter Primary Passenger Details</h2>
+          
+          <form (ngSubmit)="onSubmit()" #checkoutForm="ngForm">
+            <div class="form-row">
+              <div class="form-field">
+                <label class="field-label">First Name</label>
+                <input 
+                  type="text" 
+                  class="field-input" 
+                  placeholder="Enter First Name of Primary Passenger."
+                  [(ngModel)]="passengerDetails.firstName"
+                  name="firstName"
+                  required>
+              </div>
+              
+              <div class="form-field">
+                <label class="field-label">Last Name</label>
+                <input 
+                  type="text" 
+                  class="field-input" 
+                  placeholder="Enter Last Name of Primary Passenger."
+                  [(ngModel)]="passengerDetails.lastName"
+                  name="lastName"
+                  required>
+              </div>
+            </div>
+            
+            <div class="form-field">
+              <label class="field-label">Email ID</label>
+              <input 
+                type="email" 
+                class="field-input" 
+                placeholder="Enter Email ID of Primary Passenger (for e-ticket)."
+                [(ngModel)]="passengerDetails.emailId"
+                name="emailId"
+                required>
+            </div>
+            
+            <div class="form-field">
+              <label class="field-label">Primary Contact No</label>
+              <div class="contact-input-group">
+                <select class="country-code-select">
+                  <option value="+91">+91 - India</option>
+                </select>
+                <input 
+                  type="tel" 
+                  class="field-input phone-input" 
+                  placeholder="Enter Primary Phone No."
+                  [(ngModel)]="passengerDetails.primaryContactNo"
+                  name="primaryContactNo"
+                  required>
+              </div>
+            </div>
+            
+            <div class="form-field">
+              <label class="field-label">Alternate Contact No</label>
+              <div class="contact-input-group">
+                <select class="country-code-select">
+                  <option value="+91">+91 - India</option>
+                </select>
+                <input 
+                  type="tel" 
+                  class="field-input phone-input" 
+                  placeholder="Enter Alternate Phone No."
+                  [(ngModel)]="passengerDetails.alternateContactNo"
+                  name="alternateContactNo">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Right Column -->
+      <div class="right-column">
+        
+        <!-- Options Card -->
+        <div class="options-card">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="passengerDetails.isBusinessTravel"
+                name="isBusinessTravel">
+              <span class="checkmark"></span>
+              Yes, I am travelling for Business.
+            </label>
+            
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="passengerDetails.hasDiscountCoupon"
+                name="hasDiscountCoupon">
+              <span class="checkmark"></span>
+              Yes, I have a Discount Coupon.
+            </label>
+          </div>
+        </div>
+        
+        <!-- Fare Details Card -->
+        <div class="fare-card">
+          <h3 class="fare-title">Fare Details</h3>
+          
+          <div class="fare-breakdown">
+            <div class="fare-item">
+              <span class="fare-label">Ride Fare (in Rs.):</span>
+              <span class="fare-amount">₹ {{ rideFare.toFixed(2) }}</span>
+            </div>
+            
+            <div class="fare-item">
+              <span class="fare-label">Goods & Services Tax (in Rs.):</span>
+              <span class="fare-amount">₹ {{ gstAmount.toFixed(2) }}</span>
+            </div>
+          </div>
+          
+          <div class="total-fare">
+            <span class="total-label">Total Fare (in Rs.):</span>
+            <span class="total-amount">₹ {{ totalFare.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Legal Text and Payment Button -->
+    <div class="legal-section">
+      <p class="legal-text">
+        By clicking on the PROCEED TO PAYMENT Button, you agree to our 
+        <a href="#" class="legal-link">Terms & Conditions</a> of Wizzride Shared Cabs and that you have read our 
+        <a href="#" class="legal-link">Privacy Policy</a> and 
+        <a href="#" class="legal-link">User Agreement</a>
+      </p>
+      <p class="legal-text">
+        Also, please make sure to check our 
+        <a href="#" class="legal-link">Cancellation Policy</a>.
+      </p>
+      
+      <button class="proceed-payment-btn" (click)="onSubmit()">
+        Proceed to Payment
+      </button>
+    </div>
+  </div>
+</div>

@@ -529,18 +529,22 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         perSeatPrice: this.selectedSeats[0]?.price || 0
       };
       
-      // Display selection details with vehicle information
-      console.log('Selection Details:', selectionDetails);
-      alert(`Booking confirmed for ${this.selectedSeats.length} seat(s):\n\n` +
-            `Vehicle: ${this.currentSelectedVehicle.name}\n` +
-            `Route: ${this.currentSelectedVehicle.route.from.name} to ${this.currentSelectedVehicle.route.to.name}\n` +
-            `Departure: ${this.currentSelectedVehicle.departureTime}\n` +
-            `Duration: ${this.currentSelectedVehicle.duration}\n` +
-            `Seats: ${this.selectedSeats.map(s => s.number).join(', ')}\n` +
-            `Total Price: ₹${totalPrice.toFixed(2)}\n` +
-            `Per Seat: ₹${this.selectedSeats[0]?.price.toFixed(2) || 0}\n\n` +
-            `Pickup Location: ${this.currentSelectedVehicle.pickupLocation || 'Not specified'}\n` +
-            `Drop Location: ${this.currentSelectedVehicle.dropLocation || 'Not specified'}`);
+      // Create booking data for checkout
+      const bookingData = {
+        searchParams: this.searchParams,
+        vehicleDetails: this.currentSelectedVehicle,
+        selectedSeats: this.selectedSeats,
+        bookingType: 'shared' as const,
+        totalPrice: totalPrice
+      };
+      
+      // Store booking data
+      localStorage.setItem('bookingData', JSON.stringify(bookingData));
+      
+      // Navigate to checkout
+      this.router.navigate(['/checkout'], { 
+        state: { bookingData: bookingData }
+      });
       
       this.closeSeatPopup();
     } else {
@@ -576,16 +580,21 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       totalPrice: vehicle.price
     };
     
-    // Store booking details (for now showing in alert)
-    console.log('Cab booking details:', bookingDetails);
-    alert(`Cab booking confirmed!\n\n` +
-          `Vehicle: ${vehicle.name}\n` +
-          `Route: ${vehicle.route.from.name} to ${vehicle.route.to.name}\n` +
-          `Departure: ${departureTime}\n` +
-          `Duration: ${vehicle.duration}\n` +
-          `Price: ₹${vehicle.price.toFixed(2)}\n\n` +
-          `Pickup Location: ${vehicle.pickupLocation || 'Not specified'}\n` +
-          `Drop Location: ${vehicle.dropLocation || 'Not specified'}`);
+    // Create booking data for checkout
+    const bookingData = {
+      searchParams: this.searchParams,
+      vehicleDetails: vehicle,
+      bookingType: 'reserved' as const,
+      totalPrice: vehicle.price
+    };
+    
+    // Store booking data
+    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+    
+    // Navigate to checkout
+    this.router.navigate(['/checkout'], { 
+      state: { bookingData: bookingData }
+    });
   }
 
   // Time Picker Methods
