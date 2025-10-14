@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -86,7 +86,16 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   minutes = ['00', '15', '30', '45'];
 
+  // Sticky header property
+  isHeaderSticky = false;
+
   constructor(private router: Router, private route: ActivatedRoute) {}
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    this.isHeaderSticky = scrollPosition > 50;
+  }
 
   ngOnInit() {
     console.log('BookingResultsComponent initialized');
