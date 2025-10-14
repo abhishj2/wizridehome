@@ -148,7 +148,7 @@ export class BookingResultsComponent implements OnInit {
           image: '../../assets/images/reversed-removebg-preview.png',
           departureTime: '04:30pm',
           duration: '05hrs 30min',
-          price: 1331.43,
+          price: 1500.43,
           seatsLeft: 2,
           amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
           route: baseRoute,
