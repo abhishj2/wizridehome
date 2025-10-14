@@ -76,6 +76,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     emailId: '',
     preferredTime: ''
   };
+  carAdditionRequests: any[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -298,16 +299,86 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         this.carAdditionFormData.emailId && 
         this.carAdditionFormData.preferredTime) {
       
-      console.log('Car addition request submitted:', this.carAdditionFormData);
+      // Create comprehensive car addition request data
+      const carAdditionRequest = {
+        id: Date.now().toString(), // Simple ID generation
+        timestamp: new Date().toISOString(),
+        requestType: 'car_addition',
+        searchParams: this.searchParams,
+        customerDetails: {
+          fullName: this.carAdditionFormData.fullName,
+          contactNo: this.carAdditionFormData.contactNo,
+          emailId: this.carAdditionFormData.emailId,
+          preferredTime: this.carAdditionFormData.preferredTime
+        },
+        locationDetails: {
+          pickupLocation: this.searchParams?.pickupLocation || 'Not specified',
+          dropLocation: this.searchParams?.dropLocation || 'Not specified',
+          fromCity: this.searchParams?.from || 'Not specified',
+          toCity: this.searchParams?.to || 'Not specified'
+        },
+        status: 'pending',
+        notes: 'Customer requested additional car for the route'
+      };
       
-      // Here you would typically send the data to your backend service
-      // For now, we'll just show a success message
-      alert(`Thank you ${this.carAdditionFormData.fullName}! Your car addition request has been submitted. We will contact you at ${this.carAdditionFormData.contactNo} regarding your preferred time: ${this.carAdditionFormData.preferredTime}`);
+      // Store the request
+      this.carAdditionRequests.push(carAdditionRequest);
+      
+      // Log to console for debugging
+      console.log('Car addition request submitted:', carAdditionRequest);
+      console.log('All car addition requests:', this.carAdditionRequests);
+      
+      // Show detailed success message
+      alert(`Car Addition Request Submitted Successfully!\n\n` +
+            `Request ID: ${carAdditionRequest.id}\n` +
+            `Customer: ${this.carAdditionFormData.fullName}\n` +
+            `Contact: ${this.carAdditionFormData.contactNo}\n` +
+            `Email: ${this.carAdditionFormData.emailId}\n` +
+            `Preferred Time: ${this.carAdditionFormData.preferredTime}\n\n` +
+            `Route Details:\n` +
+            `From: ${this.searchParams?.from}\n` +
+            `To: ${this.searchParams?.to}\n` +
+            `Pickup Location: ${this.searchParams?.pickupLocation || 'Not specified'}\n` +
+            `Drop Location: ${this.searchParams?.dropLocation || 'Not specified'}\n` +
+            `Date: ${this.searchParams?.date}\n` +
+            `Passengers: ${this.searchParams?.passengers}\n\n` +
+            `We will contact you soon regarding your request!`);
       
       this.closeCarAdditionModal();
     } else {
       alert('Please fill in all the required fields.');
     }
+  }
+
+  // Method to view all car addition requests (for debugging/admin)
+  viewAllCarAdditionRequests() {
+    if (this.carAdditionRequests.length === 0) {
+      alert('No car addition requests found.');
+      return;
+    }
+    
+    console.log('All Car Addition Requests:', this.carAdditionRequests);
+    
+    let requestList = `Total Car Addition Requests: ${this.carAdditionRequests.length}\n\n`;
+    this.carAdditionRequests.forEach((request, index) => {
+      requestList += `Request ${index + 1}:\n`;
+      requestList += `ID: ${request.id}\n`;
+      requestList += `Customer: ${request.customerDetails.fullName}\n`;
+      requestList += `Contact: ${request.customerDetails.contactNo}\n`;
+      requestList += `Email: ${request.customerDetails.emailId}\n`;
+      requestList += `Preferred Time: ${request.customerDetails.preferredTime}\n\n`;
+      requestList += `Route Details:\n`;
+      requestList += `From: ${request.searchParams?.from}\n`;
+      requestList += `To: ${request.searchParams?.to}\n`;
+      requestList += `Pickup Location: ${request.locationDetails?.pickupLocation || 'Not specified'}\n`;
+      requestList += `Drop Location: ${request.locationDetails?.dropLocation || 'Not specified'}\n`;
+      requestList += `Date: ${request.searchParams?.date}\n`;
+      requestList += `Passengers: ${request.searchParams?.passengers}\n`;
+      requestList += `Status: ${request.status}\n`;
+      requestList += `Submitted: ${new Date(request.timestamp).toLocaleString()}\n\n`;
+    });
+    
+    alert(requestList);
   }
 
   formatDate(dateString: string): string {

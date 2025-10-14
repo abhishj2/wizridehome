@@ -26,6 +26,7 @@
     <div class="summary-actions">
       <button class="modify-btn" (click)="modifySearch()">Modify</button>
       <button class="request-btn" (click)="requestCarAddition()" *ngIf="searchParams?.type === 'shared'">Request for Addition</button>
+      <button class="modify-btn" (click)="viewAllCarAdditionRequests()" *ngIf="searchParams?.type === 'shared'" style="background: #6c757d;">View Requests</button>
     </div>
   </div>
   <div class="container">
