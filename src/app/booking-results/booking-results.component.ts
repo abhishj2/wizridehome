@@ -376,35 +376,35 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   // Method to view all car addition requests (for debugging/admin)
-  viewAllCarAdditionRequests() {
-    if (this.carAdditionRequests.length === 0) {
-      alert('No car addition requests found.');
-      return;
-    }
+  // viewAllCarAdditionRequests() {
+  //   if (this.carAdditionRequests.length === 0) {
+  //     alert('No car addition requests found.');
+  //     return;
+  //   }
     
-    console.log('All Car Addition Requests:', this.carAdditionRequests);
+  //   console.log('All Car Addition Requests:', this.carAdditionRequests);
     
-    let requestList = `Total Car Addition Requests: ${this.carAdditionRequests.length}\n\n`;
-    this.carAdditionRequests.forEach((request, index) => {
-      requestList += `Request ${index + 1}:\n`;
-      requestList += `ID: ${request.id}\n`;
-      requestList += `Customer: ${request.customerDetails.fullName}\n`;
-      requestList += `Contact: ${request.customerDetails.contactNo}\n`;
-      requestList += `Email: ${request.customerDetails.emailId}\n`;
-      requestList += `Preferred Time: ${request.customerDetails.preferredTime}\n\n`;
-      requestList += `Route Details:\n`;
-      requestList += `From: ${request.searchParams?.from}\n`;
-      requestList += `To: ${request.searchParams?.to}\n`;
-      requestList += `Pickup Location: ${request.locationDetails?.pickupLocation || 'Not specified'}\n`;
-      requestList += `Drop Location: ${request.locationDetails?.dropLocation || 'Not specified'}\n`;
-      requestList += `Date: ${request.searchParams?.date}\n`;
-      requestList += `Passengers: ${request.searchParams?.passengers}\n`;
-      requestList += `Status: ${request.status}\n`;
-      requestList += `Submitted: ${new Date(request.timestamp).toLocaleString()}\n\n`;
-    });
+  //   let requestList = `Total Car Addition Requests: ${this.carAdditionRequests.length}\n\n`;
+  //   this.carAdditionRequests.forEach((request, index) => {
+  //     requestList += `Request ${index + 1}:\n`;
+  //     requestList += `ID: ${request.id}\n`;
+  //     requestList += `Customer: ${request.customerDetails.fullName}\n`;
+  //     requestList += `Contact: ${request.customerDetails.contactNo}\n`;
+  //     requestList += `Email: ${request.customerDetails.emailId}\n`;
+  //     requestList += `Preferred Time: ${request.customerDetails.preferredTime}\n\n`;
+  //     requestList += `Route Details:\n`;
+  //     requestList += `From: ${request.searchParams?.from}\n`;
+  //     requestList += `To: ${request.searchParams?.to}\n`;
+  //     requestList += `Pickup Location: ${request.locationDetails?.pickupLocation || 'Not specified'}\n`;
+  //     requestList += `Drop Location: ${request.locationDetails?.dropLocation || 'Not specified'}\n`;
+  //     requestList += `Date: ${request.searchParams?.date}\n`;
+  //     requestList += `Passengers: ${request.searchParams?.passengers}\n`;
+  //     requestList += `Status: ${request.status}\n`;
+  //     requestList += `Submitted: ${new Date(request.timestamp).toLocaleString()}\n\n`;
+  //   });
     
-    alert(requestList);
-  }
+  //   alert(requestList);
+  // }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);

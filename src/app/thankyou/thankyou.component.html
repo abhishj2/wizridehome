@@ -1,0 +1,93 @@
+<!-- Thank You Page -->
+<div class="thankyou-container">
+  <div class="thankyou-card">
+    
+    <!-- Header Section -->
+    <div class="thankyou-header">
+      <div class="success-animation">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="success-ring"></div>
+      </div>
+      <h1 class="thankyou-title">Thank You, {{ passengerDetails?.firstName }}!</h1>
+      <p class="thankyou-message">
+        Your booking has been confirmed successfully.
+      </p>
+    </div>
+
+    <!-- Booking Reference -->
+    <div class="booking-reference">
+      <span class="reference-label">Booking Reference</span>
+      <span class="reference-number">{{ bookingReference }}</span>
+    </div>
+
+    <!-- Essential Booking Details -->
+    <div class="booking-summary" *ngIf="bookingData && passengerDetails">
+      <div class="route-display">
+        <div class="from-location">
+          <span class="location-label">From</span>
+          <span class="location-name">{{ bookingData.searchParams.from }}</span>
+        </div>
+        <div class="route-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+        <div class="to-location">
+          <span class="location-label">To</span>
+          <span class="location-name">{{ bookingData.searchParams.to }}</span>
+        </div>
+      </div>
+      <div class="booking-type">
+        <span class="type-badge">{{ bookingData.bookingType === 'shared' ? 'Shared Cab' : 'Reserved Cab' }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a class="btn btn-primary" href="/">
+        <i class="fas fa-car"></i>
+        Book Another Cab
+      </a>
+    </div>
+
+    <!-- Promotional Section -->
+    <div class="promotional-section">
+      <div class="promo-card">
+        <div class="promo-icon">
+          <i class="fas fa-plane"></i>
+        </div>
+        <div class="promo-content">
+          <h3 class="promo-title">We Also Offer Flight Bookings Now!</h3>
+          <p class="promo-description">
+            Book your flights with us and enjoy the same great service and competitive prices. 
+            Whether you're traveling domestically or internationally, we've got you covered with 
+            the best deals on flights from top airlines.
+          </p>
+          <div class="promo-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Best Price Guarantee</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>24/7 Customer Support</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Easy Cancellation</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Instant Confirmation</span>
+            </div>
+          </div>
+          <a class="btn btn-promo" href="/">
+            <i class="fas fa-plane"></i>
+            Book Flights Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

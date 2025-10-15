@@ -249,6 +249,7 @@ export class CheckoutComponent implements OnInit {
         fareDetails: {
           rideFare: this.rideFare,
           gstAmount: this.gstAmount,
+          travelInsuranceCost: this.travelInsuranceCost,
           totalFare: this.totalFare
         }
       };
@@ -260,6 +261,7 @@ export class CheckoutComponent implements OnInit {
       console.log('Fare Details:', {
         rideFare: this.rideFare,
         gstAmount: this.gstAmount,
+        travelInsuranceCost: this.travelInsuranceCost,
         totalFare: this.totalFare
       });
       console.log('Complete Checkout Data:', checkoutData);
@@ -304,8 +306,8 @@ Check console for complete data object.
       
       localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
       
-      // Navigate to payment (placeholder)
-      // this.router.navigate(['/payment']);
+      // Navigate to thank you page
+      this.router.navigate(['/thankyou']);
     }
   }
 
