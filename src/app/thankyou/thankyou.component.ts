@@ -43,6 +43,7 @@ export class ThankyouComponent implements OnInit {
   passengerDetails: PassengerDetails | null = null;
   fareDetails: FareDetails | null = null;
   bookingReference = '';
+  countdown = 10;
 
   constructor(private router: Router) {}
 
@@ -57,6 +58,19 @@ export class ThankyouComponent implements OnInit {
       
       // Generate booking reference
       this.generateBookingReference();
+      
+      // Countdown timer
+      const countdownInterval = setInterval(() => {
+        this.countdown--;
+        if (this.countdown <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+      
+      // Auto-redirect to home page after 10 seconds
+      setTimeout(() => {
+        this.router.navigate(['/']);
+      }, 10000);
     } else {
       // If no data, redirect to home
       this.router.navigate(['/']);

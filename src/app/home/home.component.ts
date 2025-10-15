@@ -756,10 +756,10 @@ trackByOfferId(index: number, offer: any): number {
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
 
     // Meta Description
-    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India.' });
+    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling,Gangtok, Kalimpong,Shillong.Affordable rates,24/7 service,and safe rides across Northeast India.' });
 
-    // Canonical URL
-    this.metaService.updateTag({ rel: 'canonical', href: 'https://wizzride.com/' });
+    // Canonical URL - Add as link element
+    this.setCanonicalUrl('https://wizzride.com/');
 
     // Open Graph Tags
     this.metaService.updateTag({ property: 'og:title', content: 'Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok' });
@@ -847,6 +847,21 @@ trackByOfferId(index: number, offer: any): number {
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schema);
     this.renderer2.appendChild(this.document.head, script);
+  }
+
+  // Helper method to set canonical URL
+  private setCanonicalUrl(url: string): void {
+    // Remove existing canonical link if any
+    const existingLink = this.document.querySelector('link[rel="canonical"]');
+    if (existingLink) {
+      this.renderer2.removeChild(this.document.head, existingLink);
+    }
+    
+    // Create and append new canonical link
+    const link = this.renderer2.createElement('link');
+    this.renderer2.setAttribute(link, 'rel', 'canonical');
+    this.renderer2.setAttribute(link, 'href', url);
+    this.renderer2.appendChild(this.document.head, link);
   }
 
   ngOnDestroy() {

@@ -2617,7 +2617,7 @@ a.service-cta-btn {
             line-height: 1.2;
         }
 
-        .app-content h1 .highlight {
+        .app-content h2 .highlight {
             color: darkcyan;
             position: relative;
             display: inline-block;
