@@ -4,8 +4,12 @@ import {
   OnDestroy,
   AfterViewInit,
   Inject,
-  PLATFORM_ID,ElementRef, ViewChild
+  PLATFORM_ID,
+  ElementRef,
+  ViewChild,
+  Renderer2
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -742,10 +746,109 @@ trackByOfferId(index: number, offer: any): number {
     private titleService: Title,
     private metaService: Meta,
     @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer2: Renderer2,
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Set page title
+    this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
+
+    // Meta Description
+    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India.' });
+
+    // Canonical URL
+    this.metaService.updateTag({ rel: 'canonical', href: 'https://wizzride.com/' });
+
+    // Open Graph Tags
+    this.metaService.updateTag({ property: 'og:title', content: 'Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India.' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
+    this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
+
+    // Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India.' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
+
+    // Breadcrumb Schema (JSON-LD)
+    this.insertJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.wizzride.com/"
+        }
+      ]
+    });
+
+    // Organization Schema (JSON-LD)
+    this.insertJsonLd({
+      "@context": "https://schema.org",
+      "@type": [
+        "Organization",
+        "LocalBusiness",
+        "TravelAgency"
+      ],
+      "name": "Wizzride Technologies Pvt Ltd",
+      "alternateName": "Wizzride",
+      "url": "https://www.wizzride.com",
+      "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp",
+      "description": "Book Wizzride online cab services for Bagdogra to Darjeeling, Gangtok, Kalimpong, NJP, Guwahati & Shillong. Safe, affordable rides in Northeast.",
+      "foundingDate": "2017",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+917478493874",
+        "contactType": "reservations",
+        "areaServed": "IN",
+        "availableLanguage": [
+          "en",
+          "Hindi"
+        ]
+      },
+      "sameAs": [
+        "https://www.facebook.com/wizzride",
+        "https://www.instagram.com/wizzride",
+        "https://www.linkedin.com/company/in/wizzride-technologies-private-limited-33b0871a0/",
+        "https://twitter.com/wizzride"
+      ],
+      "openingHours": "Mo-Su 04:00-21:00",
+      "areaServed": [
+        "Assam",
+        "Meghalaya",
+        "Sikkim",
+        "West Bengal"
+      ],
+      "paymentAccepted": [
+        "Cash",
+        "Credit Card",
+        "UPI"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "reviewCount": "2411"
+      }
+    });
+  }
+
+  // Helper method to insert JSON-LD structured data
+  private insertJsonLd(schema: any): void {
+    const script = this.renderer2.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    this.renderer2.appendChild(this.document.head, script);
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
