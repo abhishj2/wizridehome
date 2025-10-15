@@ -102,7 +102,8 @@
   word-wrap: break-word;
 }
 
-.route-summary .date, .route-summary .seats, .route-summary .seat-selected {
+.route-summary .date, .route-summary .seats, .route-summary .seat-selected,
+.route-summary .pickup-time {
   font-size: 14px;
   font-weight: 600;
   color: #fff;
@@ -447,5 +448,69 @@
     padding: 14px 32px;
     font-size: 16px;
     min-width: 160px;
+  }
+}
+
+/* Coupon Section Styles */
+.coupon-section {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.coupon-input-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.coupon-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.coupon-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.coupon-submit-btn {
+  padding: 12px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.coupon-submit-btn:hover {
+  background-color: #218838;
+}
+
+.coupon-submit-btn:active {
+  background-color: #1e7e34;
+}
+
+/* Responsive design for coupon section */
+@media (max-width: 768px) {
+  .coupon-input-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .coupon-submit-btn {
+    width: 100%;
   }
 }

@@ -17,6 +17,7 @@
           </div>
           <div class="journey-details">
             <span class="date">When: {{ formatDate(bookingData.searchParams.date) }}</span>
+            <span class="pickup-time" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">Pickup Time: {{ bookingData.searchParams.pickupTime }}</span>
             <span class="seats">No. of Seats: {{ bookingData.searchParams.passengers }}</span>
             <span class="seat-selected" *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected: {{ getSelectedSeats() }}</span>
           </div>
@@ -75,8 +76,10 @@
             <div class="form-field">
               <label class="field-label">Primary Contact No</label>
               <div class="contact-input-group">
-                <select class="country-code-select">
-                  <option value="+91">+91 - India</option>
+                <select class="country-code-select" [(ngModel)]="passengerDetails.primaryCountryCode" name="primaryCountryCode">
+                  <option *ngFor="let country of countryList" [value]="country.code">
+                    {{ country.code }} - {{ country.name }}
+                  </option>
                 </select>
                 <input 
                   type="tel" 
@@ -84,6 +87,8 @@
                   placeholder="Enter Primary Phone No."
                   [(ngModel)]="passengerDetails.primaryContactNo"
                   name="primaryContactNo"
+                  maxlength="10"
+                  pattern="[0-9]{10}"
                   required>
               </div>
             </div>
@@ -91,15 +96,19 @@
             <div class="form-field">
               <label class="field-label">Alternate Contact No</label>
               <div class="contact-input-group">
-                <select class="country-code-select">
-                  <option value="+91">+91 - India</option>
+                <select class="country-code-select" [(ngModel)]="passengerDetails.alternateCountryCode" name="alternateCountryCode">
+                  <option *ngFor="let country of countryList" [value]="country.code">
+                    {{ country.code }} - {{ country.name }}
+                  </option>
                 </select>
                 <input 
                   type="tel" 
                   class="field-input phone-input" 
                   placeholder="Enter Alternate Phone No."
                   [(ngModel)]="passengerDetails.alternateContactNo"
-                  name="alternateContactNo">
+                  name="alternateContactNo"
+                  maxlength="10"
+                  pattern="[0-9]{10}">
               </div>
             </div>
           </form>
@@ -129,6 +138,24 @@
               <span class="checkmark"></span>
               Yes, I have a Discount Coupon.
             </label>
+            
+            <!-- Coupon Code Input Field (Conditional) -->
+            <div class="coupon-section" *ngIf="passengerDetails.hasDiscountCoupon">
+              <div class="coupon-input-group">
+                <input 
+                  type="text" 
+                  class="coupon-input" 
+                  placeholder="Enter your coupon code"
+                  [(ngModel)]="passengerDetails.couponCode"
+                  name="couponCode">
+                <button 
+                  type="button" 
+                  class="coupon-submit-btn"
+                  (click)="onCouponSubmit()">
+                  Apply
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -160,13 +187,13 @@
     <div class="legal-section">
       <p class="legal-text">
         By clicking on the PROCEED TO PAYMENT Button, you agree to our 
-        <a href="#" class="legal-link">Terms & Conditions</a> of Wizzride Shared Cabs and that you have read our 
-        <a href="#" class="legal-link">Privacy Policy</a> and 
-        <a href="#" class="legal-link">User Agreement</a>
+        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Terms & Conditions</a> of Wizzride Shared Cabs and that you have read our 
+        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Privacy Policy</a> and 
+        <a href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank" class="legal-link">User Agreement</a>
       </p>
       <p class="legal-text">
         Also, please make sure to check our 
-        <a href="#" class="legal-link">Cancellation Policy</a>.
+        <a href="https://wizzride.com/cancellationpolicy" target="_blank" class="legal-link">Cancellation Policy</a>.
       </p>
       
       <button class="proceed-payment-btn" (click)="onSubmit()">
