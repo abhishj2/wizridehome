@@ -22,6 +22,7 @@ interface PassengerDetails {
   couponCode: string;
   primaryCountryCode: string;
   alternateCountryCode: string;
+  hasTravelInsurance: boolean;
 }
 
 @Component({
@@ -43,14 +44,17 @@ export class CheckoutComponent implements OnInit {
     hasDiscountCoupon: false,
     couponCode: '',
     primaryCountryCode: '+91',
-    alternateCountryCode: '+91'
+    alternateCountryCode: '+91',
+    hasTravelInsurance: false
   };
 
   // Fare calculation
   rideFare = 0;
   gstAmount = 0;
+  travelInsuranceCost = 0;
   totalFare = 0;
   readonly GST_RATE = 0.05; // 5% GST
+  readonly TRAVEL_INSURANCE_RATE = 99; // ₹99 per booking
 
   // Country codes
   countryList = [
@@ -273,6 +277,7 @@ PASSENGER DETAILS:
 • Business Travel: ${this.passengerDetails.isBusinessTravel ? 'Yes' : 'No'}
 • Has Coupon: ${this.passengerDetails.hasDiscountCoupon ? 'Yes' : 'No'}
 • Coupon Code: ${this.passengerDetails.couponCode || 'Not provided'}
+• Travel Insurance: ${this.passengerDetails.hasTravelInsurance ? 'Yes' : 'No'}
 
 BOOKING DETAILS:
 • From: ${this.bookingData?.searchParams?.from || 'N/A'}
@@ -288,7 +293,8 @@ BOOKING DETAILS:
 
 FARE BREAKDOWN:
 • Ride Fare: ₹${this.rideFare.toFixed(2)}
-• GST (5%): ₹${this.gstAmount.toFixed(2)}
+• GST (5%): ₹${this.gstAmount.toFixed(2)}${this.travelInsuranceCost > 0 ? `
+• Travel Insurance: ₹${this.travelInsuranceCost.toFixed(2)}` : ''}
 • Total Fare: ₹${this.totalFare.toFixed(2)}
 
 Check console for complete data object.
@@ -365,8 +371,11 @@ Check console for complete data object.
     // Calculate 5% GST
     this.gstAmount = this.rideFare * this.GST_RATE;
     
-    // Calculate total fare
-    this.totalFare = this.rideFare + this.gstAmount;
+    // Calculate travel insurance cost (added after GST)
+    this.travelInsuranceCost = this.passengerDetails.hasTravelInsurance ? this.TRAVEL_INSURANCE_RATE : 0;
+    
+    // Calculate total fare (ride fare + GST + travel insurance)
+    this.totalFare = this.rideFare + this.gstAmount + this.travelInsuranceCost;
   }
 
   getSelectedSeats(): string {
@@ -383,5 +392,10 @@ Check console for complete data object.
     } else {
       alert('Please enter a coupon code');
     }
+  }
+
+  onTravelInsuranceChange() {
+    // Recalculate fare when travel insurance option changes
+    this.calculateFare();
   }
 }
