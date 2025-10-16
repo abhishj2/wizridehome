@@ -13,10 +13,10 @@ import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { SeoService } from '../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
-
 interface City {
   name: string;
   code: string;
@@ -745,6 +745,7 @@ trackByOfferId(index: number, offer: any): number {
   constructor(
     private titleService: Title,
     private metaService: Meta,
+    private seoService: SeoService,
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
@@ -752,14 +753,14 @@ trackByOfferId(index: number, offer: any): number {
   ) {}
 
   ngOnInit() {
+    // Set canonical URL using SEO service
+    this.seoService.setCanonicalURL('https://wizzride.com/');
+    
     // Set page title
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
 
     // Meta Description
-    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling,Gangtok, Kalimpong,Shillong.Affordable rates,24/7 service,and safe rides across Northeast India.' });
-
-    // Canonical URL - Add as link element
-    this.setCanonicalUrl('https://wizzride.com/');
+    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling,Gangtok,Kalimpong,Shillong.Affordable rates,24/7 service,and safe rides across Northeast India.' });
 
     // Open Graph Tags
     this.metaService.updateTag({ property: 'og:title', content: 'Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok' });
@@ -850,19 +851,7 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   // Helper method to set canonical URL
-  private setCanonicalUrl(url: string): void {
-    // Remove existing canonical link if any
-    const existingLink = this.document.querySelector('link[rel="canonical"]');
-    if (existingLink) {
-      this.renderer2.removeChild(this.document.head, existingLink);
-    }
-    
-    // Create and append new canonical link
-    const link = this.renderer2.createElement('link');
-    this.renderer2.setAttribute(link, 'rel', 'canonical');
-    this.renderer2.setAttribute(link, 'href', url);
-    this.renderer2.appendChild(this.document.head, link);
-  }
+  
 
   ngOnDestroy() {
     this.destroy$.next();

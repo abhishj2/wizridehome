@@ -1,0 +1,281 @@
+:root {
+    --main-col: #1daaba;
+    --main-hover-col: #0a7d8c;
+    --head-font-weight: 600;
+    --shadow-light: 0 6px 20px rgba(29, 170, 186, 0.3);
+}
+
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(
+        135deg,
+        rgba(29, 170, 186, 0.8),
+        rgba(10, 125, 140, 0.8)
+    ),
+    url('../../../assets/images/aboutimages/aboutmain.jpeg') !important;
+    color: #fff;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hero-pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23hero-pattern)"/></svg>');
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(-20px) translateY(-20px); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: var(--head-font-weight);
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+/* Philosophy Sections */
+.philosophy-section {
+    padding: 80px 0;
+}
+
+.philosophy-section:nth-child(even) {
+    background: white;
+}
+
+.philosophy-section:nth-child(odd) {
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.05), rgba(10, 125, 140, 0.05));
+}
+
+.philosophy-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.philosophy-section:nth-child(even) .philosophy-content {
+    grid-template-columns: 1fr 0.6fr;
+}
+
+.philosophy-section:nth-child(odd) .philosophy-content {
+    grid-template-columns: 0.6fr 1fr;
+}
+
+.philosophy-text {
+    padding: 20px;
+}
+
+.philosophy-title {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: var(--head-font-weight);
+    margin-bottom: 20px;
+    color: #2c3e50;
+    position: relative;
+}
+
+.philosophy-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--main-col), var(--main-hover-col));
+    border-radius: 2px;
+}
+
+.philosophy-subtitle {
+    color: var(--main-col);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.philosophy-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.philosophy-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+.philosophy-image:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(29, 170, 186, 0.2);
+}
+
+.philosophy-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.philosophy-image:hover img {
+    transform: scale(1.05);
+}
+
+.philosophy-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.2), rgba(10, 125, 140, 0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.philosophy-image:hover::before {
+    opacity: 1;
+}
+
+.highlight-box {
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.1), rgba(10, 125, 140, 0.1));
+    padding: 30px;
+    border-radius: 16px;
+    border-left: 4px solid var(--main-col);
+    margin: 30px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.highlight-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(29, 170, 186, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.highlight-box:hover::before {
+    left: 100%;
+}
+
+/* Icon styling */
+.philosophy-icon {
+    font-size: 3rem;
+    color: var(--main-col);
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+/* Animations */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh;
+        padding: 60px 0;
+    }
+
+    .philosophy-section {
+        padding: 60px 0;
+    }
+
+    .philosophy-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .philosophy-section:nth-child(even) .philosophy-content {
+        grid-template-columns: 1fr;
+    }
+
+    .philosophy-section:nth-child(odd) .philosophy-content {
+        grid-template-columns: 1fr;
+    }
+
+    .philosophy-image img {
+        height: 300px;
+    }
+
+    .philosophy-text {
+        padding: 10px;
+    }
+
+    .philosophy-title::after {
+        width: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .philosophy-content {
+        gap: 30px;
+    }
+
+    .philosophy-image img {
+        height: 250px;
+    }
+
+    .highlight-box {
+        padding: 20px;
+        margin: 20px 0;
+    }
+}

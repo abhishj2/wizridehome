@@ -3275,12 +3275,15 @@ a.service-cta-btn {
         /* Japan Content */
         .japan-content {
             text-align: center;
-            color: white;
+            color: white !important;
             z-index: 2;
             max-width: 900px;
             padding: 0 60px;
             position: relative;
             animation: fadeInUp 1.2s ease-out;
+        }
+        .japan-content h2{
+            color:#fff !important;
         }
 
         @keyframes fadeInUp {
