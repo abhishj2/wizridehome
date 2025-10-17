@@ -1,0 +1,362 @@
+
+:host {
+    --main-col: #1daaba;
+    --main-hover-col: #0a7d8c;
+    --head-font-weight: 600;
+     --shadow-light: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+}
+
+
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(
+        135deg,
+        rgba(29, 170, 186, 0.7),
+        rgba(10, 125, 140, 0.7)
+    ),
+    url('../../../assets/images/holidayhero.jpeg') !important;
+    color: #fff;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+.hero-content h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: var(--head-font-weight);
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 16px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--main-col);
+    color: white;
+    box-shadow: 0 8px 30px rgba(29, 170, 186, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--main-hover-col);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(29, 170, 186, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: #333;
+    transform: translateY(-2px);
+}
+
+/* Tour Cards Section */
+.tours-section {
+    padding: 100px 0 0;
+    background: white;
+}
+
+.tours-section.new{
+    padding: 80px 0px 100px;
+}
+.tours-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.tour-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tour-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(29, 170, 186, 0.2);
+}
+
+.tour-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tour-card:hover img {
+    transform: scale(1.05);
+}
+
+.tour-content {
+    padding: 30px;
+}
+
+.tour-title {
+    font-size: 1.4rem;
+    font-weight: var(--head-font-weight);
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.tour-description {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Large Tour Card */
+.large-tour-card {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 800px;
+    margin: 40px auto 0;
+}
+
+.large-tour-card img {
+    height: 300px;
+}
+
+.large-tour-content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--main-col) 0%, var(--main-hover-col) 100%);
+    color: #000;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.cta-section .tour-card {
+    padding: 60px 0;
+}
+.cta-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+.cta-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: var(--head-font-weight);
+}
+
+.cta-list {
+    list-style: none;
+    list-style: none;
+width: 270px;
+margin: auto;
+text-align: left;
+}
+
+.mt-20{
+margin-top: 20px;
+}
+
+.cta-list li {
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+.cta-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Bottom CTA */
+.bottom-cta {
+    background: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.bottom-cta h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: var(--head-font-weight);
+}
+
+.bottom-cta p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+.bottom-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-teal {
+    background: var(--main-col);
+    color: white;
+    box-shadow: 0 8px 30px rgba(29, 170, 186, 0.3);
+}
+
+.btn-teal:hover {
+    background: var(--main-hover-col);
+    transform: translateY(-2px);
+}
+
+/* Contact Form */
+.contact-section {
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.05), rgba(10, 125, 140, 0.05));
+    padding: 80px 0;
+}
+
+.contact-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 50px;
+    font-weight: var(--head-font-weight);
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: "Montserrat", sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--main-col);
+    box-shadow: 0 0 0 3px rgba(29, 170, 186, 0.1);
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-submit {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.privacy-text {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Animations */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-buttons,
+    .bottom-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tours-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .large-tour-card {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .cta-list {
+        text-align: center;
+    }
+}

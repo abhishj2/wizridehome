@@ -10,6 +10,13 @@ import { OurphilosophyComponent } from './aboutpages/ourphilosophy/ourphilosophy
 import { ContactusComponent } from './contactus/contactus.component';
 import { ApplyforjobComponent } from './careerpages/applyforjob/applyforjob.component';
 import { DriverjobComponent } from './careerpages/driverjob/driverjob.component';
+import { PartnerwithusComponent } from './careerpages/partnerwithus/partnerwithus.component';
+import { InfulencerapplyComponent } from './collaborate/infulencerapply/infulencerapply.component';
+import { CorporatepackagesComponent } from './ourservices/corporatepackages/corporatepackages.component';
+import { IntercityridesComponent } from './ourservices/intercityrides/intercityrides.component';
+import { LocalridesComponent } from './ourservices/localrides/localrides.component';
+import { HolidaytoursComponent } from './ourservices/holidaytours/holidaytours.component';
+import { PackageddeliveryComponent } from './ourservices/packageddelivery/packageddelivery.component';
 
 export const routes: Routes = [
       { path: '', component: HomeComponent },
@@ -25,4 +32,11 @@ export const routes: Routes = [
       {path:'contactus',component:ContactusComponent},
       {path:'applyforjob',component:ApplyforjobComponent},
       {path:'applyforjob/driverjob',component:DriverjobComponent},
+      {path:'applyforjob/partnerwithus',component:PartnerwithusComponent},
+      {path:'influencerapply',component:InfulencerapplyComponent},
+      {path:'ourservices/corporatepackages',component:CorporatepackagesComponent},
+      {path:'ourservices/intercityrides',component:IntercityridesComponent},
+      {path:'ourservices/localrides',component:LocalridesComponent},
+      {path:'ourservices/holidaystours',component:HolidaytoursComponent},
+      {path:'ourservices/packagedelivery',component:PackageddeliveryComponent}
 ];

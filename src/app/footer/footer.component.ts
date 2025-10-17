@@ -32,10 +32,10 @@ export class FooterComponent {
   // Navigation Sections
   ourServices = [
     { name: 'InterCity Ride', link: '/ourservices/intercityrides' },
-    { name: 'Local Ride', link: 'https://wizzride.com/ourservices/localrides/' },
-    { name: 'Holiday & Tour Packages', link: 'https://wizzride.com/ourservices/holidaystours/' },
-    { name: 'Corporate Events', link: 'https://wizzride.com/ourservices/corporatepackages/' },
-    { name: 'Package Delivery', link: 'https://wizzride.com/ourservices/packagedelivery' }
+    { name: 'Local Ride', link: '/ourservices/localrides' },
+    { name: 'Holiday & Tour Packages', link: '/holidaystours' },
+    { name: 'Corporate Events', link: '/ourservices/corporatepackages/' },
+    { name: 'Package Delivery', link: '/ourservices/packagedelivery' }
   ];
 
   aboutUs = [

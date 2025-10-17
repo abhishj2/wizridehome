@@ -53,7 +53,7 @@ export class NavbarComponent {
         { name: 'Join our Corporate Team ', link: '/applyforjob' },
         { name: 'Apply for Driver Job ', link: '/applyforjob/driverjob' },
         { name: 'Attach Your Car ', link: '/applyforjob/partnerwithus' },
-        { name: 'Become an Agent', link: '/applyforjob/partnerwithus' }
+        { name: 'Become an Agent', link: '/applyforjob/partnerwithus?id=3' }
       ]
     },
     {
@@ -67,9 +67,9 @@ export class NavbarComponent {
       hasDropdown: true,
       dropdownItems: [
         { name: 'Influencer', link: '/influencerapply' },
-        { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackagesr' },
-        { name: 'Private Events', link: '/applyforjob/partnerwithus' },
-        { name: 'Investor Center ', link: '/applyforjob/partnerwithus' },
+        { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
+        { name: 'Private Events', link: '/applyforjob/partnerwithus?id=6' },
+        { name: 'Investor Center ', link: '/applyforjob/partnerwithus?id=2' },
       ]
     },
     {

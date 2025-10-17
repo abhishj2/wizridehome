@@ -1,0 +1,439 @@
+:host {
+    --primary-color: #1daaba;
+    --primary-hover: #0a7d8c;
+    --secondary-color: #ff7675;
+    --accent-color: #f5a623;
+    --text-dark: #334155;
+    --text-light: #64748b;
+    --bg-light: #f8fafc;
+    --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --card-hover-shadow: 0 8px 30px rgba(29, 170, 186, 0.15);
+    --border-radius: 15px;
+  }
+
+
+  body {
+    background: var(--bg-gradient);
+    line-height: 1.6;
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    height: 70vh;
+    min-height: 600px;
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.9), rgba(10, 125, 140, 0.8)),
+      url('../../../assets/images/intercitybanner.jpeg') center/cover;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+
+  .hero-content {
+    max-width: 800px;
+    z-index: 2;
+    padding: 0 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    animation: slideInUp 1s ease-out;
+  }
+
+  .hero p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    animation: slideInUp 1s ease-out 0.2s both;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 80px 0;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 60px;
+    text-align: center;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Why Choose Section */
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 25px;
+  }
+
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--primary-color), var(--primary-hover));
+    border-radius: 3px;
+  }
+
+  .section-subtitle {
+    color: var(--primary-hover);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .section-desc {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 60px;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(29, 170, 186, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  .feature-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
+  .feature-desc {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Routes Table */
+  .routes-section {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(29, 170, 186, 0.1);
+    margin-bottom: 60px;
+  }
+
+  .routes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+  }
+
+  .routes-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+  }
+
+  .routes-table th {
+    padding: 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .routes-table th:first-child {
+    border-radius: 10px 0 0 0;
+  }
+
+  .routes-table th:last-child {
+    border-radius: 0 10px 0 0;
+  }
+
+  .routes-table td {
+    padding: 20px;
+    border-bottom: 1px solid rgba(29, 170, 186, 0.1);
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .routes-table tbody tr {
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .routes-table tbody tr:hover {
+    background: rgba(29, 170, 186, 0.05);
+  }
+
+  /* Journey Steps */
+  .journey-section {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(29, 170, 186, 0.1);
+    margin-bottom: 60px;
+  }
+
+  .steps-container {
+    margin-top: 40px;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: rgba(29, 170, 186, 0.05);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(29, 170, 186, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .step-item:hover {
+    background: rgba(29, 170, 186, 0.08);
+    transform: translateX(10px);
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  /* CTA Button */
+  .cta-section {
+    text-align: center;
+    margin: 60px 0;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color));
+    color: white;
+    padding: 18px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 20px rgba(255, 118, 117, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 118, 117, 0.5);
+  }
+
+  /* Contact Section */
+  
+
+
+ 
+
+  
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+
+
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+    }
+
+    .main-content {
+      padding: 60px 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      padding-left: 20px;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .routes-section,
+    .journey-section {
+      padding: 30px 20px;
+    }
+
+    .routes-table {
+      font-size: 0.9rem;
+    }
+
+    .routes-table th,
+    .routes-table td {
+      padding: 15px 10px;
+    }
+
+   
+
+    .step-item {
+      padding: 15px;
+    }
+
+    .step-item:hover {
+      transform: translateX(5px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 0 15px;
+    }
+
+    .hero {
+      height: 60vh;
+      min-height: 500px;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero p {
+      font-size: 1rem;
+    }
+
+    .feature-card {
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .routes-table {
+      font-size: 0.8rem;
+    }
+
+    .routes-table th,
+    .routes-table td {
+      padding: 12px 8px;
+    }
+
+    .cta-button {
+      padding: 15px 30px;
+      font-size: 1rem;
+    }
+  }
