@@ -1,0 +1,499 @@
+<!-- Header Section -->
+<section class="header-section">
+    <div class="container">
+        <div class="header-content">
+            <h1 class="page-title">Cancel Your Ticket</h1>
+            <p class="page-subtitle">Easily cancel your booking and get refunds as per our policy</p>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Progress Steps -->
+        <div class="progress-section" data-animate>
+            <div class="progress-container">
+                <div class="progress-step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+                    <div class="step-circle">
+                        <span class="step-number">1</span>
+                    </div>
+                    <div class="step-label">Verify through OTP</div>
+                </div>
+                <div class="progress-line" [class.completed]="currentStep > 1"></div>
+                
+                <div class="progress-step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+                    <div class="step-circle">
+                        <span class="step-number">2</span>
+                    </div>
+                    <div class="step-label">Check Ticket Details</div>
+                </div>
+                <div class="progress-line" [class.completed]="currentStep > 2"></div>
+                
+                <div class="progress-step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+                    <div class="step-circle">
+                        <span class="step-number">3</span>
+                    </div>
+                    <div class="step-label">Cancellation Charges</div>
+                </div>
+                <div class="progress-line" [class.completed]="currentStep > 3"></div>
+                
+                <div class="progress-step" [class.active]="currentStep >= 4" [class.completed]="currentStep > 4">
+                    <div class="step-circle">
+                        <span class="step-number">4</span>
+                    </div>
+                    <div class="step-label">Cancellation Summary</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Main Content Grid -->
+        <div class="cancel-container">
+            <!-- Left Column - Form -->
+            <div class="form-section" data-animate *ngIf="currentStep === 1">
+                <div class="form-card">
+                    <h3 class="form-title">
+                        <i class="fas fa-mobile-alt"></i>
+                        Step 1: Enter PNR & Registered Mobile No/ Email & Verify OTP
+                    </h3>
+                    
+                    <form [formGroup]="cancelForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <label for="pnr">Ticket PNR *</label>
+                            <input 
+                                type="text" 
+                                id="pnr" 
+                                formControlName="pnr"
+                                placeholder="Enter the PNR of your ticket"
+                                [class.error]="cancelForm.get('pnr')?.invalid && cancelForm.get('pnr')?.touched">
+                            <div class="error-message" *ngIf="cancelForm.get('pnr')?.invalid && cancelForm.get('pnr')?.touched">
+                                Please enter a valid PNR number
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mobile">Registered Contact No *</label>
+                            <input 
+                                type="tel" 
+                                id="mobile" 
+                                formControlName="mobile"
+                                placeholder="Enter Primary Contact Number of the Primary Passenger"
+                                [class.error]="cancelForm.get('mobile')?.invalid && cancelForm.get('mobile')?.touched">
+                            <div class="error-message" *ngIf="cancelForm.get('mobile')?.invalid && cancelForm.get('mobile')?.touched">
+                                Please enter a valid mobile number
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Registered Email ID</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                formControlName="email"
+                                placeholder="Enter Email ID of Primary Passenger (Optional)">
+                        </div>
+
+                        <!-- OTP Section -->
+                        <div class="otp-section" *ngIf="otpSent">
+                            <div class="form-group">
+                                <label for="otp">Enter OTP *</label>
+                                <input 
+                                    type="text" 
+                                    id="otp" 
+                                    formControlName="otp"
+                                    placeholder="Enter 4-digit OTP"
+                                    maxlength="4"
+                                    [class.error]="cancelForm.get('otp')?.invalid && cancelForm.get('otp')?.touched">
+                                <div class="error-message" *ngIf="cancelForm.get('otp')?.invalid && cancelForm.get('otp')?.touched">
+                                    Please enter the 4-digit OTP
+                                </div>
+                            </div>
+                            <div class="otp-info">
+                                <p><i class="fas fa-info-circle"></i> OTP sent to your registered mobile number</p>
+                                <button type="button" class="resend-btn" (click)="resendOTP()">Resend OTP</button>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" [disabled]="!isFormValidForSubmission() || isLoading" *ngIf="currentStep === 1">
+                            <i class="fas fa-paper-plane" *ngIf="!isLoading"></i>
+                            <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+                            {{ otpSent ? 'Verify OTP' : 'Send OTP' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2 - Ticket Details -->
+            <div class="form-section" data-step="2" *ngIf="currentStep === 2">
+                <div class="form-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-ticket-alt"></i>
+                        Step 2 : Check Details of Ticket to be Cancelled
+                    </h2>
+                    
+                    
+                    
+                    <!-- Loading state -->
+                    <div *ngIf="!ticketDetails && isLoading" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <p style="margin-top: 15px; color: var(--text-light);">Loading ticket details...</p>
+                    </div>
+                    
+                    <!-- Error state -->
+                    <div *ngIf="!ticketDetails && !isLoading" style="text-align: center; padding: 40px; color: var(--error-color);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                        <p style="margin-top: 15px;">Unable to load ticket details. Please try again.</p>
+                    </div>
+                    
+                    <div class="ticket-details" *ngIf="ticketDetails">
+                        <div class="form-group">
+                            <label for="from">From</label>
+                            <input 
+                                type="text" 
+                                id="from" 
+                                [value]="ticketDetails.from" 
+                                readonly
+                                class="readonly-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="to">To</label>
+                            <input 
+                                type="text" 
+                                id="to" 
+                                [value]="ticketDetails.to" 
+                                readonly
+                                class="readonly-input">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="travelDate">Travel Date</label>
+                                <input 
+                                    type="text" 
+                                    id="travelDate" 
+                                    [value]="ticketDetails.travelDate" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="pickupTime">Pick Up Time</label>
+                                <input 
+                                    type="text" 
+                                    id="pickupTime" 
+                                    [value]="ticketDetails.pickupTime" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="seatNumber">Seat Number</label>
+                                <input 
+                                    type="text" 
+                                    id="seatNumber" 
+                                    [value]="ticketDetails.seatNumber" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="passengerName">Passenger Name</label>
+                                <input 
+                                    type="text" 
+                                    id="passengerName" 
+                                    [value]="ticketDetails.passengerName" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookingAmount">Booking Amount</label>
+                                <input 
+                                    type="text" 
+                                    id="bookingAmount" 
+                                    [value]="ticketDetails.bookingAmount" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="pnr">PNR Number</label>
+                                <input 
+                                    type="text" 
+                                    id="pnr" 
+                                    [value]="ticketDetails.pnr" 
+                                    readonly
+                                    class="readonly-input">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="proceed-btn" (click)="proceedWithCancellation()">
+                        <i class="fas fa-arrow-right"></i>
+                        Proceed with Cancellation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3 - Cancellation Charges -->
+            <div class="form-section" data-step="3" *ngIf="currentStep === 3">
+                <div class="form-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-calculator"></i>
+                        Step 3: Check Cancellation Charges
+                    </h2>
+                    
+                    <div class="cancellation-charges" *ngIf="cancellationDetails">
+                        <div class="form-group">
+                            <label for="amountPaid">Amount Paid (incl GST)</label>
+                            <input 
+                                type="text" 
+                                id="amountPaid" 
+                                [value]="cancellationDetails.amountPaid" 
+                                readonly
+                                class="readonly-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cancellationCharges">Cancellation Charges</label>
+                            <input 
+                                type="text" 
+                                id="cancellationCharges" 
+                                [value]="cancellationDetails.cancellationCharges" 
+                                readonly
+                                class="readonly-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="refundAmount">Refund Amount</label>
+                            <input 
+                                type="text" 
+                                id="refundAmount" 
+                                [value]="cancellationDetails.refundAmount" 
+                                readonly
+                                class="readonly-input">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="confirm-btn" (click)="confirmCancellation()">
+                        <i class="fas fa-check"></i>
+                        Confirm Cancellation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4 - Cancellation Summary -->
+            <div class="form-section" data-step="4" *ngIf="currentStep === 4">
+                <div class="form-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-check-circle"></i>
+                        Step 4: Cancellation Confirmation Summary
+                    </h2>
+                    
+                    <div class="cancellation-summary" *ngIf="ticketDetails">
+                        <div class="confirmation-message">
+                            <h3>Your Ticket with PNR <strong>{{ticketDetails.pnr}}</strong> has been Cancelled.</h3>
+                        </div>
+                        
+                        <div class="refund-info">
+                            <h4>Refund Information:</h4>
+                            <ul class="refund-list">
+                                <li>
+                                    <i class="fas fa-info-circle"></i>
+                                    The refund amount will reflect in the account used for payment. Please check the correct bank account.
+                                </li>
+                                <li>
+                                    <i class="fas fa-clock"></i>
+                                    The refund will reflect within 5-7 working days from the cancellation date, excluding holidays.
+                                </li>
+                                <li>
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Please do not depend on bank SMS for refund confirmation, as they may not be delivered. Please check your online bank account statements instead.
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="summary-details" *ngIf="cancellationDetails">
+                            <div class="summary-row">
+                                <span class="label">Refund Amount:</span>
+                                <span class="value">{{cancellationDetails.refundAmount}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="home-btn" (click)="returnToHome()">
+                        <i class="fas fa-home"></i>
+                        Return to Home
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column - Policies -->
+            <div class="policies-section" data-animate *ngIf="currentStep === 1 || currentStep === 2 || currentStep === 3">
+                <!-- Shared Cab Policy -->
+                <div class="policy-card">
+                    <h3 class="policy-title">
+                        <i class="fas fa-users"></i>
+                        Cancellation Policy for Wizzride Shared Cab
+                    </h3>
+                    <div class="policy-list">
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">24 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 100 per seat + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">within 24 hours but 12 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 200 per seat + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">within 12 hours of the travel time and Booking Done within 1 hour from now</span>
+                                    <span class="condition-text">, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 200 per seat + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item no-refund">
+                            <div class="policy-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">within 12 hours of the travel time and Booking Done before 1 hour from now</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount no-refund-text">100% - No Refund</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reserved Cab Policy -->
+                <div class="policy-card">
+                    <h3 class="policy-title">
+                        <i class="fas fa-car"></i>
+                        Cancellation Policy for Wizzride Reserved Cab
+                    </h3>
+                    <div class="policy-list">
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">24 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">2% cancellation charge</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">within 24 hours but 12 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 200 + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">within 12 hours but 3 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 300 + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is done</span>
+                                    <span class="time-frame">3 hours before</span>
+                                    <span class="condition-text">the travel time, the refund will be processed with a cancellation charge of</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount">Rs. 500 + 5% GST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="policy-item no-refund">
+                            <div class="policy-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="policy-content">
+                                <div class="policy-condition">
+                                    <span class="condition-label">If cancellation is attempted for</span>
+                                    <span class="time-frame">past bookings</span>
+                                    <span class="condition-text">, there shall be</span>
+                                </div>
+                                <div class="policy-charge">
+                                    <span class="charge-amount no-refund-text">no refund</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

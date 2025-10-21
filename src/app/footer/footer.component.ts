@@ -33,32 +33,32 @@ export class FooterComponent {
   ourServices = [
     { name: 'InterCity Ride', link: '/ourservices/intercityrides' },
     { name: 'Local Ride', link: '/ourservices/localrides' },
-    { name: 'Holiday & Tour Packages', link: '/holidaystours' },
+    { name: 'Holiday & Tour Packages', link: '/ourservices/holidaystours' },
     { name: 'Corporate Events', link: '/ourservices/corporatepackages/' },
     { name: 'Package Delivery', link: '/ourservices/packagedelivery' }
   ];
 
   aboutUs = [
-    { name: 'Our Vision', link: 'https://wizzride.com/aboutcompany/ourvision' },
-    { name: 'Our Commitment', link: 'https://wizzride.com/aboutcompany/ourcommittment' },
-    { name: 'Work Philosophy', link: 'https://wizzride.com/aboutcompany/ourworkphilosophy/' },
-    { name: 'Company Overview', link: 'https://wizzride.com/aboutcompany/' }
+    { name: 'Our Vision', link: '/aboutcompany/ourvision' },
+    { name: 'Our Commitment', link: '/aboutcompany/ourcommittment' },
+    { name: 'Work Philosophy', link: '/aboutcompany/ourworkphilosophy/' },
+    { name: 'Company Overview', link: '/aboutcompany/' }
   ];
 
   importantLinks = [
-    { name: 'Cancellation Policy', link: 'https://wizzride.com/cancellationpolicy/' },
-    { name: 'Terms & Conditions', link: 'https://wizzride.com/cancellationpolicy/termsandconditions' },
-    { name: 'Privacy & Security', link: 'https://wizzride.com/cancellationpolicy/privacypolicy' },
-    { name: 'User Agreement', link: 'https://wizzride.com/cancellationpolicy/useragreement' },
-    { name: 'Sikkim Permit Guide', link: 'https://wizzride.com/sikkim_permit_guide/' }
+    { name: 'Cancellation Policy', link: '/cancellationpolicy' },
+    { name: 'Terms & Conditions', link: '/cancellationpolicy/termsandconditions' },
+    { name: 'Privacy & Security', link: '/cancellationpolicy/privacypolicy' },
+    { name: 'User Agreement', link: '/cancellationpolicy/useragreement' },
+    { name: 'Sikkim Permit Guide', link: '/sikkim_permit_guide/' }
   ];
 
   quickLinks = [
-    { name: 'FAQs', link: 'https://wizzride.com/frequentlyaskedquestions' },
-    { name: 'Collaborate', link: 'https://wizzride.com/influencerapply/' },
-    { name: 'Cancel Ticket', link: 'https://wizzride.com/cancelticket' },
-    { name: 'Apply for a Job', link: 'https://wizzride.com/applyforjob' },
-    { name: 'Enroll Your Car', link: 'https://wizzride.com/applyforjob/partnerwithus/' }
+    { name: 'FAQs', link: '/frequentlyaskedquestions' },
+    { name: 'Collaborate', link: '/influencerapply/' },
+    { name: 'Cancel Ticket', link: '/cancelticket' },
+    { name: 'Apply for a Job', link: '/applyforjob' },
+    { name: 'Enroll Your Car', link: '/applyforjob/partnerwithus/' }
   ];
 
   // Contact Information

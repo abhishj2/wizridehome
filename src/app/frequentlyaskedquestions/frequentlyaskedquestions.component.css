@@ -1,0 +1,151 @@
+:host {
+    --main-col: #1daaba;
+    --main-hover-col: #0a7d8c;
+    --head-font-weight: 600;
+    --shadow-light: 0 6px 20px rgba(245, 166, 35, 0.5);
+}
+
+.btn-c{
+    background: linear-gradient(135deg, #1daaba,#0a7d8c) !important;
+          color: white;
+          padding: 18px 40px;
+          border: none;
+          border-radius: 30px;
+          font-weight: 600;
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin: 20px  0;
+          display: block;
+          min-width: 200px;
+    }
+    
+    .btn-c:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 30px rgba(29, 170, 186, 0.4);
+      }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .divider {
+    width: 80px;
+    height: 3px;
+    background-color: var(--main-col);
+    margin: 0 auto 30px;
+  }
+
+  .spacer {
+    height: 60px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+ 
+
+  /* Search Box Styles */
+  .search-container {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-box {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 15px 50px 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #fff;
+  }
+
+  .search-input:focus {
+    border-color: var(--main-col);
+    box-shadow: 0 0 0 3px rgba(29, 170, 186, 0.1);
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+    display: none;
+  }
+
+  /* FAQ styles are handled globally in styles.css */
+
+  /* Fade on scroll animation */
+  .fade-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .fade-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 30px !important;
+    }
+
+    .faq-question {
+      padding: 20px 25px;
+    }
+
+    .faq-question h3 {
+      font-size: 1rem;
+    }
+
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      margin-left: 15px;
+    }
+
+    .faq-icon i {
+      font-size: 0.8rem;
+    }
+
+    .faq-answer p {
+      padding: 0 25px 20px;
+      font-size: 0.95rem;
+    }
+  }
+
+  textarea.form-control {
+padding: 15px;
+      border: 2px solid rgba(29, 170, 186, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #000;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+width:100% 
+}
+
+
