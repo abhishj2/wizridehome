@@ -74,9 +74,10 @@
 .progress-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     max-width: 800px;
     margin: 0 auto;
+    overflow: hidden;
     background: white;
     padding: 30px;
     border-radius: var(--border-radius);
@@ -89,6 +90,7 @@
     align-items: center;
     flex: 1;
     position: relative;
+    min-width: 0;
 }
 
 .step-circle {
@@ -133,11 +135,12 @@
 .progress-line {
     position: absolute;
     top: 25px;
-    left: 50%;
-    right: -50%;
+    left: calc(50% + 25px);
+    right: calc(50% + 25px);
     height: 3px;
     background: #e2e8f0;
     transition: all 0.3s ease;
+    z-index: 1;
 }
 
 .progress-line.completed {

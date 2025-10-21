@@ -44,6 +44,7 @@
                     </div>
                     <div class="step-label">Cancellation Summary</div>
                 </div>
+                <!-- No progress line after the last step -->
             </div>
         </div>
 
@@ -127,10 +128,10 @@
             <!-- Step 2 - Ticket Details -->
             <div class="form-section" data-step="2" *ngIf="currentStep === 2">
                 <div class="form-card">
-                    <h2 class="form-title">
+                    <h3 class="form-title">
                         <i class="fas fa-ticket-alt"></i>
                         Step 2 : Check Details of Ticket to be Cancelled
-                    </h2>
+                    </h3>
                     
                     
                     
@@ -241,10 +242,10 @@
             <!-- Step 3 - Cancellation Charges -->
             <div class="form-section" data-step="3" *ngIf="currentStep === 3">
                 <div class="form-card">
-                    <h2 class="form-title">
+                    <h3 class="form-title">
                         <i class="fas fa-calculator"></i>
                         Step 3: Check Cancellation Charges
-                    </h2>
+                    </h3>
                     
                     <div class="cancellation-charges" *ngIf="cancellationDetails">
                         <div class="form-group">
@@ -288,10 +289,10 @@
             <!-- Step 4 - Cancellation Summary -->
             <div class="form-section" data-step="4" *ngIf="currentStep === 4">
                 <div class="form-card">
-                    <h2 class="form-title">
+                    <h3 class="form-title">
                         <i class="fas fa-check-circle"></i>
                         Step 4: Cancellation Confirmation Summary
-                    </h2>
+                    </h3>
                     
                     <div class="cancellation-summary" *ngIf="ticketDetails">
                         <div class="confirmation-message">
