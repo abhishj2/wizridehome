@@ -123,7 +123,9 @@ export class FooterComponent {
       { name: 'Tsomgo Lake', link: '/destinations/tsomgo_lake' },
       { name: 'Pelling', link: '/destinations/pelling/' },
       { name: 'Nathula Pass', link: '/destinations/nathula_pass' },
-      { name: 'Rumtek Monastery', link: '/destinations/rumtek_monastery' }
+      { name: 'Rumtek Monastery', link: '/destinations/rumtek_monastery' },
+      { name: 'Zuluk', link: '/destinations/zuluk' },
+      { name: 'Rangpo', link: '/destinations/rangpo' }
     ],
     darjeeling: [
       { name: 'Darjeeling Town', link: '/destinations/darjeeling/' },

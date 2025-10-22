@@ -29,6 +29,20 @@ import { MaindestinationsComponent } from './destinations/maindestinations/maind
 import { CancelbookingComponent } from './cancelbooking/cancelbooking.component';
 import { GangtokComponent } from './destinations/sikkim/gangtok/gangtok.component';
 import { NamchiComponent } from './destinations/sikkim/namchi/namchi.component';
+import { YuksomComponent } from './destinations/sikkim/yuksom/yuksom.component';
+import { LachungComponent } from './destinations/sikkim/lachung/lachung.component';
+import { TsomgolakeComponent } from './destinations/sikkim/tsomgolake/tsomgolake.component';
+import { PellingComponent } from './destinations/sikkim/pelling/pelling.component';
+import { NathulapassComponent } from './destinations/sikkim/nathulapass/nathulapass.component';
+import { RumtekmonasteryComponent } from './destinations/sikkim/rumtekmonastery/rumtekmonastery.component';
+import { ZulukComponent } from './destinations/sikkim/zuluk/zuluk.component';
+import { RangpoComponent } from './destinations/sikkim/rangpo/rangpo.component';
+import { DarjeelingtownComponent } from './destinations/darjeelingandkalimpong/darjeelingtown/darjeelingtown.component';
+import { TigerhillComponent } from './destinations/darjeelingandkalimpong/tigerhill/tigerhill.component';
+import { GhoommonsateryComponent } from './destinations/darjeelingandkalimpong/ghoommonsatery/ghoommonsatery.component';
+import { BatasialoopComponent } from './destinations/darjeelingandkalimpong/batasialoop/batasialoop.component';
+import { HimalayanzoologicalparkComponent } from './destinations/darjeelingandkalimpong/himalayanzoologicalpark/himalayanzoologicalpark.component';
+import { HappyvalleyteaestateComponent } from './destinations/darjeelingandkalimpong/happyvalleyteaestate/happyvalleyteaestate.component';
 
 
 
@@ -70,5 +84,23 @@ export const routes: Routes = [
 
       {path:'destinations/gangtok',component:GangtokComponent},
       {path:'destinations/namchi',component:NamchiComponent},
+      {path:'destinations/yuksom',component:YuksomComponent},
+      {path:'destinations/lachung',component:LachungComponent},
+      {path:'destinations/tsomgo_lake',component:TsomgolakeComponent},
+      {path:'destinations/pelling',component:PellingComponent},
+      {path:'destinations/nathula_pass',component:NathulapassComponent},
+      {path:'destinations/rumtek_monastery',component:RumtekmonasteryComponent},
+      {path:'destinations/zuluk',component:ZulukComponent},
+      {path:'destinations/rangpo',component:RangpoComponent},
+
+
+      //Darjeeling
+      {path:'destinations/darjeeling',component:DarjeelingtownComponent},
+      {path:'destinations/tigerhill',component:TigerhillComponent},
+      {path:'destinations/ghoom-monastery',component:GhoommonsateryComponent},
+      {path:'destinations/batasia-loop',component:BatasialoopComponent},
+      {path:'destinations/himalayan-zoological-park',component:HimalayanzoologicalparkComponent},
+      {path:'destinations/happy-valley-tea-estate',component:HappyvalleyteaestateComponent},
+      
       
 ];
