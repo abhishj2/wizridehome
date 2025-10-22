@@ -28,6 +28,7 @@ import { FrequentlyaskedquestionsComponent } from './frequentlyaskedquestions/fr
 import { MaindestinationsComponent } from './destinations/maindestinations/maindestinations.component';
 import { CancelbookingComponent } from './cancelbooking/cancelbooking.component';
 import { GangtokComponent } from './destinations/sikkim/gangtok/gangtok.component';
+import { NamchiComponent } from './destinations/sikkim/namchi/namchi.component';
 
 
 
@@ -68,5 +69,6 @@ export const routes: Routes = [
       //destinations
 
       {path:'destinations/gangtok',component:GangtokComponent},
+      {path:'destinations/namchi',component:NamchiComponent},
       
 ];
