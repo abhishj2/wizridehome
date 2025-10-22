@@ -3,6 +3,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
 
 @Component({
@@ -30,47 +31,114 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     private metaService: Meta,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
+    private router: Router,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.initializeForm();
   }
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/cancel-ticket');
+    this.seoService.setCanonicalURL('https://wizzride.com/cancelticket');
     
     // ✅ SEO Metadata
-    this.titleService.setTitle("Cancel Your Ticket - Wizzride");
+    this.titleService.setTitle("Cancel Your Ticket | WizzRide – Flexible Taxi Booking Policy");
     this.metaService.updateTag({
       name: 'description',
-      content: "Cancel your Wizzride booking easily and get refunds as per our cancellation policy. Simple OTP verification process for secure cancellations."
+      content: "Cancellation, Wizzride contact number, Taxi in Sikkim, Taxi in Darjeeling, Taxi in Guwahati, Taxi in Shillong."
     });
     this.metaService.updateTag({
       name: 'title',
-      content: "Cancel Your Ticket - Wizzride"
+      content: "Cancel Your Ticket | WizzRide – Flexible Taxi Booking Policy"
     });
 
     // Open Graph Tags
-    this.metaService.updateTag({ property: 'og:title', content: 'Cancel Your Ticket - Wizzride' });
-    this.metaService.updateTag({ property: 'og:description', content: 'Cancel your Wizzride booking easily and get refunds as per our cancellation policy. Simple OTP verification process for secure cancellations.' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Cancel Your Ticket | WizzRide – Flexible Taxi Booking Policy' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Cancellation, Wizzride contact number, Taxi in Sikkim, Taxi in Darjeeling, Taxi in Guwahati, Taxi in Shillong.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/cancel-ticket' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/cancelticket' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
     // Twitter Card Tags
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.metaService.updateTag({ name: 'twitter:title', content: 'Cancel Your Ticket - Wizzride' });
-    this.metaService.updateTag({ name: 'twitter:description', content: 'Cancel your Wizzride booking easily and get refunds as per our cancellation policy. Simple OTP verification process for secure cancellations.' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Cancel Your Ticket | WizzRide – Flexible Taxi Booking Policy' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Cancellation, Wizzride contact number, Taxi in Sikkim, Taxi in Darjeeling, Taxi in Guwahati, Taxi in Shillong.' });
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
+
+    // ✅ BreadcrumbList JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Cancel Ticket",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/cancelticket"
+          }
+        }
+      ]
+    });
+
+    // ✅ WebPage JSON-LD for Cancel Ticket page
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Cancel Your Ticket | WizzRide – Flexible Taxi Booking Policy",
+      "description": "Cancellation, Wizzride contact number, Taxi in Sikkim, Taxi in Darjeeling, Taxi in Guwahati, Taxi in Shillong.",
+      "url": "https://www.wizzride.com/cancelticket",
+      "mainEntity": {
+        "@type": "Service",
+        "name": "Ticket Cancellation Service",
+        "description": "Cancel your Wizzride taxi booking with flexible cancellation policy and instant refund processing",
+        "provider": {
+          "@type": "Organization",
+          "name": "Wizzride Technologies Pvt Ltd",
+          "url": "https://www.wizzride.com"
+        },
+        "serviceType": "Taxi Booking Cancellation",
+        "areaServed": [
+          "Sikkim",
+          "Darjeeling", 
+          "Guwahati",
+          "Shillong"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "description": "Flexible cancellation policy with refund options",
+          "price": "0",
+          "priceCurrency": "INR"
+        }
+      }
+    });
+  }
+
+  // ✅ Utility: inject LD+JSON scripts
+  private addJsonLd(schemaObject: any): void {
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   // Initialize form with validators
   initializeForm(): void {
     this.cancelForm = this.fb.group({
-      pnr: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
-      mobile: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+      pnr: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10), Validators.pattern(/^[A-Za-z0-9]+$/)]],
+      mobile: ['', [Validators.required, Validators.pattern(/^(\+91|91)?[6-9]\d{9}$/)]],
       email: ['', [Validators.email]],
       otp: [''] // OTP validation will be added when OTP is sent
     });
@@ -165,7 +233,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       // Dummy ticket data based on the reference image
       this.ticketDetails = {
-        pnr: pnr,
+        pnr: pnr || 'ABC123456', // Use provided PNR or default alphanumeric
         from: 'Guwahati Airport (Airport Parking Lot)',
         to: 'Shillong (Police Bazaar Point)',
         travelDate: '2025-11-28',
@@ -246,20 +314,9 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
 
   // Return to home
   returnToHome(): void {
-    // Reset the form and go back to step 1
-    this.currentStep = 1;
-    this.otpSent = false;
-    this.isLoading = false;
-    this.ticketDetails = null;
-    this.cancellationDetails = null;
-    
-    // Reset form
-    this.cancelForm.reset();
-    this.cancelForm.get('otp')?.clearValidators();
-    this.cancelForm.get('otp')?.updateValueAndValidity();
-    
-    console.log('Returned to home - form reset');
-    this.cdr.detectChanges();
+    // Navigate to home page
+    this.router.navigate(['/']);
+    console.log('Redirecting to home page');
   }
 
   // Resend OTP

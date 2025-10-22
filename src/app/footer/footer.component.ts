@@ -116,54 +116,54 @@ export class FooterComponent {
   // Popular Destinations
   destinations = {
     sikkim: [
-      { name: 'Gangtok', link: 'https://wizzride.com/destinations/gangtok' },
-      { name: 'Namchi', link: 'https://wizzride.com/destinations/namchi/' },
-      { name: 'Yuksom', link: 'https://wizzride.com/destinations/yuksom/' },
-      { name: 'Lachung', link: 'https://wizzride.com/destinations/lachung/' },
-      { name: 'Tsomgo Lake', link: 'https://wizzride.com/destinations/tsomgo_lake' },
-      { name: 'Pelling', link: 'https://wizzride.com/destinations/pelling/' },
-      { name: 'Nathula Pass', link: 'https://wizzride.com/destinations/nathula_pass' },
-      { name: 'Rumtek Monastery', link: 'https://wizzride.com/destinations/rumtek_monastery' }
+      { name: 'Gangtok', link: '/destinations/gangtok' },
+      { name: 'Namchi', link: '/destinations/namchi/' },
+      { name: 'Yuksom', link: '/destinations/yuksom/' },
+      { name: 'Lachung', link: '/destinations/lachung/' },
+      { name: 'Tsomgo Lake', link: '/destinations/tsomgo_lake' },
+      { name: 'Pelling', link: '/destinations/pelling/' },
+      { name: 'Nathula Pass', link: '/destinations/nathula_pass' },
+      { name: 'Rumtek Monastery', link: '/destinations/rumtek_monastery' }
     ],
     darjeeling: [
-      { name: 'Darjeeling Town', link: 'https://wizzride.com/destinations/darjeeling/' },
-      { name: 'Tiger Hill', link: 'https://wizzride.com/destinations/tigerhill/' },
-      { name: 'Ghoom Monastery', link: 'https://wizzride.com/destinations/ghoom-monastery' },
-      { name: 'Batasia Loop', link: 'https://wizzride.com/destinations/batasia-loop/' },
-      { name: 'Himalayan Zoological Park', link: 'https://wizzride.com/destinations/himalayan-zoological-park/' },
-      { name: 'Happy Valley Tea Estate', link: 'https://wizzride.com/destinations/happy-valley-tea-estate/' }
+      { name: 'Darjeeling Town', link: '/destinations/darjeeling/' },
+      { name: 'Tiger Hill', link: '/destinations/tigerhill/' },
+      { name: 'Ghoom Monastery', link: '/destinations/ghoom-monastery' },
+      { name: 'Batasia Loop', link: '/destinations/batasia-loop/' },
+      { name: 'Himalayan Zoological Park', link: '/destinations/himalayan-zoological-park/' },
+      { name: 'Happy Valley Tea Estate', link: '/destinations/happy-valley-tea-estate/' }
     ],
     assam: [
-      { name: 'Kaziranga National Park', link: 'https://wizzride.com/destinations/kaziranga-national-park' },
-      { name: 'Majuli Island', link: 'https://wizzride.com/destinations/majuli-island' },
-      { name: 'Guwahati City', link: 'https://wizzride.com/destinations/guwahati' },
-      { name: 'Kamakhya Temple', link: 'https://wizzride.com/destinations/kamakhya' },
-      { name: 'Sivasagar', link: 'https://wizzride.com/destinations/kamakhya/sivasagar' },
-      { name: 'Tezpur', link: 'https://wizzride.com/destinations/tezpur' }
+      { name: 'Kaziranga National Park', link: '/destinations/kaziranga-national-park' },
+      { name: 'Majuli Island', link: '/destinations/majuli-island' },
+      { name: 'Guwahati City', link: '/destinations/guwahati' },
+      { name: 'Kamakhya Temple', link: '/destinations/kamakhya' },
+      { name: 'Sivasagar', link: '/destinations/kamakhya/sivasagar' },
+      { name: 'Tezpur', link: '/destinations/tezpur' }
     ],
     meghalaya: [
-      { name: 'Shillong', link: 'https://wizzride.com/destinations/shillong/' },
-      { name: 'Cherrapunji', link: 'https://wizzride.com/destinations/cherrapunji/' },
-      { name: 'Mawsynram', link: 'https://wizzride.com/destinations/mawsynram/' },
-      { name: 'Dawki', link: 'https://wizzride.com/destinations/dawki' },
-      { name: 'Umiam Lake', link: 'https://wizzride.com/destinations/umiam-lake/' },
-      { name: 'Laitlum Canyons', link: 'https://wizzride.com/destinations/laitlum'}
+      { name: 'Shillong', link: '/destinations/shillong/' },
+      { name: 'Cherrapunji', link: '/destinations/cherrapunji/' },
+      { name: 'Mawsynram', link: '/destinations/mawsynram/' },
+      { name: 'Dawki', link: '/destinations/dawki' },
+      { name: 'Umiam Lake', link: '/destinations/umiam-lake/' },
+      { name: 'Laitlum Canyons', link: '/destinations/laitlum'}
     ],
     arunachalPradesh: [
-      { name: 'Tawang', link: 'https://wizzride.com/destinations/tawang'},
-      { name: 'Ziro Valley', link: 'https://wizzride.com/destinations/zirovalley'},
-      { name: 'Namdapha National Park', link: 'https://wizzride.com/destinations/namdaphanationalpark', target: '_blank' },
-      { name: 'Itanagar', link: 'https://wizzride.com/destinations/itanagar'},
-      { name: 'Bhalukpong', link: 'https://wizzride.com/destinations/bhalukpong'},
-      { name: 'Bomdila', link: 'https://wizzride.com/destinations/bomdila'}
+      { name: 'Tawang', link: '/destinations/tawang'},
+      { name: 'Ziro Valley', link: '/destinations/zirovalley'},
+      { name: 'Namdapha National Park', link: '/destinations/namdaphanationalpark', target: '_blank' },
+      { name: 'Itanagar', link: '/destinations/itanagar'},
+      { name: 'Bhalukpong', link: '/destinations/bhalukpong'},
+      { name: 'Bomdila', link: '/destinations/bomdila'}
     ],
     nagaland: [
-      { name: 'Kohima', link: 'https://wizzride.com/destinations/kohima'},
-      { name: 'Dimapur', link: 'https://wizzride.com/destinations/dimapur' },
-      { name: 'Mokokchung', link: 'https://wizzride.com/destinations/mokokchung' },
-      { name: 'Mon', link: 'https://wizzride.com/destinations/mon' },
-      { name: 'Khonoma Green Village', link: 'https://wizzride.com/destinations/khonomagreenvillage'},
-      { name: 'Dzukou Valley', link: 'https://wizzride.com/destinations/dzukouvalley' }
+      { name: 'Kohima', link: '/destinations/kohima'},
+      { name: 'Dimapur', link: '/destinations/dimapur' },
+      { name: 'Mokokchung', link: '/destinations/mokokchung' },
+      { name: 'Mon', link: '/destinations/mon' },
+      { name: 'Khonoma Green Village', link: '/destinations/khonomagreenvillage'},
+      { name: 'Dzukou Valley', link: '/destinations/dzukouvalley' }
     ]
   };
 }

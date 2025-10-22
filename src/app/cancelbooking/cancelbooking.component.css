@@ -15,12 +15,18 @@
 
 /* Header Section */
 .header-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-    padding: 80px 0 60px;
+    background: linear-gradient(
+        135deg,
+        rgba(29, 170, 186, 0.9),
+        rgba(10, 125, 140, 0.9)
+      ), url('../../assets/images/contactmain.jpg');
+
+    padding: 120px 0 60px;
     text-align: center;
     color: white;
     position: relative;
     overflow: hidden;
+    background-size: cover;
 }
 
 .header-section::before {
@@ -295,6 +301,12 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
+}
+
+.error-message span {
+    display: block;
+    margin-bottom: 2px;
 }
 
 /* OTP Section */

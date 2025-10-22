@@ -27,6 +27,7 @@ import { UseragreementComponent } from './importantlinks/useragreement/useragree
 import { FrequentlyaskedquestionsComponent } from './frequentlyaskedquestions/frequentlyaskedquestions.component';
 import { MaindestinationsComponent } from './destinations/maindestinations/maindestinations.component';
 import { CancelbookingComponent } from './cancelbooking/cancelbooking.component';
+import { GangtokComponent } from './destinations/sikkim/gangtok/gangtok.component';
 
 
 
@@ -63,5 +64,9 @@ export const routes: Routes = [
       {path:'destinations',component:MaindestinationsComponent},
       {path:'cancelticket',component:CancelbookingComponent},
       
+
+      //destinations
+
+      {path:'destinations/gangtok',component:GangtokComponent},
       
 ];

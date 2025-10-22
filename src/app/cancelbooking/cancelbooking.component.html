@@ -66,10 +66,13 @@
                                 type="text" 
                                 id="pnr" 
                                 formControlName="pnr"
-                                placeholder="Enter the PNR of your ticket"
+                                placeholder="Enter your PNR (alphanumeric, 6-10 characters)"
                                 [class.error]="cancelForm.get('pnr')?.invalid && cancelForm.get('pnr')?.touched">
                             <div class="error-message" *ngIf="cancelForm.get('pnr')?.invalid && cancelForm.get('pnr')?.touched">
-                                Please enter a valid PNR number
+                                <span *ngIf="cancelForm.get('pnr')?.errors?.['required']">PNR is required</span>
+                                <span *ngIf="cancelForm.get('pnr')?.errors?.['minlength']">PNR must be at least 6 characters</span>
+                                <span *ngIf="cancelForm.get('pnr')?.errors?.['maxlength']">PNR must not exceed 10 characters</span>
+                                <span *ngIf="cancelForm.get('pnr')?.errors?.['pattern']">PNR must contain only letters and numbers</span>
                             </div>
                         </div>
                         
@@ -79,10 +82,11 @@
                                 type="tel" 
                                 id="mobile" 
                                 formControlName="mobile"
-                                placeholder="Enter Primary Contact Number of the Primary Passenger"
+                                placeholder="Enter mobile number (with or without +91/91 country code)"
                                 [class.error]="cancelForm.get('mobile')?.invalid && cancelForm.get('mobile')?.touched">
                             <div class="error-message" *ngIf="cancelForm.get('mobile')?.invalid && cancelForm.get('mobile')?.touched">
-                                Please enter a valid mobile number
+                                <span *ngIf="cancelForm.get('mobile')?.errors?.['required']">Mobile number is required</span>
+                                <span *ngIf="cancelForm.get('mobile')?.errors?.['pattern']">Please enter a valid mobile number (with or without +91/91)</span>
                             </div>
                         </div>
                         

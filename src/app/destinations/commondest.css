@@ -1,0 +1,1715 @@
+.marg30{
+    margin-top: 40px !important;
+}
+h1 {
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+h2 {
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+h3 {
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+p {
+    line-height: 1.6;
+    color: #666;
+}
+
+a {
+    color:#1daaba !important;
+    text-decoration:none !important;
+}
+a:hover{
+    color: #000 !important;
+}
+
+.mainbann {
+    position: relative;
+    background: inear-gradient(
+        135deg,
+        rgba(29, 170, 186, 0.7),
+        rgba(10, 125, 140, 0.7)
+      ),
+        url("https://wizzride.com/assets/images_new/destinations/bomdila-viewpoint.57afaa5c667d4515.jpg");
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+    padding: 0 20px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg,
+            rgba(29, 170, 186, 0.1),
+            rgba(10, 125, 140, 0.1));
+    z-index: 1;
+}
+
+.mainbann h1 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.mainbann h3 {
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-c {
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    padding: 16px 40px;
+    color: #fff !important;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-c::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-c:hover::before {
+    left: 100%;
+}
+
+.btn-c:hover {
+    background: linear-gradient(135deg, #0a7d8c, #1daaba);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+
+.spacing {
+    height: 60px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Section Styles */
+.whycus {
+    padding:  0;
+}
+
+.why-visit-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.section-title {
+    color: #474747;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    color: #474747;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 3rem;
+}
+
+/* Cards Section */
+.fourcard {
+    display: flex;
+    gap: 30px;
+}
+
+.fourcol {
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe {
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.carfe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    transform: scaleX(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover::before {
+    transform: scaleX(1);
+}
+
+.carfe:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.icon-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #0a7d8c, #1daaba);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover .icon-wrapper::before {
+    opacity: 1;
+}
+
+.carfe i {
+    font-size: 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover i {
+    transform: scale(1.1);
+}
+
+.carfe h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.carfe p {
+    color: #474747;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Slider Styles */
+.slider-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0 23px;
+}
+
+.slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 0 10px;
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    gap: 20px;
+    padding: 0 15px;
+}
+
+.slide {
+    flex: 0 0 25%;
+    /* 4 columns on desktop */
+    max-width: 25%;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.slide-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+}
+
+.slide-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.slide-image {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slide-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.slide-card:hover .slide-image img {
+    transform: scale(1.1);
+}
+
+.slide-content {
+    padding: 25px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.slide-content h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.slide-content p {
+    color: #474747;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Slider Navigation */
+
+
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+}
+
+.animate-slide-up-delay {
+    animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.animate-slide-up-delay-2 {
+    animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.masonry-wrapper {
+    padding: 0;
+    margin: auto;
+}
+
+.masonry {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    cursor: pointer;
+}
+
+.masonry-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.3));
+    transition: filter 0.25s ease-in-out;
+}
+
+.masonry-item:hover {
+    filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.3));
+}
+
+.masonry-content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.9), rgba(10, 125, 140, 0.7));
+    color: #fff;
+    padding: 15px;
+    transform: translateY(75%);
+    transition: transform 0.4s ease;
+    height: 100%;
+    opacity: 0.85;
+}
+
+.overlay h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    transition: transform 0.4s ease;
+    font-weight: 600;
+}
+
+.overlay p {
+    opacity: 0;
+    margin-top: 10px;
+    transition: opacity 0.4s ease;
+    color: #fff;
+}
+
+.masonry-item:hover .overlay {
+    transform: translateY(0);
+}
+
+.masonry-item:hover .overlay h3 {
+    transform: translateY(-5px);
+}
+
+.masonry-item:hover .overlay p {
+    opacity: 1;
+}
+.btime {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 80px 0;
+}
+
+.btime.last{
+    padding: 40px 0;
+} 
+
+
+
+.best-time-visit ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+
+}
+
+.best-time-visit li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 1.4rem;
+    line-height: 1.5;
+    color: #474747;
+    font-size:  clamp(0.9rem, 1.5vw, 1.125rem);
+}
+
+/* Bold period name */
+.best-time-visit li strong {
+    font-weight: 700;
+}
+
+/* Custom checkmark icon */
+.best-time-visit li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    color: #1daaba;
+    /* green color */
+    font-weight: bold;
+}
+
+
+.howtoreach-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 48px 0 56px 0;
+}
+
+
+.howtoreach-cards {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.howtoreach-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 36px 32px;
+    max-width: 480px;
+    min-width: 320px;
+    flex: 1 1 320px;
+    text-align: center;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.howtoreach-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+    transform: translateY(-6px) scale(1.02);
+}
+
+.howtoreach-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1daaba;
+}
+
+.howtoreach-card p {
+    color: #474747;
+    line-height: 1.6;
+}
+
+.howto {
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.howto-steps {
+    background: #f7fafc;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+    padding: 40px 32px;
+    margin: 32px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.howto-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(.4, 0, .2, 1), transform 0.7s cubic-bezier(.4, 0, .2, 1);
+}
+
+.howto-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.howto-icon {
+    font-size: 2rem;
+    color: #2b7a78;
+    min-width: 40px;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.howto-app-icons {
+    font-size: 1.3em;
+    margin-left: 8px;
+}
+
+.howto-app-icons i {
+    margin-right: 4px;
+    color: #222;
+}
+
+.howto-text {
+  font-size: clamp(0.9rem, 1.5vw, 1.125rem);
+    
+    color: #474747;
+    line-height: 1.6;
+
+}
+
+.howtoreach {
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.9)), url('../../assets/images/destinations/howtoreach.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 80px 0;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.reach-cards {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.reach-cards {
+    font-size: 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reach-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 36px 32px;
+    max-width: 480px;
+    min-width: 320px;
+    flex: 1 1 320px;
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.reach-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+    transform: translateY(-6px) scale(1.02);
+}
+
+.reach-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.reach-card p {
+    color: #474747;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.howtoreach h2.section-title {
+    color: #fff !important;
+}
+
+.howtoreach h2.section-title:after {
+    background: #fff !important;
+}
+
+@media (max-width: 700px) {
+    .howto-steps {
+        padding: 24px 8px;
+    }
+
+    .howto-step {
+        font-size: 1rem;
+        gap: 14px;
+    }
+
+    h2 {
+        font-size: clamp(24px, 3vw, 40px);
+    }
+}
+
+@media (max-width: 900px) {
+    .howtoreach-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .howtoreach-card {
+        max-width: 100%;
+        padding: 20px;
+        flex: 1 1 200px;
+    }
+
+    .howtoreach {
+        padding: 20px;
+    }
+}
+
+/* Responsive typography */
+@media (max-width: 480px) {
+    .best-time-visit {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .best-time-visit h2 {
+        font-size: 1.5rem;
+    }
+
+    .best-time-visit li {
+        padding-left: 24px;
+    }
+}
+
+
+@media(min-width:767px) {
+    .btimeul {
+        width: 900px;
+        margin: 0 auto !important;
+    }
+
+    
+
+}
+
+/* Responsive masonry columns */
+@media only screen and (max-width: 1023px) and (min-width: 768px) {
+    .masonry {
+       grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .masonry {
+       grid-template-columns: repeat(3, 1fr);
+               height: 300px;
+    
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .fourcard {
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .reach-card i {
+        font-size: 18px;
+    }
+
+    .fourcol {
+        flex: 0 0 calc(50% - 12.5px);
+    }
+
+    .carfe {
+        padding: 30px 25px;
+    }
+
+    .slider-container {
+        max-width: 900px;
+        padding: 0 15px;
+        /* Reduced padding for tablet */
+    }
+
+    .slider-track {
+        gap: 15px;
+        padding: 0 10px;
+        /* Reduced padding for tablet */
+    }
+
+    .slide-image {
+        height: 220px;
+    }
+
+    .slide {
+        flex: 0 0 33.3333%;
+        /* 3 columns on tablet */
+        max-width: 33.3333%;
+    }
+
+    .slide-content {
+        padding: 20px;
+    }
+
+    .slide-content h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    .reach-card {
+        display:flex;
+        padding: 20px;
+    }
+    
+    .reach-card .icon-wrapper {
+        position:absolute;
+    left:75px;
+       width:30px;
+    height:30px;
+    }
+
+    .reach-card .icon-wrapper.aone{
+         left:88px !important;
+    }
+    .icon-wrapper i{
+        font-size: 13px;
+    }
+
+    .cultural-card {
+        flex-direction:row !important;
+    }
+    
+    .cultural-icon-wrapper {
+        width:25px !important;
+        height:25px !important;
+                position:absolute !important;
+            
+            
+            }
+    .onewrap{
+      left:50px !important;
+              top:55px !important;
+    }
+    
+    .twowrap,
+    .thwrap{
+       left:20px !important;
+              top:55px !important;
+    }
+    
+    
+      .cultural-icon-wrapper i{
+        font-size:10px !important;
+      }
+    
+   
+    .carfe {
+        flex-direction: row !important;
+    }
+
+
+    .icfelx h3 {
+        font-size: 17px !important;
+    }
+
+    .mainbann {
+        background-attachment: scroll;
+        padding: 100px 20px;
+    }
+
+    .hero-content {
+        padding: 0 15px;
+    }
+
+    .fourcard {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .fourcol {
+        flex: 1;
+    }
+
+    .carfe {
+        padding: 25px 20px;
+    }
+
+    .icon-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+
+    .carfe i {
+        font-size: 1.75rem;
+    }
+
+    .why-visit-section {
+        padding: 60px 0;
+    }
+
+    .slider-container {
+        max-width: 100%;
+        padding: 0 15px;
+        /* Reduced padding for mobile */
+    }
+
+    .slider-track {
+        gap: 17px;
+        padding: 0 10px;
+        /* Reduced padding for mobile */
+    }
+
+    .slide-image {
+        height: 200px;
+    }
+
+    .slide-content {
+        padding: 18px;
+    }
+
+    .slider-nav {
+        padding: 15px 0;
+        margin-top: 20px;
+    }
+
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+
+    .slide {
+        flex: 0 0 100%;
+        /* 1 column on mobile */
+        max-width: 100%;
+    }
+
+    .slide-content h3 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .slider-wrapper {
+        padding: 0 !important;
+    }
+
+    .mainbann {
+        padding: 80px 15px;
+    }
+
+    .hero-content {
+        padding: 0 10px;
+    }
+
+    .carfe {
+        padding: 15px 15px;
+    }
+
+    .icon-wrapper {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 10px;
+    }
+
+    .carfe i {
+        font-size: 14px;
+    }
+
+    .btn-c {
+        padding: 14px 30px;
+        font-size: 1rem;
+    }
+
+    .why-visit-section {
+        padding: 40px 0;
+    }
+
+    .slider-container {
+        padding: 0 10px;
+        /* Reduced padding for small mobile */
+    }
+
+    .slider-track {
+        padding: 0;
+        /* Reduced padding for small mobile */
+    }
+
+    .slide-image {
+        height: 180px;
+    }
+
+    .slide-content {
+        padding: 15px;
+    }
+
+    .slide-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .slider-nav {
+        padding: 10px 0;
+        margin-top: 15px;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* Cultural Experiences Section */
+.cultural-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cultural-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.cultural-title {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 60px;
+    color: #474747;
+}
+
+.cultural-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    border-radius: 2px;
+}
+
+.cultural-cards {
+    display: flex;
+    gap: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.cultural-card {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cultural-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.05), rgba(10, 125, 140, 0.05));
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.cultural-card:hover::before {
+    opacity: 1;
+}
+
+.cultural-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.cultural-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cultural-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    border-radius: 50%;
+    opacity: 0.3;
+    z-index: -1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cultural-card:hover .cultural-icon-wrapper::before {
+    transform: scale(1.2);
+    opacity: 0.5;
+}
+
+.cultural-card:hover .cultural-icon-wrapper {
+    transform: scale(1.1);
+}
+
+.cultural-icon-wrapper i {
+    font-size: 2rem;
+    color: #fff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cultural-card:hover .cultural-icon-wrapper i {
+    transform: scale(1.1);
+}
+
+.cultural-card h3 {
+    color: #474747;
+    margin-bottom: 15px;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    font-size: 1.4rem;
+}
+
+.cultural-card p {
+    color: #474747;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+    font-size: 1rem;
+}
+
+/* Responsive Design for Cultural Section */
+@media (max-width: 1024px) {
+    .cultural-cards {
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .cultural-card {
+        flex: 0 0 calc(50% - 12.5px);
+        min-height: 280px;
+        padding: 30px 25px;
+    }
+
+    .cultural-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .cultural-icon-wrapper i {
+        font-size: 1.8rem;
+    }
+
+    .cultural-card h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .cultural-section {
+        padding: 60px 0;
+    }
+
+    .slider-wrapper {
+        padding: 0 !important;
+    }
+
+    .slide-card {
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+    .masonry {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+                justify-content: center;
+    }
+
+    .masonry-item {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+
+    .overlay h3 {
+        font-size: 12px;
+        margin-bottom: 0px;
+        padding-top: 10px;
+    }
+
+    .masonry-wrapper {
+        padding: 0;
+    }
+
+    .overlay {
+        transform: translateY(58%);
+        padding: 5px;
+    }
+
+    .overlay p {
+        font-size: 10px;
+        margin-top: 0 !important;
+    }
+
+    .slide-card img {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px !important;
+        margin-left: 10px;
+        margin-top: 40px;
+        margin-left: 20px;
+        object-fit: cover;
+    }
+
+    .slide-content h3 {
+        font-size: 15px;
+    }
+
+    .slide-content p {
+        font-size: 12px;
+    }
+
+    .cultural-cards {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cultural-card {
+        flex: 1;
+        min-height: 250px;
+        padding: 25px 20px;
+    }
+
+    .cultural-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 18px;
+    }
+
+    .cultural-icon-wrapper i {
+        font-size: 1.6rem;
+    }
+
+    .cultural-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .cultural-card p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cultural-section {
+        padding: 50px 0;
+    }
+
+    .cultural-title {
+        margin-bottom: 40px;
+    }
+
+    .cultural-card {
+        padding: 20px 15px;
+        min-height: 220px;
+    }
+
+    .cultural-icon-wrapper {
+        width: 55px;
+        height: 55px;
+        margin-bottom: 15px;
+    }
+
+    .cultural-icon-wrapper i {
+        font-size: 1.5rem;
+    }
+
+    .cultural-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .cultural-card p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Travel Tips and Plan Your Trip Section */
+.travel-tips-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.travel-tips-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="tips-grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23cbd5e1" opacity="0.4"/><circle cx="75" cy="75" r="1" fill="%23cbd5e1" opacity="0.4"/><circle cx="50" cy="50" r="0.5" fill="%23cbd5e1" opacity="0.4"/></pattern></defs><rect width="100" height="100" fill="url(%23tips-grain)"/></svg>');
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.travel-tips-title,
+.plan-trip-title {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 40px;
+    color: #474747;
+}
+
+.travel-tips-title::after,
+.plan-trip-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    border-radius: 2px;
+}
+
+.travel-tips-content,
+.plan-trip-content {
+    position: relative;
+    z-index: 2;
+}
+
+.tips-card,
+.plan-trip-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 35px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tips-card::before,
+.plan-trip-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    transform: scaleX(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tips-card:hover::before,
+.plan-trip-card:hover::before {
+    transform: scaleX(1);
+}
+
+.tips-card:hover,
+.plan-trip-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+}
+
+.tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.tip-item  span{
+    font-size:  clamp(0.9rem, 1.5vw, 1.125rem) !important;
+
+}
+
+.tip-item:last-child {
+    margin-bottom: 0;
+}
+
+
+
+.tip-item:hover::before {
+    opacity: 1;
+}
+
+.tip-item:hover {
+    transform: translateX(5px);
+}
+
+.tip-icon {
+    color: #ec4899;
+    font-size: 1.1rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tip-item:hover .tip-icon {
+    transform: scale(1.2);
+    color: #1daaba;
+}
+
+.tip-item span {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tip-item:hover span {
+    color: #474747;
+}
+
+.plan-trip-description {
+    color: #474747;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0 0 25px 0;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plan-trip-card:hover .plan-trip-description {
+    color: #475569;
+}
+
+.plan-trip-cta {
+    color: #474747;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 30px 0;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plan-trip-card:hover .plan-trip-cta {
+    color: #475569;
+}
+
+.plan-trip-cta strong {
+    color: #1daaba;
+    font-weight: 600;
+}
+
+.plan-trip-button-wrapper {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.plan-trip-btn {
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    color: #fff;
+    padding: 15px 35px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-trip-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plan-trip-btn:hover::before {
+    left: 100%;
+}
+
+.plan-trip-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    color: #fff;
+}
+
+/* Responsive Design for Travel Tips Section */
+@media (max-width: 768px) {
+    span.howto-icon {
+    font-size:20px;
+}
+
+.howto-step{
+ gap:0px;   
+}
+    .spacing {
+        height: 20px !important;
+    }
+
+    .whycus {
+        padding: 0px 0 !important;
+    }
+
+    .howto {
+        padding: 0px 20px !important;
+    }
+
+    .travel-tips-section {
+        padding: 60px 0;
+    }
+
+    .mainbann {
+        min-height: 400px !important;
+        margin-bottom: 30px;
+    }
+
+    .travel-tips-title,
+    .plan-trip-title {
+        margin-bottom: 30px;
+    }
+
+    .tips-card,
+    .plan-trip-card {
+        padding: 30px 25px;
+    }
+
+    .tip-item {
+        gap: 12px;
+        margin-bottom: 18px;
+        padding: 12px 0;
+    }
+
+    .tip-icon {
+        font-size: 1rem;
+    }
+
+    .tip-item span {
+        font-size: 0.95rem;
+    }
+
+    .plan-trip-description {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .plan-trip-cta {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    .plan-trip-btn {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .travel-tips-section {
+        padding: 0;
+    }
+
+    .travel-tips-title,
+    .plan-trip-title {
+        margin-bottom: 25px;
+    }
+
+    .tips-card,
+    .plan-trip-card {
+        padding: 25px 20px;
+    }
+
+    .tip-item {
+        gap: 10px;
+        margin-bottom: 15px;
+        padding: 10px 0;
+    }
+
+    .tip-icon {
+        font-size: 0.9rem;
+    }
+
+    .tip-item span {
+        font-size: 0.9rem;
+    }
+
+    .plan-trip-description {
+        font-size: 0.95rem;
+        margin-bottom: 18px;
+    }
+
+    .plan-trip-cta {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .plan-trip-btn {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+}
+
+.slider-nav {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.bullet-nav {
+    display: inline-block;
+}
+
+.bullet {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.bullet.active,
+.bullet:hover {
+    background-color: #1daaba;
+}
+
+.destinations-section a{
+    color:#474747 !important
+}
+
+footer a
+{
+    color:#bbb !important;
+}
+
+footer a:hover{
+    color:#fff !important;
+}
+
+
+span.howto-icon {
+        font-size:20px !important;
+        margin-right:0 !important;
+}
+
+.howto-step{
+        gap:0px !important;
+        align-items: center !important;
+}
+

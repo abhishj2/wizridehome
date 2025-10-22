@@ -9,12 +9,21 @@
   font-family: "Quicksand", sans-serif !important;
 
 }
-
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
 .fa-classic, .fa-regular, .fa-solid, .far, .fas {
   font-family: "Font Awesome 6 Free" !important;
 }
 
-
+.fab
+{
+  font-family: "Font Awesome 6 Brands" !important;
+}
 h2{
   font-size: clamp(2rem, 4vw, 3rem) !important;
 }
@@ -28,6 +37,10 @@ p{
   font-size: 1.1rem !important;
 }
 
+h3{
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem) !important; 
+
+}
 .faq-container {
   position: relative;
   z-index: 2;
@@ -60,6 +73,14 @@ p{
   position: relative;
 }
 
+.faq-question h3{
+  color: rgb(71, 71, 71) !important;
+  font-weight: 600  !important;
+  font-size: 1.1rem !important;
+  margin: 0px !important;
+  flex: 1 1 0% !important;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
 .faq-question::before {
   content: '';
   position: absolute;
