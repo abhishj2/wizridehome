@@ -43,6 +43,9 @@ import { GhoommonsateryComponent } from './destinations/darjeelingandkalimpong/g
 import { BatasialoopComponent } from './destinations/darjeelingandkalimpong/batasialoop/batasialoop.component';
 import { HimalayanzoologicalparkComponent } from './destinations/darjeelingandkalimpong/himalayanzoologicalpark/himalayanzoologicalpark.component';
 import { HappyvalleyteaestateComponent } from './destinations/darjeelingandkalimpong/happyvalleyteaestate/happyvalleyteaestate.component';
+import { KurseongComponent } from './destinations/darjeelingandkalimpong/kurseong/kurseong.component';
+import { KalimpongComponent } from './destinations/darjeelingandkalimpong/kalimpong/kalimpong.component';
+import { RavanglaComponent } from './destinations/sikkim/ravangla/ravangla.component';
 
 
 
@@ -102,5 +105,10 @@ export const routes: Routes = [
       {path:'destinations/himalayan-zoological-park',component:HimalayanzoologicalparkComponent},
       {path:'destinations/happy-valley-tea-estate',component:HappyvalleyteaestateComponent},
       
+
+      {path:'destinations/kurseong',component:KurseongComponent},
+      {path:'destinations/kalimpong',component:KalimpongComponent},
+      {path:'destinations/ravangla',component:RavanglaComponent},
+
       
 ];

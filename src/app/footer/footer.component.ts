@@ -125,7 +125,8 @@ export class FooterComponent {
       { name: 'Nathula Pass', link: '/destinations/nathula_pass' },
       { name: 'Rumtek Monastery', link: '/destinations/rumtek_monastery' },
       { name: 'Zuluk', link: '/destinations/zuluk' },
-      { name: 'Rangpo', link: '/destinations/rangpo' }
+      { name: 'Rangpo', link: '/destinations/rangpo' },
+      {name:'Ravangla',link:'/destinations/ravangla'},
     ],
     darjeeling: [
       { name: 'Darjeeling Town', link: '/destinations/darjeeling/' },
@@ -133,7 +134,9 @@ export class FooterComponent {
       { name: 'Ghoom Monastery', link: '/destinations/ghoom-monastery' },
       { name: 'Batasia Loop', link: '/destinations/batasia-loop/' },
       { name: 'Himalayan Zoological Park', link: '/destinations/himalayan-zoological-park/' },
-      { name: 'Happy Valley Tea Estate', link: '/destinations/happy-valley-tea-estate/' }
+      { name: 'Happy Valley Tea Estate', link: '/destinations/happy-valley-tea-estate/' },
+      {name:'Kurseong',link:'destinations/kurseong'},
+      {name:'Kalimpong',link:'destinations/kalimpong'},
     ],
     assam: [
       { name: 'Kaziranga National Park', link: '/destinations/kaziranga-national-park' },
