@@ -58,6 +58,10 @@ import { MawsynramComponent } from './destinations/meghalaya/mawsynram/mawsynram
 import { DawkiComponent } from './destinations/meghalaya/dawki/dawki.component';
 import { UmiamlakeComponent } from './destinations/meghalaya/umiamlake/umiamlake.component';
 import { LaitlumcanyonsComponent } from './destinations/meghalaya/laitlumcanyons/laitlumcanyons.component';
+import { TawangComponent } from './destinations/arunachal/tawang/tawang.component';
+import { ZirovalleyComponent } from './destinations/arunachal/zirovalley/zirovalley.component';
+import { NamdaphanationalparkComponent } from './destinations/arunachal/namdaphanationalpark/namdaphanationalpark.component';
+import { ItanagarComponent } from './destinations/arunachal/itanagar/itanagar.component';
 
 
 
@@ -133,5 +137,9 @@ export const routes: Routes = [
       {path:'destinations/dawki',component:DawkiComponent},
       {path:'destinations/umiam-lake',component:UmiamlakeComponent},
       {path:'destinations/laitlum',component:LaitlumcanyonsComponent},
+      {path:'destinations/tawang',component:TawangComponent},
+      {path:'destinations/zirovalley',component:ZirovalleyComponent},
+      {path:'destinations/namdaphanationalpark',component:NamdaphanationalparkComponent},
+      {path:'destinations/itanagar',component:ItanagarComponent},
       
 ];

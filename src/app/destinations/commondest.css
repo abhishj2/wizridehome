@@ -1713,3 +1713,6 @@ span.howto-icon {
         align-items: center !important;
 }
 
+.cardim img{
+    width:100% !Important;
+}
