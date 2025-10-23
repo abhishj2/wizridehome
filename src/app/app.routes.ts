@@ -46,6 +46,12 @@ import { HappyvalleyteaestateComponent } from './destinations/darjeelingandkalim
 import { KurseongComponent } from './destinations/darjeelingandkalimpong/kurseong/kurseong.component';
 import { KalimpongComponent } from './destinations/darjeelingandkalimpong/kalimpong/kalimpong.component';
 import { RavanglaComponent } from './destinations/sikkim/ravangla/ravangla.component';
+import { KazirangaComponent } from './destinations/assam/kaziranga/kaziranga.component';
+import { MajuliislandComponent } from './destinations/assam/majuliisland/majuliisland.component';
+import { GuwahaticityComponent } from './destinations/assam/guwahaticity/guwahaticity.component';
+import { KamakhyatempleComponent } from './destinations/assam/kamakhyatemple/kamakhyatemple.component';
+import { SavasagarComponent } from './destinations/assam/savasagar/savasagar.component';
+import { TezpurComponent } from './destinations/assam/tezpur/tezpur.component';
 
 
 
@@ -109,6 +115,11 @@ export const routes: Routes = [
       {path:'destinations/kurseong',component:KurseongComponent},
       {path:'destinations/kalimpong',component:KalimpongComponent},
       {path:'destinations/ravangla',component:RavanglaComponent},
-
+      {path:'destinations/kaziranga-national-park',component:KazirangaComponent},
+      {path:'destinations/majuli-island',component:MajuliislandComponent},
+      {path:'destinations/guwahati',component:GuwahaticityComponent},
+      {path:'destinations/kamakhya',component:KamakhyatempleComponent},
+      {path:'destinations/sivasagar',component:SavasagarComponent},
+      {path:'destinations/tezpur',component:TezpurComponent},
       
 ];

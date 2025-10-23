@@ -143,7 +143,7 @@ export class FooterComponent {
       { name: 'Majuli Island', link: '/destinations/majuli-island' },
       { name: 'Guwahati City', link: '/destinations/guwahati' },
       { name: 'Kamakhya Temple', link: '/destinations/kamakhya' },
-      { name: 'Sivasagar', link: '/destinations/kamakhya/sivasagar' },
+      { name: 'Sivasagar', link: '/destinations/sivasagar' },
       { name: 'Tezpur', link: '/destinations/tezpur' }
     ],
     meghalaya: [
