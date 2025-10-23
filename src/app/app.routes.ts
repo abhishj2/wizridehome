@@ -52,6 +52,12 @@ import { GuwahaticityComponent } from './destinations/assam/guwahaticity/guwahat
 import { KamakhyatempleComponent } from './destinations/assam/kamakhyatemple/kamakhyatemple.component';
 import { SavasagarComponent } from './destinations/assam/savasagar/savasagar.component';
 import { TezpurComponent } from './destinations/assam/tezpur/tezpur.component';
+import { ShillongComponent } from './destinations/meghalaya/shillong/shillong.component';
+import { CherrapunjiComponent } from './destinations/meghalaya/cherrapunji/cherrapunji.component';
+import { MawsynramComponent } from './destinations/meghalaya/mawsynram/mawsynram.component';
+import { DawkiComponent } from './destinations/meghalaya/dawki/dawki.component';
+import { UmiamlakeComponent } from './destinations/meghalaya/umiamlake/umiamlake.component';
+import { LaitlumcanyonsComponent } from './destinations/meghalaya/laitlumcanyons/laitlumcanyons.component';
 
 
 
@@ -121,5 +127,11 @@ export const routes: Routes = [
       {path:'destinations/kamakhya',component:KamakhyatempleComponent},
       {path:'destinations/sivasagar',component:SavasagarComponent},
       {path:'destinations/tezpur',component:TezpurComponent},
+      {path:'destinations/shillong',component:ShillongComponent},
+      {path:'destinations/cherrapunji',component:CherrapunjiComponent},
+      {path:'destinations/mawsynram',component:MawsynramComponent},
+      {path:'destinations/dawki',component:DawkiComponent},
+      {path:'destinations/umiam-lake',component:UmiamlakeComponent},
+      {path:'destinations/laitlum',component:LaitlumcanyonsComponent},
       
 ];
