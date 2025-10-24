@@ -62,6 +62,14 @@ import { TawangComponent } from './destinations/arunachal/tawang/tawang.componen
 import { ZirovalleyComponent } from './destinations/arunachal/zirovalley/zirovalley.component';
 import { NamdaphanationalparkComponent } from './destinations/arunachal/namdaphanationalpark/namdaphanationalpark.component';
 import { ItanagarComponent } from './destinations/arunachal/itanagar/itanagar.component';
+import { BhalukpongComponent } from './destinations/arunachal/bhalukpong/bhalukpong.component';
+import { BomdilaComponent } from './destinations/arunachal/bomdila/bomdila.component';
+import { KohimaComponent } from './destinations/nagaland/kohima/kohima.component';
+import { DimapurComponent } from './destinations/nagaland/dimapur/dimapur.component';
+import { MokokchungComponent } from './destinations/nagaland/mokokchung/mokokchung.component';
+import { MonComponent } from './destinations/nagaland/mon/mon.component';
+import { KhonomagreenvillageComponent } from './destinations/nagaland/khonomagreenvillage/khonomagreenvillage.component';
+import { DzukouvalleyComponent } from './destinations/nagaland/dzukouvalley/dzukouvalley.component';
 
 
 
@@ -142,4 +150,13 @@ export const routes: Routes = [
       {path:'destinations/namdaphanationalpark',component:NamdaphanationalparkComponent},
       {path:'destinations/itanagar',component:ItanagarComponent},
       
+
+      {path:'destinations/bhalukpong',component:BhalukpongComponent},
+      {path:'destinations/bomdila',component:BomdilaComponent},
+      {path:'destinations/kohima',component:KohimaComponent},
+      {path:'destinations/dimapur',component:DimapurComponent},
+      {path:'destinations/mokokchung',component:MokokchungComponent},
+      {path:'destinations/mon',component:MonComponent},
+      {path:'destinations/khonomagreenvillage',component:KhonomagreenvillageComponent},
+      {path:'destinations/dzukouvalley',component:DzukouvalleyComponent},
 ];
