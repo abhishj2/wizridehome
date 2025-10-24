@@ -1,0 +1,545 @@
+
+:host {
+  --main-col: #1daaba;
+  --main-hover-col: #0a7d8c;
+  --head-font-weight: 600;
+  --shadow-light: 0 6px 20px rgba(245, 166, 35, 0.5);
+}
+
+.divider {
+  width: 80px;
+  height: 3px;
+  background-color: var(--main-col);
+  margin: 0;
+}
+
+.spacer{
+  height: 60px;
+}
+
+.mxc{
+  text-align: center;
+} 
+
+.mxc h2{
+  margin-top: 0;
+  color: #fff;
+}
+
+
+.flexrow {
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.flexcol{
+  flex: 0 0 50%;
+
+}
+.mxc{
+  margin: 0 auto;
+}
+.whyclist{
+  list-style-type:none;
+  color:#000 !important;
+  margin-top: 20px;
+
+}
+
+.whyclist li{
+  margin-bottom:10px;
+  
+  
+}
+
+.whyclist i{
+  margin-right:5px;
+  color:var(--main-col)
+}
+
+.airportbanner {
+  background: linear-gradient(
+      135deg,
+      rgba(29, 170, 186, 0.7),
+      rgba(10, 125, 140, 0.7)
+    ),
+    url("../../assets/images/airports/guwahatiairport.jpg")
+      center/cover no-repeat ;
+      background-attachment: fixed !important;
+  color: white;
+  padding: 160px 20px;
+  text-align: center;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: top center !important; 
+}
+
+.darjeel{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/darjeeling.jpg");
+    
+}
+.sk{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/sk.jpg");
+}
+
+
+
+.shil{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/sgil.jpg");
+}
+
+.iims{
+   background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images/icons/Lumdiengjri%20Peak.jpg");
+  
+}
+.smit{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/smit.jpg");
+}
+
+.gangt{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/gangtok.png");
+}
+
+.rangpo{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/rangpo.jpg");
+}
+.kgn{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/kgn.jpeg");
+}
+
+.kalim{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/kalimpong.jpg");
+}
+
+.tezp{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("https://wizzride.com/assets/images_new/tezpur.jpg");
+}
+.marg{
+  margin-top: 30px;
+}
+.mxc{
+  
+  background: linear-gradient(
+      135deg,
+      rgba(29, 170, 186, 0.7),
+      rgba(10, 125, 140, 0.7)
+    ),
+    url("/images/cta.jpg")
+      center/cover no-repeat;
+      background-attachment: fixed !important;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+
+.airportbanner h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: var(--head-font-weight);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.655);
+}
+
+.airportbanner h2{
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.655);
+  color: #fff !important;
+
+}
+h2 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #474747;
+}
+
+h3{
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+p ,
+ul{
+  font-size: clamp(0.9rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  color: #474747;
+}
+a{
+  text-decoration: none;
+  color:var(--main-col)
+}
+
+a:hover{
+  color: (var(--main-hover-col));
+}
+
+img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+img.imgadj{
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+.rowimg {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.col-half {
+  flex: 1 1 50%;
+}
+
+.rowimg img{
+  box-shadow: var(--shadow-light);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top:30px;
+}
+
+h3{
+  margin-top: 20px;
+}
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: var(--main-col);
+  color: white;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background:#fff;
+  color: var(--main-col);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s;
+  font-weight: bold;
+}
+
+.btnbut{
+  display: inline-block;
+  padding: 12px 24px;
+  background:var(--main-col);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s;
+  font-weight: bold;
+}
+
+
+.btnbut:hover{
+  background: var(--main-hover-col);
+  color: #fff;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #ffffffce;
+}
+
+.text-center{
+  text-align: center;
+}
+
+/* Fade on scroll animation */
+.fade-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.faq-container {
+  position: relative;
+  z-index: 2;
+
+  margin-top: 40px ;
+}
+
+.faq-item {
+  background: #fff;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+}
+
+.faq-item:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.faq-question {
+  padding: 25px 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.faq-question::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #1daaba, #0a7d8c);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover .faq-question::before {
+  opacity: 1;
+}
+
+.faq-question h3 {
+  color: #474747;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0;
+  flex: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover .faq-question h3 {
+  color: #1daaba;
+}
+
+.faq-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #1daaba, #0a7d8c);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.faq-icon::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg, #1daaba, #0a7d8c);
+  border-radius: 50%;
+  opacity: 0.3;
+  z-index: -1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover .faq-icon::before {
+  transform: scale(1.2);
+  opacity: 0.5;
+}
+
+.faq-icon i {
+  color: #fff;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: rotate(0deg);
+}
+
+.faq-item.active .faq-icon i {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  /* Adjust as needed based on content */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.faq-answer p {
+  padding: 0 30px 25px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .airportbanner {
+    padding: 80px 15px;
+  }
+  h2{
+    font-size: 30px !important;
+  }
+ 
+  .flexrow{
+    flex-direction:column;
+}
+}
+
+
+@media (max-width: 768px) {
+
+  .faq-section {
+      padding: 60px 0;
+  }
+
+  .faq-title {
+      margin-bottom: 40px;
+  }
+
+
+
+
+  .faq-question {
+      padding: 20px 25px;
+  }
+
+  .faq-question h3 {
+      font-size: 1rem;
+  }
+
+  .faq-icon {
+      width: 28px;
+      height: 28px;
+      margin-left: 15px;
+  }
+
+  .faq-icon i {
+      font-size: 0.8rem;
+  }
+
+  .faq-answer p {
+      padding: 0 25px 20px;
+      font-size: 0.95rem;
+  }
+}
+
+footer img.logo {
+  width:200px;
+  height:auto
+}
+
+footer a{
+      font-size: 14px !important;
+}
+
+.footer-bottom img{
+width:15px;
+height:15px;}
+
+.footer-bottom p{
+  color:#fff !important;
+  font-size: 12px;
+  color: #888;
+}
+
+.search-bar-div img{
+
+  width:15px !important;
+  height:15px !important;
+}
+
+
+.whyclist  i{
+  font-size:17px !important;
+}
+
+
+
+.cardshadow {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding:60px 20px;
+    border-radius:20px;
+    
+}
+.cardshadow .divider{
+  margin:auto;
+}
+.carshadinner{
+    max-width:900px;
+    margin:auto;
+}
+
+.carshadinner h2{
+    text-align:center;
+}

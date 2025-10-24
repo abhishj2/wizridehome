@@ -70,6 +70,10 @@ import { MokokchungComponent } from './destinations/nagaland/mokokchung/mokokchu
 import { MonComponent } from './destinations/nagaland/mon/mon.component';
 import { KhonomagreenvillageComponent } from './destinations/nagaland/khonomagreenvillage/khonomagreenvillage.component';
 import { DzukouvalleyComponent } from './destinations/nagaland/dzukouvalley/dzukouvalley.component';
+import { GuwahatiairportComponent } from './airports/guwahatiairport/guwahatiairport.component';
+import { BagdograirportComponent } from './airports/bagdograirport/bagdograirport.component';
+import { ShillongairportComponent } from './airports/shillongairport/shillongairport.component';
+import { PakyongairportComponent } from './airports/pakyongairport/pakyongairport.component';
 
 
 
@@ -159,4 +163,9 @@ export const routes: Routes = [
       {path:'destinations/mon',component:MonComponent},
       {path:'destinations/khonomagreenvillage',component:KhonomagreenvillageComponent},
       {path:'destinations/dzukouvalley',component:DzukouvalleyComponent},
+
+      {path:'airports/guwahatiairport',component:GuwahatiairportComponent},
+      {path:'airports/bagdograairport',component:BagdograirportComponent},
+      {path:'airports/shillongairport',component:ShillongairportComponent},
+      {path:'airports/pakyongairport',component:PakyongairportComponent},
 ];

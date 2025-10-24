@@ -105,10 +105,10 @@ export class FooterComponent {
     airportsCovered: {
       title: "Airport Covered",
       routes: [
-        { name: "Guwahati Airport", link: "https://wizzride.com/airports/guwahatiairport/" },
-        { name: "Bagdogra Airport", link: "https://wizzride.com/airports/bagdograairport/" },
-        { name: "Shillong Airport", link: "https://wizzride.com/airports/shillongairport/" },
-        { name: "Pakyong Airport", link: "https://wizzride.com/airports/pakyongairport/" }
+        { name: "Guwahati Airport", link: "/airports/guwahatiairport/" },
+        { name: "Bagdogra Airport", link: "/airports/bagdograairport/" },
+        { name: "Shillong Airport", link: "/airports/shillongairport/" },
+        { name: "Pakyong Airport", link: "/airports/pakyongairport/" }
       ]
     }
   };
