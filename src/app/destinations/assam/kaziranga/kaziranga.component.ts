@@ -123,7 +123,7 @@ export class KazirangaComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Kaziranga National Park",
           "item": "https://wizzride.com/destinations/kaziranga-national-park/"
         }
       ]

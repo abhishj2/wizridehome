@@ -59,53 +59,108 @@ export class ApplyforjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // BreadcrumbList JSON-LD
-    this.addJsonLd({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": {
-            "@type": "WebPage",
-            "@id": "https://www.wizzride.com/"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Careers",
-          "item": {
-            "@type": "WebPage",
-            "@id": "https://www.wizzride.com/applyforjob"
-          }
-        }
-      ]
-    });
+   // BreadcrumbList JSON-LD
+this.addJsonLd({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {
+        "@type": "WebPage",
+        "@id": "https://www.wizzride.com/"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Careers",
+      "item": {
+        "@type": "WebPage",
+        "@id": "https://www.wizzride.com/applyforjob"
+      }
+    }
+  ]
+});
 
-    // JobPosting JSON-LD
-    this.addJsonLd({
-      "@context": "https://schema.org",
-      "@type": "JobPosting",
-      "title": "Corporate Team Member",
-      "description": "Join the dynamic realm of Wizzride, where innovation meets passion, and excellence is the standard. Our corporate team is the brain and soul of our operations.",
-      "hiringOrganization": {
-        "@type": "Organization",
-        "name": "Wizzride Technologies Pvt Ltd",
-        "sameAs": "https://www.wizzride.com",
-        "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp"
-      },
-      "datePosted": "2024-01-01",
-      "jobLocationType": "TELECOMMUTE",
-      "applicantLocationRequirements": {
-        "@type": "Country",
-        "name": "India"
-      },
-      "employmentType": "FULL_TIME"
-    });
+// JobPosting JSON-LD
+this.addJsonLd({
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "title": "Corporate Team Member",
+  "description": "Join the dynamic realm of Wizzride, where innovation meets passion, and excellence is the standard. Our corporate team is the brain and soul of our operations.",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Wizzride Technologies Pvt Ltd",
+    "sameAs": "https://www.wizzride.com",
+    "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp"
+  },
+  "datePosted": "2024-01-01",
+  "jobLocationType": "TELECOMMUTE",
+  "applicantLocationRequirements": {
+    "@type": "Country",
+    "name": "India"
+  },
+  "employmentType": "FULL_TIME"
+});
+
+// Organization JSON-LD
+this.addJsonLd({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Wizzride",
+  "url": "https://wizzride.com",
+  "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png",
+  "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.",
+  "foundingDate": "2015",
+  "founders": [
+    {
+      "@type": "Person",
+      "name": "Wizzride Founders"
+    }
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+91-9775999444",
+      "contactType": "customer service",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/wizzride",
+    "https://twitter.com/wizzride",
+    "https://www.instagram.com/wizzride",
+    "https://www.linkedin.com/company/wizzride"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Gangtok, Sikkim",
+    "addressLocality": "Gangtok",
+    "addressRegion": "Sikkim",
+    "postalCode": "737101",
+    "addressCountry": "IN"
+  },
+  "department": [
+    {
+      "@type": "Organization",
+      "name": "Wizzride Cab Booking",
+      "url": "https://wizzride.com/cab-booking/",
+      "description": "Book intercity and local cabs with flexible shared or reserved options."
+    },
+    {
+      "@type": "Organization",
+      "name": "Wizzride Flight Booking",
+      "url": "https://wizzride.com/flights/",
+      "description": "Compare and book domestic and international flights easily."
+    }
+  ]
+});
   }
+  
 
   // Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {

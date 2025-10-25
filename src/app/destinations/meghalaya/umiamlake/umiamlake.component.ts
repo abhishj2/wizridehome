@@ -123,7 +123,7 @@ export class UmiamlakeComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Umiam Lake",
           "item": "https://wizzride.com/destinations/umiam-lake/"
         }
       ]

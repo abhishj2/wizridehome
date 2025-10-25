@@ -125,7 +125,7 @@ export class DzukouvalleyComponent  implements OnInit, AfterViewInit, OnDestroy 
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Dzukou Valley",
           "item": "https://wizzride.com/destinations/dzukouvalley/"
         }
       ]

@@ -115,7 +115,7 @@ export class DimapurComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Dimapur",
           "item": "https://wizzride.com/destinations/dimapur/"
         }
       ]

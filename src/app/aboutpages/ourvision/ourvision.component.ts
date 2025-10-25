@@ -88,53 +88,7 @@ export class OurvisionComponent implements AfterViewInit {
     });
 
     // ✅ Organization JSON-LD (for branding)
-    this.addJsonLd({
-      "@context": "https://schema.org",
-      "@type": [
-        "Organization",
-        "LocalBusiness",
-        "TravelAgency"
-      ],
-      "name": "Wizzride Technologies Pvt Ltd",
-      "alternateName": "Wizzride",
-      "url": "https://www.wizzride.com",
-      "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp",
-      "description": "Book Wizzride online cab services for Bagdogra to Darjeeling, Gangtok, Kalimpong, NJP, Guwahati & Shillong. Safe, affordable rides in Northeast.",
-      "foundingDate": "2017",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+917478493874",
-        "contactType": "reservations",
-        "areaServed": "IN",
-        "availableLanguage": [
-          "en",
-          "Hindi"
-        ]
-      },
-      "sameAs": [
-        "https://www.facebook.com/wizzride",
-        "https://www.instagram.com/wizzride",
-        "https://www.linkedin.com/company/in/wizzride-technologies-private-limited-33b0871a0/",
-        "https://twitter.com/wizzride"
-      ],
-      "openingHours": "Mo-Su 04:00-21:00",
-      "areaServed": [
-        "Assam",
-        "Meghalaya",
-        "Sikkim",
-        "West Bengal"
-      ],
-      "paymentAccepted": [
-        "Cash",
-        "Credit Card",
-        "UPI"
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.7",
-        "reviewCount": "2411"
-      }
-    });
+    this.addJsonLd( { "@context": "https://schema.org", "@type": "Organization", "name": "Wizzride", "url": "https://wizzride.com", "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png", "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.", "foundingDate": "2015", "founders": [ { "@type": "Person", "name": "Wizzride Founders" } ], "contactPoint": [ { "@type": "ContactPoint", "telephone": "+91-9775999444", "contactType": "customer service", "areaServed": "IN", "availableLanguage": ["English", "Hindi"] } ], "sameAs": [ "https://www.facebook.com/wizzride", "https://twitter.com/wizzride", "https://www.instagram.com/wizzride", "https://www.linkedin.com/company/wizzride" ], "address": { "@type": "PostalAddress", "streetAddress": "Gangtok, Sikkim", "addressLocality": "Gangtok", "addressRegion": "Sikkim", "postalCode": "737101", "addressCountry": "IN" }, "department": [ { "@type": "Organization", "name": "Wizzride Cab Booking", "url": "https://wizzride.com/cab-booking/", "description": "Book intercity and local cabs with flexible shared or reserved options." }, { "@type": "Organization", "name": "Wizzride Flight Booking", "url": "https://wizzride.com/flights/", "description": "Compare and book domestic and international flights easily." } ] });
   }    
 
   // ✅ Utility: inject LD+JSON scripts

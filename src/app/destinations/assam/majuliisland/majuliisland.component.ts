@@ -123,7 +123,7 @@ export class MajuliislandComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Majuli Island",
           "item": "https://wizzride.com/destinations/majuli-island/"
         }
       ]

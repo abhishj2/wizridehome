@@ -125,7 +125,7 @@ export class HimalayanzoologicalparkComponent  implements OnInit, AfterViewInit,
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Himalayan Zoological Park",
           "item": "https://wizzride.com/destinations/himalayan-zoological-park/"
         }
       ]

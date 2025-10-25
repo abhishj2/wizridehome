@@ -122,7 +122,7 @@ export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Batasia Loop",
           "item": "https://wizzride.com/destinations/batasia-loop/"
         }
       ]

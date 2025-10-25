@@ -116,7 +116,7 @@ export class SavasagarComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Sivasagar",
           "item": "https://wizzride.com/destinations/sivasagar/"
         }
       ]

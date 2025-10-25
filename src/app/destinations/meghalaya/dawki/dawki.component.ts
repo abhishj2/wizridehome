@@ -123,7 +123,7 @@ export class DawkiComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Dawki",
           "item": "https://wizzride.com/destinations/dawki/"
         }
       ]

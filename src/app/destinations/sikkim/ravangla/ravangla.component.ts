@@ -124,7 +124,7 @@ export class RavanglaComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Yuksom",
+          "name": "Ravangla",
           "item": "https://wizzride.com/destinations/ravangla/"
         }
       ]

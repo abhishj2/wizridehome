@@ -760,7 +760,7 @@ trackByOfferId(index: number, offer: any): number {
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
 
     // Meta Description
-    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling,Gangtok,Kalimpong,Shillong.Affordable rates,24/7 service,and safe rides across Northeast India.' });
+    this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India..' });
 
     // Open Graph Tags
     this.metaService.updateTag({ property: 'og:title', content: 'Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok' });

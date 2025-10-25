@@ -116,7 +116,7 @@ export class MonComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Mon",
           "item": "https://wizzride.com/destinations/mon/"
         }
       ]

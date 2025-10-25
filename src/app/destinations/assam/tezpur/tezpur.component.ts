@@ -116,7 +116,7 @@ export class TezpurComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Tezpur",
           "item": "https://wizzride.com/destinations/tezpur/"
         }
       ]

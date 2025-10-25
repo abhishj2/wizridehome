@@ -125,7 +125,7 @@ export class KurseongComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "kurseong",
           "item": "https://wizzride.com/destinations/kurseong/"
         }
       ]

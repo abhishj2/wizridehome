@@ -123,7 +123,7 @@ export class KhonomagreenvillageComponent implements OnInit, AfterViewInit, OnDe
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Khonoma Green Village",
           "item": "https://wizzride.com/destinations/khonomagreenvillage/"
         }
       ]

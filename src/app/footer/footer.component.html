@@ -10,7 +10,7 @@
         <h3 class="route-title">{{ routes.airportShared.title }}</h3>
         <div class="route-content">
           <span *ngFor="let route of routes.airportShared.routes; let last = last">
-            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
           </span>
         </div>
       </div>
@@ -25,7 +25,7 @@
         <h3 class="route-title">{{ routes.cityShared.title }}</h3>
         <div class="route-content">
           <span *ngFor="let route of routes.cityShared.routes; let last = last">
-            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
           </span>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
         <div class="route-content">
           <span *ngFor="let route of routes.airportReserved.routes; let last = last">
-            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
           </span>
         </div>
       </div>
@@ -55,7 +55,7 @@
         <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
         <div class="route-content">
           <span *ngFor="let route of routes.airportsCovered.routes; let last = last">
-            <a [href]="route.link" target="_blank" class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
           </span>
         </div>
       </div>
@@ -94,7 +94,7 @@
 
       <!-- Right Section - Darjeeling -->
       <div class="destination-card">
-        <h3 class="destination-title">DARJEELING</h3>
+        <h3 class="destination-title">DARJEELING & KALIMPONG</h3>
         <ul class="destination-list">
           <li *ngFor="let destination of destinations.darjeeling">
             <i class="fas fa-angle-double-right destination-icon"></i>
@@ -165,7 +165,7 @@
         </div>
         
         <div class="social-links">
-          <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-link" [title]="social.name">
+          <a *ngFor="let social of socialLinks" [href]="social.url"  class="social-link" [title]="social.name">
             <i [class]="social.icon"></i>
           </a>
         </div>

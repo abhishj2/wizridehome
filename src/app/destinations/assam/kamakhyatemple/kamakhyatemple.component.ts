@@ -115,7 +115,7 @@ export class KamakhyatempleComponent  implements OnInit, AfterViewInit, OnDestro
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Kamakhya",
           "item": "https://wizzride.com/destinations/kamakhya/"
         }
       ]

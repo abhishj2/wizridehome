@@ -123,7 +123,7 @@ export class RangpoComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Yuksom",
+          "name": "Rangpo",
           "item": "https://wizzride.com/destinations/rangpo/"
         }
       ]

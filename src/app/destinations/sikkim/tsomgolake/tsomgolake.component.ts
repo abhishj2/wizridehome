@@ -123,7 +123,7 @@ export class TsomgolakeComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Lachung",
+          "name": "Tsomgo Lake",
           "item": "https://wizzride.com/destinations/tsomgo_lake/"
         }
       ]

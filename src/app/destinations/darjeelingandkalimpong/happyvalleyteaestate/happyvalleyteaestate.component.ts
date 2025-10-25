@@ -125,7 +125,7 @@ export class HappyvalleyteaestateComponent implements OnInit, AfterViewInit, OnD
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Happy Valley Tea Estate",
           "item": "https://wizzride.com/destinations/happy-valley-tea-estate/"
         }
       ]

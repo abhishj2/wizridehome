@@ -74,6 +74,24 @@ import { GuwahatiairportComponent } from './airports/guwahatiairport/guwahatiair
 import { BagdograirportComponent } from './airports/bagdograirport/bagdograirport.component';
 import { ShillongairportComponent } from './airports/shillongairport/shillongairport.component';
 import { PakyongairportComponent } from './airports/pakyongairport/pakyongairport.component';
+import { BagdogratosikkimComponent } from './airportcityreservedcabs/bagdogratosikkim/bagdogratosikkim.component';
+import { BagdogratodarjeelingComponent } from './airportcityreservedcabs/bagdogratodarjeeling/bagdogratodarjeeling.component';
+import { BagdogratokalimpongComponent } from './airportcityreservedcabs/bagdogratokalimpong/bagdogratokalimpong.component';
+import { GuwahatitoshillongComponent } from './airportcityreservedcabs/guwahatitoshillong/guwahatitoshillong.component';
+import { GuwahatitoiimshillongComponent } from './airportcityreservedcabs/guwahatitoiimshillong/guwahatitoiimshillong.component';
+import { GuwahatitotezpurComponent } from './airportcityreservedcabs/guwahatitotezpur/guwahatitotezpur.component';
+import { ShillongtotezpurComponent } from './airportcityreservedcabs/shillongtotezpur/shillongtotezpur.component';
+import { SiliguritogangtokComponent } from './wizridecityroutes/siliguritogangtok/siliguritogangtok.component';
+import { SiliguritosmitComponent } from './wizridecityroutes/siliguritosmit/siliguritosmit.component';
+import { SiliguritorangpoComponent } from './wizridecityroutes/siliguritorangpo/siliguritorangpo.component';
+import { SiliguritodarjeelingComponent } from './wizridecityroutes/siliguritodarjeeling/siliguritodarjeeling.component';
+import { SiliguritokurseongComponent } from './wizridecityroutes/siliguritokurseong/siliguritokurseong.component';
+import { SiliguritokalimpongComponent } from './wizridecityroutes/siliguritokalimpong/siliguritokalimpong.component';
+import { BagairporttogangtokComponent } from './airportsharedcabs/bagairporttogangtok/bagairporttogangtok.component';
+import { BagairportodarjeelingComponent } from './airportsharedcabs/bagairportodarjeeling/bagairportodarjeeling.component';
+import { BagairportkalimpongComponent } from './airportsharedcabs/bagairportkalimpong/bagairportkalimpong.component';
+import { GauairtoshillongComponent } from './airportsharedcabs/gauairtoshillong/gauairtoshillong.component';
+
 
 
 
@@ -168,4 +186,28 @@ export const routes: Routes = [
       {path:'airports/bagdograairport',component:BagdograirportComponent},
       {path:'airports/shillongairport',component:ShillongairportComponent},
       {path:'airports/pakyongairport',component:PakyongairportComponent},
+
+
+      {path:'ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Sikkim_Reserved_Cab_Service',component:BagdogratosikkimComponent},
+      {path:'ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Darjeeling_Reserved_Cab_Service',component:BagdogratodarjeelingComponent},
+
+      {path:'ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Kalimpong_Reserved_Cab_Service',component:BagdogratokalimpongComponent},
+      {path:'ourservices/Luxury-Reserved-Cabs/Guwahati_Airport_To_Shillong_Reserved_Cab_Service',component:GuwahatitoshillongComponent},
+      {path:'ourservices/Luxury-Reserved-Cabs/IIM-Shillong-to-Guwahati-Airport',component:GuwahatitoiimshillongComponent},
+      {path:'ourservices/Luxury-Reserved-Cabs/Guwahati_To_Tezpur_Reserved_Cab_Service',component:GuwahatitotezpurComponent},
+      {path:'ourservices/Luxury-Reserved-Cabs/Shillong_To_Tezpur_Reserved_Cab_Service',component:ShillongtotezpurComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service',component: SiliguritogangtokComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_SMIT_Shared_Cab_Service', component:SiliguritosmitComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_Rangpo_Shared_Cab_Service',component:SiliguritorangpoComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_Darjeeling_Shared_Cab_Service',component:SiliguritodarjeelingComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_Kurseong_Shared_Cab_Service',component:SiliguritokurseongComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Siliguri_To_Kalimpong_Shared_Cab_Service',component:SiliguritokalimpongComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_to_Gangtok_Shared_Cab_Service',component:BagairporttogangtokComponent
+      },
+      {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service',component:BagairportodarjeelingComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service',component:BagairportkalimpongComponent},
+      {path:'ourservices/Luxury-Shared-Cabs/guwahati-to-shillong',component:GauairtoshillongComponent}
 ];
+
+
+

@@ -123,7 +123,7 @@ export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestr
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Lachung",
+          "name": "Rumtek Monastery",
           "item": "https://wizzride.com/destinations/rumtek_monastery/"
         }
       ]

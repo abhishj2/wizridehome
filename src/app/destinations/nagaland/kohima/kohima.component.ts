@@ -115,7 +115,7 @@ export class KohimaComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Kohima",
           "item": "https://wizzride.com/destinations/kohima/"
         }
       ]

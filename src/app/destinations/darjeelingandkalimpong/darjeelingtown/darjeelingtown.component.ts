@@ -122,7 +122,7 @@ export class DarjeelingtownComponent implements OnInit, AfterViewInit, OnDestroy
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Darjeeling",
           "item": "https://wizzride.com/destinations/darjeeling/"
         }
       ]

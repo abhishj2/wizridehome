@@ -1,0 +1,11 @@
+@import '../../airports/commonairport.css';
+
+.darjeel{
+  background: linear-gradient(
+    135deg,
+    rgba(29, 170, 186, 0.7),
+    rgba(10, 125, 140, 0.7)
+  ),
+  url("../../../assets/images/cityroutes/darjeeling.jpg");
+}
+  

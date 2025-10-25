@@ -125,7 +125,7 @@ export class TigerhillComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Tiger Hill",
           "item": "https://wizzride.com/destinations/tigerhill/"
         }
       ]

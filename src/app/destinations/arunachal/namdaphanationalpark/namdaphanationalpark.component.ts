@@ -123,7 +123,7 @@ export class NamdaphanationalparkComponent  implements OnInit, AfterViewInit, On
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Namdapha National Park",
           "item": "https://wizzride.com/destinations/namdaphanationalpark/"
         }
       ]

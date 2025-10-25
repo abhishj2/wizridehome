@@ -123,7 +123,7 @@ export class ItanagarComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Itanagar",
           "item": "https://wizzride.com/destinations/itanagar/"
         }
       ]

@@ -116,7 +116,7 @@ export class TawangComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Tawang",
           "item": "https://wizzride.com/destinations/tawang/"
         }
       ]

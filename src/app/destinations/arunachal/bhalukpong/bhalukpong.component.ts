@@ -122,7 +122,7 @@ export class BhalukpongComponent   implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Bhalukpong",
           "item": "https://wizzride.com/destinations/bhalukpong/"
         }
       ]

@@ -73,33 +73,33 @@ export class FooterComponent {
     airportShared: {
       title: "Wizzride Airport Routes - Shared Cabs",
       routes: [
-        { name: "Bagdogra Airport to Gangtok", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/" } as Route,
-        { name: "Bagdogra Airport to Darjeeling", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/" } as Route,
-        { name: "Bagdogra Airport to Kalimpong", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/" } as Route,
-        { name: "Guwahati Airport to Shillong", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/" } as Route
+        { name: "Bagdogra Airport to Gangtok", link: "/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_to_Gangtok_Shared_Cab_Service" } as Route,
+        { name: "Bagdogra Airport to Darjeeling", link: "/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/" } as Route,
+        { name: "Bagdogra Airport to Kalimpong", link: "/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/" } as Route,
+        { name: "Guwahati Airport to Shillong", link: "/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/" } as Route
       ]
     },
     cityShared: {
       title: "Wizzride City Routes - Shared Cabs",
       routes: [
-        { name: "Siliguri to Gangtok", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/" },
-        { name: "Siliguri to SMIT", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_SMIT_Shared_Cab_Service/" },
-        { name: "Siliguri to Rangpo", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Rangpo_Shared_Cab_Service/" },
-        { name: "Siliguri to Darjeeling", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Darjeeling_Shared_Cab_Service/" },
-        { name: "Siliguri to Kurseong", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kurseong_Shared_Cab_Service/" },
-        { name: "Siliguri to Kalimpong", link: "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kalimpong_Shared_Cab_Service/" }
+        { name: "Siliguri to Gangtok", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/" },
+        { name: "Siliguri to SMIT", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_SMIT_Shared_Cab_Service/" },
+        { name: "Siliguri to Rangpo", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Rangpo_Shared_Cab_Service/" },
+        { name: "Siliguri to Darjeeling", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Darjeeling_Shared_Cab_Service/" },
+        { name: "Siliguri to Kurseong", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kurseong_Shared_Cab_Service/" },
+        { name: "Siliguri to Kalimpong", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kalimpong_Shared_Cab_Service/" }
       ]
     },
     airportReserved: {
       title: "Wizzride Airport Connectivity - Reserved Cabs",
       routes: [
-        { name: "Bagdogra Airport to Sikkim", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Sikkim_Reserved_Cab_Service/" },
-        { name: "Bagdogra Airport to Darjeeling", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Darjeeling_Reserved_Cab_Service/" },
-        { name: "Bagdogra Airport to Kalimpong", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Kalimpong_Reserved_Cab_Service/" },
-        { name: "Guwahati Airport to Shillong", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Guwahati_Airport_To_Shillong_Reserved_Cab_Service/" },
-        { name: "Guwahati To IIM Shillong", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/IIM-Shillong-to-Guwahati-Airport/" },
-        { name: "Guwahati to Tezpur", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Guwahati_To_Tezpur_Reserved_Cab_Service/" },
-        { name: "Shillong to Tezpur", link: "https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Shillong_To_Tezpur_Reserved_Cab_Service/" }
+        { name: "Bagdogra Airport to Sikkim", link: "/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Sikkim_Reserved_Cab_Service/" },
+        { name: "Bagdogra Airport to Darjeeling", link: "/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Darjeeling_Reserved_Cab_Service/" },
+        { name: "Bagdogra Airport to Kalimpong", link: "/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Kalimpong_Reserved_Cab_Service/" },
+        { name: "Guwahati Airport to Shillong", link: "/ourservices/Luxury-Reserved-Cabs/Guwahati_Airport_To_Shillong_Reserved_Cab_Service/" },
+        { name: "Guwahati To IIM Shillong", link: "/ourservices/Luxury-Reserved-Cabs/IIM-Shillong-to-Guwahati-Airport/" },
+        { name: "Guwahati to Tezpur", link: "/ourservices/Luxury-Reserved-Cabs/Guwahati_To_Tezpur_Reserved_Cab_Service/" },
+        { name: "Shillong to Tezpur", link: "/ourservices/Luxury-Reserved-Cabs/Shillong_To_Tezpur_Reserved_Cab_Service/" }
       ]
     },
     airportsCovered: {

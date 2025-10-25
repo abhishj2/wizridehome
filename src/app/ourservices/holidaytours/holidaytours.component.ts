@@ -87,7 +87,58 @@ export class HolidaytoursComponent implements OnInit, AfterViewInit {
         }
       ]
     });
-
+this.addJsonLd({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Wizzride",
+  "url": "https://wizzride.com",
+  "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png",
+  "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.",
+  "foundingDate": "2015",
+  "founders": [
+    {
+      "@type": "Person",
+      "name": "Wizzride Founders"
+    }
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+91-9775999444",
+      "contactType": "customer service",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/wizzride",
+    "https://twitter.com/wizzride",
+    "https://www.instagram.com/wizzride",
+    "https://www.linkedin.com/company/wizzride"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Gangtok, Sikkim",
+    "addressLocality": "Gangtok",
+    "addressRegion": "Sikkim",
+    "postalCode": "737101",
+    "addressCountry": "IN"
+  },
+  "department": [
+    {
+      "@type": "Organization",
+      "name": "Wizzride Cab Booking",
+      "url": "https://wizzride.com/cab-booking/",
+      "description": "Book intercity and local cabs with flexible shared or reserved options."
+    },
+    {
+      "@type": "Organization",
+      "name": "Wizzride Flight Booking",
+      "url": "https://wizzride.com/flights/",
+      "description": "Compare and book domestic and international flights easily."
+    }
+  ]
+});
   
   }    
 

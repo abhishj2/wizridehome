@@ -123,7 +123,7 @@ export class ZulukComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Yuksom",
+          "name": "Zuluk",
           "item": "https://wizzride.com/destinations/zuluk/"
         }
       ]

@@ -125,7 +125,7 @@ export class GhoommonsateryComponent implements OnInit, AfterViewInit, OnDestroy
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Ghoom Monastery",
           "item": "https://wizzride.com/destinations/ghoom-monastery/"
         }
       ]

@@ -123,7 +123,7 @@ export class MawsynramComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Mawsynram",
           "item": "https://wizzride.com/destinations/mawsynram/"
         }
       ]

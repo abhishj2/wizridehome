@@ -131,7 +131,7 @@ export class BomdilaComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Bomdila",
           "item": "https://wizzride.com/destinations/bomdila/"
         }
       ]

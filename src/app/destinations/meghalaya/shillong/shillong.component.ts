@@ -123,7 +123,7 @@ export class ShillongComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Shillong",
           "item": "https://wizzride.com/destinations/shillong/"
         }
       ]

@@ -123,7 +123,7 @@ export class LaitlumcanyonsComponent   implements OnInit, AfterViewInit, OnDestr
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Laitlum Canyons",
           "item": "https://wizzride.com/destinations/laitlum/"
         }
       ]

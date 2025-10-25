@@ -124,7 +124,7 @@ export class ZirovalleyComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Ziro Valley",
           "item": "https://wizzride.com/destinations/zirovalley/"
         }
       ]

@@ -123,7 +123,7 @@ export class MokokchungComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Mokokchung",
           "item": "https://wizzride.com/destinations/mokokchung/"
         }
       ]

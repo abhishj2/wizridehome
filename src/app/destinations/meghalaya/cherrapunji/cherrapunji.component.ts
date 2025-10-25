@@ -123,7 +123,7 @@ export class CherrapunjiComponent  implements OnInit, AfterViewInit, OnDestroy {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Cherrapunji",
           "item": "https://wizzride.com/destinations/cherrapunji/"
         }
       ]

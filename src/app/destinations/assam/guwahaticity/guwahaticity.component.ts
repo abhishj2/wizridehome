@@ -115,7 +115,7 @@ export class GuwahaticityComponent  implements OnInit, AfterViewInit, OnDestroy 
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Gangtok",
+          "name": "Guwahati",
           "item": "https://wizzride.com/destinations/guwahati/"
         }
       ]
