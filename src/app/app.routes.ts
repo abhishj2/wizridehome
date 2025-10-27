@@ -91,6 +91,13 @@ import { BagairporttogangtokComponent } from './airportsharedcabs/bagairporttoga
 import { BagairportodarjeelingComponent } from './airportsharedcabs/bagairportodarjeeling/bagairportodarjeeling.component';
 import { BagairportkalimpongComponent } from './airportsharedcabs/bagairportkalimpong/bagairportkalimpong.component';
 import { GauairtoshillongComponent } from './airportsharedcabs/gauairtoshillong/gauairtoshillong.component';
+import { BagdogratobengaluruComponent } from './airportroutes/bagdogra/bagdogratobengaluru/bagdogratobengaluru.component';
+import { BagdogratodelhiComponent } from './airportroutes/bagdogra/bagdogratodelhi/bagdogratodelhi.component';
+import { BagdogratodibrugarhComponent } from './airportroutes/bagdogra/bagdogratodibrugarh/bagdogratodibrugarh.component';
+import { BagdogratoguwahatiComponent } from './airportroutes/bagdogra/bagdogratoguwahati/bagdogratoguwahati.component';
+import { BagdogratokolkataComponent } from './airportroutes/bagdogra/bagdogratokolkata/bagdogratokolkata.component';
+import { BagdogratomumbaiComponent } from './airportroutes/bagdogra/bagdogratomumbai/bagdogratomumbai.component';
+import { GuwahatitoagartalaComponent } from './airportroutes/guwahati/guwahatitoagartala/guwahatitoagartala.component';
 
 
 
@@ -206,7 +213,15 @@ export const routes: Routes = [
       },
       {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service',component:BagairportodarjeelingComponent},
       {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service',component:BagairportkalimpongComponent},
-      {path:'ourservices/Luxury-Shared-Cabs/guwahati-to-shillong',component:GauairtoshillongComponent}
+      {path:'ourservices/Luxury-Shared-Cabs/guwahati-to-shillong',component:GauairtoshillongComponent},
+
+      {path:'ourservices/flight-booking/bagdogra/bagdogratobengaluru',component:BagdogratobengaluruComponent},
+      {path:'ourservices/flight-booking/bagdogra/bagdogratodelhi',component:BagdogratodelhiComponent},
+      {path:'ourservices/flight-booking/bagdogra/bagdogratodibrugarh',component:BagdogratodibrugarhComponent},
+      {path:'ourservices/flight-booking/bagdogra/bagdogratoguwahati',component:BagdogratoguwahatiComponent},
+      {path:'ourservices/flight-booking/bagdogra/bagdogratokolkata',component:BagdogratokolkataComponent},
+      {path:'ourservices/flight-booking/bagdogra/bagdogratomumbai',component:BagdogratomumbaiComponent},
+      {path:'ourservices/flight-booking/bagdogra/guwahatitoagartala',component:GuwahatitoagartalaComponent},
 ];
 
 
