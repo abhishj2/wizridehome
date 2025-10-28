@@ -24,7 +24,7 @@ export class BagdogratoguwahatiComponent  implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratoguwahati/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogratoguwahati');
     
     // ✅ SEO Metadata
     this.titleService.setTitle("Bagdogra to Guwahati Flights | Cheap IXB to GAU Booking");
@@ -41,7 +41,7 @@ export class BagdogratoguwahatiComponent  implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ property: 'og:title', content: 'Bagdogra to Guwahati Flights | Cheap IXB to GAU Booking' });
     this.metaService.updateTag({ property: 'og:description', content: "Book Bagdogra to Guwahati flights with Wizzride. Compare fares & airlines, and enjoy a smooth journey between North Bengal and Assam. Reserve your ticket today" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratoguwahati/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratoguwahati' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
@@ -122,7 +122,7 @@ export class BagdogratoguwahatiComponent  implements OnInit, AfterViewInit, OnDe
           "@type": "ListItem",
           "position": 3,
           "name": "Bagdogra to Guwahati Flights",
-          "item": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratoguwahati/"
+          "item": "https://wizzride.com/ourservices/flight-booking/bagdogratoguwahati"
         }
       ]
     });
@@ -167,7 +167,7 @@ export class BagdogratoguwahatiComponent  implements OnInit, AfterViewInit, OnDe
         "@type": "Offer",
         "priceCurrency": "INR",
         "price": "2000",
-        "url": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratoguwahati/",
+        "url": "https://wizzride.com/ourservices/flight-booking/bagdogratoguwahati",
         "availability": "https://schema.org/InStock"
       }
     });

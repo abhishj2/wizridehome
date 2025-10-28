@@ -1,28 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Quicksand", sans-serif !important;
-}
-
-body {
-    background: #cccccc;
-    color: #333333;
-    line-height: 1.6;
-}
-
-.fas {
-    font-family: "Font Awesome 6 Free" !important;
-}
-
-.fab {
-    font-family: "Font Awesome 6 Brands" !important;
-}
 
 h2{
-    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 700;
     color: #212529;
 }
@@ -1021,6 +998,7 @@ small {
     margin-bottom: 32px;
     text-align: center;
     position: relative;
+    margin-bottom: 40px;
 }
 
 .content-section h2::after {
@@ -2624,7 +2602,7 @@ a.service-cta-btn {
         }
 
         .app-content .subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
             color: #64748b;
             margin-bottom: 50px;
             line-height: 1.6;
@@ -2856,7 +2834,7 @@ a.service-cta-btn {
 
         .statistics-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 20px;
             position: relative;
             z-index: 2;
         }
@@ -4087,15 +4065,14 @@ button.nav-tab img{
   }
 
   .offers-header h2 {
+    margin-bottom: 20px;
     color: #000000;
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 700;
+  
   }
 
   .offers-header p {
     color: #000;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
     opacity: 0.95;
   }
   
@@ -4226,7 +4203,7 @@ button.nav-tab img{
   }
   
   .offer-subtitle {
-    font-size: 11px;
+    font-size: 11px !important;
     color: #9ca3af;
     margin-bottom: 12px;
     line-height: 1.4;

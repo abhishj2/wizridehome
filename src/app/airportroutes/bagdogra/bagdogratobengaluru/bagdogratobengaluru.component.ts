@@ -24,7 +24,7 @@ export class BagdogratobengaluruComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratobengaluru/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogratobengaluru');
     
     // ✅ SEO Metadata
     this.titleService.setTitle("Bagdogra to Bengaluru Flights - Book Affordable Wizzride Flights");
@@ -41,7 +41,7 @@ export class BagdogratobengaluruComponent implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ property: 'og:title', content: 'Bagdogra to Bengaluru Flights - Book Affordable Wizzride Flights' });
     this.metaService.updateTag({ property: 'og:description', content: "Book cheap flights from Bagdogra (IXB) to Bengaluru (BLR) with Wizzride. Find flight schedules, fares, and travel tips for a smooth journey. Reserve your Bagdogra to Bengaluru flight today" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratobengaluru/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratobengaluru' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
@@ -124,7 +124,7 @@ export class BagdogratobengaluruComponent implements OnInit, AfterViewInit, OnDe
               "@type": "ListItem",
               "position": 3,
               "name": "Bagdogra to Bengaluru Flights",
-              "item": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratobengaluru/"
+              "item": "https://wizzride.com/ourservices/flight-booking/bagdogratobengaluru"
             }
           ]
           
@@ -166,7 +166,7 @@ export class BagdogratobengaluruComponent implements OnInit, AfterViewInit, OnDe
           "@type": "Offer",
           "priceCurrency": "INR",
           "price": "4500",
-          "url": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratobengaluru/",
+          "url": "https://wizzride.com/ourservices/flight-booking/bagdogratobengaluru/",
           "availability": "https://schema.org/InStock"
         }
       });

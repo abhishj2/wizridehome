@@ -12,28 +12,13 @@
     --border-radius: 15px;
   }
 
-  body {
-    background: var(--bg-gradient);
-    line-height: 1.6;
-    color: var(--text-dark);
-    overflow-x: hidden;
-  }
 
-
-
- 
-  /* Container */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
 
   /* Header Section */
   .header-section {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: white;
-    padding: 120px 0 80px;
+    padding: 150px 0;
     text-align: center;
     position: relative;
     overflow: hidden;

@@ -24,7 +24,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratomumbai/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogratomumbai');
     
     // ✅ SEO Metadata
     this.titleService.setTitle("Bagdogra to Mumbai Flights – Book Affordable IXB to BOM Tickets with Wizzride");
@@ -41,7 +41,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
     this.metaService.updateTag({ property: 'og:title', content: 'Bagdogra to Mumbai Flights – Book Affordable IXB to BOM Tickets with Wizzride' });
     this.metaService.updateTag({ property: 'og:description', content: "Find affordable Bagdogra to Mumbai (IXB–BOM) flight tickets with Wizzride. Enjoy smooth booking, flexible timings, and budget-friendly fares. Book your IXB to BOM flights today!" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratomumbai/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratomumbai' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
@@ -122,7 +122,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
           "@type": "ListItem",
           "position": 3,
           "name": "Bagdogra to Mumbai",
-          "item":"https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratomumbai/"
+          "item":"https://wizzride.com/ourservices/flight-booking/bagdogratomumbai"
         }
       ]
     });
@@ -166,7 +166,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
         "@type": "Offer",
         "priceCurrency": "INR",
         "price": "5000",
-        "url": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratomumbai/",
+        "url": "https://wizzride.com/ourservices/flight-booking/bagdogratomumbai",
         "availability": "https://schema.org/InStock",
         "validFrom": "2025-08-20T00:00"
       },
@@ -174,7 +174,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
         "@type": "ReserveAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://wizzride.com/book-flight/bagdogra-to-mumbai",
+          "urlTemplate": "https://wizzride.com/book-flight/bagdogratomumbai",
           "inLanguage": "en",
           "actionPlatform": [
             "http://schema.org/DesktopWebPlatform",

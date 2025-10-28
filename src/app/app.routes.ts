@@ -98,6 +98,16 @@ import { BagdogratoguwahatiComponent } from './airportroutes/bagdogra/bagdograto
 import { BagdogratokolkataComponent } from './airportroutes/bagdogra/bagdogratokolkata/bagdogratokolkata.component';
 import { BagdogratomumbaiComponent } from './airportroutes/bagdogra/bagdogratomumbai/bagdogratomumbai.component';
 import { GuwahatitoagartalaComponent } from './airportroutes/guwahati/guwahatitoagartala/guwahatitoagartala.component';
+import { GuwahatitodelhiComponent } from './airportroutes/guwahati/guwahatitodelhi/guwahatitodelhi.component';
+import { GuwahatitodibrugrahComponent } from './airportroutes/guwahati/guwahatitodibrugrah/guwahatitodibrugrah.component';
+import { GuwahatitoimphalComponent } from './airportroutes/guwahati/guwahatitoimphal/guwahatitoimphal.component';
+import { GuwahatitokolkataComponent } from './airportroutes/guwahati/guwahatitokolkata/guwahatitokolkata.component';
+import { PakyoongtodelhiComponent } from './airportroutes/pakyong/pakyoongtodelhi/pakyoongtodelhi.component';
+import { isPlatformWorkerApp } from '@angular/common';
+import { PakyoongtokolkataComponent } from './airportroutes/pakyong/pakyoongtokolkata/pakyoongtokolkata.component';
+import { ArunachalpermitComponent } from './ilp/arunachalpermit/arunachalpermit.component';
+import { NagalandpermitComponent } from './ilp/nagalandpermit/nagalandpermit.component';
+import { SikkimpermitComponent } from './ilp/sikkimpermit/sikkimpermit.component';
 
 
 
@@ -215,13 +225,24 @@ export const routes: Routes = [
       {path:'ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service',component:BagairportkalimpongComponent},
       {path:'ourservices/Luxury-Shared-Cabs/guwahati-to-shillong',component:GauairtoshillongComponent},
 
-      {path:'ourservices/flight-booking/bagdogra/bagdogratobengaluru',component:BagdogratobengaluruComponent},
-      {path:'ourservices/flight-booking/bagdogra/bagdogratodelhi',component:BagdogratodelhiComponent},
-      {path:'ourservices/flight-booking/bagdogra/bagdogratodibrugarh',component:BagdogratodibrugarhComponent},
-      {path:'ourservices/flight-booking/bagdogra/bagdogratoguwahati',component:BagdogratoguwahatiComponent},
-      {path:'ourservices/flight-booking/bagdogra/bagdogratokolkata',component:BagdogratokolkataComponent},
-      {path:'ourservices/flight-booking/bagdogra/bagdogratomumbai',component:BagdogratomumbaiComponent},
-      {path:'ourservices/flight-booking/bagdogra/guwahatitoagartala',component:GuwahatitoagartalaComponent},
+      {path:'ourservices/flight-booking/bagdogratobengaluru',component:BagdogratobengaluruComponent},
+      {path:'ourservices/flight-booking/bagdogratodelhi',component:BagdogratodelhiComponent},
+      {path:'ourservices/flight-booking/bagdogratodibrugarh',component:BagdogratodibrugarhComponent},
+      {path:'ourservices/flight-booking/bagdogratoguwahati',component:BagdogratoguwahatiComponent},
+      {path:'ourservices/flight-booking/bagdogratokolkata',component:BagdogratokolkataComponent},
+      {path:'ourservices/flight-booking/bagdogratomumbai',component:BagdogratomumbaiComponent},
+      {path:'ourservices/flight-booking/guwahatitoagartala',component:GuwahatitoagartalaComponent},
+      {path:'ourservices/flight-booking/guwahatitodelhi',component:GuwahatitodelhiComponent},
+      {path:'ourservices/flight-booking/guwahatitodibrugarh', component:GuwahatitodibrugrahComponent},
+      {path:'ourservices/flight-booking/guwahatitoimphal',component:GuwahatitoimphalComponent},
+      {path:'ourservices/flight-booking/guwahatitokolkata',component:GuwahatitokolkataComponent},
+      {path:'ourservices/flight-booking/pakyongtodelhi', component:PakyoongtodelhiComponent},
+      {path:'ourservices/flight-booking/pakyongtokolkata',component:PakyoongtokolkataComponent},
+
+      {path:'inner-line-permit/arunachal-inner-line-permit',component:ArunachalpermitComponent},
+      {path:'inner-line-permit/nagaland-inner-line-permit',component:NagalandpermitComponent},
+      {path:'sikkim_permit_guide',component:SikkimpermitComponent},
+
 ];
 
 

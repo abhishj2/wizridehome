@@ -1,0 +1,480 @@
+
+
+.spacing {
+    height: 60px;
+}
+
+.img-center img{
+    display: block;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+  
+
+h1 {
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+h2 {
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-bottom: 40px !important;
+}
+
+h3 {
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+p {
+    line-height: 1.6;
+    color: #474747;
+}
+
+a {
+    color:#1daaba !important;
+    text-decoration:none !important;
+}
+a:hover{
+    color: #000 !important;
+}
+.section-title {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 43px;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    border-radius: 2px;
+}
+.marg30{
+    margin-top: 40px;
+}
+.section-subtitle {
+    color: #7f8c8d;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 3rem;
+}
+.howto {
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.howto-steps {
+    background: #f7fafc;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+    padding: 40px 32px;
+    margin: 32px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.howto-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(.4, 0, .2, 1), transform 0.7s cubic-bezier(.4, 0, .2, 1);
+}
+
+.howto-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.howto-icon {
+    font-size: 2rem;
+    color: #2b7a78;
+    min-width: 40px;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.howto-app-icons {
+    font-size: 1.3em;
+    margin-left: 8px;
+}
+
+.howto-app-icons i {
+    margin-right: 4px;
+    color: #222;
+}
+
+.howto-text {
+    
+    color: #444;
+    line-height: 1.6;
+
+}
+.howtoreach {
+    background: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.9)), url('https://wizzride.com/assets/images_new/destinations/relax-bomdila.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 80px 0;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.reach-cards {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.reach-cards {
+    font-size: 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reach-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 36px 32px;
+    max-width: 480px;
+    min-width: 320px;
+    flex: 1 1 320px;
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.reach-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+    transform: translateY(-6px) scale(1.02);
+}
+
+.reach-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.reach-card p {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.howtoreach h2.section-title {
+    color: #fff !important;
+}
+
+.howtoreach h2.section-title:after {
+    background: #fff !important;
+}
+.howto-steps[_ngcontent-hbp-c24] {
+    background: #f7fafc;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+    padding: 40px 32px;
+    margin: 32px auto 0 auto;
+    display: flex
+;
+    flex-direction: column;
+    gap: 32px;
+}
+/* Cards Section */
+.fourcard {
+    display: flex;
+    gap: 30px;
+}
+
+.fourcol {
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe {
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);;
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.carfe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1daaba, #0a7d8c);
+    transform: scaleX(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover::before {
+    transform: scaleX(1);
+}
+
+.carfe:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+section.why-choose-section .carfe {
+    padding:10px !important;
+}
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1daaba, #0a7d8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.icon-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #0a7d8c, #1daaba);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover .icon-wrapper::before {
+    opacity: 1;
+}
+
+.carfe i {
+    font-size: 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carfe:hover i {
+    transform: scale(1.1);
+}
+
+.carfe h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.carfe p {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.text-white{
+    color: #fff !important;
+}
+.marg20{
+    margin-top: 20px !important
+    
+}
+.newfor .carfe{
+    padding:0;
+}
+
+.newfor .carfe h3{
+    margin:20px 20px 0 20px  !important;
+    
+}
+
+.newfor .carfe p{
+    margin:10px 20px 20px 20px !important;
+}
+.newfor .cardim img{
+    height:200px;
+    width:100%  !important;
+    object-fit:cover;
+}
+
+
+.howto-step .howto-text{
+    font-size:18px !important;
+}
+
+.howto-icon{
+    font-size:22px !important;
+}
+
+.howto-steps .howto-step{
+    align-items:center !important;
+}
+
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+}
+
+.animate-slide-up-delay {
+    animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.animate-slide-up-delay-2 {
+    animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width:767px){
+    .howtoreach {
+        padding: 20px;
+    }
+    .fourcard {
+        flex-direction: column;
+        gap: 20px;
+    margin:20px !important;
+    }
+    .reach-card 
+{
+    padding:10px !important;
+    margin:0px 20px !important;;
+}
+    .fourcol {
+        flex: 1;
+    }
+}
+
+
+
+
+
+
+
+
+@media (max-width: 480px) {
+
+    
+    .reach-card .icon-wrapper {
+      
+        width:35px;
+     height:35px;
+     }
+ 
+  .reach-card .icon-wrapper i{
+   font-size:15px;
+  }
+ .icon-wrapper{
+  margin-bottom:10px !important; 
+ }
+ .reach-card h3{
+  margin-bottom:0 !important;
+  margin-top:0 !important;}
+  .fourcol .icon-wrapper {
+    width:35px !important;
+    height:35px !important;
+    margin-bottom:0 !important;
+}
+
+.carfe h3{
+    margin-top:10px !important;
+    margin-bottom:10px !important;
+}
+.icon-wrapper i{
+    font-size:15px !important;
+}
+.carfe{
+    padding:20px  !important;
+}
+}
+
+
+ ul.points {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+
+}
+
+ ul.points li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 1.4rem;
+    line-height: 1.5;
+    color: #474747;
+            font-size: clamp(0.8rem, 1.5vw, 1.125rem);
+
+}
+
+
+ ul.points li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    color: #1daaba;
+    /* green color */
+    font-weight: bold;
+}

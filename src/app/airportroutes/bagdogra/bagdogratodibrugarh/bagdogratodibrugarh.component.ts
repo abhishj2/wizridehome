@@ -24,7 +24,7 @@ export class BagdogratodibrugarhComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodibrugarh/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogratodibrugarh');
     
     // ✅ SEO Metadata
     this.titleService.setTitle("Bagdogra to Dibrugarh Flights | Cheap IXB to DIB Booking");
@@ -41,7 +41,7 @@ export class BagdogratodibrugarhComponent implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ property: 'og:title', content: 'Bagdogra to Dibrugarh Flights | Cheap IXB to DIB Booking' });
     this.metaService.updateTag({ property: 'og:description', content: "Book Bagdogra (IXB) to Dibrugarh (DIB) flights with Wizzride. Get low fares, easy booking & multiple airlines. Fly hassle-free to the Tea City of India today!" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodibrugarh/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratodibrugarh' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
@@ -124,7 +124,7 @@ export class BagdogratodibrugarhComponent implements OnInit, AfterViewInit, OnDe
               "@type": "ListItem",
               "position": 3,
               "name": "Bagdogra to Dibrugarh Flights",
-              "item": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodibrugarh/"
+              "item": "https://wizzride.com/ourservices/flight-booking/bagdogratodibrugarh"
             }
           ]
         }

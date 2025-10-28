@@ -24,7 +24,7 @@ export class BagdogratodelhiComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodelhi/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/flight-booking/bagdogratodelhi');
     
     // ✅ SEO Metadata
     this.titleService.setTitle("Bagdogra to Delhi Flights | Wizzride Affordable Air Tickets");
@@ -41,7 +41,7 @@ export class BagdogratodelhiComponent implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ property: 'og:title', content: 'Bagdogra to Delhi Flights | Wizzride Affordable Air Tickets' });
     this.metaService.updateTag({ property: 'og:description', content: "Book Bagdogra to Delhi flights with Wizzride for a seamless and affordable journey. Find schedules, ticket prices, and travel tips for a comfortable trip." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodelhi/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratodelhi' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
@@ -122,7 +122,7 @@ export class BagdogratodelhiComponent implements OnInit, AfterViewInit, OnDestro
           "@type": "ListItem",
           "position": 3,
           "name": "Bagdogra to Delhi Flights",
-          "item": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodelhi/"
+          "item": "https://wizzride.com/ourservices/flight-booking/bagdogratodelhi"
         }
       ]
     });
@@ -161,7 +161,7 @@ export class BagdogratodelhiComponent implements OnInit, AfterViewInit, OnDestro
       },
       "offers": {
           "@type": "Offer",
-          "url": "https://wizzride.com/ourservices/flight-booking/bagdogra/bagdogratodelhi/",
+          "url": "https://wizzride.com/ourservices/flight-booking/bagdogratodelhi",
           "priceCurrency": "INR",
           "price": "4500",
           "availability": "https://schema.org/InStock",
