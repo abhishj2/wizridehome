@@ -140,7 +140,7 @@ h2{
 }
 
 .booking-section-wrapper {
-    background:url('../../assets/images/Background-image4.png');
+    background:url('../../assets/images/bgnewfour.png');
     background-size:cover;
     background-repeat: no-repeat;
     padding: 80px 40px;
@@ -2938,7 +2938,7 @@ a.service-cta-btn {
 
         /* Stat Number */
         .statistics-section .stat-number {
-            font-size: clamp(2.5rem, 4vw, 2.5rem);
+            font-size: clamp(2rem, 3vw, 2rem);
             font-weight: 700;
             color: darkcyan;
             margin-bottom: 15px;
@@ -2947,6 +2947,7 @@ a.service-cta-btn {
             transition: all 0.4s ease;
         }
 
+
         .stat-card:hover .stat-number {
             transform: scale(1.1);
             color: #006666;
@@ -2954,7 +2955,7 @@ a.service-cta-btn {
 
         /* Stat Label */
        .statistics-section  .stat-label {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
+        font-size: clamp(1.1rem, 2vw, 1.1rem) !important;
             font-weight: 600;
             color: #495057;
             margin-bottom: 10px;

@@ -436,3 +436,6 @@
       grid-template-columns: 1fr;
     }
   }
+  .form-group {
+    margin-bottom:20px;
+}

@@ -53,8 +53,10 @@
   
 }
 
+
 .whyclist i{
-  margin-right:5px;
+  margin-right:10px;
+  font-size: 16px;
   color:var(--main-col)
 }
 
@@ -285,9 +287,7 @@ height:15px;}
 }
 
 
-.whyclist  i{
-  font-size:17px !important;
-}
+
 
 
 

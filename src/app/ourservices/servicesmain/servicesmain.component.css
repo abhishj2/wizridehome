@@ -81,6 +81,9 @@
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(29, 170, 186, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .service-card::before {
@@ -143,6 +146,7 @@
 .service-features {
     list-style: none;
     margin-bottom: 30px;
+    flex-grow: 1;
 }
 
 .service-features li {
@@ -173,6 +177,8 @@
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(29, 170, 186, 0.3);
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 .btn-primary:hover {
@@ -228,9 +234,17 @@
 
     .service-card {
         padding: 30px 20px;
+        height: auto; /* Allow natural height on mobile */
     }
 
-  
+    .service-features {
+        flex-grow: 0; /* Remove flex-grow on mobile */
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        margin-top: 0; /* Remove auto margin on mobile */
+    }
 
     .contact-info {
         flex-direction: column;
@@ -256,5 +270,15 @@
 
     .service-card {
         padding: 25px 15px;
+        height: auto; /* Allow natural height on mobile */
+    }
+
+    .service-features {
+        flex-grow: 0; /* Remove flex-grow on mobile */
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        margin-top: 0; /* Remove auto margin on mobile */
     }
 }
