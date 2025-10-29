@@ -108,6 +108,8 @@ import { PakyoongtokolkataComponent } from './airportroutes/pakyong/pakyoongtoko
 import { ArunachalpermitComponent } from './ilp/arunachalpermit/arunachalpermit.component';
 import { NagalandpermitComponent } from './ilp/nagalandpermit/nagalandpermit.component';
 import { SikkimpermitComponent } from './ilp/sikkimpermit/sikkimpermit.component';
+import { BlogmainComponent } from './blogmain/blogmain.component';
+import { BlogSingleComponent } from './blog-single/blog-single.component';
 
 
 
@@ -242,6 +244,12 @@ export const routes: Routes = [
       {path:'inner-line-permit/arunachal-inner-line-permit',component:ArunachalpermitComponent},
       {path:'inner-line-permit/nagaland-inner-line-permit',component:NagalandpermitComponent},
       {path:'sikkim_permit_guide',component:SikkimpermitComponent},
+
+
+    
+      {path:'blog',component:BlogmainComponent},
+      {path:'blog/:slug',component:BlogSingleComponent},
+
 
 ];
 

@@ -1,0 +1,81 @@
+<!-- Header Section -->
+<header class="archive-header">
+    <div class="container">
+        <h1>Our Blog</h1>
+        <p>Explore the Wizzride Blog for expert travel tips, destination guides, and latest updates on transportation services across North East India and Himalayan routes. Plan smarter journeys with Wizzride.</p>
+    </div>
+</header>
+
+<!-- Filter Section -->
+<section class="filter-section">
+    <div class="container">
+        <div class="filter-controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search articles..." [(ngModel)]="searchTerm" (input)="onSearch()">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="category-filters">
+                <a href="#" class="filter-btn" [class.active]="selectedCategory === 'all'" (click)="filterByCategory('all', $event)">All Posts</a>
+                <a href="#" class="filter-btn" 
+                   *ngFor="let category of categories" 
+                   [class.active]="selectedCategory === category.slug"
+                   (click)="filterByCategory(category.slug, $event)"
+                   [attr.data-category]="category.slug">
+                   {{ category.name }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Grid -->
+<main class="container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading articles...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error">
+        <h3>Error loading posts</h3>
+        <p>{{ error }}</p>
+        <button (click)="loadPosts()">Retry</button>
+    </div>
+
+    <!-- Blog Grid -->
+    <div *ngIf="!loading && !error" class="blog-grid" id="blogGrid">
+        <!-- No Posts State -->
+        <p *ngIf="filteredPosts.length === 0 && !loading && !error">No blog posts available yet.</p>
+        
+        <!-- Posts List -->
+        <article *ngFor="let post of filteredPosts; let i = index" 
+                 class="blog-card" 
+                 [attr.data-category]="getPostCategory(post)"
+                 [style.animation-delay]="(i * 0.1) + 's'">
+            <div class="card-image">
+                <img [src]="getFeaturedImage(post)" 
+                     [alt]="post.title.rendered" 
+                     loading="lazy">
+                <span class="card-category">{{ getPostCategoryName(post) }}</span>
+            </div>
+            <div class="card-content">
+                <div class="card-meta">
+                    <span *ngIf="post.date">
+                        <i class="fas fa-calendar-alt"></i> {{ post.date | date:'MMMM d, y' }}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i> {{ getReadTime(post) }} min read
+                    </span>
+                </div>
+                <h2 class="card-title">
+                    <a [routerLink]="['/blog', post.slug]" [innerHTML]="post.title.rendered"></a>
+                </h2>
+                <p class="card-excerpt" [innerHTML]="getExcerpt(post)"></p>
+                <a [routerLink]="['/blog', post.slug]" class="read-more">
+                    Read More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </article>
+    </div>
+</main>
