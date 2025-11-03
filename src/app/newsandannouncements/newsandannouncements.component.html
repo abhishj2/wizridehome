@@ -1,0 +1,313 @@
+<div class="newspa">
+    <header class="hero">
+        <!-- Animated Background Elements -->
+        <div class="satellite-bg">
+            <div class="satellite-orbit"></div>
+            <div class="data-stream stream-1"></div>
+            <div class="data-stream stream-2"></div>
+            <div class="data-stream stream-3"></div>
+            <div class="signal-pulse pulse-1"></div>
+            <div class="signal-pulse pulse-2"></div>
+            <div class="signal-pulse pulse-3"></div>
+        </div>
+
+        <!-- Breaking News Ticker -->
+        <div class="news-ticker">
+            <div class="ticker-content">
+                <span class="breaking-label">LIVE</span>
+                <span class="ticker-text" *ngIf="isLoadingAnnouncements"> Loading announcements...</span>
+                <span class="ticker-text" *ngIf="!isLoadingAnnouncements && announcements.length === 0"> No announcements at this time.</span>
+                <span class="ticker-text" *ngIf="!isLoadingAnnouncements && announcements.length > 0"><ng-container *ngFor="let announcement of announcements; let i = index"><span *ngIf="announcements.length > 1">{{ i + 1 }}. </span>{{ getPlainTextContent(announcement.content.rendered) }}<a *ngIf="announcement.acf && announcement.acf.link_to_any" [href]="announcement.acf.link_to_any" target="_blank" style="color: #fbbf24; text-decoration: underline; margin-left: 5px;"> Learn More</a><span *ngIf="i < announcements.length - 1"> | </span></ng-container></span>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="typewriter-text">
+                    <span class="typewriter-line">News & Updates</span>
+                </h1>
+                <p class="fade-in-text">Stay informed with the latest offers and announcements</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item" data-counter="4">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Active Offers</span>
+                </div>
+                <div class="stat-item" data-counter="24">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support</span>
+                </div>
+                <div class="stat-item" data-counter="100">
+                    <span class="stat-number">0%</span>
+                    <span class="stat-label">Reliable</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Icons -->
+        <div class="floating-icons">
+            <i class="fas fa-satellite floating-icon icon-1"></i>
+            <i class="fas fa-broadcast-tower floating-icon icon-2"></i>
+            <i class="fas fa-wifi floating-icon icon-3"></i>
+            <i class="fas fa-signal floating-icon icon-4"></i>
+        </div>
+    </header>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="container">
+            <div class="action-grid">
+                <div class="action-card" data-service="shared">
+                    <div class="action-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Shared Rides</h3>
+                    <p>Daily commutes made easy</p>
+                </div>
+                <div class="action-card" data-service="reserved">
+                    <div class="action-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Reserved Service</h3>
+                    <p>Private trips with comfort</p>
+                </div>
+                <div class="action-card" data-service="tours">
+                    <div class="action-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>International Tours</h3>
+                    <p>Curated travel experiences</p>
+                </div>
+                <div class="action-card" data-service="flights">
+                    <div class="action-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3>Flight Booking</h3>
+                    <p>Seamless air travel</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Offers -->
+    <section class="featured-offers">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Offers</h2>
+                <div class="header-actions">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="cabs">Cabs</button>
+                    <button class="filter-btn" data-filter="flights">Flights</button>
+                    <button class="filter-btn" data-filter="inter">International Travel</button>
+                </div>
+            </div>
+
+            <div class="slider-container">
+                <!-- <button class="slider-nav prev-btn" aria-label="Previous slide">
+                <i class="fas fa-chevron-left"></i>
+            </button> -->
+
+                <div class="slider-wrapper">
+                    <div class="slider-track">
+                       
+
+                        <article class="offer-card slide feacard" data-category="cabs">
+                            <div class="card-image">
+                                <img src="../../assets/images/cab.jpg"
+                                    alt="Reserved Cab Offers">
+                                <div class="card-badge">Cabs</div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-meta">
+                                    <span class="category">Cabs</span>
+                                    <span class="date">07-08-2025</span>
+                                </div>
+                                <h3>Wizzride Shared Cabs Now Popular on Guwahati–Shillong Route!</h3>
+                                <p>We’re thrilled to see growing demand for Wizzride’s shared cab services on the Guwahati to Shillong route.</p>
+                                <div class="more-content"><p>Due to increasing popularity and limited daily seats, we highly recommend booking your ride in advance to ensure a hassle-free journey. Enjoy comfortable, affordable, and timely travel with Wizzride – your trusted partner in the Northeast</p></div>
+
+                                <div class="card-actions">
+                                    <a href="#" class="btn-news toggle-details">View Details</a>
+                                    <div class="social-share">
+                                        <button class="share-btn" data-platform="whatsapp">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </button>
+                                        <button class="share-btn" data-platform="facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                        <button class="share-btn" data-platform="twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="offer-card slide feacard" data-category="flights">
+                            <div class="card-image">
+                                <img src="../../assets/images/unnamed.png" alt="Flight Booking Offers">
+                                <div class="card-badge">Flights</div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-meta">
+                                    <span class="category">Flights</span>
+                                    <span class="date">07-08-2025</span>
+                                </div>
+                                <h3>✈ Book Flights Worldwide with Wizzride – No Platform Fees! </h3>
+                                <p>Wizzride now offers flight booking services...</p>
+                              
+                                <div class="more-content">
+                                  <p>Looking for affordable flights to Bagdogra Airport (IXB)...</p>
+                                  <p><strong>Why Book Flights on Wizzride?</strong></p>
+                                  <ul class="benefits-list">
+                                    <li>No hidden fees or extra charges</li>
+                                    <li>Book domestic & international flights easily</li>
+                                    <li>Real-time fare comparison and instant booking</li>
+                                    <li>Smooth user experience via our app</li>
+                                  </ul>
+                                  <p><strong>🚖 Need a ride to the airport?</strong></p>
+                                  <p>Wizzride also offers doorstep reserved cab pickup...</p>
+                                  <p>Download the Wizzride App now and book your flight...</p>
+                                </div>
+                              
+                                <div class="card-actions">
+                                  <a href="#" class="btn-news toggle-details">View Details</a>
+                                  <div class="social-share">
+                                    <button class="share-btn" data-platform="whatsapp">
+                                      <i class="fab fa-whatsapp"></i>
+                                    </button>
+                                    <button class="share-btn" data-platform="facebook">
+                                      <i class="fab fa-facebook-f"></i>
+                                    </button>
+                                    <button class="share-btn" data-platform="twitter">
+                                      <i class="fab fa-twitter"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="offer-card slide feacard" data-category="inter">
+                            <div class="card-image">
+                                <img src="../../assets/images/japan.jpg"
+                                    alt="Japan">
+                                <div class="card-badge">Interanational Travel</div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-meta">
+                                    <span class="category">Interanational Travel</span>
+                                    <span class="date">07-08-2025</span>
+                                </div>
+                                <h3>Plan Your Global Vacation with Wizzride – Japan in October & More</h3>
+                                <p>Whether you're dreaming of a Japan trip this October or exploring destinations across Asia, Europe, or beyond, Wizzride now offers end-to-end travel management — from flight bookings and visa assistance to accommodation and local cab support.</p>  
+                                <div class="more-content"><p>We handle everything so you can travel worry-free. Heading to or from the Northeast? We also provide reserved cab pickups to Bagdogra Airport (IXB) and support for those booking air tickets to Bagdogra. Recognized as a key hub, Bagdogra International Airport connects travelers to the world. So whether you're planning a global vacation or a regional getaway, Wizzride is your trusted partner — managing everything from flights to visa and stay, all in one platform.</p></div>
+                                <div class="card-actions">
+                                    <a href="#" class="btn-news toggle-details">View Details</a>
+                                    <div class="social-share">
+                                        <button class="share-btn" data-platform="whatsapp">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </button>
+                                        <button class="share-btn" data-platform="facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                        <button class="share-btn" data-platform="twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- <button class="slider-nav next-btn" aria-label="Next slide">
+                <i class="fas fa-chevron-right"></i>
+            </button> -->
+
+                <div class="slider-dots">
+                    <button class="dot active" data-slide="0"></button>
+                    <button class="dot" data-slide="1"></button>
+                    <button class="dot" data-slide="2"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Hub -->
+    <section class="content-hub">
+        <div class="container">
+            <div class="hub-grid">
+                <!-- Social Feed -->
+                <div class="hub-item social-feed">
+                    
+                    <div class="hub-header">
+                       <h3><i class="fas fa-newspaper"></i> Press Release</h3>
+                    </div>
+                    <ul class="leftli">
+                        <li>
+                            Wizzride Technologies: Redefining Mobility and Tourism in Northeast India with Innovation and Heart ... <a href="../../assets/images/prel.pdf" target="_blank">Read More</a>
+
+                        </li>
+                    </ul>
+                    <!-- <div class="viewer-container">
+                        <div class="sidebar" id="pdf-list">
+                        </div>
+                        <div class="pdf-display">
+                          <iframe id="pdf-frame" src="" frameborder="0"></iframe>
+                        </div>
+                      </div> -->
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="hub-item trending-topics">
+                    <div class="hub-header">
+                        <h3><i class="fas fa-fire"></i> Blog</h3>
+                        <span class="update-time">Updated 2h ago</span>
+                    </div>
+                    <div class="topics-list">
+                        <div class="topic-item">
+                            <span class="topic-rank">#2</span>
+                            <div class="topic-content">
+                                <h4>Top 10 Places to Visit in Shillong</h4>
+                                <p>Shillong, often affectionately referred to as the "Scotland of the East," is a captivating hill station located in the northeastern part of India. This charming city is renowned for its lush, rolling green landscapes, tranquil lakes, and vibrant cultural scene that draws visitors from all over the world. Shillong is a perfect blend of natural beauty and rich heritage, where every street, hill, and valley tells a story... <a href="https://wizzride.com/blogs/Top-10-Places-To-Visit-In-Shillong/" class="rmore">Read More</a></p>
+                             
+                            </div>
+                        </div>
+                      
+                        
+                    </div>
+                </div>
+
+
+
+                <!-- Video Content -->
+                <div class="hub-item video-content">
+                    <div class="hub-header">
+                        <h3><i class="fab fa-instagram"></i> Latest Updates</h3>
+                        <a href="https://www.instagram.com/wizzride/" target="_blank" class="follow-btn">Follow
+                            &#64;wizzride</a>
+                    </div>
+                    <div class="feed-container">
+                        <iframe class="instagram-feed"
+                        src="https://www.instagram.com/wizzride/embed/?cr=1&v=14&wp=540&rd=http%3A%2F%2Flocalhost&rp=%2FWizzride_Modular_Enhanced%2Fwizzride%2Fphpfiles%2Fnew_news_and_announcement.php"
+                        allowtransparency="true" allowfullscreen="true" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                </div>
+
+                <!-- YouTube Video Content -->
+                <div class="hub-item video-content">
+                    <div class="hub-header">
+                        <h3><i class="fab fa-youtube"></i> WizzRide Introduction</h3>
+                    </div>
+                    <div class="video-container">
+                        <iframe width="100%" height="200"
+                        src="https://www.youtube.com/embed/5-jROWxwc7Q?si=vdVYX3FOHovk82Vg&amp;start=6"
+                        title="WizzRide Introduction" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
