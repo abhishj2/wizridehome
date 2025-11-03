@@ -1,0 +1,363 @@
+<div class="registration-container">
+  <div class="registration-header">
+    <button class="back-button" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <h1>Sell Your Vehicle</h1>
+    <p>Fill in the details below to list your vehicle for sale</p>
+  </div>
+
+  <form class="vehicle-form" (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
+    
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="submitMessage">
+      <i class="fas fa-check-circle"></i>
+      {{ submitMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="submitError">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ submitError }}
+    </div>
+
+    <!-- Vehicle Basic Information -->
+    <div class="form-section">
+      <h2><i class="fas fa-car"></i> Vehicle Basic Information</h2>
+      
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="vehicleTitle">Vehicle Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="vehicleTitle" 
+            name="vehicleTitle"
+            [(ngModel)]="vehicleTitle" 
+            placeholder="e.g., Honda City ZX 2021"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="vehicleCategory">Vehicle Category <span class="required">*</span></label>
+          <select 
+            id="vehicleCategory" 
+            name="vehicleCategory"
+            [(ngModel)]="vehicleCategory" 
+            required
+            [disabled]="isLoadingCategories">
+            <option [value]="null" selected>
+              {{ isLoadingCategories ? 'Loading categories...' : 'Select Vehicle Category' }}
+            </option>
+            <option *ngFor="let category of vehicleCategories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <small *ngIf="vehicleCategories.length === 0 && !isLoadingCategories" style="color: #ef4444; margin-top: 0.25rem; display: block;">
+            No categories available. Please contact admin.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="vehicleBrand">Vehicle Brand <span class="required">*</span></label>
+          <select 
+            id="vehicleBrand" 
+            name="vehicleBrand"
+            [(ngModel)]="vehicleBrand" 
+            required
+            [disabled]="isLoadingBrands">
+            <option [value]="null" selected>
+              {{ isLoadingBrands ? 'Loading brands...' : 'Select Vehicle Brand' }}
+            </option>
+            <option *ngFor="let brand of vehicleBrands" [value]="brand.id">
+              {{ brand.name }}
+            </option>
+          </select>
+          <small *ngIf="vehicleBrands.length === 0 && !isLoadingBrands" style="color: #ef4444; margin-top: 0.25rem; display: block;">
+            No brands available. Please contact admin.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price (₹) <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="price" 
+            name="price"
+            [(ngModel)]="price" 
+            placeholder="e.g., 8,50,000"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="km">Kilometers Driven <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="km" 
+            name="km"
+            [(ngModel)]="km" 
+            placeholder="e.g., 25,000 km"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="year">Model Year <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="year" 
+            name="year"
+            [(ngModel)]="year" 
+            placeholder="e.g., 2021"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="fuel">Fuel Type <span class="required">*</span></label>
+          <select 
+            id="fuel" 
+            name="fuel"
+            [(ngModel)]="fuel" 
+            required>
+            <option value="" disabled selected>Select Fuel Type</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="CNG">CNG</option>
+            <option value="Electric">Electric</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="img">Vehicle Image <span class="required">*</span></label>
+          <input 
+            type="file" 
+            id="img" 
+            name="img"
+            (change)="onImageSelect($event)"
+            accept="image/*"
+            class="file-input"
+            required>
+          <small style="color: #6b7280; margin-top: 0.5rem; display: block;">
+            Upload a clear image of your vehicle (JPEG, PNG, WebP)
+          </small>
+          
+          <!-- Image Preview -->
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Vehicle Preview">
+            <p>Image preview</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Details -->
+    <div class="form-section">
+      <h2><i class="fas fa-info-circle"></i> Vehicle Details</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="registrationYear">Registration Year <span class="required">*</span></label>
+          <input 
+            type="date" 
+            id="registrationYear" 
+            name="registrationYear"
+            [(ngModel)]="registrationYear" 
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="seats">Number of Seats <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="seats" 
+            name="seats"
+            [(ngModel)]="seats" 
+            placeholder="e.g., 5"
+            min="2"
+            max="50"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Insurance <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="insurance" 
+                value="Valid"
+                [(ngModel)]="insurance"
+                required>
+              <span>Valid</span>
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="insurance" 
+                value="Invalid"
+                [(ngModel)]="insurance"
+                required>
+              <span>Invalid</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="transmission">Transmission <span class="required">*</span></label>
+          <select 
+            id="transmission" 
+            name="transmission"
+            [(ngModel)]="transmission" 
+            required>
+            <option value="" disabled selected>Select Transmission</option>
+            <option value="Manual">Manual</option>
+            <option value="Automatic">Automatic</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rto">RTO <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="rto" 
+            name="rto"
+            [(ngModel)]="rto" 
+            placeholder="e.g., Mumbai"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="ownership">Ownership <span class="required">*</span></label>
+          <select 
+            id="ownership" 
+            name="ownership"
+            [(ngModel)]="ownership" 
+            required>
+            <option value="" disabled selected>Select Ownership</option>
+            <option value="First Owner">First Owner</option>
+            <option value="Second Owner">Second Owner</option>
+            <option value="Third Owner">Third Owner</option>
+            <option value="Fourth Owner">Fourth Owner</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="engineDisplacement">Engine Displacement <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="engineDisplacement" 
+            name="engineDisplacement"
+            [(ngModel)]="engineDisplacement" 
+            placeholder="e.g., 1497 cc"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="manufactureYear">Manufacture Year <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="manufactureYear" 
+            name="manufactureYear"
+            [(ngModel)]="manufactureYear" 
+            placeholder="e.g., 2021"
+            required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Owner Information -->
+    <div class="form-section">
+      <h2><i class="fas fa-user"></i> Owner Information</h2>
+      
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="ownerName">Owner Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="ownerName" 
+            name="ownerName"
+            [(ngModel)]="ownerName" 
+            placeholder="Enter your full name"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="address">Address <span class="required">*</span></label>
+          <textarea 
+            id="address" 
+            name="address"
+            [(ngModel)]="address" 
+            rows="3"
+            placeholder="Enter your complete address"
+            required></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="city" 
+            name="city"
+            [(ngModel)]="city" 
+            placeholder="e.g., Mumbai"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="state">State <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="state" 
+            name="state"
+            [(ngModel)]="state" 
+            placeholder="e.g., Maharashtra"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pinCode">Pin Code <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="pinCode" 
+            name="pinCode"
+            [(ngModel)]="pinCode" 
+            placeholder="e.g., 400001"
+            pattern="[0-9]{6}"
+            required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="isSubmitting || vehicleForm.invalid">
+        <i class="fas fa-paper-plane" *ngIf="!isSubmitting"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+        {{ isSubmitting ? 'Submitting...' : 'Submit Vehicle for Approval' }}
+      </button>
+    </div>
+
+  </form>
+</div>

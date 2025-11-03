@@ -2,24 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 interface Vehicle {
   id: number;
-  title: string;
-  price: string;
-  km: string;
-  year: number;
-  fuel: string;
-  img: string;
-  badge?: string;
-  registrationYear: string;
-  insurance: string;
-  seats: string;
-  rto: string;
-  ownership: string;
-  engineDisplacement: string;
-  transmission: string;
-  manufactureYear: number;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  acf?: {
+    price: string;
+    km: string;
+    year: string;
+    fuel: string;
+    img: string;
+    badge?: string;
+    registrationyear: string;
+    insurance: string;
+    seats: number;
+    rto: string;
+    ownership: string;
+    engine_displacement: string;
+    transmission: string;
+    manufactureyear: string;
+    is_approved?: boolean | string | number | string[] | number[];
+  };
 }
 
 @Component({
@@ -42,85 +51,76 @@ export class BuyandsellcarComponent implements OnInit {
   budget: string = '';
   location: string = '';
 
-  featuredVehicles: Vehicle[] = [
-    {
-      id: 1,
-      title: 'Honda City ZX',
-      price: '₹8,50,000',
-      km: '25,000 km',
-      year: 2021,
-      fuel: 'Petrol',
-      img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80',
-      badge: 'Hot Deal',
-      registrationYear: 'Jan 2021',
-      insurance: 'Valid',
-      seats: '5 Seats',
-      rto: 'Mumbai',
-      ownership: 'First Owner',
-      engineDisplacement: '1497 cc',
-      transmission: 'Manual',
-      manufactureYear: 2021
-    },
-    {
-      id: 2,
-      title: 'Tata Nexon',
-      price: '₹9,20,000',
-      km: '15,000 km',
-      year: 2022,
-      fuel: 'Diesel',
-      img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=600&q=80',
-      badge: 'Featured',
-      registrationYear: 'Mar 2022',
-      insurance: 'Valid',
-      seats: '5 Seats',
-      rto: 'Bangalore',
-      ownership: 'First Owner',
-      engineDisplacement: '1499 cc',
-      transmission: 'Manual',
-      manufactureYear: 2022
-    },
-    {
-      id: 3,
-      title: 'Some Car',
-      price: '₹1.65 Lakh',
-      km: '8,500 km',
-      year: 2019,
-      fuel: 'Petrol',
-      img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
-      badge: 'Low KM',
-      registrationYear: 'Nov 2019',
-      insurance: 'Expired',
-      seats: '5 Seats',
-      rto: 'Delhi',
-      ownership: 'Second Owner',
-      engineDisplacement: '1197 cc',
-      transmission: 'Automatic',
-      manufactureYear: 2019
-    },
-    {
-      id: 4,
-      title: 'Another Car',
-      price: '₹2.10 Lakh',
-      km: '12,000 km',
-      year: 2020,
-      fuel: 'Petrol',
-      img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
-      badge: 'Low Price',
-      registrationYear: 'Feb 2020',
-      insurance: 'Valid',
-      seats: '5 Seats',
-      rto: 'Chennai',
-      ownership: 'First Owner',
-      engineDisplacement: '998 cc',
-      transmission: 'Manual',
-      manufactureYear: 2020
-    }
-  ];
+  featuredVehicles: Vehicle[] = [];
+  isLoadingVehicles: boolean = true;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
-    // Component initialization
+    this.fetchFeaturedVehicles();
+  }
+
+  fetchFeaturedVehicles(): void {
+    this.isLoadingVehicles = true;
+    // Fetch published vehicles, then filter by is_approved
+    this.http.get<Vehicle[]>('http://wizcms.test/wp-json/wp/v2/buy_sell_cars?status=publish&per_page=100')
+      .subscribe({
+        next: (data) => {
+          // Filter to show only approved vehicles
+          // ACF checkbox can return: true, "1", ["1"], or false/null/empty
+          this.featuredVehicles = data.filter(vehicle => {
+            if (!vehicle.acf || !vehicle.acf.is_approved) return false;
+            
+            const isApproved: any = vehicle.acf.is_approved;
+            
+            // Handle different ACF checkbox return formats
+            if (Array.isArray(isApproved)) {
+              return isApproved.includes('1') || isApproved.includes(1);
+            }
+            
+            return isApproved === true || isApproved === '1' || isApproved === 1;
+          });
+          this.isLoadingVehicles = false;
+          console.log('Featured vehicles loaded:', data);
+          console.log('Approved vehicles:', this.featuredVehicles);
+        },
+        error: (error) => {
+          console.error('Error fetching vehicles:', error);
+          this.isLoadingVehicles = false;
+          this.featuredVehicles = [];
+        }
+      });
+  }
+
+  getVehicleTitle(vehicle: Vehicle): string {
+    return vehicle.title.rendered;
+  }
+
+  getVehiclePrice(vehicle: Vehicle): string {
+    return vehicle.acf?.price || 'N/A';
+  }
+
+  getVehicleKm(vehicle: Vehicle): string {
+    return vehicle.acf?.km || 'N/A';
+  }
+
+  getVehicleYear(vehicle: Vehicle): string {
+    return vehicle.acf?.year || 'N/A';
+  }
+
+  getVehicleFuel(vehicle: Vehicle): string {
+    return vehicle.acf?.fuel || 'N/A';
+  }
+
+  getVehicleImage(vehicle: Vehicle): string {
+    return vehicle.acf?.img || 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80';
+  }
+
+  getVehicleBadge(vehicle: Vehicle): string | undefined {
+    return vehicle.acf?.badge;
   }
 
   onActionChange(): void {

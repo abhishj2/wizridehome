@@ -112,6 +112,7 @@ import { BlogmainComponent } from './blogmain/blogmain.component';
 import { BlogSingleComponent } from './blog-single/blog-single.component';
 import { NewsandannouncementsComponent } from './newsandannouncements/newsandannouncements.component';
 import { BuyandsellcarComponent } from './buyandsellcar/buyandsellcar.component';
+import { VehicleRegistrationFormComponent } from './vehicle-registration-form/vehicle-registration-form.component';
 
 
 
@@ -253,7 +254,8 @@ export const routes: Routes = [
       {path:'blog/:slug',component:BlogSingleComponent},
 
       {path:'news-and-announcements',component: NewsandannouncementsComponent},
-      {path:'sellyourcar',component: BuyandsellcarComponent}
+      {path:'sellyourcar',component: BuyandsellcarComponent},
+      {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent}
 
 
 ];

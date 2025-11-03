@@ -98,19 +98,33 @@
         <h2>Featured Vehicles</h2>
         <p>Check out our latest additions to the inventory</p>
       </div>
-      <div class="vehicles-grid" id="vehiclesGrid">
+      <!-- Loading State -->
+      <div *ngIf="isLoadingVehicles" style="text-align: center; padding: 40px; color: #666;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
+        <p style="margin-top: 1rem;">Loading vehicles...</p>
+      </div>
+
+      <!-- No Vehicles -->
+      <div *ngIf="!isLoadingVehicles && featuredVehicles.length === 0" style="text-align: center; padding: 40px; color: #666;">
+        <i class="fas fa-car" style="font-size: 3rem; color: #cbd5e1;"></i>
+        <p style="margin-top: 1rem; font-size: 1.1rem;">No approved vehicles available at the moment.</p>
+        <p style="color: #9ca3af;">Check back later for new listings!</p>
+      </div>
+
+      <!-- Vehicles Grid -->
+      <div class="vehicles-grid" id="vehiclesGrid" *ngIf="!isLoadingVehicles && featuredVehicles.length > 0">
         <div class="vehicle-card" *ngFor="let vehicle of featuredVehicles">
           <div class="vehicle-image">
-            <img [src]="vehicle.img" [alt]="vehicle.title">
-            <span class="vehicle-badge" *ngIf="vehicle.badge">{{ vehicle.badge }}</span>
+            <img [src]="getVehicleImage(vehicle)" [alt]="getVehicleTitle(vehicle)">
+            <span class="vehicle-badge" *ngIf="getVehicleBadge(vehicle)">{{ getVehicleBadge(vehicle) }}</span>
           </div>
           <div class="vehicle-details">
-            <h3>{{ vehicle.title }}</h3>
-            <div class="vehicle-price">{{ vehicle.price }}</div>
+            <h3>{{ getVehicleTitle(vehicle) }}</h3>
+            <div class="vehicle-price">{{ getVehiclePrice(vehicle) }}</div>
             <div class="vehicle-meta">
-              <span><i class="fas fa-tachometer-alt"></i> {{ vehicle.km }}</span>
-              <span><i class="fas fa-calendar-alt"></i> {{ vehicle.year }}</span>
-              <span><i class="fas fa-gas-pump"></i> {{ vehicle.fuel }}</span>
+              <span><i class="fas fa-tachometer-alt"></i> {{ getVehicleKm(vehicle) }}</span>
+              <span><i class="fas fa-calendar-alt"></i> {{ getVehicleYear(vehicle) }}</span>
+              <span><i class="fas fa-gas-pump"></i> {{ getVehicleFuel(vehicle) }}</span>
             </div>
             <a (click)="viewVehicleDetails(vehicle.id)" class="view-details" style="cursor: pointer;">View Details</a>
           </div>
