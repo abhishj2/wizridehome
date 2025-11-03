@@ -1,0 +1,508 @@
+.buyandsell-page {
+    background: #f9f9f9;
+    color: #2d3436;
+    line-height: 1.6;
+  }
+  
+  
+
+  i.fas{
+    font-family: "Font Awesome 6 Free" !important;
+  }
+  /* Hero Slider */
+  .buyandsell-page .slider {
+    width: 100%;
+    height: 100vh;
+    max-height: 800px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 0;
+  }
+  
+  .buyandsell-page .slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    animation: buyandsellslidin 25s ease-in-out infinite;
+  }
+  
+  .buyandsell-page .slide {
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%;
+    color: white;
+  }
+  
+  .buyandsell-page .bg-image {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    animation: zoomIn 6.25s ease-in-out infinite;
+    transform-origin: center;
+  }
+  
+  .buyandsell-page .slide:nth-child(1) .bg-image { 
+    background-image: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.7)), url('../../assets/images/cab.jpg') !important;
+  }
+  .buyandsell-page .slide:nth-child(2) .bg-image { 
+    background-image: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.7)), url('../../assets/images/cab.jpg') !important;
+  }
+  .buyandsell-page .slide:nth-child(3) .bg-image { 
+    background-image: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.7)), url('../../assets/images/cab.jpg') !important;
+  }
+  .buyandsell-page .slide:nth-child(4) .bg-image { 
+    background-image: linear-gradient(135deg, rgba(29, 170, 186, 0.7), rgba(10, 125, 140, 0.7))url('../../assets/images/cab.jpg') !important;
+  }
+  
+  .buyandsell-page .slide:nth-child(1) .bg-image { animation-delay: 0s; }
+  .buyandsell-page .slide:nth-child(2) .bg-image { animation-delay: 6.25s; }
+  .buyandsell-page .slide:nth-child(3) .bg-image { animation-delay: 12.5s; }
+  .buyandsell-page .slide:nth-child(4) .bg-image { animation-delay: 18.75s; }
+  
+  .buyandsell-page .overlay-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 0.5s;
+  }
+  
+  .buyandsell-page .overlay-text h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+  }
+  
+  .buyandsell-page .overlay-text p {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .cta-button {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: #f8b400;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+    box-shadow: 0 4px 15px rgba(248, 180, 0, 0.3);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(248, 180, 0, 0.4);
+    background: #f8a800;
+  }
+  
+  /* Search Form */
+  .search-section {
+    position: relative;
+    margin-top: -80px;
+    z-index: 10;
+    padding: 0 5%;
+  }
+  
+  .formsell {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+  }
+  
+  .formsell:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .formsell h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1daaba;
+    text-align: center;
+  }
+  
+  .formsell form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    /* justify-content: space-between; */
+    flex-direction: column;
+  }
+  
+  .form-group {
+    flex: 1 ;
+    min-width: 200px;
+    position: relative;
+  }
+  div.bffilds {
+    display: flex;
+    flex-direction:row !important;
+    justify-content:space-between;
+    gap: 10px;
+  }
+
+  
+  div.bffilds select{
+    width:100% !important;
+  }
+  .formsell select, .formsell input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+    appearance: none;
+    color: #2d3436;
+  }
+  
+  .formsell select:focus, .formsell input:focus {
+    outline: none;
+    border-color: #1daaba;
+    box-shadow: 0 0 0 3px rgba(29, 170, 186, 0.2);
+  }
+  
+  .formsell select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23636e72' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
+  }
+  
+  .search-button {
+    flex: 1 1 100%;
+    padding: 1rem;
+    background: #1daaba;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+    margin-top: 0.5rem;
+  }
+  
+  .search-button:hover {
+    background: #0a7d8c;
+    transform: translateY(-2px);
+  }
+  
+  /* Featured Section */
+  .featured-section {
+    padding: 5rem 5%;
+    background: white;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .section-title h2 {
+    font-size: 2.25rem;
+    color: #1daaba;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: #f8b400;
+  }
+  
+  .section-title p {
+    color: #636e72;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .vehicles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .vehicle-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+  }
+  
+  .vehicle-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vehicle-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .vehicle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+  }
+  
+  .vehicle-card:hover .vehicle-image img {
+    transform: scale(1.05);
+  }
+  
+  .vehicle-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #f8b400;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .vehicle-details {
+    padding: 1.5rem;
+  }
+  
+  .vehicle-details h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+  }
+  
+  .vehicle-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1daaba;
+    margin-bottom: 1rem;
+  }
+  
+  .vehicle-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .vehicle-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #636e72;
+    font-size: 0.875rem;
+  }
+  
+  .vehicle-meta i {
+    color: #1daaba;
+  }
+  
+  .view-details,
+  .enq {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem;
+    text-align: center;
+    background: #1daaba !important;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+  }
+  
+  .view-details:hover,
+  .enq:hover {
+    background: #0a7d8c;
+  }
+  
+  /* Testimonials */
+  .testimonials-section {
+    padding: 5rem 5%;
+    background: #f9f9f9;
+  }
+  
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  
+  .testimonial-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 5rem;
+    color: rgba(29, 170, 186, 0.1);
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  
+  .testimonial-content {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: #636e72;
+  }
+  
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .author-info h4 {
+    font-size: 1rem;
+    color: #2d3436;
+    margin-bottom: 0.25rem;
+  }
+  
+  .author-info p {
+    font-size: 0.875rem;
+    color: #636e72;
+  }
+  
+  
+  
+  /* Animations */
+  @keyframes buyandsellslidin {
+    0%, 20% { transform: translateX(0); }
+    25%, 45% { transform: translateX(-100%); }
+    50%, 70% { transform: translateX(-200%); }
+    75%, 95% { transform: translateX(-300%); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes zoomIn {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    
+    
+    .formsell form {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    div.bffilds {
+      flex-direction:column !important;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    
+    .buyandsell-page .slider {
+      height: 80vh;
+    }
+    
+    .search-section {
+      margin-top: -60px;
+    }
+    
+    .formsell {
+      padding: 1.5rem;
+    }
+    
+    .formsell form {
+      grid-template-columns: 1fr;
+    }
+    
+    .featured-section, .testimonials-section {
+      padding: 3rem 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .buyandsell-page .slider {
+      height: 70vh;
+    }
+    
+    .buyandsell-page .overlay-text h2 {
+      font-size: 2rem;
+    }
+    
+    .search-section {
+      margin-top: -40px;
+    }
+   
+  }
+  

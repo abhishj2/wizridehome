@@ -625,6 +625,113 @@
     padding: 1.5rem;
 }
 
+/* WordPress Content Styles */
+.card-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+    line-height: 1.4;
+}
+
+.offer-content {
+    display: block !important;
+    margin-bottom: 1rem !important;
+}
+
+.offer-content > *,
+.offer-content p,
+.offer-content div,
+.card-content > p {
+    display: block !important;
+    color: #4b5563 !important;
+    line-height: 1.6 !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 1.6em !important;
+}
+
+.offer-content p:last-child,
+.card-content p:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Ensure all direct children are visible */
+.offer-content > * {
+    display: block !important;
+}
+
+.offer-content > p,
+.offer-content > div > p {
+    display: block !important;
+    margin-bottom: 1rem !important;
+}
+
+.offer-content ul,
+.offer-content ol,
+.card-content ul,
+.card-content ol {
+    display: block !important;
+    margin: 1rem 0 !important;
+    padding-left: 1.5rem !important;
+    color: #4b5563 !important;
+    list-style-position: outside !important;
+}
+
+.offer-content ul {
+    list-style-type: disc !important;
+}
+
+.offer-content ol {
+    list-style-type: decimal !important;
+}
+
+.offer-content li,
+.card-content li {
+    display: list-item !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.6 !important;
+    color: #4b5563 !important;
+}
+
+.offer-content strong,
+.card-content strong {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.offer-content a,
+.card-content a {
+    color: #1daaba;
+    text-decoration: underline;
+}
+
+.offer-content a:hover,
+.card-content a:hover {
+    color: #0a7d8c;
+}
+
+/* More Content specific styles */
+.offer-content .more-content,
+.card-content .more-content {
+    display: block;
+}
+
+.offer-content .more-content p:first-child,
+.card-content .more-content p:first-child {
+    margin-top: 0;
+}
+
+.offer-content .more-content ul,
+.offer-content .more-content ol,
+.card-content .more-content ul,
+.card-content .more-content ol {
+    margin-top: 0.5rem;
+}
+
 .card-meta {
     display: flex;
     justify-content: space-between;
@@ -670,11 +777,11 @@
 
 .btn-news {
     background: #1daaba;
-    color: white;
+    color: white !important;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
-    text-decoration: none;
-    font-weight: 500;
+    text-decoration: none !important;
+    font-weight: 500 !important;
     font-size: 0.875rem;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-block;
@@ -1367,13 +1474,31 @@ background: linear-gradient(135deg, #1daaba,#0a7d8c) !important;
 
 
 .more-content {
+    display: block !important;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 1s ease;
+    opacity: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                margin 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0 !important;
+    padding: 0;
+    transform-origin: top;
   }
   
   .more-content.show {
-    max-height: 1000px; 
+    max-height: 3000px;
+    opacity: 1 !important;
+    margin-top: 1rem !important;
+  }
+
+  .more-content p,
+  .more-content ul,
+  .more-content ol,
+  .more-content li,
+  .more-content strong {
+    display: block !important;
+    visibility: visible !important;
   }
 
 

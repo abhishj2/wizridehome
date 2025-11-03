@@ -111,6 +111,7 @@ import { SikkimpermitComponent } from './ilp/sikkimpermit/sikkimpermit.component
 import { BlogmainComponent } from './blogmain/blogmain.component';
 import { BlogSingleComponent } from './blog-single/blog-single.component';
 import { NewsandannouncementsComponent } from './newsandannouncements/newsandannouncements.component';
+import { BuyandsellcarComponent } from './buyandsellcar/buyandsellcar.component';
 
 
 
@@ -251,7 +252,8 @@ export const routes: Routes = [
       {path:'blog',component:BlogmainComponent},
       {path:'blog/:slug',component:BlogSingleComponent},
 
-      {path:'news-and-announcements',component: NewsandannouncementsComponent}
+      {path:'news-and-announcements',component: NewsandannouncementsComponent},
+      {path:'sellyourcar',component: BuyandsellcarComponent}
 
 
 ];

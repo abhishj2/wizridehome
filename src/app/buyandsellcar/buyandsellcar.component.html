@@ -1,0 +1,187 @@
+<div class="buyandsell-page">
+    <!-- Hero Slider -->
+    <div class="slider">
+      <div class="slides">
+        <div class="slide">
+          <div class="bg-image"></div>
+          <div class="overlay-text">
+            <h2>Find Your Perfect Vehicle in Siliguri</h2>
+            <p>Wizzride offers the largest selection of quality used cars, bikes, and commercial vehicles in the region.</p>
+            <button class="cta-button">Browse Inventory</button>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="bg-image"></div>
+          <div class="overlay-text">
+            <h2>Sell Your Vehicle Fast & Easy</h2>
+            <p>Get the best price for your vehicle with our hassle-free selling process and expert valuation.</p>
+            <button class="cta-button">Get Valuation</button>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="bg-image"></div>
+          <div class="overlay-text">
+            <h2>Trusted by Thousands</h2>
+            <p>Join our community of satisfied customers who found their dream vehicle with Wizzride.</p>
+            <a href="#testomonial"><button class="cta-button">Read Testimonials</button></a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="bg-image"></div>
+          <div class="overlay-text">
+            <h2>Financing Options Available</h2>
+            <p>Flexible payment plans and loan options to make your purchase affordable.</p>
+            <button class="cta-button">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="formsell">
+        <h3>Find or Sell Your Vehicle</h3>
+        <form id="vehicleForm" (submit)="onSubmit($event)">
+          <div class="form-group">
+            <select id="action" [(ngModel)]="selectedAction" (change)="onActionChange()" name="action" required>
+              <option value="" disabled selected>I want to...</option>
+              <option value="buy">Buy a Vehicle</option>
+              <option value="sell">Sell My Vehicle</option>
+            </select>
+          </div>
+
+          <!-- Buy fields -->
+          <div id="buyFields" class="bffilds" [style.display]="showBuyFields ? 'flex' : 'none'">
+            <div class="form-group">
+              <select [(ngModel)]="vehicleType" name="vehicleType" required>
+                <option value="" disabled selected>Vehicle Type</option>
+                <option value="Sedans">Sedans</option>
+                <option value="SUVs">SUVs</option>
+                <option value="Hatchbacks">Hatchbacks</option>
+                <option value="Bikes">Bikes</option>
+                <option value="Commercial Vehicles">Commercial Vehicles</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select [(ngModel)]="brand" name="brand" required>
+                <option value="" disabled selected>Select Brand</option>
+                <option value="Honda">Honda</option>
+                <option value="Tata">Tata</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Maruti Suzuki">Maruti Suzuki</option>
+                <option value="Mahindra">Mahindra</option>
+                <option value="Toyota">Toyota</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select [(ngModel)]="budget" name="budget" required>
+                <option value="" disabled selected>Price Range</option>
+                <option value="Under ₹5 Lakh">Under ₹5 Lakh</option>
+                <option value="₹5-10 Lakh">₹5-10 Lakh</option>
+                <option value="₹10-15 Lakh">₹10-15 Lakh</option>
+                <option value="₹15-20 Lakh">₹15-20 Lakh</option>
+                <option value="Over ₹20 Lakh">Over ₹20 Lakh</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="search-button" id="submitBtn" [disabled]="submitButtonDisabled">
+            <i class="fas fa-search"></i> {{ submitButtonText }}
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Featured Vehicles -->
+    <section class="featured-section">
+      <div class="section-title">
+        <h2>Featured Vehicles</h2>
+        <p>Check out our latest additions to the inventory</p>
+      </div>
+      <div class="vehicles-grid" id="vehiclesGrid">
+        <div class="vehicle-card" *ngFor="let vehicle of featuredVehicles">
+          <div class="vehicle-image">
+            <img [src]="vehicle.img" [alt]="vehicle.title">
+            <span class="vehicle-badge" *ngIf="vehicle.badge">{{ vehicle.badge }}</span>
+          </div>
+          <div class="vehicle-details">
+            <h3>{{ vehicle.title }}</h3>
+            <div class="vehicle-price">{{ vehicle.price }}</div>
+            <div class="vehicle-meta">
+              <span><i class="fas fa-tachometer-alt"></i> {{ vehicle.km }}</span>
+              <span><i class="fas fa-calendar-alt"></i> {{ vehicle.year }}</span>
+              <span><i class="fas fa-gas-pump"></i> {{ vehicle.fuel }}</span>
+            </div>
+            <a (click)="viewVehicleDetails(vehicle.id)" class="view-details" style="cursor: pointer;">View Details</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section" id="testomonial">
+      <div class="section-title">
+        <h2>What Our Customers Say</h2>
+        <p>Hear from people who found their perfect vehicle with Wizzride</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
+            </div>
+            <div class="author-info">
+              <h4>Rajiv Sharma</h4>
+              <p>Siliguri</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
+            </div>
+            <div class="author-info">
+              <h4>Rajiv Sharma</h4>
+              <p>Siliguri</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
+            </div>
+            <div class="author-info">
+              <h4>Rajiv Sharma</h4>
+              <p>Siliguri</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
+            </div>
+            <div class="author-info">
+              <h4>Rajiv Sharma</h4>
+              <p>Siliguri</p>
+            </div>
+          </div>
+        </div>
+        <!-- Add more testimonials same as above -->
+      </div>
+    </section>
+  </div>

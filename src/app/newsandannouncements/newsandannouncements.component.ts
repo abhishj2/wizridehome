@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 interface Announcement {
   id: number;
@@ -15,23 +16,260 @@ interface Announcement {
   };
 }
 
+interface FeaturedOffer {
+  id: number;
+  date: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  excerpt?: {
+    rendered: string;
+  };
+  featured_media: number;
+  offer_category: number[];
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+    }>>;
+  };
+}
+
+interface PressRelease {
+  id: number;
+  date: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  acf?: {
+    pdf_file?: {
+      url: string;
+      filename: string;
+      filesize: number;
+    } | string;
+  };
+}
+
+interface BlogPost {
+  id: number;
+  date: string;
+  slug: string;
+  title: {
+    rendered: string;
+  };
+  excerpt: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
+}
+
 @Component({
   selector: 'app-newsandannouncements',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './newsandannouncements.component.html',
-  styleUrl: './newsandannouncements.component.css'
+  styleUrl: './newsandannouncements.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnDestroy {
   private modernSliderInstance: ModernSlider | null = null;
   announcements: Announcement[] = [];
   isLoadingAnnouncements = true;
+  featuredOffers: FeaturedOffer[] = [];
+  filteredOffers: FeaturedOffer[] = [];
+  isLoadingOffers = true;
+  activeFilter = 'all';
+  pressReleases: PressRelease[] = [];
+  isLoadingPressReleases = true;
+  blogPosts: BlogPost[] = [];
+  isLoadingBlogPosts = true;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     // Component initialization
     this.fetchAnnouncements();
+    this.fetchFeaturedOffers();
+    this.fetchPressReleases();
+    this.fetchBlogPosts();
+  }
+
+  fetchBlogPosts(): void {
+    this.isLoadingBlogPosts = true;
+    this.http.get<BlogPost[]>('http://wizcms.test/wp-json/wp/v2/posts?_embed&per_page=5')
+      .subscribe({
+        next: (data) => {
+          this.blogPosts = data;
+          this.isLoadingBlogPosts = false;
+          console.log('Blog posts loaded:', data);
+        },
+        error: (error) => {
+          console.error('Error fetching blog posts:', error);
+          this.isLoadingBlogPosts = false;
+          this.blogPosts = [];
+        }
+      });
+  }
+
+  fetchPressReleases(): void {
+    this.isLoadingPressReleases = true;
+    this.http.get<PressRelease[]>('http://wizcms.test/wp-json/wp/v2/press_releases')
+      .subscribe({
+        next: (data) => {
+          this.pressReleases = data;
+          this.isLoadingPressReleases = false;
+          console.log('Press releases loaded:', data);
+        },
+        error: (error) => {
+          console.error('Error fetching press releases:', error);
+          this.isLoadingPressReleases = false;
+          this.pressReleases = [];
+        }
+      });
+  }
+
+  getPdfUrl(pressRelease: PressRelease): string {
+    if (pressRelease.acf && pressRelease.acf.pdf_file) {
+      // Check if pdf_file is an object with url property
+      if (typeof pressRelease.acf.pdf_file === 'object' && 'url' in pressRelease.acf.pdf_file) {
+        return pressRelease.acf.pdf_file.url;
+      }
+      // Check if pdf_file is a string (direct URL)
+      if (typeof pressRelease.acf.pdf_file === 'string') {
+        return pressRelease.acf.pdf_file;
+      }
+    }
+    return '#'; // Fallback if no PDF
+  }
+
+  hasPdf(pressRelease: PressRelease): boolean {
+    return !!(pressRelease.acf && pressRelease.acf.pdf_file);
+  }
+
+  getTruncatedContent(htmlContent: string, maxLength: number = 120): string {
+    // Strip HTML tags to get plain text
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlContent;
+    const plainText = temp.textContent || temp.innerText || '';
+    
+    // Truncate and add ellipsis
+    if (plainText.length > maxLength) {
+      return plainText.substring(0, maxLength).trim() + ' ...';
+    }
+    return plainText;
+  }
+
+  fetchFeaturedOffers(): void {
+    this.isLoadingOffers = true;
+    this.http.get<FeaturedOffer[]>('http://wizcms.test/wp-json/wp/v2/featured_offers?_embed')
+      .subscribe({
+        next: (data) => {
+          this.featuredOffers = data;
+          this.filteredOffers = data;
+          this.isLoadingOffers = false;
+          console.log('Featured offers loaded:', data);
+          
+          // Debug: Log the content to see what's being received
+          data.forEach((offer, index) => {
+            console.log(`Offer ${index + 1} content:`, offer.content.rendered);
+          });
+          
+          // Reinitialize slider and event listeners after data loads
+          setTimeout(() => {
+            if (this.modernSliderInstance) {
+              this.modernSliderInstance.destroy();
+            }
+            this.modernSliderInstance = new ModernSlider();
+            this.attachToggleDetailListeners();
+            this.attachShareButtonListeners();
+          }, 100);
+        },
+        error: (error) => {
+          console.error('Error fetching featured offers:', error);
+          this.isLoadingOffers = false;
+          this.featuredOffers = [];
+          this.filteredOffers = [];
+        }
+      });
+  }
+
+  filterOffers(category: string): void {
+    this.activeFilter = category;
+    if (category === 'all') {
+      this.filteredOffers = this.featuredOffers;
+    } else {
+      this.filteredOffers = this.featuredOffers.filter(offer => {
+        if (offer._embedded && offer._embedded['wp:term'] && offer._embedded['wp:term'][0]) {
+          return offer._embedded['wp:term'][0].some(term => term.slug === category);
+        }
+        return false;
+      });
+    }
+    
+    // Reinitialize slider and event listeners after filtering
+    setTimeout(() => {
+      if (this.modernSliderInstance) {
+        this.modernSliderInstance.destroy();
+      }
+      this.modernSliderInstance = new ModernSlider();
+      this.attachToggleDetailListeners();
+      this.attachShareButtonListeners();
+    }, 100);
+  }
+
+  getOfferImage(offer: FeaturedOffer): string {
+    if (offer._embedded && offer._embedded['wp:featuredmedia'] && offer._embedded['wp:featuredmedia'][0]) {
+      return offer._embedded['wp:featuredmedia'][0].source_url;
+    }
+    return '../../assets/images/cab.jpg'; // Default fallback image
+  }
+
+  getOfferImageAlt(offer: FeaturedOffer): string {
+    if (offer._embedded && offer._embedded['wp:featuredmedia'] && offer._embedded['wp:featuredmedia'][0]) {
+      return offer._embedded['wp:featuredmedia'][0].alt_text || offer.title.rendered;
+    }
+    return offer.title.rendered;
+  }
+
+  getOfferCategory(offer: FeaturedOffer): string {
+    if (offer._embedded && offer._embedded['wp:term'] && offer._embedded['wp:term'][0] && offer._embedded['wp:term'][0][0]) {
+      return offer._embedded['wp:term'][0][0].name;
+    }
+    return 'Offer';
+  }
+
+  getOfferCategorySlug(offer: FeaturedOffer): string {
+    if (offer._embedded && offer._embedded['wp:term'] && offer._embedded['wp:term'][0] && offer._embedded['wp:term'][0][0]) {
+      return offer._embedded['wp:term'][0][0].slug;
+    }
+    return 'all';
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   }
 
   fetchAnnouncements(): void {
@@ -156,12 +394,46 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
       });
     });
 
-    // Social Share buttons
-    document.querySelectorAll('.share-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    this.attachShareButtonListeners();
+    this.attachToggleDetailListeners();
+
+    // Filter functionality
+    this.setupFilterButtons();
+  }
+
+  // Attach Toggle Detail Listeners (for dynamically loaded content)
+  attachToggleDetailListeners(): void {
+    document.querySelectorAll('.toggle-details').forEach(button => {
+      // Remove existing listener if any
+      const newButton = button.cloneNode(true);
+      button.parentNode?.replaceChild(newButton, button);
+      
+      newButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const platform = (btn as HTMLElement).dataset['platform'];
-        const card = (btn as HTMLElement).closest('.offer-card');
+        const card = (newButton as HTMLElement).closest('.feacard');
+        if (!card) return;
+
+        const moreContent = card.querySelector('.more-content');
+        if (!moreContent) return;
+
+        const isOpen = moreContent.classList.contains('show');
+        moreContent.classList.toggle('show');
+        (newButton as HTMLElement).textContent = isOpen ? 'View Details' : 'Hide Details';
+      });
+    });
+  }
+
+  // Attach Share Button Listeners (for dynamically loaded content)
+  attachShareButtonListeners(): void {
+    document.querySelectorAll('.share-btn').forEach(btn => {
+      // Remove existing listener if any
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode?.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const platform = (newBtn as HTMLElement).dataset['platform'];
+        const card = (newBtn as HTMLElement).closest('.offer-card');
         if (!card) return;
 
         const title = card.querySelector('h3')?.textContent || '';
@@ -170,68 +442,12 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
         this.shareContent(platform || '', title, link);
       });
     });
-
-    // Toggle Details buttons
-    document.querySelectorAll('.toggle-details').forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        const card = (button as HTMLElement).closest('.feacard');
-        if (!card) return;
-
-        const moreContent = card.querySelector('.more-content');
-        if (!moreContent) return;
-
-        const isOpen = moreContent.classList.contains('show');
-        moreContent.classList.toggle('show');
-        (button as HTMLElement).textContent = isOpen ? 'View Details' : 'Hide Details';
-      });
-    });
-
-    // Filter functionality
-    this.setupFilterButtons();
   }
 
   // Setup Filter Buttons
   setupFilterButtons(): void {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const allSlides = document.querySelectorAll('.slider-track .slide');
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-
-        const filter = (button as HTMLElement).dataset['filter'];
-
-        allSlides.forEach(slide => {
-          (slide as HTMLElement).style.display = 'none';
-          (slide as HTMLElement).style.order = '999';
-        });
-
-        let visibleIndex = 0;
-        allSlides.forEach(slide => {
-          if (filter === 'all' || (slide as HTMLElement).dataset['category'] === filter) {
-            (slide as HTMLElement).style.display = 'flex';
-            (slide as HTMLElement).style.order = visibleIndex.toString();
-            visibleIndex++;
-          }
-        });
-
-        const sliderTrack = document.querySelector('.slider-track') as HTMLElement;
-        if (sliderTrack) {
-          sliderTrack.style.transform = 'translateX(0%)';
-        }
-
-        if (this.modernSliderInstance) {
-          this.modernSliderInstance.destroy();
-        }
-
-        setTimeout(() => {
-          this.modernSliderInstance = new ModernSlider();
-          console.log('Slider reinitialized');
-        }, 100);
-      });
-    });
+    // Filter buttons are now handled by Angular click events in the template
+    // This method is kept for compatibility but logic moved to filterOffers()
   }
 
   // Share Content

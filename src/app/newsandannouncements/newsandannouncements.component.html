@@ -95,112 +95,32 @@
             <div class="section-header">
                 <h2>Featured Offers</h2>
                 <div class="header-actions">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="cabs">Cabs</button>
-                    <button class="filter-btn" data-filter="flights">Flights</button>
-                    <button class="filter-btn" data-filter="inter">International Travel</button>
+                    <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="filterOffers('all')">All</button>
+                    <button class="filter-btn" [class.active]="activeFilter === 'cabs'" (click)="filterOffers('cabs')">Cabs</button>
+                    <button class="filter-btn" [class.active]="activeFilter === 'flights'" (click)="filterOffers('flights')">Flights</button>
+                    <button class="filter-btn" [class.active]="activeFilter === 'international-travel'" (click)="filterOffers('international-travel')">International Travel</button>
                 </div>
             </div>
 
-            <div class="slider-container">
-                <!-- <button class="slider-nav prev-btn" aria-label="Previous slide">
-                <i class="fas fa-chevron-left"></i>
-            </button> -->
-
+            <div class="slider-container" *ngIf="!isLoadingOffers && filteredOffers.length > 0">
                 <div class="slider-wrapper">
                     <div class="slider-track">
-                       
-
-                        <article class="offer-card slide feacard" data-category="cabs">
+                        <article class="offer-card slide feacard" 
+                                 *ngFor="let offer of filteredOffers" 
+                                 [attr.data-category]="getOfferCategorySlug(offer)">
                             <div class="card-image">
-                                <img src="../../assets/images/cab.jpg"
-                                    alt="Reserved Cab Offers">
-                                <div class="card-badge">Cabs</div>
+                                <img [src]="getOfferImage(offer)" 
+                                     [alt]="getOfferImageAlt(offer)">
+                                <div class="card-badge">{{ getOfferCategory(offer) }}</div>
                             </div>
                             <div class="card-content">
                                 <div class="card-meta">
-                                    <span class="category">Cabs</span>
-                                    <span class="date">07-08-2025</span>
+                                    <span class="category">{{ getOfferCategory(offer) }}</span>
+                                    <span class="date">{{ formatDate(offer.date) }}</span>
                                 </div>
-                                <h3>Wizzride Shared Cabs Now Popular on Guwahati–Shillong Route!</h3>
-                                <p>We’re thrilled to see growing demand for Wizzride’s shared cab services on the Guwahati to Shillong route.</p>
-                                <div class="more-content"><p>Due to increasing popularity and limited daily seats, we highly recommend booking your ride in advance to ensure a hassle-free journey. Enjoy comfortable, affordable, and timely travel with Wizzride – your trusted partner in the Northeast</p></div>
+                                <h3 [innerHTML]="offer.title.rendered"></h3>
+                                <div class="offer-content" [innerHTML]="offer.content.rendered"></div>
 
-                                <div class="card-actions">
-                                    <a href="#" class="btn-news toggle-details">View Details</a>
-                                    <div class="social-share">
-                                        <button class="share-btn" data-platform="whatsapp">
-                                            <i class="fab fa-whatsapp"></i>
-                                        </button>
-                                        <button class="share-btn" data-platform="facebook">
-                                            <i class="fab fa-facebook-f"></i>
-                                        </button>
-                                        <button class="share-btn" data-platform="twitter">
-                                            <i class="fab fa-twitter"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="offer-card slide feacard" data-category="flights">
-                            <div class="card-image">
-                                <img src="../../assets/images/unnamed.png" alt="Flight Booking Offers">
-                                <div class="card-badge">Flights</div>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-meta">
-                                    <span class="category">Flights</span>
-                                    <span class="date">07-08-2025</span>
-                                </div>
-                                <h3>✈ Book Flights Worldwide with Wizzride – No Platform Fees! </h3>
-                                <p>Wizzride now offers flight booking services...</p>
-                              
-                                <div class="more-content">
-                                  <p>Looking for affordable flights to Bagdogra Airport (IXB)...</p>
-                                  <p><strong>Why Book Flights on Wizzride?</strong></p>
-                                  <ul class="benefits-list">
-                                    <li>No hidden fees or extra charges</li>
-                                    <li>Book domestic & international flights easily</li>
-                                    <li>Real-time fare comparison and instant booking</li>
-                                    <li>Smooth user experience via our app</li>
-                                  </ul>
-                                  <p><strong>🚖 Need a ride to the airport?</strong></p>
-                                  <p>Wizzride also offers doorstep reserved cab pickup...</p>
-                                  <p>Download the Wizzride App now and book your flight...</p>
-                                </div>
-                              
-                                <div class="card-actions">
-                                  <a href="#" class="btn-news toggle-details">View Details</a>
-                                  <div class="social-share">
-                                    <button class="share-btn" data-platform="whatsapp">
-                                      <i class="fab fa-whatsapp"></i>
-                                    </button>
-                                    <button class="share-btn" data-platform="facebook">
-                                      <i class="fab fa-facebook-f"></i>
-                                    </button>
-                                    <button class="share-btn" data-platform="twitter">
-                                      <i class="fab fa-twitter"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="offer-card slide feacard" data-category="inter">
-                            <div class="card-image">
-                                <img src="../../assets/images/japan.jpg"
-                                    alt="Japan">
-                                <div class="card-badge">Interanational Travel</div>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-meta">
-                                    <span class="category">Interanational Travel</span>
-                                    <span class="date">07-08-2025</span>
-                                </div>
-                                <h3>Plan Your Global Vacation with Wizzride – Japan in October & More</h3>
-                                <p>Whether you're dreaming of a Japan trip this October or exploring destinations across Asia, Europe, or beyond, Wizzride now offers end-to-end travel management — from flight bookings and visa assistance to accommodation and local cab support.</p>  
-                                <div class="more-content"><p>We handle everything so you can travel worry-free. Heading to or from the Northeast? We also provide reserved cab pickups to Bagdogra Airport (IXB) and support for those booking air tickets to Bagdogra. Recognized as a key hub, Bagdogra International Airport connects travelers to the world. So whether you're planning a global vacation or a regional getaway, Wizzride is your trusted partner — managing everything from flights to visa and stay, all in one platform.</p></div>
                                 <div class="card-actions">
                                     <a href="#" class="btn-news toggle-details">View Details</a>
                                     <div class="social-share">
@@ -220,14 +140,27 @@
                     </div>
                 </div>
 
-                <!-- <button class="slider-nav next-btn" aria-label="Next slide">
-                <i class="fas fa-chevron-right"></i>
-            </button> -->
-
                 <div class="slider-dots">
-                    <button class="dot active" data-slide="0"></button>
-                    <button class="dot" data-slide="1"></button>
-                    <button class="dot" data-slide="2"></button>
+                    <button class="dot" 
+                            *ngFor="let offer of filteredOffers; let i = index" 
+                            [class.active]="i === 0"
+                            [attr.data-slide]="i"></button>
+                </div>
+            </div>
+
+            <div class="slider-container" *ngIf="isLoadingOffers">
+                <div class="slider-wrapper">
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p>Loading offers...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-container" *ngIf="!isLoadingOffers && filteredOffers.length === 0">
+                <div class="slider-wrapper">
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p>No offers available in this category.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -243,38 +176,56 @@
                     <div class="hub-header">
                        <h3><i class="fas fa-newspaper"></i> Press Release</h3>
                     </div>
-                    <ul class="leftli">
-                        <li>
-                            Wizzride Technologies: Redefining Mobility and Tourism in Northeast India with Innovation and Heart ... <a href="../../assets/images/prel.pdf" target="_blank">Read More</a>
 
+                    <!-- Loading State -->
+                    <div *ngIf="isLoadingPressReleases" style="padding: 20px; color: #666;">
+                        Loading press releases...
+                    </div>
+
+                    <!-- No Press Releases -->
+                    <div *ngIf="!isLoadingPressReleases && pressReleases.length === 0" style="padding: 20px; color: #666;">
+                        No press releases available.
+                    </div>
+
+                    <!-- Press Releases List -->
+                    <ul class="leftli" *ngIf="!isLoadingPressReleases && pressReleases.length > 0">
+                        <li *ngFor="let release of pressReleases">
+                            {{ getTruncatedContent(release.content.rendered) }}...... <a *ngIf="hasPdf(release)" 
+                               [href]="getPdfUrl(release)" 
+                               target="_blank"
+                               rel="noopener noreferrer">Read More</a>
                         </li>
                     </ul>
-                    <!-- <div class="viewer-container">
-                        <div class="sidebar" id="pdf-list">
-                        </div>
-                        <div class="pdf-display">
-                          <iframe id="pdf-frame" src="" frameborder="0"></iframe>
-                        </div>
-                      </div> -->
                 </div>
 
                 <!-- Trending Topics -->
                 <div class="hub-item trending-topics">
                     <div class="hub-header">
                         <h3><i class="fas fa-fire"></i> Blog</h3>
-                        <span class="update-time">Updated 2h ago</span>
                     </div>
-                    <div class="topics-list">
-                        <div class="topic-item">
-                            <span class="topic-rank">#2</span>
+
+                    <!-- Loading State -->
+                    <div *ngIf="isLoadingBlogPosts" style="padding: 20px; color: #666;">
+                        Loading blog posts...
+                    </div>
+
+                    <!-- No Blog Posts -->
+                    <div *ngIf="!isLoadingBlogPosts && blogPosts.length === 0" style="padding: 20px; color: #666;">
+                        No blog posts available.
+                    </div>
+
+                    <!-- Blog Posts List -->
+                    <div class="topics-list" *ngIf="!isLoadingBlogPosts && blogPosts.length > 0">
+                        <div class="topic-item" *ngFor="let post of blogPosts; let i = index">
+                            <span class="topic-rank">#{{ i + 1 }}</span>
                             <div class="topic-content">
-                                <h4>Top 10 Places to Visit in Shillong</h4>
-                                <p>Shillong, often affectionately referred to as the "Scotland of the East," is a captivating hill station located in the northeastern part of India. This charming city is renowned for its lush, rolling green landscapes, tranquil lakes, and vibrant cultural scene that draws visitors from all over the world. Shillong is a perfect blend of natural beauty and rich heritage, where every street, hill, and valley tells a story... <a href="https://wizzride.com/blogs/Top-10-Places-To-Visit-In-Shillong/" class="rmore">Read More</a></p>
-                             
+                                <h4 [innerHTML]="post.title.rendered"></h4>
+                                <p>
+                                    {{ getTruncatedContent(post.excerpt.rendered, 200) }} 
+                                    <a [routerLink]="['/blog', post.slug]" class="rmore">Read More</a>
+                                </p>
                             </div>
                         </div>
-                      
-                        
                     </div>
                 </div>
 
