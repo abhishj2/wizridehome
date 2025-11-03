@@ -37,6 +37,9 @@ interface VehicleFormData {
     transmission: string;
     manufactureyear: string;
     owner_name: string;
+    email: string;
+    phone_number: string;
+    vehicle_number: string;
     address: string;
     city: string;
     state: string;
@@ -74,6 +77,9 @@ export class VehicleRegistrationFormComponent implements OnInit {
   transmission: string = '';
   manufactureYear: string = '';
   ownerName: string = '';
+  email: string = '';
+  phoneNumber: string = '';
+  vehicleNumber: string = '';
   address: string = '';
   city: string = '';
   state: string = '';
@@ -207,6 +213,9 @@ export class VehicleRegistrationFormComponent implements OnInit {
           transmission: this.transmission,
           manufactureyear: this.manufactureYear,
           owner_name: this.ownerName,
+          email: this.email,
+          phone_number: this.phoneNumber,
+          vehicle_number: this.vehicleNumber,
           address: this.address,
           city: this.city,
           state: this.state,
