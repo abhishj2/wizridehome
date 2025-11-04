@@ -65,6 +65,11 @@ export class VehicledetailsComponent implements OnInit {
   enquiryPhone: string = '';
   enquiryMessage: string = '';
   isSubmittingEnquiry: boolean = false;
+  
+  // Captcha
+  captchaQuestion: string = '';
+  captchaAnswer: number = 0;
+  userCaptchaAnswer: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -80,6 +85,16 @@ export class VehicledetailsComponent implements OnInit {
         this.fetchVehicleDetails();
       }
     });
+    
+    // Generate captcha
+    this.generateCaptcha();
+  }
+
+  generateCaptcha(): void {
+    const num1 = Math.floor(Math.random() * 20) + 1;
+    const num2 = Math.floor(Math.random() * 20) + 1;
+    this.captchaAnswer = num1 + num2;
+    this.captchaQuestion = `${num1} + ${num2} = ?`;
   }
 
   fetchVehicleDetails(): void {
@@ -169,18 +184,55 @@ export class VehicledetailsComponent implements OnInit {
   }
 
   onEnquirySubmit(): void {
+    // Validate captcha first
+    const userAnswer = parseInt(this.userCaptchaAnswer);
+    if (isNaN(userAnswer) || userAnswer !== this.captchaAnswer) {
+      alert('❌ Incorrect answer! Please solve the math problem correctly.');
+      this.userCaptchaAnswer = '';
+      return;
+    }
+
     this.isSubmittingEnquiry = true;
 
-    // Simulate form submission
-    setTimeout(() => {
-      alert('Enquiry submitted successfully! We will contact you soon.');
-      this.isSubmittingEnquiry = false;
-      
-      // Reset form
-      this.enquiryName = '';
-      this.enquiryEmail = '';
-      this.enquiryPhone = '';
-      this.enquiryMessage = '';
-    }, 1500);
+    const enquiryData = {
+      title: `Enquiry: ${this.getVehicleTitle()} - ${this.enquiryName}`,
+      content: this.enquiryMessage || 'No message provided',
+      status: 'publish',
+      acf: {
+        customer_name: this.enquiryName,
+        customer_email: this.enquiryEmail,
+        customer_phone: this.enquiryPhone,
+        customer_message: this.enquiryMessage || '',
+        vehicle_name: this.getVehicleTitle(),
+        listing_id: this.vehicleId?.toString() || '',
+        enquiry_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting enquiry:', enquiryData);
+
+    this.http.post('http://wizcms.test/wp-json/wp/v2/vehicle_enquiries', enquiryData)
+      .subscribe({
+        next: (response) => {
+          console.log('Enquiry submitted successfully:', response);
+          this.isSubmittingEnquiry = false;
+          alert('✅ Enquiry submitted successfully! We will contact you soon.');
+          
+          // Reset form
+          this.enquiryName = '';
+          this.enquiryEmail = '';
+          this.enquiryPhone = '';
+          this.enquiryMessage = '';
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.generateCaptcha();
+        },
+        error: (error) => {
+          console.error('Error submitting enquiry:', error);
+          this.isSubmittingEnquiry = false;
+          alert('❌ There was an error submitting your enquiry. Please try again.');
+        }
+      });
   }
 }
