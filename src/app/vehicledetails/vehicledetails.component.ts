@@ -110,28 +110,26 @@ export class VehicledetailsComponent implements OnInit {
 
     const acf = this.vehicle.acf;
 
-    // Prepare Key Features (you can add more ACF fields if available)
+    // Prepare Key Features - More compact and relevant
     this.keyFeatures = [
-      { icon: 'fas fa-car', title: 'Vehicle Type', description: 'Sedan' }, // Can be from taxonomy
-      { icon: 'fas fa-palette', title: 'Color', description: 'Black' }, // Add ACF field if needed
       { icon: 'fas fa-cogs', title: 'Engine', description: acf.engine_displacement },
-      { icon: 'fas fa-tachometer-alt', title: 'Mileage', description: acf.km },
-      { icon: 'fas fa-bolt', title: 'Transmission', description: acf.transmission },
-      { icon: 'fas fa-shield-alt', title: 'Safety', description: '2 Airbags, ABS' } // Add ACF field if needed
+      { icon: 'fas fa-gear', title: 'Transmission', description: acf.transmission },
+      { icon: 'fas fa-gas-pump', title: 'Fuel Type', description: acf.fuel },
+      { icon: 'fas fa-user', title: 'Ownership', description: acf.ownership }
     ];
 
-    // Prepare Car Specs
+    // Prepare Car Specs - Comprehensive details
     this.carSpecs = [
-      { icon: 'fas fa-calendar-alt', label: 'Registration Year', value: acf.registrationyear },
-      { icon: 'fas fa-shield-alt', label: 'Insurance', value: acf.insurance },
-      { icon: 'fas fa-gas-pump', label: 'Fuel Type', value: acf.fuel },
-      { icon: 'fas fa-chair', label: 'Seats', value: acf.seats + ' Seats' },
+      { icon: 'fas fa-rupee-sign', label: 'Price', value: acf.price },
+      { icon: 'fas fa-calendar-alt', label: 'Model Year', value: acf.year },
       { icon: 'fas fa-tachometer-alt', label: 'Kms Driven', value: acf.km },
+      { icon: 'fas fa-calendar-check', label: 'Registration Year', value: acf.registrationyear },
+      { icon: 'fas fa-shield-alt', label: 'Insurance', value: acf.insurance },
+      { icon: 'fas fa-chair', label: 'Seating Capacity', value: acf.seats + ' Seats' },
       { icon: 'fas fa-building', label: 'RTO', value: acf.rto },
-      { icon: 'fas fa-user', label: 'Ownership', value: acf.ownership },
-      { icon: 'fas fa-cogs', label: 'Engine Displacement', value: acf.engine_displacement },
+      { icon: 'fas fa-cogs', label: 'Engine', value: acf.engine_displacement },
       { icon: 'fas fa-gear', label: 'Transmission', value: acf.transmission },
-      { icon: 'fas fa-clock', label: 'Year of Manufacture', value: acf.manufactureyear }
+      { icon: 'fas fa-clock', label: 'Manufacture Year', value: acf.manufactureyear }
     ];
   }
 
