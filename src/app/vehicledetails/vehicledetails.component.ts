@@ -65,6 +65,8 @@ export class VehicledetailsComponent implements OnInit {
   enquiryPhone: string = '';
   enquiryMessage: string = '';
   isSubmittingEnquiry: boolean = false;
+  enquirySuccessMessage: string = '';
+  enquiryErrorMessage: string = '';
   
   // Captcha
   captchaQuestion: string = '';
@@ -184,10 +186,14 @@ export class VehicledetailsComponent implements OnInit {
   }
 
   onEnquirySubmit(): void {
+    // Clear previous messages
+    this.enquirySuccessMessage = '';
+    this.enquiryErrorMessage = '';
+
     // Validate captcha first
     const userAnswer = parseInt(this.userCaptchaAnswer);
     if (isNaN(userAnswer) || userAnswer !== this.captchaAnswer) {
-      alert('❌ Incorrect answer! Please solve the math problem correctly.');
+      this.enquiryErrorMessage = 'Incorrect answer! Please solve the math problem correctly.';
       this.userCaptchaAnswer = '';
       return;
     }
@@ -216,7 +222,7 @@ export class VehicledetailsComponent implements OnInit {
         next: (response) => {
           console.log('Enquiry submitted successfully:', response);
           this.isSubmittingEnquiry = false;
-          alert('✅ Enquiry submitted successfully! We will contact you soon.');
+          this.enquirySuccessMessage = 'Thank you! Your enquiry has been submitted successfully. We will contact you soon.';
           
           // Reset form
           this.enquiryName = '';
@@ -231,7 +237,7 @@ export class VehicledetailsComponent implements OnInit {
         error: (error) => {
           console.error('Error submitting enquiry:', error);
           this.isSubmittingEnquiry = false;
-          alert('❌ There was an error submitting your enquiry. Please try again.');
+          this.enquiryErrorMessage = 'There was an error submitting your enquiry. Please try again.';
         }
       });
   }

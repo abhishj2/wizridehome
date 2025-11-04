@@ -22,7 +22,7 @@
           <div class="hero-image">
             <img [src]="getVehicleImage()" [alt]="getVehicleTitle()" class="car-image"/>
             <div class="image-overlay"></div>
-            <div class="image-badge">{{ getVehiclePrice() }}</div>
+            <div class="image-badge">₹ {{ getVehiclePrice() }}</div>
             <div class="image-gradient"></div>
           </div>
         </div>
@@ -194,6 +194,19 @@
               </div>
             </div>
           </div>
+
+          <!-- Success Message -->
+          <div *ngIf="enquirySuccessMessage" style="background: #d1fae5; color: #065f46; padding: 1rem 1.5rem; border-radius: 0.5rem; margin: 1rem 0; display: flex; align-items: center; justify-content: center; gap: 0.75rem; border: 2px solid #10b981; font-weight: 600; animation: slideIn 0.3s ease-out;">
+            <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+            <span>{{ enquirySuccessMessage }}</span>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="enquiryErrorMessage" style="background: #fee2e2; color: #991b1b; padding: 1rem 1.5rem; border-radius: 0.5rem; margin: 1rem 0; display: flex; align-items: center; justify-content: center; gap: 0.75rem; border: 2px solid #ef4444; font-weight: 600; animation: slideIn 0.3s ease-out;">
+            <i class="fas fa-exclamation-circle" style="font-size: 1.5rem;"></i>
+            <span>{{ enquiryErrorMessage }}</span>
+          </div>
+
           <div class="form-submit">
             <button type="submit" class="submit-button" id="submitBtn" [disabled]="isSubmittingEnquiry || enquiryFormRef.invalid">
               <span class="button-content">
