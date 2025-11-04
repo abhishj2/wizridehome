@@ -53,29 +53,30 @@
           <!-- Buy fields -->
           <div id="buyFields" class="bffilds" [style.display]="showBuyFields ? 'flex' : 'none'">
             <div class="form-group">
-              <select [(ngModel)]="vehicleType" name="vehicleType" required>
-                <option value="" disabled selected>Vehicle Type</option>
-                <option value="Sedans">Sedans</option>
-                <option value="SUVs">SUVs</option>
-                <option value="Hatchbacks">Hatchbacks</option>
-                <option value="Bikes">Bikes</option>
-                <option value="Commercial Vehicles">Commercial Vehicles</option>
+              <select [(ngModel)]="selectedCategory" 
+                      (change)="onFilterChange()" 
+                      name="vehicleCategory">
+                <option value="">All Categories</option>
+                <option *ngFor="let category of vehicleCategories" [value]="category.id">
+                  {{ category.name }}
+                </option>
               </select>
             </div>
             <div class="form-group">
-              <select [(ngModel)]="brand" name="brand" required>
-                <option value="" disabled selected>Select Brand</option>
-                <option value="Honda">Honda</option>
-                <option value="Tata">Tata</option>
-                <option value="Hyundai">Hyundai</option>
-                <option value="Maruti Suzuki">Maruti Suzuki</option>
-                <option value="Mahindra">Mahindra</option>
-                <option value="Toyota">Toyota</option>
+              <select [(ngModel)]="selectedBrand" 
+                      (change)="onFilterChange()" 
+                      name="vehicleBrand">
+                <option value="">All Brands</option>
+                <option *ngFor="let brand of vehicleBrands" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
               </select>
             </div>
             <div class="form-group">
-              <select [(ngModel)]="budget" name="budget" required>
-                <option value="" disabled selected>Price Range</option>
+              <select [(ngModel)]="selectedBudget" 
+                      (change)="onFilterChange()" 
+                      name="budget">
+                <option value="">All Prices</option>
                 <option value="Under ₹5 Lakh">Under ₹5 Lakh</option>
                 <option value="₹5-10 Lakh">₹5-10 Lakh</option>
                 <option value="₹10-15 Lakh">₹10-15 Lakh</option>
@@ -138,64 +139,35 @@
         <h2>What Our Customers Say</h2>
         <p>Hear from people who found their perfect vehicle with Wizzride</p>
       </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingTestimonials" style="text-align: center; padding: 40px; color: #666;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
+        <p style="margin-top: 1rem;">Loading testimonials...</p>
+      </div>
+
+      <!-- No Testimonials -->
+      <div *ngIf="!isLoadingTestimonials && testimonials.length === 0" style="text-align: center; padding: 40px; color: #666;">
+        <i class="fas fa-comments" style="font-size: 3rem; color: #cbd5e1;"></i>
+        <p style="margin-top: 1rem; font-size: 1.1rem;">No testimonials available yet.</p>
+      </div>
+
+      <!-- Testimonials Grid -->
+      <div class="testimonials-grid" *ngIf="!isLoadingTestimonials && testimonials.length > 0">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
           <div class="testimonial-content">
-            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
+            <p [innerHTML]="getTestimonialContent(testimonial)"></p>
           </div>
           <div class="testimonial-author">
             <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
+              <img [src]="getTestimonialImage(testimonial)" [alt]="getTestimonialImageAlt(testimonial)">
             </div>
             <div class="author-info">
-              <h4>Rajiv Sharma</h4>
-              <p>Siliguri</p>
+              <h4 [innerHTML]="getTestimonialName(testimonial)"></h4>
+              <p>{{ getTestimonialLocation(testimonial) }}</p>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
-          <div class="testimonial-content">
-            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
-          </div>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
-            </div>
-            <div class="author-info">
-              <h4>Rajiv Sharma</h4>
-              <p>Siliguri</p>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-content">
-            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
-          </div>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
-            </div>
-            <div class="author-info">
-              <h4>Rajiv Sharma</h4>
-              <p>Siliguri</p>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-content">
-            <p>I was skeptical about buying a used car online, but Wizzride made the process so transparent and easy. The Honda City I bought was in perfect condition, just as described.</p>
-          </div>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rajiv Sharma">
-            </div>
-            <div class="author-info">
-              <h4>Rajiv Sharma</h4>
-              <p>Siliguri</p>
-            </div>
-          </div>
-        </div>
-        <!-- Add more testimonials same as above -->
       </div>
     </section>
   </div>

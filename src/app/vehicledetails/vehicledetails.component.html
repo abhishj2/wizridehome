@@ -1,0 +1,190 @@
+<div class="car-details-page" id="carDetailsPage">
+    <!-- Loading State -->
+    <div *ngIf="isLoadingVehicle" style="text-align: center; padding: 100px 20px;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #1daaba;"></i>
+      <p style="margin-top: 1rem; font-size: 1.2rem; color: #666;">Loading vehicle details...</p>
+    </div>
+
+    <!-- Vehicle Not Found -->
+    <div *ngIf="!isLoadingVehicle && vehicleNotFound" style="text-align: center; padding: 100px 20px;">
+      <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ef4444;"></i>
+      <h2 style="margin-top: 1rem; color: #1f2937;">Vehicle Not Found</h2>
+      <p style="margin-top: 0.5rem; color: #666;">The vehicle you're looking for doesn't exist or has been removed.</p>
+      <button (click)="goBack()" style="margin-top: 2rem; padding: 1rem 2rem; background: #1daaba; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1rem;">
+        <i class="fas fa-arrow-left"></i> Back to List
+      </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" aria-label="Car Overview" *ngIf="!isLoadingVehicle && !vehicleNotFound && vehicle">
+      <div class="hero-container">
+        <div class="hero-image-wrapper">
+          <div class="hero-image">
+            <img [src]="getVehicleImage()" [alt]="getVehicleTitle()" class="car-image"/>
+            <div class="image-overlay"></div>
+            <div class="image-badge">{{ getVehiclePrice() }}</div>
+            <div class="image-gradient"></div>
+          </div>
+        </div>
+        
+        <div class="hero-content">
+          <div class="hero-content-inner">
+            <header class="hero-header">
+              <div class="title-wrapper">
+                <h1 class="hero-title">{{ getVehicleTitle() }}</h1>
+                <div class="title-underline"></div>
+              </div>
+              
+              <div class="hero-meta-grid" aria-label="Car details">
+                <div class="meta-card">
+                  <div class="meta-icon"><i class="fas fa-calendar-alt"></i></div>
+                  <div class="meta-content">
+                    <span class="meta-value">{{ getVehicleYear() }}</span>
+                    <span class="meta-label">Year</span>
+                  </div>
+                </div>
+                <div class="meta-card">
+                  <div class="meta-icon"><i class="fas fa-tachometer-alt"></i></div>
+                  <div class="meta-content">
+                    <span class="meta-value">{{ getVehicleKm() }}</span>
+                    <span class="meta-label">Mileage</span>
+                  </div>
+                </div>
+                <div class="meta-card">
+                  <div class="meta-icon"><i class="fas fa-gas-pump"></i></div>
+                  <div class="meta-content">
+                    <span class="meta-value">{{ getVehicleFuel() }}</span>
+                    <span class="meta-label">Fuel Type</span>
+                  </div>
+                </div>
+              </div>
+            </header>
+            
+            <div class="hero-actions">
+              <button type="button" class="cta-button primary pulse-animation" (click)="scrollToEnquiry()">
+                <span class="button-content">
+                  <i class="fas fa-paper-plane"></i><span>Enquire Now</span>
+                </span>
+                <div class="button-ripple"></div>
+              </button>
+              
+              <button type="button" class="cta-button secondary" (click)="goBack()">
+                <span class="button-content">
+                  <i class="fas fa-arrow-left"></i><span>Back to List</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section section-animate" aria-label="Key Features" *ngIf="!isLoadingVehicle && !vehicleNotFound && vehicle">
+      <div class="section-header-modern">
+        <div class="section-icon"><i class="fas fa-star"></i></div>
+        <h2 class="section-title">Key Features</h2>
+        <div class="section-subtitle">Discover what makes this vehicle exceptional</div>
+      </div>
+      <div class="features-grid" id="featuresGrid">
+        <article class="feature-card" *ngFor="let feature of keyFeatures; let i = index">
+          <div class="feature-card-inner" [style.animation-delay]="(i * 0.1) + 's'">
+            <div class="feature-header">
+              <div class="feature-icon"><i [class]="feature.icon"></i><div class="icon-glow"></div></div>
+              <div class="feature-number">{{ i + 1 }}</div>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">{{ feature.title }}</h3>
+              <p class="feature-description">{{ feature.description }}</p>
+            </div>
+            <div class="feature-hover-effect"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Specifications Section -->
+    <section class="specs-section section-animate" aria-label="Technical Specifications" *ngIf="!isLoadingVehicle && !vehicleNotFound && vehicle">
+      <div class="section-header-modern">
+        <div class="section-icon"><i class="fas fa-list-alt"></i></div>
+        <h2 class="section-title">Technical Specifications</h2>
+        <div class="section-subtitle">Detailed performance and technical data</div>
+      </div>
+      <div class="specs-container">
+        <div class="specs-grid" id="specsGrid">
+          <div class="spec-card" *ngFor="let spec of carSpecs; let i = index">
+            <div class="spec-card-inner" [style.animation-delay]="(i * 0.05) + 's'">
+              <div class="spec-icon-wrapper"><i [class]="spec.icon"></i></div>
+              <div class="spec-content">
+                <div class="spec-label">{{ spec.label }}</div>
+                <div class="spec-value">{{ spec.value }}</div>
+              </div>
+              <div class="spec-progress-bar"><div class="spec-progress-fill"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="enquiry-section section-animate" id="enquiryFormBlock">
+      <div class="enquiry-container">
+        <div class="enquiry-header">
+          <div class="section-header-modern">
+            <div class="section-icon"><i class="fas fa-envelope"></i></div>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="section-subtitle">Ready to take the next step? Contact us today!</div>
+          </div>
+        </div>
+        <form id="enquiryForm" class="enquiry-form" (ngSubmit)="onEnquirySubmit()" #enquiryFormRef="ngForm">
+          <div class="form-layout">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Name *</label>
+                <div class="input-wrapper">
+                  <input type="text" name="enquiryName" [(ngModel)]="enquiryName" required class="form-input"/>
+                  <div class="input-underline"></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <div class="input-wrapper">
+                  <input type="tel" name="enquiryPhone" [(ngModel)]="enquiryPhone" required class="form-input"/>
+                  <div class="input-underline"></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <div class="input-wrapper">
+                  <input type="email" name="enquiryEmail" [(ngModel)]="enquiryEmail" required class="form-input"/>
+                  <div class="input-underline"></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Your Message</label>
+              <div class="textarea-wrapper">
+                <textarea name="enquiryMessage" [(ngModel)]="enquiryMessage" rows="5" class="form-textarea" placeholder="I'm interested in this vehicle..."></textarea>
+                <div class="textarea-underline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="submit-button" id="submitBtn" [disabled]="isSubmittingEnquiry || enquiryFormRef.invalid">
+              <span class="button-content">
+                <i class="fas fa-paper-plane" *ngIf="!isSubmittingEnquiry"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="isSubmittingEnquiry"></i>
+                <span>{{ isSubmittingEnquiry ? 'Sending...' : 'Send Message' }}</span>
+              </span>
+              <div class="button-ripple"></div>
+            </button>
+            <div class="form-footer">
+              <div class="security-badge"><i class="fas fa-lock"></i><span>Your info is secure</span></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
