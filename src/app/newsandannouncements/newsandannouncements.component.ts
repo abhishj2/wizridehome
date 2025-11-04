@@ -1,7 +1,10 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation, Renderer2, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
+import { SeoService } from '../services/seo.service';
 
 interface Announcement {
   id: number;
@@ -103,14 +106,128 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
   blogPosts: BlogPost[] = [];
   isLoadingBlogPosts = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private seoService: SeoService,
+    private renderer: Renderer2,
+    private titleService: Title,
+    private metaService: Meta,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
     // Component initialization
+    this.setMetaTags();
     this.fetchAnnouncements();
     this.fetchFeaturedOffers();
     this.fetchPressReleases();
     this.fetchBlogPosts();
+  }
+
+  setMetaTags(): void {
+    // Set canonical URL
+    this.seoService.setCanonicalURL('https://wizzride.com/newsandannouncements');
+    
+    // SEO Metadata
+    this.titleService.setTitle('Wizzride News & Announcements - Latest Updates & Travel Alerts');
+    this.metaService.updateTag({
+      name: 'description',
+      content: "Stay updated with Wizzride's latest news, service announcements, travel updates, and important alerts for our cab services and tour packages across destinations."
+    });
+    this.metaService.updateTag({
+      name: 'title',
+      content: 'Wizzride News & Announcements - Latest Updates & Travel Alerts'
+    });
+    
+
+    // Open Graph Tags
+    this.metaService.updateTag({ property: 'og:title', content: 'Wizzride News & Announcements - Latest Updates & Travel Alerts' });
+    this.metaService.updateTag({ property: 'og:description', content: "Stay updated with Wizzride's latest news, service announcements, travel updates, and important alerts for our cab services and tour packages across destinations." });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/newsandannouncements' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
+    this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
+
+    // Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride News & Announcements - Latest Updates & Travel Alerts' });
+    this.metaService.updateTag({ name: 'twitter:description', content: "Stay updated with Wizzride's latest news, service announcements, travel updates, and important alerts for our cab services and tour packages across destinations."});
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
+
+    // BreadcrumbList JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "News & Announcements",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://wizzride.com/newsandannouncements"
+          }
+        }
+      ]
+    });
+
+    // Organization JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Wizzride",
+      "url": "https://wizzride.com",
+      "logo": "https://wizzride.com/assets/images/icons/logo2.webp",
+      "description": "Wizzride - Your trusted partner for cab services, flight bookings, and travel solutions in Northeast India.",
+      "sameAs": [
+        "https://www.facebook.com/wizzride",
+        "https://twitter.com/wizzride",
+        "https://www.instagram.com/wizzride"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9775999444",
+        "contactType": "Customer Service",
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"]
+      }
+    });
+
+    // NewsArticle/Blog Posting Schema
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "News & Announcements",
+      "description": "Latest news, announcements, offers, and press releases from Wizzride",
+      "url": "https://wizzride.com/newsandannouncements",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Wizzride",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://wizzride.com/assets/images/icons/logo2.webp"
+        }
+      }
+    });
+  }
+
+  // Utility: inject LD+JSON scripts
+  private addJsonLd(schemaObject: any): void {
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   fetchBlogPosts(): void {

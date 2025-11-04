@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
+import { SeoService } from '../services/seo.service';
 
 interface Vehicle {
   id: number;
@@ -27,6 +30,7 @@ interface Vehicle {
     engine_displacement: string;
     transmission: string;
     manufactureyear: string;
+    city?: string;
   };
 }
 
@@ -49,7 +53,7 @@ interface Spec {
   templateUrl: './vehicledetails.component.html',
   styleUrl: './vehicledetails.component.css'
 })
-export class VehicledetailsComponent implements OnInit {
+export class VehicledetailsComponent implements OnInit, OnDestroy {
   
   vehicleId: number | null = null;
   vehicle: Vehicle | null = null;
@@ -76,7 +80,12 @@ export class VehicledetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private seoService: SeoService,
+    private renderer: Renderer2,
+    private titleService: Title,
+    private metaService: Meta,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +99,154 @@ export class VehicledetailsComponent implements OnInit {
     
     // Generate captcha
     this.generateCaptcha();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup if needed
+  }
+
+  setMetaTags(): void {
+    if (!this.vehicle || !this.vehicle.acf) return;
+
+    const carModel = this.getVehicleTitle();
+    const price = this.vehicle.acf.price || 'Best Price';
+    const location = this.vehicle.acf.city || 'Northeast India';
+
+    // Dynamic Meta Title
+    const metaTitle = `Best Used Car ${carModel} Starting from ${price} at ${location}`;
+    
+    // Dynamic Meta Description
+    const metaDescription = `Find the best deals on used ${carModel} starting from ${price} in ${location}. Certified cars with easy financing and quick delivery.`;
+
+    // Set canonical URL with vehicle ID
+    this.seoService.setCanonicalURL(`https://wizzride.com/vehicle-details/${this.vehicleId}`);
+    
+    // SEO Metadata
+    this.titleService.setTitle(metaTitle);
+    this.metaService.updateTag({
+      name: 'description',
+      content: metaDescription
+    });
+    this.metaService.updateTag({
+      name: 'title',
+      content: metaTitle
+    });
+
+    // Open Graph Tags
+    this.metaService.updateTag({ property: 'og:title', content: metaTitle });
+    this.metaService.updateTag({ property: 'og:description', content: metaDescription });
+    this.metaService.updateTag({ property: 'og:type', content: 'product' });
+    this.metaService.updateTag({ property: 'og:url', content: `https://wizzride.com/vehicle-details/${this.vehicleId}` });
+    this.metaService.updateTag({ property: 'og:image', content: this.getVehicleImage() });
+    this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
+    this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
+
+    // Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: metaTitle });
+    this.metaService.updateTag({ name: 'twitter:description', content: metaDescription });
+    this.metaService.updateTag({ name: 'twitter:image', content: this.getVehicleImage() });
+    this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
+
+    // Product Schema (JSON-LD)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": carModel,
+      "image": this.getVehicleImage(),
+      "description": metaDescription,
+      "brand": {
+        "@type": "Brand",
+        "name": carModel.split(' ')[0] // Extract brand from car model
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://wizzride.com/vehicle-details/${this.vehicleId}`,
+        "priceCurrency": "INR",
+        "price": this.extractNumericPrice(price),
+        "priceValidUntil": this.getNextMonth(),
+        "itemCondition": "https://schema.org/UsedCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Wizzride"
+        }
+      },
+      "vehicleEngine": {
+        "@type": "EngineSpecification",
+        "fuelType": this.vehicle.acf.fuel
+      },
+      "vehicleTransmission": this.vehicle.acf.transmission,
+      "mileageFromOdometer": {
+        "@type": "QuantitativeValue",
+        "value": this.vehicle.acf.km,
+        "unitText": "km"
+      },
+      "productionDate": this.vehicle.acf.year,
+      "vehicleSeatingCapacity": this.vehicle.acf.seats
+    });
+
+    // BreadcrumbList Schema
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Buy & Sell Cars",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://wizzride.com/sellyourcar"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": carModel,
+          "item": {
+            "@type": "WebPage",
+            "@id": `https://wizzride.com/vehicle-details/${this.vehicleId}`
+          }
+        }
+      ]
+    });
+  }
+
+  // Utility: inject LD+JSON scripts
+  private addJsonLd(schemaObject: any): void {
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
+  }
+
+  // Extract numeric price for schema
+  private extractNumericPrice(priceString: string): string {
+    const numericString = priceString.replace(/[₹,\s]/g, '');
+    
+    if (numericString.toLowerCase().includes('lakh')) {
+      const value = parseFloat(numericString.replace(/lakh/i, ''));
+      return (value * 100000).toString();
+    }
+    
+    return numericString || '0';
+  }
+
+  // Get next month date for price validity
+  private getNextMonth(): string {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 1);
+    return date.toISOString().split('T')[0];
   }
 
   generateCaptcha(): void {
@@ -108,6 +265,8 @@ export class VehicledetailsComponent implements OnInit {
             this.vehicle = data[0];
             this.vehicleNotFound = false;
             this.prepareVehicleData();
+            // Set dynamic meta tags after vehicle data is loaded
+            this.setMetaTags();
           } else {
             this.vehicleNotFound = true;
           }

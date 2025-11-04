@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
+import { SeoService } from '../services/seo.service';
 
 interface VehicleCategory {
   id: number;
@@ -78,7 +81,7 @@ interface Vehicle {
   templateUrl: './buyandsellcar.component.html',
   styleUrl: './buyandsellcar.component.css'
 })
-export class BuyandsellcarComponent implements OnInit {
+export class BuyandsellcarComponent implements OnInit, OnDestroy {
   
   selectedAction: string = '';
   showBuyFields: boolean = false;
@@ -107,14 +110,119 @@ export class BuyandsellcarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private seoService: SeoService,
+    private renderer: Renderer2,
+    private titleService: Title,
+    private metaService: Meta,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
+    this.setMetaTags();
     this.fetchVehicleCategories();
     this.fetchVehicleBrands();
     this.fetchFeaturedVehicles();
     this.fetchTestimonials();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup if needed
+  }
+
+  setMetaTags(): void {
+    // Set canonical URL
+    this.seoService.setCanonicalURL('https://wizzride.com/sellyourcar');
+    
+    // SEO Metadata
+    this.titleService.setTitle('Sell Your Car with Wizzride - Easy & Secure Across NE India');
+    this.metaService.updateTag({
+      name: 'description',
+      content: 'Sell your car with Wizzride across Gangtok, Darjeeling, Siliguri, Shillong, and more. Enjoy a fast, easy, and secure process with fair valuations and seamless service.'
+    });
+    this.metaService.updateTag({
+      name: 'title',
+      content: 'Sell Your Car with Wizzride - Easy & Secure Across NE India'
+    });
+    this.metaService.updateTag({
+      name: 'keywords',
+      content: 'buy used cars, sell cars online, used car marketplace, pre-owned cars, second hand cars, car dealers, vehicle marketplace India'
+    });
+
+    // Open Graph Tags
+    this.metaService.updateTag({ property: 'og:title', content: 'Sell Your Car with Wizzride - Easy & Secure Across NE India' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Sell your car with Wizzride across Gangtok, Darjeeling, Siliguri, Shillong, and more. Enjoy a fast, easy, and secure process with fair valuations and seamless service.' });
+    this.metaService.updateTag({ property: 'og:type', content: 'website' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/sellyourcar' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
+    this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
+
+    // Twitter Card Tags
+    this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Sell Your Car with Wizzride - Easy & Secure Across NE India' });
+    this.metaService.updateTag({ name: 'twitter:description', content: 'Buy and sell used cars with Wizzride. Browse verified vehicles, find your perfect car, or list your vehicle for sale.' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
+
+    // FAQ JSON-LD Schema
+   
+    // BreadcrumbList JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Sell Your Car",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/sellyourcar"
+          }
+        }
+      ]
+    });
+
+    // Organization/LocalBusiness JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Wizzride Buy & Sell Cars",
+      "image": "https://wizzride.com/assets/images/icons/logo2.webp",
+      "description": "Buy and sell used cars with Wizzride. Browse verified vehicles, find your perfect car, or list your vehicle for sale.",
+      "url": "https://wizzride.com/sellyourcar",
+      "telephone": "+91-9775999444",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Siliguri",
+        "addressRegion": "West Bengal",
+        "addressCountry": "India"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": "100000",
+        "highPrice": "2000000"
+      }
+    });
+  }
+
+  // Utility: inject LD+JSON scripts
+  private addJsonLd(schemaObject: any): void {
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   fetchTestimonials(): void {

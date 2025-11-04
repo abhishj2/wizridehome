@@ -251,10 +251,10 @@ export const routes: Routes = [
 
 
     
-      {path:'blog',component:BlogmainComponent},
+      {path:'blogs',component:BlogmainComponent},
       {path:'blog/:slug',component:BlogSingleComponent},
 
-      {path:'news-and-announcements',component: NewsandannouncementsComponent},
+      {path:'newsandannouncements',component: NewsandannouncementsComponent},
       {path:'sellyourcar',component: BuyandsellcarComponent},
       {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent},
       {path:'vehicle-details/:id',component: VehicledetailsComponent}
