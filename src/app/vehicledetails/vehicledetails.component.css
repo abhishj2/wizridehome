@@ -281,8 +281,8 @@
         }
   
         .meta-icon {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           margin: 0 auto 1rem;
           background: var(--primary-light);
           border-radius: 50%;
@@ -678,8 +678,7 @@
         }
 
         .section-title {
-          font-size: 1.75rem;
-          margin-bottom: 0.5rem;
+          margin-bottom: 20px;
         }
 
         .section-subtitle {
@@ -733,18 +732,7 @@
         .textarea-wrapper {
           position: relative;
   
-          .input-underline,
-          .textarea-underline {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-            transform-origin: center;
-          }
+          
         }
   
         .form-input,
@@ -764,10 +752,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
   
-            + .input-underline,
-            + .textarea-underline {
-              transform: scaleX(1);
-            }
+         
           }
   
           &::placeholder {

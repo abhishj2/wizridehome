@@ -232,7 +232,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   fetchBlogPosts(): void {
     this.isLoadingBlogPosts = true;
-    this.http.get<BlogPost[]>('http://wizcms.test/wp-json/wp/v2/posts?_embed&per_page=5')
+    this.http.get<BlogPost[]>('https://cms.wizzride.com/wp-json/wp/v2/posts?_embed&per_page=5')
       .subscribe({
         next: (data) => {
           this.blogPosts = data;
@@ -249,7 +249,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   fetchPressReleases(): void {
     this.isLoadingPressReleases = true;
-    this.http.get<PressRelease[]>('http://wizcms.test/wp-json/wp/v2/press_releases')
+    this.http.get<PressRelease[]>('https://cms.wizzride.com/wp-json/wp/v2/press_releases')
       .subscribe({
         next: (data) => {
           this.pressReleases = data;
@@ -297,7 +297,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   fetchFeaturedOffers(): void {
     this.isLoadingOffers = true;
-    this.http.get<FeaturedOffer[]>('http://wizcms.test/wp-json/wp/v2/featured_offers?_embed')
+    this.http.get<FeaturedOffer[]>('https://cms.wizzride.com/wp-json/wp/v2/featured_offers?_embed')
       .subscribe({
         next: (data) => {
           this.featuredOffers = data;
@@ -391,7 +391,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   fetchAnnouncements(): void {
     this.isLoadingAnnouncements = true;
-    this.http.get<Announcement[]>('http://wizcms.test/wp-json/wp/v2/announcements')
+    this.http.get<Announcement[]>('https://cms.wizzride.com/wp-json/wp/v2/announcements')
       .subscribe({
         next: (data) => {
           this.announcements = data;

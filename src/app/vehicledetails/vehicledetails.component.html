@@ -142,15 +142,15 @@
               <div class="form-group">
                 <label class="form-label">Name *</label>
                 <div class="input-wrapper">
-                  <input type="text" name="enquiryName" [(ngModel)]="enquiryName" required class="form-input"/>
-                  <div class="input-underline"></div>
+                  <input type="text" name="enquiryName" placeholder="Enter your name" [(ngModel)]="enquiryName" required class="form-input"/>
+                  
                 </div>
               </div>
               <div class="form-group">
                 <label class="form-label">Phone Number *</label>
                 <div class="input-wrapper">
-                  <input type="tel" name="enquiryPhone" [(ngModel)]="enquiryPhone" required class="form-input"/>
-                  <div class="input-underline"></div>
+                  <input type="tel" name="enquiryPhone" placeholder="+91 1234567890" [(ngModel)]="enquiryPhone" required class="form-input"/>
+                  
                 </div>
               </div>
             </div>
@@ -158,8 +158,8 @@
               <div class="form-group">
                 <label class="form-label">Email Address *</label>
                 <div class="input-wrapper">
-                  <input type="email" name="enquiryEmail" [(ngModel)]="enquiryEmail" required class="form-input"/>
-                  <div class="input-underline"></div>
+                  <input type="email" name="enquiryEmail" placeholder="test@gmail.com" [(ngModel)]="enquiryEmail" required class="form-input"/>
+                  
                 </div>
               </div>
             </div>
@@ -167,7 +167,6 @@
               <label class="form-label">Your Message (Optional)</label>
               <div class="textarea-wrapper">
                 <textarea name="enquiryMessage" [(ngModel)]="enquiryMessage" rows="3" class="form-textarea" placeholder="I'm interested in this vehicle..."></textarea>
-                <div class="textarea-underline"></div>
               </div>
             </div>
 
@@ -188,7 +187,7 @@
                       class="form-input"
                       placeholder="Your answer"
                       style="text-align: center; font-weight: 600;"/>
-                    <div class="input-underline"></div>
+                    
                   </div>
                 </div>
               </div>

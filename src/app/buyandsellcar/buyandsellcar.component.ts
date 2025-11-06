@@ -227,7 +227,7 @@ export class BuyandsellcarComponent implements OnInit, OnDestroy {
 
   fetchTestimonials(): void {
     this.isLoadingTestimonials = true;
-    this.http.get<Testimonial[]>('http://wizcms.test/wp-json/wp/v2/vehicle_testimonials?_embed&per_page=4&orderby=date&order=desc')
+    this.http.get<Testimonial[]>('https://cms.wizzride.com/wp-json/wp/v2/vehicle_testimonials?_embed&per_page=4&orderby=date&order=desc')
       .subscribe({
         next: (data) => {
           this.testimonials = data;
@@ -244,7 +244,7 @@ export class BuyandsellcarComponent implements OnInit, OnDestroy {
 
   fetchVehicleCategories(): void {
     this.isLoadingCategories = true;
-    this.http.get<VehicleCategory[]>('http://wizcms.test/wp-json/wp/v2/vehicle_category')
+    this.http.get<VehicleCategory[]>('https://cms.wizzride.com/wp-json/wp/v2/vehicle_category')
       .subscribe({
         next: (data) => {
           this.vehicleCategories = data;
@@ -261,7 +261,7 @@ export class BuyandsellcarComponent implements OnInit, OnDestroy {
 
   fetchVehicleBrands(): void {
     this.isLoadingBrands = true;
-    this.http.get<VehicleBrand[]>('http://wizcms.test/wp-json/wp/v2/vehicle_brand')
+    this.http.get<VehicleBrand[]>('https://cms.wizzride.com/wp-json/wp/v2/vehicle_brand')
       .subscribe({
         next: (data) => {
           this.vehicleBrands = data;
@@ -279,7 +279,7 @@ export class BuyandsellcarComponent implements OnInit, OnDestroy {
   fetchFeaturedVehicles(): void {
     this.isLoadingVehicles = true;
     // Fetch published vehicles with embedded taxonomies, then filter by is_approved
-    this.http.get<Vehicle[]>('http://wizcms.test/wp-json/wp/v2/buy_sell_cars?status=publish&per_page=100&_embed')
+    this.http.get<Vehicle[]>('https://cms.wizzride.com/wp-json/wp/v2/buy_sell_cars?status=publish&per_page=100&_embed')
       .subscribe({
         next: (data) => {
           // Filter to show only approved vehicles
