@@ -61,7 +61,7 @@
 
 .calendar-arrow {
   position: absolute;
-  right: 14px;
+  right: 30px;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;

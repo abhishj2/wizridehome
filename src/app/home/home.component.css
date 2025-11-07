@@ -110,7 +110,7 @@ h2{
 }
 
 .booking-section-wrapper {
-    background:url('../../assets/images/bg-homepage.23223c27.webp');
+    background:url('../../assets/images/newbg.jpg');
     background-size:cover;
     background-repeat: no-repeat;
     padding: 80px 40px;
@@ -4299,8 +4299,9 @@ button.nav-tab img{
     padding-top:20px !important;
 }
 .tabs-container {
-    background: transparent !important;
+    background: #fff !important;
     box-shadow: none !important;
+    opacity: 0.8;
 }
 
 .trip-type {
