@@ -27,7 +27,7 @@
 }
 
 .calendar-input {
-  padding: 16px 20px 16px 44px;
+  padding: 16px 44px 16px 44px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 16px;
@@ -36,6 +36,8 @@
   background: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-input:focus {
@@ -61,7 +63,7 @@
 
 .calendar-arrow {
   position: absolute;
-  right: 30px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
@@ -93,8 +95,8 @@
   margin-top: 5px;
   min-width: 280px;
   max-width: 320px;
-  max-height: 350px;
-  overflow: hidden;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 /* Smart positioning - open upward if no space below */
@@ -395,9 +397,29 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .calendar-dropdown {
-    min-width: 280px;
-    left: -20px;
-    right: -20px;
+    min-width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    max-height: 380px;
+    overflow-y: auto;
+    position: fixed;
+    top: auto !important;
+    bottom: 80px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 40px);
+    margin: 0 20px;
+  }
+  
+  .calendar-dropdown.active {
+    transform: translateX(-50%) scale(1) !important;
+  }
+  
+  .calendar-dropdown.open-upward {
+    bottom: 80px !important;
+    top: auto !important;
   }
   
   .calendar-header {
@@ -422,7 +444,11 @@
 
 @media (max-width: 480px) {
   .calendar-dropdown {
-    min-width: 260px;
+    min-width: 95%;
+    max-width: 100%;
+    width: calc(100% - 30px);
+    margin: 0 auto;
+    max-height: 360px;
   }
   
   .calendar-day {

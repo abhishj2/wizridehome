@@ -7,7 +7,8 @@ import {
   PLATFORM_ID,
   ElementRef,
   ViewChild,
-  Renderer2
+  Renderer2,
+  HostListener
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -729,6 +730,8 @@ trackByOfferId(index: number, offer: any): number {
   };
 
   tabs = ['shared-cabs', 'reserved-cabs', 'flights'];
+  showMobileBottomNav = true;
+  lastScrollTop = 0;
 
   // Validation methods
   isSameCitySelected(pickup: string, dropoff: string): boolean {
@@ -1784,5 +1787,29 @@ trackByOfferId(index: number, offer: any): number {
     return `${displayHour}:${minuteStr} ${period}`;
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(): void {
+    const bookingSection = document.querySelector('.booking-section-wrapper');
+    if (!bookingSection) return;
+
+    const bookingSectionRect = bookingSection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Show bottom nav when booking section is visible
+    // Hide when scrolled past the booking section
+    if (bookingSectionRect.bottom > 0 && bookingSectionRect.top < windowHeight) {
+      this.showMobileBottomNav = true;
+    } else {
+      this.showMobileBottomNav = false;
+    }
+  }
+
+  scrollToContact(): void {
+    // Scroll to contact section or footer
+    const footer = document.querySelector('app-footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 
 }

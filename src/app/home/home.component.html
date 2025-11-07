@@ -39,7 +39,8 @@
 <div class="booking-section-wrapper">
     <div class="container header" (click)="onDocumentClick($event)">
 
-        <div class="nav-tabs">
+        <!-- Desktop Tabs -->
+        <div class="nav-tabs desktop-tabs">
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
                 <span class="icon" *ngIf="tab === 'shared-cabs'"><img
@@ -936,6 +937,29 @@
     </div>
 </div>
 <!-- End of Special Offers and Content Sections -->
+
+<!-- Mobile Bottom Navigation -->
+<div class="mobile-bottom-nav" [class.visible]="showMobileBottomNav">
+    <button *ngFor="let tab of tabs" class="mobile-nav-tab" [class.active]="currentTab === tab"
+        (click)="switchTab(tab)">
+        <span class="mobile-icon" *ngIf="tab === 'shared-cabs'">
+            <img src="../../assets/images/shared-removebg-preview.png" />
+        </span>
+        <span class="mobile-icon" *ngIf="tab === 'reserved-cabs'">
+            <img src="../../assets/images/reserved.png" />
+        </span>
+        <span class="mobile-icon" *ngIf="tab === 'flights'">
+            <img src="../../assets/images/flight.png" />
+        </span>
+        <span class="mobile-label">{{ tab === 'shared-cabs' ? 'Shared' : tab === 'reserved-cabs' ? 'Reserve' : 'Flights' }}</span>
+    </button>
+    <button class="mobile-nav-tab" (click)="scrollToContact()">
+        <span class="mobile-icon">
+            <i class="fas fa-phone"></i>
+        </span>
+        <span class="mobile-label">Contact</span>
+    </button>
+</div>
 
 <!-- Sliding Functionality Section -->
 <div class="sliding-section-wrapper">

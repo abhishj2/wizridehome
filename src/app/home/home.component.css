@@ -268,7 +268,7 @@ h2{
 
 @keyframes contentSlideIn {
     0% {
-        transform: translateY(20px);
+        transform: translateY(0px);
         opacity: 0;
     }
     100% {
@@ -5042,7 +5042,124 @@ button.nav-tab.active img{
         margin-top: 8px;
         color: #dc3545;
     }
+}
 
 .japan-experience-section{
     width: auto !important;
-}}
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 8px 0 12px 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mobile-bottom-nav.visible {
+    transform: translateY(0);
+}
+
+.mobile-nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    position: relative;
+}
+
+.mobile-nav-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: darkcyan;
+    transition: width 0.3s ease;
+}
+
+.mobile-nav-tab.active::before {
+    width: 60%;
+}
+
+.mobile-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+.mobile-icon img {
+    width: 26px;
+    height: auto;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-tab.active .mobile-icon img {
+    opacity: 0.7;
+}
+
+.mobile-icon i {
+    font-size: 22px;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.mobile-nav-tab.active .mobile-icon i {
+    color: #666;
+}
+
+.mobile-label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.mobile-nav-tab.active .mobile-label {
+    color: #666;
+    font-weight: 500;
+}
+
+/* Hide desktop tabs on mobile */
+@media (max-width: 768px) {
+    .desktop-tabs {
+        display: none !important;
+    }
+    
+    .mobile-bottom-nav {
+        display: flex !important;
+    }
+}
+
+/* Show desktop tabs on larger screens */
+@media (min-width: 769px) {
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+    
+    .desktop-tabs {
+        display: flex !important;
+    }
+}
