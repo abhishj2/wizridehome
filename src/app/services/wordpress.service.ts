@@ -41,6 +41,14 @@ export class WordpressService {
     );
   }
 
+  getGoogleReviews(limit: number = 10): Observable<any> {
+    const url = `${this.baseUrl}/google_reviews?_embed&acf_format=standard&status=publish&per_page=${limit}&orderby=date&order=desc`;
+    
+    return this.http.get(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('WordPress API Error:', error);
     return throwError(() => new Error(`WordPress API Error: ${error.message}`));

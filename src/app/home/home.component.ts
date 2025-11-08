@@ -135,62 +135,7 @@ export class HomeComponent
     },
  
   ];
-  testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: 'Shin Tae',
-      location: 'Guwahati, Assam',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjW9XkZcnJ9unApgswH-n9yaY9o_8wqmYTPFewdzV8cKoV1Llkhd=w60-h60-p-rp-mo-ba3-br100',
-      rating: 5,
-      text: 'Luxury ride for a reasonable price. Instead of taking the local taxis from Shillong to Guwahati, opt for WizzRide. They give u an amazing ride for the same price of the local taxis. AC, complimentary snacks and enough space for a comfortable ride.',
-      isVerified: true
-    },
-    {
-      id: 2,
-      name: 'Anisha Bafna',
-      location: 'Shillong, Meghalaya',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjVpO-1WuShjg-gRa9B32C8F8xQP8i0DWT53AFj8GWm9hXGZms1a0w=w60-h60-p-rp-mo-ba3-br100',
-      rating: 5,
-      text: 'Punctual and professional... Drivers know there job very well... Also, on customer support a special mention to Sanjay who been very helpful when asked various questions about the pickup/drop points and also Adhar who helped me to change the pickup timing. You guys are doing very well and I would recommend people to use their services.',
-      isVerified: true
-    },
-    {
-      id: 3,
-      name: 'Subrata Sen',
-      location: 'Darjeeling, West Bengal',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjUAU5-omdu4KAXKVbJ2HB3NLhv-O8yomE6H1VhL3AKxL2P4LFToPw=w60-h60-p-rp-mo-ba2-br100',
-      rating: 5,
-      text: 'Excellent services by Wizzride. I use to avail this facility from Guwahati to Shillong and vice versa. The vehicle is well maintained and drivers are well behaved. The recently introduced Home pickup & drop facility is also very much helpful. Please keep it up 👍👍',
-      isVerified: true
-    },
-    {
-      id: 4,
-      name: 'Sourav Ganguly',
-      location: 'Gangtok, Sikkim',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXdCeN4QWS1UD0s7gpW4ro13xg-c6o-cZDFiZeY2IUgfxMpIy0m=w81-h81-p-rp-mo-ba4-br100',
-      rating: 5,
-      text: 'I had a good first experience with WIZZRIDE service recently booked a cab from Siliguri to darjeeling. The booking process was simple and user-friendly. The cab arrived on time, the vehicle was clean, and the ride was smooth and comfortable. the driver was courteous and professional, felt safe throughout the journey, and the fare was reasonable too. Overall, it was a convenient and pleasant way to travel—definitely a service I’d use again.',
-      isVerified: true
-    },
-    {
-      id: 5,
-      name: 'Vinny P Mathew',
-      location: 'Bagdogra, West Bengal',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjU5Klc_GVjMjPUYCyGM9WNoqgmema4EfwAAXT55TAjgWxykf_baHw=w81-h81-p-rp-mo-ba5-br100',
-      rating: 5,
-      text: 'Amazing service from Wizzride is hands down one of the best shared cab services in the Northeast! Always on time, with soft-spoken and professional drivers, clean and well-maintained cabs, and excellent coordination with customers. The experience is smooth and hassle-free every time. Also, it’s super pocket-friendly, which makes it even better. I truly hope Wizzride expands to other states soon — we need more services like this across India. Keep up the great work!',
-      isVerified: true
-    },
-    {
-      id: 6,
-      name: 'Kapil khatiwara',
-      location: 'Kalimpong, West Bengal',
-      avatar: 'https://lh3.googleusercontent.com/a-/ALV-UjXPO5HRBOfekxRFTtgC2fEbSgS8DuiENBQazOp2GElIk4FUxeCe=w81-h81-p-rp-mo-br100',
-      rating: 5,
-      text: 'The ride was incredibly comfortable, and the driver was punctual and courteous. But what truly stood out was the exceptional customer support provided by Miss Easther. She was extremely helpful, responding to all my queries in a professional and friendly manner. Her dedication to ensuring a smooth experience made all the difference. Highly recommend!',
-      isVerified: true
-    }
-  ];
+  testimonials: Testimonial[] = [];
 
   specialOffers: Offer[] = [];
   isLoadingOffers = false;
@@ -852,6 +797,9 @@ trackByOfferId(index: number, offer: any): number {
 
     // Load offers for current tab
     this.loadOffers(this.currentTab);
+    
+    // Load Google reviews
+    this.loadGoogleReviews();
   }
 
   // Helper method to insert JSON-LD structured data
@@ -1891,6 +1839,64 @@ trackByOfferId(index: number, offer: any): number {
         this.isLoadingOffers = false;
         // Keep empty array or show fallback offers
         this.specialOffers = [];
+      }
+    });
+  }
+
+  /** -------------------
+   * Load Google Reviews from WordPress
+   -------------------- */
+  loadGoogleReviews(): void {
+    this.wordpressService.getGoogleReviews(10).subscribe({
+      next: (wpReviews: any[]) => {
+        if (wpReviews && wpReviews.length > 0) {
+          // Map WordPress reviews to testimonial structure
+          this.testimonials = wpReviews.map((wpReview) => {
+            // Extract text from content (strip HTML tags)
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = wpReview.content?.rendered || '';
+            const reviewText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            // Get avatar from featured image or ACF field
+            let avatarUrl = wpReview.acf?.avatar_url || '';
+            if (!avatarUrl && wpReview._embedded && wpReview._embedded['wp:featuredmedia'] && wpReview._embedded['wp:featuredmedia'][0]) {
+              const featuredMedia = wpReview._embedded['wp:featuredmedia'][0];
+              avatarUrl = featuredMedia.source_url || 
+                         featuredMedia.media_details?.sizes?.thumbnail?.source_url ||
+                         featuredMedia.media_details?.sizes?.medium?.source_url ||
+                         '';
+            }
+            
+            // Fallback avatar if none provided
+            if (!avatarUrl) {
+              avatarUrl = 'https://via.placeholder.com/60';
+            }
+            
+            return {
+              id: wpReview.id,
+              name: this.decodeHtmlEntities(wpReview.title?.rendered || 'Anonymous'),
+              location: wpReview.acf?.location || '',
+              avatar: avatarUrl,
+              rating: wpReview.acf?.rating ? parseInt(wpReview.acf.rating) : 5,
+              text: reviewText.trim(),
+              isVerified: wpReview.acf?.is_verified !== undefined ? wpReview.acf.is_verified : true
+            };
+          });
+          
+          // Initialize carousel after loading reviews
+          setTimeout(() => {
+            this.init3DTestimonialCarousel();
+          }, 100);
+        } else {
+          // No reviews found - keep testimonials empty
+          this.testimonials = [];
+        }
+        console.log('Google reviews loaded:', this.testimonials);
+      },
+      error: (error) => {
+        console.error('Error loading Google reviews:', error);
+        // Keep testimonials empty on error
+        this.testimonials = [];
       }
     });
   }
