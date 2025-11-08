@@ -3726,6 +3726,7 @@ a.service-cta-btn {
     outline-offset: 3px;
 }
 
+
 .slider-container,
 .slider-wrapper,
 .slide {
@@ -3776,45 +3777,73 @@ a.service-cta-btn {
 
 @media (max-width: 768px) {
     .testimonials-section {
-        padding: 80px 0;
+        padding: 60px 0;
     }
     
     .sectnew {
-        height: 420px;
-        padding: 0 15px;
+        height: auto;
+        min-height: auto;
+        padding: 0 20px;
     }
     
     .slider-container {
         max-width: 100%;
-        perspective: 1200px;
+        perspective: none;
+        height: auto;
+    }
+    
+    .slider-wrapper {
+        transform-style: flat;
+        height: auto;
     }
     
     .slide {
-        width: 320px;
+        width: 100%;
+        max-width: 380px;
+        position: relative;
+        transform: none !important;
+        height: auto;
     }
     
-    .slide.prev {
-        transform: translateX(-220px) translateZ(-40px) rotateY(8deg) scale(0.85);
+    /* Hide all slides except active on mobile */
+    .slide.prev,
+    .slide.next,
+    .slide.far-prev,
+    .slide.far-next,
+    .slide.hidden {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
     
-    .slide.next {
-        transform: translateX(220px) translateZ(-40px) rotateY(-8deg) scale(0.85);
+    /* Only show active slide */
+    .slide.active {
+        display: block !important;
+        opacity: 1 !important;
+        position: relative !important;
+        transform: none !important;
+        z-index: 10;
+        height: auto;
     }
     
-    .slide.far-prev {
-        transform: translateX(-360px) translateZ(-80px) rotateY(12deg) scale(0.7);
-    }
-    
-    .slide.far-next {
-        transform: translateX(360px) translateZ(-80px) rotateY(-12deg) scale(0.7);
-    }
     .testimonialbox {
-        padding: 25px 20px 20px;
+        padding: 30px 25px 25px;
+        height: auto;
+        min-height: auto;
+    }
+    
+    .testimonialbox .content {
+        height: auto;
     }
     
     .testimonialbox p {
-        font-size: 13px;
-        margin: 12px 0 15px;
+        font-size: 14px;
+        margin: 15px 0 20px;
+        line-height: 1.6;
+        -webkit-line-clamp: unset;
+        display: block;
+        overflow: visible;
+        max-height: none;
     }
     
     .testimonialbox p::before {
@@ -3823,59 +3852,87 @@ a.service-cta-btn {
     }
     
     .testimonialbox .details .imgBx {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
     
     .testimonialbox .details h3 {
-        font-size: 14px;
+        font-size: 15px;
     }
     
     .testimonialbox .details h3 strong {
-        font-size: 11px;
+        font-size: 12px;
     }
 }
 
 @media (max-width: 480px) {
     .testimonials-section {
-        padding: 60px 0;
+        padding: 50px 0;
     }
     
     .sectnew {
-        height: 380px;
-        padding: 0 10px;
+        height: auto;
+        min-height: auto;
+        padding: 0 15px;
     }
     
     .slider-container {
-        perspective: 1000px;
+        perspective: none;
+        height: auto;
+    }
+    
+    .slider-wrapper {
+        transform-style: flat;
+        height: auto;
     }
     
     .slide {
-        width: 280px;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        transform: none !important;
+        height: auto;
     }
     
-    .slide.prev {
-        transform: translateX(-180px) translateZ(-30px) rotateY(6deg) scale(0.82);
+    /* Hide all slides except active on mobile */
+    .slide.prev,
+    .slide.next,
+    .slide.far-prev,
+    .slide.far-next,
+    .slide.hidden {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
     
-    .slide.next {
-        transform: translateX(180px) translateZ(-30px) rotateY(-6deg) scale(0.82);
+    /* Only show active slide */
+    .slide.active {
+        display: block !important;
+        opacity: 1 !important;
+        position: relative !important;
+        transform: none !important;
+        z-index: 10;
+        height: auto;
     }
     
-    .slide.far-prev {
-        transform: translateX(-280px) translateZ(-60px) rotateY(10deg) scale(0.65);
-    }
-    
-    .slide.far-next {
-        transform: translateX(280px) translateZ(-60px) rotateY(-10deg) scale(0.65);
-    }
     .testimonialbox {
-        padding: 20px 15px 15px;
+        padding: 25px 20px 20px;
+        height: auto;
+        min-height: auto;
+    }
+    
+    .testimonialbox .content {
+        height: auto;
     }
     
     .testimonialbox p {
-        font-size: 12px;
-        margin: 10px 0 12px;
+        font-size: 13px;
+        margin: 12px 0 15px;
+        line-height: 1.6;
+        -webkit-line-clamp: unset;
+        display: block;
+        overflow: visible;
+        max-height: none;
     }
     
     .testimonialbox p::before {
@@ -3884,17 +3941,17 @@ a.service-cta-btn {
     }
     
     .testimonialbox .details .imgBx {
-        width: 45px;
-        height: 45px;
+        width: 55px;
+        height: 55px;
         margin-bottom: 8px;
     }
     
     .testimonialbox .details h3 {
-        font-size: 13px;
+        font-size: 14px;
     }
     
     .testimonialbox .details h3 strong {
-        font-size: 10px;
+        font-size: 11px;
     }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -4168,13 +4225,32 @@ button.nav-tab img{
     }
   
     .offers-slider-container {
-      min-height: 380px;
+      min-height: 420px;
     }
   
     .offer-card {
       flex: 0 0 300px;
-      min-height: 360px;
+      min-height: 400px;
       margin-right: 20px;
+    }
+    
+    .offer-card-inner {
+      flex-direction: column !important;
+      min-height: 400px;
+    }
+    
+    .offer-image-section {
+      flex: 0 0 auto !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      height: 180px;
+    }
+    
+    .offer-content {
+      flex: 1 !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      padding: 16px;
     }
   
     .offers-slider-track {
@@ -4669,13 +4745,14 @@ button.nav-tab.active img{
 
     /* Highlight Stats - Mobile */
     .highlight-stats {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         padding: 20px;
-        gap: 15px;
+        gap: 20px;
     }
 
     .stat {
-        min-width: 100%;
+        min-width: auto;
     }
 
     .stat-number {
@@ -4941,8 +5018,15 @@ button.nav-tab.active img{
 
     /* Highlight Stats */
     .highlight-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         padding: 18px;
         border-radius: 15px;
+        gap: 16px;
+    }
+
+    .stat {
+        min-width: auto;
     }
 
     .stat-number {
@@ -5150,6 +5234,10 @@ button.nav-tab.active img{
     
     .mobile-bottom-nav {
         display: flex !important;
+    }
+
+    .offer-image{
+        background-size: cover !important;
     }
 }
 
