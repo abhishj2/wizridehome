@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
+import { WordpressService } from '../services/wordpress.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
@@ -44,6 +45,42 @@ interface SelectedCities {
   shared: { pickup: string; dropoff: string };
   reserved: { pickup: string; dropoff: string };
   flights: { from: string; to: string };
+}
+
+interface Offer {
+  id: number;
+  title: string;
+  description: string;
+  subtitle: string;
+  code: string;
+  image: string;
+}
+
+interface WordPressOffer {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  acf?: {
+    offer_subtitle?: string;
+    offer_code?: string;
+    offer_tab?: string; // ACF field for tab filtering (shared-cabs, flights, reserved-cabs)
+  };
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url?: string;
+      media_details?: {
+        sizes?: {
+          medium?: { source_url?: string };
+          large?: { source_url?: string };
+          full?: { source_url?: string };
+        };
+      };
+    }>;
+  };
 }
 
 @Component({
@@ -155,40 +192,8 @@ export class HomeComponent
     }
   ];
 
-  specialOffers = [
-    {
-      id: 1,
-      title: 'Fly & Ride Stress-Free',
-      description: 'Up to 20% OFF on Flight + Cab Packages',
-      subtitle: 'Book your flight and enjoy a private cab from your home to the airport and back. Travel hassle-free from door to destination.',
-      code: 'WRFLYCAB20',
-      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg', // Add your image path
-    },
-    {
-      id: 2,
-      title: 'Your Schedule, Your Comfort',
-      description: 'Flat ₹400 OFF on Intercity Flight Transfers',
-      subtitle: 'Seamless travel between your city and major airports. Perfect for business or leisure trips.',
-      code: 'WRINTER400',
-      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-    },
-    {
-      id: 3,
-      title: 'Reserve & Relax',
-      description: '15% OFF on Private Cab Reservations',
-      subtitle: ' Ideal for airport pickups, drop-offs, or connecting flights — reserve your cab and travel worry-free.',
-      code: 'WRPRIVATE15',
-      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-    },
-    {
-      id: 4,
-      title: 'Airport Transfers Made Easy',
-      description: 'Flat ₹250 OFF on Home-to-Airport & Airport-to-Home Cabs',
-      subtitle: 'Enjoy convenient pickup and drop services along with your flight booking.',
-      code: 'WRAIRPORT250',
-      image: 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg',
-    }
-  ];
+  specialOffers: Offer[] = [];
+  isLoadingOffers = false;
   
 // 3D Testimonial Carousel Properties
 @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
@@ -749,6 +754,7 @@ trackByOfferId(index: number, offer: any): number {
     private titleService: Title,
     private metaService: Meta,
     private seoService: SeoService,
+    private wordpressService: WordpressService,
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
@@ -843,6 +849,9 @@ trackByOfferId(index: number, offer: any): number {
         "reviewCount": "2411"
       }
     });
+
+    // Load offers for current tab
+    this.loadOffers(this.currentTab);
   }
 
   // Helper method to insert JSON-LD structured data
@@ -943,6 +952,8 @@ trackByOfferId(index: number, offer: any): number {
 
         setTimeout(() => {
             this.currentTab = tabName;
+            // Load offers for the new tab
+            this.loadOffers(tabName);
             setTimeout(() => {
                 this.previousTab = null;
                 this.isSliding = false;
@@ -1810,6 +1821,78 @@ trackByOfferId(index: number, offer: any): number {
     if (footer) {
       footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  /** -------------------
+   * Decode HTML entities
+   -------------------- */
+  private decodeHtmlEntities(text: string): string {
+    if (!text) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  }
+
+  /** -------------------
+   * Load Offers from WordPress
+   -------------------- */
+  loadOffers(tab: string): void {
+    this.isLoadingOffers = true;
+    
+    this.wordpressService.getHomepageOffers().subscribe({
+      next: (wpOffers: WordPressOffer[]) => {
+        // Filter offers by tab using ACF field, then map to our Offer interface
+        const filteredOffers = wpOffers.filter((wpOffer) => {
+          // If offer_tab ACF field matches current tab, or if no tab specified, show all
+          const offerTab = wpOffer.acf?.offer_tab;
+          return !offerTab || offerTab === tab;
+        });
+        
+        // Map WordPress offers to our Offer interface
+        this.specialOffers = filteredOffers.map((wpOffer) => {
+          // Decode HTML entities in title
+          const decodedTitle = this.decodeHtmlEntities(wpOffer.title.rendered);
+          
+          // Extract description from content (strip HTML tags)
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = wpOffer.content.rendered;
+          const description = tempDiv.textContent || tempDiv.innerText || '';
+          
+          // Decode HTML entities in subtitle
+          const decodedSubtitle = this.decodeHtmlEntities(wpOffer.acf?.offer_subtitle || '');
+          
+          // Get featured image
+          let imageUrl = 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg'; // Default fallback
+          
+          if (wpOffer._embedded && wpOffer._embedded['wp:featuredmedia'] && wpOffer._embedded['wp:featuredmedia'][0]) {
+            const featuredMedia = wpOffer._embedded['wp:featuredmedia'][0];
+            imageUrl = featuredMedia.source_url || 
+                      featuredMedia.media_details?.sizes?.large?.source_url ||
+                      featuredMedia.media_details?.sizes?.medium?.source_url ||
+                      featuredMedia.media_details?.sizes?.full?.source_url ||
+                      imageUrl;
+          }
+          
+          return {
+            id: wpOffer.id,
+            title: decodedTitle,
+            description: description.trim(),
+            subtitle: decodedSubtitle,
+            code: wpOffer.acf?.offer_code || '',
+            image: imageUrl
+          };
+        });
+        
+        this.isLoadingOffers = false;
+        console.log('Offers loaded for tab:', tab, this.specialOffers);
+      },
+      error: (error) => {
+        console.error('Error loading offers:', error);
+        this.isLoadingOffers = false;
+        // Keep empty array or show fallback offers
+        this.specialOffers = [];
+      }
+    });
   }
 
 }
