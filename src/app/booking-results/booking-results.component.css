@@ -5,10 +5,18 @@
   box-sizing: border-box;
 }
 
+/* Prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Glassmorphic Search Summary */
@@ -23,6 +31,8 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Sticky Header State */
@@ -34,6 +44,9 @@
   padding: 16px 32px;
   box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
   animation: slideDown 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes slideDown {
@@ -187,6 +200,9 @@ color: #000 !important;
   /* background: linear-gradient(180deg, #f0f9f9 0%, #ffffff 50%, #f8f8f8 100%); */
   min-height: calc(100vh - 200px);
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .results-main::before {
@@ -206,6 +222,9 @@ color: #000 !important;
   gap: 40px;
   align-items: start;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 
@@ -275,6 +294,9 @@ color: #000 !important;
   position: relative;
   z-index: 1;
   margin-bottom: 50px;
+  /* Make card focusable for touch devices */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .card:hover {
@@ -528,6 +550,7 @@ color: #000 !important;
   border-top: 1px solid #e5e7eb;
   background: #ffffff;
   gap: 10px;
+  overflow: visible;
 }
 
 .option-item {
@@ -582,16 +605,53 @@ color: #000 !important;
   height: 100%;
 }
 
-/* Card-wide hover effects */
-.card:hover .default-amenities {
+/* Card-wide hover effects - Works on both desktop and mobile */
+.card:hover .default-amenities,
+.card:focus .default-amenities {
   opacity: 0;
   transform: translateY(0);
 }
 
-.card:hover .hover-dropdowns {
+.card:hover .hover-dropdowns,
+.card:focus .hover-dropdowns {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+/* Mobile touch support - hover works on tap and stays until another tap */
+@media (hover: none) and (pointer: coarse) {
+  /* On touch devices, :hover activates on tap and stays active */
+  .card:hover .default-amenities {
+    opacity: 0;
+  }
+  
+  .card:hover .hover-dropdowns {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Also support focus for better accessibility */
+  .card:focus .default-amenities {
+    opacity: 0;
+  }
+  
+  .card:focus .hover-dropdowns {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Make card interactive on touch */
+  .card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Remove focus outline on touch devices */
+  .card:focus {
+    outline: none;
+  }
 }
 
 .dropdown {
@@ -604,6 +664,9 @@ color: #000 !important;
   display: flex;
   align-items: center;
   gap: 6px;
+  /* Make dropdown focusable for mobile */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .dropdown i {
@@ -611,7 +674,9 @@ color: #000 !important;
   color: #6b7280;
 }
 
-.dropdown:hover {
+.dropdown:hover,
+.dropdown:focus,
+.dropdown:active {
   opacity: 1;
 }
 
@@ -628,14 +693,45 @@ color: #000 !important;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-size: 12px;
-  z-index: 9999;
+  z-index: 99999;
   line-height: 1.4;
   margin-top: 8px;
   border: 1px solid #e5e7eb;
 }
 
-.dropdown:hover .dropdown-content {
+/* Show dropdown content on hover, focus, and active for mobile */
+.dropdown:hover .dropdown-content,
+.dropdown:focus .dropdown-content,
+.dropdown:active .dropdown-content,
+.dropdown.touch-active .dropdown-content {
   display: block;
+}
+
+/* Mobile touch support - keep dropdown open on tap */
+@media (hover: none) and (pointer: coarse) {
+  .dropdown {
+    touch-action: manipulation;
+  }
+  
+  /* On mobile, hover activates on tap and stays until another tap */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Also support focus for better accessibility */
+  .dropdown:focus .dropdown-content {
+    display: block;
+  }
+  
+  /* Remove focus outline on touch devices */
+  .dropdown:focus {
+    outline: none;
+  }
+  
+  /* Keep dropdown open when active */
+  .dropdown:active .dropdown-content {
+    display: block;
+  }
 }
 
 .select-btn-card {
@@ -695,6 +791,9 @@ color: #000 !important;
   border: 2px solid transparent;
   background: linear-gradient(#fff, #fff) padding-box,
               linear-gradient(135deg, #008b8b, #20b2aa, #48d1cc) border-box;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .ad-card:hover {
@@ -766,168 +865,832 @@ color: #000 !important;
     overflow-x: auto;
     gap: 20px;
     padding-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
   
   .ad-card {
     min-width: 300px;
+    scroll-snap-align: start;
   }
 }
 
 @media (max-width: 768px) {
+  /* Touch-friendly improvements */
+  .modify-btn, .request-btn, .btn {
+    min-height: 44px;
+  }
+
+  .vehicle-cards {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn, .modify-btn, .request-btn {
+    -webkit-tap-highlight-color: rgba(0, 139, 139, 0.2);
+    user-select: none;
+  }
+
+  .route-visualization {
+    padding: 8px 0;
+  }
+
+  .route-line {
+    margin: 8px 0;
+  }
+
+  .container {
+    padding: 0 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .search-summary {
+    padding: 16px !important;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .search-summary.sticky {
+    padding: 12px 16px !important;
+    box-sizing: border-box;
+  }
+
   .summary-content {
     flex-direction: column;
     gap: 16px;
-    align-items: flex-starti
-    
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
   }
   
   .route-summary {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
   }
 
   .route-locations {
     width: 100%;
+    max-width: 100%;
     justify-content: space-between;
+    gap: 12px;
+    flex-wrap: nowrap;
   }
 
   .location-group {
     flex: 1;
     max-width: 45%;
+    min-width: 0;
+    overflow: hidden;
   }
   
   .route-summary .from, .route-summary .to {
     font-size: 16px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
   
-  .route-summary .date, .route-summary .passengers {
+  .route-summary .date, .route-summary .passengers, .route-summary .pickup-time {
     font-size: 11px;
     padding: 6px 12px;
+    white-space: nowrap;
   }
 
   .location-detail {
-    font-size: 11px;
-    max-width: 120px;
+    font-size: 10px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .journey-details {
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   
   .summary-actions {
     width: 100%;
+    max-width: 100%;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
   
   .modify-btn, .request-btn {
     flex: 1;
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+    min-width: 0;
+    max-width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
+  .results-main {
+    padding: 20px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .results-column {
-    padding: 24px;
-    border-radius: 24px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
-  
+
+  .vehicle-cards {
+    gap: 20px;
+    padding-top: 10px;
+    width: 100%;
+    max-width: 100%;
+  }
 
   .card {
     margin-bottom: 20px;
+    border-radius: 12px;
+    padding-top: 8px;
+    overflow: hidden;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .date-hanger {
+    position: relative;
+    left: auto;
+    transform: none;
+    margin-bottom: 12px;
+    text-align: center;
+    top: 0;
+  }
+
+  .date-content {
+    padding: 6px 20px !important;
+    border-radius: 10px !important;
+    border: 1px solid #e5e7eb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    display: inline-block;
+  }
+
+  .date-text {
+    font-size: 11px;
   }
   
   .route {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    padding: 16px;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .vehicle {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .vehicle img {
+    width: 100px;
+    max-width: 120px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .vehicle-info {
+    margin-top: 8px;
+  }
+
+  .vehicle-info h3 {
+    font-size: 13px;
+  }
+  
+  .route-column {
+    gap: 6px;
+  }
+
+  .route-column:first-child {
+    grid-column: 1;
+    grid-row: 2;
+    width: auto;
+    min-width: 0;
+    max-width: 120px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+
+  .route-column:last-child {
+    grid-column: 3;
+    grid-row: 2;
+    width: auto;
+    min-width: 0;
+    max-width: 120px;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  
+  .route-visualization {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0 4px;
+    overflow: hidden;
+  }
+  
+  .route-code {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  
+  .location {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .route-line {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .route-details {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .time, .duration {
+    font-size: 12px;
+    padding: 6px 12px;
+    display: inline-block;
+  }
+  
+  .price-info {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 16px;
+    width: 100%;
+  }
+
+  .price {
+    font-size: 22px;
+  }
+
+  .price-info p {
+    font-size: 11px;
+    margin-top: 8px !important;
+  }
+  
+  .options {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px 8px;
+    padding: 16px;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .option-item {
+    justify-content: center;
+    padding: 8px 0;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+    min-height: 60px;
+  }
+  
+  .option-item:hover,
+  .option-item:focus-within {
+    z-index: 100000;
+  }
+
+  .default-amenities {
+    gap: 8px;
+    flex-direction: column;
+    width: 100%;
+    min-height: 50px;
+    justify-content: center;
+  }
+
+  .amenity-item {
+    font-size: 11px;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .amenity-item i {
+    font-size: 14px;
+  }
+  
+  .amenity-item span {
     text-align: center;
   }
   
-  
-  .route-column:first-child {
-    order: 1;
-  }
-  
-  .route-column:last-child {
-    order: 3;
-  }
-  
- 
-  
-  .options {
+  .hover-dropdowns {
+    min-height: 50px;
     justify-content: center;
   }
   
+  /* Ensure hover dropdowns work in three-column layout */
+  .hover-dropdowns {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .hover-dropdowns .dropdown {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+  }
+  
+  .hover-dropdowns .dropdown i {
+    font-size: 14px;
+  }
+  
+  .hover-dropdowns .dropdown span {
+    font-size: 10px;
+    text-align: center;
+  }
+
+  /* Ensure dropdowns are interactive on mobile */
+  .dropdown {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    position: relative;
+  }
+  
+  /* Fix dropdown content positioning - open above to avoid being behind content */
+  .dropdown-content {
+    width: 200px;
+    max-width: calc(100vw - 32px);
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 8px;
+    z-index: 99999;
+    background: #fff;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Position dropdowns based on their column */
+  .option-item:first-child .dropdown-content {
+    left: 0;
+    transform: none;
+  }
+  
+  .option-item:last-child .dropdown-content {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+  
+  .option-item:nth-child(2) .dropdown-content {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .dropdown:hover .dropdown-content,
+  .dropdown:focus .dropdown-content,
+  .dropdown:active .dropdown-content {
+    display: block;
+  }
+  
+  /* Ensure option-item has proper overflow handling and z-index */
+  .option-item {
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .option-item:hover,
+  .option-item:focus-within {
+    z-index: 100000;
+  }
+
+  .select-btn-card {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+    width: 100%;
+  }
+  
   .btn {
-    width: 100% !important;
+    width: auto !important;
+    max-width: 90%;
+    padding: 12px 24px;
+    font-size: 13px;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  .sidebar-column {
+    order: -1;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .promotional-ads {
+    flex-direction: column;
+    overflow-x: visible;
+    gap: 20px;
+    padding-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ad-card {
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+
   .search-summary {
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 20px;
+    padding: 12px !important;
+    border-radius: 12px;
+  }
+
+  .search-summary.sticky {
+    padding: 10px 12px !important;
+  }
+
+  .summary-content {
+    gap: 12px;
+  }
+
+  .route-summary {
+    gap: 10px;
+  }
+
+  .route-locations {
+    gap: 8px;
+  }
+
+  .location-group {
+    max-width: 48%;
+  }
+
+  .route-summary .from, .route-summary .to {
+    font-size: 14px;
+  }
+
+  .location-detail {
+    font-size: 9px;
+  }
+
+  .journey-details {
+    gap: 6px;
+  }
+
+  .route-summary .date, .route-summary .passengers, .route-summary .pickup-time {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+
+  .summary-actions {
+    gap: 6px;
+  }
+
+  .modify-btn, .request-btn {
+    padding: 8px 10px !important;
+    font-size: 11px !important;
   }
   
   .results-main {
-    padding: 30px 0;
+    padding: 16px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .results-column {
-    padding: 20px;
-    border-radius: 20px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .vehicle-cards {
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
   }
   
- 
   .card {
-    border-radius: 12px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .date-hanger {
+    margin-bottom: 0px;
+  }
+
+  .date-content {
+    padding: 5px 16px !important;
+  }
+
+  .date-text {
+    font-size: 10px;
   }
   
   .route {
-    padding: 16px;
+    padding: 12px;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .vehicle {
+    width: 100%;
+  }
+
+  .vehicle img {
+    width: 85px;
+    max-width: 95px;
+  }
+
+  .vehicle-info {
+    margin-top: 6px;
+  }
+
+  .vehicle-info h3 {
+    font-size: 12px;
+  }
+
+  .route-column {
+    width: auto;
+    min-width: 70px;
+    max-width: 100px;
+    margin-top: -45px;
+    overflow: hidden;
+  }
+
+  .route-code {
+    font-size: 13px;
+    padding: 4px 8px;
+    display: inline-block;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
   
-  
+  .location {
+    font-size: 11px;
+    margin-top: 6px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .sub-location {
+    font-size: 9px;
+    margin-top: 3px;
+  }
+
+  .route-visualization {
+    padding: 0 4px;
+  }
+
+  .route-line {
+    width: 100%;
+  }
+
+  .route-car img {
+    width: 28px;
+  }
+
+  .route-details {
+    gap: 6px;
+    margin-top: -20px;
+  }
+
+  .time, .duration {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .price-info {
+    margin-top: 12px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    width: auto !important;
+    max-width: 85%;
+    margin: 0 auto;
+  }
   
   .price {
     font-size: 20px;
   }
-  
-  .route-code {
-    font-size: 14px;
-    padding: 4px 8px;
+
+  .price-info p {
+    font-size: 10px;
   }
   
-  .location {
+  .options {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 12px;
+    gap: 6px;
+    overflow: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .option-item {
+    padding: 4px 0;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .option-item:hover,
+  .option-item:focus-within {
+    z-index: 100000;
+  }
+
+  .default-amenities {
+    gap: 6px;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .amenity-item {
+    font-size: 10px;
+    gap: 4px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .amenity-item i {
     font-size: 12px;
   }
   
-  .time, .duration {
+  .amenity-item span {
+    text-align: center;
+    font-size: 9px;
+  }
+  
+  /* Ensure hover dropdowns work in three-column layout */
+  .hover-dropdowns {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+  
+  .hover-dropdowns .dropdown {
+    flex-direction: column;
+    gap: 3px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+  }
+  
+  .hover-dropdowns .dropdown i {
     font-size: 12px;
+  }
+  
+  .hover-dropdowns .dropdown span {
+    font-size: 9px;
+    text-align: center;
+  }
+  
+  /* Fix dropdown content positioning - open above to avoid being behind content */
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-content {
+    width: 180px;
+    max-width: calc(100vw - 24px);
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 8px;
+    z-index: 99999;
+    background: #fff;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Position dropdowns based on their column to prevent overlap */
+  .option-item:first-child .dropdown-content {
+    left: 0;
+    transform: none;
+  }
+  
+  .option-item:last-child .dropdown-content {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+  
+  .option-item:nth-child(2) .dropdown-content {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .select-btn-card {
+    grid-column: 1 / -1;
+    margin-top: 10px;
   }
   
   .dropdown {
-    font-size: 12px;
+    font-size: 10px;
+    position: relative;
+  }
+
+  .dropdown-content {
+    width: 200px;
+    font-size: 11px;
+    padding: 10px;
+    /* Ensure dropdown is visible on mobile */
+    position: absolute;
+    z-index: 10000;
+  }
+  
+  /* Make sure dropdowns work on mobile tap */
+  .dropdown:hover .dropdown-content,
+  .dropdown:focus .dropdown-content,
+  .dropdown:active .dropdown-content {
+    display: block !important;
   }
   
   .btn {
     font-size: 12px;
-    padding: 8px 16px;
-    width: 120px;
+    padding: 10px 16px;
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
-  .modify-btn {
-    padding: 8px 16px;
-    font-size: 12px;
+  .ad-card {
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
-  
+
   .ad-image {
-    height: 180px;
+    height: 160px;
   }
   
   .ad-title {
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .ad-description {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
@@ -1262,65 +2025,236 @@ span.seat-price {
 
 /* Responsive Popup */
 @media (max-width: 768px) {
+  .seat-popup-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
   .seat-popup {
-    width: 95%;
-    margin: 20px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 95vh;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .popup-header {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .popup-title h2 {
+    font-size: 20px;
+  }
+
+  .popup-title p {
+    font-size: 13px;
+  }
+
+  .close-btn {
+    top: 8px !important;
+    right: 8px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 18px !important;
+  }
+  
+  .popup-content {
+    padding: 0 16px;
   }
   
   .modal-layout {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
   }
   
   .car-container {
-    width: 200px;
-    height: 160px;
+    width: 100%;
+    max-width: 280px;
+    height: 180px;
+    margin: 0 auto;
   }
   
   .car-image {
-    width: 180px;
+    width: 200px;
   }
   
   .unified-seat-grid {
-    width: 120px;
-    gap: 10px;
-    top: 65%;
+    width: 100%;
+    max-width: 200px;
+    gap: 8px;
+    top: 70%;
   }
   
   .seat-row {
-    gap: 12px;
+    gap: 10px;
+    justify-content: center;
   }
   
-
-  .seat.passenger-seat img{
-    height: 50px !important;
-        width: 50px !important;
-}
+  .seat.passenger-seat img {
+    height: 45px !important;
+    width: 45px !important;
+  }
   
   .driver-seat img {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
+  }
+
+  span.seat-number {
+    font-size: 11px !important;
+    top: 12px;
+    left: 20px;
+  }
+
+  span.seat-price {
+    font-size: 8px !important;
   }
   
   .seat-legend {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   
   .legend-column {
     padding: 16px;
-    margin-top: 16px;
+    margin-top: 0;
     border-radius: 12px;
+  }
+
+  .seat-legend::before {
+    font-size: 14px;
+    margin-bottom: 12px;
   }
   
   .legend-item {
-    font-size: 13px;
-    padding: 6px 10px;
+    font-size: 12px;
+    padding: 8px 12px;
   }
   
   .legend-item img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .popup-footer {
+    padding: 16px;
+  }
+
+  .proceed-btn {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seat-popup-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .seat-popup {
+    border-radius: 20px 20px 0 0;
+    max-height: 90vh;
+  }
+
+  .popup-header {
+    padding: 10px 14px;
+    margin-bottom: 12px;
+  }
+
+  .popup-title h2 {
+    font-size: 18px;
+  }
+
+  .popup-title p {
+    font-size: 12px;
+  }
+
+  .close-btn {
+    top: 6px !important;
+    right: 6px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 16px !important;
+  }
+
+  .popup-content {
+    padding: 0 12px;
+  }
+
+  .modal-layout {
+    gap: 16px;
+  }
+
+  .car-container {
+    max-width: 240px;
+    height: 160px;
+  }
+
+  .car-image {
+    width: 180px;
+  }
+
+  .unified-seat-grid {
+    max-width: 180px;
+    gap: 6px;
+    top: 68%;
+  }
+
+  .seat-row {
+    gap: 8px;
+  }
+
+  .seat.passenger-seat img {
+    height: 40px !important;
+    width: 40px !important;
+  }
+
+  .driver-seat img {
+    width: 26px;
+    height: 26px;
+  }
+
+  span.seat-number {
+    font-size: 10px !important;
+    top: 10px;
+    left: 18px;
+  }
+
+  span.seat-price {
+    font-size: 7px !important;
+  }
+
+  .legend-column {
+    padding: 12px;
+  }
+
+  .seat-legend::before {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .legend-item img {
     width: 20px;
     height: 20px;
+  }
+
+  .popup-footer {
+    padding: 12px;
+  }
+
+  .proceed-btn {
+    padding: 10px 20px;
+    font-size: 13px;
   }
 }
 
@@ -1532,14 +2466,23 @@ span.seat-price {
 
 /* Responsive Modal */
 @media (max-width: 768px) {
+  .car-addition-modal-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
   .car-addition-modal {
-    width: 95%;
-    margin: 20px;
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    max-height: 95vh;
   }
   
   .modal-header {
     padding: 16px 20px;
+    border-radius: 16px 16px 0 0;
   }
   
   .modal-title h2 {
@@ -1549,11 +2492,23 @@ span.seat-price {
   .modal-title p {
     font-size: 13px;
   }
+
+  .modal-close-btn {
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
   
   .modal-content {
     padding: 20px;
   }
   
+  .car-addition-form {
+    gap: 18px;
+  }
+
   .form-field {
     flex-direction: column;
     align-items: flex-start;
@@ -1563,6 +2518,7 @@ span.seat-price {
   .field-label {
     min-width: auto;
     font-size: 13px;
+    width: 100%;
   }
   
   .field-input {
@@ -1570,26 +2526,64 @@ span.seat-price {
     padding: 10px 14px;
     font-size: 13px;
   }
+
+  .time-input-wrapper {
+    width: 100%;
+  }
+
+  .time-display-input {
+    width: 100%;
+  }
+
+  .time-icon {
+    right: 14px;
+  }
   
+  .form-submit {
+    margin-top: 12px;
+  }
+
   .submit-btn {
+    width: 100%;
     padding: 12px 24px;
     font-size: 14px;
-    min-width: 180px;
+    min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
+  .car-addition-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
   .car-addition-modal {
     width: 100%;
-    height: 100%;
-    max-height: none;
-    border-radius: 0;
+    height: auto;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
     margin: 0;
   }
   
   .modal-header {
-    border-radius: 0;
-    padding: 20px 16px;
+    border-radius: 20px 20px 0 0;
+    padding: 16px;
+  }
+
+  .modal-title h2 {
+    font-size: 18px;
+  }
+
+  .modal-title p {
+    font-size: 12px;
+  }
+
+  .modal-close-btn {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
   }
   
   .modal-content {
@@ -1609,14 +2603,19 @@ span.seat-price {
   }
   
   .field-input {
-    padding: 8px 12px;
+    padding: 10px 12px;
     font-size: 12px;
+  }
+
+  .time-icon {
+    right: 12px;
+    font-size: 16px;
   }
   
   .submit-btn {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 13px;
-    min-width: 160px;
+    min-width: auto;
   }
 }
 
@@ -1819,4 +2818,120 @@ span.seat-price {
 
 .done-btn:active {
   transform: translateY(0);
+}
+
+/* Responsive Time Picker */
+@media (max-width: 768px) {
+  .time-picker-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
+  .time-picker-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    margin: 0;
+  }
+
+  .time-picker-header {
+    padding: 16px 20px;
+  }
+
+  .time-picker-header h3 {
+    font-size: 16px;
+  }
+
+  .time-picker-content {
+    padding: 20px;
+  }
+
+  .time-columns {
+    gap: 12px;
+  }
+
+  .column-header {
+    font-size: 13px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+  }
+
+  .time-scroll-container {
+    max-height: 180px;
+  }
+
+  .time-option {
+    padding: 10px 12px;
+    font-size: 14px;
+    margin: 2px 6px;
+  }
+
+  .time-picker-footer {
+    padding: 14px 20px;
+  }
+
+  .done-btn {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-picker-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .time-picker-modal {
+    border-radius: 20px 20px 0 0;
+    max-height: 85vh;
+  }
+
+  .time-picker-header {
+    padding: 14px 16px;
+  }
+
+  .time-picker-header h3 {
+    font-size: 15px;
+  }
+
+  .close-btn {
+    font-size: 16px;
+    padding: 4px;
+  }
+
+  .time-picker-content {
+    padding: 16px;
+  }
+
+  .time-columns {
+    gap: 10px;
+  }
+
+  .column-header {
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+  }
+
+  .time-scroll-container {
+    max-height: 160px;
+  }
+
+  .time-option {
+    padding: 8px 10px;
+    font-size: 13px;
+    margin: 2px 4px;
+  }
+
+  .time-picker-footer {
+    padding: 12px 16px;
+  }
+
+  .done-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
