@@ -27,7 +27,7 @@
 }
 
 .calendar-input {
-  padding: 16px 44px 16px 44px;
+  padding: 16px 20px 16px 44px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 16px;
@@ -52,7 +52,7 @@
 
 .input-icon {
   position: absolute;
-  left: 14px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
@@ -63,7 +63,7 @@
 
 .calendar-arrow {
   position: absolute;
-  right: 14px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
@@ -396,6 +396,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .calendar-input {
+    padding: 10px 14px 10px 38px;
+    font-size: 15px;
+  }
+
+  .input-icon {
+    left: 12px;
+    font-size: 13px;
+  }
+
+  .calendar-arrow {
+    right: 12px;
+    font-size: 13px;
+  }
+
   .calendar-dropdown {
     min-width: 100%;
     max-width: 100%;
@@ -443,6 +458,21 @@
 }
 
 @media (max-width: 480px) {
+  .calendar-input {
+    padding: 10px 12px 10px 36px;
+    font-size: 15px;
+  }
+
+  .input-icon {
+    left: 12px;
+    font-size: 13px;
+  }
+
+  .calendar-arrow {
+    right: 12px;
+    font-size: 13px;
+  }
+
   .calendar-dropdown {
     min-width: 95%;
     max-width: 100%;
