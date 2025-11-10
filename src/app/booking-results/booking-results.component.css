@@ -9,6 +9,15 @@
 html, body {
   overflow-x: hidden;
   max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure all images respect container width */
+img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
 }
 
 .container {
@@ -16,7 +25,9 @@ html, body {
   margin: 0 auto;
   padding: 0 24px;
   width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Glassmorphic Search Summary */
@@ -203,6 +214,7 @@ color: #000 !important;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .results-main::before {
@@ -225,6 +237,8 @@ color: #000 !important;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 
@@ -281,6 +295,10 @@ color: #000 !important;
   gap: 32px;
   padding-top: 20px;
   overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .card {
@@ -289,7 +307,7 @@ color: #000 !important;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-  overflow: visible;
+  overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
@@ -297,6 +315,10 @@ color: #000 !important;
   /* Make card focusable for touch devices */
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .card:hover {
@@ -341,6 +363,10 @@ color: #000 !important;
   align-items: center;
   padding: 18px 24px;
   background: #f5f7fa;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .route-column {
@@ -348,6 +374,8 @@ color: #000 !important;
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .route-code {
@@ -359,6 +387,10 @@ color: #000 !important;
   font-size: 18px;
   color: #000;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .location {
@@ -367,6 +399,10 @@ color: #000 !important;
   text-align: center;
   font-weight: 600;
   margin-top: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .sub-location {
@@ -419,6 +455,10 @@ color: #000 !important;
   flex-direction: column;
   align-items: center;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .route-line {
@@ -426,8 +466,11 @@ color: #000 !important;
   align-items: center;
   justify-content: space-between;
   width: 70%;
+  max-width: 100%;
   position: relative;
   padding-bottom: 20px;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .route-line:before {
@@ -440,6 +483,8 @@ color: #000 !important;
   z-index: 1;
   border-radius: 2px;
   box-shadow: 0 2px 8px #008b8b4d;
+  max-width: calc(100% - 21px);
+  box-sizing: border-box;
 }
 
 .route-node {
@@ -467,13 +512,19 @@ color: #000 !important;
 
 .route-car img {
   width: 100%;
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
 }
 
 .route-details {
   display: flex;
   flex-direction: row;
   width: 100%;
+  max-width: 100%;
   justify-content: space-between;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 
@@ -489,12 +540,18 @@ color: #000 !important;
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .vehicle img {
   width: 90%;
-  height: 26%;
+  max-width: 100%;
+  height: auto;
   padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .vehicle-info h3 {
@@ -520,6 +577,10 @@ color: #000 !important;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .price-info p {
@@ -551,6 +612,10 @@ color: #000 !important;
   background: #ffffff;
   gap: 10px;
   overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .option-item {
@@ -752,12 +817,14 @@ color: #000 !important;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px #008b8b33;
   width: 200px !important;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   z-index: 999999999 !important;
   padding: 10px 20px;
+  box-sizing: border-box;
 }
 
 .btn:hover {
@@ -809,9 +876,11 @@ color: #000 !important;
 
 .ad-image img {
   width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
 }
 
 .ad-card:hover .ad-image img {
@@ -853,11 +922,17 @@ color: #000 !important;
   .results-layout {
     grid-template-columns: 1fr;
     gap: 32px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .sidebar-column {
     order: -1;
     position: static;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .promotional-ads {
@@ -867,11 +942,36 @@ color: #000 !important;
     padding-bottom: 12px;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .ad-card {
     min-width: 300px;
     scroll-snap-align: start;
+    max-width: calc(100vw - 32px);
+    box-sizing: border-box;
+  }
+}
+
+/* Ensure no horizontal scroll on tablets */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .promotional-ads {
+    overflow-x: auto;
+  }
+}
+
+/* Force column layout on mobile */
+@media (max-width: 768px) {
+  .promotional-ads {
+    flex-direction: column !important;
+    overflow-x: hidden !important;
+  }
+  
+  .ad-card {
+    min-width: auto !important;
+    max-width: 100% !important;
   }
 }
 
@@ -1009,6 +1109,8 @@ color: #000 !important;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .vehicle-cards {
@@ -1016,6 +1118,8 @@ color: #000 !important;
     padding-top: 10px;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .card {
@@ -1026,6 +1130,7 @@ color: #000 !important;
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .date-hanger {
@@ -1052,14 +1157,15 @@ color: #000 !important;
   .route {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 8px;
-    padding: 16px;
+    gap: 6px;
+    padding: 12px;
     align-items: center;
     text-align: center;
     overflow: hidden;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .vehicle {
@@ -1071,9 +1177,10 @@ color: #000 !important;
 
   .vehicle img {
     width: 100px;
-    max-width: 120px;
+    max-width: 100%;
     height: auto;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .vehicle-info {
@@ -1086,6 +1193,8 @@ color: #000 !important;
   
   .route-column {
     gap: 6px;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .route-column:first-child {
@@ -1093,9 +1202,10 @@ color: #000 !important;
     grid-row: 2;
     width: auto;
     min-width: 0;
-    max-width: 120px;
+    max-width: 90px;
     margin-bottom: 0;
     overflow: hidden;
+    box-sizing: border-box;
   }
 
   .route-column:last-child {
@@ -1103,9 +1213,10 @@ color: #000 !important;
     grid-row: 2;
     width: auto;
     min-width: 0;
-    max-width: 120px;
+    max-width: 90px;
     margin-top: 0;
     overflow: hidden;
+    box-sizing: border-box;
   }
   
   .route-visualization {
@@ -1114,8 +1225,9 @@ color: #000 !important;
     width: 100%;
     min-width: 0;
     margin: 0;
-    padding: 0 4px;
+    padding: 0 2px;
     overflow: hidden;
+    box-sizing: border-box;
   }
   
   .route-code {
@@ -1128,12 +1240,21 @@ color: #000 !important;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .route-line {
     width: 100%;
     max-width: 100%;
     margin: 0;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  
+  .route-line:before {
+    right: 8px;
+    max-width: calc(100% - 13px);
   }
 
   .route-details {
@@ -1167,14 +1288,15 @@ color: #000 !important;
   
   .options {
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px 8px;
-    padding: 16px;
+    gap: 6px 4px;
+    padding: 12px;
     overflow: visible;
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .option-item {
@@ -1184,6 +1306,8 @@ color: #000 !important;
     position: relative;
     z-index: 1;
     min-height: 60px;
+    min-width: 0;
+    box-sizing: border-box;
   }
   
   .option-item:hover,
@@ -1322,22 +1446,26 @@ color: #000 !important;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .promotional-ads {
     flex-direction: column;
-    overflow-x: visible;
+    overflow-x: hidden;
     gap: 20px;
     padding-bottom: 0;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .ad-card {
-    min-width: auto;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 }
 
@@ -1409,12 +1537,16 @@ color: #000 !important;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .vehicle-cards {
     gap: 16px;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
   
   .card {
@@ -1423,6 +1555,7 @@ color: #000 !important;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .date-hanger {
@@ -1439,10 +1572,11 @@ color: #000 !important;
   
   .route {
     padding: 12px;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .vehicle {
@@ -1451,7 +1585,8 @@ color: #000 !important;
 
   .vehicle img {
     width: 85px;
-    max-width: 95px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .vehicle-info {
@@ -1464,10 +1599,11 @@ color: #000 !important;
 
   .route-column {
     width: auto;
-    min-width: 70px;
-    max-width: 100px;
+    min-width: 0;
+    max-width: 85px;
     margin-top: -45px;
     overflow: hidden;
+    box-sizing: border-box;
   }
 
   .route-code {
@@ -1485,6 +1621,8 @@ color: #000 !important;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .sub-location {
@@ -1494,10 +1632,20 @@ color: #000 !important;
 
   .route-visualization {
     padding: 0 4px;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .route-line {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  
+  .route-line:before {
+    right: 4px;
+    max-width: calc(100% - 9px);
   }
 
   .route-car img {
@@ -1537,11 +1685,12 @@ color: #000 !important;
   .options {
     grid-template-columns: 1fr 1fr 1fr;
     padding: 12px;
-    gap: 6px;
+    gap: 4px 2px;
     overflow: visible;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .option-item {
@@ -1549,6 +1698,8 @@ color: #000 !important;
     overflow: visible;
     position: relative;
     z-index: 1;
+    min-width: 0;
+    box-sizing: border-box;
   }
   
   .option-item:hover,
@@ -1675,10 +1826,10 @@ color: #000 !important;
   }
   
   .ad-card {
-    min-width: auto;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-width: 0;
   }
 
   .ad-image {
