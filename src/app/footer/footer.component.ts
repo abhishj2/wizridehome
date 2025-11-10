@@ -152,7 +152,8 @@ export class FooterComponent {
       { name: 'Mawsynram', link: '/destinations/mawsynram/' },
       { name: 'Dawki', link: '/destinations/dawki' },
       { name: 'Umiam Lake', link: '/destinations/umiam-lake/' },
-      { name: 'Laitlum Canyons', link: '/destinations/laitlum'}
+      { name: 'Laitlum Canyons', link: '/destinations/laitlum'},
+      {name:'Wards Lake',link:'destinations/wards-lake-shillong'}
     ],
     arunachalPradesh: [
       { name: 'Tawang', link: '/destinations/tawang'},

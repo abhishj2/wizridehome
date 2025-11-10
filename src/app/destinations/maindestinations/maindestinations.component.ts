@@ -187,6 +187,11 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
           name: "Laitlum Canyons",
           img: "../../../assets/images/destinations/laitlum-canyons-cover.jpg",
           link: "/destinations/laitlum"
+        },
+        {
+          name:'Wards Lake',
+          img:'../../../assets/images/destinations/Ward\'s_Lake\,_Shillong.jpg',
+          link:'destinations/wards-lake-shillong'
         }
       ]
     },
