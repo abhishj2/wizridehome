@@ -459,6 +459,19 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     return this.expandedSections[key] || false;
   }
 
+  toggleCardExpansion(vehicleId: string, event?: Event): void {
+    if (event) {
+      // Don't toggle if clicking on button or interactive elements
+      const target = event.target as HTMLElement;
+      if (target.closest('.btn') || target.closest('.dropdown') || target.closest('button')) {
+        return;
+      }
+    }
+    
+    this.expandedSections[vehicleId] = !this.expandedSections[vehicleId];
+    console.log(`Toggled card ${vehicleId}: ${this.expandedSections[vehicleId]}`);
+  }
+
   // Seat selection methods
   selectSeat(vehicle: VehicleOption) {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);

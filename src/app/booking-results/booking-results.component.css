@@ -672,13 +672,15 @@ color: #000 !important;
 
 /* Card-wide hover effects - Works on both desktop and mobile */
 .card:hover .default-amenities,
-.card:focus .default-amenities {
+.card:focus .default-amenities,
+.card-expanded .default-amenities {
   opacity: 0;
   transform: translateY(0);
 }
 
 .card:hover .hover-dropdowns,
-.card:focus .hover-dropdowns {
+.card:focus .hover-dropdowns,
+.card-expanded .hover-dropdowns {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
@@ -686,7 +688,17 @@ color: #000 !important;
 
 /* Mobile touch support - hover works on tap and stays until another tap */
 @media (hover: none) and (pointer: coarse) {
-  /* On touch devices, :hover activates on tap and stays active */
+  /* On touch devices, use class-based toggle instead of :hover */
+  .card.card-expanded .default-amenities {
+    opacity: 0;
+  }
+  
+  .card.card-expanded .hover-dropdowns {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Also support :hover for devices that support it */
   .card:hover .default-amenities {
     opacity: 0;
   }
@@ -716,6 +728,18 @@ color: #000 !important;
   /* Remove focus outline on touch devices */
   .card:focus {
     outline: none;
+  }
+}
+
+/* Mobile-specific: Use class-based toggle for better control */
+@media (max-width: 768px) {
+  .card.card-expanded .default-amenities {
+    opacity: 0;
+  }
+  
+  .card.card-expanded .hover-dropdowns {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 

@@ -59,7 +59,7 @@
 
         <!-- Vehicle Cards -->
         <div class="vehicle-cards" *ngIf="!isLoading">
-          <div class="card" *ngFor="let vehicle of vehicleOptions">
+          <div class="card" [class.card-expanded]="expandedSections[vehicle.id]" (click)="toggleCardExpansion(vehicle.id, $event)" *ngFor="let vehicle of vehicleOptions">
 
             <!-- Date Hanger -->
             <div class="date-hanger">
@@ -180,8 +180,8 @@
 
               <!-- Column 4: Select Seat Button for Shared / Book Cab Button for Reserved -->
               <div class="select-btn-card">
-                <button class="btn" (click)="selectSeat(vehicle)" *ngIf="searchParams?.type === 'shared'">Select Seat</button>
-                <button class="btn" (click)="bookCab(vehicle)" *ngIf="searchParams?.type === 'reserved'">Book Cab</button>
+                <button class="btn" (click)="selectSeat(vehicle); $event.stopPropagation()" *ngIf="searchParams?.type === 'shared'">Select Seat</button>
+                <button class="btn" (click)="bookCab(vehicle); $event.stopPropagation()" *ngIf="searchParams?.type === 'reserved'">Book Cab</button>
               </div>
             </div>
           </div>
