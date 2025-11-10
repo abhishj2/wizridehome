@@ -114,6 +114,7 @@ import { NewsandannouncementsComponent } from './newsandannouncements/newsandann
 import { BuyandsellcarComponent } from './buyandsellcar/buyandsellcar.component';
 import { VehicleRegistrationFormComponent } from './vehicle-registration-form/vehicle-registration-form.component';
 import { VehicledetailsComponent } from './vehicledetails/vehicledetails.component';
+import { WardslakeComponent } from './destinations/meghalaya/wardslake/wardslake.component';
 
 
 
@@ -257,7 +258,9 @@ export const routes: Routes = [
       {path:'newsandannouncements',component: NewsandannouncementsComponent},
       {path:'sellyourcar',component: BuyandsellcarComponent},
       {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent},
-      {path:'vehicle-details/:id',component: VehicledetailsComponent}
+      {path:'vehicle-details/:id',component: VehicledetailsComponent},
+
+      {path:'destinations/wards-lake-shillong',component:WardslakeComponent},
 
 
 ];
