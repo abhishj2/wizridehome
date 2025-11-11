@@ -65,28 +65,28 @@
                         <h2 class="form-title">Attach Your Car with Wizzride</h2>
                         <p class="form-description">Join our fleet and start earning with your vehicle</p>
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitCarAttachment()" #carFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullName">Car Owner Full Name *</label>
-                                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullName" name="fullName" [(ngModel)]="carAttachmentForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="contactNumber">Car Owner Contact No *</label>
-                                    <input type="text" id="contactNumber" name="contactNumber" required placeholder="Enter your Contact Number">
+                                    <input type="text" id="contactNumber" name="contactNumber" [(ngModel)]="carAttachmentForm.contactNumber" required placeholder="Enter your Contact Number">
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="cityName">City/Town *</label>
-                                <input type="text" id="cityName" name="cityName" required placeholder="Enter your City / Place of Residence">
+                                <input type="text" id="cityName" name="cityName" [(ngModel)]="carAttachmentForm.cityName" required placeholder="Enter your City / Place of Residence">
                             </div>
                             
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="alreadycar">Already have a Car? *</label>
-                                    <select id="alreadycar" name="alreadycar" required>
+                                    <select id="alreadycar" name="alreadycar" [(ngModel)]="carAttachmentForm.alreadycar" required>
                                         <option value="">Select your Answer</option>
                                         <option value="Yes, I have a Commercial Car">Yes, I have a Commercial Car</option>
                                         <option value="No, I am planning to buy">No, I am planning to buy.</option>
@@ -95,7 +95,7 @@
                                 
                                 <div class="form-group">
                                     <label for="driver">Who will drive? *</label>
-                                    <select id="driver" name="driver" required>
+                                    <select id="driver" name="driver" [(ngModel)]="carAttachmentForm.driver" required>
                                         <option value="">Select your Answer</option>
                                         <option value="I have a driver ready for this car">I have a driver ready for this car.</option>
                                         <option value="I DO NOT have a driver yet">I DO NOT have a driver yet.</option>
@@ -108,12 +108,47 @@
                             
                             <div class="form-group full-width">
                                 <label for="message">Your Message</label>
-                                <textarea id="message" name="message" placeholder="Write your Message here..."></textarea>
+                                <textarea id="message" name="message" [(ngModel)]="carAttachmentForm.message" placeholder="Write your Message here..."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['car-attachment']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['car-attachment']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['car-attachment']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['car-attachment'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['car-attachment']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['car-attachment'] }}</span>
+                                </div>
                             </div>
                             
-                            <button type="submit" class="submit-btn send-otp-button" id="send-otp-button-id">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Request
+                            <button type="submit" class="submit-btn send-otp-button" [disabled]="isSubmitting['car-attachment']">
+                                <i class="fas" [ngClass]="isSubmitting['car-attachment'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['car-attachment'] ? 'Submitting...' : 'Submit Request' }}
                             </button>
                         </form>
                     </div>
@@ -124,43 +159,74 @@
                         </h2>
                        
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitInvestor()" #investorFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullNameI">Full Name *</label>
-                                    <input type="text" id="fullNameI" name="fullNameI" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullNameI" name="fullNameI" [(ngModel)]="investorForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="contactNumberI">Contact Number *</label>
-                                    <input type="text" id="contactNumberI" name="contactNumberI" required placeholder="Enter your Contact Number">
+                                    <input type="text" id="contactNumberI" name="contactNumberI" [(ngModel)]="investorForm.contactNumber" required placeholder="Enter your Contact Number">
                                 </div>
                             </div>
                             
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="emailIdI">Email Address </label>
-                                    <input type="email" id="emailIdI" name="emailIdI"  placeholder="Enter your Email">
+                                    <input type="email" id="emailIdI" name="emailIdI" [(ngModel)]="investorForm.emailId" placeholder="Enter your Email">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="contactNumberI">Organisation *</label>
-                                    <input type="text" id="organisationI" name="organisationI" required placeholder="Enter your Organisation Name.">
+                                    <label for="organisationI">Organisation *</label>
+                                    <input type="text" id="organisationI" name="organisationI" [(ngModel)]="investorForm.organisation" required placeholder="Enter your Organisation Name.">
                                 </div>
-                                
-                                
                             </div>
                             
                             <div class="form-group full-width">
                                 <label for="messageI">Your Message</label>
-                                <textarea id="messageI" name="messageI" placeholder="Write your Message here..."></textarea>
+                                <textarea id="messageI" name="messageI" [(ngModel)]="investorForm.message" placeholder="Write your Message here..."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['investor']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['investor']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['investor']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['investor'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['investor']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['investor'] }}</span>
+                                </div>
                             </div>
                             
-                            
-                            
-                            <button type="submit" class="submit-btn" id="send-submit-request-button-id2">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Investment Inquiry
+                            <button type="submit" class="submit-btn" [disabled]="isSubmitting['investor']">
+                                <i class="fas" [ngClass]="isSubmitting['investor'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['investor'] ? 'Submitting...' : 'Submit Investment Inquiry' }}
                             </button>
                         </form>
                     </div>
@@ -170,51 +236,81 @@
                         <h2 class="form-title">Become a Wizzride Agent</h2>
                         
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitAgent()" #agentFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullNamewa">Full Name *</label>
-                                    <input type="text" id="fullNamewa" name="fullNamewa" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullNamewa" name="fullNamewa" [(ngModel)]="agentForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="contactNumberwa">Contact Number *</label>
-                                    <input type="text" id="contactNumberwa" name="contactNumberwa" required placeholder="Enter your Contact Number">
+                                    <input type="text" id="contactNumberwa" name="contactNumberwa" [(ngModel)]="agentForm.contactNumber" required placeholder="Enter your Contact Number">
                                 </div>
                             </div>
                             
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="emailIdwa">Email Address </label>
-                                    <input type="email" id="emailIdwa" name="emailIdwa" placeholder="Enter your Email">
+                                    <input type="email" id="emailIdwa" name="emailIdwa" [(ngModel)]="agentForm.emailId" placeholder="Enter your Email">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="addresswa">Address   *</label>
-                                    <input type="text" id="addresswa" name="addresswa" required placeholder="Enter your Office Address.">
+                                    <input type="text" id="addresswa" name="addresswa" [(ngModel)]="agentForm.address" required placeholder="Enter your Office Address.">
                                 </div>
                             </div>
 
                             <div class="form-grid">
-                              
-                                
                                 <div class="form-group full-width">
                                     <label for="gstnumberwa">GSTIN    *</label>
-                                    <input type="text" id="gstnumberwa" name="gstnumberwa" required placeholder="Enter your GST Number.">
+                                    <input type="text" id="gstnumberwa" name="gstnumberwa" [(ngModel)]="agentForm.gstnumber" required placeholder="Enter your GST Number.">
                                 </div>
                             </div>
 
                             <div class="form-group full-width">
                                 <label for="messagewa">Your Message</label>
-                                <textarea id="messagewa" name="messagewa" placeholder="Write your Message here..."></textarea>
+                                <textarea id="messagewa" name="messagewa" [(ngModel)]="agentForm.message" placeholder="Write your Message here..."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['agent']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['agent']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['agent']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['agent'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['agent']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['agent'] }}</span>
+                                </div>
                             </div>
                             
-
-                         
-                            
-                            <button type="submit" class="submit-btn" id="send-submit-request-button-id3">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Agent Application
+                            <button type="submit" class="submit-btn" [disabled]="isSubmitting['agent']">
+                                <i class="fas" [ngClass]="isSubmitting['agent'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['agent'] ? 'Submitting...' : 'Submit Agent Application' }}
                             </button>
                         </form>
                     </div>
@@ -225,43 +321,67 @@
                         </h2>
                         
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitInfluencer()" #influencerFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullNameIA">Full Name *</label>
-                                    <input type="text" id="fullNameIA" name="fullNameIA" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullNameIA" name="fullNameIA" [(ngModel)]="influencerForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="contactNumberIA">Contact Number *</label>
-                                    <input type="text" id="contactNumberIA" name="contactNumberIA" required placeholder="Enter your Contact Number">
+                                    <input type="text" id="contactNumberIA" name="contactNumberIA" [(ngModel)]="influencerForm.contactNumber" required placeholder="Enter your Contact Number">
                                 </div>
                             </div>
                             
-                            
-                                <div class="form-group full-width">
-                                    <label for="emailIdIA">Email Address</label>
-                                    <input type="email" id="emailIdIA" name="emailIdIA"  placeholder="Enter your Email">
-                                </div>
-                                
+                            <div class="form-group full-width">
+                                <label for="emailIdIA">Email Address</label>
+                                <input type="email" id="emailIdIA" name="emailIdIA" [(ngModel)]="influencerForm.emailId" placeholder="Enter your Email">
+                            </div>
 
-                                <div class="form-group full-width">
-                                    <label for="messageIA">Your Message</label>
-                                    <textarea id="messageIA" name="messageIA" placeholder="Tell Us about your Profile & how you think we could collaborate."></textarea>
+                            <div class="form-group full-width">
+                                <label for="messageIA">Your Message</label>
+                                <textarea id="messageIA" name="messageIA" [(ngModel)]="influencerForm.message" placeholder="Tell Us about your Profile & how you think we could collaborate."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['influencer']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['influencer']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
                                 </div>
-                                
-                               
-                        
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['influencer']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['influencer'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['influencer']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['influencer'] }}</span>
+                                </div>
+                            </div>
                             
-                         
-                            
-                          
-                            
-                         
-                            
-                            <button type="submit" class="submit-btn" id="send-submit-request-button-id4">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Collaboration Request
+                            <button type="submit" class="submit-btn" [disabled]="isSubmitting['influencer']">
+                                <i class="fas" [ngClass]="isSubmitting['influencer'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['influencer'] ? 'Submitting...' : 'Submit Collaboration Request' }}
                             </button>
                         </form>
                     </div>
@@ -272,42 +392,70 @@
                         </h2>
                       
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitB2B()" #b2bFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullNameb2b">Full Name *</label>
-                                    <input type="text" id="fullNameb2b" name="fullNameb2b" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullNameb2b" name="fullNameb2b" [(ngModel)]="b2bForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="companyNameb2b">
-                                        Company/ Business Name     *</label>
-                                    <input type="text" id="companyNameb2b" name="companyNameb2b" required placeholder="Enter your Business/ Organisation Name">
+                                    <label for="companyNameb2b">Company/ Business Name *</label>
+                                    <input type="text" id="companyNameb2b" name="companyNameb2b" [(ngModel)]="b2bForm.companyName" required placeholder="Enter your Business/ Organisation Name">
                                 </div>
                             </div>
                             <div class="form-grid">
-                               
-                                
                                 <div class="form-group">
                                     <label for="contactNumberb2b">Contact No  *</label>
-                                    <input type="text" id="contactNumberb2b" name="contactNumberb2b" required placeholder="Enter your Contact Number.">
+                                    <input type="text" id="contactNumberb2b" name="contactNumberb2b" [(ngModel)]="b2bForm.contactNumber" required placeholder="Enter your Contact Number.">
                                 </div>
                                 <div class="form-group">
                                     <label for="emailIdb2b">Email ID </label>
-                                    <input type="emailIdb2b" id="emailIdb2b" name="emailIdb2b"  placeholder="Enter your Email">
+                                    <input type="email" id="emailIdb2b" name="emailIdb2b" [(ngModel)]="b2bForm.emailId" placeholder="Enter your Email">
                                 </div>
                             </div>
                             <div class="form-group full-width">
                                 <label for="messageb2b">Your Message</label>
-                                <textarea id="messageb2b" name="messageb2b" placeholder="Write us about your requirement in detail."></textarea>
+                                <textarea id="messageb2b" name="messageb2b" [(ngModel)]="b2bForm.message" placeholder="Write us about your requirement in detail."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['b2b']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['b2b']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['b2b']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['b2b'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['b2b']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['b2b'] }}</span>
+                                </div>
                             </div>
                             
-                            
-                          
-                            
-                           
-                            <button type="submit" class="submit-btn" id="send-submit-request-button-id5">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Partnership Proposal
+                            <button type="submit" class="submit-btn" [disabled]="isSubmitting['b2b']">
+                                <i class="fas" [ngClass]="isSubmitting['b2b'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['b2b'] ? 'Submitting...' : 'Submit Partnership Proposal' }}
                             </button>
                         </form>
                     </div>
@@ -320,42 +468,70 @@
                         </h2>
                       
                         
-                        <form class="partnership-form">
+                        <form class="partnership-form" (ngSubmit)="onSubmitCorporate()" #corporateFormRef="ngForm">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullNameCE">Full Name *</label>
-                                    <input type="text" id="fullNameCE" name="fullNameCE" required placeholder="Enter your Full Name">
+                                    <input type="text" id="fullNameCE" name="fullNameCE" [(ngModel)]="corporateForm.fullName" required placeholder="Enter your Full Name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="companyNameCE">
-                                        Company/ Business Name     *</label>
-                                    <input type="text" id="companyNameCE" name="companyNameCE" required placeholder="Enter your Business/ Organisation Name">
+                                    <label for="companyNameCE">Company/ Business Name *</label>
+                                    <input type="text" id="companyNameCE" name="companyNameCE" [(ngModel)]="corporateForm.companyName" required placeholder="Enter your Business/ Organisation Name">
                                 </div>
                             </div>
                             <div class="form-grid">
-                               
-                                
                                 <div class="form-group">
                                     <label for="contactNumberCE">Contact No  *</label>
-                                    <input type="text" id="contactNumberCE" name="contactNumberCE" required placeholder="Enter your Contact Number.">
+                                    <input type="text" id="contactNumberCE" name="contactNumberCE" [(ngModel)]="corporateForm.contactNumber" required placeholder="Enter your Contact Number.">
                                 </div>
                                 <div class="form-group">
                                     <label for="emailIdCE">Email ID </label>
-                                    <input type="email" id="emailIdCE" name="emailIdCE"  placeholder="Enter your Email">
+                                    <input type="email" id="emailIdCE" name="emailIdCE" [(ngModel)]="corporateForm.emailId" placeholder="Enter your Email">
                                 </div>
                             </div>
                             <div class="form-group full-width">
                                 <label for="messageCE">Your Message</label>
-                                <textarea id="messageCE" name="messageCE" placeholder="Write us about your requirement in detail."></textarea>
+                                <textarea id="messageCE" name="messageCE" [(ngModel)]="corporateForm.message" placeholder="Write us about your requirement in detail."></textarea>
+                            </div>
+
+                            <!-- Captcha Verification -->
+                            <div class="form-group full-width">
+                                <label>Security Check *</label>
+                                <div class="captcha-container">
+                                    <div class="captcha-question">
+                                        {{ captchaData['corporateprivate']?.question }}
+                                    </div>
+                                    <div class="captcha-input-wrapper">
+                                        <input 
+                                            type="number" 
+                                            name="userCaptchaAnswer" 
+                                            [(ngModel)]="userCaptchaAnswers['corporateprivate']" 
+                                            required 
+                                            class="captcha-input"
+                                            placeholder="Your answer"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div *ngIf="successMessages['corporateprivate']" class="form-group full-width">
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ successMessages['corporateprivate'] }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessages['corporateprivate']" class="form-group full-width">
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ errorMessages['corporateprivate'] }}</span>
+                                </div>
                             </div>
                             
-                            
-                          
-                            
-                           
-                            <button type="submit" class="submit-btn" id="send-submit-request-button-id6">
-                                <i class="fas fa-paper-plane"></i>
-                                Submit Partnership Proposal
+                            <button type="submit" class="submit-btn" [disabled]="isSubmitting['corporateprivate']">
+                                <i class="fas" [ngClass]="isSubmitting['corporateprivate'] ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                                {{ isSubmitting['corporateprivate'] ? 'Submitting...' : 'Submit Partnership Proposal' }}
                             </button>
                         </form>
                     </div>

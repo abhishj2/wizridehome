@@ -3,16 +3,128 @@ import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
+
+interface CarAttachmentFormData {
+  fullName: string;
+  contactNumber: string;
+  cityName: string;
+  alreadycar: string;
+  driver: string;
+  message: string;
+}
+
+interface InvestorFormData {
+  fullName: string;
+  contactNumber: string;
+  emailId: string;
+  organisation: string;
+  message: string;
+}
+
+interface AgentFormData {
+  fullName: string;
+  contactNumber: string;
+  emailId: string;
+  address: string;
+  gstnumber: string;
+  message: string;
+}
+
+interface InfluencerFormData {
+  fullName: string;
+  contactNumber: string;
+  emailId: string;
+  message: string;
+}
+
+interface B2BFormData {
+  fullName: string;
+  companyName: string;
+  contactNumber: string;
+  emailId: string;
+  message: string;
+}
+
+interface CorporateFormData {
+  fullName: string;
+  companyName: string;
+  contactNumber: string;
+  emailId: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-partnerwithus',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './partnerwithus.component.html',
   styleUrl: './partnerwithus.component.css'
 })
 export class PartnerwithusComponent implements OnInit, AfterViewInit {
   private selectedTabId: string | null = null;
+  
+  // Form data objects
+  carAttachmentForm: CarAttachmentFormData = {
+    fullName: '',
+    contactNumber: '',
+    cityName: '',
+    alreadycar: '',
+    driver: '',
+    message: ''
+  };
+
+  investorForm: InvestorFormData = {
+    fullName: '',
+    contactNumber: '',
+    emailId: '',
+    organisation: '',
+    message: ''
+  };
+
+  agentForm: AgentFormData = {
+    fullName: '',
+    contactNumber: '',
+    emailId: '',
+    address: '',
+    gstnumber: '',
+    message: ''
+  };
+
+  influencerForm: InfluencerFormData = {
+    fullName: '',
+    contactNumber: '',
+    emailId: '',
+    message: ''
+  };
+
+  b2bForm: B2BFormData = {
+    fullName: '',
+    companyName: '',
+    contactNumber: '',
+    emailId: '',
+    message: ''
+  };
+
+  corporateForm: CorporateFormData = {
+    fullName: '',
+    companyName: '',
+    contactNumber: '',
+    emailId: '',
+    message: ''
+  };
+
+  // Captcha for each form
+  captchaData: { [key: string]: CaptchaData } = {};
+  userCaptchaAnswers: { [key: string]: string } = {};
+
+  // Form state
+  isSubmitting: { [key: string]: boolean } = {};
+  successMessages: { [key: string]: string } = {};
+  errorMessages: { [key: string]: string } = {};
   
   constructor(
     private seoService: SeoService,
@@ -21,9 +133,21 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     private metaService: Meta,
     private elementRef: ElementRef,
     private route: ActivatedRoute,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
   ngOnInit(): void {
+    // Generate captcha for all forms
+    const formTypes = ['car-attachment', 'investor', 'agent', 'influencer', 'b2b', 'corporateprivate'];
+    formTypes.forEach(formType => {
+      this.captchaData[formType] = this.captchaService.generateCaptcha();
+      this.userCaptchaAnswers[formType] = '';
+      this.isSubmitting[formType] = false;
+      this.successMessages[formType] = '';
+      this.errorMessages[formType] = '';
+    });
+
     // Get query parameters
     this.route.queryParams.subscribe(params => {
       const tabId = params['id'];
@@ -224,7 +348,6 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initTabFunctionality();
-    this.initFormSubmissions();
     this.initFocusAnimations();
     this.initHoverEffects();
     this.initSmoothScrolling();
@@ -289,67 +412,245 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Form submission handling
-  private initFormSubmissions(): void {
-    const forms = this.elementRef.nativeElement.querySelectorAll('.partnership-form');
-    
-    forms.forEach((form: HTMLFormElement) => {
-      this.renderer.listen(form, 'submit', (e: Event) => {
-        e.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(form);
-        const formDataObject: { [key: string]: any } = {};
-        
-        formData.forEach((value, key) => {
-          formDataObject[key] = value;
-        });
-        
-        // Get form type from parent container
-        const formContainer = form.closest('.form-container');
-        const formType = formContainer?.id || 'Unknown Form';
-        
-        // Log to console
-        console.log('=== Form Submission ===');
-        console.log('Form Type:', formType);
-        console.log('Form Data:', formDataObject);
-        console.log('Timestamp:', new Date().toLocaleString());
-        console.log('====================');
-        
-        // Create readable alert message
-        let alertMessage = `Form Type: ${formType}\n\n`;
-        for (const [key, value] of Object.entries(formDataObject)) {
-          if (value) {
-            alertMessage += `${key}: ${value}\n`;
-          }
-        }
-        
-        // Add loading state to button
-        const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-        if (!submitBtn) return;
+  /**
+   * Submit Car Attachment Form
+   */
+  onSubmitCarAttachment(): void {
+    this.submitForm('car-attachment', {
+      title: `Car Attachment Request - ${this.carAttachmentForm.fullName}`,
+      content: this.carAttachmentForm.message || 'No message provided',
+      acf: {
+        form_type: 'car-attachment',
+        full_name: this.carAttachmentForm.fullName,
+        contact_number: this.carAttachmentForm.contactNumber,
+        city_name: this.carAttachmentForm.cityName,
+        already_car: this.carAttachmentForm.alreadycar,
+        driver: this.carAttachmentForm.driver,
+        message: this.carAttachmentForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.carAttachmentForm, () => {
+      this.carAttachmentForm = {
+        fullName: '',
+        contactNumber: '',
+        cityName: '',
+        alreadycar: '',
+        driver: '',
+        message: ''
+      };
+    });
+  }
 
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Request...';
-        submitBtn.disabled = true;
-        
-        // Simulate form submission
-        setTimeout(() => {
-          // Show alert with form data
-          alert(alertMessage);
-          
-          submitBtn.innerHTML = '<i class="fas fa-check"></i> Request Submitted Successfully!';
-          submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+  /**
+   * Submit Investor Form
+   */
+  onSubmitInvestor(): void {
+    this.submitForm('investor', {
+      title: `Investor Inquiry - ${this.investorForm.fullName}`,
+      content: this.investorForm.message || 'No message provided',
+      acf: {
+        form_type: 'investor',
+        full_name: this.investorForm.fullName,
+        contact_number: this.investorForm.contactNumber,
+        email_id: this.investorForm.emailId,
+        organisation: this.investorForm.organisation,
+        message: this.investorForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.investorForm, () => {
+      this.investorForm = {
+        fullName: '',
+        contactNumber: '',
+        emailId: '',
+        organisation: '',
+        message: ''
+      };
+    });
+  }
+
+  /**
+   * Submit Agent Form
+   */
+  onSubmitAgent(): void {
+    this.submitForm('agent', {
+      title: `Agent Application - ${this.agentForm.fullName}`,
+      content: this.agentForm.message || 'No message provided',
+      acf: {
+        form_type: 'agent',
+        full_name: this.agentForm.fullName,
+        contact_number: this.agentForm.contactNumber,
+        email_id: this.agentForm.emailId,
+        address: this.agentForm.address,
+        gst_number: this.agentForm.gstnumber,
+        message: this.agentForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.agentForm, () => {
+      this.agentForm = {
+        fullName: '',
+        contactNumber: '',
+        emailId: '',
+        address: '',
+        gstnumber: '',
+        message: ''
+      };
+    });
+  }
+
+  /**
+   * Submit Influencer Form
+   */
+  onSubmitInfluencer(): void {
+    this.submitForm('influencer', {
+      title: `Influencer Collaboration - ${this.influencerForm.fullName}`,
+      content: this.influencerForm.message || 'No message provided',
+      acf: {
+        form_type: 'influencer',
+        full_name: this.influencerForm.fullName,
+        contact_number: this.influencerForm.contactNumber,
+        email_id: this.influencerForm.emailId,
+        message: this.influencerForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.influencerForm, () => {
+      this.influencerForm = {
+        fullName: '',
+        contactNumber: '',
+        emailId: '',
+        message: ''
+      };
+    });
+  }
+
+  /**
+   * Submit B2B Form
+   */
+  onSubmitB2B(): void {
+    this.submitForm('b2b', {
+      title: `B2B Partnership - ${this.b2bForm.fullName}`,
+      content: this.b2bForm.message || 'No message provided',
+      acf: {
+        form_type: 'b2b',
+        full_name: this.b2bForm.fullName,
+        company_name: this.b2bForm.companyName,
+        contact_number: this.b2bForm.contactNumber,
+        email_id: this.b2bForm.emailId,
+        message: this.b2bForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.b2bForm, () => {
+      this.b2bForm = {
+        fullName: '',
+        companyName: '',
+        contactNumber: '',
+        emailId: '',
+        message: ''
+      };
+    });
+  }
+
+  /**
+   * Submit Corporate/Private Events Form
+   */
+  onSubmitCorporate(): void {
+    this.submitForm('corporateprivate', {
+      title: `Corporate/Private Event - ${this.corporateForm.fullName}`,
+      content: this.corporateForm.message || 'No message provided',
+      acf: {
+        form_type: 'corporate-private',
+        full_name: this.corporateForm.fullName,
+        company_name: this.corporateForm.companyName,
+        contact_number: this.corporateForm.contactNumber,
+        email_id: this.corporateForm.emailId,
+        message: this.corporateForm.message || '',
+        submission_date: new Date().toISOString()
+      }
+    }, this.corporateForm, () => {
+      this.corporateForm = {
+        fullName: '',
+        companyName: '',
+        contactNumber: '',
+        emailId: '',
+        message: ''
+      };
+    });
+  }
+
+  /**
+   * Generic form submission handler
+   */
+  private submitForm(
+    formType: string,
+    submissionData: any,
+    formData: any,
+    resetCallback: () => void
+  ): void {
+    // Clear previous messages
+    this.successMessages[formType] = '';
+    this.errorMessages[formType] = '';
+
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswers[formType], this.captchaData[formType].answer)) {
+      this.errorMessages[formType] = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswers[formType] = '';
+      this.captchaData[formType] = this.captchaService.generateCaptcha();
+      return;
+    }
+
+    // Validate required fields based on form type
+    let isValid = true;
+    if (formType === 'car-attachment') {
+      isValid = !!(formData.fullName && formData.contactNumber && formData.cityName && formData.alreadycar && formData.driver);
+    } else if (formType === 'investor') {
+      isValid = !!(formData.fullName && formData.contactNumber && formData.organisation);
+    } else if (formType === 'agent') {
+      isValid = !!(formData.fullName && formData.contactNumber && formData.address && formData.gstnumber);
+    } else if (formType === 'influencer') {
+      isValid = !!(formData.fullName && formData.contactNumber);
+    } else if (formType === 'b2b' || formType === 'corporateprivate') {
+      isValid = !!(formData.fullName && formData.companyName && formData.contactNumber);
+    }
+
+    if (!isValid) {
+      this.errorMessages[formType] = 'Please fill in all required fields.';
+      return;
+    }
+
+    this.isSubmitting[formType] = true;
+    submissionData.status = 'publish';
+
+    console.log(`Submitting ${formType} form:`, submissionData);
+
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/wiz_partnerships', submissionData)
+      .subscribe({
+        next: (response) => {
+          console.log(`${formType} form submitted successfully:`, response);
+          this.isSubmitting[formType] = false;
+          this.successMessages[formType] = 'Thank you! Your request has been submitted successfully. We will contact you soon.';
           
           // Reset form
+          resetCallback();
+          this.userCaptchaAnswers[formType] = '';
+          
+          // Generate new captcha
+          this.captchaData[formType] = this.captchaService.generateCaptcha();
+
+          // Clear success message after 5 seconds
           setTimeout(() => {
-            form.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.style.background = '';
-            submitBtn.disabled = false;
-          }, 3000);
-        }, 2000);
+            this.successMessages[formType] = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error(`Error submitting ${formType} form:`, error);
+          this.isSubmitting[formType] = false;
+          this.errorMessages[formType] = 'There was an error submitting your request. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessages[formType] = '';
+          }, 5000);
+        }
       });
-    });
   }
 
   // Focus animations for form inputs
