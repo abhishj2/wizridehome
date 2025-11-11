@@ -3,6 +3,8 @@ import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../services/seo.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 interface ContactFormData {
   fullName: string;
@@ -14,21 +16,42 @@ interface ContactFormData {
 @Component({
   selector: 'app-contactus',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './contactus.component.html',
   styleUrl: './contactus.component.css'
 })
 export class ContactusComponent implements OnInit, AfterViewInit {
   @ViewChild('contactForm') contactFormElement?: ElementRef<HTMLFormElement>;
   
+  formData: ContactFormData = {
+    fullName: '',
+    mobileNumber: '',
+    emailId: '',
+    message: ''
+  };
+
+  // Captcha
+  captchaQuestion: string = '';
+  captchaAnswer: number = 0;
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+  
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient
   ) {}
   ngOnInit(): void {
+    // Generate captcha
+    this.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/contactus');
     
@@ -104,11 +127,97 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
-    this.initializeFormSubmission();
     this.initializeContactCardAnimations();
     this.initializeFormInputAnimations();
     this.initializeContactCardClickAnimations();
     this.initializeStaggeredContactCards();
+  }
+
+  /**
+   * Generate captcha question
+   */
+  generateCaptcha(): void {
+    const num1 = Math.floor(Math.random() * 20) + 1;
+    const num2 = Math.floor(Math.random() * 20) + 1;
+    this.captchaAnswer = num1 + num2;
+    this.captchaQuestion = `${num1} + ${num2} = ?`;
+  }
+
+  /**
+   * Handle form submission
+   */
+  onSubmit(): void {
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    // Validate captcha first
+    const userAnswer = parseInt(this.userCaptchaAnswer);
+    if (isNaN(userAnswer) || userAnswer !== this.captchaAnswer) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.generateCaptcha();
+      return;
+    }
+
+    // Validate form data
+    if (!this.formData.fullName || !this.formData.mobileNumber || !this.formData.emailId || !this.formData.message) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const submissionData = {
+      title: `Contact Form Submission - ${this.formData.fullName}`,
+      content: this.formData.message,
+      status: 'publish',
+      acf: {
+        full_name: this.formData.fullName,
+        mobile_number: this.formData.mobileNumber,
+        email_id: this.formData.emailId,
+        message: this.formData.message,
+        submission_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting contact form:', submissionData);
+
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/contact_submissions', submissionData)
+      .subscribe({
+        next: (response) => {
+          console.log('Contact form submitted successfully:', response);
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your message has been submitted successfully. We will contact you soon.';
+          
+          // Reset form
+          this.formData = {
+            fullName: '',
+            mobileNumber: '',
+            emailId: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.generateCaptcha();
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting contact form:', error);
+          this.isSubmitting = false;
+          this.errorMessage = 'There was an error submitting your message. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
+        }
+      });
   }
 
   /**
@@ -155,75 +264,6 @@ export class ContactusComponent implements OnInit, AfterViewInit {
 
     // Start typing animation after a short delay
     setTimeout(typeWriter, 200);
-  }
-
-  /**
-   * Handle form submission
-   */
-  private initializeFormSubmission(): void {
-    const form = this.document.getElementById('contactForm') as HTMLFormElement;
-    if (!form) return;
-
-    form.addEventListener('submit', (e: Event) => {
-      e.preventDefault();
-      this.handleFormSubmit(form);
-    });
-  }
-
-  /**
-   * Process form submission and display data
-   */
-  private handleFormSubmit(form: HTMLFormElement): void {
-    // Get form data
-    const formData: ContactFormData = {
-      fullName: (form.elements.namedItem('fullName') as HTMLInputElement)?.value || '',
-      mobileNumber: (form.elements.namedItem('mobileNumber') as HTMLInputElement)?.value || '',
-      emailId: (form.elements.namedItem('emailId') as HTMLInputElement)?.value || '',
-      message: (form.elements.namedItem('message') as HTMLTextAreaElement)?.value || ''
-    };
-
-    // Display data in console
-    console.log('=== Contact Form Submission ===');
-    console.log('Full Name:', formData.fullName);
-    console.log('Contact Number:', formData.mobileNumber);
-    console.log('Email ID:', formData.emailId);
-    console.log('Message:', formData.message);
-    console.log('================================');
-
-    // Display data in alert
-    const alertMessage = `
-Contact Form Submitted!
-
-Full Name: ${formData.fullName}
-Contact Number: ${formData.mobileNumber}
-Email ID: ${formData.emailId}
-Message: ${formData.message}
-    `.trim();
-    
-    // Add loading state to button
-    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-    if (!submitBtn) return;
-
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-    submitBtn.disabled = true;
-    
-    // Simulate form submission
-    setTimeout(() => {
-      // Show alert with form data
-      alert(alertMessage);
-
-      submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-      submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-      
-      // Reset form
-      setTimeout(() => {
-        form.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.style.background = '';
-        submitBtn.disabled = false;
-      }, 2000);
-    }, 1500);
   }
 
   /**
