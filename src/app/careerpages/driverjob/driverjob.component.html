@@ -18,31 +18,68 @@
             <h2>Enquire About Joining</h2>
             <p>Fill out the form below and we'll get back to you shortly.</p>
         </div>
-        <form id="enquireForm">
+        <form id="enquireForm" (ngSubmit)="onSubmit()" #driverForm="ngForm">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="enquireName">Full Name *</label>
-                    <input type="text" id="enquireName" name="enquireName" required placeholder="Enter your full name">
+                    <input type="text" id="enquireName" name="enquireName" [(ngModel)]="formData.fullName" required placeholder="Enter your full name">
                 </div>
                 <div class="form-group">
                     <label for="enquireEmail">Email *</label>
-                    <input type="email" id="enquireEmail" name="enquireEmail" required placeholder="Enter your email address">
+                    <input type="email" id="enquireEmail" name="enquireEmail" [(ngModel)]="formData.email" required placeholder="Enter your email address">
                 </div>
                 <div class="form-group">
                     <label for="enquirePhone">Contact No *</label>
-                    <input type="text" id="enquirePhone" name="enquirePhone" required placeholder="Enter your contact number">
+                    <input type="text" id="enquirePhone" name="enquirePhone" [(ngModel)]="formData.contactNumber" required placeholder="Enter your contact number">
                 </div>
                 <div class="form-group">
                     <label for="enquireSubject">Subject</label>
-                    <input type="text" id="enquireSubject" name="enquireSubject" placeholder="Enter subject">
+                    <input type="text" id="enquireSubject" name="enquireSubject" [(ngModel)]="formData.subject" placeholder="Enter subject">
                 </div>
                 <div class="form-group full-width">
                     <label for="enquireMessage">Message</label>
-                    <textarea id="enquireMessage" name="enquireMessage" placeholder="Tell us more..."></textarea>
+                    <textarea id="enquireMessage" name="enquireMessage" [(ngModel)]="formData.message" placeholder="Tell us more..."></textarea>
+                </div>
+
+                <!-- Captcha Verification -->
+                <div class="form-group full-width">
+                    <label>Security Check *</label>
+                    <div class="captcha-container">
+                        <div class="captcha-question">
+                            {{ captchaData.question }}
+                        </div>
+                        <div class="captcha-input-wrapper">
+                            <input 
+                                type="number" 
+                                id="userCaptchaAnswer" 
+                                name="userCaptchaAnswer" 
+                                [(ngModel)]="userCaptchaAnswer" 
+                                required 
+                                class="captcha-input"
+                                placeholder="Your answer"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div *ngIf="successMessage" class="form-group full-width">
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ successMessage }}</span>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="errorMessage" class="form-group full-width">
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ errorMessage }}</span>
+                    </div>
                 </div>
             </div>
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-paper-plane"></i> Send Enquiry
+            <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+                <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i> 
+                {{ isSubmitting ? 'Submitting...' : 'Send Enquiry' }}
             </button>
         </form>
     </div>

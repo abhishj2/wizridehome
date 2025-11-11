@@ -2,6 +2,10 @@ import { Component, AfterViewInit, Renderer2, OnInit, Inject } from '@angular/co
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
 
 interface DriverEnquiryFormData {
   fullName: string;
@@ -14,21 +18,43 @@ interface DriverEnquiryFormData {
 @Component({
   selector: 'app-driverjob',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './driverjob.component.html',
   styleUrl: './driverjob.component.css'
 })
 export class DriverjobComponent implements OnInit, AfterViewInit {
+
+  formData: DriverEnquiryFormData = {
+    fullName: '',
+    email: '',
+    contactNumber: '',
+    subject: '',
+    message: ''
+  };
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
 
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/applyforjob/driverjob');
     
@@ -119,7 +145,6 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
-    this.initializeFormSubmission();
     this.initializeFormInputAnimations();
     this.initializeParallaxEffect();
   }
@@ -173,73 +198,79 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
   /**
    * Handle form submission
    */
-  private initializeFormSubmission(): void {
-    const form = this.document.getElementById('enquireForm') as HTMLFormElement;
-    if (!form) return;
+  onSubmit(): void {
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
 
-    form.addEventListener('submit', (e: Event) => {
-      e.preventDefault();
-      this.handleFormSubmit(form);
-    });
-  }
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
+    }
 
-  /**
-   * Process form submission and display data
-   */
-  private handleFormSubmit(form: HTMLFormElement): void {
-    // Get form data
-    const formData: DriverEnquiryFormData = {
-      fullName: (form.elements.namedItem('enquireName') as HTMLInputElement)?.value || '',
-      email: (form.elements.namedItem('enquireEmail') as HTMLInputElement)?.value || '',
-      contactNumber: (form.elements.namedItem('enquirePhone') as HTMLInputElement)?.value || '',
-      subject: (form.elements.namedItem('enquireSubject') as HTMLInputElement)?.value || '',
-      message: (form.elements.namedItem('enquireMessage') as HTMLTextAreaElement)?.value || ''
+    // Validate form data
+    if (!this.formData.fullName || !this.formData.email || !this.formData.contactNumber) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const submissionData = {
+      title: `Driver Application - ${this.formData.fullName}`,
+      content: this.formData.message || 'No message provided',
+      status: 'publish',
+      acf: {
+        full_name: this.formData.fullName,
+        email: this.formData.email,
+        contact_number: this.formData.contactNumber,
+        subject: this.formData.subject || '',
+        message: this.formData.message || '',
+        submission_date: new Date().toISOString()
+      }
     };
 
-    // Display data in console
-    console.log('=== Driver Enquiry Submission ===');
-    console.log('Full Name:', formData.fullName);
-    console.log('Email:', formData.email);
-    console.log('Contact Number:', formData.contactNumber);
-    console.log('Subject:', formData.subject);
-    console.log('Message:', formData.message);
-    console.log('=================================');
+    console.log('Submitting driver application:', submissionData);
 
-    // Display data in alert
-    const alertMessage = `
-Driver Enquiry Submitted!
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/driver_applications', submissionData)
+      .subscribe({
+        next: (response) => {
+          console.log('Driver application submitted successfully:', response);
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your application has been submitted successfully. We will contact you soon.';
+          
+          // Reset form
+          this.formData = {
+            fullName: '',
+            email: '',
+            contactNumber: '',
+            subject: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.captchaData = this.captchaService.generateCaptcha();
 
-Full Name: ${formData.fullName}
-Email: ${formData.email}
-Contact Number: ${formData.contactNumber}
-Subject: ${formData.subject}
-Message: ${formData.message}
-    `.trim();
-    
-    // Add loading state to button
-    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-    if (!submitBtn) return;
-
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Application...';
-    submitBtn.disabled = true;
-    
-    // Simulate form submission
-    setTimeout(() => {
-      // Show alert with form data
-      alert(alertMessage);
-
-      submitBtn.innerHTML = '<i class="fas fa-check"></i> Application Submitted!';
-      submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-      
-      // Reset form
-      setTimeout(() => {
-        form.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.style.background = '';
-        submitBtn.disabled = false;
-      }, 3000);
-    }, 2000);
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting driver application:', error);
+          this.isSubmitting = false;
+          this.errorMessage = 'There was an error submitting your application. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
+        }
+      });
   }
 
   /**
