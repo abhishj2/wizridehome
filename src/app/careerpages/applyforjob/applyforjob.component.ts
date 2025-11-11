@@ -2,33 +2,60 @@ import { Component, AfterViewInit, Renderer2, OnInit, Inject } from '@angular/co
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
 
 interface CareerFormData {
   fullName: string;
   contactNumber: string;
   address: string;
-  fileName: string;
   message: string;
 }
 
 @Component({
   selector: 'app-applyforjob',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './applyforjob.component.html',
   styleUrl: './applyforjob.component.css'
 })
 export class ApplyforjobComponent implements OnInit, AfterViewInit {
+
+  formData: CareerFormData = {
+    fullName: '',
+    contactNumber: '',
+    address: '',
+    message: ''
+  };
+
+  selectedFile: File | null = null;
+  fileName: string = '';
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
 
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/applyforjob');
     
@@ -174,7 +201,6 @@ this.addJsonLd({
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
-    this.initializeFormSubmission();
     this.initializeFileInputHandling();
     this.initializeFeatureCardHoverEffects();
     this.initializeFormInputAnimations();
@@ -229,91 +255,159 @@ this.addJsonLd({
   }
 
   /**
-   * Handle form submission
+   * Handle file selection
    */
-  private initializeFormSubmission(): void {
-    const form = this.document.getElementById('careerForm') as HTMLFormElement;
-    if (!form) return;
+  onFileSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        this.errorMessage = 'Please upload a valid PDF, DOC, or DOCX file.';
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessage = 'File size must be less than 5MB.';
+        return;
+      }
 
-    form.addEventListener('submit', (e: Event) => {
-      e.preventDefault();
-      this.handleFormSubmit(form);
+      this.selectedFile = file;
+      this.fileName = file.name;
+      this.errorMessage = '';
+    }
+  }
+
+  /**
+   * Upload file to WordPress
+   */
+  uploadFileToWordPress(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      if (!this.selectedFile) {
+        resolve(0);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      this.http.post<any>('https://cms.wizzride.com/wp-json/wp/v2/media', formData)
+        .subscribe({
+          next: (response) => {
+            console.log('File uploaded successfully:', response);
+            resolve(response.id);
+          },
+          error: (error) => {
+            console.error('Error uploading file:', error);
+            reject(error);
+          }
+        });
     });
   }
 
   /**
-   * Process form submission and display data
+   * Handle form submission
    */
-  private handleFormSubmit(form: HTMLFormElement): void {
-    // Get form data
-    const fileInput = form.elements.namedItem('files') as HTMLInputElement;
-    const formData: CareerFormData = {
-      fullName: (form.elements.namedItem('fullName') as HTMLInputElement)?.value || '',
-      contactNumber: (form.elements.namedItem('contactNumber') as HTMLInputElement)?.value || '',
-      address: (form.elements.namedItem('address') as HTMLInputElement)?.value || '',
-      fileName: fileInput?.files?.[0]?.name || 'No file selected',
-      message: (form.elements.namedItem('message') as HTMLTextAreaElement)?.value || ''
-    };
+  onSubmit(): void {
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
 
-    // Display data in console
-    console.log('=== Career Application Submission ===');
-    console.log('Full Name:', formData.fullName);
-    console.log('Contact Number:', formData.contactNumber);
-    console.log('Address:', formData.address);
-    console.log('CV File:', formData.fileName);
-    console.log('Message:', formData.message);
-    console.log('====================================');
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
+    }
 
-    // Display data in alert
-    const alertMessage = `
-Career Application Submitted!
+    // Validate form data
+    if (!this.formData.fullName || !this.formData.contactNumber || !this.formData.address) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
 
-Full Name: ${formData.fullName}
-Contact Number: ${formData.contactNumber}
-Address: ${formData.address}
-CV File: ${formData.fileName}
-Message: ${formData.message}
-    `.trim();
-    
-    // Add loading state to button
-    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-    if (!submitBtn) return;
+    if (!this.selectedFile) {
+      this.errorMessage = 'Please attach your CV.';
+      return;
+    }
 
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Application...';
-    submitBtn.disabled = true;
-    
-    // Simulate form submission
-    setTimeout(() => {
-      // Show alert with form data
-      alert(alertMessage);
+    this.isSubmitting = true;
 
-      submitBtn.innerHTML = '<i class="fas fa-check"></i> Application Submitted!';
-      submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-      
-      // Reset form
-      setTimeout(() => {
-        form.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.style.background = '';
-        submitBtn.disabled = false;
-
-        // Reset file input display
-        const fileInputDisplay = this.document.querySelector('.file-input') as HTMLElement;
-        if (fileInputDisplay) {
-          const textNode = Array.from(fileInputDisplay.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
-          if (textNode) {
-            textNode.textContent = ' Choose File (PDF, DOC, DOCX)';
+    // First upload the file, then submit the form
+    this.uploadFileToWordPress()
+      .then((fileId) => {
+        const submissionData = {
+          title: `Career Application - ${this.formData.fullName}`,
+          content: this.formData.message || 'No message provided',
+          status: 'publish',
+          acf: {
+            full_name: this.formData.fullName,
+            contact_number: this.formData.contactNumber,
+            address: this.formData.address,
+            message: this.formData.message || '',
+            cv_file: fileId, // WordPress media ID
+            cv_file_name: this.fileName,
+            submission_date: new Date().toISOString()
           }
-          const icon = fileInputDisplay.querySelector('i');
-          if (icon) {
-            icon.className = 'fas fa-upload';
-          }
-          fileInputDisplay.style.borderColor = '';
-          fileInputDisplay.style.background = '';
-        }
-      }, 3000);
-    }, 2000);
+        };
+
+        console.log('Submitting career application:', submissionData);
+
+        this.http.post('https://cms.wizzride.com/wp-json/wp/v2/career_applications', submissionData)
+          .subscribe({
+            next: (response) => {
+              console.log('Career application submitted successfully:', response);
+              this.isSubmitting = false;
+              this.successMessage = 'Thank you! Your application has been submitted successfully. We will contact you soon.';
+              
+              // Reset form
+              this.formData = {
+                fullName: '',
+                contactNumber: '',
+                address: '',
+                message: ''
+              };
+              this.selectedFile = null;
+              this.fileName = '';
+              this.userCaptchaAnswer = '';
+              
+              // Reset file input
+              const fileInput = this.document.querySelector('#cvFile') as HTMLInputElement;
+              if (fileInput) {
+                fileInput.value = '';
+              }
+              
+              // Generate new captcha
+              this.captchaData = this.captchaService.generateCaptcha();
+
+              // Clear success message after 5 seconds
+              setTimeout(() => {
+                this.successMessage = '';
+              }, 5000);
+            },
+            error: (error) => {
+              console.error('Error submitting career application:', error);
+              this.isSubmitting = false;
+              this.errorMessage = 'There was an error submitting your application. Please try again.';
+              
+              // Clear error message after 5 seconds
+              setTimeout(() => {
+                this.errorMessage = '';
+              }, 5000);
+            }
+          });
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error);
+        this.isSubmitting = false;
+        this.errorMessage = 'There was an error uploading your CV. Please try again.';
+        
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 5000);
+      });
   }
 
   /**

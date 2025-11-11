@@ -5,6 +5,7 @@ import { SeoService } from '../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../services/captcha.service';
 
 interface ContactFormData {
   fullName: string;
@@ -31,8 +32,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
   };
 
   // Captcha
-  captchaQuestion: string = '';
-  captchaAnswer: number = 0;
+  captchaData: CaptchaData = { question: '', answer: 0 };
   userCaptchaAnswer: string = '';
 
   // Form state
@@ -46,11 +46,12 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private metaService: Meta,
     @Inject(DOCUMENT) private document: Document,
-    private http: HttpClient
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
   ngOnInit(): void {
     // Generate captcha
-    this.generateCaptcha();
+    this.captchaData = this.captchaService.generateCaptcha();
     
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/contactus');
@@ -134,16 +135,6 @@ export class ContactusComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Generate captcha question
-   */
-  generateCaptcha(): void {
-    const num1 = Math.floor(Math.random() * 20) + 1;
-    const num2 = Math.floor(Math.random() * 20) + 1;
-    this.captchaAnswer = num1 + num2;
-    this.captchaQuestion = `${num1} + ${num2} = ?`;
-  }
-
-  /**
    * Handle form submission
    */
   onSubmit(): void {
@@ -152,11 +143,10 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     this.errorMessage = '';
 
     // Validate captcha first
-    const userAnswer = parseInt(this.userCaptchaAnswer);
-    if (isNaN(userAnswer) || userAnswer !== this.captchaAnswer) {
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
       this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
       this.userCaptchaAnswer = '';
-      this.generateCaptcha();
+      this.captchaData = this.captchaService.generateCaptcha();
       return;
     }
 
@@ -200,7 +190,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
           this.userCaptchaAnswer = '';
           
           // Generate new captcha
-          this.generateCaptcha();
+          this.captchaData = this.captchaService.generateCaptcha();
 
           // Clear success message after 5 seconds
           setTimeout(() => {
