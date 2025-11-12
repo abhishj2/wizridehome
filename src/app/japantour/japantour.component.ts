@@ -92,8 +92,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Tokyo Imperial Palace and East Gardens',
           description: 'The Tokyo Imperial Palace is the primary residence of the Emperor of Japan, located on the site of the former Edo Castle. The palace complex is surrounded by walls and moats, covering approximately 1.15 square kilometers (0.44 square miles). The Kyūden (宮殿) is the main building where the Emperor conducts official duties and ceremonies. The East Gardens (東御苑, Higashi-gyoen) are a public area offering a serene escape with traditional Japanese gardens, ponds, bridges, and historic structures. The gardens include areas like Honmaru, Ninomaru, and Sannomaru, with the Ninomaru Garden featuring a pond, islands, and teahouses. The Fujimi yagura offers panoramic views of the palace grounds.',
           images: [
-            'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1578637381404-fb7f3c6d8d5c?w=800&h=600&fit=crop'
+            'https://images.pexels.com/photos/5817295/pexels-photo-5817295.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'https://images.pexels.com/photos/5206573/pexels-photo-5206573.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'https://images.pexels.com/photos/14892395/pexels-photo-14892395.jpeg?auto=compress&cs=tinysrgb&w=800'
           ]
         }
       ]
@@ -116,8 +117,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Transfer to Hakone & Mt. Fuji Tour',
           description: 'After breakfast, check out from hotel and transfer to Hakone. Enjoy a scenic tour of Hakone including Lake Ashi cruise and ropeway ride (weather permitting). Visit Mt. Fuji 5th Station (subject to weather conditions). Check-in at hotel in Hakone. Overnight stay in Hakone.',
           images: [
-            'https://images.unsplash.com/photo-1578637381404-fb7f3c6d8d5c?w=800&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=600&fit=crop'
+            'https://images.pexels.com/photos/861446/pexels-photo-861446.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/13598687/pexels-photo-13598687.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/13598682/pexels-photo-13598682.jpeg?auto=compress&cs=tinysrgb&w=600'
           ]
         }
       ]
@@ -150,8 +152,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Transfer to Nara & Visit Todaiji Temple',
           description: 'After breakfast, transfer to Nara (approximately 1 hour). Visit Todaiji Temple, home to the world\'s largest bronze statue of Buddha. The temple is a UNESCO World Heritage site and represents the grandeur and skill of ancient Japanese craftsmanship. Todaiji\'s historical and cultural significance extends beyond its architectural marvels. It played a crucial role in the spread of Buddhism in Japan and served as the head temple of all provincial Buddhist temples. The temple complex includes various other significant buildings, such as the Nandaimon (Great South Gate), which features two imposing statues of Nio guardians, and the Nigatsu-do and Sangatsu-do halls, known for their cultural treasures and annual rituals. As a UNESCO World Heritage site, Todaiji not only embodies the spiritual and cultural heritage of Japan but also stands as a testament to the country\'s architectural and artistic achievements. Visiting Todaiji offers a profound glimpse into Japan\'s rich history and religious traditions, making it an essential destination for travelers.',
           images: [
-            'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1578637381404-fb7f3c6d8d5c?w=800&h=600&fit=crop'
+            'https://images.pexels.com/photos/10237794/pexels-photo-10237794.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/17399791/pexels-photo-17399791/free-photo-of-wall-of-tokyo-skytree.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/21759451/pexels-photo-21759451/free-photo-of-sky-tree.jpeg?auto=compress&cs=tinysrgb&w=600'
           ]
         },
         {
@@ -169,8 +172,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Osaka Castle',
           description: 'Osaka Castle is one of Japan\'s most famous landmarks, offering visitors a fascinating glimpse into the country\'s rich history and culture. Originally built in 1583 by Toyotomi Hideyoshi, a key figure in Japan\'s unification, the castle has played a significant role in various historical events, including the Siege of Osaka. The castle\'s striking main tower, surrounded by moats and impressive stone walls, stands as a testament to the architectural ingenuity of the time. Visiting Osaka Castle provides an opportunity to explore its expansive grounds, which include beautifully landscaped gardens, such as the Nishinomaru Garden, offering spectacular views of the castle tower against a backdrop of cherry blossoms in spring. The castle\'s interior has been transformed into a modern museum, showcasing a vast collection of historical artifacts, samurai armor, and informative displays detailing the castle\'s storied past. The observation deck at the top of the main tower offers panoramic views of Osaka, allowing visitors to appreciate the city\'s blend of historical and modern elements. The castle grounds are also a hub for cultural events and festivals, providing a vibrant atmosphere throughout the year. Overall, Osaka Castle is a must-visit destination for history enthusiasts, architecture lovers, and anyone looking to experience the cultural heritage of Japan. Its blend of historical significance, architectural beauty, and cultural activities makes it a highlight of any visit to Osaka.',
           images: [
-            'https://images.unsplash.com/photo-1578637381404-fb7f3c6d8d5c?w=800&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&h=600&fit=crop'
+            'https://images.pexels.com/photos/5905658/pexels-photo-5905658.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/3402955/pexels-photo-3402955.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/18848590/pexels-photo-18848590/free-photo-of-hachiko-memorial-statue-in-tokyo-japan.jpeg?auto=compress&cs=tinysrgb&w=600'
           ]
         },
         {
@@ -434,6 +438,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
 
   shouldShowReadMore(story: string): boolean {
     return story.length > this.maxStoryLength;
+  }
+
+  onImageError(event: any): void {
+    console.error('Image failed to load:', event.target.src);
+    // Set a fallback image
+    event.target.src = 'assets/images/japan.jpg';
   }
 
   ngOnDestroy(): void {

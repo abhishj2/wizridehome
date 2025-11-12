@@ -23,6 +23,16 @@
             <h2 class="tour-duration">8 Days Tour of Tokyo - Hakone - Mt. Fuji - Kyoto - Hiroshima - Osaka</h2>
         </div>
 
+        <div class="tour-promo-section">
+            <div class="tour-logo-section">
+                <img src="assets/images/japan/Global Logo.png" alt="Global Terrain Vacations" class="global-logo"/>
+            </div>
+
+            <div class="tour-sale-section">
+                <img src="assets/images/japan/sale japan.png" alt="Japan Tour Sale" class="sale-graphic"/>
+            </div>
+        </div>
+
         <div class="tour-details-grid">
             <div class="tour-info-card">
                 <div class="info-item">
@@ -52,11 +62,6 @@
                         <h3>Deal Type</h3>
                         <p>Cost To Cost Deal</p>
                     </div>
-                </div>
-                <div class="info-grid">
-                    <img src="../../assets/images/japan/Global Logo.png" class="globimg"/>    
-                    <img src="../../assets/images/japan/sale japan.png" class="japimg"/>
-                
                 </div>
             </div>
 
@@ -146,13 +151,18 @@
         </div>
     </div>
 </section>
-
+<img src="../../assets/images/japan/pexels-photo-4058530.jpeg" class="midimg" alt="ourpurpose"/>
 <!-- Our Purpose Section -->
 <section class="purpose-section">
     <div class="container">
         <h2 class="section-title">Our purpose with this tour.</h2>
         <div class="purpose-content">
-            <p>Our purpose in organizing this Japan tour is to inspire individuals of all ages, demonstrating that life can be vibrant and purposeful at any stage. We believe that travel is a powerful tool to reignite passions and broaden perspectives, and Japan's rich culture and breathtaking landscapes provide the perfect backdrop for this journey. In Japan, elderly people continue to work and lead active lives, driven by the concept of "ikigai" – a sense of purpose and fulfillment. This tour aims to highlight how the Japanese embrace ikigai, balancing work, passion, and community involvement, contributing to their remarkable longevity and quality of life. We want our participants to witness firsthand how Japanese individuals of all ages find joy and purpose in their daily activities, defying traditional views of aging and retirement. By experiencing Japan's scenic beauty and observing the active lifestyles of its citizens, we hope to inspire everyone to find their own ikigai. Whether through new hobbies, volunteer work, or rekindling old passions, this tour encourages participants to discover and pursue their unique purpose. As highlighted in the Netflix documentary "Live to 100: Secrets of the Blue Zones," understanding and embracing ikigai could be key to a fulfilling and extended life. We invite you to join us on this enlightening journey, to explore, learn, and perhaps, find your own ikigai. Share your thoughts and experiences with us, and let's embark on this adventure together, regardless of age.</p>
+            <div class="purpose-text">
+                <p>Our purpose in organizing this Japan tour is to inspire individuals of all ages, demonstrating that life can be vibrant and purposeful at any stage. We believe that travel is a powerful tool to reignite passions and broaden perspectives, and Japan's rich culture and breathtaking landscapes provide the perfect backdrop for this journey. In Japan, elderly people continue to work and lead active lives, driven by the concept of "ikigai" – a sense of purpose and fulfillment. This tour aims to highlight how the Japanese embrace ikigai, balancing work, passion, and community involvement, contributing to their remarkable longevity and quality of life. We want our participants to witness firsthand how Japanese individuals of all ages find joy and purpose in their daily activities, defying traditional views of aging and retirement. By experiencing Japan's scenic beauty and observing the active lifestyles of its citizens, we hope to inspire everyone to find their own ikigai. Whether through new hobbies, volunteer work, or rekindling old passions, this tour encourages participants to discover and pursue their unique purpose. As highlighted in the Netflix documentary "Live to 100: Secrets of the Blue Zones," understanding and embracing ikigai could be key to a fulfilling and extended life. We invite you to join us on this enlightening journey, to explore, learn, and perhaps, find your own ikigai. Share your thoughts and experiences with us, and let's embark on this adventure together, regardless of age.</p>
+            </div>
+            <div class="purpose-image">
+                <img src="https://images.unsplash.com/photo-1625022653882-42eede1f1c52?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aWtpZ2FpfGVufDB8fDB8fHww" alt="Ikigai" class="midimg"/>
+            </div>
         </div>
     </div>
 </section>
@@ -169,7 +179,7 @@
         </div>
     </div>
 </section>
-
+<img src="../../assets/images/japan/commit.jpeg" class="midimg" alt="commitment"/>
 <!-- Why Japan Section -->
 <section class="why-japan-section">
     <div class="container">
@@ -187,7 +197,7 @@
         </div>
     </div>
 </section>
-
+<img src="../../assets/images/japan/itinerary.jpeg" class="midimg" alt="itinerary">
 <!-- Itinerary Section -->
 <section class="itinerary-section">
     <div class="container">
@@ -206,8 +216,12 @@
                             <div class="activity-images-slider" *ngIf="activity.images && activity.images.length > 0">
                                 <div class="slider-container">
                                     <div class="slider-wrapper" [style.transform]="'translateX(-' + (getActivityImageIndex(day.title, activity.title) * 100) + '%)'">
-                                        <div class="slider-slide" *ngFor="let img of activity.images">
-                                            <img [src]="img" [alt]="activity.title" class="activity-image">
+                                        <div class="slider-slide" *ngFor="let img of activity.images; let imgIndex = index">
+                                            <img [src]="img" 
+                                                 [alt]="activity.title + ' - Image ' + (imgIndex + 1)" 
+                                                 class="activity-image"
+                                                 loading="lazy"
+                                                 (error)="onImageError($event)">
                                         </div>
                                     </div>
                                     <button class="slider-nav prev" 
