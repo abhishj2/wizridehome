@@ -1,0 +1,271 @@
+<!-- Header Banner Section -->
+<section class="header-banner-section">
+    <div class="banner-container">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source [src]="heroVideoSrc" type="video/mp4">
+            <!-- Fallback image if video doesn't load -->
+            <img [src]="heroImageFallback" alt="Japan Tourism" class="hero-fallback-image">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Experience Japan</h1>
+            <p class="hero-subtitle">In its Most Mystical Autumn Season this September of 2024</p>
+        </div>
+    </div>
+</section>
+
+<!-- Hero Section with Tour Details -->
+<section class="hero-tour-section">
+    <div class="container">
+        <div class="tour-header">
+            <h1 class="tour-main-title">Experience Japan</h1>
+            <p class="tour-subtitle">In its Most Mystical Autumn Season this September of 2024. Come with us on a journey of a lifetime.</p>
+            <h2 class="tour-duration">8 Days Tour of Tokyo - Hakone - Mt. Fuji - Kyoto - Hiroshima - Osaka</h2>
+        </div>
+
+        <div class="tour-details-grid">
+            <div class="tour-info-card">
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="info-content">
+                        <h3>Tour Start Date</h3>
+                        <p>31st August, 2024</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-times"></i>
+                    <div class="info-content">
+                        <h3>Last Date of Booking</h3>
+                        <p>31st July, 2024</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-users"></i>
+                    <div class="info-content">
+                        <h3>Availability</h3>
+                        <p>Limited Seats Only</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-tag"></i>
+                    <div class="info-content">
+                        <h3>Deal Type</h3>
+                        <p>Cost To Cost Deal</p>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <img src="../../assets/images/japan/Global Logo.png" class="globimg"/>    
+                    <img src="../../assets/images/japan/sale japan.png" class="japimg"/>
+                
+                </div>
+            </div>
+
+            <div class="tour-pricing-card">
+                <div class="pricing-header">
+                    <h3>What's Included</h3>
+                </div>
+                <div class="included-items">
+                    <div class="included-item">
+                        <i class="fas fa-plane"></i>
+                        <span>Flights</span>
+                    </div>
+                    <div class="included-item">
+                        <i class="fas fa-hotel"></i>
+                        <span>Hotels</span>
+                    </div>
+                    <div class="included-item">
+                        <i class="fas fa-bus"></i>
+                        <span>Transport</span>
+                    </div>
+                    <div class="included-item">
+                        <i class="fas fa-passport"></i>
+                        <span>Entry Visa</span>
+                    </div>
+                    <div class="included-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Tour Guide</span>
+                    </div>
+                    <div class="included-item">
+                        <i class="fas fa-train"></i>
+                        <span>Bullet Train</span>
+                    </div>
+                </div>
+                <div class="pricing-details">
+                    <div class="original-price">
+                        <span class="price-label">Rs.2,80,000</span>
+                        <span class="price-note">per person</span>
+                    </div>
+                    <div class="current-price">
+                        <span class="price-amount">Rs.1,75,000/-</span>
+                        <span class="price-note">per person</span>
+                    </div>
+                    <div class="emi-option">
+                        <p>EMI option starting &#64; Rs. 8696/- per month.*</p>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> support&#64;globalterrainvacations.com</p>
+                    <p><i class="fas fa-phone"></i> +91-9933948866</p>
+                </div>
+                <button class="request-details-btn" (click)="scrollToEnquiry()">Request for more Details</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Only in Japan Moments Section -->
+<section class="japan-moments-section">
+    <div class="container">
+        <h2 class="section-title">Some "Only in Japan" Moments..</h2>
+        <div class="moments-grid">
+            <div class="moment-card" *ngFor="let moment of japanMoments; let i = index">
+                <div class="moment-header">
+                    <div class="moment-author">
+                        <div class="author-avatar">{{ moment.authorInitial }}</div>
+                        <div class="author-name">{{ moment.author }}</div>
+                    </div>
+                </div>
+                <div class="moment-content">
+                    <p [class.truncated]="!isExpanded(i) && shouldShowReadMore(moment.story)">
+                        <span *ngIf="!isExpanded(i) && shouldShowReadMore(moment.story)">
+                            {{ getTruncatedStory(moment.story) }}
+                        </span>
+                        <span *ngIf="isExpanded(i) || !shouldShowReadMore(moment.story)">
+                            {{ moment.story }}
+                        </span>
+                    </p>
+                    <button 
+                        class="read-more-btn" 
+                        *ngIf="shouldShowReadMore(moment.story)"
+                        (click)="toggleMoment(i)">
+                        {{ isExpanded(i) ? 'Read Less' : 'Read More' }}
+                        <i class="fas" [class.fa-chevron-down]="!isExpanded(i)" [class.fa-chevron-up]="isExpanded(i)"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Purpose Section -->
+<section class="purpose-section">
+    <div class="container">
+        <h2 class="section-title">Our purpose with this tour.</h2>
+        <div class="purpose-content">
+            <p>Our purpose in organizing this Japan tour is to inspire individuals of all ages, demonstrating that life can be vibrant and purposeful at any stage. We believe that travel is a powerful tool to reignite passions and broaden perspectives, and Japan's rich culture and breathtaking landscapes provide the perfect backdrop for this journey. In Japan, elderly people continue to work and lead active lives, driven by the concept of "ikigai" – a sense of purpose and fulfillment. This tour aims to highlight how the Japanese embrace ikigai, balancing work, passion, and community involvement, contributing to their remarkable longevity and quality of life. We want our participants to witness firsthand how Japanese individuals of all ages find joy and purpose in their daily activities, defying traditional views of aging and retirement. By experiencing Japan's scenic beauty and observing the active lifestyles of its citizens, we hope to inspire everyone to find their own ikigai. Whether through new hobbies, volunteer work, or rekindling old passions, this tour encourages participants to discover and pursue their unique purpose. As highlighted in the Netflix documentary "Live to 100: Secrets of the Blue Zones," understanding and embracing ikigai could be key to a fulfilling and extended life. We invite you to join us on this enlightening journey, to explore, learn, and perhaps, find your own ikigai. Share your thoughts and experiences with us, and let's embark on this adventure together, regardless of age.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Our Commitment Section -->
+<section class="commitment-section">
+    <div class="container">
+        <h2 class="section-title">Our Commitment.</h2>
+        <div class="commitment-content">
+            <p>Our commitment to you for this Japan tour is to provide an unparalleled travel experience that prioritizes quality, comfort, and meticulous attention to detail. From the moment you embark on this journey, our dedicated team will ensure that every aspect is meticulously planned and executed, allowing you to fully immerse yourself in the beauty and culture of Japan without any worries.</p>
+            <p>We believe that travel should be an enriching and inspirational experience, and we are devoted to making that a reality for each participant. Our carefully curated itinerary includes iconic landmarks, scenic landscapes, and cultural experiences that will leave you with lasting memories. Throughout the trip, we prioritize your comfort and well-being, providing top-notch accommodations, seamless transportation, and delicious meals that showcase the best of Japanese cuisine.</p>
+            <p>Our knowledgeable guides are passionate about Japan and eager to share their insights, ensuring that you gain a deeper understanding of the country's history, traditions, and way of life. Our strong emphasis on attention to detail ensures that every moment of your journey is thoughtfully designed and executed, creating a smooth and enjoyable experience.</p>
+            <p>By the end of this tour, we promise that you will return home not only with incredible memories and newfound knowledge but also with a renewed sense of inspiration and purpose. Our commitment to quality, care, and attention to detail ensures that this journey through Japan will be a transformative experience, leaving you enriched and motivated to embrace life's adventures.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Why Japan Section -->
+<section class="why-japan-section">
+    <div class="container">
+        <h2 class="section-title">Why visiting Japan is better than visiting any other Country.</h2>
+        <div class="why-japan-content">
+            <p>In recent years, many people from Western developed countries have been moving to Japan to settle. This trend reflects Japan's unique appeal as a destination that offers an exceptional quality of life, safety, and cultural richness. Japan stands out as a travel destination for numerous reasons that make it superior to many other countries.</p>
+            <p>First and foremost, Japan is renowned for its unparalleled safety. The country has one of the lowest crime rates in the world, making it an ideal destination for travelers of all ages, including families and solo travelers. This sense of security allows visitors to explore freely and confidently, whether wandering through bustling city streets or remote countryside areas.</p>
+            <p>Japan's public transportation system is world-class, featuring the famous Shinkansen (bullet trains) that connect major cities with remarkable speed and efficiency. The punctuality and cleanliness of Japan's trains, buses, and subways are legendary, making travel within the country seamless and enjoyable. This infrastructure excellence extends to airports, stations, and public facilities, all maintained to the highest standards.</p>
+            <p>The country's rich cultural heritage, preserved alongside cutting-edge modernity, creates a unique experience that cannot be found elsewhere. From ancient temples and traditional tea ceremonies to futuristic technology and innovative architecture, Japan offers a fascinating blend of old and new. This cultural depth provides endless opportunities for learning and discovery.</p>
+            <p>Japanese cuisine is another major draw, recognized by UNESCO as an Intangible Cultural Heritage. The emphasis on fresh, seasonal ingredients, meticulous preparation, and presentation makes dining in Japan an art form. From street food to Michelin-starred restaurants, the culinary experiences are diverse and exceptional.</p>
+            <p>Japan's natural beauty is breathtaking, with four distinct seasons offering varied landscapes throughout the year. Cherry blossoms in spring, vibrant autumn foliage, snow-covered mountains in winter, and lush greenery in summer – each season brings its own unique charm and activities.</p>
+            <p>The Japanese concept of "omotenashi" (hospitality) ensures that visitors receive exceptional service wherever they go. This deep-rooted culture of respect, politeness, and attention to detail makes every interaction pleasant and memorable.</p>
+            <p>Furthermore, Japan's commitment to cleanliness and environmental consciousness is evident everywhere, from spotless streets to efficient waste management systems. This creates a pleasant and healthy environment for visitors.</p>
+            <p>For these reasons and many more, Japan offers a travel experience that is truly unparalleled, combining safety, culture, natural beauty, technological innovation, and exceptional hospitality in a way that no other country can match.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Itinerary Section -->
+<section class="itinerary-section">
+    <div class="container">
+        <h2 class="section-title">Tour Itinerary</h2>
+        <div class="itinerary-timeline">
+            <div class="day-card" *ngFor="let day of itineraryDays">
+                <div class="day-header">
+                    <h3 class="day-title">{{ day.title }}</h3>
+                </div>
+                <div class="day-content">
+                    <div class="timeline-item" *ngFor="let activity of day.activities">
+                        <div class="time-slot">{{ activity.time }}</div>
+                        <div class="activity-content">
+                            <h4 class="activity-title">{{ activity.title }}</h4>
+                            <p class="activity-description" [innerHTML]="activity.description"></p>
+                            <div class="activity-images-slider" *ngIf="activity.images && activity.images.length > 0">
+                                <div class="slider-container">
+                                    <div class="slider-wrapper" [style.transform]="'translateX(-' + (getActivityImageIndex(day.title, activity.title) * 100) + '%)'">
+                                        <div class="slider-slide" *ngFor="let img of activity.images">
+                                            <img [src]="img" [alt]="activity.title" class="activity-image">
+                                        </div>
+                                    </div>
+                                    <button class="slider-nav prev" 
+                                            (click)="prevActivityImage(day.title, activity.title, activity.images.length)"
+                                            *ngIf="activity.images.length > 1"
+                                            aria-label="Previous image">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="slider-nav next" 
+                                            (click)="nextActivityImage(day.title, activity.title, activity.images.length)"
+                                            *ngIf="activity.images.length > 1"
+                                            aria-label="Next image">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                    <div class="slider-dots" *ngIf="activity.images.length > 1">
+                                        <span *ngFor="let img of activity.images; let i = index" 
+                                              [class.active]="getActivityImageIndex(day.title, activity.title) === i"
+                                              (click)="goToActivityImage(day.title, activity.title, i)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enquiry Form Section -->
+<section class="enquiry-section" id="enquiry-form">
+    <div class="container">
+        <h2 class="section-title">Send in your Enquiry.</h2>
+        <p class="enquiry-note">Your quote will depend on your base location. We do not believe in Spaming you.</p>
+        <form class="enquiry-form" (ngSubmit)="onEnquirySubmit()" #enquiryForm="ngForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="fullName" name="fullName" [(ngModel)]="enquiryFormData.fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactNo">Contact No <span class="required">*</span></label>
+                    <input type="tel" id="contactNo" name="contactNo" [(ngModel)]="enquiryFormData.contactNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="emailId">Email ID <span class="required">*</span></label>
+                    <input type="email" id="emailId" name="emailId" [(ngModel)]="enquiryFormData.emailId" required>
+                </div>
+                <div class="form-group">
+                    <label for="fromCity">From City <span class="required">*</span></label>
+                    <input type="text" id="fromCity" name="fromCity" [(ngModel)]="enquiryFormData.fromCity" required>
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" rows="5" [(ngModel)]="enquiryFormData.message"></textarea>
+            </div>
+            <button type="submit" class="submit-btn" [disabled]="!enquiryForm.valid">Submit Request</button>
+        </form>
+    </div>
+</section>
