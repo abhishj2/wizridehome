@@ -18,32 +18,64 @@
                 <div class="form-content">
                     <h2 class="form-title">Collaborate With Us</h2>
 
-                    <form id="driverForm">
+                    <form id="driverForm" (ngSubmit)="onSubmit()" #influencerForm="ngForm">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="fullName">Full Name *</label>
-                                <input type="text" id="fullName" name="fullName" required placeholder="Enter Your Full Name">
+                                <input type="text" id="fullName" name="fullName" [(ngModel)]="formData.fullName" required placeholder="Enter Your Full Name">
                             </div>
 
                             <div class="form-group">
                                 <label for="contactNumber">Contact No *</label>
-                                <input type="text" id="contactNumber" name="contactNumber" required placeholder="Enter your Contact Number.">
+                                <input type="text" id="contactNumber" name="contactNumber" [(ngModel)]="formData.contactNumber" required placeholder="Enter your Contact Number.">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="emailId">Email ID </label>
-                            <input type="email" id="emailId" name="emailId" required placeholder="Enter your Email ID ( Optional* ).">
+                            <input type="email" id="emailId" name="emailId" [(ngModel)]="formData.emailId" placeholder="Enter your Email ID ( Optional* ).">
                         </div>
 
                         <div class="form-group full-width">
                             <label for="message">Your Message</label>
-                            <textarea id="message" name="message" placeholder="Tell Us about your Profile & how you think we could collaborate."></textarea>
+                            <textarea id="message" name="message" [(ngModel)]="formData.message" placeholder="Tell Us about your Profile & how you think we could collaborate."></textarea>
                         </div>
 
-                        <button type="submit" class="submit-btn" id="send-submit-request-button-id">
-                            <i class="fas fa-paper-plane"></i>
-                            Submit Request
+                        <!-- Captcha Verification -->
+                        <div class="form-group full-width">
+                            <label>Security Check *</label>
+                            <div class="captcha-container">
+                                <div class="captcha-question">
+                                    {{ captchaData.question }}
+                                </div>
+                                <div class="captcha-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="userCaptchaAnswer" 
+                                        name="userCaptchaAnswer" 
+                                        [(ngModel)]="userCaptchaAnswer" 
+                                        required 
+                                        class="captcha-input"
+                                        placeholder="Your answer"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Success Message -->
+                        <div *ngIf="successMessage" class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{{ successMessage }}</span>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div *ngIf="errorMessage" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ errorMessage }}</span>
+                        </div>
+
+                        <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+                            <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                            {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
                         </button>
                     </form>
                 </div>

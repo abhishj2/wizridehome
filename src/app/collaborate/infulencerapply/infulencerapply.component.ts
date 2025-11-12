@@ -2,25 +2,57 @@ import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from 
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
+
+interface InfluencerFormData {
+  fullName: string;
+  contactNumber: string;
+  emailId: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-infulencerapply',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './infulencerapply.component.html',
   styleUrl: './infulencerapply.component.css'
 })
 export class InfulencerapplyComponent implements OnInit, AfterViewInit {
   
+  formData: InfluencerFormData = {
+    fullName: '',
+    contactNumber: '',
+    emailId: '',
+    message: ''
+  };
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/influencerapply');
     
@@ -193,7 +225,6 @@ export class InfulencerapplyComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // Initialize all interactive features
     this.initIntersectionObserver();
-    this.initFormSubmission();
     this.initFocusAnimations();
     this.initParallaxEffect();
   }
@@ -221,61 +252,69 @@ export class InfulencerapplyComponent implements OnInit, AfterViewInit {
   }
 
   // Form submission handling
-  private initFormSubmission(): void {
-    const form = this.elementRef.nativeElement.querySelector('#driverForm') as HTMLFormElement;
-    
-    if (form) {
-      this.renderer.listen(form, 'submit', (e: Event) => {
-        e.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(form);
-        const formDataObject: { [key: string]: any } = {};
-        
-        formData.forEach((value, key) => {
-          formDataObject[key] = value;
-        });
-        
-        // Log to console
-        console.log('=== Influencer Form Submission ===');
-        console.log('Form Data:', formDataObject);
-        console.log('Timestamp:', new Date().toLocaleString());
-        console.log('================================');
-        
-        // Create readable alert message
-        let alertMessage = 'Influencer Collaboration Request\n\n';
-        for (const [key, value] of Object.entries(formDataObject)) {
-          if (value) {
-            alertMessage += `${key}: ${value}\n`;
-          }
-        }
-        
-        // Add loading state to button
-        const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-        if (!submitBtn) return;
+  onSubmit(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
 
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Application...';
-        submitBtn.disabled = true;
-        
-        // Simulate form submission
-        setTimeout(() => {
-          // Show alert with form data
-          alert(alertMessage);
-          
-          submitBtn.innerHTML = '<i class="fas fa-check"></i> Application Submitted!';
-          submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+    // Validate captcha
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
+    }
+
+    // Validate form fields
+    if (!this.formData.fullName || !this.formData.fullName.trim()) {
+      this.errorMessage = 'Please enter your full name.';
+      return;
+    }
+
+    if (!this.formData.contactNumber || !this.formData.contactNumber.trim()) {
+      this.errorMessage = 'Please enter your contact number.';
+      return;
+    }
+
+    // Set submitting state
+    this.isSubmitting = true;
+
+    // Prepare submission data
+    const submissionData = {
+      title: `Influencer Application - ${this.formData.fullName}`,
+      content: this.formData.message || 'No message provided',
+      status: 'publish',
+      acf: {
+        full_name: this.formData.fullName,
+        contact_number: this.formData.contactNumber,
+        email_id: this.formData.emailId || '',
+        message: this.formData.message || '',
+        submission_date: new Date().toISOString()
+      }
+    };
+
+    // Submit to WordPress
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/wiz_influencers', submissionData)
+      .subscribe({
+        next: (response: any) => {
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your influencer collaboration request has been submitted successfully. We will get back to you soon.';
           
           // Reset form
-          setTimeout(() => {
-            form.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.style.background = '';
-            submitBtn.disabled = false;
-          }, 3000);
-        }, 2000);
+          this.formData = {
+            fullName: '',
+            contactNumber: '',
+            emailId: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          this.captchaData = this.captchaService.generateCaptcha();
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          console.error('Error submitting influencer application:', error);
+          this.errorMessage = 'Sorry, there was an error submitting your request. Please try again later.';
+        }
       });
-    }
   }
 
   // Focus animations for form inputs
