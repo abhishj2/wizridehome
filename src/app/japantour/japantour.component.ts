@@ -4,6 +4,8 @@ import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../services/seo.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../services/captcha.service';
 
 interface JapanMoment {
   author: string;
@@ -38,6 +40,15 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     fromCity: '',
     message: ''
   };
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   // Hero Video
   heroVideoSrc: string = 'assets/videos/JapanVideo.mp4';
@@ -480,10 +491,15 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     private seoService: SeoService,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
 
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/japantour');
     
@@ -635,19 +651,96 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEnquirySubmit(): void {
-    if (this.enquiryFormData.fullName && this.enquiryFormData.contactNo && this.enquiryFormData.emailId && this.enquiryFormData.fromCity) {
-      // TODO: Implement enquiry submission logic
-      console.log('Enquiry submitted:', this.enquiryFormData);
-      alert('Thank you for your enquiry! We will contact you soon.');
-      // Reset form
-      this.enquiryFormData = {
-        fullName: '',
-        contactNo: '',
-        emailId: '',
-        fromCity: '',
-        message: ''
-      };
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
     }
+
+    // Validate form fields
+    if (!this.enquiryFormData.fullName || !this.enquiryFormData.fullName.trim()) {
+      this.errorMessage = 'Please enter your full name.';
+      return;
+    }
+
+    if (!this.enquiryFormData.contactNo || !this.enquiryFormData.contactNo.trim()) {
+      this.errorMessage = 'Please enter your contact number.';
+      return;
+    }
+
+    if (!this.enquiryFormData.emailId || !this.enquiryFormData.emailId.trim()) {
+      this.errorMessage = 'Please enter your email ID.';
+      return;
+    }
+
+    if (!this.enquiryFormData.fromCity || !this.enquiryFormData.fromCity.trim()) {
+      this.errorMessage = 'Please enter your city.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    // Prepare submission data
+    const submissionData = {
+      title: `Japan Tour Enquiry - ${this.enquiryFormData.fullName}`,
+      content: this.enquiryFormData.message || 'No message provided',
+      status: 'publish',
+      acf: {
+        full_name: this.enquiryFormData.fullName,
+        contact_number: this.enquiryFormData.contactNo,
+        email_id: this.enquiryFormData.emailId,
+        from_city: this.enquiryFormData.fromCity,
+        message: this.enquiryFormData.message || '',
+        submission_date: new Date().toISOString(),
+        tour_type: 'Japan Tour'
+      }
+    };
+
+    console.log('Submitting Japan tour enquiry:', submissionData);
+
+    // Submit to WordPress
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/japan_tour_enquiries', submissionData)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Japan tour enquiry submitted successfully:', response);
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your Japan tour enquiry has been submitted successfully. We will contact you soon.';
+          
+          // Reset form
+          this.enquiryFormData = {
+            fullName: '',
+            contactNo: '',
+            emailId: '',
+            fromCity: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.captchaData = this.captchaService.generateCaptcha();
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting Japan tour enquiry:', error);
+          this.isSubmitting = false;
+          this.errorMessage = 'There was an error submitting your enquiry. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
+        }
+      });
   }
 
   // Activity Image Slider Methods

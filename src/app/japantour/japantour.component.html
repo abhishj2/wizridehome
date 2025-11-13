@@ -296,7 +296,43 @@
                 <label for="message">Your Message</label>
                 <textarea id="message" name="message" rows="5" [(ngModel)]="enquiryFormData.message"></textarea>
             </div>
-            <button type="submit" class="submit-btn" [disabled]="!enquiryForm.valid">Submit Request</button>
+            
+            <!-- Captcha Verification -->
+            <div class="form-group full-width">
+                <label>Security Check <span class="required">*</span></label>
+                <div class="captcha-container">
+                    <div class="captcha-question">
+                        {{ captchaData.question }}
+                    </div>
+                    <div class="captcha-input-wrapper">
+                        <input 
+                            type="number" 
+                            id="userCaptchaAnswer" 
+                            name="userCaptchaAnswer" 
+                            [(ngModel)]="userCaptchaAnswer" 
+                            required 
+                            class="captcha-input"
+                            placeholder="Your answer"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ successMessage }}</span>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ errorMessage }}</span>
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="isSubmitting || !enquiryForm.valid">
+                <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+            </button>
         </form>
     </div>
 </section>

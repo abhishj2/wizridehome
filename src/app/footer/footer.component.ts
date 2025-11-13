@@ -87,7 +87,8 @@ export class FooterComponent {
         { name: "Siliguri to Rangpo", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Rangpo_Shared_Cab_Service/" },
         { name: "Siliguri to Darjeeling", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Darjeeling_Shared_Cab_Service/" },
         { name: "Siliguri to Kurseong", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kurseong_Shared_Cab_Service/" },
-        { name: "Siliguri to Kalimpong", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kalimpong_Shared_Cab_Service/" }
+        { name: "Siliguri to Kalimpong", link: "/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kalimpong_Shared_Cab_Service/" },
+        { name: "Guwahati to Shillong", link: "/ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service" }
       ]
     },
     airportReserved: {
