@@ -116,6 +116,7 @@ import { VehicleRegistrationFormComponent } from './vehicle-registration-form/ve
 import { VehicledetailsComponent } from './vehicledetails/vehicledetails.component';
 import { WardslakeComponent } from './destinations/meghalaya/wardslake/wardslake.component';
 import { JapantourComponent } from './japantour/japantour.component';
+import { GuwahatitoshillongCityComponent } from './wizridecityroutes/guwahatitoshillongcity/guwahatitoshillong.component';
 
 
 
@@ -262,7 +263,10 @@ export const routes: Routes = [
       {path:'vehicle-details/:id',component: VehicledetailsComponent},
 
       {path:'destinations/wards-lake-shillong',component:WardslakeComponent},
-      {path:'japantour',component:JapantourComponent}
+      {path:'japantour',component:JapantourComponent},
+
+      {path:'ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service', component:GuwahatitoshillongCityComponent},
+
 
 
 ];

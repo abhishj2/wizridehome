@@ -24,32 +24,32 @@ export class GuwahatitoshillongCityComponent implements OnInit, AfterViewInit, O
 
   ngOnInit(): void {
     // Set canonical URL
-    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/');
+    this.seoService.setCanonicalURL('https://wizzride.com/ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service');
     
     // ✅ SEO Metadata
-    this.titleService.setTitle("Siliguri to Gangtok Shared Taxi | Wizzride Affordable Taxi Services");
+    this.titleService.setTitle("Guwahati to Shillong Shared Taxi | Wizzride Affordable Taxi Services");
     this.metaService.updateTag({
       name: 'description',
-      content: "Book your shared cab from Siliguri to Gangtok with Wizzride. Affordable taxi service with multiple pickup points in Siliguri and drop-off locations in Gangtok."
+      content: "Book your shared cab from Guwahati Airport to Shillong with Wizzride. Comfortable, affordable rides with multiple pickup and drop points. Call +91-7478-4938-74 for instant booking and smooth travel."
     });
     this.metaService.updateTag({
       name: 'title',
-      content: "Siliguri to Gangtok Shared Taxi | Wizzride Affordable Taxi Services"
+      content: "Guwahati to Shillong Shared Taxi | Wizzride Affordable Taxi Services"
     });
 
     // Open Graph Tags
-    this.metaService.updateTag({ property: 'og:title', content: 'Siliguri to Gangtok Shared Taxi | Wizzride Affordable Taxi Services' });
-    this.metaService.updateTag({ property: 'og:description', content: "Book your shared cab from Siliguri to Gangtok with Wizzride. Affordable taxi service with multiple pickup points in Siliguri and drop-off locations in Gangtok." });
+    this.metaService.updateTag({ property: 'og:title', content: 'Guwahati to Shillong Shared Taxi | Wizzride Affordable Taxi Services' });
+    this.metaService.updateTag({ property: 'og:description', content: "Book your shared cab from Guwahati Airport to Shillong with Wizzride. Comfortable, affordable rides with multiple pickup and drop points. Call +91-7478-4938-74 for instant booking and smooth travel." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
     // Twitter Card Tags
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.metaService.updateTag({ name: 'twitter:title', content: 'Siliguri to Gangtok Shared Taxi | Wizzride Affordable Taxi Services' });
-    this.metaService.updateTag({ name: 'twitter:description', content: "Book your shared cab from Siliguri to Gangtok with Wizzride. Affordable taxi service with multiple pickup points in Siliguri and drop-off locations in Gangtok." });
+    this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Shillong Shared Taxi | Wizzride Affordable Taxi Services' });
+    this.metaService.updateTag({ name: 'twitter:description', content: "Book your shared cab from Guwahati Airport to Shillong with Wizzride. Comfortable, affordable rides with multiple pickup and drop points. Call +91-7478-4938-74 for instant booking and smooth travel." });
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
@@ -60,45 +60,87 @@ export class GuwahatitoshillongCityComponent implements OnInit, AfterViewInit, O
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "How far is Siliguri from Gangtok?",
+          "name": "What is the distance between Guwahati Airport and Shillong?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The distance of Gangtok from Siliguri is approximately 120 km, and it takes about 4-5 hours by road. A shared taxi from Siliguri to Gangtok is a popular choice for an affordable and convenient journey."
+            "text": "The distance between Lokpriya Gopinath Bordoloi International Airport and Shillong is around 120 km, and it takes 3–4 hours depending on weather and traffic conditions."
           }
         },
         {
           "@type": "Question",
-          "name": "What is the taxi fare from Siliguri to Gangtok?",
+          "name": "How can I book a shared cab from Guwahati Airport to Shillong?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The taxi fare from Siliguri to Gangtok varies based on vehicle type and whether you choose a shared or private taxi. On average, the fare is around ₹3500* to ₹4500* for a private taxi."
+            "text": "You can book online at https://wizzride.com or call +91-7478-4938-74 for instant confirmation and assistance."
           }
         },
         {
           "@type": "Question",
-          "name": "Can I book a shared taxi from Gangtok to Siliguri?",
+          "name": "What are the pickup and drop points for the Guwahati Airport to Shillong route?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, you can book a shared taxi from Gangtok to Siliguri with Wizzride. Our service offers comfortable and affordable rides with flexible pickup and drop-off locations."
+            "text": "Major boarding points: Guwahati Airport, Khanapara, ISBT Guwahati, Radisson Blu, Jalukbari, and Azara. Major dropping points: Police Bazaar, Laitumkhrah, Malki, Civil Hospital, Rilbong, and ISBT Mawiong."
           }
         },
         {
           "@type": "Question",
-          "name": "What are the best places to visit in Gangtok?",
+          "name": "How much does a shared cab from Guwahati to Shillong cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Some popular attractions in Gangtok include MG Marg, Baba Mandir, Changu Lake (Tsomgo Lake), Rumtek Monastery, and the famous Tashi View Point."
+            "text": "Fares start from ₹500 per seat, depending on availability and vehicle type."
           }
         },
         {
           "@type": "Question",
-          "name": "Is there a taxi service from Siliguri to Gangtok?",
+          "name": "What vehicles are used for the Guwahati to Shillong route?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, Wizzride provides taxi service from Siliguri to Gangtok, including both shared and private options. Our reliable taxi service ensures a comfortable journey to Gangtok."
+            "text": "Wizzride provides Innova, Ertiga, and Tempo Traveller vehicles for shared cab service, ensuring comfort and safety."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there any night or early morning cab services available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride offers multiple daily departures including early morning and evening services, based on seat availability."
           }
         }
-      ]
+      ],
+      "hasPart": {
+        "@type": "Route",
+        "name": "Guwahati Airport to Shillong Shared Cab Route",
+        "url": "https://wizzride.com/guwahati-airport-to-shillong-shared-cab",
+        "provider": {
+          "@type": "Organization",
+          "name": "Wizzride",
+          "url": "https://wizzride.com",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-7478-4938-74",
+            "contactType": "Customer Support",
+            "areaServed": "IN"
+          }
+        },
+        "departureStation": {
+          "@type": "Place",
+          "name": "Lokpriya Gopinath Bordoloi International Airport",
+          "address": "Borjhar, Guwahati, Assam, India"
+        },
+        "arrivalStation": {
+          "@type": "Place",
+          "name": "Police Bazaar, Shillong",
+          "address": "Shillong, Meghalaya, India"
+        },
+        "intermediateStops": [
+          { "@type": "Place", "name": "Khanapara, Guwahati" },
+          { "@type": "Place", "name": "ISBT Guwahati" },
+          { "@type": "Place", "name": "Malki Point, Shillong" },
+          { "@type": "Place", "name": "Laitumkhrah, Shillong" }
+        ],
+        "distance": "120 km",
+        "travelMode": "Car"
+      }
     });
 
     // ✅ BreadcrumbList JSON-LD
@@ -127,8 +169,8 @@ export class GuwahatitoshillongCityComponent implements OnInit, AfterViewInit, O
     {
       "@type": "ListItem",
       "position": 4,
-      "name": "Siliguri to Gangtok Shared Cab Service",
-      "item": "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/"
+      "name": "Guwahati to Shilllong Shared Cab Service",
+      "item": "https://wizzride.com/ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service"
     }
   ]
 });

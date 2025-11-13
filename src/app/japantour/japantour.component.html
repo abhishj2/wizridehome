@@ -212,34 +212,38 @@
                         <div class="time-slot">{{ activity.time }}</div>
                         <div class="activity-content">
                             <h4 class="activity-title">{{ activity.title }}</h4>
-                            <p class="activity-description" [innerHTML]="activity.description"></p>
-                            <div class="activity-images-slider" *ngIf="activity.images && activity.images.length > 0">
-                                <div class="slider-container">
-                                    <div class="slider-wrapper" [style.transform]="'translateX(-' + (getActivityImageIndex(day.title, activity.title) * 100) + '%)'">
-                                        <div class="slider-slide" *ngFor="let img of activity.images; let imgIndex = index">
-                                            <img [src]="img" 
-                                                 [alt]="activity.title + ' - Image ' + (imgIndex + 1)" 
-                                                 class="activity-image"
-                                                 loading="lazy"
-                                                 (error)="onImageError($event)">
+                            <div class="activity-layout" [class.has-images]="activity.images && activity.images.length > 0">
+                                <div class="activity-text">
+                                    <p class="activity-description" [innerHTML]="activity.description"></p>
+                                </div>
+                                <div class="activity-images-slider" *ngIf="activity.images && activity.images.length > 0">
+                                    <div class="slider-container">
+                                        <div class="slider-wrapper" [style.transform]="'translateX(-' + (getActivityImageIndex(day.title, activity.title) * 100) + '%)'">
+                                            <div class="slider-slide" *ngFor="let img of activity.images; let imgIndex = index">
+                                                <img [src]="img" 
+                                                     [alt]="activity.title + ' - Image ' + (imgIndex + 1)" 
+                                                     class="activity-image"
+                                                     loading="lazy"
+                                                     (error)="onImageError($event)">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button class="slider-nav prev" 
-                                            (click)="prevActivityImage(day.title, activity.title, activity.images.length)"
-                                            *ngIf="activity.images.length > 1"
-                                            aria-label="Previous image">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </button>
-                                    <button class="slider-nav next" 
-                                            (click)="nextActivityImage(day.title, activity.title, activity.images.length)"
-                                            *ngIf="activity.images.length > 1"
-                                            aria-label="Next image">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </button>
-                                    <div class="slider-dots" *ngIf="activity.images.length > 1">
-                                        <span *ngFor="let img of activity.images; let i = index" 
-                                              [class.active]="getActivityImageIndex(day.title, activity.title) === i"
-                                              (click)="goToActivityImage(day.title, activity.title, i)"></span>
+                                        <button class="slider-nav prev" 
+                                                (click)="prevActivityImage(day.title, activity.title, activity.images.length)"
+                                                *ngIf="activity.images.length > 1"
+                                                aria-label="Previous image">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <button class="slider-nav next" 
+                                                (click)="nextActivityImage(day.title, activity.title, activity.images.length)"
+                                                *ngIf="activity.images.length > 1"
+                                                aria-label="Next image">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                        <div class="slider-dots" *ngIf="activity.images.length > 1">
+                                            <span *ngFor="let img of activity.images; let i = index" 
+                                                  [class.active]="getActivityImageIndex(day.title, activity.title) === i"
+                                                  (click)="goToActivityImage(day.title, activity.title, i)"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

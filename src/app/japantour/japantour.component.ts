@@ -105,7 +105,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: 'Full Day',
           title: 'Full Day Tokyo City Tour',
-          description: 'After breakfast, proceed for a full day Tokyo city tour. Visit Senso-ji Temple (Asakusa Kannon Temple), Tokyo Skytree (from outside), Imperial Palace (from outside), Shibuya Crossing, and Harajuku. Enjoy lunch at a local restaurant. Return to hotel in the evening. Overnight stay in Tokyo.'
+          description: 'After breakfast, proceed for a full day Tokyo city tour. Visit Senso-ji Temple (Asakusa Kannon Temple), Tokyo Skytree (from outside), Imperial Palace (from outside), Shibuya Crossing, and Harajuku. Enjoy lunch at a local restaurant. Return to hotel in the evening. Overnight stay in Tokyo.',
+          images: [
+            'https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/315191/pexels-photo-315191.jpeg?auto=compress&cs=tinysrgb&w=600'
+          ]
         }
       ]
     },
@@ -130,7 +135,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: 'Morning',
           title: 'Transfer to Kyoto via Bullet Train',
-          description: 'After breakfast, check out from hotel. Transfer to Odawara station and board the Bullet Train (Shinkansen) to Kyoto. Arrive at Kyoto station and transfer to hotel. Check-in and rest. In the afternoon, visit Fushimi Inari Shrine famous for its thousands of vermilion torii gates. Overnight stay in Kyoto.'
+          description: 'After breakfast, check out from hotel. Transfer to Odawara station and board the Bullet Train (Shinkansen) to Kyoto. Arrive at Kyoto station and transfer to hotel. Check-in and rest. In the afternoon, visit Fushimi Inari Shrine famous for its thousands of vermilion torii gates. Overnight stay in Kyoto.',
+          images: [
+            'https://images.pexels.com/photos/2187605/pexels-photo-2187605.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/161401/fushimi-inari-taisha-shrine-kyoto-japan-temple-161401.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/4151484/pexels-photo-4151484.jpeg?auto=compress&cs=tinysrgb&w=600'
+          ]
         }
       ]
     },
@@ -140,7 +150,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: 'Full Day',
           title: 'Full Day Kyoto City Tour',
-          description: 'After breakfast, proceed for a full day Kyoto city tour. Visit Kinkaku-ji (Golden Pavilion), Kiyomizu-dera Temple, Arashiyama Bamboo Grove, and Gion District (famous Geisha district). Enjoy traditional Japanese lunch. Return to hotel in the evening. Overnight stay in Kyoto.'
+          description: 'After breakfast, proceed for a full day Kyoto city tour. Visit Kinkaku-ji (Golden Pavilion), Kiyomizu-dera Temple, Arashiyama Bamboo Grove, and Gion District (famous Geisha district). Enjoy traditional Japanese lunch. Return to hotel in the evening. Overnight stay in Kyoto.',
+          images: [
+            'https://images.pexels.com/photos/3408354/pexels-photo-3408354.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/402028/pexels-photo-402028.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1822605/pexels-photo-1822605.jpeg?auto=compress&cs=tinysrgb&w=600'
+          ]
         }
       ]
     },
@@ -180,7 +195,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: '6:00 PM - 8:00 PM',
           title: 'Visit Dotonbori, Osaka',
-          description: 'Dotonbori, located in Osaka, is a must-visit destination for anyone traveling to Japan. This vibrant entertainment district is famous for its lively atmosphere, neon lights, and diverse culinary offerings. As you stroll along the Dotonbori Canal, you\'ll be captivated by the bright, animated billboards, including the iconic Glico Running Man and the giant Kani Doraku crab sign, which have become symbols of the area. Dotonbori is a food lover\'s paradise, offering an array of delicious street food and local delicacies. From takoyaki (octopus balls) and okonomiyaki (savory pancakes) to kushikatsu (deep-fried skewers) and fugu (pufferfish), the district is renowned for its diverse and mouth-watering cuisine. The numerous restaurants and food stalls ensure that visitors can indulge in Osaka\'s culinary delights at any time of day. The area is also home to a variety of entertainment options, including theaters, bars, and shops, making it a bustling hub of activity both day and night. The nearby Dotonbori Arcade offers a unique shopping experience with its eclectic mix of stores. Visiting Dotonbori allows travelers to experience the vibrant energy and rich culinary culture of Osaka. Whether you\'re savoring local dishes, exploring the bustling streets, or enjoying the dazzling lights along the canal, Dotonbori promises an unforgettable and immersive experience that captures the essence of Osaka\'s lively spirit.'
+          description: 'Dotonbori, located in Osaka, is a must-visit destination for anyone traveling to Japan. This vibrant entertainment district is famous for its lively atmosphere, neon lights, and diverse culinary offerings. As you stroll along the Dotonbori Canal, you\'ll be captivated by the bright, animated billboards, including the iconic Glico Running Man and the giant Kani Doraku crab sign, which have become symbols of the area. Dotonbori is a food lover\'s paradise, offering an array of delicious street food and local delicacies. From takoyaki (octopus balls) and okonomiyaki (savory pancakes) to kushikatsu (deep-fried skewers) and fugu (pufferfish), the district is renowned for its diverse and mouth-watering cuisine. The numerous restaurants and food stalls ensure that visitors can indulge in Osaka\'s culinary delights at any time of day. The area is also home to a variety of entertainment options, including theaters, bars, and shops, making it a bustling hub of activity both day and night. The nearby Dotonbori Arcade offers a unique shopping experience with its eclectic mix of stores. Visiting Dotonbori allows travelers to experience the vibrant energy and rich culinary culture of Osaka. Whether you\'re savoring local dishes, exploring the bustling streets, or enjoying the dazzling lights along the canal, Dotonbori promises an unforgettable and immersive experience that captures the essence of Osaka\'s lively spirit.',
+          images: [
+            'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2187605/pexels-photo-2187605.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2187599/pexels-photo-2187599.jpeg?auto=compress&cs=tinysrgb&w=600'
+          ]
         },
         {
           time: '8:00 PM',
@@ -200,7 +220,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: 'Full Day',
           title: 'Full Day Excursion to Hiroshima',
-          description: 'Visit Peace Park, Memorial Museum and Atomic Bomb Dome at Hiroshima. Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome are profound symbols of the impact of nuclear warfare and the enduring hope for global peace. Located in Hiroshima, Japan, the park was established to honor the victims of the atomic bomb dropped on the city on August 6, 1945, and to advocate for the abolition of nuclear weapons. The Atomic Bomb Dome, originally the Hiroshima Prefectural Industrial Promotion Hall, is the most iconic structure in the park. Left in its ruined state, it serves as a stark reminder of the destruction caused by the bomb and stands as a powerful symbol of resilience and peace. Designated as a UNESCO World Heritage site, it is a place of reflection and a poignant reminder of the need for nuclear disarmament. The Hiroshima Peace Memorial Museum, located within the park, provides a comprehensive and moving account of the events leading up to, during, and after the bombing. Exhibits include personal artifacts, photographs, and testimonies from survivors, offering a deeply human perspective on the tragedy. The museum aims to educate visitors about the horrors of nuclear warfare and to promote a message of peace. The park itself is a serene space, featuring various memorials and monuments, such as the Cenotaph for A-bomb Victims and the Children\'s Peace Monument. It offers a place for contemplation and prayer, with thousands of paper cranes left by visitors symbolizing wishes for peace. Visiting Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome provides a powerful, emotional experience that underscores the importance of striving for a world free from the threat of nuclear war.'
+          description: 'Visit Peace Park, Memorial Museum and Atomic Bomb Dome at Hiroshima. Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome are profound symbols of the impact of nuclear warfare and the enduring hope for global peace. Located in Hiroshima, Japan, the park was established to honor the victims of the atomic bomb dropped on the city on August 6, 1945, and to advocate for the abolition of nuclear weapons. The Atomic Bomb Dome, originally the Hiroshima Prefectural Industrial Promotion Hall, is the most iconic structure in the park. Left in its ruined state, it serves as a stark reminder of the destruction caused by the bomb and stands as a powerful symbol of resilience and peace. Designated as a UNESCO World Heritage site, it is a place of reflection and a poignant reminder of the need for nuclear disarmament. The Hiroshima Peace Memorial Museum, located within the park, provides a comprehensive and moving account of the events leading up to, during, and after the bombing. Exhibits include personal artifacts, photographs, and testimonies from survivors, offering a deeply human perspective on the tragedy. The museum aims to educate visitors about the horrors of nuclear warfare and to promote a message of peace. The park itself is a serene space, featuring various memorials and monuments, such as the Cenotaph for A-bomb Victims and the Children\'s Peace Monument. It offers a place for contemplation and prayer, with thousands of paper cranes left by visitors symbolizing wishes for peace. Visiting Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome provides a powerful, emotional experience that underscores the importance of striving for a world free from the threat of nuclear war.',
+          images: [
+            'https://images.pexels.com/photos/4151484/pexels-photo-4151484.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/5363272/pexels-photo-5363272.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/4151430/pexels-photo-4151430.jpeg?auto=compress&cs=tinysrgb&w=600'
+          ]
         },
         {
           time: 'Evening',
