@@ -115,24 +115,60 @@
 <section id="contact" class="contact-section">
     <div class="container">
         <h2 class="contact-title animate-on-scroll">Send In Your Enquiry</h2>
-        <form class="contact-form animate-on-scroll">
+        <form class="contact-form animate-on-scroll" (ngSubmit)="onSubmit()" #enquiryForm="ngForm">
             <div class="form-group">
-                <input type="text" name="fullName" class="form-control" placeholder="Enter your full name" required>
+                <input type="text" name="fullName" [(ngModel)]="formData.fullName" class="form-control" placeholder="Enter your full name" required>
             </div>
             <div class="form-group">
-                <input type="tel" name="contactNo" class="form-control" placeholder="Enter your 10-digit contact number" required>
+                <input type="tel" name="contactNo" [(ngModel)]="formData.contactNo" class="form-control" placeholder="Enter your 10-digit contact number" required>
             </div>
             <div class="form-group">
-                <input type="email" name="email" class="form-control" placeholder="Enter your email address" required>
+                <input type="email" name="email" [(ngModel)]="formData.email" class="form-control" placeholder="Enter your email address" required>
             </div>
             <div class="form-group">
-                <input type="text" name="fromCity" class="form-control" placeholder="Enter your location">
+                <input type="text" name="fromCity" [(ngModel)]="formData.fromCity" class="form-control" placeholder="Enter your location">
             </div>
             <div class="form-group">
-                <textarea class="form-control" name="message" placeholder="Enter your message" required></textarea>
+                <textarea class="form-control" name="message" [(ngModel)]="formData.message" placeholder="Enter your message" required></textarea>
             </div>
+
+            <!-- Captcha Verification -->
+            <div class="form-group">
+                <label class="captcha-label">Security Check *</label>
+                <div class="captcha-container">
+                    <div class="captcha-question">
+                        {{ captchaData.question }}
+                    </div>
+                    <div class="captcha-input-wrapper">
+                        <input 
+                            type="number" 
+                            id="userCaptchaAnswer" 
+                            name="userCaptchaAnswer" 
+                            [(ngModel)]="userCaptchaAnswer" 
+                            required 
+                            class="captcha-input"
+                            placeholder="Your answer"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ successMessage }}</span>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ errorMessage }}</span>
+            </div>
+
             <div class="form-submit">
-                <button type="submit" class="btn btn-teal">Send Enquiry</button>
+                <button type="submit" class="btn btn-teal" [disabled]="isSubmitting">
+                    <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                    {{ isSubmitting ? 'Submitting...' : 'Send Enquiry' }}
+                </button>
             </div>
             <p class="privacy-text">
                 We respect your privacy and use your details only to contact you about our services.

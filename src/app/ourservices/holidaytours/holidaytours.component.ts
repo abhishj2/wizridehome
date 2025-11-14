@@ -2,25 +2,59 @@ import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from 
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
+
+interface HolidayTourEnquiryFormData {
+  fullName: string;
+  contactNo: string;
+  email: string;
+  fromCity: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-holidaytours',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './holidaytours.component.html',
   styleUrl: './holidaytours.component.css'
 })
 export class HolidaytoursComponent implements OnInit, AfterViewInit {
   
+  formData: HolidayTourEnquiryFormData = {
+    fullName: '',
+    contactNo: '',
+    email: '',
+    fromCity: '',
+    message: ''
+  };
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/ourservices/holidaystours');
     
@@ -202,43 +236,84 @@ this.addJsonLd({
   }
 
   // Form submission handling
-  private initFormSubmission(): void {
-    const contactForm = this.elementRef.nativeElement.querySelector('.contact-form') as HTMLFormElement;
-    
-    if (contactForm) {
-      this.renderer.listen(contactForm, 'submit', (e: Event) => {
-        e.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(contactForm);
-        const formDataObject: { [key: string]: any } = {};
-        
-        formData.forEach((value, key) => {
-          formDataObject[key] = value;
-        });
-        
-        // Log to console
-        console.log('=== Holiday Tour Enquiry Form Submission ===');
-        console.log('Form Data:', formDataObject);
-        console.log('Timestamp:', new Date().toLocaleString());
-        console.log('==========================================');
-        
-        // Create readable alert message
-        let alertMessage = 'Holiday Tour Enquiry Submitted!\n\n';
-        for (const [key, value] of Object.entries(formDataObject)) {
-          if (value) {
-            alertMessage += `${key}: ${value}\n`;
-          }
-        }
-        alertMessage += '\nThank you for your enquiry! We will get back to you soon.';
-        
-        // Show alert with form data
-        alert(alertMessage);
-        
-        // Reset form
-        contactForm.reset();
-      });
+  onSubmit(): void {
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
     }
+
+    // Validate form data
+    if (!this.formData.fullName || !this.formData.contactNo || !this.formData.email) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const submissionData = {
+      title: `Holiday Tour Enquiry - ${this.formData.fullName}`,
+      content: this.formData.message || 'No message provided',
+      status: 'publish',
+      acf: {
+        full_name: this.formData.fullName,
+        contact_number: this.formData.contactNo,
+        email: this.formData.email,
+        from_city: this.formData.fromCity || '',
+        message: this.formData.message || '',
+        enquiry_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting holiday tour enquiry:', submissionData);
+
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/holiday_enquiries', submissionData)
+      .subscribe({
+        next: (response) => {
+          console.log('Holiday tour enquiry submitted successfully:', response);
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your enquiry has been submitted successfully. We will contact you soon.';
+          
+          // Reset form
+          this.formData = {
+            fullName: '',
+            contactNo: '',
+            email: '',
+            fromCity: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.captchaData = this.captchaService.generateCaptcha();
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting holiday tour enquiry:', error);
+          this.isSubmitting = false;
+          this.errorMessage = 'There was an error submitting your enquiry. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
+        }
+      });
+  }
+
+  // Form submission handling (kept for backward compatibility but not used)
+  private initFormSubmission(): void {
+    // This method is kept for backward compatibility but onSubmit() is now used
   }
 
 }
