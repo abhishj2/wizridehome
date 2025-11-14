@@ -2,25 +2,57 @@ import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from 
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { CaptchaService, CaptchaData } from '../../services/captcha.service';
+
+interface CorporateEnquiryFormData {
+  fullName: string;
+  email: string;
+  contact: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-corporatepackages',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './corporatepackages.component.html',
   styleUrl: './corporatepackages.component.css'
 })
 export class CorporatepackagesComponent implements OnInit, AfterViewInit {
   
+  formData: CorporateEnquiryFormData = {
+    fullName: '',
+    email: '',
+    contact: '',
+    message: ''
+  };
+
+  // Captcha
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
+
+  // Form state
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private captchaService: CaptchaService
   ) {}
   ngOnInit(): void {
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
+    
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/ourservices/corporatepackages/');
     
@@ -271,43 +303,82 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
   }
 
   // Form submission handling
-  private initFormSubmission(): void {
-    const form = this.elementRef.nativeElement.querySelector('#enquiryForm') as HTMLFormElement;
-    
-    if (form) {
-      this.renderer.listen(form, 'submit', (e: Event) => {
-        e.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(form);
-        const formDataObject: { [key: string]: any } = {};
-        
-        formData.forEach((value, key) => {
-          formDataObject[key] = value;
-        });
-        
-        // Log to console
-        console.log('=== Corporate Enquiry Form Submission ===');
-        console.log('Form Data:', formDataObject);
-        console.log('Timestamp:', new Date().toLocaleString());
-        console.log('=======================================');
-        
-        // Create readable alert message
-        let alertMessage = 'Corporate Enquiry Submitted!\n\n';
-        for (const [key, value] of Object.entries(formDataObject)) {
-          if (value) {
-            alertMessage += `${key}: ${value}\n`;
-          }
-        }
-        alertMessage += '\nThank you for your enquiry! Our team will contact you soon.';
-        
-        // Show alert with form data
-        alert(alertMessage);
-        
-        // Reset form
-        form.reset();
-      });
+  onSubmit(): void {
+    // Clear previous messages
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    // Validate captcha first
+    if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
+      this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      return;
     }
+
+    // Validate form data
+    if (!this.formData.fullName || !this.formData.email || !this.formData.contact) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const submissionData = {
+      title: `Corporate Package Enquiry - ${this.formData.fullName}`,
+      content: this.formData.message || 'No message provided',
+      status: 'publish',
+      acf: {
+        full_name: this.formData.fullName,
+        email: this.formData.email,
+        contact_number: this.formData.contact,
+        message: this.formData.message || '',
+        enquiry_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting corporate enquiry:', submissionData);
+
+    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/corporate_enquiries', submissionData)
+      .subscribe({
+        next: (response) => {
+          console.log('Corporate enquiry submitted successfully:', response);
+          this.isSubmitting = false;
+          this.successMessage = 'Thank you! Your enquiry has been submitted successfully. We will contact you soon.';
+          
+          // Reset form
+          this.formData = {
+            fullName: '',
+            email: '',
+            contact: '',
+            message: ''
+          };
+          this.userCaptchaAnswer = '';
+          
+          // Generate new captcha
+          this.captchaData = this.captchaService.generateCaptcha();
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting corporate enquiry:', error);
+          this.isSubmitting = false;
+          this.errorMessage = 'There was an error submitting your enquiry. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
+        }
+      });
+  }
+
+  // Form submission handling (kept for backward compatibility but not used)
+  private initFormSubmission(): void {
+    // This method is kept for backward compatibility but onSubmit() is now used
   }
 
   // Load animations for section titles and descriptions

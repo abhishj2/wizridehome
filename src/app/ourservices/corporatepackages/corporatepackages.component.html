@@ -77,24 +77,60 @@
         <div class="container">
           <div class="enquiry-card">
             <h2 class="enquiry-title">Send Your Enquiry</h2>
-            <form id="enquiryForm">
+            <form id="enquiryForm" (ngSubmit)="onSubmit()" #enquiryForm="ngForm">
               <div class="form-group">
                 <label for="name">Full Name *</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <input type="text" id="name" name="fullName" [(ngModel)]="formData.fullName" placeholder="Enter your full name" required>
               </div>
               <div class="form-group">
                 <label for="email">Email *</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" [(ngModel)]="formData.email" placeholder="Enter your email" required>
               </div>
               <div class="form-group">
                 <label for="contact">Contact No *</label>
-                <input type="tel" id="contact" name="contact" placeholder="Enter your contact number" required>
+                <input type="tel" id="contact" name="contact" [(ngModel)]="formData.contact" placeholder="Enter your contact number" required>
               </div>
               <div class="form-group full-width">
                 <label for="message">Message</label>
-                <textarea id="message" name="message" placeholder="Enter your message"></textarea>
+                <textarea id="message" name="message" [(ngModel)]="formData.message" placeholder="Enter your message"></textarea>
               </div>
-              <button type="submit" class="submit-btn">Send Enquiry</button>
+
+              <!-- Captcha Verification -->
+              <div class="form-group">
+                <label>Security Check *</label>
+                <div class="captcha-container">
+                  <div class="captcha-question">
+                    {{ captchaData.question }}
+                  </div>
+                  <div class="captcha-input-wrapper">
+                    <input 
+                      type="number" 
+                      id="userCaptchaAnswer" 
+                      name="userCaptchaAnswer" 
+                      [(ngModel)]="userCaptchaAnswer" 
+                      required 
+                      class="captcha-input"
+                      placeholder="Your answer"/>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Success Message -->
+              <div *ngIf="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ successMessage }}</span>
+              </div>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ errorMessage }}</span>
+              </div>
+
+              <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+                <i class="fas" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                {{ isSubmitting ? 'Submitting...' : 'Send Enquiry' }}
+              </button>
             </form>
           </div>
         </div>

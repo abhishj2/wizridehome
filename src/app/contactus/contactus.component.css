@@ -79,7 +79,7 @@
 
 .contact-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: 60px;
     align-items: start;
 }
@@ -485,6 +485,66 @@
     box-shadow: 0 5px 15px rgba(29, 170, 186, 0.3);
 }
 
+/* Map Section */
+.map-section {
+    margin-top: 30px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+.map-section.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.map-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+    position: relative;
+    padding-left: 25px;
+}
+
+.map-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--primary-color), var(--primary-hover));
+    border-radius: 3px;
+}
+
+.map-title i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.map-container {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(29, 170, 186, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-5px);
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    border-radius: 12px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .header-section {
@@ -525,6 +585,24 @@
         height: 45px;
         font-size: 1.1rem;
     }
+
+    .map-section {
+        margin-top: 25px;
+    }
+
+    .map-title {
+        font-size: 1.6rem;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .map-container {
+        padding: 15px;
+    }
+
+    .map-container iframe {
+        height: 250px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -555,6 +633,23 @@
     .contact-details {
         text-align: center;
     }
+
+    .map-section {
+        margin-top: 20px;
+    }
+
+    .map-title {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    .map-container {
+        padding: 10px;
+    }
+
+    .map-container iframe {
+        height: 200px;
+    }
 }
 
 /* Animation delays */
@@ -564,4 +659,8 @@
 
 .contact-info-section {
     transition-delay: 0.3s;
+}
+
+.map-section {
+    transition-delay: 0.5s;
 }
