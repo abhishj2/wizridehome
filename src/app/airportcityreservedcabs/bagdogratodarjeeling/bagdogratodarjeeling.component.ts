@@ -60,34 +60,42 @@ export class BagdogratodarjeelingComponent  implements OnInit, AfterViewInit, On
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Is there a bus from Bagdogra Airport to Sikkim?",
+          "name": "How much does a taxi cost from Bagdogra Airport to Darjeeling?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No, Bagdogra Airport does not have direct bus services to Sikkim. You can catch a bus from the Siliguri Bus Station."
+            "text": "The taxi fare for a reserved cab from Bagdogra to Darjeeling starts at ₹999*."
           }
         },
         {
           "@type": "Question",
-          "name": "Cab Options and Pricing from Bagdogra Airport to Sikkim?",
+          "name": "How long does it take to reach Darjeeling from Bagdogra Airport?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Wizzride offers a variety of cab options for a comfortable journey, including hatchbacks, sedans, SUVs, and luxury Innovas. Taxi fares start at just ₹999, with a fully online booking experience for convenience. Booking in advance is recommended for a smooth trip."
+            "text": "The journey typically takes around 2 hours 47 minutes, depending on traffic and road conditions."
           }
         },
         {
           "@type": "Question",
-          "name": "Are there tolls along the way to Sikkim?",
+          "name": "Can I make stops along the way?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No, there are no toll booths along the way from Bagdogra Airport to Gangtok."
+            "text": "Yes, Wizzride offers the flexibility to stop for sightseeing, meals, or photo opportunities along the route."
           }
         },
         {
           "@type": "Question",
-          "name": "Distance and Travel Time",
+          "name": "What is the best time to visit Darjeeling?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The total distance from Bagdogra Airport to Gangtok is approximately 125 km, and travel time can take 4 to 5 hours depending on traffic conditions."
+            "text": "The best time to visit Darjeeling is between March and June (summer) or September and December (autumn) for pleasant weather and clear views."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are taxis available at Bagdogra Airport?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, taxis are available at Bagdogra Airport. However, booking a reserved cab with Wizzride ensures a more personalized and comfortable experience."
           }
         }
       ]
