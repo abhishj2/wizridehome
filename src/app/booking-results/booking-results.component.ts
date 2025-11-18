@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ApiserviceService } from '../services/apiservice.service';
 
 interface BookingSearchParams {
   from: string;
@@ -89,7 +90,11 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   // Sticky header property
   isHeaderSticky = false;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute,
+    private apiService: ApiserviceService
+  ) {}
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
@@ -141,11 +146,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     
     console.log('Final search params:', this.searchParams);
     
-    // Simulate loading
-    setTimeout(() => {
-      this.loadVehicleOptions();
-      this.isLoading = false;
-    }, 1000);
+    // Load vehicle options
+    this.loadVehicleOptions();
   }
 
   ngOnDestroy() {
@@ -154,6 +156,84 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   loadVehicleOptions() {
+    if (!this.searchParams) return;
+
+    this.isLoading = true;
+
+    // Call API for shared cabs
+    if (this.searchParams.type === 'shared') {
+      this.loadSharedCarList();
+    } else {
+      // For reserved cabs, use existing dummy data for now
+      this.loadReservedCarOptions();
+    }
+  }
+
+  loadSharedCarList() {
+    if (!this.searchParams) return;
+
+    const userPhone = this.searchParams.phoneNumber || '';
+    const source = this.searchParams.from || '';
+    const destination = this.searchParams.to || '';
+    const pickup = this.searchParams.pickupLocation || '';
+    const drop = this.searchParams.dropLocation || '';
+    const seats = this.searchParams.passengers || 1;
+    const traveldate = this.searchParams.date || '';
+
+    console.log('=== Calling getSharedCarList API ===');
+    console.log('Request Parameters:');
+    console.log('  User Phone:', userPhone);
+    console.log('  Source:', source);
+    console.log('  Destination:', destination);
+    console.log('  Pickup Location:', pickup);
+    console.log('  Dropoff Location:', drop);
+    console.log('  Seats:', seats);
+    console.log('  Travel Date:', traveldate);
+
+    this.apiService.getSharedCarList(
+      userPhone,
+      source,
+      destination,
+      pickup,
+      drop,
+      seats,
+      traveldate
+    ).subscribe({
+      next: (data) => {
+        console.log('=== getSharedCarList API RESPONSE ===');
+        console.log('Full response:', JSON.stringify(data, null, 2));
+        console.log('Response type:', typeof data);
+        console.log('Is array:', Array.isArray(data));
+        console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
+        
+        if (Array.isArray(data) && data.length > 0) {
+          console.log('Number of vehicles:', data.length);
+          data.forEach((vehicle, index) => {
+            console.log(`Vehicle ${index + 1}:`, vehicle);
+          });
+        } else {
+          console.warn('API returned empty or invalid response');
+        }
+
+        // TODO: Map API response to vehicleOptions format
+        // For now, keep using dummy data until we see the API response structure
+        this.loadDummySharedCarOptions();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('=== getSharedCarList API ERROR ===');
+        console.error('Error details:', error);
+        console.error('Error message:', error.message);
+        console.error('Error status:', error.status);
+        
+        // Fallback to dummy data on error
+        this.loadDummySharedCarOptions();
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadDummySharedCarOptions() {
     if (!this.searchParams) return;
 
     const baseRoute = {
@@ -169,51 +249,69 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       }
     };
 
-    if (this.searchParams.type === 'shared') {
-      this.vehicleOptions = [
-        {
-          id: 'innova-1',
-          name: 'Innova Crysta',
-          image: '../../assets/images/reversed-removebg-preview.png',
-          departureTime: '03:30pm',
-          duration: '05hrs 30min',
-          price: 1331.43,
-          seatsLeft: 1,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        },
-        {
-          id: 'innova-2',
-          name: 'Innova Crysta',
-          image: '../../assets/images/reversed-removebg-preview.png',
-          departureTime: '04:30pm',
-          duration: '05hrs 30min',
-          price: 1500.43,
-          seatsLeft: 2,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        },
-        {
-          id: 'innova-3',
-          name: 'Innova Crysta',
-          image: '../../assets/images/reversed-removebg-preview.png',
-          departureTime: '06:30pm',
-          duration: '05hrs 30min',
-          price: 1331.43,
-          seatsLeft: 3,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        }
-      ];
-    } else {
-      // Reserved cabs - more vehicle options
-      this.vehicleOptions = [
+    this.vehicleOptions = [
+      {
+        id: 'innova-1',
+        name: 'Innova Crysta',
+        image: '../../assets/images/reversed-removebg-preview.png',
+        departureTime: '03:30pm',
+        duration: '05hrs 30min',
+        price: 1331.43,
+        seatsLeft: 1,
+        amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
+        route: baseRoute,
+        pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+        dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
+      },
+      {
+        id: 'innova-2',
+        name: 'Innova Crysta',
+        image: '../../assets/images/reversed-removebg-preview.png',
+        departureTime: '04:30pm',
+        duration: '05hrs 30min',
+        price: 1500.43,
+        seatsLeft: 2,
+        amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
+        route: baseRoute,
+        pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+        dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
+      },
+      {
+        id: 'innova-3',
+        name: 'Innova Crysta',
+        image: '../../assets/images/reversed-removebg-preview.png',
+        departureTime: '06:30pm',
+        duration: '05hrs 30min',
+        price: 1331.43,
+        seatsLeft: 3,
+        amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space'],
+        route: baseRoute,
+        pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
+        dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
+      }
+    ];
+  }
+
+  loadReservedCarOptions() {
+    if (!this.searchParams) return;
+
+    this.isLoading = true;
+
+    const baseRoute = {
+      from: { 
+        code: this.getLocationCode(this.searchParams.from), 
+        name: this.searchParams.from.split('(')[0].trim(),
+        location: this.searchParams.from.split('(')[1]?.replace(')', '').trim() || ''
+      },
+      to: { 
+        code: this.getLocationCode(this.searchParams.to), 
+        name: this.searchParams.to.split('(')[0].trim(),
+        location: this.searchParams.to.split('(')[1]?.replace(')', '').trim() || ''
+      }
+    };
+
+    // Reserved cabs - more vehicle options
+    this.vehicleOptions = [
         {
           id: 'swift-1',
           name: 'Swift Dzire',
@@ -267,7 +365,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
         }
       ];
-    }
+    
+    this.isLoading = false;
   }
 
   getLocationCode(location: string): string {
