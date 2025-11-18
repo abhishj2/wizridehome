@@ -91,6 +91,27 @@ readonly ROOT_URL = 'https://www.wizzride.com/app/api/testBed/getSrcDestPickDrop
   }
 
 
+
+caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferredTime : any, travelDate : any, 
+  source : any, pickup : any, destination : any, drop : any, seats : any){
+  const data = {
+    page: 'caradditionrequest',
+    fullName : fullName,
+    contactNumber : contactNumber,    
+    emailId : emailId,
+    preferredTime : preferredTime,
+    travelDate : travelDate,
+    source : source,
+    destination : destination,
+    pickup : pickup,
+    drop: drop,
+    seats : seats
+  }    
+
+  console.log("Value of Data",data)
+  const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+  return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+}
   // WIZZBLACK APIs
 
   getSourceDestinationFb()

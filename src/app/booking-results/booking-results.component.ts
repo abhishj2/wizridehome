@@ -500,52 +500,63 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         this.carAdditionFormData.emailId && 
         this.carAdditionFormData.preferredTime) {
       
-      // Create comprehensive car addition request data
-      const carAdditionRequest = {
-        id: Date.now().toString(), // Simple ID generation
-        timestamp: new Date().toISOString(),
-        requestType: 'car_addition',
-        searchParams: this.searchParams,
-        customerDetails: {
-          fullName: this.carAdditionFormData.fullName,
-          contactNo: this.carAdditionFormData.contactNo,
-          emailId: this.carAdditionFormData.emailId,
-          preferredTime: this.carAdditionFormData.preferredTime
+      // Prepare API request parameters
+      const fullName = this.carAdditionFormData.fullName;
+      const contactNumber = this.carAdditionFormData.contactNo;
+      const emailId = this.carAdditionFormData.emailId;
+      const preferredTime = this.carAdditionFormData.preferredTime;
+      const travelDate = this.searchParams?.date || '';
+      const source = this.searchParams?.from || '';
+      const pickup = this.searchParams?.pickupLocation || '';
+      const destination = this.searchParams?.to || '';
+      const drop = this.searchParams?.dropLocation || '';
+      const seats = this.searchParams?.passengers || 1;
+      
+      console.log('========== CALLING caraddditionrequest API ==========');
+      console.log('Request Parameters:');
+      console.log('  Full Name:', fullName);
+      console.log('  Contact Number:', contactNumber);
+      console.log('  Email ID:', emailId);
+      console.log('  Preferred Time:', preferredTime);
+      console.log('  Travel Date:', travelDate);
+      console.log('  Source:', source);
+      console.log('  Pickup:', pickup);
+      console.log('  Destination:', destination);
+      console.log('  Drop:', drop);
+      console.log('  Seats:', seats);
+      console.log('====================================================');
+      
+      // Call API to submit car addition request
+      this.apiService.caraddditionrequest(
+        fullName,
+        contactNumber,
+        emailId,
+        preferredTime,
+        travelDate,
+        source,
+        pickup,
+        destination,
+        drop,
+        seats
+      ).subscribe({
+        next: (response: any) => {
+          console.log('========== caraddditionrequest API RESPONSE ==========');
+          console.log('Response:', response);
+          console.log('Response Type:', typeof response);
+          console.log('Response String:', JSON.stringify(response));
+          console.log('=====================================================');
+          
+          
+          
+          this.closeCarAdditionModal();
         },
-        locationDetails: {
-          pickupLocation: this.searchParams?.pickupLocation || 'Not specified',
-          dropLocation: this.searchParams?.dropLocation || 'Not specified',
-          fromCity: this.searchParams?.from || 'Not specified',
-          toCity: this.searchParams?.to || 'Not specified'
-        },
-        status: 'pending',
-        notes: 'Customer requested additional car for the route'
-      };
-      
-      // Store the request
-      this.carAdditionRequests.push(carAdditionRequest);
-      
-      // Log to console for debugging
-      console.log('Car addition request submitted:', carAdditionRequest);
-      console.log('All car addition requests:', this.carAdditionRequests);
-      
-      // Show detailed success message
-      alert(`Car Addition Request Submitted Successfully!\n\n` +
-            `Request ID: ${carAdditionRequest.id}\n` +
-            `Customer: ${this.carAdditionFormData.fullName}\n` +
-            `Contact: ${this.carAdditionFormData.contactNo}\n` +
-            `Email: ${this.carAdditionFormData.emailId}\n` +
-            `Preferred Time: ${this.carAdditionFormData.preferredTime}\n\n` +
-            `Route Details:\n` +
-            `From: ${this.searchParams?.from}\n` +
-            `To: ${this.searchParams?.to}\n` +
-            `Pickup Location: ${this.searchParams?.pickupLocation || 'Not specified'}\n` +
-            `Drop Location: ${this.searchParams?.dropLocation || 'Not specified'}\n` +
-            `Date: ${this.searchParams?.date}\n` +
-            `Passengers: ${this.searchParams?.passengers}\n\n` +
-            `We will contact you soon regarding your request!`);
-      
-      this.closeCarAdditionModal();
+        error: (error) => {
+          console.error('========== caraddditionrequest API ERROR ==========');
+          console.error('Error:', error);
+          console.error('===================================================');
+          alert('Error submitting car addition request. Please try again.');
+        }
+      });
     } else {
       alert('Please fill in all the required fields.');
     }
