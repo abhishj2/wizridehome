@@ -20,6 +20,7 @@ import { ApiserviceService, SourceValue } from '../services/apiservice.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
+import Swal from 'sweetalert2';
 interface City {
   name: string;
   code: string;
@@ -1173,16 +1174,126 @@ trackByOfferId(index: number, offer: any): number {
 
     if (this.pendingAction === 'flights') {
       this.submitFlights(completePhoneNumber);
-    } else if (this.pendingAction === 'shared' || this.pendingAction === 'reserved') {
+      // Navigate to booking results for flights
+      this.navigateToResults(completePhoneNumber);
+      this.cancelPhonePopup();
+    } else if (this.pendingAction === 'shared') {
+      // For shared cabs, check API first before navigating
+      this.checkAndNavigateForSharedCabs(completePhoneNumber);
+    } else if (this.pendingAction === 'reserved') {
+      // For reserved cabs, navigate directly (can add API check later if needed)
       this.submitCabs(this.pendingAction, completePhoneNumber);
+      this.navigateToResults(completePhoneNumber);
+      this.cancelPhonePopup();
+    }
+  }
+
+  checkAndNavigateForSharedCabs(phoneNumber: string) {
+    const source = this.selectedCities.shared.pickup || '';
+    const destination = this.selectedCities.shared.dropoff || '';
+    const pickup = this.formValues.sharedPickupLocation || '';
+    const drop = this.formValues.sharedDropoffLocation || '';
+    const seats = this.formValues.sharedPassengers || 1;
+    const traveldate = this.formValues.sharedDateTime || '';
+
+    if (!source || !destination || !pickup || !drop) {
+      alert('Please fill in all required fields.');
+      return;
     }
 
-    // Navigate to booking results page FIRST (before clearing pendingAction)
-    console.log('About to navigate to booking results...');
-    this.navigateToResults(completePhoneNumber);
-    
-    // Then close the modal
-    this.cancelPhonePopup();
+    console.log('=== Checking route availability before navigation ===');
+    console.log('Source:', source);
+    console.log('Destination:', destination);
+    console.log('Pickup:', pickup);
+    console.log('Dropoff:', drop);
+    console.log('Seats:', seats);
+    console.log('Travel Date:', traveldate);
+
+    // Call API to check if route is available
+    this.apiService.getSharedCarList(
+      phoneNumber,
+      source,
+      destination,
+      pickup,
+      drop,
+      seats,
+      traveldate
+    ).subscribe({
+      next: (data: any) => {
+        console.log('=== Route Availability Check Response ===');
+        console.log('Response:', JSON.stringify(data, null, 2));
+        
+        // Check if response contains "NOT_PRESENT"
+        const responseString = JSON.stringify(data);
+        let isNotPresent = false;
+        
+        if (typeof data === 'string') {
+          isNotPresent = (data as string).includes('NOT_PRESENT');
+        } else if (Array.isArray(data)) {
+          isNotPresent = data.length === 1 && String(data[0]) === 'NOT_PRESENT';
+        } else {
+          isNotPresent = responseString.includes('NOT_PRESENT');
+        }
+        
+        if (isNotPresent) {
+          // Close phone popup before showing alert
+          this.cancelPhonePopup();
+          
+          // Show SweetAlert for 5 seconds
+          Swal.fire({
+            icon: 'error',
+            title: 'Route Not Available',
+            text: 'Sorry, this route is not present at the moment.',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false
+          });
+          
+          console.log('Route not available - NOT_PRESENT in response');
+        } else if (Array.isArray(data) && data.length > 0) {
+          // Data is present, navigate to booking results
+          console.log('Route available - Found', data.length, 'vehicles');
+          console.log('Vehicle details:', data);
+          
+          this.submitCabs('shared', phoneNumber);
+          this.navigateToResults(phoneNumber);
+          this.cancelPhonePopup();
+        } else {
+          // Close phone popup before showing alert
+          this.cancelPhonePopup();
+          
+          // Empty or unexpected response
+          Swal.fire({
+            icon: 'warning',
+            title: 'No Vehicles Found',
+            text: 'No vehicles available for this route at the moment.',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false
+          });
+          console.log('No vehicles found in response');
+        }
+      },
+      error: (error) => {
+        // Close phone popup before showing error alert
+        this.cancelPhonePopup();
+        
+        console.error('=== Route Availability Check Error ===');
+        console.error('Error:', error);
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Unable to check route availability. Please try again.',
+          timer: 5000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+      }
+    });
   }
 
   /** -------------------

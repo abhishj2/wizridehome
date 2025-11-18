@@ -44,7 +44,6 @@ export class NavbarComponent {
       hasDropdown: false,
       link: '/contactus'
     },
-    
     {
       name: 'Careers',
       hasDropdown: true,

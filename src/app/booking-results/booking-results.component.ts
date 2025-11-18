@@ -199,7 +199,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       seats,
       traveldate
     ).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         console.log('=== getSharedCarList API RESPONSE ===');
         console.log('Full response:', JSON.stringify(data, null, 2));
         console.log('Response type:', typeof data);
@@ -211,13 +211,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           data.forEach((vehicle, index) => {
             console.log(`Vehicle ${index + 1}:`, vehicle);
           });
+          
+          // Map API response to vehicleOptions format
+          this.mapApiResponseToVehicleOptions(data);
         } else {
           console.warn('API returned empty or invalid response');
+          this.vehicleOptions = [];
         }
-
-        // TODO: Map API response to vehicleOptions format
-        // For now, keep using dummy data until we see the API response structure
-        this.loadDummySharedCarOptions();
+        
         this.isLoading = false;
       },
       error: (error) => {
@@ -231,6 +232,79 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  mapApiResponseToVehicleOptions(apiData: any[]) {
+    if (!this.searchParams) return;
+
+    const baseRoute = {
+      from: { 
+        code: this.getLocationCode(this.searchParams.from), 
+        name: this.searchParams.from,
+        location: this.searchParams.pickupLocation || ''
+      },
+      to: { 
+        code: this.getLocationCode(this.searchParams.to), 
+        name: this.searchParams.to,
+        location: this.searchParams.dropLocation || ''
+      }
+    };
+
+    // Map API response to VehicleOption format
+    this.vehicleOptions = apiData.map((vehicle: any, index: number) => {
+      // Format departure time from SHOWTIME (e.g., "09:00 AM" -> "09:00am")
+      let departureTime = vehicle.SHOWTIME || vehicle.TRAVELTIME || '';
+      if (departureTime) {
+        // Convert "09:00 AM" to "09:00am" format for display
+        departureTime = departureTime.toLowerCase().replace(/\s+/g, '');
+        // If it's in 24-hour format like "09:00:00", convert to 12-hour format
+        if (departureTime.includes(':') && !departureTime.includes('am') && !departureTime.includes('pm')) {
+          const [hours, minutes] = departureTime.split(':');
+          const hour24 = parseInt(hours, 10);
+          const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+          const period = hour24 >= 12 ? 'pm' : 'am';
+          departureTime = `${hour12}:${minutes}${period}`;
+        }
+      }
+
+      // Format duration from TRAVELDURATION (e.g., "3 hrs 0 mins" -> "03hrs 00min")
+      let duration = vehicle.TRAVELDURATION || '';
+      if (duration) {
+        // Keep the format as is or format it
+        duration = duration.replace(/\s+/g, ' ').trim();
+      }
+
+      // Get price from AMOUNT
+      const price = parseFloat(vehicle.AMOUNT || '0');
+
+      // Get seats left
+      const seatsLeft = parseInt(vehicle.SEATSLEFT || '0', 10);
+
+      // Get car type/name
+      const carType = vehicle.CARTYPE || 'Car';
+
+      // Get image path
+      const imagePath = vehicle.IMAGEPATH || '../../assets/images/reversed-removebg-preview.png';
+
+      // Create unique ID from TID or RID
+      const vehicleId = `vehicle-${vehicle.TID || vehicle.RID || index}`;
+
+      return {
+        id: vehicleId,
+        name: carType,
+        image: imagePath,
+        departureTime: departureTime,
+        duration: duration,
+        price: price,
+        seatsLeft: seatsLeft,
+        amenities: ['AC', 'Luggage', 'Refreshment'], // Default amenities as shown in card
+        route: baseRoute,
+        pickupLocation: this.searchParams?.pickupLocation || '',
+        dropLocation: this.searchParams?.dropLocation || ''
+      } as VehicleOption;
+    });
+
+    console.log('Mapped vehicle options:', this.vehicleOptions);
   }
 
   loadDummySharedCarOptions() {
