@@ -16,6 +16,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
 import { WordpressService } from '../services/wordpress.service';
+import { ApiserviceService, SourceValue } from '../services/apiservice.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
@@ -546,6 +547,9 @@ trackByOfferId(index: number, offer: any): number {
     flights: { from: 'Chandigarh', to: 'Bagdogra' },
   };
 
+  // Source cities from API for shared cabs
+  sourceCities: City[] = [];
+
   // Cities & Locations
   cities: City[] = [
     { name: 'Delhi', code: 'DEL', state: 'Delhi' },
@@ -700,6 +704,7 @@ trackByOfferId(index: number, offer: any): number {
     private metaService: Meta,
     private seoService: SeoService,
     private wordpressService: WordpressService,
+    private apiService: ApiserviceService,
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
@@ -712,6 +717,30 @@ trackByOfferId(index: number, offer: any): number {
     
     // Set page title
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
+
+    // Fetch source cities for shared cabs
+    this.apiService.getSource().subscribe({
+      next: (data) => {
+        console.log('data received in HomeComponent:', data);
+        // Transform API data to City[] format for shared cabs
+        if (Array.isArray(data)) {
+          this.sourceCities = data.map((item: SourceValue | string) => {
+            // Handle both SourceValue interface and string array
+            const name = typeof item === 'string' ? item : item.name;
+            const id = typeof item === 'string' ? '' : item.id;
+            return {
+              name: name,
+              code: id || name.substring(0, 3).toUpperCase(),
+              state: '' // State not available from API
+            };
+          });
+          console.log('Source cities populated:', this.sourceCities);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching source data:', error);
+      }
+    });
 
     // Meta Description
     this.metaService.updateTag({ name: 'description', content: 'Book shared cabs from Bagdogra & Guwahati Airports to Darjeeling, Gangtok, Kalimpong & Shillong. Affordable rates, 24/7 service, and safe rides across Northeast India..' });
@@ -1268,19 +1297,51 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
+    // Use sourceCities for shared cab dropdowns, otherwise use cities
+    const citiesToSearch = (target === 'shared-pickup' || target === 'shared-dropoff') 
+      ? this.sourceCities 
+      : this.cities;
+
     // Filter cities based on the query
-    const filteredCities = this.cities.filter(city =>
+    let filteredCities = citiesToSearch.filter(city =>
       city.name.toLowerCase().includes(query.toLowerCase()) ||
       city.code.toLowerCase().includes(query.toLowerCase())
     );
 
-    // Show up to 8 matching cities
-    this.activeSuggestions[target] = filteredCities.slice(0, 8);
+    // For shared cabs, exclude the city selected in the other field
+    if (target === 'shared-pickup' && this.formValues.sharedDropoff) {
+      filteredCities = filteredCities.filter(city => 
+        city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+      );
+    } else if (target === 'shared-dropoff' && this.formValues.sharedPickup) {
+      filteredCities = filteredCities.filter(city => 
+        city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+      );
+    }
+
+    // Show all matching cities
+    this.activeSuggestions[target] = filteredCities;
   }
 
   showCitySuggestionsOnFocus(target: string) {
+    // Use sourceCities for shared cab dropdowns, otherwise use cities
+    let citiesToShow = (target === 'shared-pickup' || target === 'shared-dropoff') 
+      ? this.sourceCities 
+      : this.cities;
+    
+    // For shared cabs, exclude the city selected in the other field
+    if (target === 'shared-pickup' && this.formValues.sharedDropoff) {
+      citiesToShow = citiesToShow.filter(city => 
+        city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+      );
+    } else if (target === 'shared-dropoff' && this.formValues.sharedPickup) {
+      citiesToShow = citiesToShow.filter(city => 
+        city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+      );
+    }
+    
     // Show all cities when focusing on input
-    this.activeSuggestions[target] = this.cities.slice(0, 8);
+    this.activeSuggestions[target] = citiesToShow;
   }
 
   getMultiCitySuggestions(target: string): City[] {
@@ -1359,8 +1420,26 @@ trackByOfferId(index: number, offer: any): number {
     // Update selected cities
     if (target === 'shared-pickup') {
       this.selectedCities.shared.pickup = cityName;
+      // Refresh suggestions for shared-dropoff to exclude the selected pickup city
+      if (this.activeSuggestions['shared-dropoff']) {
+        const currentQuery = this.formValues.sharedDropoff || '';
+        if (currentQuery.trim()) {
+          this.showCitySuggestions(currentQuery, 'shared-dropoff');
+        } else {
+          this.showCitySuggestionsOnFocus('shared-dropoff');
+        }
+      }
     } else if (target === 'shared-dropoff') {
       this.selectedCities.shared.dropoff = cityName;
+      // Refresh suggestions for shared-pickup to exclude the selected dropoff city
+      if (this.activeSuggestions['shared-pickup']) {
+        const currentQuery = this.formValues.sharedPickup || '';
+        if (currentQuery.trim()) {
+          this.showCitySuggestions(currentQuery, 'shared-pickup');
+        } else {
+          this.showCitySuggestionsOnFocus('shared-pickup');
+        }
+      }
     } else if (target === 'reserved-pickup') {
       this.selectedCities.reserved.pickup = cityName;
     } else if (target === 'reserved-dropoff') {
