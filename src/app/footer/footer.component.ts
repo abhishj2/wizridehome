@@ -111,6 +111,32 @@ export class FooterComponent {
         { name: "Shillong Airport", link: "/airports/shillongairport/" },
         { name: "Pakyong Airport", link: "/airports/pakyongairport/" }
       ]
+    },
+    aiportroutes:{
+      title:'Air Routes',
+      route:[
+        { name: 'Bagdogra to Bengaluru', link: '/ourservices/flight-booking/bagdogratobengaluru' },
+        { name: 'Bagdogra to Delhi', link: '/ourservices/flight-booking/bagdogratodelhi' },
+        { name: 'Bagdogra to Dibrugarh', link: '/ourservices/flight-booking/bagdogratodibrugarh' },
+        { name: 'Bagdogra to Guwahati', link: '/ourservices/flight-booking/bagdogratoguwahati' },
+        { name: 'Bagdogra to Kolkata', link: '/ourservices/flight-booking/bagdogratokolkata' },
+        { name: 'Bagdogra to Mumbai', link: '/ourservices/flight-booking/bagdogratomumbai' },
+        { name: 'Guwahati to Agartala', link: '/ourservices/flight-booking/guwahatitoagartala' },
+        { name: 'Guwahati to Delhi', link: '/ourservices/flight-booking/guwahatitodelhi' },
+        { name: 'Guwahati to Dibrugarh', link: '/ourservices/flight-booking/guwahatitodibrugarh' },
+        { name: 'Guwahati to Imphal', link: '/ourservices/flight-booking/guwahatitoimphal' },
+        { name: 'Guwahati to Kolkata', link: '/ourservices/flight-booking/guwahatitokolkata' },
+        { name: 'Pakyong to Delhi', link: '/ourservices/flight-booking/pakyongtodelhi' },
+        { name: 'Pakyong to Kolkata', link: '/ourservices/flight-booking/pakyongtokolkata' }
+      ]
+    },
+    innerlinepermits:{
+      title:'Inner Line Permits',
+      route:[
+        { name: 'Arunachal Inner Line Permit', link: '/inner-line-permit/arunachal-inner-line-permit' },
+        { name: 'Nagaland Inner Line Permit', link: '/inner-line-permit/nagaland-inner-line-permit' },
+        { name: 'Sikkim Permit Guide', link: '/sikkim_permit_guide' }
+      ]
     }
   };
 
@@ -128,7 +154,10 @@ export class FooterComponent {
       { name: 'Zuluk', link: '/destinations/zuluk' },
       { name: 'Rangpo', link: '/destinations/rangpo' },
       {name:'Ravangla',link:'/destinations/ravangla'},
+      {name:'Aritar Lake',link:'/destinations/aritarlake'},
+      {name:'Baba Mandir',link:'/destinations/babamandir'},
     ],
+    
     darjeeling: [
       { name: 'Darjeeling Town', link: '/destinations/darjeeling/' },
       { name: 'Tiger Hill', link: '/destinations/tigerhill/' },

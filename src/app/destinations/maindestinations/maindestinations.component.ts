@@ -69,12 +69,24 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
           img: "assets/images/destinations/rangpo.jpg",
           link: "/destinations/rangpo"
         },
+        
         {
           name: "Ravangla",
           img: "assets/images/destinations/borong.jpg",
           link: "/destinations/ravangla"
-        }
+        },
+        {
+          name: "Aritar Lake",
+          img: "assets/images/destinations/lampokhari.jpg",
+          link: "/destinations/aritarlake"
+        },
+        {
+          name: "Baba Mandir",
+          img: "assets/images/destinations/oldbabamandir.jpg",
+          link: "/destinations/babamandir"
+        },
       ]
+      
     },
     {
       title: "Darjeeling & Kalimpong",

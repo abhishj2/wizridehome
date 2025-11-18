@@ -117,6 +117,8 @@ import { VehicledetailsComponent } from './vehicledetails/vehicledetails.compone
 import { WardslakeComponent } from './destinations/meghalaya/wardslake/wardslake.component';
 import { JapantourComponent } from './japantour/japantour.component';
 import { GuwahatitoshillongCityComponent } from './wizridecityroutes/guwahatitoshillongcity/guwahatitoshillong.component';
+import { AritarlakeComponent } from './destinations/sikkim/aritarlake/aritarlake.component';
+import { BabamandirComponent } from './destinations/sikkim/babamandir/babamandir.component';
 
 
 
@@ -266,6 +268,9 @@ export const routes: Routes = [
       {path:'japantour',component:JapantourComponent},
 
       {path:'ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service', component:GuwahatitoshillongCityComponent},
+
+      {path:'destinations/aritarlake',component:AritarlakeComponent},
+      {path:'destinations/babamandir',component:BabamandirComponent},
 
 
 

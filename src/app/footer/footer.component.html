@@ -60,6 +60,33 @@
         </div>
       </div>
     </div>
+
+    <div class="route-card">
+      <div class="route-icon-column">
+        <i class="fas fa-plane route-icon"></i>
+      </div>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.aiportroutes.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.aiportroutes.route; let last = last">
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="route-card">
+      <div class="route-icon-column">
+        <i class="fas fa-file route-icon"></i>
+      </div>
+      <div class="route-content-column">
+        <h3 class="route-title">{{ routes.innerlinepermits.title }}</h3>
+        <div class="route-content">
+          <span *ngFor="let route of routes.innerlinepermits.route; let last = last">
+            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
