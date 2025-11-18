@@ -37,6 +37,12 @@ readonly ROOT_URL = 'https://www.wizzride.com/app/api/testBed/getSrcDestPickDrop
       source: source,    
       destination : destination  
     }
+    console.log('=== getPickupDrop API Request ===');
+    console.log('URL:', this.ROOT_URL);
+    console.log('Request payload:', JSON.stringify(data, null, 2));
+    console.log('Source:', source);
+    console.log('Destination:', destination);
+    
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }

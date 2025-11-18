@@ -725,7 +725,7 @@ trackByOfferId(index: number, offer: any): number {
         // Transform API data to City[] format for shared cabs
         if (Array.isArray(data)) {
           this.sourceCities = data.map((item: SourceValue | string) => {
-            // Handle both SourceValue interface and string array
+
             const name = typeof item === 'string' ? item : item.name;
             const id = typeof item === 'string' ? '' : item.id;
             return {
@@ -1457,6 +1457,41 @@ trackByOfferId(index: number, offer: any): number {
     if (target.includes('shared') || target.includes('reserved')) {
       this.checkAndShowLocationDetails(target);
     }
+
+    // Call getPickupDrop API when both source and destination cities are selected for shared cabs
+    if (target === 'shared-pickup' || target === 'shared-dropoff') {
+      const source = this.selectedCities.shared.pickup;
+      const destination = this.selectedCities.shared.dropoff;
+      
+      if (source && destination && source !== destination) {
+        console.log('=== Calling getPickupDrop API ===');
+        console.log('Source:', source);
+        console.log('Destination:', destination);
+        
+        this.apiService.getPickupDrop(source, destination).subscribe({
+          next: (data) => {
+            console.log('=== getPickupDrop API RESPONSE (from selectCity) ===');
+            console.log('Full response:', JSON.stringify(data, null, 2));
+            console.log('Response type:', typeof data);
+            console.log('Is array:', Array.isArray(data));
+            console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
+            
+            if (Array.isArray(data) && data.length > 0) {
+              console.log('Pickup points:', data[0]);
+              console.log('Dropoff points:', data[1]);
+            } else {
+              console.warn('API returned empty or invalid response');
+            }
+          },
+          error: (error) => {
+            console.error('=== getPickupDrop API ERROR (from selectCity) ===');
+            console.error('Error details:', error);
+            console.error('Error message:', error.message);
+            console.error('Error status:', error.status);
+          }
+        });
+      }
+    }
   }
 
   selectMultiCity(cityName: string, cityCode: string, target: string) {
@@ -1510,6 +1545,45 @@ trackByOfferId(index: number, offer: any): number {
 
     // Clear suggestions immediately when location is selected
     delete this.activeSuggestions[target];
+
+    if (target === 'shared-pickup-specific' || target === 'shared-dropoff-specific') {
+      const hasPickupLocation = !!this.formValues.sharedPickupLocation;
+      const hasDropoffLocation = !!this.formValues.sharedDropoffLocation;
+      const hasSourceCity = !!this.selectedCities.shared.pickup;
+      const hasDestinationCity = !!this.selectedCities.shared.dropoff;
+      
+      if (hasPickupLocation && hasDropoffLocation && hasSourceCity && hasDestinationCity) {
+        console.log('=== Calling getPickupDrop API (from selectLocation) ===');
+        console.log('Source:', this.selectedCities.shared.pickup);
+        console.log('Destination:', this.selectedCities.shared.dropoff);
+        
+        this.apiService.getPickupDrop(
+          this.selectedCities.shared.pickup,
+          this.selectedCities.shared.dropoff
+        ).subscribe({
+          next: (data) => {
+            console.log('=== getPickupDrop API RESPONSE (from selectLocation) ===');
+            console.log('Full response:', JSON.stringify(data, null, 2));
+            console.log('Response type:', typeof data);
+            console.log('Is array:', Array.isArray(data));
+            console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
+            
+            if (Array.isArray(data) && data.length > 0) {
+              console.log('Pickup points:', data[0]);
+              console.log('Dropoff points:', data[1]);
+            } else {
+              console.warn('API returned empty or invalid response');
+            }
+          },
+          error: (error) => {
+            console.error('=== getPickupDrop API ERROR (from selectLocation) ===');
+            console.error('Error details:', error);
+            console.error('Error message:', error.message);
+            console.error('Error status:', error.status);
+          }
+        });
+      }
+    }
   }
 
   checkAndShowLocationDetails(target: string) {
@@ -1517,7 +1591,6 @@ trackByOfferId(index: number, offer: any): number {
     const cities = this.selectedCities[tabType];
 
     if (cities.pickup && cities.dropoff) {
-      // For shared cabs, don't show location details if source and destination are the same
       if (tabType === 'shared' && this.isSameCitySelected(cities.pickup, cities.dropoff)) {
         this.locationDetailsVisible[tabType] = false;
         return;
