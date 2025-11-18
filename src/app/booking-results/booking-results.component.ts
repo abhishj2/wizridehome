@@ -31,6 +31,7 @@ interface VehicleOption {
   };
   pickupLocation?: string;
   dropLocation?: string;
+  tid?: string; // Transaction ID for seat blocking
 }
 
 interface Seat {
@@ -288,6 +289,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
       // Create unique ID from TID or RID
       const vehicleId = `vehicle-${vehicle.TID || vehicle.RID || index}`;
+      const tid = vehicle.TID || vehicle.RID || '';
 
       return {
         id: vehicleId,
@@ -300,7 +302,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         amenities: ['AC', 'Luggage', 'Refreshment'], // Default amenities as shown in card
         route: baseRoute,
         pickupLocation: this.searchParams?.pickupLocation || '',
-        dropLocation: this.searchParams?.dropLocation || ''
+        dropLocation: this.searchParams?.dropLocation || '',
+        tid: tid // Store TID for seat blocking API
       } as VehicleOption;
     });
 
@@ -649,20 +652,91 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   selectSeat(vehicle: VehicleOption) {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
     this.currentSelectedVehicle = vehicle;
+    
+    // Initialize seats with default status first
     this.initializeSeats(vehicle.price);
+    
+    // Fetch actual seat availability from API
+    if (vehicle.tid) {
+      this.fetchSeatDetails(vehicle.tid, vehicle.price);
+    }
+    
     this.showSeatPopup = true;
     console.log('showSeatPopup set to:', this.showSeatPopup);
   }
 
+  fetchSeatDetails(tid: string, price: number) {
+    console.log('========== CALLING getSeatDetails API ==========');
+    console.log('TID:', tid);
+    
+    this.apiService.getSeatDetails(tid).subscribe({
+      next: (data: any) => {
+        console.log('========== getSeatDetails API RESPONSE ==========');
+        console.log('Response:', data);
+        console.log('Response Type:', typeof data);
+        console.log('Response String:', JSON.stringify(data));
+        console.log('================================================');
+        
+        // Update seat statuses based on API response
+        this.updateSeatStatusFromAPI(data, price);
+      },
+      error: (error) => {
+        console.error('========== getSeatDetails API ERROR ==========');
+        console.error('Error:', error);
+        console.error('===============================================');
+        // Keep default seat statuses if API fails
+      }
+    });
+  }
+
+  updateSeatStatusFromAPI(apiData: any, price: number) {
+    // Create a map of seat numbers to their booked status from API
+    const seatStatusMap: { [key: number]: boolean } = {};
+    
+    if (Array.isArray(apiData)) {
+      apiData.forEach((seat: any) => {
+        const seatNumber = parseInt(seat.seatNumber || seat.seatnumber || seat.seat_number, 10);
+        const isBooked = seat.bookedStatus === 'Y' || seat.bookedStatus === 'y' || seat.bookedstatus === 'Y' || seat.bookedstatus === 'y';
+        if (seatNumber) {
+          seatStatusMap[seatNumber] = isBooked;
+        }
+      });
+    }
+    
+    console.log('Seat Status Map from API:', seatStatusMap);
+    
+    // Update front seats
+    this.frontSeats = this.frontSeats.map(seat => ({
+      ...seat,
+      status: seatStatusMap[seat.number] ? 'booked' : 'available'
+    }));
+    
+    // Update middle seats
+    this.middleSeats = this.middleSeats.map(seat => ({
+      ...seat,
+      status: seatStatusMap[seat.number] ? 'booked' : 'available'
+    }));
+    
+    // Update back seats
+    this.backSeats = this.backSeats.map(seat => ({
+      ...seat,
+      status: seatStatusMap[seat.number] ? 'booked' : 'available'
+    }));
+    
+    console.log('Updated Front Seats:', this.frontSeats);
+    console.log('Updated Middle Seats:', this.middleSeats);
+    console.log('Updated Back Seats:', this.backSeats);
+  }
+
   initializeSeats(price: number) {
-    // Initialize seats with all available (no pre-selected seats)
+  
     this.frontSeats = [
       { id: '1', number: 1, status: 'available', price: price }
     ];
 
     this.middleSeats = [
       { id: '3', number: 3, status: 'available', price: price },
-      { id: '4', number: 4, status: 'booked', price: price }
+      { id: '4', number: 4, status: 'available', price: price }
     ];
 
     this.backSeats = [
@@ -701,38 +775,80 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     if (this.selectedSeats.length > 0 && this.currentSelectedVehicle) {
       console.log('Proceeding to booking with seats:', this.selectedSeats);
       
-      // Calculate total price
-      const totalPrice = this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+      // Get TID, selected seats, and phone number
+      const tid = this.currentSelectedVehicle.tid;
+      const phoneNumber = this.searchParams?.phoneNumber || '';
       
-      // Create selection details
-      const selectionDetails = {
-        selectedSeats: this.selectedSeats.map(seat => ({
-          seatNumber: seat.number,
-          price: seat.price
-        })),
-        totalSeats: this.selectedSeats.length,
-        totalPrice: totalPrice,
-        perSeatPrice: this.selectedSeats[0]?.price || 0
-      };
+      // Sort selected seat numbers and convert to string (as per reference image)
+      const sortedSeatNumbers = this.selectedSeats
+        .map(seat => seat.number)
+        .sort((a, b) => a < b ? -1 : a > b ? 1 : 0)
+        .toString();
       
-      // Create booking data for checkout
-      const bookingData = {
-        searchParams: this.searchParams,
-        vehicleDetails: this.currentSelectedVehicle,
-        selectedSeats: this.selectedSeats,
-        bookingType: 'shared' as const,
-        totalPrice: totalPrice
-      };
+      console.log('========== CALLING shareSeatBlock API ==========');
+      console.log('TID:', tid);
+      console.log('Selected Seats (sorted):', sortedSeatNumbers);
+      console.log('Phone Number:', phoneNumber);
+      console.log('================================================');
       
-      // Store booking data
-      localStorage.setItem('bookingData', JSON.stringify(bookingData));
-      
-      // Navigate to checkout
-      this.router.navigate(['/checkout'], { 
-        state: { bookingData: bookingData }
+      // Call shareSeatBlock API to check if seats are blocked
+      this.apiService.shareSeatBlock(tid, sortedSeatNumbers, phoneNumber).subscribe({
+        next: (val: any) => {
+          console.log('========== shareSeatBlock API RESPONSE ==========');
+          console.log('Response:', val);
+          console.log('Response Type:', typeof val);
+          console.log('Response String:', JSON.stringify(val));
+          console.log('================================================');
+          
+          // Check if response includes 'NO BLOCKING' (as per reference image)
+          const responseString = JSON.stringify(val);
+          if (responseString.includes('NO BLOCKING')) {
+            console.log('✅ NO BLOCKING - Seats are available, proceeding to checkout');
+            
+            // Calculate total price
+            const totalPrice = this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+            
+            // Create selection details
+            const selectionDetails = {
+              selectedSeats: this.selectedSeats.map(seat => ({
+                seatNumber: seat.number,
+                price: seat.price
+              })),
+              totalSeats: this.selectedSeats.length,
+              totalPrice: totalPrice,
+              perSeatPrice: this.selectedSeats[0]?.price || 0
+            };
+            
+            // Create booking data for checkout
+            const bookingData = {
+              searchParams: this.searchParams,
+              vehicleDetails: this.currentSelectedVehicle,
+              selectedSeats: this.selectedSeats,
+              bookingType: 'shared' as const,
+              totalPrice: totalPrice
+            };
+            
+            // Store booking data
+            localStorage.setItem('bookingData', JSON.stringify(bookingData));
+            
+            // Navigate to checkout
+            this.router.navigate(['/checkout'], { 
+              state: { bookingData: bookingData }
+            });
+            
+            this.closeSeatPopup();
+          } else {
+            console.log('❌ SEATS ARE BLOCKED - Cannot proceed to checkout');
+            alert('Selected seats are currently blocked. Please select different seats.');
+          }
+        },
+        error: (error) => {
+          console.error('========== shareSeatBlock API ERROR ==========');
+          console.error('Error:', error);
+          console.error('===============================================');
+          alert('Error checking seat availability. Please try again.');
+        }
       });
-      
-      this.closeSeatPopup();
     } else {
       alert('Please select at least one seat to proceed.');
     }

@@ -2004,8 +2004,8 @@ color: #000 !important;
 }
 
 .car-image {
-  width: 250px;
-  height: auto;
+  width: auto;
+  height: 372px;
   z-index: 1;
   position: absolute;
   top: 100%;
@@ -2016,7 +2016,7 @@ color: #000 !important;
 /* Unified Seat Grid */
 .unified-seat-grid {
   position: absolute;
-  top: 132%;
+  top:  130%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
