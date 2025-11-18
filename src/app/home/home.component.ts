@@ -1412,8 +1412,9 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    // Use sourceCities for shared cab dropdowns, otherwise use cities
-    const citiesToSearch = (target === 'shared-pickup' || target === 'shared-dropoff') 
+    // Use sourceCities for shared and reserved cab dropdowns, otherwise use cities
+    const citiesToSearch = (target === 'shared-pickup' || target === 'shared-dropoff' || 
+                            target === 'reserved-pickup' || target === 'reserved-dropoff') 
       ? this.sourceCities 
       : this.cities;
 
@@ -1433,14 +1434,26 @@ trackByOfferId(index: number, offer: any): number {
         city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
       );
     }
+    
+    // For reserved cabs, exclude the city selected in the other field
+    if (target === 'reserved-pickup' && this.formValues.reservedDropoff) {
+      filteredCities = filteredCities.filter(city => 
+        city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+      );
+    } else if (target === 'reserved-dropoff' && this.formValues.reservedPickup) {
+      filteredCities = filteredCities.filter(city => 
+        city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
+      );
+    }
 
     // Show all matching cities
     this.activeSuggestions[target] = filteredCities;
   }
 
   showCitySuggestionsOnFocus(target: string) {
-    // Use sourceCities for shared cab dropdowns, otherwise use cities
-    let citiesToShow = (target === 'shared-pickup' || target === 'shared-dropoff') 
+    // Use sourceCities for shared and reserved cab dropdowns, otherwise use cities
+    let citiesToShow = (target === 'shared-pickup' || target === 'shared-dropoff' || 
+                       target === 'reserved-pickup' || target === 'reserved-dropoff') 
       ? this.sourceCities 
       : this.cities;
     
@@ -1452,6 +1465,17 @@ trackByOfferId(index: number, offer: any): number {
     } else if (target === 'shared-dropoff' && this.formValues.sharedPickup) {
       citiesToShow = citiesToShow.filter(city => 
         city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+      );
+    }
+    
+    // For reserved cabs, exclude the city selected in the other field
+    if (target === 'reserved-pickup' && this.formValues.reservedDropoff) {
+      citiesToShow = citiesToShow.filter(city => 
+        city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+      );
+    } else if (target === 'reserved-dropoff' && this.formValues.reservedPickup) {
+      citiesToShow = citiesToShow.filter(city => 
+        city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
       );
     }
     
@@ -1569,8 +1593,26 @@ trackByOfferId(index: number, offer: any): number {
       }
     } else if (target === 'reserved-pickup') {
       this.selectedCities.reserved.pickup = cityName;
+      // Refresh suggestions for reserved-dropoff to exclude the selected pickup city
+      if (this.activeSuggestions['reserved-dropoff']) {
+        const currentQuery = this.formValues.reservedDropoff || '';
+        if (currentQuery.trim()) {
+          this.showCitySuggestions(currentQuery, 'reserved-dropoff');
+        } else {
+          this.showCitySuggestionsOnFocus('reserved-dropoff');
+        }
+      }
     } else if (target === 'reserved-dropoff') {
       this.selectedCities.reserved.dropoff = cityName;
+      // Refresh suggestions for reserved-pickup to exclude the selected dropoff city
+      if (this.activeSuggestions['reserved-pickup']) {
+        const currentQuery = this.formValues.reservedPickup || '';
+        if (currentQuery.trim()) {
+          this.showCitySuggestions(currentQuery, 'reserved-pickup');
+        } else {
+          this.showCitySuggestionsOnFocus('reserved-pickup');
+        }
+      }
     } else if (target === 'flight-from') {
       this.selectedCities.flights.from = cityName;
     } else if (target === 'flight-to') {
