@@ -550,6 +550,10 @@ trackByOfferId(index: number, offer: any): number {
   // Source cities from API for shared cabs
   sourceCities: City[] = [];
 
+  // API response locations for shared cabs
+  sharedPickupLocations: string[] = [];
+  sharedDropoffLocations: string[] = [];
+
   // Cities & Locations
   cities: City[] = [
     { name: 'Delhi', code: 'DEL', state: 'Delhi' },
@@ -1355,19 +1359,25 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    let cityName = '';
+    let locations: string[] = [];
+    
+    // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
-      cityName = this.selectedCities.shared.pickup;
+      locations = this.sharedPickupLocations;
     } else if (target.includes('shared-dropoff-specific')) {
-      cityName = this.selectedCities.shared.dropoff;
-    } else if (target.includes('reserved-pickup-specific')) {
-      cityName = this.selectedCities.reserved.pickup;
-    } else if (target.includes('reserved-dropoff-specific')) {
-      cityName = this.selectedCities.reserved.dropoff;
+      locations = this.sharedDropoffLocations;
+    } else {
+      // For reserved cabs, use hardcoded locations
+      let cityName = '';
+      if (target.includes('reserved-pickup-specific')) {
+        cityName = this.selectedCities.reserved.pickup;
+      } else if (target.includes('reserved-dropoff-specific')) {
+        cityName = this.selectedCities.reserved.dropoff;
+      }
+      locations = this.locations[cityName] || [];
     }
 
-    const cityLocations = this.locations[cityName] || [];
-    const filteredLocations = cityLocations.filter(location =>
+    const filteredLocations = locations.filter(location =>
       location.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 6);
 
@@ -1375,19 +1385,25 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   showLocationSuggestionsOnFocus(target: string) {
-    let cityName = '';
+    let locations: string[] = [];
+    
+    // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
-      cityName = this.selectedCities.shared.pickup;
+      locations = this.sharedPickupLocations;
     } else if (target.includes('shared-dropoff-specific')) {
-      cityName = this.selectedCities.shared.dropoff;
-    } else if (target.includes('reserved-pickup-specific')) {
-      cityName = this.selectedCities.reserved.pickup;
-    } else if (target.includes('reserved-dropoff-specific')) {
-      cityName = this.selectedCities.reserved.dropoff;
+      locations = this.sharedDropoffLocations;
+    } else {
+      // For reserved cabs, use hardcoded locations
+      let cityName = '';
+      if (target.includes('reserved-pickup-specific')) {
+        cityName = this.selectedCities.reserved.pickup;
+      } else if (target.includes('reserved-dropoff-specific')) {
+        cityName = this.selectedCities.reserved.dropoff;
+      }
+      locations = this.locations[cityName] || [];
     }
 
-    const cityLocations = this.locations[cityName] || [];
-    this.activeSuggestions[target] = cityLocations.slice(0, 6);
+    this.activeSuggestions[target] = locations.slice(0, 6);
   }
 
   hideLocationSuggestions(target: string) {
@@ -1463,31 +1479,27 @@ trackByOfferId(index: number, offer: any): number {
       const source = this.selectedCities.shared.pickup;
       const destination = this.selectedCities.shared.dropoff;
       
+      // Clear previous locations when cities change
+      if (target === 'shared-pickup') {
+        this.sharedPickupLocations = [];
+        this.formValues.sharedPickupLocation = '';
+      } else if (target === 'shared-dropoff') {
+        this.sharedDropoffLocations = [];
+        this.formValues.sharedDropoffLocation = '';
+      }
+      
       if (source && destination && source !== destination) {
-        console.log('=== Calling getPickupDrop API ===');
-        console.log('Source:', source);
-        console.log('Destination:', destination);
-        
         this.apiService.getPickupDrop(source, destination).subscribe({
           next: (data) => {
-            console.log('=== getPickupDrop API RESPONSE (from selectCity) ===');
-            console.log('Full response:', JSON.stringify(data, null, 2));
-            console.log('Response type:', typeof data);
-            console.log('Is array:', Array.isArray(data));
-            console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
-            
-            if (Array.isArray(data) && data.length > 0) {
-              console.log('Pickup points:', data[0]);
-              console.log('Dropoff points:', data[1]);
-            } else {
-              console.warn('API returned empty or invalid response');
+            if (Array.isArray(data) && data.length >= 2) {
+              this.sharedPickupLocations = Array.isArray(data[0]) ? data[0] : [];
+              this.sharedDropoffLocations = Array.isArray(data[1]) ? data[1] : [];
             }
           },
           error: (error) => {
-            console.error('=== getPickupDrop API ERROR (from selectCity) ===');
-            console.error('Error details:', error);
-            console.error('Error message:', error.message);
-            console.error('Error status:', error.status);
+            console.error('Error fetching pickup/dropoff locations:', error);
+            this.sharedPickupLocations = [];
+            this.sharedDropoffLocations = [];
           }
         });
       }
@@ -1552,37 +1564,8 @@ trackByOfferId(index: number, offer: any): number {
       const hasSourceCity = !!this.selectedCities.shared.pickup;
       const hasDestinationCity = !!this.selectedCities.shared.dropoff;
       
-      if (hasPickupLocation && hasDropoffLocation && hasSourceCity && hasDestinationCity) {
-        console.log('=== Calling getPickupDrop API (from selectLocation) ===');
-        console.log('Source:', this.selectedCities.shared.pickup);
-        console.log('Destination:', this.selectedCities.shared.dropoff);
-        
-        this.apiService.getPickupDrop(
-          this.selectedCities.shared.pickup,
-          this.selectedCities.shared.dropoff
-        ).subscribe({
-          next: (data) => {
-            console.log('=== getPickupDrop API RESPONSE (from selectLocation) ===');
-            console.log('Full response:', JSON.stringify(data, null, 2));
-            console.log('Response type:', typeof data);
-            console.log('Is array:', Array.isArray(data));
-            console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
-            
-            if (Array.isArray(data) && data.length > 0) {
-              console.log('Pickup points:', data[0]);
-              console.log('Dropoff points:', data[1]);
-            } else {
-              console.warn('API returned empty or invalid response');
-            }
-          },
-          error: (error) => {
-            console.error('=== getPickupDrop API ERROR (from selectLocation) ===');
-            console.error('Error details:', error);
-            console.error('Error message:', error.message);
-            console.error('Error status:', error.status);
-          }
-        });
-      }
+      // API call is already handled in selectCity method when cities are selected
+      // No need to call again here
     }
   }
 
@@ -1610,6 +1593,29 @@ trackByOfferId(index: number, offer: any): number {
       const tempCity = this.selectedCities.shared.pickup;
       this.selectedCities.shared.pickup = this.selectedCities.shared.dropoff;
       this.selectedCities.shared.dropoff = tempCity;
+      
+      // Swap locations and fetch new data
+      const tempLocations = this.sharedPickupLocations;
+      this.sharedPickupLocations = this.sharedDropoffLocations;
+      this.sharedDropoffLocations = tempLocations;
+      
+      // Fetch fresh data for swapped cities
+      if (this.selectedCities.shared.pickup && this.selectedCities.shared.dropoff) {
+        this.apiService.getPickupDrop(
+          this.selectedCities.shared.pickup,
+          this.selectedCities.shared.dropoff
+        ).subscribe({
+          next: (data) => {
+            if (Array.isArray(data) && data.length >= 2) {
+              this.sharedPickupLocations = Array.isArray(data[0]) ? data[0] : [];
+              this.sharedDropoffLocations = Array.isArray(data[1]) ? data[1] : [];
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching pickup/dropoff locations:', error);
+          }
+        });
+      }
     } else {
       const temp = this.formValues.reservedPickup;
       this.formValues.reservedPickup = this.formValues.reservedDropoff;
