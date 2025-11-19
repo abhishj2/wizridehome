@@ -190,7 +190,7 @@ caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferre
       totalDeficitAmountFlag : totalDeficitAmountFlag,
 
       // dev : 'test',
-      dev : 'prod',
+      dev : 'test',
       type : 'SHAREDWEB'
     }
 
@@ -263,7 +263,7 @@ caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferre
         totalDeficitAmount : totalDeficitAmount,    
         totalDeficitAmountFlag : totalDeficitAmountFlag,
         // dev : 'test',
-        dev : 'prod',
+        dev : 'test',
         type : 'RESERVEDWEB'
 
       }

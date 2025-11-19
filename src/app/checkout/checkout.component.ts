@@ -278,9 +278,9 @@ export class CheckoutComponent implements OnInit {
       // Handle shared cab payment
       if (this.bookingData?.bookingType === 'shared') {
         this.processSharedCabPayment();
-      } else {
-        // Reserved cab flow (to be implemented later)
-        alert('Reserved cab payment will be implemented later');
+      } else if (this.bookingData?.bookingType === 'reserved') {
+        // Reserved cab payment flow
+        this.processReservedCabPayment();
       }
     }
   }
@@ -332,7 +332,7 @@ export class CheckoutComponent implements OnInit {
     const pickup = this.bookingData.searchParams?.pickupLocation || '';
     const drop = this.bookingData.searchParams?.dropLocation || '';
     const bookedSeats = this.bookingData.selectedSeats?.length || this.bookingData.searchParams?.passengers || 1;
-    const totalamount = this.totalFare; // Use total fare including GST and insurance
+    const totalamount = Math.round(this.totalFare); // Round off total fare (Cashfree doesn't accept decimals)
     const travelTime = this.bookingData.vehicleDetails?.departureTime || '';
     const selectedTID = this.bookingData.vehicleDetails?.tid || '';
     const seatsSelected = this.bookingData.selectedSeats?.map(seat => seat.number) || [];
@@ -497,6 +497,10 @@ export class CheckoutComponent implements OnInit {
     return '1'; // Default for reserved cabs
   }
 
+  getRoundedTotalFare(): number {
+    return Math.round(this.totalFare);
+  }
+
   onCouponSubmit() {
     if (this.passengerDetails.couponCode.trim()) {
       console.log('Coupon code submitted:', this.passengerDetails.couponCode);
@@ -509,5 +513,149 @@ export class CheckoutComponent implements OnInit {
   onTravelInsuranceChange() {
     // Recalculate fare when travel insurance option changes
     this.calculateFare();
+  }
+
+  processReservedCabPayment() {
+    if (!this.bookingData) {
+      alert('Booking data not found');
+      return;
+    }
+
+    // Generate 6-digit alphanumeric ORDERID (PNR) with "F" prefix for reserved cabs
+    const ORDERID = 'F' + this.generateOrderId();
+    
+    // Extract primary number without country code
+    let primaryNumber = '';
+    if (this.bookingData.searchParams?.phoneNumber) {
+      // Extract phone number without country code from searchParams
+      const phoneNumber = this.bookingData.searchParams.phoneNumber;
+      // Remove country code if present
+      for (const country of this.countryList) {
+        if (phoneNumber.startsWith(country.code)) {
+          primaryNumber = phoneNumber.substring(country.code.length);
+          break;
+        }
+      }
+      // If no country code found, use as is
+      if (!primaryNumber) {
+        primaryNumber = phoneNumber;
+      }
+    } else {
+      // Use primary contact number without country code
+      primaryNumber = this.passengerDetails.primaryContactNo;
+    }
+
+    // Prepare all data for sendFbPayment API
+    const totalamt = Math.round(this.totalFare); // Round off total fare (Cashfree doesn't accept decimals)
+    const traveldate = this.bookingData.searchParams?.date || '';
+    const source = this.bookingData.searchParams?.from || '';
+    const destination = this.bookingData.searchParams?.to || '';
+    const sourcelocid = this.bookingData.searchParams?.fromlocid || '';
+    const destinationlocid = this.bookingData.searchParams?.tolocid || '';
+    const capacity = this.bookingData.vehicleDetails?.seatsLeft || this.bookingData.searchParams?.passengers || 1;
+    const fare = this.rideFare; // Base fare before GST
+    const gst = this.gstAmount; // GST amount
+    const cartype = this.bookingData.vehicleDetails?.name || '';
+    const traveltime = this.bookingData.searchParams?.pickupTime || this.bookingData.vehicleDetails?.departureTime || '';
+    const fname = this.passengerDetails.firstName;
+    const lname = this.passengerDetails.lastName;
+    const email = this.passengerDetails.emailId;
+    const primaryCountryCode = this.passengerDetails.primaryCountryCode;
+    const secondaryCountryCode = this.passengerDetails.alternateCountryCode || '+91';
+    const alternatenumber = this.passengerDetails.alternateContactNo || '';
+    const adults = this.bookingData.searchParams?.passengers || 1;
+    const infants = 0; // Default value, can be updated if needed
+    const picklandmark = this.bookingData.searchParams?.pickupLocation || '';
+    const droplandmark = this.bookingData.searchParams?.dropLocation || '';
+    const APPID = primaryNumber; // Using primary number as APPID
+    const gstNumber = this.gstNumber || '';
+    const totalDeficitAmount = 0; // Default value
+    const totalDeficitAmountFlag = 0; // Default value
+
+    // Prepare payment data object for console logging
+    const paymentData = {
+      ORDERID,
+      totalamt,
+      traveldate,
+      source,
+      destination,
+      sourcelocid,
+      destinationlocid,
+      capacity,
+      fare,
+      gst,
+      cartype,
+      traveltime,
+      fname,
+      lname,
+      email,
+      primaryCountryCode,
+      primarynumber: primaryNumber,
+      secondaryCountryCode,
+      alternatenumber,
+      adults,
+      infants,
+      picklandmark,
+      droplandmark,
+      APPID,
+      gstNumber,
+      totalDeficitAmount,
+      totalDeficitAmountFlag
+    };
+
+    // Show data in console first
+    console.log('========== RESERVED CAB PAYMENT DATA ==========');
+    console.log('ORDERID (PNR):', ORDERID);
+    console.log('Complete Payment Data:', paymentData);
+    console.log('===============================================');
+
+    // Call sendFbPayment API
+    this.apiService.sendFbPayment(
+      ORDERID,
+      totalamt,
+      traveldate,
+      source,
+      destination,
+      sourcelocid,
+      destinationlocid,
+      capacity,
+      fare,
+      gst,
+      cartype,
+      traveltime,
+      fname,
+      lname,
+      email,
+      primaryCountryCode,
+      primaryNumber,
+      secondaryCountryCode,
+      alternatenumber,
+      adults,
+      infants,
+      picklandmark,
+      droplandmark,
+      APPID,
+      gstNumber,
+      totalDeficitAmount,
+      totalDeficitAmountFlag
+    ).subscribe((val: any) => {
+      console.log("Payment Response:", val);
+
+      if (val?.payment_session_id) {
+        const paymentSessionId = val['payment_session_id'];
+        // Call cashfree function directly
+        if (typeof (window as any).cashfree === 'function') {
+          (window as any).cashfree(paymentSessionId);
+        } else {
+          console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
+          alert('Payment session created. Session ID: ' + paymentSessionId);
+        }
+      } else {
+        const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
+        const isEmailError = msg.includes('INVALID EMAIL');
+        
+        alert(isEmailError ? 'Please Enter Email ID in Correct Format.' : msg);
+      }
+    });
   }
 }
