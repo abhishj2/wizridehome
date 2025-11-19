@@ -31,7 +31,9 @@
               "src/styles.css"
 
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/cashfree.js"
+            ]
           },
           "configurations": {
             "production": {
