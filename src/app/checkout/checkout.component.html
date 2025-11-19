@@ -130,6 +130,19 @@
               Yes, I am travelling for Business.
             </label>
             
+            <!-- GST Number Input Field (Conditional - shows when business travel is checked) -->
+            <div class="gst-section" *ngIf="passengerDetails.isBusinessTravel">
+              <div class="form-field">
+                <label class="field-label">GST Number (Optional)</label>
+                <input 
+                  type="text" 
+                  class="field-input" 
+                  placeholder="Enter GST Number"
+                  [(ngModel)]="gstNumber"
+                  name="gstNumber">
+              </div>
+            </div>
+            
             <label class="checkbox-label">
               <input 
                 type="checkbox" 

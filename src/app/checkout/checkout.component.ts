@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ApiserviceService } from '../services/apiservice.service';
 
 interface BookingData {
   searchParams: any;
@@ -200,7 +201,14 @@ export class CheckoutComponent implements OnInit {
   // Sticky header
   isHeaderSticky = false;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  // GST Number (for business travel)
+  gstNumber: string = '';
+
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute,
+    private apiService: ApiserviceService
+  ) {}
 
   ngOnInit() {
     // Get booking data from navigation state or localStorage
@@ -267,48 +275,150 @@ export class CheckoutComponent implements OnInit {
       console.log('Complete Checkout Data:', checkoutData);
       console.log('================================');
       
-      // Show detailed alert with submitted data
-      const alertMessage = `
-CHECKOUT DATA SUBMITTED:
-
-PASSENGER DETAILS:
-• Name: ${this.passengerDetails.firstName} ${this.passengerDetails.lastName}
-• Email: ${this.passengerDetails.emailId}
-• Primary Contact: ${this.passengerDetails.primaryCountryCode}${this.passengerDetails.primaryContactNo}
-• Alternate Contact: ${this.passengerDetails.alternateContactNo ? this.passengerDetails.alternateCountryCode + this.passengerDetails.alternateContactNo : 'Not provided'}
-• Business Travel: ${this.passengerDetails.isBusinessTravel ? 'Yes' : 'No'}
-• Has Coupon: ${this.passengerDetails.hasDiscountCoupon ? 'Yes' : 'No'}
-• Coupon Code: ${this.passengerDetails.couponCode || 'Not provided'}
-• Travel Insurance: ${this.passengerDetails.hasTravelInsurance ? 'Yes' : 'No'}
-
-BOOKING DETAILS:
-• From: ${this.bookingData?.searchParams?.from || 'N/A'}
-• To: ${this.bookingData?.searchParams?.to || 'N/A'}
-• Pickup Location: ${this.bookingData?.searchParams?.pickupLocation || 'N/A'}
-• Drop Location: ${this.bookingData?.searchParams?.dropLocation || 'N/A'}
-• Date: ${this.formatDate(this.bookingData?.searchParams?.date || '')}
-• Pickup Time: ${this.bookingData?.searchParams?.pickupTime || 'N/A'}
-• Passengers: ${this.bookingData?.searchParams?.passengers}
-• Selected Seats: ${this.getSelectedSeats()}
-• Booking Type: ${this.bookingData?.bookingType}${this.bookingData?.bookingType === 'shared' ? `
-• Selected Cab Timing: ${this.bookingData?.vehicleDetails?.departureTime || 'N/A'}` : ''}
-
-FARE BREAKDOWN:
-• Ride Fare: ₹${this.rideFare.toFixed(2)}
-• GST (5%): ₹${this.gstAmount.toFixed(2)}${this.travelInsuranceCost > 0 ? `
-• Travel Insurance: ₹${this.travelInsuranceCost.toFixed(2)}` : ''}
-• Total Fare: ₹${this.totalFare.toFixed(2)}
-
-Check console for complete data object.
-      `.trim();
-      
-      alert(alertMessage);
-      
-      localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
-      
-      // Navigate to thank you page
-      this.router.navigate(['/thankyou']);
+      // Handle shared cab payment
+      if (this.bookingData?.bookingType === 'shared') {
+        this.processSharedCabPayment();
+      } else {
+        // Reserved cab flow (to be implemented later)
+        alert('Reserved cab payment will be implemented later');
+      }
     }
+  }
+
+  generateOrderId(): string {
+    // Generate 6-digit alphanumeric string
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let orderId = '';
+    for (let i = 0; i < 6; i++) {
+      orderId += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return orderId;
+  }
+
+  processSharedCabPayment() {
+    if (!this.bookingData) {
+      alert('Booking data not found');
+      return;
+    }
+
+    // Generate 6-digit alphanumeric ORDERID (PNR)
+    const PNR = this.generateOrderId();
+    
+    // Extract primary number without country code
+    let primaryNumber = '';
+    if (this.bookingData.searchParams?.phoneNumber) {
+      // Extract phone number without country code from searchParams
+      const phoneNumber = this.bookingData.searchParams.phoneNumber;
+      // Remove country code if present
+      for (const country of this.countryList) {
+        if (phoneNumber.startsWith(country.code)) {
+          primaryNumber = phoneNumber.substring(country.code.length);
+          break;
+        }
+      }
+      // If no country code found, use as is
+      if (!primaryNumber) {
+        primaryNumber = phoneNumber;
+      }
+    } else {
+      // Use primary contact number without country code
+      primaryNumber = this.passengerDetails.primaryContactNo;
+    }
+
+    // Prepare all data for sendSharePayment API
+    const travelDate = this.bookingData.searchParams?.date || '';
+    const source = this.bookingData.searchParams?.from || '';
+    const destination = this.bookingData.searchParams?.to || '';
+    const pickup = this.bookingData.searchParams?.pickupLocation || '';
+    const drop = this.bookingData.searchParams?.dropLocation || '';
+    const bookedSeats = this.bookingData.selectedSeats?.length || this.bookingData.searchParams?.passengers || 1;
+    const totalamount = this.totalFare; // Use total fare including GST and insurance
+    const travelTime = this.bookingData.vehicleDetails?.departureTime || '';
+    const selectedTID = this.bookingData.vehicleDetails?.tid || '';
+    const seatsSelected = this.bookingData.selectedSeats?.map(seat => seat.number) || [];
+    const firstName = this.passengerDetails.firstName;
+    const lastName = this.passengerDetails.lastName;
+    const emailid = this.passengerDetails.emailId;
+    const primaryCountryCode = this.passengerDetails.primaryCountryCode;
+    const alternateCountryCode = this.passengerDetails.alternateCountryCode || '+91';
+    const secondaryNumber = this.passengerDetails.alternateContactNo || '';
+    const gstNumber = this.gstNumber || '';
+    const totalDeficitAmount = 0; // Default value
+    const totalDeficitAmountFlag = 0; // Default value
+
+    // Prepare payment data object for console logging
+    const paymentData = {
+      PNR,
+      primaryNumber,
+      travelDate,
+      source,
+      destination,
+      pickup,
+      drop,
+      bookedSeats,
+      totalamount,
+      travelTime,
+      selectedTID,
+      seatsSelected: seatsSelected.toString(),
+      firstName,
+      lastName,
+      emailid,
+      primaryCountryCode,
+      alternateCountryCode,
+      secondaryNumber,
+      gstNumber,
+      totalDeficitAmount,
+      totalDeficitAmountFlag
+    };
+
+    // Show data in console first
+    console.log('========== SHARED CAB PAYMENT DATA ==========');
+    console.log('PNR (ORDERID):', PNR);
+    console.log('Complete Payment Data:', paymentData);
+    console.log('=============================================');
+
+    this.apiService.sendSharePayment(
+      PNR,
+      primaryNumber,
+      travelDate,
+      source,
+      destination,
+      pickup,
+      drop,
+      bookedSeats,
+      totalamount,
+      travelTime,
+      selectedTID,
+      seatsSelected.toString(),
+      firstName,
+      lastName,
+      emailid,
+      primaryCountryCode,
+      primaryNumber,
+      alternateCountryCode,
+      secondaryNumber,
+      gstNumber,
+      totalDeficitAmount,
+      totalDeficitAmountFlag
+    ).subscribe((val: any) => {
+      console.log("Payment Response:", val);
+
+      if (val?.payment_session_id) {
+        const paymentSessionId = val['payment_session_id'];
+        // Call cashfree function directly
+        if (typeof (window as any).cashfree === 'function') {
+          (window as any).cashfree(paymentSessionId);
+        } else {
+          console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
+          alert('Payment session created. Session ID: ' + paymentSessionId);
+        }
+      } else {
+        const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
+        const isEmailError = msg.includes('INVALID EMAIL');
+        
+        alert(isEmailError ? 'Please Enter Email ID in Correct Format.' : msg);
+      }
+    });
   }
 
   validateForm(): boolean {
