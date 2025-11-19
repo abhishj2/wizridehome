@@ -119,6 +119,7 @@ import { JapantourComponent } from './japantour/japantour.component';
 import { GuwahatitoshillongCityComponent } from './wizridecityroutes/guwahatitoshillongcity/guwahatitoshillong.component';
 import { AritarlakeComponent } from './destinations/sikkim/aritarlake/aritarlake.component';
 import { BabamandirComponent } from './destinations/sikkim/babamandir/babamandir.component';
+import { ResultpageComponent } from './resultpage/resultpage.component';
 
 
 
@@ -271,6 +272,7 @@ export const routes: Routes = [
 
       {path:'destinations/aritarlake',component:AritarlakeComponent},
       {path:'destinations/babamandir',component:BabamandirComponent},
+      {path: 'result/:orderId/:orderAmount/:type', component:ResultpageComponent},
 
 
 

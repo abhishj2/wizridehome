@@ -536,6 +536,9 @@ export class CheckoutComponent implements OnInit {
     console.log('Complete Payment Data:', paymentData);
     console.log('=============================================');
 
+    // Display order ID in alert for debugging
+    alert(`Order ID: ${PNR}`);
+
     this.apiService.sendSharePayment(
       PNR,
       primaryNumber,
@@ -760,6 +763,9 @@ export class CheckoutComponent implements OnInit {
     console.log('ORDERID (PNR):', ORDERID);
     console.log('Complete Payment Data:', paymentData);
     console.log('===============================================');
+
+    // Display order ID in alert for debugging
+    alert(`Order ID: ${ORDERID}`);
 
     // Call sendFbPayment API
     this.apiService.sendFbPayment(

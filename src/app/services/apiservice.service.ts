@@ -371,7 +371,7 @@ caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferre
       page: 'fbsuccessnew',
       orderId : orderId,    
       orderAmount : orderAmount,
-      env : 'prod'
+      env : 'test'
       // env : 'test'
     }    
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});

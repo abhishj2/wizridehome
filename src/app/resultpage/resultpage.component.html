@@ -1,0 +1,81 @@
+<!-- Loader -->
+<div class="loader-container" *ngIf="loader">
+  <div class="loader">
+    <div class="spinner"></div>
+    <p>Processing your booking...</p>
+  </div>
+</div>
+
+<!-- Success Content -->
+<div class="result-container" *ngIf="showSuccess && !loader">
+  <div class="result-card">
+    
+    <!-- Success Header -->
+    <div class="success-header">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h1 class="success-title">Booking Confirmed!</h1>
+      <p class="success-message">Your ticket has been generated successfully.</p>
+    </div>
+
+    <!-- PNR/Order ID Section -->
+    <div class="pnr-section">
+      <div class="pnr-label">PNR / Order ID</div>
+      <div class="pnr-value">{{ orderId }}</div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section" *ngIf="qr">
+      <div class="qr-label">Scan QR Code</div>
+      <div class="qr-container">
+        <img [src]="qr" alt="QR Code" class="qr-image" />
+      </div>
+      <p class="qr-note">Show this QR code at the time of boarding</p>
+    </div>
+
+    <!-- Booking Details Section -->
+    <div class="booking-details" *ngIf="list && list.STATUS">
+      <h3 class="details-title">Booking Details</h3>
+      <div class="details-grid">
+        <div class="detail-item" *ngIf="list.STATUS">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value">{{ list.STATUS }}</span>
+        </div>
+        <div class="detail-item" *ngIf="list.SOURCE">
+          <span class="detail-label">From:</span>
+          <span class="detail-value">{{ list.SOURCE }}</span>
+        </div>
+        <div class="detail-item" *ngIf="list.DESTINATION">
+          <span class="detail-label">To:</span>
+          <span class="detail-value">{{ list.DESTINATION }}</span>
+        </div>
+        <div class="detail-item" *ngIf="list.TRAVELDATE">
+          <span class="detail-label">Travel Date:</span>
+          <span class="detail-value">{{ list.TRAVELDATE }}</span>
+        </div>
+        <div class="detail-item" *ngIf="orderAmount">
+          <span class="detail-label">Amount Paid:</span>
+          <span class="detail-value">₹{{ orderAmount }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="returnToHome()">
+        <i class="fas fa-home"></i>
+        Return to Home
+      </button>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-info">
+      <p>Need help? Contact us:</p>
+      <p>
+        <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>
+      </p>
+    </div>
+
+  </div>
+</div>
