@@ -14,6 +14,8 @@ interface BookingSearchParams {
   pickupLocation?: string;
   dropLocation?: string;
   pickupTime?: string;
+  fromlocid?: string | number; // Location code for reserved cabs
+  tolocid?: string | number; // Location code for reserved cabs
 }
 
 interface VehicleOption {
@@ -369,81 +371,201 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     ];
   }
 
+  // Helper method to format date to "Nov 21, 2025" format
+  private formatDateForAPI(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+  }
+
+  // Helper method to format time to "01:15 P.M." format
+  private formatTimeForAPI(timeString: string): string {
+    if (!timeString) return '';
+    const [hours, minutes] = timeString.split(':');
+    const hour24 = parseInt(hours, 10);
+    const minute = minutes || '00';
+    
+    let hour12 = hour24;
+    let period = 'A.M.';
+    
+    if (hour24 === 0) {
+      hour12 = 12;
+      period = 'A.M.';
+    } else if (hour24 < 12) {
+      hour12 = hour24;
+      period = 'A.M.';
+    } else if (hour24 === 12) {
+      hour12 = 12;
+      period = 'P.M.';
+    } else {
+      hour12 = hour24 - 12;
+      period = 'P.M.';
+    }
+    
+    return `${hour12.toString().padStart(2, '0')}:${minute.padStart(2, '0')} ${period}`;
+  }
+
   loadReservedCarOptions() {
     if (!this.searchParams) return;
 
     this.isLoading = true;
 
+    // Get location codes from search params (stored when navigating from home component)
+    const fromlocid = this.searchParams.fromlocid || '';
+    const tolocid = this.searchParams.tolocid || '';
+    const travelDate = this.searchParams.date || '';
+    const travelTime = this.searchParams.pickupTime || '';
+
+    if (!fromlocid || !tolocid || !travelDate || !travelTime) {
+      console.error('Missing required parameters for reserved cab API call');
+      this.isLoading = false;
+      this.vehicleOptions = [];
+      return;
+    }
+
+    // Format date and time according to API requirements
+    const formattedDate = this.formatDateForAPI(travelDate);
+    const formattedTime = this.formatTimeForAPI(travelTime);
+
+    console.log('=== Calling getReservedCarList API ===');
+    console.log('Request Parameters:');
+    console.log('  From Location ID:', fromlocid);
+    console.log('  To Location ID:', tolocid);
+    console.log('  Travel Date (original):', travelDate, 'Formatted:', formattedDate);
+    console.log('  Travel Time (original):', travelTime, 'Formatted:', formattedTime);
+
+    this.apiService.getReservedCarList(
+      fromlocid,
+      tolocid,
+      formattedDate,
+      formattedTime
+    ).subscribe({
+      next: (data: any) => {
+        console.log('=== getReservedCarList API RESPONSE ===');
+        console.log('Full response:', JSON.stringify(data, null, 2));
+        console.log('Response type:', typeof data);
+        console.log('Is array:', Array.isArray(data));
+        
+        if (Array.isArray(data) && data.length > 0) {
+          // Handle nested array structure: [[{...}]]
+          let cabData: any[] = [];
+          
+          if (Array.isArray(data[0]) && data[0].length > 0) {
+            // Nested array structure - extract the inner array
+            cabData = data[0];
+            console.log('Found nested array structure with', cabData.length, 'vehicles');
+          } else if (data.length > 0 && typeof data[0] === 'object' && data[0].CTD) {
+            // Flat array structure with cab objects
+            cabData = data;
+            console.log('Found flat array structure with', cabData.length, 'vehicles');
+          }
+          
+          if (cabData.length > 0) {
+            // Map API response to vehicleOptions format
+            this.mapReservedApiResponseToVehicleOptions(cabData);
+          } else {
+            console.warn('API returned empty cab data');
+            this.vehicleOptions = [];
+          }
+        } else {
+          console.warn('API returned empty or invalid response');
+          this.vehicleOptions = [];
+        }
+        
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('=== getReservedCarList API ERROR ===');
+        console.error('Error details:', error);
+        console.error('Error message:', error.message);
+        console.error('Error status:', error.status);
+        
+        // Fallback to empty array on error
+        this.vehicleOptions = [];
+        this.isLoading = false;
+      }
+    });
+  }
+
+  mapReservedApiResponseToVehicleOptions(apiData: any[]) {
+    if (!this.searchParams) return;
+
     const baseRoute = {
       from: { 
         code: this.getLocationCode(this.searchParams.from), 
-        name: this.searchParams.from.split('(')[0].trim(),
-        location: this.searchParams.from.split('(')[1]?.replace(')', '').trim() || ''
+        name: this.searchParams.from,
+        location: this.searchParams.pickupLocation || ''
       },
       to: { 
         code: this.getLocationCode(this.searchParams.to), 
-        name: this.searchParams.to.split('(')[0].trim(),
-        location: this.searchParams.to.split('(')[1]?.replace(')', '').trim() || ''
+        name: this.searchParams.to,
+        location: this.searchParams.dropLocation || ''
       }
     };
 
-    // Reserved cabs - more vehicle options
-    this.vehicleOptions = [
-        {
-          id: 'swift-1',
-          name: 'Swift Dzire',
-          image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=150&fit=crop',
-          departureTime: '03:00 AM',
-          duration: '4 hrs 45 mins',
-          price: 2100.00,
-          seatsLeft: 4,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        },
-        {
-          id: 'innova-reserved-1',
-          name: 'Innova Crysta',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&h=150&fit=crop',
-          departureTime: '04:00 AM',
-          duration: '05hrs 30min',
-          price: 2800.00,
-          seatsLeft: 6,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        },
-        {
-          id: 'ertiga-1',
-          name: 'Ertiga',
-          image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=150&fit=crop',
-          departureTime: '05:30 AM',
-          duration: '5 hrs 30 mins',
-          price: 3200.00,
-          seatsLeft: 7,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi', 'Charging Points'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
-        },
-        {
-          id: 'fortuner-1',
-          name: 'Fortuner',
-          image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=150&fit=crop',
-          departureTime: '06:00 AM',
-          duration: '5 hrs 15 mins',
-          price: 4500.00,
-          seatsLeft: 7,
-          amenities: ['AC', 'Music System', 'Comfortable Seats', 'Luggage Space', 'Personal Driver', 'WiFi', 'Charging Points', 'Premium Interior'],
-          route: baseRoute,
-          pickupLocation: this.searchParams.pickupLocation || 'Airport Terminal 3',
-          dropLocation: this.searchParams.dropLocation || 'Bandra Kurla Complex'
+    // Map API response to VehicleOption format
+    this.vehicleOptions = apiData.map((vehicle: any, index: number) => {
+      // Get car type/name from CTD
+      const carType = vehicle.CTD || 'Car';
+      
+      // Get image from CARIMAGE
+      const imagePath = vehicle.CARIMAGE || '../../assets/images/reversed-removebg-preview.png';
+      
+      // Get price from PRICE
+      const price = parseFloat(vehicle.PRICE || '0');
+      
+      // Get capacity from CAPACITY
+      const capacity = parseInt(vehicle.CAPACITY || '4', 10);
+      
+      // Get request time from REQUESTTIME
+      let departureTime = vehicle.REQUESTTIME || '';
+      if (departureTime) {
+        // Format time for display (e.g., "01:15:00 PM" -> "01:15pm")
+        departureTime = departureTime.toLowerCase().replace(/\s+/g, '').replace(/:/g, ':');
+        // Remove seconds if present
+        if (departureTime.includes(':') && departureTime.split(':').length === 3) {
+          const [hours, minutes] = departureTime.split(':');
+          const period = minutes.includes('am') || minutes.includes('pm') ? 
+            (minutes.includes('am') ? 'am' : 'pm') : 
+            (departureTime.includes('am') ? 'am' : 'pm');
+          const min = minutes.replace(/[amp]/gi, '');
+          departureTime = `${hours}:${min}${period}`;
         }
-      ];
-    
-    this.isLoading = false;
+      }
+      
+      // Get rating from RATING
+      const rating = parseFloat(vehicle.RATING || '0');
+      
+      // Get travel name from TRAVELSNAME
+      const travelName = vehicle.TRAVELSNAME || '';
+      
+      // Get owner TD from OWNERTD (for future use)
+      const ownerTD = vehicle.OWNERTD || '';
+
+      // Create unique ID from OWNERTD or index
+      const vehicleId = `reserved-${ownerTD || index}`;
+
+      return {
+        id: vehicleId,
+        name: carType,
+        image: imagePath,
+        departureTime: departureTime,
+        duration: '', // Duration not available in API response
+        price: price,
+        seatsLeft: capacity,
+        amenities: ['AC', 'Luggage', 'Personal Driver'], // Default amenities
+        route: baseRoute,
+        pickupLocation: this.searchParams?.pickupLocation || '',
+        dropLocation: this.searchParams?.dropLocation || '',
+        tid: ownerTD.toString() // Store OWNERTD as tid
+      } as VehicleOption;
+    });
+
+    console.log('Mapped reserved vehicle options:', this.vehicleOptions);
   }
 
   getLocationCode(location: string): string {

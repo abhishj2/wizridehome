@@ -551,6 +551,9 @@ trackByOfferId(index: number, offer: any): number {
   // Source cities from API for shared cabs
   sourceCities: City[] = [];
 
+  // Reserved cities from API for reserved cabs
+  reservedCities: City[] = [];
+
   // API response locations for shared cabs
   sharedPickupLocations: string[] = [];
   sharedDropoffLocations: string[] = [];
@@ -744,6 +747,30 @@ trackByOfferId(index: number, offer: any): number {
       },
       error: (error) => {
         console.error('Error fetching source data:', error);
+      }
+    });
+
+    // Fetch cities for reserved cabs (same API for source and destination)
+    this.apiService.getSourceDestinationFb().subscribe({
+      next: (data) => {
+        console.log('Reserved cities data received:', data);
+        // Transform API data to City[] format for reserved cabs
+        // API returns array with objects containing LOCATIONCODE and LOCATION
+        if (Array.isArray(data)) {
+          this.reservedCities = data.map((item: any) => {
+            const name = item.LOCATION || item.location || '';
+            const code = item.LOCATIONCODE || item.locationcode || '';
+            return {
+              name: name,
+              code: code || name.substring(0, 3).toUpperCase(),
+              state: '' // State not available from API
+            };
+          });
+          console.log('Reserved cities populated:', this.reservedCities);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching reserved cities data:', error);
       }
     });
 
@@ -1014,7 +1041,7 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    const searchParams = {
+    const searchParams: any = {
       from: this.getCurrentFromLocation(),
       to: this.getCurrentToLocation(),
       date: this.getCurrentDate(),
@@ -1026,6 +1053,14 @@ trackByOfferId(index: number, offer: any): number {
       pickupTime: this.getCurrentPickupTime()
     };
 
+    // Add location codes for reserved cabs
+    if (this.pendingAction === 'reserved') {
+      const source = this.selectedCities.reserved.pickup || '';
+      const destination = this.selectedCities.reserved.dropoff || '';
+      searchParams.fromlocid = this.getReservedCityCode(source);
+      searchParams.tolocid = this.getReservedCityCode(destination);
+    }
+
     console.log('Navigating to booking results with params:', searchParams);
     console.log('Router available:', !!this.router);
 
@@ -1035,7 +1070,7 @@ trackByOfferId(index: number, offer: any): number {
       
       // Try router navigation first
       console.log('Attempting router navigation...');
-      this.router.navigate(['/booking-results']).then(success => {
+      this.router.navigate(['/booking-results'], { state: { searchParams } }).then(success => {
         console.log('Router navigation success:', success);
         if (!success) {
           console.log('Router navigation failed, trying window.location...');
@@ -1181,11 +1216,238 @@ trackByOfferId(index: number, offer: any): number {
       // For shared cabs, check API first before navigating
       this.checkAndNavigateForSharedCabs(completePhoneNumber);
     } else if (this.pendingAction === 'reserved') {
-      // For reserved cabs, navigate directly (can add API check later if needed)
-      this.submitCabs(this.pendingAction, completePhoneNumber);
-      this.navigateToResults(completePhoneNumber);
-      this.cancelPhonePopup();
+      // For reserved cabs, check API first before navigating
+      this.checkAndNavigateForReservedCabs(completePhoneNumber);
     }
+  }
+
+  // Helper method to get location code from city name for reserved cabs
+  private getReservedCityCode(cityName: string): string {
+    const city = this.reservedCities.find(c => 
+      c.name.toLowerCase() === cityName.toLowerCase()
+    );
+    return city ? city.code : '';
+  }
+
+  // Helper method to format date to "Nov 21, 2025" format
+  private formatDateForAPI(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+  }
+
+  // Helper method to format time to "01:15 P.M." format
+  private formatTimeForAPI(timeString: string): string {
+    if (!timeString) return '';
+    const [hours, minutes] = timeString.split(':');
+    const hour24 = parseInt(hours, 10);
+    const minute = minutes || '00';
+    
+    let hour12 = hour24;
+    let period = 'A.M.';
+    
+    if (hour24 === 0) {
+      hour12 = 12;
+      period = 'A.M.';
+    } else if (hour24 < 12) {
+      hour12 = hour24;
+      period = 'A.M.';
+    } else if (hour24 === 12) {
+      hour12 = 12;
+      period = 'P.M.';
+    } else {
+      hour12 = hour24 - 12;
+      period = 'P.M.';
+    }
+    
+    return `${hour12.toString().padStart(2, '0')}:${minute.padStart(2, '0')} ${period}`;
+  }
+
+  checkAndNavigateForReservedCabs(phoneNumber: string) {
+    const source = this.selectedCities.reserved.pickup || '';
+    const destination = this.selectedCities.reserved.dropoff || '';
+    const travelDate = this.formValues.reservedDate || '';
+    const travelTime = this.formValues.reservedTime || '';
+
+    if (!source || !destination || !travelDate || !travelTime) {
+      this.cancelPhonePopup();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please fill in all required fields (From, To, Date, and Pickup Time).',
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        allowOutsideClick: false
+      });
+      return;
+    }
+
+    // Get location codes from selected cities
+    const fromlocid = this.getReservedCityCode(source);
+    const tolocid = this.getReservedCityCode(destination);
+
+    if (!fromlocid || !tolocid) {
+      this.cancelPhonePopup();
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Unable to get location codes. Please try selecting the cities again.',
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        allowOutsideClick: false
+      });
+      return;
+    }
+
+    // Format date and time according to API requirements
+    const formattedDate = this.formatDateForAPI(travelDate);
+    const formattedTime = this.formatTimeForAPI(travelTime);
+
+    console.log('=== Checking reserved cab availability before navigation ===');
+    console.log('Source:', source, 'Code:', fromlocid);
+    console.log('Destination:', destination, 'Code:', tolocid);
+    console.log('Travel Date (original):', travelDate, 'Formatted:', formattedDate);
+    console.log('Travel Time (original):', travelTime, 'Formatted:', formattedTime);
+
+    // Call API to check if reserved cabs are available
+    this.apiService.getReservedCarList(
+      fromlocid,
+      tolocid,
+      formattedDate,
+      formattedTime
+    ).subscribe({
+      next: (data: any) => {
+        console.log('=== Reserved Cab Availability Check Response ===');
+        console.log('Response:', JSON.stringify(data, null, 2));
+        console.log('Response type:', typeof data);
+        console.log('Is array:', Array.isArray(data));
+        
+        // Check if response contains "SORRY NO CABS AVAILABLE"
+        const responseString = JSON.stringify(data);
+        let isNoCabsAvailable = false;
+        
+        if (typeof data === 'string') {
+          isNoCabsAvailable = (data as string).toUpperCase().includes('SORRY NO CABS AVAILABLE');
+        } else if (Array.isArray(data)) {
+          // Check for nested array structure [[{...}]]
+          if (data.length === 0) {
+            isNoCabsAvailable = true;
+          } else if (Array.isArray(data[0])) {
+            // Nested array structure: [[{...}]]
+            if (data[0].length === 0) {
+              isNoCabsAvailable = true;
+            } else {
+              // Check if first element is a string with "SORRY NO CABS AVAILABLE"
+              const firstElement = data[0][0];
+              if (typeof firstElement === 'string' && firstElement.toUpperCase().includes('SORRY NO CABS AVAILABLE')) {
+                isNoCabsAvailable = true;
+              }
+            }
+          } else {
+            // Flat array structure: check for error message
+            isNoCabsAvailable = data.some(item => 
+              String(item).toUpperCase().includes('SORRY NO CABS AVAILABLE')
+            );
+          }
+        } else {
+          isNoCabsAvailable = responseString.toUpperCase().includes('SORRY NO CABS AVAILABLE');
+        }
+        
+        if (isNoCabsAvailable) {
+          // Close phone popup before showing alert
+          this.cancelPhonePopup();
+          
+          // Show SweetAlert
+          Swal.fire({
+            icon: 'warning',
+            title: 'No Cabs Available',
+            text: 'Sorry, no cabs available for this route at the selected time.',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false
+          });
+          
+          console.log('No cabs available - SORRY NO CABS AVAILABLE in response');
+        } else if (Array.isArray(data) && data.length > 0) {
+          // Check nested array structure: [[{...}]]
+          let hasCabs = false;
+          if (Array.isArray(data[0]) && data[0].length > 0) {
+            // Nested array structure - check if it contains valid cab objects
+            const firstCab = data[0][0];
+            if (firstCab && typeof firstCab === 'object' && firstCab.CTD) {
+              hasCabs = true;
+              console.log('Cabs available - Found', data[0].length, 'vehicles in nested array');
+              console.log('Vehicle details:', data[0]);
+            }
+          } else if (data.length > 0 && typeof data[0] === 'object' && data[0].CTD) {
+            // Flat array structure with cab objects
+            hasCabs = true;
+            console.log('Cabs available - Found', data.length, 'vehicles');
+            console.log('Vehicle details:', data);
+          }
+          
+          if (hasCabs) {
+            this.submitCabs('reserved', phoneNumber);
+            this.navigateToResults(phoneNumber);
+            this.cancelPhonePopup();
+          } else {
+            // Close phone popup before showing alert
+            this.cancelPhonePopup();
+            
+            // Empty or unexpected response
+            Swal.fire({
+              icon: 'warning',
+              title: 'No Vehicles Found',
+              text: 'No vehicles available for this route at the moment.',
+              timer: 5000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+              allowOutsideClick: false
+            });
+            console.log('No vehicles found in response');
+          }
+        } else {
+          // Close phone popup before showing alert
+          this.cancelPhonePopup();
+          
+          // Empty or unexpected response
+          Swal.fire({
+            icon: 'warning',
+            title: 'No Vehicles Found',
+            text: 'No vehicles available for this route at the moment.',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false
+          });
+          console.log('No vehicles found in response');
+        }
+      },
+      error: (error) => {
+        // Close phone popup before showing error alert
+        this.cancelPhonePopup();
+        
+        console.error('=== Reserved Cab Availability Check Error ===');
+        console.error('Error:', error);
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Unable to check cab availability. Please try again.',
+          timer: 5000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          allowOutsideClick: false
+        });
+      }
+    });
   }
 
   checkAndNavigateForSharedCabs(phoneNumber: string) {
@@ -1412,11 +1674,15 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    // Use sourceCities for shared and reserved cab dropdowns, otherwise use cities
-    const citiesToSearch = (target === 'shared-pickup' || target === 'shared-dropoff' || 
-                            target === 'reserved-pickup' || target === 'reserved-dropoff') 
-      ? this.sourceCities 
-      : this.cities;
+    // Use reservedCities for reserved cabs, sourceCities for shared cabs, otherwise use cities
+    let citiesToSearch: City[];
+    if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
+      citiesToSearch = this.reservedCities;
+    } else if (target === 'shared-pickup' || target === 'shared-dropoff') {
+      citiesToSearch = this.sourceCities;
+    } else {
+      citiesToSearch = this.cities;
+    }
 
     // Filter cities based on the query
     let filteredCities = citiesToSearch.filter(city =>
@@ -1451,11 +1717,15 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   showCitySuggestionsOnFocus(target: string) {
-    // Use sourceCities for shared and reserved cab dropdowns, otherwise use cities
-    let citiesToShow = (target === 'shared-pickup' || target === 'shared-dropoff' || 
-                       target === 'reserved-pickup' || target === 'reserved-dropoff') 
-      ? this.sourceCities 
-      : this.cities;
+    // Use reservedCities for reserved cabs, sourceCities for shared cabs, otherwise use cities
+    let citiesToShow: City[];
+    if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
+      citiesToShow = this.reservedCities;
+    } else if (target === 'shared-pickup' || target === 'shared-dropoff') {
+      citiesToShow = this.sourceCities;
+    } else {
+      citiesToShow = this.cities;
+    }
     
     // For shared cabs, exclude the city selected in the other field
     if (target === 'shared-pickup' && this.formValues.sharedDropoff) {
@@ -1888,6 +2158,14 @@ trackByOfferId(index: number, offer: any): number {
     if (!dateField || !dateField.trim()) {
       alert('Please select a date first.');
       return;
+    }
+
+    // For reserved cabs, validate time field
+    if (type === 'reserved') {
+      if (!this.formValues.reservedTime || !this.formValues.reservedTime.trim()) {
+        alert('Please select a pickup time first.');
+        return;
+      }
     }
 
     const pickupLocation = type === 'shared' 
