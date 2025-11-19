@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
+import Swal from 'sweetalert2';
 
 interface BookingData {
   searchParams: any;
@@ -34,6 +35,7 @@ interface PassengerDetails {
   styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent implements OnInit {
+  Math = Math; // Expose Math for use in template
   bookingData: BookingData | null = null;
   passengerDetails: PassengerDetails = {
     firstName: '',
@@ -53,9 +55,14 @@ export class CheckoutComponent implements OnInit {
   rideFare = 0;
   gstAmount = 0;
   travelInsuranceCost = 0;
+  deficitAmount = 0; // Previous due/deficit amount
   totalFare = 0;
   readonly GST_RATE = 0.05; // 5% GST
   readonly TRAVEL_INSURANCE_RATE = 99; // ₹99 per booking
+
+  // Deficit check status
+  isCheckingDeficit = false; // Whether deficit check is in progress
+  isDeficitChecked = false; // Whether deficit has been checked and user has been informed
 
   // Country codes
   countryList = [
@@ -239,6 +246,7 @@ export class CheckoutComponent implements OnInit {
         }
       }
       this.passengerDetails.primaryContactNo = phoneNumber;
+      
     }
   }
 
@@ -248,41 +256,210 @@ export class CheckoutComponent implements OnInit {
     this.isHeaderSticky = scrollPosition > 50;
   }
 
-  onSubmit() {
+  onSubmit(event?: Event) {
+    // Always prevent default form submission
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    // Prevent multiple clicks while checking
+    if (this.isCheckingDeficit) {
+      console.log('Already checking deficit, ignoring click');
+      return;
+    }
+    
+    // If deficit has been checked and user has been informed, proceed to payment
+    if (this.isDeficitChecked) {
+      console.log('Deficit already checked, proceeding to payment');
+      this.proceedToPayment();
+      return;
+    }
+    
     if (this.validateForm()) {
-      // Store checkout data
-      const checkoutData = {
-        bookingData: this.bookingData,
-        passengerDetails: this.passengerDetails,
-        fareDetails: {
-          rideFare: this.rideFare,
-          gstAmount: this.gstAmount,
-          travelInsuranceCost: this.travelInsuranceCost,
-          totalFare: this.totalFare
+      // Check deficit amount before proceeding to payment
+      console.log('onSubmit called - checking deficit amount');
+      this.checkDeficitAmount();
+    }
+  }
+
+  checkDeficitAmount() {
+    // Extract primary and secondary numbers without country code
+    const primaryNumber = this.getPrimaryNumberWithoutCountryCode();
+    const secondaryNumber = this.passengerDetails.alternateContactNo || '';
+
+    console.log('=== DEFICIT CHECK START ===');
+    console.log('Primary number (without country code):', primaryNumber);
+    console.log('Secondary number:', secondaryNumber);
+    console.log('Primary number length:', primaryNumber?.length);
+
+    // Only check if primary number has value
+    if (!primaryNumber || primaryNumber.length !== 10) {
+      console.log('Primary number invalid or missing, proceeding without deficit check');
+      // No primary number, proceed directly to payment
+      this.deficitAmount = 0;
+      this.calculateFare();
+      this.isDeficitChecked = true; // Mark as checked so next click proceeds
+      this.proceedToPayment();
+      return;
+    }
+
+    // Set checking status
+    this.isCheckingDeficit = true;
+    console.log('Calling deficit API...');
+
+    // Call API to check deficit amount
+    console.log('API Call - Primary:', primaryNumber, 'Secondary:', secondaryNumber || '(empty)');
+    this.apiService.getDeficitUnionTotal(primaryNumber, secondaryNumber).subscribe(
+      (response: any) => {
+        console.log('Deficit Amount Response:', response);
+        
+        // Extract deficit amount from response based on actual API structure
+        // Response structure: { success: true, totalDeficit: 200, rows: [{ deficitAmount: "200.00" }] }
+        let deficit = 0;
+        
+        if (response) {
+          // Check for totalDeficit first (most reliable)
+          if (response.totalDeficit !== undefined && response.totalDeficit !== null) {
+            deficit = parseFloat(response.totalDeficit) || 0;
+          }
+          // Fallback to rows array
+          else if (response.rows && response.rows.length > 0 && response.rows[0].deficitAmount) {
+            deficit = parseFloat(response.rows[0].deficitAmount) || 0;
+          }
+          // Fallback to direct deficitAmount
+          else if (response.deficitAmount !== undefined) {
+            deficit = parseFloat(response.deficitAmount) || 0;
+          }
+          // Check if response is an array
+          else if (Array.isArray(response) && response.length > 0) {
+            deficit = parseFloat(response[0]?.deficitAmount || response[0]?.amount || response[0]?.total || 0) || 0;
+          }
         }
-      };
-      
-      // Log complete checkout data to console
-      console.log('=== CHECKOUT DATA SUBMITTED ===');
-      console.log('Booking Data:', this.bookingData);
-      console.log('Passenger Details:', this.passengerDetails);
-      console.log('Fare Details:', {
+
+        console.log('Extracted deficit amount:', deficit);
+        this.deficitAmount = deficit || 0;
+        console.log('Final deficit amount set to:', this.deficitAmount);
+        
+        // Recalculate total fare including deficit amount
+        this.calculateFare();
+        console.log('Total fare after deficit:', this.totalFare);
+        
+        // Mark as checked
+        this.isCheckingDeficit = false;
+        this.isDeficitChecked = true;
+        console.log('=== DEFICIT CHECK COMPLETE ===');
+        
+        // If deficit exists, inform user and wait for second click
+        if (this.deficitAmount > 0) {
+          const roundedTotal = Math.round(this.totalFare);
+          const roundedDeficit = Math.round(this.deficitAmount);
+          const totalWithDeficit = roundedTotal + roundedDeficit;
+          console.log('Deficit found! Showing SweetAlert and waiting for second click');
+          
+          Swal.fire({
+            title: 'Previous Due Amount Found',
+            html: `
+              <p style="font-size: 16px; margin-bottom: 10px;">
+                You have a previous due amount of <strong>₹${roundedDeficit}</strong>.
+              </p>
+              <p style="font-size: 16px; margin-bottom: 10px;">
+                Your booking fare is <strong>₹${roundedTotal}</strong>.
+              </p>
+              <p style="font-size: 16px; margin-bottom: 10px;">
+                The payment gateway will add the deficit amount, making your total payment <strong>₹${totalWithDeficit}</strong>.
+              </p>
+              <p style="font-size: 14px; color: #666;">
+                Please click "Proceed to Payment" again to continue.
+              </p>
+            `,
+            icon: 'info',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6',
+            width: '500px'
+          });
+          
+          // Don't proceed to payment - wait for second click
+          return; // Explicitly return to prevent proceeding
+        } else {
+          // No deficit, proceed directly to payment
+          console.log('No deficit found (deficit = 0), proceeding to payment');
+          this.proceedToPayment();
+        }
+      },
+      (error) => {
+        console.error('Error checking deficit amount:', error);
+        // If API fails, proceed without deficit amount
+        this.deficitAmount = 0;
+        this.calculateFare();
+        this.isCheckingDeficit = false;
+        this.isDeficitChecked = true;
+        this.proceedToPayment();
+      }
+    );
+  }
+
+  proceedToPayment() {
+    // Store checkout data
+    const checkoutData = {
+      bookingData: this.bookingData,
+      passengerDetails: this.passengerDetails,
+      fareDetails: {
         rideFare: this.rideFare,
         gstAmount: this.gstAmount,
         travelInsuranceCost: this.travelInsuranceCost,
+        deficitAmount: this.deficitAmount,
         totalFare: this.totalFare
-      });
-      console.log('Complete Checkout Data:', checkoutData);
-      console.log('================================');
-      
-      // Handle shared cab payment
-      if (this.bookingData?.bookingType === 'shared') {
-        this.processSharedCabPayment();
-      } else if (this.bookingData?.bookingType === 'reserved') {
-        // Reserved cab payment flow
-        this.processReservedCabPayment();
+      }
+    };
+    
+    // Log complete checkout data to console
+    console.log('=== CHECKOUT DATA SUBMITTED ===');
+    console.log('Booking Data:', this.bookingData);
+    console.log('Passenger Details:', this.passengerDetails);
+    console.log('Fare Details:', {
+      rideFare: this.rideFare,
+      gstAmount: this.gstAmount,
+      travelInsuranceCost: this.travelInsuranceCost,
+      deficitAmount: this.deficitAmount,
+      totalFare: this.totalFare
+    });
+    console.log('Complete Checkout Data:', checkoutData);
+    console.log('================================');
+    
+    // Handle shared cab payment
+    if (this.bookingData?.bookingType === 'shared') {
+      this.processSharedCabPayment();
+    } else if (this.bookingData?.bookingType === 'reserved') {
+      // Reserved cab payment flow
+      this.processReservedCabPayment();
+    }
+  }
+
+  getPrimaryNumberWithoutCountryCode(): string {
+    let primaryNumber = '';
+    
+    // Always use the primary contact number from the form (most reliable)
+    if (this.passengerDetails.primaryContactNo) {
+      primaryNumber = this.passengerDetails.primaryContactNo;
+    } else if (this.bookingData?.searchParams?.phoneNumber) {
+      // Fallback to phone number from searchParams if form field is empty
+      const phoneNumber = this.bookingData.searchParams.phoneNumber;
+      // Remove country code if present
+      for (const country of this.countryList) {
+        if (phoneNumber.startsWith(country.code)) {
+          primaryNumber = phoneNumber.substring(country.code.length);
+          break;
+        }
+      }
+      // If no country code found, use as is
+      if (!primaryNumber) {
+        primaryNumber = phoneNumber;
       }
     }
+    
+    console.log('getPrimaryNumberWithoutCountryCode - returning:', primaryNumber);
+    return primaryNumber;
   }
 
   generateOrderId(): string {
@@ -305,25 +482,7 @@ export class CheckoutComponent implements OnInit {
     const PNR = this.generateOrderId();
     
     // Extract primary number without country code
-    let primaryNumber = '';
-    if (this.bookingData.searchParams?.phoneNumber) {
-      // Extract phone number without country code from searchParams
-      const phoneNumber = this.bookingData.searchParams.phoneNumber;
-      // Remove country code if present
-      for (const country of this.countryList) {
-        if (phoneNumber.startsWith(country.code)) {
-          primaryNumber = phoneNumber.substring(country.code.length);
-          break;
-        }
-      }
-      // If no country code found, use as is
-      if (!primaryNumber) {
-        primaryNumber = phoneNumber;
-      }
-    } else {
-      // Use primary contact number without country code
-      primaryNumber = this.passengerDetails.primaryContactNo;
-    }
+    const primaryNumber = this.getPrimaryNumberWithoutCountryCode();
 
     // Prepare all data for sendSharePayment API
     const travelDate = this.bookingData.searchParams?.date || '';
@@ -343,8 +502,8 @@ export class CheckoutComponent implements OnInit {
     const alternateCountryCode = this.passengerDetails.alternateCountryCode || '+91';
     const secondaryNumber = this.passengerDetails.alternateContactNo || '';
     const gstNumber = this.gstNumber || '';
-    const totalDeficitAmount = 0; // Default value
-    const totalDeficitAmountFlag = 0; // Default value
+    const totalDeficitAmount = Math.round(this.deficitAmount); // Round off deficit amount
+    const totalDeficitAmountFlag = this.deficitAmount > 0 ? 1 : 0; // Set flag if deficit exists
 
     // Prepare payment data object for console logging
     const paymentData = {
@@ -487,6 +646,7 @@ export class CheckoutComponent implements OnInit {
     this.travelInsuranceCost = this.passengerDetails.hasTravelInsurance ? this.TRAVEL_INSURANCE_RATE : 0;
     
     // Calculate total fare (ride fare + GST + travel insurance)
+    // Note: Deficit amount is NOT added here as payment gateway will add it separately
     this.totalFare = this.rideFare + this.gstAmount + this.travelInsuranceCost;
   }
 
@@ -499,6 +659,16 @@ export class CheckoutComponent implements OnInit {
 
   getRoundedTotalFare(): number {
     return Math.round(this.totalFare);
+  }
+
+  // Get display total fare (includes deficit for UI display only)
+  // Note: This is for display purposes only. The actual totalFare variable (without deficit) is sent to payment gateway
+  getDisplayTotalFare(): number {
+    return Math.round(this.totalFare + this.deficitAmount);
+  }
+
+  getRoundedDeficitAmount(): number {
+    return Math.round(this.deficitAmount);
   }
 
   onCouponSubmit() {
@@ -525,25 +695,7 @@ export class CheckoutComponent implements OnInit {
     const ORDERID = 'F' + this.generateOrderId();
     
     // Extract primary number without country code
-    let primaryNumber = '';
-    if (this.bookingData.searchParams?.phoneNumber) {
-      // Extract phone number without country code from searchParams
-      const phoneNumber = this.bookingData.searchParams.phoneNumber;
-      // Remove country code if present
-      for (const country of this.countryList) {
-        if (phoneNumber.startsWith(country.code)) {
-          primaryNumber = phoneNumber.substring(country.code.length);
-          break;
-        }
-      }
-      // If no country code found, use as is
-      if (!primaryNumber) {
-        primaryNumber = phoneNumber;
-      }
-    } else {
-      // Use primary contact number without country code
-      primaryNumber = this.passengerDetails.primaryContactNo;
-    }
+    const primaryNumber = this.getPrimaryNumberWithoutCountryCode();
 
     // Prepare all data for sendFbPayment API
     const totalamt = Math.round(this.totalFare); // Round off total fare (Cashfree doesn't accept decimals)
@@ -569,8 +721,8 @@ export class CheckoutComponent implements OnInit {
     const droplandmark = this.bookingData.searchParams?.dropLocation || '';
     const APPID = primaryNumber; // Using primary number as APPID
     const gstNumber = this.gstNumber || '';
-    const totalDeficitAmount = 0; // Default value
-    const totalDeficitAmountFlag = 0; // Default value
+    const totalDeficitAmount = Math.round(this.deficitAmount); // Round off deficit amount
+    const totalDeficitAmountFlag = this.deficitAmount > 0 ? 1 : 0; // Set flag if deficit exists
 
     // Prepare payment data object for console logging
     const paymentData = {

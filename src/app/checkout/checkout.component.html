@@ -201,11 +201,16 @@
               <span class="fare-label">Travel Insurance (in Rs.):</span>
               <span class="fare-amount">₹ {{ travelInsuranceCost.toFixed(2) }}</span>
             </div>
+            
+            <div class="fare-item" *ngIf="deficitAmount > 0">
+              <span class="fare-label">Deficit Amount (Previous Due) (in Rs.):</span>
+              <span class="fare-amount">₹ {{ getRoundedDeficitAmount() }}</span>
+            </div>
           </div>
           
           <div class="total-fare">
             <span class="total-label">Total Fare (in Rs.):</span>
-            <span class="total-amount">₹ {{ getRoundedTotalFare() }}</span>
+            <span class="total-amount">₹ {{ getDisplayTotalFare() }}</span>
           </div>
         </div>
       </div>
@@ -224,8 +229,13 @@
         <a href="https://wizzride.com/cancellationpolicy" target="_blank" class="legal-link">Cancellation Policy</a>.
       </p>
       
-      <button class="proceed-payment-btn" (click)="onSubmit()">
-        Proceed to Payment
+      <button 
+        type="button"
+        class="proceed-payment-btn" 
+        (click)="onSubmit($event)"
+        [disabled]="isCheckingDeficit">
+        <span *ngIf="isCheckingDeficit">Checking...</span>
+        <span *ngIf="!isCheckingDeficit">Proceed to Payment</span>
       </button>
     </div>
   </div>
