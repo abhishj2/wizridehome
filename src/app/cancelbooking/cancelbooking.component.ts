@@ -236,12 +236,17 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     }
     
     // Step 2: Check PNR based on length
-    if (pnrLength > 6) {
+    // 7 digits = Reserved/Black Cab, 6 digits = Shared Cab
+    if (pnrLength === 7) {
       // Reserved/Black Cab - use getFBPNRDetails
       this.checkFBPNRAndSendOTP(pnr, mobileNumber);
-    } else {
+    } else if (pnrLength === 6) {
       // Shared Cab - use getPNRDetails
       this.checkSharedPNRAndSendOTP(pnr, mobileNumber);
+    } else {
+      this.isLoading = false;
+      alert('Invalid PNR length. PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).');
+      this.cdr.detectChanges();
     }
   }
 
@@ -419,14 +424,30 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
   // Fetch ticket details using API
   fetchTicketDetails(pnr: string): void {
     this.isLoading = true;
+    const pnrLength = pnr.length;
     
-    console.log('Fetching ticket details for PNR:', pnr);
+    console.log('Fetching ticket details for PNR:', pnr, 'Length:', pnrLength);
     
-    // Call the API service to get PNR details
+    // Check PNR length to determine cab type
+    if (pnrLength === 7) {
+      // Reserved/Black Cab - use getFBPNRDetails
+      this.fetchFBPNRDetails(pnr);
+    } else if (pnrLength === 6) {
+      // Shared Cab - use getPNRDetails
+      this.fetchSharedPNRDetails(pnr);
+    } else {
+      this.isLoading = false;
+      alert('Invalid PNR length. PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).');
+      this.cdr.detectChanges();
+    }
+  }
+
+  // Fetch Shared Cab PNR details
+  fetchSharedPNRDetails(pnr: string): void {
     this.apiService.getPNRDetails(pnr).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        console.log('PNR Details API Response:', response);
+        console.log('Shared PNR Details API Response:', response);
         
         // API returns an array with a single object containing booking details
         if (response && Array.isArray(response) && response.length > 0) {
@@ -455,7 +476,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
             seatNumber: bookingData.seatNumber || '',
             passengerName: bookingData.passengerName || '',
             bookingAmount: formattedAmount,
-            bookingDate: bookingData.travelDate || '', // Using travelDate as bookingDate if not available
+            bookingDate: bookingData.travelDate || '',
             cabType: 'Shared Cab',
             status: bookingData.status || 'ACTIVE',
             // Store additional data for cancellation calculation
@@ -464,23 +485,89 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
             rid: bookingData.RID
           };
           
-          console.log('Ticket Details Mapped:', this.ticketDetails);
+          console.log('Shared Cab Ticket Details Mapped:', this.ticketDetails);
           
           // Move to next step after ticket details are loaded
           this.currentStep = 2;
         } else {
-          // Handle empty or invalid response
           alert('No ticket details found for this PNR. Please verify the PNR and try again.');
           console.error('Invalid or empty PNR response:', response);
           this.ticketDetails = null;
         }
         
-        // Force view update
         this.cdr.detectChanges();
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('PNR Details API Error:', error);
+        console.error('Shared PNR Details API Error:', error);
+        alert('Failed to fetch ticket details. Please try again.');
+        this.ticketDetails = null;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Fetch Reserved/Black Cab PNR details
+  fetchFBPNRDetails(pnr: string): void {
+    this.apiService.getFBPNRDetails(pnr).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('Reserved PNR Details API Response:', response);
+        
+        // API returns an array with a single object containing booking details
+        if (response && Array.isArray(response) && response.length > 0) {
+          const bookingData = response[0];
+          
+          // Format ticket amount with Rs. prefix (reserved cab uses TICKETAMOUNT in uppercase)
+          const ticketAmount = parseFloat(bookingData.TICKETAMOUNT || '0');
+          const formattedAmount = `Rs. ${ticketAmount.toFixed(2)}`;
+          
+          // For reserved cab, get location names (check both uppercase and lowercase field names)
+          // Location names might be in SOURCE/DESTINATION or source/destination fields
+          const fromLocation = bookingData.SOURCE || bookingData.source || 
+                              (bookingData.FROMLOCID ? `Location ID: ${bookingData.FROMLOCID}` : '');
+          const toLocation = bookingData.DESTINATION || bookingData.destination || 
+                            (bookingData.TOLOCID ? `Location ID: ${bookingData.TOLOCID}` : '');
+          
+          // Get passenger name (check multiple possible field names)
+          const passengerName = bookingData.PASSENGERNAME || bookingData.passengerName || 
+                               bookingData.FIRSTNAME || bookingData.firstName || '';
+          
+          // Map API response to ticketDetails format (reserved cab uses uppercase fields)
+          this.ticketDetails = {
+            pnr: bookingData.PNR || pnr,
+            from: fromLocation,
+            to: toLocation,
+            travelDate: bookingData.TRAVELDATE || bookingData.travelDate || '',
+            pickupTime: bookingData.REPORTINGTIME || bookingData.DEPARTURETIME || 
+                       bookingData.reportingTime || bookingData.departureTime || '',
+            seatNumber: '', // Reserved cab doesn't have seat numbers
+            passengerName: passengerName,
+            bookingAmount: formattedAmount,
+            bookingDate: bookingData.TRAVELDATE || bookingData.travelDate || '',
+            cabType: 'Reserved Cab',
+            status: bookingData.STATUS || bookingData.status || 'ACTIVE',
+            // Store additional data for cancellation calculation
+            ticketAmount: ticketAmount,
+            appId: bookingData.APPID || bookingData.appId,
+            rid: bookingData.CARID || bookingData.carId || null
+          };
+          
+          console.log('Reserved Cab Ticket Details Mapped:', this.ticketDetails);
+          
+          // Move to next step after ticket details are loaded
+          this.currentStep = 2;
+        } else {
+          alert('No ticket details found for this PNR. Please verify the PNR and try again.');
+          console.error('Invalid or empty PNR response:', response);
+          this.ticketDetails = null;
+        }
+        
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Reserved PNR Details API Error:', error);
         alert('Failed to fetch ticket details. Please try again.');
         this.ticketDetails = null;
         this.cdr.detectChanges();
@@ -507,17 +594,25 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     
     this.isLoading = true;
     const pnr = this.ticketDetails.pnr;
+    const pnrLength = pnr.length;
+    const isReservedCab = pnrLength === 7;
     
-    console.log('Fetching cancellation charges for PNR:', pnr);
+    console.log('Fetching cancellation charges for PNR:', pnr, 'Type:', isReservedCab ? 'Reserved Cab' : 'Shared Cab');
     
-    // Call the API service to get cancellation criteria
-    this.apiService.cancelcriteria(pnr).subscribe({
+    // Use appropriate API based on cab type
+    // 7 digits = Reserved Cab (fbcancelcriteria), 6 digits = Shared Cab (cancelcriteria)
+    const apiCall = isReservedCab 
+      ? this.apiService.fbcancelcriteria(pnr)
+      : this.apiService.cancelcriteria(pnr);
+    
+    apiCall.subscribe({
       next: (response: any) => {
         this.isLoading = false;
         console.log('Cancellation Criteria API Response:', response);
         
         // API returns array: [refundAmount, cancellationCharges, refundMethod]
-        // Example: [891, 105, "CASHFREE_REFUND"]
+        // Example: [735, 210, "CASHFREE_REFUND"] for reserved
+        // Example: [891, 105, "CASHFREE_REFUND"] for shared
         if (response && Array.isArray(response) && response.length >= 3) {
           const refundAmount = parseFloat(response[0]) || 0;
           const cancellationCharges = parseFloat(response[1]) || 0;
@@ -573,6 +668,8 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     }
     
     const pnr = this.ticketDetails.pnr;
+    const pnrLength = pnr.length;
+    const isReservedCab = pnrLength === 7;
     
     // Extract numeric values from formatted strings (remove "Rs. " and parse)
     const refundAmountStr = this.cancellationDetails.refundAmount.replace('Rs. ', '').replace(/,/g, '');
@@ -583,14 +680,20 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     
     console.log('Confirming cancellation:', {
       pnr: pnr,
+      cabType: isReservedCab ? 'Reserved Cab' : 'Shared Cab',
       refundAmount: refundAmount,
       wizzAmount: wizzAmount
     });
     
     this.isLoading = true;
     
-    // Call the API service to cancel the ticket
-    this.apiService.cancelShareTicket(pnr, refundAmount, wizzAmount).subscribe({
+    // Use appropriate API based on cab type
+    // 7 digits = Reserved Cab (cancelReservedTicket), 6 digits = Shared Cab (cancelShareTicket)
+    const apiCall = isReservedCab
+      ? this.apiService.cancelReservedTicket(pnr, this.ticketDetails.appId, refundAmount, wizzAmount)
+      : this.apiService.cancelShareTicket(pnr, refundAmount, wizzAmount);
+    
+    apiCall.subscribe({
       next: (response: any) => {
         this.isLoading = false;
         console.log('Cancel Ticket API Response:', response);

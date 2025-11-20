@@ -215,7 +215,7 @@
                             </div>
                         </div>
                         
-                        <div class="form-row">
+                        <div class="form-row" *ngIf="ticketDetails.cabType === 'Shared Cab'">
                             <div class="form-group">
                                 <label for="seatNumber">Seat Number</label>
                                 <input 
