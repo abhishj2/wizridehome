@@ -99,6 +99,28 @@
                                 placeholder="Enter Email ID of Primary Passenger (Optional)">
                         </div>
 
+                        <!-- Captcha Verification -->
+                        <div class="form-group" *ngIf="!otpSent">
+                            <label for="captcha">Security Check *</label>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="background: var(--primary-color); color: white; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; min-width: 120px; text-align: center;">
+                                    {{ captchaData.question }}
+                                </div>
+                                <div style="flex: 1;">
+                                    <input 
+                                        type="number" 
+                                        id="captcha" 
+                                        formControlName="captcha"
+                                        placeholder="Your answer"
+                                        [class.error]="cancelForm.get('captcha')?.invalid && cancelForm.get('captcha')?.touched"
+                                        style="text-align: center; font-weight: 600; width: 100%;">
+                                </div>
+                            </div>
+                            <div class="error-message" *ngIf="cancelForm.get('captcha')?.invalid && cancelForm.get('captcha')?.touched">
+                                <span *ngIf="cancelForm.get('captcha')?.errors?.['required']">Please solve the captcha</span>
+                            </div>
+                        </div>
+
                         <!-- OTP Section -->
                         <div class="otp-section" *ngIf="otpSent">
                             <div class="form-group">

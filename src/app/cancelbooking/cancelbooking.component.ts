@@ -1,16 +1,17 @@
 import { Component, AfterViewInit, Renderer2, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
 import { ApiserviceService } from '../services/apiservice.service';
+import { CaptchaService, CaptchaData } from '../services/captcha.service';
 
 @Component({
   selector: 'app-cancelbooking',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './cancelbooking.component.html',
   styleUrl: './cancelbooking.component.css'
 })
@@ -24,6 +25,10 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
   receivedOTP: string = ''; // OTP received from API
   ticketDetails: any = null; // Ticket details for Step 2
   cancellationDetails: any = null; // Cancellation charges for Step 3
+  
+  // Captcha properties
+  captchaData: CaptchaData = { question: '', answer: 0 };
+  userCaptchaAnswer: string = '';
 
   constructor(
     private seoService: SeoService,
@@ -34,6 +39,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private apiService: ApiserviceService,
+    private captchaService: CaptchaService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.initializeForm();
@@ -142,8 +148,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
       pnr: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10), Validators.pattern(/^[A-Za-z0-9]+$/)]],
       mobile: ['', [Validators.required, Validators.pattern(/^(\+91|91)?[6-9]\d{9}$/)]],
       email: ['', [Validators.email]],
-      otp: [''] // OTP validation will be added when OTP is sent
+      otp: [''], // OTP validation will be added when OTP is sent
+      captcha: ['', [Validators.required]] // Captcha validation
     });
+    
+    // Generate captcha
+    this.captchaData = this.captchaService.generateCaptcha();
   }
 
   // Form submission handler
@@ -169,8 +179,8 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
 
     if (!this.otpSent) {
-      // Send OTP
-      this.sendOTP();
+      // Start validation checks before sending OTP
+      this.validateAndSendOTP();
     } else {
       // Verify OTP
       this.verifyOTP();
@@ -206,56 +216,173 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     return cleanedNumber;
   }
 
-  // Send OTP using API
-  sendOTP(): void {
+  // Validate and send OTP - includes all mandatory checks
+  validateAndSendOTP(): void {
     const formData = this.cancelForm.value;
+    const pnr = formData.pnr?.trim().toUpperCase();
+    const mobileNumber = this.removeCountryCode(formData.mobile);
+    const pnrLength = pnr.length;
     
-    // Remove country code from phone number
-    const phoneNumberWithoutCountryCode = this.removeCountryCode(formData.mobile);
+    // Step 1: Validate custom captcha
+    const captchaAnswer = formData.captcha || this.userCaptchaAnswer;
+    if (!this.captchaService.validateCaptcha(captchaAnswer, this.captchaData.answer)) {
+      this.isLoading = false;
+      alert('Incorrect captcha answer! Please solve the math problem correctly.');
+      this.userCaptchaAnswer = '';
+      this.captchaData = this.captchaService.generateCaptcha();
+      this.cancelForm.patchValue({ captcha: '' });
+      this.cdr.detectChanges();
+      return;
+    }
     
-    console.log('Sending OTP to phone number:', phoneNumberWithoutCountryCode);
-    
-    // Call the API service
-    this.apiService.sendOtp(phoneNumberWithoutCountryCode).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        console.log('OTP API Response:', response);
+    // Step 2: Check PNR based on length
+    if (pnrLength > 6) {
+      // Reserved/Black Cab - use getFBPNRDetails
+      this.checkFBPNRAndSendOTP(pnr, mobileNumber);
+    } else {
+      // Shared Cab - use getPNRDetails
+      this.checkSharedPNRAndSendOTP(pnr, mobileNumber);
+    }
+  }
+
+  // Check FBPNR (Reserved/Black Cab) and send OTP
+  checkFBPNRAndSendOTP(pnr: string, mobileNumber: string): void {
+    this.apiService.getFBPNRDetails(pnr).subscribe({
+      next: (val: any) => {
+        console.log('details', val);
         
-        // API returns OTP as a string (e.g., "1667")
-        // Handle both string response and array response formats
-        let otpValue = '';
-        
-        if (typeof response === 'string') {
-          // Direct string response
-          otpValue = response.trim();
-        } else if (Array.isArray(response) && response.length > 0) {
-          // Array response - take first element
-          otpValue = String(response[0]).trim();
-        } else if (response != null) {
-          // Object response - try to extract OTP
-          otpValue = String(response).trim();
+        if (String(val).trim() === 'NOT_FOUND') {
+          this.isLoading = false;
+          alert('PNR not found. Please verify the PNR and try again.');
+          this.cdr.detectChanges();
+          return;
         }
         
-        // Check if we got a valid OTP (should be numeric, 4-6 digits typically)
+        if (!val || !Array.isArray(val) || val.length === 0) {
+          this.isLoading = false;
+          alert('PNR not found. Please verify the PNR and try again.');
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        const bookingData = val[0];
+        
+        // Check if ticket is already cancelled
+        if (bookingData.STATUS === 'CANCEL-ADMIN' || bookingData.STATUS === 'CANCELLED-VERIFIED') {
+          this.isLoading = false;
+          alert('Ticket Already Cancelled');
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        // Check if mobile number matches
+        if (bookingData.PASSENGERNUMBER != mobileNumber) {
+          this.isLoading = false;
+          alert("Primary Number doesn't match. Please enter the registered mobile number.");
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        // All checks passed - send OTP
+        this.sendOTP(mobileNumber);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('FBPNR Details API Error:', error);
+        alert('Failed to verify PNR. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Check Shared Cab PNR and send OTP
+  checkSharedPNRAndSendOTP(pnr: string, mobileNumber: string): void {
+    this.apiService.getPNRDetails(pnr).subscribe({
+      next: (val: any) => {
+        console.log('detailspp', val);
+        
+        if (String(val).trim() === 'NOT_FOUND') {
+          this.isLoading = false;
+          alert('PNR not found. Please verify the PNR and try again.');
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        if (!val || !Array.isArray(val) || val.length === 0) {
+          this.isLoading = false;
+          alert('PNR not found. Please verify the PNR and try again.');
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        const bookingData = val[0];
+        
+        // Check if ticket is already cancelled
+        if (bookingData.status === 'CANCELLED-ADMIN' || bookingData.status === 'CANCELLED-VERIFIED') {
+          this.isLoading = false;
+          alert('Ticket Already Cancelled');
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        // Check if mobile number matches
+        if (bookingData.passengerNumber != mobileNumber) {
+          this.isLoading = false;
+          alert("Primary Number doesn't match. Please enter the registered mobile number.");
+          this.cdr.detectChanges();
+          return;
+        }
+        
+        // All checks passed - send OTP
+        this.sendOTP(mobileNumber);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Shared PNR Details API Error:', error);
+        alert('Failed to verify PNR. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Send OTP using API (after all validations pass)
+  sendOTP(mobileNumber: string): void {
+    console.log('Sending OTP to mobile number:', mobileNumber);
+    
+    this.apiService.sendOtp(mobileNumber).subscribe({
+      next: (val: any) => {
+        this.isLoading = false;
+        console.log('valal', val);
+        
+        // API returns OTP as a string (e.g., "1667")
+        let otpValue = '';
+        
+        if (typeof val === 'string') {
+          otpValue = val.trim();
+        } else if (Array.isArray(val) && val.length > 0) {
+          otpValue = String(val[0]).trim();
+        } else if (val != null) {
+          otpValue = String(val).trim();
+        }
+        
+        // Check if we got a valid OTP
         if (otpValue && /^\d+$/.test(otpValue)) {
           this.receivedOTP = otpValue;
           this.otpSent = true;
           
-          console.log('OTP received from API:', this.receivedOTP);
+          console.log('OTP received:', this.receivedOTP);
           
           // Show success message
-          alert(`OTP sent successfully to ${formData.mobile}`);
+          alert(`OTP sent successfully to ${this.cancelForm.get('mobile')?.value}`);
           
           // Add OTP validation to form
           this.cancelForm.get('otp')?.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
           this.cancelForm.get('otp')?.updateValueAndValidity();
         } else {
-          // Handle error response - invalid OTP format
           alert('Failed to send OTP. Please try again.');
-          console.error('Invalid OTP response format:', response);
+          console.error('Invalid OTP response format:', val);
         }
         
-        // Force view update
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -468,9 +595,31 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
         console.log('Cancel Ticket API Response:', response);
         
-        // Check if cancellation was successful
-        // Adjust this based on your actual API response structure
-        if (response && (response[0]?.status === 'success' || response[0]?.message || Array.isArray(response))) {
+        // API returns "CANCEL_SUCCESS" as a string when successful
+        // Handle both string response and array response formats
+        let responseString = '';
+        
+        if (typeof response === 'string') {
+          // Direct string response
+          responseString = response.trim();
+        } else if (Array.isArray(response) && response.length > 0) {
+          // Array response - check first element
+          const firstElement = response[0];
+          if (typeof firstElement === 'string') {
+            responseString = firstElement.trim();
+          } else if (firstElement && typeof firstElement === 'object') {
+            // Object response - try to get message or status
+            responseString = firstElement.message || firstElement.status || '';
+          }
+        } else if (response && typeof response === 'object') {
+          // Object response
+          responseString = response.message || response.status || '';
+        }
+        
+        console.log('Cancellation response check:', { response, responseString, type: typeof response });
+        
+        // Check if response is CANCEL_SUCCESS
+        if (responseString === 'CANCEL_SUCCESS' || String(response).trim() === 'CANCEL_SUCCESS') {
           // Cancellation successful
           alert('Cancellation confirmed! You will receive a refund of ' + this.cancellationDetails.refundAmount);
           console.log('Cancellation Confirmed Successfully:', response);
@@ -480,7 +629,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
         } else {
           // Handle error response
           alert('Failed to confirm cancellation. Please try again.');
-          console.error('Cancellation failed:', response);
+          console.error('Cancellation failed. Response:', response, 'Response String:', responseString);
         }
         
         // Force view update
