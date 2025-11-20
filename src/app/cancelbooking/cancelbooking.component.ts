@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
+import { ApiserviceService } from '../services/apiservice.service';
 
 @Component({
   selector: 'app-cancelbooking',
@@ -20,7 +21,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
   currentStep: number = 1;
   otpSent: boolean = false;
   isLoading: boolean = false;
-  dummyOTP: string = '1234'; // Dummy OTP for testing
+  receivedOTP: string = ''; // OTP received from API
   ticketDetails: any = null; // Ticket details for Step 2
   cancellationDetails: any = null; // Cancellation charges for Step 3
 
@@ -32,6 +33,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private apiService: ApiserviceService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.initializeForm();
@@ -175,141 +177,322 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Send OTP (dummy implementation)
+  // Helper method to remove country code from phone number
+  // Handles phone numbers with or without country code (+91, 91, or no prefix)
+  private removeCountryCode(phoneNumber: string): string {
+    if (!phoneNumber) return '';
+    
+    // Remove all spaces and special characters except + and digits
+    let cleanedNumber = phoneNumber.trim().replace(/[\s-()]/g, '');
+    
+    // Remove +91 prefix if present
+    if (cleanedNumber.startsWith('+91')) {
+      cleanedNumber = cleanedNumber.substring(3);
+    }
+    // Remove 91 prefix if present (check if number is 12+ digits to avoid removing 91 from a 10-digit number starting with 91)
+    else if (cleanedNumber.startsWith('91') && cleanedNumber.length > 10) {
+      cleanedNumber = cleanedNumber.substring(2);
+    }
+    
+    // Remove any leading zeros
+    cleanedNumber = cleanedNumber.replace(/^0+/, '');
+    
+    // If the number is still longer than 10 digits, take the last 10 digits
+    // This handles edge cases where extra digits might be present
+    if (cleanedNumber.length > 10) {
+      cleanedNumber = cleanedNumber.substring(cleanedNumber.length - 10);
+    }
+    
+    return cleanedNumber;
+  }
+
+  // Send OTP using API
   sendOTP(): void {
     const formData = this.cancelForm.value;
     
-    // Simulate API call delay
-    setTimeout(() => {
-      this.isLoading = false;
-      this.otpSent = true;
-      
-      // Show success message
-      alert(`OTP sent successfully to ${formData.mobile}\n\nFor testing purposes, use OTP: ${this.dummyOTP}`);
-      console.log('OTP Sent:', {
-        pnr: formData.pnr,
-        mobile: formData.mobile,
-        email: formData.email,
-        otp: this.dummyOTP
-      });
-      
-      // Add OTP validation to form
-      this.cancelForm.get('otp')?.setValidators([Validators.required, Validators.pattern(/^\d{4}$/)]);
-      this.cancelForm.get('otp')?.updateValueAndValidity();
-      
-      // Force view update
-      this.cdr.detectChanges();
-    }, 1500);
+    // Remove country code from phone number
+    const phoneNumberWithoutCountryCode = this.removeCountryCode(formData.mobile);
+    
+    console.log('Sending OTP to phone number:', phoneNumberWithoutCountryCode);
+    
+    // Call the API service
+    this.apiService.sendOtp(phoneNumberWithoutCountryCode).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('OTP API Response:', response);
+        
+        // API returns OTP as a string (e.g., "1667")
+        // Handle both string response and array response formats
+        let otpValue = '';
+        
+        if (typeof response === 'string') {
+          // Direct string response
+          otpValue = response.trim();
+        } else if (Array.isArray(response) && response.length > 0) {
+          // Array response - take first element
+          otpValue = String(response[0]).trim();
+        } else if (response != null) {
+          // Object response - try to extract OTP
+          otpValue = String(response).trim();
+        }
+        
+        // Check if we got a valid OTP (should be numeric, 4-6 digits typically)
+        if (otpValue && /^\d+$/.test(otpValue)) {
+          this.receivedOTP = otpValue;
+          this.otpSent = true;
+          
+          console.log('OTP received from API:', this.receivedOTP);
+          
+          // Show success message
+          alert(`OTP sent successfully to ${formData.mobile}`);
+          
+          // Add OTP validation to form
+          this.cancelForm.get('otp')?.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+          this.cancelForm.get('otp')?.updateValueAndValidity();
+        } else {
+          // Handle error response - invalid OTP format
+          alert('Failed to send OTP. Please try again.');
+          console.error('Invalid OTP response format:', response);
+        }
+        
+        // Force view update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('OTP API Error:', error);
+        alert('Failed to send OTP. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  // Verify OTP (dummy implementation)
+  // Verify OTP
   verifyOTP(): void {
     const formData = this.cancelForm.value;
+    const enteredOTP = formData.otp?.trim();
     
-    // Simulate API call delay
-    setTimeout(() => {
-      this.isLoading = false; // Always set loading to false first
+    this.isLoading = false;
+    
+    // Verify OTP against the one received from API
+    if (enteredOTP && this.receivedOTP && enteredOTP === this.receivedOTP) {
+      // OTP verified successfully
+      console.log('OTP Verified Successfully:', formData);
       
-      if (formData.otp === this.dummyOTP) {
-        // OTP verified successfully
-        console.log('OTP Verified Successfully:', formData);
-        
-        // Fetch ticket details (dummy data) and then move to step 2
-        this.fetchTicketDetails(formData.pnr);
-      } else {
-        alert('Invalid OTP. Please try again.');
-        console.log('Invalid OTP:', formData.otp);
-      }
-      
-      // Force view update for both success and failure cases
-      this.cdr.detectChanges();
-    }, 1000);
+      // Fetch ticket details and then move to step 2
+      this.fetchTicketDetails(formData.pnr);
+    } else {
+      alert('Invalid OTP. Please try again.');
+      console.log('Invalid OTP. Entered:', enteredOTP, 'Expected:', this.receivedOTP);
+    }
+    
+    // Force view update for both success and failure cases
+    this.cdr.detectChanges();
   }
-  // Fetch ticket details (dummy implementation)
+  // Fetch ticket details using API
   fetchTicketDetails(pnr: string): void {
-    // Simulate API call to fetch ticket details
     this.isLoading = true;
     
-    setTimeout(() => {
-      // Dummy ticket data based on the reference image
-      this.ticketDetails = {
-        pnr: pnr || 'ABC123456', // Use provided PNR or default alphanumeric
-        from: 'Guwahati Airport (Airport Parking Lot)',
-        to: 'Shillong (Police Bazaar Point)',
-        travelDate: '2025-11-28',
-        pickupTime: '06:00:00 PM',
-        seatNumber: '6',
-        passengerName: 'Abhishek Jain',
-        bookingAmount: 'Rs. 1,200',
-        bookingDate: '2025-01-15',
-        cabType: 'Shared Cab',
-        status: 'Confirmed'
-      };
-      
-      console.log('Ticket Details Fetched:', this.ticketDetails);
-      
-      // Move to next step after ticket details are loaded
-      this.currentStep = 2;
-      this.isLoading = false;
-      console.log('Current Step:', this.currentStep);
-      console.log('Ticket Details:', this.ticketDetails);
-      
-      // 🔹 Force view update to detect changes made inside setTimeout
-      this.cdr.detectChanges();
-    }, 500);
+    console.log('Fetching ticket details for PNR:', pnr);
+    
+    // Call the API service to get PNR details
+    this.apiService.getPNRDetails(pnr).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('PNR Details API Response:', response);
+        
+        // API returns an array with a single object containing booking details
+        if (response && Array.isArray(response) && response.length > 0) {
+          const bookingData = response[0];
+          
+          // Format ticket amount with Rs. prefix
+          const ticketAmount = parseFloat(bookingData.ticketAmount || '0');
+          const formattedAmount = `Rs. ${ticketAmount.toFixed(2)}`;
+          
+          // Format from/to with boarding point
+          const fromLocation = bookingData.boardingPoint 
+            ? `${bookingData.source} (${bookingData.boardingPoint})`
+            : bookingData.source || '';
+          
+          const toLocation = bookingData.dropPoint 
+            ? `${bookingData.destination} (${bookingData.dropPoint})`
+            : bookingData.destination || '';
+          
+          // Map API response to ticketDetails format
+          this.ticketDetails = {
+            pnr: bookingData.PNR || pnr,
+            from: fromLocation,
+            to: toLocation,
+            travelDate: bookingData.travelDate || '',
+            pickupTime: bookingData.departureTime || '',
+            seatNumber: bookingData.seatNumber || '',
+            passengerName: bookingData.passengerName || '',
+            bookingAmount: formattedAmount,
+            bookingDate: bookingData.travelDate || '', // Using travelDate as bookingDate if not available
+            cabType: 'Shared Cab',
+            status: bookingData.status || 'ACTIVE',
+            // Store additional data for cancellation calculation
+            ticketAmount: ticketAmount,
+            appId: bookingData.APPID,
+            rid: bookingData.RID
+          };
+          
+          console.log('Ticket Details Mapped:', this.ticketDetails);
+          
+          // Move to next step after ticket details are loaded
+          this.currentStep = 2;
+        } else {
+          // Handle empty or invalid response
+          alert('No ticket details found for this PNR. Please verify the PNR and try again.');
+          console.error('Invalid or empty PNR response:', response);
+          this.ticketDetails = null;
+        }
+        
+        // Force view update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('PNR Details API Error:', error);
+        alert('Failed to fetch ticket details. Please try again.');
+        this.ticketDetails = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // Proceed with cancellation
   proceedWithCancellation(): void {
     if (this.ticketDetails) {
-      alert('Proceeding to cancellation charges calculation...');
       console.log('Proceeding with cancellation for:', this.ticketDetails);
       
-      // Calculate cancellation charges
+      // Calculate cancellation charges using API
       this.calculateCancellationCharges();
-      
-      // Move to step 3 (cancellation charges)
-      this.currentStep = 3;
-      this.cdr.detectChanges();
     }
   }
 
-  // Calculate cancellation charges
+  // Calculate cancellation charges using API
   calculateCancellationCharges(): void {
-    if (!this.ticketDetails) return;
+    if (!this.ticketDetails || !this.ticketDetails.pnr) {
+      alert('Ticket details not available. Please try again.');
+      return;
+    }
     
-    // Extract amount from ticket details (remove "Rs. " and commas)
-    const amountPaidStr = this.ticketDetails.bookingAmount.replace('Rs. ', '').replace(',', '');
-    const amountPaid = parseInt(amountPaidStr);
+    this.isLoading = true;
+    const pnr = this.ticketDetails.pnr;
     
-    // Calculate cancellation charges based on policy
-    // For demo purposes, using Rs. 100 + 5% GST = Rs. 105
-    const baseCharge = 100;
-    const gst = Math.round(baseCharge * 0.05);
-    const cancellationCharges = baseCharge + gst;
+    console.log('Fetching cancellation charges for PNR:', pnr);
     
-    // Calculate refund amount
-    const refundAmount = amountPaid - cancellationCharges;
-    
-    this.cancellationDetails = {
-      amountPaid: `Rs. ${amountPaid}`,
-      cancellationCharges: `Rs. ${cancellationCharges}`,
-      refundAmount: `Rs. ${refundAmount}`
-    };
-    
-    console.log('Cancellation Details Calculated:', this.cancellationDetails);
+    // Call the API service to get cancellation criteria
+    this.apiService.cancelcriteria(pnr).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('Cancellation Criteria API Response:', response);
+        
+        // API returns array: [refundAmount, cancellationCharges, refundMethod]
+        // Example: [891, 105, "CASHFREE_REFUND"]
+        if (response && Array.isArray(response) && response.length >= 3) {
+          const refundAmount = parseFloat(response[0]) || 0;
+          const cancellationCharges = parseFloat(response[1]) || 0;
+          const refundMethod = response[2] || 'CASHFREE_REFUND';
+          
+          // Get original amount paid from ticket details
+          let amountPaid: number;
+          if (this.ticketDetails.ticketAmount !== undefined && this.ticketDetails.ticketAmount !== null) {
+            amountPaid = this.ticketDetails.ticketAmount;
+          } else {
+            // Fallback: Extract amount from bookingAmount string
+            const amountPaidStr = this.ticketDetails.bookingAmount.replace('Rs. ', '').replace(/,/g, '');
+            amountPaid = parseFloat(amountPaidStr) || 0;
+          }
+          
+          // Store cancellation details
+          this.cancellationDetails = {
+            amountPaid: `Rs. ${amountPaid.toFixed(2)}`,
+            cancellationCharges: `Rs. ${cancellationCharges.toFixed(2)}`,
+            refundAmount: `Rs. ${refundAmount.toFixed(2)}`,
+            refundMethod: refundMethod
+          };
+          
+          console.log('Cancellation Details from API:', this.cancellationDetails);
+          
+          // Move to step 3 (cancellation charges) after successful API call
+          this.currentStep = 3;
+        } else {
+          // Handle invalid response
+          alert('Failed to calculate cancellation charges. Please try again.');
+          console.error('Invalid cancellation criteria response:', response);
+          this.cancellationDetails = null;
+        }
+        
+        // Force view update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Cancellation Criteria API Error:', error);
+        alert('Failed to fetch cancellation charges. Please try again.');
+        this.cancellationDetails = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  // Confirm cancellation
+  // Confirm cancellation using API
   confirmCancellation(): void {
-    if (this.cancellationDetails) {
-      alert('Cancellation confirmed! You will receive a refund of ' + this.cancellationDetails.refundAmount);
-      console.log('Cancellation Confirmed:', this.cancellationDetails);
-      
-      // Move to step 4 (summary)
-      this.currentStep = 4;
-      this.cdr.detectChanges();
+    if (!this.cancellationDetails || !this.ticketDetails) {
+      alert('Cancellation details not available. Please try again.');
+      return;
     }
+    
+    const pnr = this.ticketDetails.pnr;
+    
+    // Extract numeric values from formatted strings (remove "Rs. " and parse)
+    const refundAmountStr = this.cancellationDetails.refundAmount.replace('Rs. ', '').replace(/,/g, '');
+    const refundAmount = parseFloat(refundAmountStr) || 0;
+    
+    const cancellationChargesStr = this.cancellationDetails.cancellationCharges.replace('Rs. ', '').replace(/,/g, '');
+    const wizzAmount = parseFloat(cancellationChargesStr) || 0;
+    
+    console.log('Confirming cancellation:', {
+      pnr: pnr,
+      refundAmount: refundAmount,
+      wizzAmount: wizzAmount
+    });
+    
+    this.isLoading = true;
+    
+    // Call the API service to cancel the ticket
+    this.apiService.cancelShareTicket(pnr, refundAmount, wizzAmount).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('Cancel Ticket API Response:', response);
+        
+        // Check if cancellation was successful
+        // Adjust this based on your actual API response structure
+        if (response && (response[0]?.status === 'success' || response[0]?.message || Array.isArray(response))) {
+          // Cancellation successful
+          alert('Cancellation confirmed! You will receive a refund of ' + this.cancellationDetails.refundAmount);
+          console.log('Cancellation Confirmed Successfully:', response);
+          
+          // Move to step 4 (summary)
+          this.currentStep = 4;
+        } else {
+          // Handle error response
+          alert('Failed to confirm cancellation. Please try again.');
+          console.error('Cancellation failed:', response);
+        }
+        
+        // Force view update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Cancel Ticket API Error:', error);
+        alert('Failed to confirm cancellation. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // Return to home
@@ -319,18 +502,57 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     console.log('Redirecting to home page');
   }
 
-  // Resend OTP
+  // Resend OTP using API
   resendOTP(): void {
     this.isLoading = true;
+    const mobileValue = this.cancelForm.get('mobile')?.value;
     
-    setTimeout(() => {
-      this.isLoading = false;
-      alert(`OTP resent to ${this.cancelForm.get('mobile')?.value}\n\nFor testing purposes, use OTP: ${this.dummyOTP}`);
-      console.log('OTP Resent');
-      
-      // Force view update
-      this.cdr.detectChanges();
-    }, 1000);
+    // Remove country code from phone number
+    const phoneNumberWithoutCountryCode = this.removeCountryCode(mobileValue);
+    
+    console.log('Resending OTP to phone number:', phoneNumberWithoutCountryCode);
+    
+    // Call the API service
+    this.apiService.sendOtp(phoneNumberWithoutCountryCode).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('Resend OTP API Response:', response);
+        
+        // API returns OTP as a string (e.g., "1667")
+        // Handle both string response and array response formats
+        let otpValue = '';
+        
+        if (typeof response === 'string') {
+          // Direct string response
+          otpValue = response.trim();
+        } else if (Array.isArray(response) && response.length > 0) {
+          // Array response - take first element
+          otpValue = String(response[0]).trim();
+        } else if (response != null) {
+          // Object response - try to extract OTP
+          otpValue = String(response).trim();
+        }
+        
+        // Check if we got a valid OTP (should be numeric)
+        if (otpValue && /^\d+$/.test(otpValue)) {
+          this.receivedOTP = otpValue;
+          console.log('OTP resent from API:', this.receivedOTP);
+          alert(`OTP resent successfully to ${mobileValue}`);
+        } else {
+          alert('Failed to resend OTP. Please try again.');
+          console.error('Invalid OTP response format:', response);
+        }
+        
+        // Force view update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Resend OTP API Error:', error);
+        alert('Failed to resend OTP. Please try again.');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // Check if form is valid for submission
