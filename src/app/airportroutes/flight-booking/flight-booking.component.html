@@ -1,0 +1,122 @@
+<section class="flight-banner flight-booking-banner animate-fade-in">
+    <div class="container">
+        <h1 class="animate-slide-up">Flight Booking</h1>
+        <h3 class="text-white animate-slide-up-delay">
+            Discover all available flight routes from Bagdogra, Guwahati, and Pakyong to major destinations across India. Book your flights with Wizzride for the best deals and seamless travel experience.
+        </h3>
+    </div>
+</section>
+
+<div class="spacing"></div>
+
+<!-- Introduction Section -->
+<section class="intro-section">
+    <div class="container">
+        <div class="intro-content animate-on-scroll">
+            <h3>Explore our comprehensive network of flight routes connecting the Northeast with major cities across India. Whether you're traveling for business, leisure, or visiting family, we offer convenient and affordable flight options to make your journey smooth and enjoyable.</h3>
+        </div>
+    </div>
+</section>
+
+<div class="spacing"></div>
+
+<!-- Flight Routes Grid Section -->
+<section class="routes-section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title animate-on-scroll">All Flight Routes</h2>
+            <p class="section-subtitle animate-on-scroll">Click on any route to view detailed flight information, schedules, and book your tickets</p>
+        </div>
+        
+        <div class="routes-grid">
+            <a *ngFor="let route of flightRoutes" 
+               [routerLink]="route.link" 
+               class="route-card animate-on-scroll"
+               [attr.aria-label]="'Book ' + route.name + ' flights'">
+                <div class="route-card-image" [style.background-image]="'url(' + route.image + ')'">
+                    <div class="route-overlay"></div>
+                    <div class="route-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                </div>
+                <div class="route-card-content">
+                    <div class="route-from-to">
+                        <span class="route-from">{{ route.from }}</span>
+                        <i class="fas fa-arrow-right route-arrow"></i>
+                        <span class="route-to">{{ route.to }}</span>
+                    </div>
+                    <div class="route-name">{{ route.name }}</div>
+                    <div class="route-link-text">
+                        View Details <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="spacing"></div>
+
+<!-- Why Book with Wizzride Section -->
+<section class="why-choose-section">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="section-title animate-on-scroll">
+            Why Book Flights with Wizzride?
+        </h2>
+      </div>
+      <div class="features-grid">
+  
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-tags"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">Affordable Airfares</div>
+            <div class="feature-desc">Competitive ticket prices with no hidden charges.</div>
+          </div>
+        </div>
+  
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-mouse-pointer"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">Hassle-free Booking</div>
+            <div class="feature-desc">Quick and secure online flight reservations.</div>
+          </div>
+        </div>
+  
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-clock"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">Flexible Flight Timings</div>
+            <div class="feature-desc">Morning, afternoon, and evening options available.</div>
+          </div>
+        </div>
+  
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">Trusted Airlines</div>
+            <div class="feature-desc">Flights operated by top domestic carriers.</div>
+          </div>
+        </div>
+  
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-route"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">Smooth Connectivity</div>
+            <div class="feature-desc">Direct and connecting flights available.</div>
+          </div>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon"><i class="fas fa-headset"></i></div>
+          <div class="feature-content">
+            <div class="feature-title">24/7 Customer Support</div>
+            <div class="feature-desc">Round-the-clock assistance for all your travel needs.</div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+
+<div class="spacing"></div>

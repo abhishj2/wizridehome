@@ -35,7 +35,8 @@ export class FooterComponent {
     { name: 'Local Ride', link: '/ourservices/localrides' },
     { name: 'Holiday & Tour Packages', link: '/ourservices/holidaystours' },
     { name: 'Corporate Events', link: '/ourservices/corporatepackages/' },
-    { name: 'Package Delivery', link: '/ourservices/packagedelivery' }
+    { name: 'Package Delivery', link: '/ourservices/packagedelivery' },
+    { name:'Flight Booking',link:'/ourservices/flight-booking'}
   ];
 
   aboutUs = [
@@ -110,24 +111,6 @@ export class FooterComponent {
         { name: "Bagdogra Airport", link: "/airports/bagdograairport/" },
         { name: "Shillong Airport", link: "/airports/shillongairport/" },
         { name: "Pakyong Airport", link: "/airports/pakyongairport/" }
-      ]
-    },
-    aiportroutes:{
-      title:'Air Routes',
-      route:[
-        { name: 'Bagdogra to Bengaluru', link: '/ourservices/flight-booking/bagdogratobengaluru' },
-        { name: 'Bagdogra to Delhi', link: '/ourservices/flight-booking/bagdogratodelhi' },
-        { name: 'Bagdogra to Dibrugarh', link: '/ourservices/flight-booking/bagdogratodibrugarh' },
-        { name: 'Bagdogra to Guwahati', link: '/ourservices/flight-booking/bagdogratoguwahati' },
-        { name: 'Bagdogra to Kolkata', link: '/ourservices/flight-booking/bagdogratokolkata' },
-        { name: 'Bagdogra to Mumbai', link: '/ourservices/flight-booking/bagdogratomumbai' },
-        { name: 'Guwahati to Agartala', link: '/ourservices/flight-booking/guwahatitoagartala' },
-        { name: 'Guwahati to Delhi', link: '/ourservices/flight-booking/guwahatitodelhi' },
-        { name: 'Guwahati to Dibrugarh', link: '/ourservices/flight-booking/guwahatitodibrugarh' },
-        { name: 'Guwahati to Imphal', link: '/ourservices/flight-booking/guwahatitoimphal' },
-        { name: 'Guwahati to Kolkata', link: '/ourservices/flight-booking/guwahatitokolkata' },
-        { name: 'Pakyong to Delhi', link: '/ourservices/flight-booking/pakyongtodelhi' },
-        { name: 'Pakyong to Kolkata', link: '/ourservices/flight-booking/pakyongtokolkata' }
       ]
     },
     innerlinepermits:{

@@ -621,7 +621,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
     console.log(`Submitting ${formType} form:`, submissionData);
 
-    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/wiz_partnerships', submissionData)
+    this.http.post('https://wizztest.com/wp-json/wp/v2/wiz_partnerships', submissionData)
       .subscribe({
         next: (response) => {
           console.log(`${formType} form submitted successfully:`, response);

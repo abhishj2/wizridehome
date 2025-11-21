@@ -293,7 +293,7 @@ export class InfulencerapplyComponent implements OnInit, AfterViewInit {
     };
 
     // Submit to WordPress
-    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/wiz_influencers', submissionData)
+    this.http.post('https://wizztest.com/wp-json/wp/v2/wiz_influencers', submissionData)
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;

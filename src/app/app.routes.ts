@@ -105,6 +105,7 @@ import { GuwahatitokolkataComponent } from './airportroutes/guwahati/guwahatitok
 import { PakyoongtodelhiComponent } from './airportroutes/pakyong/pakyoongtodelhi/pakyoongtodelhi.component';
 import { isPlatformWorkerApp } from '@angular/common';
 import { PakyoongtokolkataComponent } from './airportroutes/pakyong/pakyoongtokolkata/pakyoongtokolkata.component';
+import { FlightBookingComponent } from './airportroutes/flight-booking/flight-booking.component';
 import { ArunachalpermitComponent } from './ilp/arunachalpermit/arunachalpermit.component';
 import { NagalandpermitComponent } from './ilp/nagalandpermit/nagalandpermit.component';
 import { SikkimpermitComponent } from './ilp/sikkimpermit/sikkimpermit.component';
@@ -250,6 +251,7 @@ export const routes: Routes = [
       {path:'ourservices/flight-booking/guwahatitokolkata',component:GuwahatitokolkataComponent},
       {path:'ourservices/flight-booking/pakyongtodelhi', component:PakyoongtodelhiComponent},
       {path:'ourservices/flight-booking/pakyongtokolkata',component:PakyoongtokolkataComponent},
+      {path:'ourservices/flight-booking',component:FlightBookingComponent},
 
       {path:'inner-line-permit/arunachal-inner-line-permit',component:ArunachalpermitComponent},
       {path:'inner-line-permit/nagaland-inner-line-permit',component:NagalandpermitComponent},

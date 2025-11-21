@@ -235,7 +235,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
 
     console.log('Submitting driver application:', submissionData);
 
-    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/driver_applications', submissionData)
+    this.http.post('https://wizztest.com/wp-json/wp/v2/driver_applications', submissionData)
       .subscribe({
         next: (response) => {
           console.log('Driver application submitted successfully:', response);

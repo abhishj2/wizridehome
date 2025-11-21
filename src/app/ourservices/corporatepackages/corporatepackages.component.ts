@@ -339,7 +339,7 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
 
     console.log('Submitting corporate enquiry:', submissionData);
 
-    this.http.post('https://cms.wizzride.com/wp-json/wp/v2/corporate_enquiries', submissionData)
+    this.http.post('https://wizztest.com/wp-json/wp/v2/corporate_enquiries', submissionData)
       .subscribe({
         next: (response) => {
           console.log('Corporate enquiry submitted successfully:', response);
