@@ -142,6 +142,12 @@ export class HomeComponent
   specialOffers: Offer[] = [];
   isLoadingOffers = false;
   
+  // Home statistics
+  sharedCabsStats: Array<{number: string, label: string}> = [];
+  reservedCabsStats: Array<{number: string, label: string}> = [];
+  numbersSectionStats: Array<{number: string, label: string, description: string, icon: string}> = [];
+  isLoadingStats = false;
+  
 // 3D Testimonial Carousel Properties
 @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
 currentSlide = 0;
@@ -861,6 +867,9 @@ trackByOfferId(index: number, offer: any): number {
     
     // Load Google reviews
     this.loadGoogleReviews();
+    
+    // Load home statistics
+    this.loadHomeStatistics();
   }
 
   // Helper method to insert JSON-LD structured data
@@ -2486,6 +2495,80 @@ trackByOfferId(index: number, offer: any): number {
         console.error('Error loading Google reviews:', error);
         // Keep testimonials empty on error
         this.testimonials = [];
+      }
+    });
+  }
+
+  /** -------------------
+   * Load Home Statistics from WordPress
+   -------------------- */
+  loadHomeStatistics(): void {
+    this.isLoadingStats = true;
+    
+    this.wordpressService.getHomeStatistics().subscribe({
+      next: (data: any) => {
+        if (data && data.shared_cabs && data.reserved_cabs) {
+          this.sharedCabsStats = data.shared_cabs;
+          this.reservedCabsStats = data.reserved_cabs;
+          
+          // Load numbers section stats if available
+          if (data.numbers_section && Array.isArray(data.numbers_section)) {
+            this.numbersSectionStats = data.numbers_section;
+          } else {
+            // Fallback to default values
+            this.numbersSectionStats = [
+              { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
+              { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
+              { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
+              { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+            ];
+          }
+        } else {
+          // Fallback to default values if API fails
+          this.sharedCabsStats = [
+            { number: '60%', label: 'Cost Savings' },
+            { number: '10K+', label: 'Daily Rides' },
+            { number: '4.8⭐', label: 'User Rating' },
+            { number: '100+', label: 'Cities Covered' }
+          ];
+          this.reservedCabsStats = [
+            { number: '5⭐', label: 'Service Rating' },
+            { number: '98%', label: 'On-Time Performance' },
+            { number: '500+', label: 'Premium Vehicles' },
+            { number: '24/7', label: 'Available Service' }
+          ];
+          this.numbersSectionStats = [
+            { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
+            { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
+            { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
+            { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+          ];
+        }
+        this.isLoadingStats = false;
+        console.log('Home statistics loaded:', { shared: this.sharedCabsStats, reserved: this.reservedCabsStats, numbers: this.numbersSectionStats });
+      },
+      error: (error) => {
+        console.error('Error loading home statistics:', error);
+        // Fallback to default values on error
+        this.sharedCabsStats = [
+          { number: '60%', label: 'Cost Savings' },
+          { number: '10K+', label: 'Daily Rides' },
+          { number: '4.8⭐', label: 'User Rating' },
+          { number: '100+', label: 'Cities Covered' }
+        ];
+        this.reservedCabsStats = [
+          { number: '5⭐', label: 'Service Rating' },
+          { number: '98%', label: 'On-Time Performance' },
+          { number: '500+', label: 'Premium Vehicles' },
+          { number: '24/7', label: 'Available Service' }
+        ];
+        this.numbersSectionStats = [
+          { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
+          { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
+          { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
+          { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+        ];
+        this.isLoadingStats = false;
       }
     });
   }

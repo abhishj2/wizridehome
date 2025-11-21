@@ -65,7 +65,7 @@ export class NavbarComponent {
       name: 'Collaborate',
       hasDropdown: true,
       dropdownItems: [
-        { name: 'Influencer', link: '/influencerapply' },
+        { name: 'Influencer', link: '/applyforjob/partnerwithus?id=4' },
         { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
         { name: 'Private Events', link: '/applyforjob/partnerwithus?id=6' },
         { name: 'Investor Center ', link: '/applyforjob/partnerwithus?id=2' },

@@ -499,8 +499,28 @@
             </div>
         </div>
     </div>
-    <textarea class="form-control" placeholder="Couldn't find your question on the list? Post your question here and we will get back with an answer."></textarea>
-    <button type="submit" class="btn btn-c">Submit</button>
+    <div class="faq-form-container">
+        <textarea 
+            class="form-control" 
+            [(ngModel)]="sharedCabsQuestion"
+            placeholder="Couldn't find your question on the list? Post your question here and we will get back with an answer."
+            [disabled]="isSubmittingShared">
+        </textarea>
+        <button 
+            type="button" 
+            class="btn btn-c" 
+            (click)="onSubmitSharedCabs()"
+            [disabled]="isSubmittingShared">
+            <span *ngIf="!isSubmittingShared">Submit</span>
+            <span *ngIf="isSubmittingShared">Submitting...</span>
+        </button>
+        <div *ngIf="sharedCabsSuccessMessage" class="alert alert-success" style="margin-top: 15px;">
+            {{ sharedCabsSuccessMessage }}
+        </div>
+        <div *ngIf="sharedCabsErrorMessage" class="alert alert-danger" style="margin-top: 15px;">
+            {{ sharedCabsErrorMessage }}
+        </div>
+    </div>
     <div class="no-results" id="noResults">
         <i class="fas fa-search" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 20px;"></i>
         <h3>No FAQs found</h3>
@@ -532,8 +552,28 @@
             </div>
         </div>
     </div>
-    <textarea class="form-control" placeholder="Couldn't find your question on the list? Post your question here and we will get back with an answer."></textarea>
-    <button type="submit" class="btn btn-c">Submit</button>
+    <div class="faq-form-container">
+        <textarea 
+            class="form-control" 
+            [(ngModel)]="reservedCabsQuestion"
+            placeholder="Couldn't find your question on the list? Post your question here and we will get back with an answer."
+            [disabled]="isSubmittingReserved">
+        </textarea>
+        <button 
+            type="button" 
+            class="btn btn-c" 
+            (click)="onSubmitReservedCabs()"
+            [disabled]="isSubmittingReserved">
+            <span *ngIf="!isSubmittingReserved">Submit</span>
+            <span *ngIf="isSubmittingReserved">Submitting...</span>
+        </button>
+        <div *ngIf="reservedCabsSuccessMessage" class="alert alert-success" style="margin-top: 15px;">
+            {{ reservedCabsSuccessMessage }}
+        </div>
+        <div *ngIf="reservedCabsErrorMessage" class="alert alert-danger" style="margin-top: 15px;">
+            {{ reservedCabsErrorMessage }}
+        </div>
+    </div>
     <div class="spacer"></div>
 </div>
 

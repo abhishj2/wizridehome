@@ -49,6 +49,16 @@ export class WordpressService {
     );
   }
 
+  getHomeStatistics(): Observable<any> {
+    // Use custom REST API endpoint
+    const customBaseUrl = this.baseUrl.replace('/wp/v2', '');
+    const url = `${customBaseUrl}/custom/v1/home-statistics`;
+    
+    return this.http.get(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('WordPress API Error:', error);
     return throwError(() => new Error(`WordPress API Error: ${error.message}`));

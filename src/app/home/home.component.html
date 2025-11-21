@@ -739,21 +739,9 @@
             </div>
         </div>
         <div class="highlight-stats">
-            <div class="stat">
-                <span class="stat-number">60%</span>
-                <span class="stat-label">Cost Savings</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">10K+</span>
-                <span class="stat-label">Daily Rides</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">4.8⭐</span>
-                <span class="stat-label">User Rating</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">100+</span>
-                <span class="stat-label">Cities Covered</span>
+            <div class="stat" *ngFor="let stat of sharedCabsStats">
+                <span class="stat-number">{{ stat.number }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
             </div>
         </div>
     </div>
@@ -911,21 +899,9 @@
             </div>
         </div>
         <div class="highlight-stats">
-            <div class="stat">
-                <span class="stat-number">5⭐</span>
-                <span class="stat-label">Service Rating</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">98%</span>
-                <span class="stat-label">On-Time Performance</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">500+</span>
-                <span class="stat-label">Premium Vehicles</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">24/7</span>
-                <span class="stat-label">Available Service</span>
+            <div class="stat" *ngFor="let stat of reservedCabsStats">
+                <span class="stat-number">{{ stat.number }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
             </div>
         </div>
     </div>
@@ -1109,40 +1085,13 @@
                 </div>
 
                 <div class="statistics-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--delay: 1">
-                            <img src="https://wizzride.com/assets/images/icon1.png" alt="Years of Service">
+                    <div class="stat-card" *ngFor="let stat of numbersSectionStats; let i = index">
+                        <div class="stat-icon" [style.--delay]="i + 1">
+                            <img [src]="stat.icon" [alt]="stat.label">
                         </div>
-                        <span class="stat-number" data-animate>7+</span>
-                        <div class="stat-label">Years of service</div>
-                        <div class="stat-description">Trusted experience in the travel industry</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--delay: 2">
-                            <img src="https://wizzride.com/assets/images/icon2.png" alt="Passengers Served">
-                        </div>
-                        <span class="stat-number" data-animate>201,574+</span>
-                        <div class="stat-label">Passengers Served</div>
-                        <div class="stat-description">Happy customers who chose our service</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--delay: 3">
-                            <img src="https://wizzride.com/assets/images/icon3.png" alt="Trips Completed">
-                        </div>
-                        <span class="stat-number" data-animate>180,801+</span>
-                        <div class="stat-label">Trips Completed</div>
-                        <div class="stat-description">Successful journeys across destinations</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--delay: 4">
-                            <img src="https://wizzride.com/assets/images/icon4.png" alt="Kilometers Covered">
-                        </div>
-                        <span class="stat-number" data-animate>23,401,092+</span>
-                        <div class="stat-label">Kilometers Covered</div>
-                        <div class="stat-description">Miles of safe and comfortable travel</div>
+                        <span class="stat-number" data-animate>{{ stat.number }}</span>
+                        <div class="stat-label">{{ stat.label }}</div>
+                        <div class="stat-description">{{ stat.description }}</div>
                     </div>
                 </div>
             </section>
@@ -1292,3 +1241,4 @@
         </div>
     </div>
 </div>
+

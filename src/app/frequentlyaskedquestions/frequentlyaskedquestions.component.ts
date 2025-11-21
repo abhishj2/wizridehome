@@ -2,11 +2,14 @@ import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, Element
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SeoService } from '../services/seo.service';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-frequentlyaskedquestions',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './frequentlyaskedquestions.component.html',
   styleUrl: './frequentlyaskedquestions.component.css',
   encapsulation: ViewEncapsulation.None
@@ -16,6 +19,18 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
   private fadeScrollObserver: IntersectionObserver | null = null;
   activeFaqIndex: number | null = null;
 
+  // Form data
+  sharedCabsQuestion: string = '';
+  reservedCabsQuestion: string = '';
+
+  // Form state
+  isSubmittingShared: boolean = false;
+  isSubmittingReserved: boolean = false;
+  sharedCabsSuccessMessage: string = '';
+  reservedCabsSuccessMessage: string = '';
+  sharedCabsErrorMessage: string = '';
+  reservedCabsErrorMessage: string = '';
+
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
@@ -23,7 +38,8 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
     private metaService: Meta,
     private elementRef: ElementRef,
     private cdr: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -391,43 +407,129 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
   // Form submission handling
   private initFormSubmissions(): void {
-    const submitButtons = this.elementRef.nativeElement.querySelectorAll('button[type="submit"]');
-    
-    submitButtons.forEach((button: Element, index: number) => {
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
-        
-        // Find the associated textarea
-        const textarea = button.previousElementSibling as HTMLTextAreaElement;
-        
-        if (textarea && textarea.tagName === 'TEXTAREA') {
-          const question = textarea.value.trim();
+    // Forms are now handled via Angular template binding
+  }
+
+  /**
+   * Submit Shared Cabs FAQ form
+   */
+  onSubmitSharedCabs(): void {
+    // Clear previous messages
+    this.sharedCabsSuccessMessage = '';
+    this.sharedCabsErrorMessage = '';
+
+    // Validate form data
+    if (!this.sharedCabsQuestion || !this.sharedCabsQuestion.trim()) {
+      this.sharedCabsErrorMessage = 'Please enter your question before submitting.';
+      return;
+    }
+
+    this.isSubmittingShared = true;
+
+    const submissionData = {
+      title: `FAQ Question - Shared Cabs - ${new Date().toISOString()}`,
+      content: this.sharedCabsQuestion,
+      status: 'publish',
+      acf: {
+        question: this.sharedCabsQuestion,
+        faq_section: 'shared-cabs',
+        submission_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting Shared Cabs FAQ:', submissionData);
+
+    this.http.post('https://wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Shared Cabs FAQ submitted successfully:', response);
+          console.log('Response ID:', response.id);
+          console.log('Response ACF:', response.acf);
+          this.isSubmittingShared = false;
+          this.sharedCabsSuccessMessage = 'Thank you! Your question has been submitted successfully. We will get back to you soon.';
           
-          if (question) {
-            const formData = {
-              question: question,
-              formNumber: index + 1,
-              timestamp: new Date().toLocaleString(),
-              section: index === 0 ? 'Shared Cabs' : 'Reserved Cabs'
-            };
-            
-            // Show data in alert
-            alert(`Form ${formData.formNumber} Submitted!\n\n` +
-                  `Section: ${formData.section}\n` +
-                  `Question: ${formData.question}\n` +
-                  `Submitted at: ${formData.timestamp}\n\n` +
-                  `Thank you for your question! We'll get back to you soon.`);
-            
-            // Clear the textarea
-            textarea.value = '';
-            
-            console.log('Form submitted:', formData);
-          } else {
-            alert('Please enter your question before submitting.');
-          }
+          // Reset form
+          this.sharedCabsQuestion = '';
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.sharedCabsSuccessMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting Shared Cabs FAQ:', error);
+          console.error('Error details:', error.error);
+          console.error('Error status:', error.status);
+          this.isSubmittingShared = false;
+          this.sharedCabsErrorMessage = 'There was an error submitting your question. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.sharedCabsErrorMessage = '';
+          }, 5000);
         }
       });
-    });
+  }
+
+  /**
+   * Submit Reserved Cabs FAQ form
+   */
+  onSubmitReservedCabs(): void {
+    // Clear previous messages
+    this.reservedCabsSuccessMessage = '';
+    this.reservedCabsErrorMessage = '';
+
+    // Validate form data
+    if (!this.reservedCabsQuestion || !this.reservedCabsQuestion.trim()) {
+      this.reservedCabsErrorMessage = 'Please enter your question before submitting.';
+      return;
+    }
+
+    this.isSubmittingReserved = true;
+
+    const submissionData = {
+      title: `FAQ Question - Reserved Cabs - ${new Date().toISOString()}`,
+      content: this.reservedCabsQuestion,
+      status: 'publish',
+      acf: {
+        question: this.reservedCabsQuestion,
+        faq_section: 'reserved-cabs',
+        submission_date: new Date().toISOString()
+      }
+    };
+
+    console.log('Submitting Reserved Cabs FAQ:', submissionData);
+
+    this.http.post('https://wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
+      .subscribe({
+        next: (response: any) => {
+          console.log('Reserved Cabs FAQ submitted successfully:', response);
+          console.log('Response ID:', response.id);
+          console.log('Response ACF:', response.acf);
+          this.isSubmittingReserved = false;
+          this.reservedCabsSuccessMessage = 'Thank you! Your question has been submitted successfully. We will get back to you soon.';
+          
+          // Reset form
+          this.reservedCabsQuestion = '';
+
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            this.reservedCabsSuccessMessage = '';
+          }, 5000);
+        },
+        error: (error) => {
+          console.error('Error submitting Reserved Cabs FAQ:', error);
+          console.error('Error details:', error.error);
+          console.error('Error status:', error.status);
+          this.isSubmittingReserved = false;
+          this.reservedCabsErrorMessage = 'There was an error submitting your question. Please try again.';
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.reservedCabsErrorMessage = '';
+          }, 5000);
+        }
+      });
   }
 
   // FAQ Search functionality
