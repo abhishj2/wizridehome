@@ -273,7 +273,7 @@ this.addJsonLd({
 
     console.log('Submitting holiday tour enquiry:', submissionData);
 
-    this.http.post('https://wizztest.com/wp-json/wp/v2/holiday_enquiries', submissionData)
+    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/holiday_enquiries', submissionData)
       .subscribe({
         next: (response) => {
           console.log('Holiday tour enquiry submitted successfully:', response);

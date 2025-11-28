@@ -106,7 +106,7 @@ export class VehicleRegistrationFormComponent implements OnInit {
 
   fetchVehicleCategories(): void {
     this.isLoadingCategories = true;
-    this.http.get<VehicleCategory[]>('https://wizztest.com/wp-json/wp/v2/vehicle_category')
+    this.http.get<VehicleCategory[]>('http://cms.wizztest.com/wp-json/wp/v2/vehicle_category')
       .subscribe({
         next: (data) => {
           this.vehicleCategories = data;
@@ -123,7 +123,7 @@ export class VehicleRegistrationFormComponent implements OnInit {
 
   fetchVehicleBrands(): void {
     this.isLoadingBrands = true;
-    this.http.get<VehicleBrand[]>('https://wizztest.com/wp-json/wp/v2/vehicle_brand')
+    this.http.get<VehicleBrand[]>('http://cms.wizztest.com/wp-json/wp/v2/vehicle_brand')
       .subscribe({
         next: (data) => {
           this.vehicleBrands = data;
@@ -164,7 +164,7 @@ export class VehicleRegistrationFormComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.selectedImageFile);
 
-      this.http.post<any>('https://wizztest.com/wp-json/wp/v2/media', formData)
+      this.http.post<any>('http://cms.wizztest.com/wp-json/wp/v2/media', formData)
         .subscribe({
           next: (response) => {
             console.log('Image uploaded successfully:', response);
@@ -226,7 +226,7 @@ export class VehicleRegistrationFormComponent implements OnInit {
 
       console.log('Submitting vehicle data:', vehicleData);
 
-      this.http.post('https://wizztest.com/wp-json/wp/v2/buy_sell_cars', vehicleData)
+      this.http.post('http://cms.wizztest.com/wp-json/wp/v2/buy_sell_cars', vehicleData)
         .subscribe({
           next: (response) => {
             console.log('Vehicle submitted successfully:', response);

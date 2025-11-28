@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, HostListener, ViewEncapsulation, Inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, OnInit, OnDestroy, HostListener, ViewEncapsulation, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { WordpressService } from '../services/wordpress.service';
@@ -27,7 +27,8 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
     private title: Title,
     private meta: Meta,
     private seoService: SeoService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -40,14 +41,16 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up JSON-LD scripts
-    const scriptIds = ['breadcrumb-schema', 'article-schema', 'faq-schema'];
-    scriptIds.forEach(id => {
-      const script = document.getElementById(id);
-      if (script) {
-        script.remove();
-      }
-    });
+    // Clean up JSON-LD scripts (only in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      const scriptIds = ['breadcrumb-schema', 'article-schema', 'faq-schema'];
+      scriptIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          script.remove();
+        }
+      });
+    }
   }
 
   loadPost(): void {
@@ -235,20 +238,25 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
   }
 
   addJsonLdScript(id: string, schema: any): void {
+    // Only add scripts in browser environment
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     // Remove existing script if it exists
-    const existingScript = document.getElementById(id);
+    const existingScript = this.document.getElementById(id);
     if (existingScript) {
       existingScript.remove();
     }
 
     // Create new script element
-    const script = document.createElement('script');
+    const script = this.document.createElement('script');
     script.id = id;
     script.type = 'application/ld+json';
     script.textContent = JSON.stringify(schema);
     
     // Add to head
-    document.head.appendChild(script);
+    this.document.head.appendChild(script);
   }
 
   toggleFaq(index: number): void {
@@ -261,14 +269,16 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
 
 
   scrollToTop(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    if (isPlatformBrowser(this.platformId) && typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   async sharePost(): Promise<void> {
-    if (!this.post) return;
+    if (!this.post || !isPlatformBrowser(this.platformId)) return;
 
     const shareData = {
       title: this.post.title?.rendered || 'Check out this article',
@@ -286,7 +296,7 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
       // Fallback to copying URL
       try {
         await navigator.clipboard.writeText(window.location.href);
-        const shareBtn = document.getElementById('shareBtn');
+        const shareBtn = this.document.getElementById('shareBtn');
         if (shareBtn) {
           shareBtn.innerHTML = '<i class="fas fa-check"></i>';
           setTimeout(() => {
@@ -301,13 +311,15 @@ export class BlogSingleComponent implements OnInit, OnDestroy {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(): void {
-    const backToTop = document.getElementById('backToTop');
-    const shareBtn = document.getElementById('shareBtn');
-    const header = document.getElementById('header');
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const backToTop = this.document.getElementById('backToTop');
+    const shareBtn = this.document.getElementById('shareBtn');
+    const header = this.document.getElementById('header');
     
     // Update scroll progress bar
     const scrollTop = window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const docHeight = this.document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
     
     if (header) {

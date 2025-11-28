@@ -1,11 +1,10 @@
-import { Component, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { NavbarComponent } from "./navbar/navbar.component";
 import { FooterComponent } from "./footer/footer.component";
 import { filter } from 'rxjs/operators';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +21,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private renderer: Renderer2,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -30,16 +30,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       // Hide navbar and footer on thank you page
       this.showNavbarFooter = !event.url.includes('/thankyou');
       
-      // Re-initialize FAQ functionality after route change
-      setTimeout(() => {
-        this.initFAQFunctionality();
-      }, 100);
+      // Re-initialize FAQ functionality after route change (only in browser)
+      if (isPlatformBrowser(this.platformId)) {
+        setTimeout(() => {
+          this.initFAQFunctionality();
+        }, 100);
+      }
     });
   }
 
   ngAfterViewInit(): void {
-    // Initialize FAQ functionality on app load
-    this.initFAQFunctionality();
+    // Initialize FAQ functionality on app load (only in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      this.initFAQFunctionality();
+    }
   }
 
   ngOnDestroy(): void {
@@ -48,6 +52,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   // Initialize FAQ functionality
   private initFAQFunctionality(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     const faqItems = this.document.querySelectorAll('.faq-item');
     
     faqItems.forEach((item: Element) => {

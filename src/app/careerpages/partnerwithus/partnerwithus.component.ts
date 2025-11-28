@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { FormsModule } from '@angular/forms';
@@ -134,6 +134,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     private elementRef: ElementRef,
     private route: ActivatedRoute,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
@@ -337,6 +338,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -345,21 +347,25 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    // Initialize all interactive features
-    this.initIntersectionObserver();
-    this.initTabFunctionality();
-    this.initFocusAnimations();
-    this.initHoverEffects();
-    this.initSmoothScrolling();
-    
-    // Open specific tab if query parameter is present
-    if (this.selectedTabId) {
-      this.openTabById(this.selectedTabId);
+    // Initialize all interactive features (only in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      this.initIntersectionObserver();
+      this.initTabFunctionality();
+      this.initFocusAnimations();
+      this.initHoverEffects();
+      this.initSmoothScrolling();
+      
+      // Open specific tab if query parameter is present
+      if (this.selectedTabId) {
+        this.openTabById(this.selectedTabId);
+      }
     }
   }
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
+    
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -621,7 +627,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
     console.log(`Submitting ${formType} form:`, submissionData);
 
-    this.http.post('https://wizztest.com/wp-json/wp/v2/wiz_partnerships', submissionData)
+    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/wiz_partnerships', submissionData)
       .subscribe({
         next: (response) => {
           console.log(`${formType} form submitted successfully:`, response);
@@ -693,6 +699,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
   // Smooth scrolling for internal links
   private initSmoothScrolling(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const anchors = this.elementRef.nativeElement.querySelectorAll('a[href^="#"]');
     
     anchors.forEach((anchor: HTMLAnchorElement) => {
@@ -713,6 +720,8 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
   // Open specific tab by ID (used for query parameter navigation)
   private openTabById(tabId: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     setTimeout(() => {
       const optionBtns = this.elementRef.nativeElement.querySelectorAll('.option-btn');
       const formContainers = this.elementRef.nativeElement.querySelectorAll('.form-container');
@@ -751,6 +760,11 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
         }
       }
     }, 100);
+  }
+
+  // Helper method to safely get captcha question for SSR compatibility
+  getCaptchaQuestion(formType: string): string {
+    return this.captchaData[formType]?.question || '';
   }
 
 }

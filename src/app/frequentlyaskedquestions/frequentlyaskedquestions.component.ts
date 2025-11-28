@@ -439,7 +439,7 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
     console.log('Submitting Shared Cabs FAQ:', submissionData);
 
-    this.http.post('https://wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
+    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
       .subscribe({
         next: (response: any) => {
           console.log('Shared Cabs FAQ submitted successfully:', response);
@@ -500,7 +500,7 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
     console.log('Submitting Reserved Cabs FAQ:', submissionData);
 
-    this.http.post('https://wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
+    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/faq_submissions', submissionData)
       .subscribe({
         next: (response: any) => {
           console.log('Reserved Cabs FAQ submitted successfully:', response);

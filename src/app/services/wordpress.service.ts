@@ -8,7 +8,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 export class WordpressService {
 
   // Try different URLs based on your setup
-  private baseUrl = 'https://wizztest.com/wp-json/wp/v2';
+  private baseUrl = 'http://cms.wizztest.com/wp-json/wp/v2';
   // Alternative URLs to try:
   // private baseUrl = 'http://wizcms.test/wp-json/wp/v2';
   // private baseUrl = 'http://127.0.0.1/wizcms/wp-json/wp/v2';

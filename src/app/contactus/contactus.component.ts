@@ -173,7 +173,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
 
     console.log('Submitting contact form:', submissionData);
 
-    this.http.post('https://wizztest.com/wp-json/wp/v2/contact_submissions', submissionData)
+    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/contact_submissions', submissionData)
       .subscribe({
         next: (response) => {
           console.log('Contact form submitted successfully:', response);

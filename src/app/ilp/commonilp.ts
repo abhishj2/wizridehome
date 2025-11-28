@@ -27,12 +27,12 @@ export class IlpAnimations {
       this.observer = null;
     }
     
-    if (this.parallaxHandler) {
+    if (this.parallaxHandler && typeof window !== 'undefined') {
       window.removeEventListener("scroll", this.parallaxHandler);
       this.parallaxHandler = null;
     }
     
-    if (this.stepsHandler) {
+    if (this.stepsHandler && typeof window !== 'undefined') {
       window.removeEventListener("scroll", this.stepsHandler);
       this.stepsHandler = null;
     }
@@ -42,10 +42,13 @@ export class IlpAnimations {
    * Page load fade-in effect
    */
   private static initPageLoadFadeIn(): void {
+    if (typeof document === 'undefined') return;
     document.body.style.opacity = "0";
     document.body.style.transition = "opacity 0.5s ease-in-out";
     setTimeout(() => {
-      document.body.style.opacity = "1";
+      if (typeof document !== 'undefined') {
+        document.body.style.opacity = "1";
+      }
     }, 100);
   }
 
@@ -53,12 +56,13 @@ export class IlpAnimations {
    * Smooth scroll for anchor links
    */
   private static initSmoothScroll(): void {
+    if (typeof document === 'undefined') return;
     const anchorLinks: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('a[href^="#"]');
     anchorLinks.forEach((link: HTMLAnchorElement) => {
       link.addEventListener("click", (e: Event) => {
         e.preventDefault();
         const targetId: string | null = link.getAttribute("href");
-        if (targetId) {
+        if (targetId && typeof document !== 'undefined') {
           const targetElement: Element | null = document.querySelector(targetId);
           if (targetElement) {
             targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -72,6 +76,7 @@ export class IlpAnimations {
    * Intersection Observer for scroll animations
    */
   private static initIntersectionObserver(): void {
+    if (typeof document === 'undefined' || typeof IntersectionObserver === 'undefined') return;
     const animateElements: NodeListOf<Element> = document.querySelectorAll(".animate-on-scroll");
     this.observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
@@ -90,9 +95,11 @@ export class IlpAnimations {
    * Parallax effect for hero section
    */
   private static initParallax(): void {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
     const heroSection: Element | null = document.querySelector(".mainbann");
     if (heroSection) {
       const updateParallax = (): void => {
+        if (typeof window === 'undefined') return;
         const scrolled: number = window.pageYOffset;
         const rate: number = scrolled * -0.1;
         (heroSection as HTMLElement).style.transform = `translateY(${rate}px)`;
@@ -100,7 +107,7 @@ export class IlpAnimations {
       };
 
       this.parallaxHandler = (): void => {
-        if (!this.ticking) {
+        if (!this.ticking && typeof window !== 'undefined') {
           requestAnimationFrame(updateParallax);
           this.ticking = true;
         }
@@ -114,6 +121,7 @@ export class IlpAnimations {
    * Hover effects for buttons and cards
    */
   private static initHoverEffects(): void {
+    if (typeof document === 'undefined') return;
     const buttons: NodeListOf<HTMLElement> = document.querySelectorAll(".btn-c, .plan-trip-btn");
     buttons.forEach((button: HTMLElement) => {
       button.addEventListener("mouseenter", () => {
@@ -142,6 +150,7 @@ export class IlpAnimations {
    * Typing effect for hero title
    */
   private static initTypingEffect(): void {
+    if (typeof document === 'undefined') return;
     const heroTitle: Element | null = document.querySelector(".mainbann h1");
     if (heroTitle) {
       const originalText: string = heroTitle.textContent || "";
@@ -164,6 +173,7 @@ export class IlpAnimations {
    * Animate section titles
    */
   private static initSectionTitles(): void {
+    if (typeof document === 'undefined') return;
     const titles: NodeListOf<HTMLElement> = document.querySelectorAll(".section-title, .section-subtitle");
     titles.forEach((title: HTMLElement, index: number) => {
       title.style.opacity = "0";
@@ -180,8 +190,10 @@ export class IlpAnimations {
    * Animate how-to steps on scroll
    */
   private static initHowToSteps(): void {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
     const steps: NodeListOf<Element> = document.querySelectorAll(".howto-step");
     const revealSteps = (): void => {
+      if (typeof window === 'undefined') return;
       const triggerBottom: number = window.innerHeight * 0.85;
       steps.forEach((step: Element, idx: number) => {
         const stepTop: number = step.getBoundingClientRect().top;
@@ -197,9 +209,11 @@ export class IlpAnimations {
   }
 }
 
-// Auto-initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  IlpAnimations.initializeAnimations();
-});
+// Auto-initialize when DOM is loaded (only in browser)
+if (typeof document !== 'undefined') {
+  document.addEventListener("DOMContentLoaded", () => {
+    IlpAnimations.initializeAnimations();
+  });
+}
   
   

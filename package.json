@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:ssr": "ng build && ng run wizbooking:server",
+    "serve:ssr": "ng run wizbooking:serve-ssr"
   },
   "private": true,
   "dependencies": {

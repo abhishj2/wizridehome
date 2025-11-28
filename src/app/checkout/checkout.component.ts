@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
@@ -214,7 +214,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
-    private apiService: ApiserviceService
+    private apiService: ApiserviceService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
@@ -224,7 +225,7 @@ export class CheckoutComponent implements OnInit {
       this.bookingData = navigation.extras.state['bookingData'];
     }
     
-    if (!this.bookingData) {
+    if (!this.bookingData && isPlatformBrowser(this.platformId)) {
       const storedData = localStorage.getItem('bookingData');
       if (storedData) {
         this.bookingData = JSON.parse(storedData);
@@ -252,6 +253,7 @@ export class CheckoutComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.isHeaderSticky = scrollPosition > 50;
   }

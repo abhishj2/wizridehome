@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,6 +15,8 @@ export class NavbarComponent {
   isSearchOpen = false;
   activeDropdown: string | null = null;
   mobileClickCount: { [key: string]: number } = {};
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   // Navigation items with dropdowns
   navigationItems = [
@@ -128,7 +130,7 @@ export class NavbarComponent {
         // Second click - navigate to main link
         this.activeDropdown = null;
         this.mobileClickCount[item.name] = 0;
-        if (item.link) {
+        if (item.link && isPlatformBrowser(this.platformId)) {
           window.location.href = item.link;
         }
       }
@@ -137,7 +139,7 @@ export class NavbarComponent {
 
   toggleSearch() {
     this.isSearchOpen = !this.isSearchOpen;
-    if (this.isSearchOpen) {
+    if (this.isSearchOpen && isPlatformBrowser(this.platformId)) {
       // Focus the input after a short delay to allow the animation
       setTimeout(() => {
         const input = document.querySelector('.sliding-search-input') as HTMLInputElement;
@@ -154,6 +156,7 @@ export class NavbarComponent {
 
   onSearchBlur() {
     // Close search after a short delay to allow for clicking the close button
+    if (!isPlatformBrowser(this.platformId)) return;
     setTimeout(() => {
       if (!document.querySelector('.sliding-search:hover') && !document.querySelector('.search-btn:hover')) {
         this.isSearchOpen = false;
@@ -183,7 +186,7 @@ export class NavbarComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    if (window.innerWidth > 768) {
+    if (isPlatformBrowser(this.platformId) && window.innerWidth > 768) {
       this.isMobileMenuOpen = false;
       this.activeDropdown = null;
     }

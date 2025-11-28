@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, Input, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
@@ -96,11 +96,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
-    private apiService: ApiserviceService
+    private apiService: ApiserviceService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.isHeaderSticky = scrollPosition > 50;
   }
@@ -115,14 +117,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       console.log('Received search params from navigation:', this.searchParams);
     }
     
-    // Fallback: try to get from history state
-    if (!this.searchParams && (window as any).history?.state) {
+    // Fallback: try to get from history state (only in browser)
+    if (!this.searchParams && isPlatformBrowser(this.platformId) && (window as any).history?.state) {
       this.searchParams = (window as any).history.state['searchParams'];
       console.log('Received search params from history:', this.searchParams);
     }
     
-    // Fallback: try to get from localStorage
-    if (!this.searchParams) {
+    // Fallback: try to get from localStorage (only in browser)
+    if (!this.searchParams && isPlatformBrowser(this.platformId)) {
       const storedParams = localStorage.getItem('bookingSearchParams');
       if (storedParams) {
         this.searchParams = JSON.parse(storedParams);
@@ -1075,6 +1077,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   scrollToSelectedHour() {
+    if (!isPlatformBrowser(this.platformId)) return;
     const hoursContainer = document.querySelector('.time-options') as HTMLElement;
     if (hoursContainer) {
       const selectedOption = hoursContainer.children[this.selectedHour - 1] as HTMLElement;
