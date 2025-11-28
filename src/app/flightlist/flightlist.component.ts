@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Inject, NgZone, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -50,8 +50,12 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   selectedRefundability: Set<string> = new Set();
 
   cities: any[] = [];
+  flightAirports: any[] = [];
 
   travelClasses = ['Economy', 'Premium Economy', 'Business', 'First'];
+  
+  isHeaderSticky: boolean = false;
+  showModifyForm: boolean = false;
 
   flights: any[] = [];
   finalFinalList: any = [];
@@ -271,6 +275,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
                 airport: airportName || cityName
               };
             });
+            // Also populate flightAirports for consistency
+            this.flightAirports = [...this.cities];
+            // Also populate flightAirports for consistency
+            this.flightAirports = [...this.cities];
             console.log('Airports populated in flightlist:', this.cities.length);
             
             // If flight data is already loaded, populate form now
@@ -291,6 +299,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             { name: 'New Delhi, India', code: 'DEL', airport: 'Indira Gandhi International Airport' },
             { name: 'Mumbai, India', code: 'BOM', airport: 'Chhatrapati Shivaji Maharaj International Airport' }
           ];
+          this.flightAirports = [...this.cities];
         }
       })
     );
@@ -400,10 +409,27 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     // Populate modify search form with data from home page
     setTimeout(() => {
       if (this.flightInputData) {
+        // Normalize travelClass to match dropdown options (capitalize first letter)
+        let travelClass = this.flightInputData['travelClass'] || 'Economy';
+        if (travelClass && typeof travelClass === 'string') {
+          // Convert lowercase to proper case (e.g., 'economy' -> 'Economy')
+          travelClass = travelClass.charAt(0).toUpperCase() + travelClass.slice(1).toLowerCase();
+          // Handle special cases
+          if (travelClass.toLowerCase() === 'economy') {
+            travelClass = 'Economy';
+          } else if (travelClass.toLowerCase() === 'premium economy') {
+            travelClass = 'Premium Economy';
+          } else if (travelClass.toLowerCase() === 'business') {
+            travelClass = 'Business';
+          } else if (travelClass.toLowerCase() === 'first class' || travelClass.toLowerCase() === 'first') {
+            travelClass = 'First';
+          }
+        }
+        
         console.log('Populating form with data:', {
           from: this.flightInputData['fromAirportCode'],
           to: this.flightInputData['toAirportCode'],
-          travelClass: this.flightInputData['travelClass'],
+          travelClass: travelClass,
           departureDate: this.flightInputData['departureDate']
         });
         
@@ -415,7 +441,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           adults: this.flightInputData['adults'] || 1,
           children: this.flightInputData['children'] || 0,
           infants: this.flightInputData['infants'] || 0,
-          travelClass: this.flightInputData['travelClass'] || 'Economy'
+          travelClass: travelClass
         });
         
         // Update total passengers
@@ -626,6 +652,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         });
       }
     });
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    if (!this.isBrowser) return;
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    this.isHeaderSticky = scrollPosition > 50;
   }
 
   ngAfterViewInit(): void {
