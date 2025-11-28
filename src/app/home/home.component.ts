@@ -560,6 +560,9 @@ trackByOfferId(index: number, offer: any): number {
   // Reserved cities from API for reserved cabs
   reservedCities: City[] = [];
 
+  // Flight airports from API
+  flightAirports: City[] = [];
+
   // API response locations for shared cabs
   sharedPickupLocations: string[] = [];
   sharedDropoffLocations: string[] = [];
@@ -703,7 +706,13 @@ trackByOfferId(index: number, offer: any): number {
 
   // Validation methods
   isSameCitySelected(pickup: string, dropoff: string): boolean {
-    return !!(pickup && dropoff && pickup.toLowerCase() === dropoff.toLowerCase());
+    if (!pickup || !dropoff) return false;
+    
+    // Extract city names from display format (handle "Delhi (DEL)" format)
+    const pickupCity = this.extractCityNameFromDisplay(pickup).toLowerCase();
+    const dropoffCity = this.extractCityNameFromDisplay(dropoff).toLowerCase();
+    
+    return pickupCity === dropoffCity;
   }
 
   getValidationMessage(pickup: string, dropoff: string): string {
@@ -777,6 +786,39 @@ trackByOfferId(index: number, offer: any): number {
       },
       error: (error) => {
         console.error('Error fetching reserved cities data:', error);
+      }
+    });
+
+    // Fetch airports for flight booking
+    this.apiService.getFullAiportList().subscribe({
+      next: (data) => {
+        console.log('Airport list data received:', data);
+        // Transform API data to City[] format for flights
+        // API returns array with objects containing AIRPORTCODE, NAME, CITY, CITYCODE, COUNTRY
+        if (Array.isArray(data)) {
+          this.flightAirports = data.map((item: any) => {
+            // Use CITY if available, otherwise use NAME as city name
+            const cityName = item.CITY || item.city || item.NAME || item.name || '';
+            const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
+            const country = item.COUNTRY || item.country || '';
+            
+            // Use just the city name for display
+            const displayName = cityName || item.NAME || item.name || '';
+            
+            return {
+              name: displayName,
+              code: airportCode || displayName.substring(0, 3).toUpperCase(),
+              state: country // Use country as state for airports
+            };
+          });
+          console.log('Flight airports populated:', this.flightAirports);
+          
+          // Set dynamic default airports
+          this.setDefaultAirports();
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching airport data:', error);
       }
     });
 
@@ -1683,12 +1725,14 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    // Use reservedCities for reserved cabs, sourceCities for shared cabs, otherwise use cities
+    // Use reservedCities for reserved cabs, sourceCities for shared cabs, flightAirports for flights, otherwise use cities
     let citiesToSearch: City[];
     if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
       citiesToSearch = this.reservedCities;
     } else if (target === 'shared-pickup' || target === 'shared-dropoff') {
       citiesToSearch = this.sourceCities;
+    } else if (target.startsWith('flight-from-') || target.startsWith('flight-to-')) {
+      citiesToSearch = this.flightAirports;
     } else {
       citiesToSearch = this.cities;
     }
@@ -1720,18 +1764,41 @@ trackByOfferId(index: number, offer: any): number {
         city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
       );
     }
+    
+    // For flights, exclude the airport selected in the other field of the same route
+    if (target.startsWith('flight-from-')) {
+      const routeIndex = parseInt(target.replace('flight-from-', ''));
+      if (this.flightRoutes[routeIndex]?.to) {
+        // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
+        const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].to);
+        filteredCities = filteredCities.filter(city => 
+          city.name.toLowerCase() !== selectedCityName.toLowerCase()
+        );
+      }
+    } else if (target.startsWith('flight-to-')) {
+      const routeIndex = parseInt(target.replace('flight-to-', ''));
+      if (this.flightRoutes[routeIndex]?.from) {
+        // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
+        const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].from);
+        filteredCities = filteredCities.filter(city => 
+          city.name.toLowerCase() !== selectedCityName.toLowerCase()
+        );
+      }
+    }
 
     // Show all matching cities
     this.activeSuggestions[target] = filteredCities;
   }
 
   showCitySuggestionsOnFocus(target: string) {
-    // Use reservedCities for reserved cabs, sourceCities for shared cabs, otherwise use cities
+    // Use reservedCities for reserved cabs, sourceCities for shared cabs, flightAirports for flights, otherwise use cities
     let citiesToShow: City[];
     if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
       citiesToShow = this.reservedCities;
     } else if (target === 'shared-pickup' || target === 'shared-dropoff') {
       citiesToShow = this.sourceCities;
+    } else if (target.startsWith('flight-from-') || target.startsWith('flight-to-')) {
+      citiesToShow = this.flightAirports;
     } else {
       citiesToShow = this.cities;
     }
@@ -1756,6 +1823,27 @@ trackByOfferId(index: number, offer: any): number {
       citiesToShow = citiesToShow.filter(city => 
         city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
       );
+    }
+    
+    // For flights, exclude the airport selected in the other field of the same route
+    if (target.startsWith('flight-from-')) {
+      const routeIndex = parseInt(target.replace('flight-from-', ''));
+      if (this.flightRoutes[routeIndex]?.to) {
+        // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
+        const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].to);
+        citiesToShow = citiesToShow.filter(city => 
+          city.name.toLowerCase() !== selectedCityName.toLowerCase()
+        );
+      }
+    } else if (target.startsWith('flight-to-')) {
+      const routeIndex = parseInt(target.replace('flight-to-', ''));
+      if (this.flightRoutes[routeIndex]?.from) {
+        // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
+        const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].from);
+        citiesToShow = citiesToShow.filter(city => 
+          city.name.toLowerCase() !== selectedCityName.toLowerCase()
+        );
+      }
     }
     
     // Show all cities when focusing on input
@@ -1942,10 +2030,15 @@ trackByOfferId(index: number, offer: any): number {
     const routeIndex = parseInt(target.split('-')[2]);
     const field = target.split('-')[1]; // 'from' or 'to'
     
+    // Format: "CityName (CODE)"
+    const displayValue = cityCode 
+      ? `${cityName} (${cityCode})`
+      : cityName;
+    
     if (field === 'from') {
-      this.flightRoutes[routeIndex].from = `${cityCode} - ${cityName}`;
+      this.flightRoutes[routeIndex].from = displayValue;
     } else {
-      this.flightRoutes[routeIndex].to = `${cityCode} - ${cityName}`;
+      this.flightRoutes[routeIndex].to = displayValue;
     }
 
     delete this.activeSuggestions[target];
@@ -2571,6 +2664,87 @@ trackByOfferId(index: number, offer: any): number {
         this.isLoadingStats = false;
       }
     });
+  }
+
+  /**
+   * Set dynamic default airports for flight booking
+   * Tries to find Delhi and Mumbai, otherwise uses first two airports
+   */
+  private setDefaultAirports(): void {
+    if (!this.flightAirports || this.flightAirports.length === 0) {
+      return;
+    }
+
+    // Try to find Delhi (DEL) and Mumbai (BOM) by code or name
+    const delhiAirport = this.flightAirports.find(airport => 
+      airport.code === 'DEL' || 
+      airport.name.toLowerCase().includes('delhi') ||
+      airport.name.toLowerCase().includes('indira gandhi')
+    );
+
+    const mumbaiAirport = this.flightAirports.find(airport => 
+      airport.code === 'BOM' || 
+      airport.name.toLowerCase().includes('mumbai') ||
+      airport.name.toLowerCase().includes('chhatrapati')
+    );
+
+    // Use found airports or fallback to first two airports
+    const defaultFrom = delhiAirport || this.flightAirports[0];
+    const defaultTo = mumbaiAirport || (this.flightAirports.length > 1 ? this.flightAirports[1] : this.flightAirports[0]);
+
+    // Format: "CityName (CODE)"
+    const defaultFromDisplay = defaultFrom.code 
+      ? `${defaultFrom.name} (${defaultFrom.code})`
+      : defaultFrom.name;
+    const defaultToDisplay = defaultTo.code 
+      ? `${defaultTo.name} (${defaultTo.code})`
+      : defaultTo.name;
+
+    // Always update flightRoutes with dynamic defaults
+    if (this.flightRoutes.length > 0) {
+      // Only update if still using static defaults or empty
+      if (!this.flightRoutes[0].from || this.flightRoutes[0].from === 'Delhi' || 
+          this.flightRoutes[0].from === 'Mumbai' ||
+          !this.flightRoutes[0].to || this.flightRoutes[0].to === 'Delhi' || 
+          this.flightRoutes[0].to === 'Mumbai') {
+        this.flightRoutes[0].from = defaultFromDisplay;
+        this.flightRoutes[0].to = defaultToDisplay;
+      }
+    }
+
+    // Always update formValues with dynamic defaults
+    if (!this.formValues.flightFrom || this.formValues.flightFrom === 'Delhi' || 
+        this.formValues.flightFrom === 'Mumbai' ||
+        !this.formValues.flightTo || this.formValues.flightTo === 'Delhi' || 
+        this.formValues.flightTo === 'Mumbai') {
+      this.formValues.flightFrom = defaultFromDisplay;
+      this.formValues.flightTo = defaultToDisplay;
+    }
+
+    console.log('Default airports set:', { from: defaultFromDisplay, to: defaultToDisplay });
+  }
+
+  /**
+   * Extract city name from display value
+   * Handles formats like "Delhi (DEL)" -> "Delhi" or "DEL - Delhi" -> "Delhi"
+   */
+  private extractCityNameFromDisplay(displayValue: string): string {
+    if (!displayValue) return '';
+    
+    // If format is "CityName (CODE)", extract just the city name
+    const matchWithParens = displayValue.match(/^([^(]+)\s*\(/);
+    if (matchWithParens) {
+      return matchWithParens[1].trim();
+    }
+    
+    // If format is "CODE - CityName", extract city name
+    const matchWithDash = displayValue.match(/-\s*(.+)$/);
+    if (matchWithDash) {
+      return matchWithDash[1].trim();
+    }
+    
+    // Otherwise, return as is
+    return displayValue.trim();
   }
 
 }

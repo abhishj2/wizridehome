@@ -713,7 +713,7 @@ h2{
     color: #212529;
     font-weight: 600;
     margin-bottom: 20px;
-    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .traveler-row {
@@ -732,12 +732,12 @@ h2{
     color: #212529;
     font-weight: 600;
     margin-bottom: 4px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .traveler-info p {
     color: #474747;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .counter {
@@ -757,7 +757,7 @@ small {
     border: 2px solid #e9ecef;
     background: darkcyan;
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -785,7 +785,7 @@ small {
 
 .counter-value {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 15px;
     min-width: 35px;
     text-align: center;
     color: #212529;
@@ -796,6 +796,14 @@ small {
     margin-top: 28px;
     padding-top: 28px;
     border-top: 1px solid #f8f9fa;
+}
+
+.class-selection h3,
+.class-selection h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 15px;
 }
 
 .class-options {
@@ -813,7 +821,7 @@ small {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 12px;
     position: relative;
 }
 
@@ -4605,7 +4613,7 @@ button.nav-tab.active img{
 
     .travelers-panel h3,
     .travelers-panel h4 {
-        font-size: 16px;
+        font-size: 14px;
         margin-bottom: 15px;
     }
 
@@ -4614,11 +4622,11 @@ button.nav-tab.active img{
     }
 
     .traveler-info h4 {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .traveler-info p {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .counter-btn {
@@ -4946,15 +4954,15 @@ button.nav-tab.active img{
     }
 
     .travelers-panel h3 {
-        font-size: 15px;
-    }
-
-    .traveler-info h4 {
         font-size: 13px;
     }
 
+    .traveler-info h4 {
+        font-size: 12px;
+    }
+
     .traveler-info p {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .counter-btn {

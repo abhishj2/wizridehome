@@ -336,7 +336,7 @@
                                             <i class="fas fa-plane-departure input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter departure city" [(ngModel)]="route.from"
+                                                placeholder="Enter departure city (e.g., Delhi DEL)" [(ngModel)]="route.from"
                                                 (focus)="showCitySuggestionsOnFocus('flight-from-' + i)"
                                                 (input)="showCitySuggestions(route.from, 'flight-from-' + i)">
                                         </div>
@@ -345,7 +345,7 @@
                                             <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
                                                 class="city-suggestion"
                                                 (click)="selectMultiCity(city.name, city.code, 'flight-from-' + i)">
-                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-name">{{city.name}} <span style="font-size: 0.85em; color: #6b7280; font-weight: 500;">({{city.code}})</span></span>
                                                 <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
                                                     {{city.state}}</div>
                                             </div>
@@ -366,7 +366,7 @@
                                             <i class="fas fa-plane-arrival input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter destination city" [(ngModel)]="route.to"
+                                                placeholder="Enter destination city (e.g., Mumbai BOM)" [(ngModel)]="route.to"
                                                 (focus)="showCitySuggestionsOnFocus('flight-to-' + i)"
                                                 (input)="showCitySuggestions(route.to, 'flight-to-' + i)">
                                         </div>
@@ -375,7 +375,7 @@
                                             <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
                                                 class="city-suggestion"
                                                 (click)="selectMultiCity(city.name, city.code, 'flight-to-' + i)">
-                                                <span class="city-name">{{city.name}}</span>
+                                                <span class="city-name">{{city.name}} <span style="font-size: 0.85em; color: #6b7280; font-weight: 500;">({{city.code}})</span></span>
                                                 <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
                                                     {{city.state}}</div>
                                             </div>
