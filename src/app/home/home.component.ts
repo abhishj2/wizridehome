@@ -11,12 +11,15 @@ import {
   HostListener
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { SeoService } from '../services/seo.service';
 import { WordpressService } from '../services/wordpress.service';
 import { ApiserviceService, SourceValue } from '../services/apiservice.service';
+import { FlightdataService } from '../services/flightdata.service';
+import { FlightData } from '../interface/flight-data';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
@@ -308,6 +311,7 @@ trackByOfferId(index: number, offer: any): number {
     return [...this.services, ...this.services, ...this.services];
   }
   private destroy$ = new Subject<void>();
+  private subscriptions: Subscription = new Subscription();
 
   // Tabs & State
   currentTab = 'shared-cabs';
@@ -329,6 +333,25 @@ trackByOfferId(index: number, offer: any): number {
       date: ''
     }
   ];
+
+  // TBO Token and IP for flight booking
+  tboTokenId: string | null = null;
+  ip: string = '';
+  loader: boolean = true;
+
+  // Calendar fare maps
+  calendarFareMap: Map<string, any> = new Map();
+  calendarFareMapReturn: Map<string, any> = new Map();
+  calendarFareFetched = false;
+  fullYearCalendarFare: any[] = [];
+
+  // Selected flight airports
+  selectedFromAirport: any = null;
+  selectedToAirport: any = null;
+  
+  // Selected flight airports as objects (matching working code)
+  selectedFrom: any = null;
+  selectedTo: any = null;
 
   // Popups
   isTravelersOpen = false;
@@ -728,10 +751,12 @@ trackByOfferId(index: number, offer: any): number {
     private seoService: SeoService,
     private wordpressService: WordpressService,
     private apiService: ApiserviceService,
+    public flightDataService: FlightdataService,
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -740,6 +765,27 @@ trackByOfferId(index: number, offer: any): number {
     
     // Set page title
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
+
+    // Fetch TBO Token for flight booking
+    this.subscriptions.add(
+      this.apiService.getTboToken().subscribe((val: any) => {
+        console.log('TBo Token', val);
+        if (val) {
+          this.loader = false;
+          this.tboTokenId = val['TokenId'];
+        } else {
+          this.loader = true;
+        }
+      })
+    );
+
+    // Fetch IP address
+    this.subscriptions.add(
+      this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
+        this.ip = res.ip;
+        console.log('nIp', this.ip);
+      })
+    );
 
     // Fetch source cities for shared cabs
     this.apiService.getSource().subscribe({
@@ -1918,10 +1964,16 @@ trackByOfferId(index: number, offer: any): number {
   selectCity(cityName: string, cityCode: string, target: string) {
     // Update form value
     if (target.includes('flight')) {
+      const displayValue = cityCode 
+        ? `${cityName} (${cityCode})`
+        : cityName;
+      
       if (target === 'flight-from') {
-        this.formValues.flightFrom = `${cityCode} - ${cityName}`;
+        this.formValues.flightFrom = displayValue;
+        this.onAirportSelected('from', displayValue);
       } else {
-        this.formValues.flightTo = `${cityCode} - ${cityName}`;
+        this.formValues.flightTo = displayValue;
+        this.onAirportSelected('to', displayValue);
       }
     } else {
       if (target === 'shared-pickup') {
@@ -2037,8 +2089,16 @@ trackByOfferId(index: number, offer: any): number {
     
     if (field === 'from') {
       this.flightRoutes[routeIndex].from = displayValue;
+      // Trigger calendar fare fetching for first route
+      if (routeIndex === 0) {
+        this.onAirportSelected('from', displayValue);
+      }
     } else {
       this.flightRoutes[routeIndex].to = displayValue;
+      // Trigger calendar fare fetching for first route
+      if (routeIndex === 0) {
+        this.onAirportSelected('to', displayValue);
+      }
     }
 
     delete this.activeSuggestions[target];
@@ -2238,13 +2298,167 @@ trackByOfferId(index: number, offer: any): number {
 
 
   searchFlights() {
-    // Validate date field
-    if (!this.formValues.flightDeparture || !this.formValues.flightDeparture.trim()) {
-      alert('Please select a departure date first.');
+    const errors: string[] = [];
+
+    // Get selected airports from flightRoutes or formValues
+    const fromValue = this.tripType === 'multi-city' 
+      ? this.flightRoutes[0]?.from 
+      : (this.flightRoutes[0]?.from || this.formValues.flightFrom);
+    const toValue = this.tripType === 'multi-city' 
+      ? this.flightRoutes[0]?.to 
+      : (this.flightRoutes[0]?.to || this.formValues.flightTo);
+
+    // Extract airport codes
+    const fromCode = this.extractAirportCode(fromValue);
+    const toCode = this.extractAirportCode(toValue);
+
+    if (!fromCode || !toCode) {
+      errors.push("Departure and Destination airports must be selected.");
+    }
+
+    if (fromCode === toCode) {
+      errors.push("Departure and Destination airports cannot be the same.");
+    }
+
+    const departureDate = this.tripType === 'multi-city' 
+      ? this.flightRoutes[0]?.date 
+      : (this.flightRoutes[0]?.date || this.formValues.flightDeparture);
+
+    if (!departureDate) {
+      errors.push("Please select a departure date.");
+    }
+
+    const today = new Date();
+    const depDate = departureDate ? new Date(departureDate) : null;
+    const retDate = this.tripType === 'round-trip' && this.formValues.flightReturn 
+      ? new Date(this.formValues.flightReturn) 
+      : null;
+
+    if (depDate && depDate < this.stripTime(today)) {
+      errors.push("Departure date cannot be in the past.");
+    }
+
+    if (this.tripType === 'round-trip') {
+      if (!this.formValues.flightReturn) {
+        errors.push("Please select a return date.");
+      } else if (retDate && retDate < this.stripTime(today)) {
+        errors.push("Return date cannot be in the past.");
+      } else if (retDate && depDate && retDate < depDate) {
+        errors.push("Return date cannot be before departure date.");
+      }
+    }
+
+    if (errors.length) {
+      Swal.fire({
+        title: 'Sorry!',
+        html: errors.join('<br>'),
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
       return;
     }
+
+    // Validate that TBO token and IP address are available
+    if (!this.tboTokenId || !this.ip) {
+      Swal.fire({
+        title: 'Please Wait',
+        html: 'We are preparing your search. Please try again in a moment.',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+        timer: 3000
+      });
+      
+      // Try to fetch token if missing
+      if (!this.tboTokenId) {
+        this.subscriptions.add(
+          this.apiService.getTboToken().subscribe((val: any) => {
+            console.log('TBo Token', val);
+            if (val && val['TokenId']) {
+              this.tboTokenId = val['TokenId'];
+              // Retry search after token is fetched
+              setTimeout(() => {
+                this.searchFlights();
+              }, 500);
+            }
+          })
+        );
+      }
+      
+      // Try to fetch IP if missing
+      if (!this.ip) {
+        this.subscriptions.add(
+          this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
+            this.ip = res.ip;
+            console.log('nIp', this.ip);
+            // Retry search after IP is fetched
+            if (this.tboTokenId) {
+              setTimeout(() => {
+                this.searchFlights();
+              }, 500);
+            }
+          })
+        );
+      }
+      
+      return;
+    }
+
+    // Find airport objects from flightAirports list using already extracted codes
+    const fromAirport = this.flightAirports.find(a => a.code === fromCode);
+    const toAirport = this.flightAirports.find(a => a.code === toCode);
     
-    this.openPhonePopup('flights');
+    // Set selectedFrom and selectedTo as objects (matching working code)
+    this.selectedFrom = fromAirport ? {
+      name: fromAirport.name,
+      code: fromAirport.code,
+      airport: fromAirport.name // Using name as airport for now
+    } : null;
+    
+    this.selectedTo = toAirport ? {
+      name: toAirport.name,
+      code: toAirport.code,
+      airport: toAirport.name // Using name as airport for now
+    } : null;
+
+    const returnDate = this.tripType === 'round-trip' ? this.formValues.flightReturn : null;
+
+    // Map tripType to match working code format
+    const tripTypeMapping: { [key: string]: string } = {
+      'one-way': 'oneway',
+      'round-trip': 'round',
+      'multi-city': 'multi'
+    };
+    const mappedTripType = tripTypeMapping[this.tripType] || 'oneway';
+
+    // Store flight data using flightDataService (matching working code)
+    this.flightDataService.setStringValue({
+      tboToken: this.tboTokenId,
+      ipAddress: this.ip,
+      tripType: mappedTripType,
+      fromCity: this.selectedFrom?.name || '',
+      fromAirport: this.selectedFrom?.airport || '',
+      fromAirportCode: this.selectedFrom?.code || '',
+      toCity: this.selectedTo?.name || '',
+      toAirport: this.selectedTo?.airport || '',
+      toAirportCode: this.selectedTo?.code || '',
+      departureDate: departureDate,
+      returnDate: returnDate,
+      fareType: 'regular',
+      adults: this.counts.adults,
+      children: this.counts.children,
+      infants: this.counts.infants,
+      travelClass: this.selectedClass,
+      calendarFareMap: Object.fromEntries(this.calendarFareMap),
+      calendarFareMapReturn: Object.fromEntries(this.calendarFareMapReturn),
+      multiCityRoutes: this.tripType === 'multi-city' ? this.flightRoutes.map(route => ({
+        from: route.from,
+        to: route.to,
+        date: route.date
+      })) : []
+    } as FlightData);
+
+    // Navigate to flight list page using path parameter (matching route definition)
+    this.router.navigate(['flightlist', 'FLIGHT']);
   }
 
   searchCabs(type: 'shared' | 'reserved') {
@@ -2745,6 +2959,242 @@ trackByOfferId(index: number, offer: any): number {
     
     // Otherwise, return as is
     return displayValue.trim();
+  }
+
+  /**
+   * Extract airport code from display value
+   * Handles formats like "Delhi (DEL)" -> "DEL" or "DEL - Delhi" -> "DEL"
+   */
+  private extractAirportCode(displayValue: string): string {
+    if (!displayValue) return '';
+    
+    // If format is "CityName (CODE)", extract the code
+    const matchWithParens = displayValue.match(/\(([^)]+)\)/);
+    if (matchWithParens) {
+      return matchWithParens[1].trim();
+    }
+    
+    // If format is "CODE - CityName", extract code
+    const matchWithDash = displayValue.match(/^([^-]+)\s*-/);
+    if (matchWithDash) {
+      return matchWithDash[1].trim();
+    }
+    
+    // Otherwise, try to find in flightAirports
+    const cityName = this.extractCityNameFromDisplay(displayValue);
+    const airport = this.flightAirports.find(a => 
+      a.name.toLowerCase() === cityName.toLowerCase()
+    );
+    return airport ? airport.code : '';
+  }
+
+  /**
+   * Strip time from date
+   */
+  private stripTime(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  /**
+   * Store flight data for navigation to flightlist page
+   */
+  private storeFlightDataForNavigation(): void {
+    const fromValue = this.tripType === 'multi-city' 
+      ? this.flightRoutes[0]?.from 
+      : (this.flightRoutes[0]?.from || this.formValues.flightFrom);
+    const toValue = this.tripType === 'multi-city' 
+      ? this.flightRoutes[0]?.to 
+      : (this.flightRoutes[0]?.to || this.formValues.flightTo);
+
+    const fromCode = this.extractAirportCode(fromValue);
+    const toCode = this.extractAirportCode(toValue);
+    const fromCity = this.extractCityNameFromDisplay(fromValue);
+    const toCity = this.extractCityNameFromDisplay(toValue);
+
+    // Find airport details
+    const fromAirport = this.flightAirports.find(a => a.code === fromCode);
+    const toAirport = this.flightAirports.find(a => a.code === toCode);
+
+    const flightData = {
+      tboToken: this.tboTokenId,
+      ipAddress: this.ip,
+      tripType: this.tripType === 'one-way' ? 'oneway' : this.tripType === 'round-trip' ? 'round' : 'multi',
+      fromCity: fromCity || '',
+      fromAirport: fromAirport?.name || '',
+      fromAirportCode: fromCode || '',
+      toCity: toCity || '',
+      toAirport: toAirport?.name || '',
+      toAirportCode: toCode || '',
+      departureDate: this.tripType === 'multi-city' 
+        ? this.flightRoutes[0]?.date 
+        : (this.flightRoutes[0]?.date || this.formValues.flightDeparture),
+      returnDate: this.tripType === 'round-trip' ? this.formValues.flightReturn : null,
+      fareType: 'regular', // Default fare type
+      adults: this.counts.adults,
+      children: this.counts.children,
+      infants: this.counts.infants,
+      travelClass: this.selectedClass,
+      calendarFareMap: Object.fromEntries(this.calendarFareMap),
+      calendarFareMapReturn: Object.fromEntries(this.calendarFareMapReturn),
+      multiCityRoutes: this.tripType === 'multi-city' ? this.flightRoutes.map(route => ({
+        from: route.from,
+        to: route.to,
+        date: route.date
+      })) : []
+    };
+
+    // Store in localStorage for flightlist component
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('flightSearchData', JSON.stringify(flightData));
+    }
+
+    console.log('Flight data stored for navigation:', flightData);
+    console.log('TBO Token being stored:', flightData.tboToken);
+    console.log('IP Address being stored:', flightData.ipAddress);
+    
+    // Validate critical data before storing
+    if (!flightData.tboToken) {
+      console.error('WARNING: TBO Token is null/undefined when storing flight data!');
+    }
+    if (!flightData.ipAddress) {
+      console.error('WARNING: IP Address is missing when storing flight data!');
+    }
+  }
+
+  /**
+   * Fetch calendar fare for full year
+   */
+  fetchFullYearCalendarFare(direction: 'departure' | 'return' = 'departure'): void {
+    // Use selectedFrom/selectedTo objects (matching working code)
+    if (!this.selectedFrom || !this.selectedTo || !this.tboTokenId || !this.ip) {
+      return;
+    }
+
+    const fromCode = direction === 'departure' 
+      ? this.selectedFrom.code 
+      : this.selectedTo.code;
+    const toCode = direction === 'departure' 
+      ? this.selectedTo.code 
+      : this.selectedFrom.code;
+
+    if (!fromCode || !toCode) {
+      return;
+    }
+
+    const mapToUse = direction === 'departure' ? this.calendarFareMap : this.calendarFareMapReturn;
+    mapToUse.clear();
+
+    const today = new Date();
+    const startMonth = today.getMonth();
+    const startYear = today.getFullYear();
+    const fetchPromises = [];
+
+    for (let i = 0; i < 12; i++) {
+      const start = i === 0 ? new Date(today) : new Date(startYear, startMonth + i, 1);
+      const end = this.getMonthEndDate(new Date(startYear, startMonth + i, 1));
+
+      const startDate = this.formatToISO(start);
+      const endDate = this.formatToISO(end);
+
+      const promise = this.apiService
+        .getCalendarFare(this.ip, this.tboTokenId, 'oneway', fromCode, toCode, 'all', startDate, endDate)
+        .toPromise()
+        .then((res: any) => {
+          console.log("values of calendar", res);
+          const results = res?.Response?.SearchResults || [];
+
+          results.forEach((fareItem: any) => {
+            const raw = fareItem.DepartureDate;
+            const istDate = new Date(new Date(raw).getTime() + 5.5 * 60 * 60 * 1000);
+            const iso = this.formatToISO(istDate);
+
+            mapToUse.set(iso, {
+              date: iso,
+              price: fareItem.Fare,
+              airline: fareItem.AirlineName,
+              isLowest: fareItem.IsLowestFareOfMonth
+            });
+          });
+        });
+
+      fetchPromises.push(promise);
+    }
+
+    Promise.all(fetchPromises).then(() => {
+      if (direction === 'departure') {
+        this.calendarFareFetched = true;
+      }
+      // Calendar fare fetched successfully
+      console.log('Calendar fare fetched for', direction);
+    });
+  }
+
+  /**
+   * Format date to ISO string
+   */
+  private formatToISO(date: Date): string {
+    const istOffset = 5.5 * 60; // in minutes
+    const istTime = new Date(date.getTime() + istOffset * 60000);
+    const year = istTime.getUTCFullYear();
+    const month = (istTime.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = istTime.getUTCDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Get month end date
+   */
+  private getMonthEndDate(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  }
+
+  /**
+   * Handle airport selection for calendar fare fetching
+   * Matches working code's selectFrom/selectTo methods
+   */
+  onAirportSelected(type: 'from' | 'to', airportValue: string): void {
+    // Extract airport code from display value
+    const airportCode = this.extractAirportCode(airportValue);
+    
+    // Find airport object from flightAirports list
+    const airport = this.flightAirports.find(a => a.code === airportCode);
+    
+    if (airport) {
+      const airportObj = {
+        name: airport.name,
+        code: airport.code,
+        airport: airport.name // Using name as airport for now
+      };
+      
+      if (type === 'from') {
+        this.selectedFrom = airportObj;
+        this.selectedFromAirport = airportValue;
+      } else {
+        this.selectedTo = airportObj;
+        this.selectedToAirport = airportValue;
+      }
+    } else {
+      // Fallback: set string values if airport not found
+      if (type === 'from') {
+        this.selectedFromAirport = airportValue;
+      } else {
+        this.selectedToAirport = airportValue;
+      }
+    }
+
+    // Clear calendar fare maps when airports change (matching working code)
+    this.calendarFareFetched = false;
+    this.fullYearCalendarFare = [];
+    this.calendarFareMap.clear();
+    this.calendarFareMapReturn.clear();
+
+    // Fetch calendar fare if both airports are selected (matching working code)
+    if (this.selectedFrom && this.selectedTo) {
+      this.fetchFullYearCalendarFare('departure');
+      if (this.tripType === 'round-trip') {
+        this.fetchFullYearCalendarFare('return');
+      }
+    }
   }
 
 }

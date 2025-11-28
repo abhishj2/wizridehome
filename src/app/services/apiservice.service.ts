@@ -522,436 +522,447 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
 
-    // generateFlighToken()
-getFlightDetailsOneWay(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
-  journeyType : any, sourceAirport : any, destinationAirport : any, cabinClass : any, departureDate : any, fareType : any
-){      
+
+  getTboToken(){
     const data = {
-      page: 'flightsearchtbo',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      adultcount : adultcount,
-      childcount : childcount,
-      infantcount : infantcount,
-      journeyType : journeyType,
-      sourceAirport : sourceAirport,
-      destinationAirport : destinationAirport,        
-      cabinClass : cabinClass,
-      departureDate : departureDate,
-      resultFareType : fareType,
+      page: 'authenticatetbo',
       // env : 'test'
-      env : 'prod'
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-getFlightDetailsBothWay(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
-  journeyType : any, sourceAirport : any, destinationAirport : any, cabinClass : any, departureDate : any,
-  returnDate : any, fareType : any
-){      
-    const data = {
-      page: 'flightsearchtboreturnflight',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      adultcount : adultcount,
-      childcount : childcount,
-      infantcount : infantcount,
-      journeyType : journeyType,
-      sourceAirport : sourceAirport,
-      destinationAirport : destinationAirport,        
-      cabinClass : cabinClass,
-      departureDate : departureDate,
-      returnDate : returnDate,
-      resultFareType : fareType,
-      // env : 'test'
-      env : 'prod'
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-getFareRule(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
-    const data = {
-      page: 'fareruletbo',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      traceid : traceid,
-      resultindex : resultindex,
-      // env : 'test'
-      env : 'prod'
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-getFareQuote(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
-    const data = {
-      page: 'farequotetbo',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      traceid : traceid,
-      resultindex : resultindex,
-        // env : 'test'
-        env : 'prod'
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-getSSR(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
-    const data = {
-      page: 'ssrtbo',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      traceid : traceid,
-      resultindex : resultindex,
-          // env : 'test'
-          env : 'prod'
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-getCalendarFare(enduserip : any, tokenid : any, journeyType : any, sourceAirport : any, destinationAirport : any, 
-  cabinClass : any, departureDate : any, extendedDate : any
-){
-  const data = {
-    page: 'getcalendarfare',
-    enduserip : enduserip,
-    tokenid : tokenid,
-    journeyType : journeyType,
-    sourceAirport : sourceAirport,
-    destinationAirport : destinationAirport,
-    cabinClass : cabinClass,
-    departureDate : departureDate,
-    extendedDate : extendedDate,
-          // env : 'test'
-          env : 'prod'
-  }    
-
-  console.log("Data for Sell Your Car",data)
-  const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-  return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-bookTicketLCC(enduserip : any, tokenid : any, traceid : any, resultindex : any, payload : any){
-  const data = {
-    page: 'bookticketlcc',
-    enduserip : enduserip,
-    tokenid : tokenid,
-    traceid : traceid,
-    resultindex : resultindex,    
-    payload : payload,
-          // env : 'test'
-          env : 'prod'
-  }    
-  console.log("Data for Sell Your Car",data)
-  console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-  const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-  return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-bookTicketNonLCC(enduserip : any, tokenid : any, traceid : any, resultindex : any, payload : any){
-  const data = {
-    page: 'bookticketnonlcc',
-    enduserip : enduserip,
-    tokenid : tokenid,
-    traceid : traceid,
-    resultindex : resultindex,    
-    payload : payload,
-          // env : 'test'
-          env : 'prod'
-  }    
-
-  console.log("Data for Sell Your Car",data)
-  console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-  const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-  return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-finalTicketNonLCC(enduserip : any, tokenid : any, traceid : any, PNR : any, bookingid : any,passport : any ){
-  const data = {
-    page: 'ticketnonlcc',
-    enduserip : enduserip,
-    tokenid : tokenid,
-    traceid : traceid,
-    PNR : PNR,    
-    bookingid : bookingid,
-    passport : passport,
-          // env : 'test'
-          env : 'prod'
-  }    
-
-  console.log("Data for Sell Your Car",data)
-  console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-  const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-  return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-}
-
-
-
- // CASHFREE PAYMENTS INTEGRATION 
-
-//  sendFlightPayment(ORDERID:string,
-//   APPID : any, passengerFname : any, passengerLname : any, passengerEmail : any, passengerContact : any, orderAmount : any,
-//   payload : any)
-//   {    
-//     const data = {
-//       page: 'wsflightpaymentnew',
-//       ORDERID: ORDERID,
-//       APPID : APPID,    
-//       passengerFname : passengerFname,
-//       passengerLname : passengerLname,
-//       passengerEmail : passengerEmail,
-//       passengerContact : passengerContact,
-//       orderAmount : orderAmount,
-//       payload : payload,
-//       dev : 'test',
-//       // dev : 'prod',
-//       type : 'FLIGHTWEB'
-//     }
-//     console.log("value to temp details",data)    
-//     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-//     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-//   }
-
-  getFullAiportList(){
-    const data = {
-      page: 'getallairports',      
+      env : 'test'
+      
     }    
   
     console.log("Data for Sell Your Car",data)
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
-
-
-  getFlightBookingDetails(tokenid : any, enduserip : any, pnr : any, firstName : any ){
-    const data = {
-      page: 'gettbobookingdetails',
-      enduserip : enduserip,
-      tokenid : tokenid,
-      PNR : pnr,
-      firstName : firstName,
-      // env : 'test'
-          env : 'prod'    
-    }    
-
-    console.log("Data for Sell Your Car",data)
-    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  // generateFlighToken()
+  getFlightDetailsOneWay(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
+    journeyType : any, sourceAirport : any, destinationAirport : any, cabinClass : any, departureDate : any, fareType : any
+  ){      
+      const data = {
+        page: 'flightsearchtbo',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        adultcount : adultcount,
+        childcount : childcount,
+        infantcount : infantcount,
+        journeyType : journeyType,
+        sourceAirport : sourceAirport,
+        destinationAirport : destinationAirport,        
+        cabinClass : cabinClass,
+        departureDate : departureDate,
+        resultFareType : fareType,
+        // env : 'test'
+        env : 'test'
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
-
-  flightSuccess(APPID : any, ORDERID : any, TRIPTYPE : any, ISUNIFIEDSEGMENT : any,
-    CUSTOMERNAME : any, CUSTOMEREMAIL : any, CUSTOMERDIALCOUNTRYCODE : any,
-    CUSTOMERPHONE : any, 
-    SOURCE : any, DESTINATION : any, ONWARDDATE : any, RETURNDATE : any,
-
-    
-    ONWARDPAYLOAD : any, RETURNPAYLOAD : any, ONWARDAMOUNT : any, 
-    RETURNAMOUNT : any, TOTALAMOUNT : any, ISLCC : any, ISLCCRETURN : any
+  
+  
+  getFlightDetailsBothWay(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
+    journeyType : any, sourceAirport : any, destinationAirport : any, cabinClass : any, departureDate : any,
+    returnDate : any, fareType : any
+  ){      
+      const data = {
+        page: 'flightsearchtboreturnflight',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        adultcount : adultcount,
+        childcount : childcount,
+        infantcount : infantcount,
+        journeyType : journeyType,
+        sourceAirport : sourceAirport,
+        destinationAirport : destinationAirport,        
+        cabinClass : cabinClass,
+        departureDate : departureDate,
+        returnDate : returnDate,
+        resultFareType : fareType,
+        // env : 'test'
+        env : 'test'
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  getFareRule(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
+      const data = {
+        page: 'fareruletbo',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        traceid : traceid,
+        resultindex : resultindex,
+        // env : 'test'
+        env : 'test'
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  getFareQuote(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
+      const data = {
+        page: 'farequotetbo',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        traceid : traceid,
+        resultindex : resultindex,
+          // env : 'test'
+          env : 'test'
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  getSSR(enduserip : any, tokenid : any, traceid : any, resultindex : any){      
+      const data = {
+        page: 'ssrtbo',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        traceid : traceid,
+        resultindex : resultindex,
+            // env : 'test'
+            env : 'test'
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  getCalendarFare(enduserip : any, tokenid : any, journeyType : any, sourceAirport : any, destinationAirport : any, 
+    cabinClass : any, departureDate : any, extendedDate : any
   ){
     const data = {
-      page: 'flpaymentnew',
-      APPID : APPID,    
-      ORDERID : ORDERID,
-      TRIPTYPE : TRIPTYPE,
-      ISUNIFIEDSEGMENT : ISUNIFIEDSEGMENT,
-      CUSTOMERNAME : CUSTOMERNAME,
-      CUSTOMEREMAIL : CUSTOMEREMAIL,
-      CUSTOMERDIALCOUNTRYCODE : CUSTOMERDIALCOUNTRYCODE,
-      CUSTOMERPHONE : CUSTOMERPHONE,
-      SOURCE : SOURCE,
-      DESTINATION : DESTINATION,
-      ONWARDDATE : ONWARDDATE,
-      RETURNDATE : RETURNDATE,
-      ONWARDPAYLOAD : ONWARDPAYLOAD,
-      RETURNPAYLOAD : RETURNPAYLOAD,
-      ONWARDAMOUNT : ONWARDAMOUNT,
-      RETURNAMOUNT : RETURNAMOUNT,
-      TOTALAMOUNT : TOTALAMOUNT,      
-      ISLCC : ISLCC, 
-      ISLCCRETURN : ISLCCRETURN,
-      //  dev : 'test',
-      dev : 'prod',
-      type : 'FLIGHT'   
-
+      page: 'getcalendarfare',
+      enduserip : enduserip,
+      tokenid : tokenid,
+      journeyType : journeyType,
+      sourceAirport : sourceAirport,
+      destinationAirport : destinationAirport,
+      cabinClass : cabinClass,
+      departureDate : departureDate,
+      extendedDate : extendedDate,
+            // env : 'test'
+            env : 'test'
     }    
-
-    console.log("Payment Data",data)
+  
+    console.log("Data for Sell Your Car",data)
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
-
-  checkFlightPaymentTbo(orderId : any,orderAmount : any){
+  
+  
+  bookTicketLCC(enduserip : any, tokenid : any, traceid : any, resultindex : any, payload : any){
     const data = {
-      page: 'checktboflightsignature',         
-      ORDERID : orderId,      
-      TOTALAMOUNT : orderAmount,      
-      //  dev : 'test',
-      dev : 'prod',
+      page: 'bookticketlcc',
+      enduserip : enduserip,
+      tokenid : tokenid,
+      traceid : traceid,
+      resultindex : resultindex,    
+      payload : payload,
+            // env : 'test'
+            env : 'test'
     }    
-
-    console.log("Payment Data",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-  }
-
-  flightTicketInsert(ORDERID : any,ONWARDFLIGHTPNR : any,ONWARDBOOKINGID : any,
-    RETURNFLIGHTPNR : any,RETURNBOOKINGID : any,
-    ONWARDORDERDETAILS : any, RETURNORDERDETAILS : any, 
-    PASSENGERCOUNT : any, ONWARDTOTALAMOUNT : any,  RETURNTOTALAMOUNT : any,   
-    TOTALAMOUNT: any,
-    APPID : any, NAME : any,EMAIL : any,COUNTRYCODE : any, PHONE :any,
-    ){
-    const data = {
-      page: 'flightgenerateticket',         
-      ORDERID : ORDERID,            
-      ONWARDFLIGHTPNR : ONWARDFLIGHTPNR,
-      ONWARDBOOKINGID : ONWARDBOOKINGID,
-      RETURNFLIGHTPNR : RETURNFLIGHTPNR,
-      RETURNBOOKINGID : RETURNBOOKINGID,
-      ONWARDORDERDETAILS : ONWARDORDERDETAILS,
-      RETURNORDERDETAILS : RETURNORDERDETAILS,
-      PASSENGERCOUNT : PASSENGERCOUNT,
-      ONWARDTOTALAMOUNT : ONWARDTOTALAMOUNT,
-      RETURNTOTALAMOUNT : RETURNTOTALAMOUNT,
-      TOTALAMOUNT : TOTALAMOUNT,
-      APPID : APPID,
-      NAME : NAME,
-      EMAIL : EMAIL,
-      COUNTRYCODE : COUNTRYCODE,
-      PHONE : PHONE          
-    }    
-
-    console.log("Payment Data",data)
-    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-  }
-
-  insertNonLCCBookingDetails(finalPayload : any ){
-    const data = {
-      page: 'insertnonlccbookingdetail',
-      enduserip : finalPayload.enduserip,
-      tokenid : finalPayload.tokenid,
-      traceid : finalPayload.traceid,
-      PNR : finalPayload.PNR,    
-      bookingid : finalPayload.bookingid,
-      passport : finalPayload.passport,
-      errormessage : finalPayload.errormessage,
-      wizzpnr : finalPayload.wizzpnr
-    }    
-
     console.log("Data for Sell Your Car",data)
     console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
-
-
-  getFlightDetailsMultiCity(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
-      segments : any, fareType : any
+  
+  
+  bookTicketNonLCC(enduserip : any, tokenid : any, traceid : any, resultindex : any, payload : any){
+    const data = {
+      page: 'bookticketnonlcc',
+      enduserip : enduserip,
+      tokenid : tokenid,
+      traceid : traceid,
+      resultindex : resultindex,    
+      payload : payload,
+            // env : 'test'
+            env : 'test'
+    }    
+  
+    console.log("Data for Sell Your Car",data)
+    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  finalTicketNonLCC(enduserip : any, tokenid : any, traceid : any, PNR : any, bookingid : any,passport : any ){
+    const data = {
+      page: 'ticketnonlcc',
+      enduserip : enduserip,
+      tokenid : tokenid,
+      traceid : traceid,
+      PNR : PNR,    
+      bookingid : bookingid,
+      passport : passport,
+            // env : 'test'
+            env : 'test'
+    }    
+  
+    console.log("Data for Sell Your Car",data)
+    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
+  
+  
+  
+   // CASHFREE PAYMENTS INTEGRATION 
+  
+  //  sendFlightPayment(ORDERID:string,
+  //   APPID : any, passengerFname : any, passengerLname : any, passengerEmail : any, passengerContact : any, orderAmount : any,
+  //   payload : any)
+  //   {    
+  //     const data = {
+  //       page: 'wsflightpaymentnew',
+  //       ORDERID: ORDERID,
+  //       APPID : APPID,    
+  //       passengerFname : passengerFname,
+  //       passengerLname : passengerLname,
+  //       passengerEmail : passengerEmail,
+  //       passengerContact : passengerContact,
+  //       orderAmount : orderAmount,
+  //       payload : payload,
+  //       dev : 'test',
+  //       // dev : 'prod',
+  //       type : 'FLIGHTWEB'
+  //     }
+  //     console.log("value to temp details",data)    
+  //     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+  //     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  //   }
+  
+    getFullAiportList(){
+      const data = {
+        page: 'getallairports',      
+      }    
+    
+      console.log("Data for Sell Your Car",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+  
+    getFlightBookingDetails(tokenid : any, enduserip : any, pnr : any, firstName : any ){
+      const data = {
+        page: 'gettbobookingdetails',
+        enduserip : enduserip,
+        tokenid : tokenid,
+        PNR : pnr,
+        firstName : firstName,
+        // env : 'test'
+            env : 'test'    
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+    flightSuccess(APPID : any, ORDERID : any, TRIPTYPE : any, ISUNIFIEDSEGMENT : any,
+      CUSTOMERNAME : any, CUSTOMEREMAIL : any, CUSTOMERDIALCOUNTRYCODE : any,
+      CUSTOMERPHONE : any, 
+      SOURCE : any, DESTINATION : any, ONWARDDATE : any, RETURNDATE : any,
+  
+      
+      ONWARDPAYLOAD : any, RETURNPAYLOAD : any, ONWARDAMOUNT : any, 
+      RETURNAMOUNT : any, TOTALAMOUNT : any, ISLCC : any, ISLCCRETURN : any
+    ){
+      const data = {
+        page: 'flpaymentnew',
+        APPID : APPID,    
+        ORDERID : ORDERID,
+        TRIPTYPE : TRIPTYPE,
+        ISUNIFIEDSEGMENT : ISUNIFIEDSEGMENT,
+        CUSTOMERNAME : CUSTOMERNAME,
+        CUSTOMEREMAIL : CUSTOMEREMAIL,
+        CUSTOMERDIALCOUNTRYCODE : CUSTOMERDIALCOUNTRYCODE,
+        CUSTOMERPHONE : CUSTOMERPHONE,
+        SOURCE : SOURCE,
+        DESTINATION : DESTINATION,
+        ONWARDDATE : ONWARDDATE,
+        RETURNDATE : RETURNDATE,
+        ONWARDPAYLOAD : ONWARDPAYLOAD,
+        RETURNPAYLOAD : RETURNPAYLOAD,
+        ONWARDAMOUNT : ONWARDAMOUNT,
+        RETURNAMOUNT : RETURNAMOUNT,
+        TOTALAMOUNT : TOTALAMOUNT,      
+        ISLCC : ISLCC, 
+        ISLCCRETURN : ISLCCRETURN,
+        //  dev : 'test',
+        dev : 'test',
+        type : 'FLIGHT'   
+  
+      }    
+  
+      console.log("Payment Data",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+    checkFlightPaymentTbo(orderId : any,orderAmount : any){
+      const data = {
+        page: 'checktboflightsignature',         
+        ORDERID : orderId,      
+        TOTALAMOUNT : orderAmount,      
+        //  dev : 'test',
+        dev : 'test',
+      }    
+  
+      console.log("Payment Data",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+    flightTicketInsert(ORDERID : any,ONWARDFLIGHTPNR : any,ONWARDBOOKINGID : any,
+      RETURNFLIGHTPNR : any,RETURNBOOKINGID : any,
+      ONWARDORDERDETAILS : any, RETURNORDERDETAILS : any, 
+      PASSENGERCOUNT : any, ONWARDTOTALAMOUNT : any,  RETURNTOTALAMOUNT : any,   
+      TOTALAMOUNT: any,
+      APPID : any, NAME : any,EMAIL : any,COUNTRYCODE : any, PHONE :any,
+      ){
+      const data = {
+        page: 'flightgenerateticket',         
+        ORDERID : ORDERID,            
+        ONWARDFLIGHTPNR : ONWARDFLIGHTPNR,
+        ONWARDBOOKINGID : ONWARDBOOKINGID,
+        RETURNFLIGHTPNR : RETURNFLIGHTPNR,
+        RETURNBOOKINGID : RETURNBOOKINGID,
+        ONWARDORDERDETAILS : ONWARDORDERDETAILS,
+        RETURNORDERDETAILS : RETURNORDERDETAILS,
+        PASSENGERCOUNT : PASSENGERCOUNT,
+        ONWARDTOTALAMOUNT : ONWARDTOTALAMOUNT,
+        RETURNTOTALAMOUNT : RETURNTOTALAMOUNT,
+        TOTALAMOUNT : TOTALAMOUNT,
+        APPID : APPID,
+        NAME : NAME,
+        EMAIL : EMAIL,
+        COUNTRYCODE : COUNTRYCODE,
+        PHONE : PHONE          
+      }    
+  
+      console.log("Payment Data",data)
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+    insertNonLCCBookingDetails(finalPayload : any ){
+      const data = {
+        page: 'insertnonlccbookingdetail',
+        enduserip : finalPayload.enduserip,
+        tokenid : finalPayload.tokenid,
+        traceid : finalPayload.traceid,
+        PNR : finalPayload.PNR,    
+        bookingid : finalPayload.bookingid,
+        passport : finalPayload.passport,
+        errormessage : finalPayload.errormessage,
+        wizzpnr : finalPayload.wizzpnr
+      }    
+  
+      console.log("Data for Sell Your Car",data)
+      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+  
+    getFlightDetailsMultiCity(enduserip : any, tokenid : any, adultcount : any, childcount : any, infantcount : any, 
+        segments : any, fareType : any
+      ){      
+          const data = {
+            page: 'flightsearchtbomulticityflight',
+            enduserip : enduserip,
+            tokenid : tokenid,
+            adultcount : adultcount,
+            childcount : childcount,
+            infantcount : infantcount,
+            segments : segments,
+            resultFareType : fareType,
+            // env : 'test'
+            env : 'test'
+          }    
+    
+          console.log("Data for Sell Your Car",data)
+          const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+          return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+      }
+  
+  
+    getTempFlightDetails(pnr : any
     ){      
         const data = {
-          page: 'flightsearchtbomulticityflight',
-          enduserip : enduserip,
-          tokenid : tokenid,
-          adultcount : adultcount,
-          childcount : childcount,
-          infantcount : infantcount,
-          segments : segments,
-          resultFareType : fareType,
-          // env : 'test'
-          env : 'prod'
+          page: 'getflightdetailtempdetails',
+          pnr : pnr
         }    
   
         console.log("Data for Sell Your Car",data)
         const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
         return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
+  
+  
+     insertWizzblackValidRequest(source : any, destination : any, requestDate : any, requestTime : any, contact : any ){
+        const data = {
+          page: 'wizzblackvalidrequest',
+          source : source,
+          destination : destination,
+          requestDate : requestDate,
+          requestTime : requestTime,
+          contact : contact
+        }    
+  
+        console.log("Data for Sell Your Car",data)
+        console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+        const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+        return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
+  
+  
+  
+    createFlightRequestData(fromAirport : any, fromCode : any, toAirport : any, toCode : any, tripType : any,
+      travelClass : any, noOfAdults : any, noOfChildren : any, noOfInfants : any, multiCityArray : any,
+      departureDate : any, returnDate : any, contact : any
+     ){
+        const data = {
+          page: 'flightrequest',
+          fromAirport : fromAirport,
+          fromCode : fromCode,
+          toAirport : toAirport,
+          toCode : toCode,
+          tripType : 'Website : '+tripType,
+          travelClass : travelClass,
+          noOfAdults : noOfAdults,
+          noOfChildren : noOfChildren,
+          noOfInfants : noOfInfants,
+          multiCityArray : multiCityArray,        
+          departureDate : departureDate,
+          returnDate : returnDate,
+          contact : contact,
+  
+        }    
+  
+        console.log("Data for Sell Your Car",data)
+        console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+        const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+        return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
 
 
-  getTempFlightDetails(pnr : any
-  ){      
-      const data = {
-        page: 'getflightdetailtempdetails',
-        pnr : pnr
-      }    
-
-      console.log("Data for Sell Your Car",data)
-      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
-
-
-   insertWizzblackValidRequest(source : any, destination : any, requestDate : any, requestTime : any, contact : any ){
-      const data = {
-        page: 'wizzblackvalidrequest',
-        source : source,
-        destination : destination,
-        requestDate : requestDate,
-        requestTime : requestTime,
-        contact : contact
-      }    
-
-      console.log("Data for Sell Your Car",data)
-      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-  }
-
-
-
-  createFlightRequestData(fromAirport : any, fromCode : any, toAirport : any, toCode : any, tripType : any,
-    travelClass : any, noOfAdults : any, noOfChildren : any, noOfInfants : any, multiCityArray : any,
-    departureDate : any, returnDate : any, contact : any
-   ){
-      const data = {
-        page: 'flightrequest',
-        fromAirport : fromAirport,
-        fromCode : fromCode,
-        toAirport : toAirport,
-        toCode : toCode,
-        tripType : 'Website : '+tripType,
-        travelClass : travelClass,
-        noOfAdults : noOfAdults,
-        noOfChildren : noOfChildren,
-        noOfInfants : noOfInfants,
-        multiCityArray : multiCityArray,        
-        departureDate : departureDate,
-        returnDate : returnDate,
-        contact : contact,
-
-      }    
-
-      console.log("Data for Sell Your Car",data)
-      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
-      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-  }
-
-}
-
-
-
 

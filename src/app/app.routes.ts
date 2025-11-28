@@ -121,6 +121,7 @@ import { GuwahatitoshillongCityComponent } from './wizridecityroutes/guwahatitos
 import { AritarlakeComponent } from './destinations/sikkim/aritarlake/aritarlake.component';
 import { BabamandirComponent } from './destinations/sikkim/babamandir/babamandir.component';
 import { ResultpageComponent } from './resultpage/resultpage.component';
+import { FlightlistComponent } from './flightlist/flightlist.component';
 
 
 
@@ -263,6 +264,7 @@ export const routes: Routes = [
       {path:'blog/:slug',component:BlogSingleComponent},
 
       {path:'newsandannouncements',component: NewsandannouncementsComponent},
+      {path:'flightlist/:type',component: FlightlistComponent},
       {path:'sellyourcar',component: BuyandsellcarComponent},
       {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent},
       {path:'vehicle-details/:id',component: VehicledetailsComponent},

@@ -1,0 +1,268 @@
+<div class="flight-list-wrapper" *ngIf="isBrowser">
+  <!-- Loading Spinner -->
+  <div *ngIf="loader" class="loader-container">
+    <div class="spinner"></div>
+    <p>Loading flights...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loader">
+    <!-- Modify Search Form -->
+    <div class="modify-search-section">
+      <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="modify-search-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>From:</label>
+            <select formControlName="from">
+              <option *ngFor="let city of cities" [value]="city.code">
+                {{ city.name }} ({{ city.code }})
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>To:</label>
+            <select formControlName="to">
+              <option *ngFor="let city of cities" [value]="city.code">
+                {{ city.name }} ({{ city.code }})
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Departure Date:</label>
+            <input type="date" formControlName="departureDate" />
+          </div>
+          <div class="form-group" *ngIf="flightType === 'round'">
+            <label>Return Date:</label>
+            <input type="date" formControlName="returnDate" />
+          </div>
+          <div class="form-group passenger-dropdown-wrapper">
+            <label>Passengers:</label>
+            <div class="passenger-display" (click)="togglePassengerDropdown()">
+              {{ totalPassengers }} Passenger{{ totalPassengers > 1 ? "s" : "" }}
+            </div>
+            <div class="passenger-dropdown" *ngIf="showPassengerDropdown">
+              <div class="passenger-type-row" *ngFor="let type of passengerTypes">
+                <div class="label">{{ type.label }}</div>
+                <div class="controls">
+                  <button type="button" (click)="decrement(type.key)">−</button>
+                  <span>{{ modifySearchForm.get(type.key)?.value }}</span>
+                  <button type="button" (click)="increment(type.key)">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Class:</label>
+            <select formControlName="travelClass">
+              <option *ngFor="let cls of travelClasses" [value]="cls">{{ cls }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="modify-btn">Modify Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- One Way Flights -->
+    <div *ngIf="flightType === 'oneway'" class="flight-list-container">
+      <!-- Date Slider -->
+      <div class="date-slider-bar" *ngIf="datePrices.length > 0">
+        <div class="date-slider-wrapper">
+          <button class="slider-nav left" (click)="scrollDates('left')">‹</button>
+          <div class="date-slider-scroll-wrapper" #scrollContainer>
+            <div class="date-slider-container">
+              <div
+                class="date-card"
+                *ngFor="let item of datePrices; let i = index"
+                [class.selected]="item.date === highlightedDate"
+                (click)="selectDateFromSlider(item.date, i)">
+                <div class="date-label">{{ item.date | date : "d MMM, yy" }}</div>
+                <div class="date-price">₹ {{ item.price | number : "1.2-2" }}</div>
+              </div>
+            </div>
+          </div>
+          <button class="slider-nav right" (click)="scrollDates('right')">›</button>
+        </div>
+      </div>
+
+      <!-- Flight List -->
+      <div class="flight-list">
+        <div class="flight-list-header">
+          <div class="route-date-label">
+            <strong>{{ flightInputData['fromCity'] }}</strong> →
+            <strong>{{ flightInputData['toCity'] }}</strong>
+            {{ flightInputData['departureDate'] | date : "EEE, d MMM" }}
+          </div>
+        </div>
+
+        <div class="flight-card" *ngFor="let flight of groupedFlights; let i = index">
+          <div class="flight-card-content">
+            <div class="airline-info">
+              <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
+                   [alt]="flight.Segments[0][0].Airline.AirlineName" width="40" height="40" />
+              <div>
+                <div class="airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
+                <small>{{ flight.Segments[0][0].Airline.AirlineCode }} {{ flight.Segments[0][0].Airline.FlightNumber }}</small>
+              </div>
+            </div>
+
+            <div class="flight-times">
+              <div class="time-row">
+                <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+                <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
+                <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+              </div>
+              <div class="airport-row">
+                <div>{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
+                <div>{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
+              </div>
+            </div>
+
+            <div class="flight-price">
+              <div class="price">₹ {{ flight.price | number : "1.0-0" }}</div>
+              <div class="per-adult">per adult</div>
+              <button class="view-prices-btn" (click)="openFareOptionsModal(flight)">View Prices</button>
+            </div>
+          </div>
+
+          <div class="flight-details-toggle" (click)="toggleDetailsoneway(i, flight)">
+            View Flight Details <i class="fa-solid fa-chevron-down"></i>
+          </div>
+
+          <!-- Expandable Details -->
+          <div class="flight-details-expanded" *ngIf="flightDetailsExpanded[i]">
+            <div class="flight-tabs">
+              <div class="tab" *ngFor="let tab of tabs" 
+                   [class.active]="activeTabs[i] === tab.id"
+                   (click)="selectTab(i, tab.id)">
+                {{ tab.label }}
+              </div>
+            </div>
+
+            <!-- Flight Details Tab -->
+            <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
+              <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
+                <div class="flight-info">
+                  <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
+                  <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
+                </div>
+                <div class="timing-info">
+                  <div class="time-block">
+                    <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                    <div class="airport">{{ segment.Origin.Airport.CityName }}</div>
+                  </div>
+                  <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                  <div class="time-block">
+                    <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                    <div class="airport">{{ segment.Destination.Airport.CityName }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fare Summary Tab -->
+            <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
+              <table class="fare-table">
+                <tr>
+                  <th>Total</th>
+                  <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare }}</strong></td>
+                </tr>
+                <tr>
+                  <th>Base Fare</th>
+                  <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare }}</td>
+                </tr>
+                <tr>
+                  <th>Taxes & Fees</th>
+                  <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Round Trip Flights -->
+    <div *ngIf="flightType === 'round'" class="flight-list-container">
+      <!-- Outbound Flights -->
+      <div class="flight-section">
+        <h3>Outbound Flights</h3>
+        <div class="flight-card" *ngFor="let flight of groupedFlights; let i = index" (click)="selectBothwayOutbound(flight)">
+          <div class="flight-card-content">
+            <div class="airline-info">
+              <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" width="40" height="40" />
+              <div>
+                <div class="airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
+                <small>{{ flight.Segments[0][0].Airline.AirlineCode }} {{ flight.Segments[0][0].Airline.FlightNumber }}</small>
+              </div>
+            </div>
+            <div class="flight-times">
+              <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+              <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
+              <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+            </div>
+            <div class="flight-price">₹ {{ flight.price | number : "1.0-0" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return Flights -->
+      <div class="flight-section">
+        <h3>Return Flights</h3>
+        <div class="flight-card" *ngFor="let flight of groupedFlightsOutbound; let i = index" (click)="selectBothwayReturn(flight)">
+          <div class="flight-card-content">
+            <div class="airline-info">
+              <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" width="40" height="40" />
+              <div>
+                <div class="airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
+                <small>{{ flight.Segments[0][0].Airline.AirlineCode }} {{ flight.Segments[0][0].Airline.FlightNumber }}</small>
+              </div>
+            </div>
+            <div class="flight-times">
+              <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+              <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
+              <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+            </div>
+            <div class="flight-price">₹ {{ flight.price | number : "1.0-0" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Footer for Round Trip -->
+      <div class="sticky-footer" *ngIf="selectedOutbound && selectedReturn">
+        <div class="footer-content">
+          <div class="selected-flights">
+            <div class="flight-summary">
+              <div>Departure: {{ selectedOutbound.airline }} - ₹ {{ selectedOutbound.price }}</div>
+              <div>Return: {{ selectedReturn.airline }} - ₹ {{ selectedReturn.price }}</div>
+            </div>
+            <div class="total-price">
+              Total: ₹ {{ selectedOutbound.price + selectedReturn.price }} per adult
+            </div>
+          </div>
+          <button class="book-now-btn" (click)="openFareOptionsModalBothway()">BOOK NOW</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fare Options Modal -->
+    <div class="modal-overlay" *ngIf="showFareModal" (click)="closeFareOptionsModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
+        <h3>Fare Options</h3>
+        <div class="fare-options-list" *ngIf="selectedFlight">
+          <div class="fare-option-card" *ngFor="let fare of selectedFlight.FareOptions">
+            <div class="fare-price">₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }} per adult</div>
+            <div class="fare-details">
+              <div>Baggage: {{ fare.Segments[0][0].Baggage }}</div>
+              <div>Cabin: {{ fare.Segments[0][0].CabinBaggage }}</div>
+            </div>
+            <button class="book-btn" (click)="finalizeSelection(fare)">BOOK NOW</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
