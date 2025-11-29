@@ -122,6 +122,7 @@ import { AritarlakeComponent } from './destinations/sikkim/aritarlake/aritarlake
 import { BabamandirComponent } from './destinations/sikkim/babamandir/babamandir.component';
 import { ResultpageComponent } from './resultpage/resultpage.component';
 import { FlightlistComponent } from './flightlist/flightlist.component';
+import { FlightfinalpageComponent } from './flightfinalpage/flightfinalpage.component';
 
 
 
@@ -265,6 +266,7 @@ export const routes: Routes = [
 
       {path:'newsandannouncements',component: NewsandannouncementsComponent},
       {path:'flightlist/:type',component: FlightlistComponent},
+      {path:'flightfinalsection',component: FlightfinalpageComponent},
       {path:'sellyourcar',component: BuyandsellcarComponent},
       {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent},
       {path:'vehicle-details/:id',component: VehicledetailsComponent},
