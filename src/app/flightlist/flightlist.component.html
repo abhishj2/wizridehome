@@ -405,6 +405,11 @@
                           </div>
                           <div class="route-node end-node"></div>
                         </div>
+                        <div class="stops-summary">
+                          {{ getStopsCount(flight) === 0
+                            ? 'Non-stop'
+                            : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
+                        </div>
                         <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                       </div>
                       <div class="route-details">
@@ -597,6 +602,11 @@
                               </div>
                               <div class="route-node end-node"></div>
                             </div>
+                          <div class="stops-summary">
+                            {{ getStopsCount(flight) === 0
+                              ? 'Non-stop'
+                              : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
+                          </div>
                             <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
                           <div class="route-details">
@@ -668,6 +678,11 @@
                               </div>
                               <div class="route-node end-node"></div>
                             </div>
+                          <div class="stops-summary">
+                            {{ getStopsCount(flight) === 0
+                              ? 'Non-stop'
+                              : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
+                          </div>
                             <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
                           <div class="route-details">
