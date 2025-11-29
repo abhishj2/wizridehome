@@ -46,22 +46,33 @@
           <div class="form-row">
             <div class="form-group">
               <label>From:</label>
-              <select formControlName="from">
-                <option value="">Select departure city</option>
-                <option *ngFor="let city of flightAirports" [value]="city.code">
-                  {{ city.name }} ({{ city.code }})
-                </option>
-              </select>
+              <!-- Typable airport input with suggestions -->
+              <input
+                type="text"
+                formControlName="from"
+                list="airportList"
+                placeholder="Type city or airport (e.g. Delhi, DEL)"
+              />
             </div>
             <div class="form-group">
               <label>To:</label>
-              <select formControlName="to">
-                <option value="">Select destination city</option>
-                <option *ngFor="let city of flightAirports" [value]="city.code">
-                  {{ city.name }} ({{ city.code }})
-                </option>
-              </select>
+              <!-- Typable airport input with suggestions -->
+              <input
+                type="text"
+                formControlName="to"
+                list="airportList"
+                placeholder="Type city or airport (e.g. Mumbai, BOM)"
+              />
             </div>
+            <!-- Shared datalist for airport suggestions -->
+            <datalist id="airportList">
+              <option
+                *ngFor="let city of flightAirports"
+                [value]="city.code"
+              >
+                {{ city.name }} ({{ city.code }})
+              </option>
+            </datalist>
             <div class="form-group">
               <label>Departure Date:</label>
               <input type="date" formControlName="departureDate" />
@@ -105,6 +116,232 @@
     <main class="results-main">
       <div class="container">
         <div class="results-layout">
+          <!-- Filter Sidebar -->
+          <div class="filter-sidebar-column" *ngIf="flightType === 'oneway'">
+            <div class="filter-card">
+              <h2 class="filter-heading">Filter Flights</h2>
+              
+              <!-- Airlines Filter -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Airlines</h3>
+                <label class="filter-option" *ngFor="let airline of dynamicFilters.airlines">
+                  <input type="checkbox" [value]="airline" (change)="onAirlineFilterChange($event)" />
+                  {{ airline }}
+                </label>
+              </div>
+
+              <!-- Price Range Filter -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Price Range</h3>
+                <input type="range" [min]="dynamicFilters.min_price" [max]="dynamicFilters.max_price" 
+                       [(ngModel)]="priceRange" class="price-range" (input)="onPriceChange()" />
+                <div class="price-range-label">
+                  ₹{{ dynamicFilters.min_price | number : "1.0-0" }} - ₹{{ priceRange | number : "1.0-0" }}
+                </div>
+              </div>
+
+              <!-- Number of Stops Filter -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Number of Stops</h3>
+                <label class="filter-option" *ngFor="let stop of dynamicFilters.stops">
+                  <input type="checkbox" [value]="stop" (change)="onStopFilterChange($event)" />
+                  {{ stop === 0 ? "Non-stop" : stop + " Stop" + (stop > 1 ? "s" : "") }}
+                </label>
+              </div>
+
+              <!-- Departure Time Filter -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Departure From {{ flightInputData['fromCity'] }}</h3>
+                <div class="departure-time-filter">
+                  <div class="time-slot" *ngFor="let slot of departureTimeSlots"
+                       (click)="toggleDepartureSlot(slot.label)"
+                       [class.selected]="selectedDepartureSlots.has(slot.label)">
+                    <i [class]="slot.iconClass"></i>
+                    <div class="label">{{ slot.label }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Refundability Filter -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Refundability</h3>
+                <label class="filter-option">
+                  <input type="checkbox" value="refundable" (change)="onRefundabilityChange($event)" />
+                  Partially Refundable
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="non-refundable" (change)="onRefundabilityChange($event)" />
+                  Non-refundable
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Round Trip Filters -->
+          <div class="filter-sidebar-column" *ngIf="flightType === 'round'">
+            <div class="filter-card">
+              <!-- Onward Filters -->
+              <h2 class="filter-heading">Filter Onward Flights</h2>
+              
+              <!-- Airlines -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Airlines</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllAirlines('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('onward')">Reset</button>
+                </div>
+                <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersOnward.airlines">
+                  <input type="checkbox" [value]="airline" 
+                         (change)="roundtripOnAirlineFilterChange($event, 'onward')"
+                         [checked]="roundtripSelectedAirlinesOnward.includes(airline)" />
+                  {{ airline }}
+                </label>
+              </div>
+
+              <!-- Price -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Price Range</h3>
+                <input type="range" [min]="roundtripDynamicFiltersOnward.min_price" 
+                       [max]="roundtripDynamicFiltersOnward.max_price"
+                       [(ngModel)]="roundtripPriceRangeOnward" class="price-range" 
+                       (input)="roundtripOnPriceChange('onward')" />
+                <div class="price-range-label">
+                  ₹{{ roundtripDynamicFiltersOnward.min_price | number : "1.0-0" }} - ₹{{ roundtripPriceRangeOnward | number : "1.0-0" }}
+                </div>
+              </div>
+
+              <!-- Stops -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Number of Stops</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllStops('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('onward')">Reset</button>
+                </div>
+                <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersOnward.stops">
+                  <input type="checkbox" [value]="stop" 
+                         (change)="roundtripOnStopFilterChange($event, 'onward')"
+                         [checked]="roundtripSelectedStopsOnward.includes(stop)" />
+                  {{ stop === 0 ? "Non-stop" : stop + " Stop" + (stop > 1 ? "s" : "") }}
+                </label>
+              </div>
+
+              <!-- Time -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Departure from {{ flightInputData['fromCity'] }}</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('onward')">Reset</button>
+                </div>
+                <div class="departure-time-filter">
+                  <div class="time-slot" *ngFor="let slot of departureTimeSlots"
+                       (click)="roundtripToggleDepartureSlot(slot.label, 'onward')"
+                       [class.selected]="roundtripSelectedDepartureSlotsOnward.has(slot.label)">
+                    <i [class]="slot.iconClass"></i>
+                    <div class="label">{{ slot.label }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Refundability -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Refundability</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="selectAllRefundability('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="resetRefundability('onward')">Reset</button>
+                </div>
+                <label class="filter-option">
+                  <input type="checkbox" [(ngModel)]="showRefundableOnward" (change)="roundtripApplyAllFilters()" />
+                  Partially Refundable
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" [(ngModel)]="showNonRefundableOnward" (change)="roundtripApplyAllFilters()" />
+                  Non-refundable
+                </label>
+              </div>
+
+              <hr />
+
+              <!-- Return Filters -->
+              <h2 class="filter-heading">Filter Return Flights</h2>
+              
+              <!-- Airlines -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Airlines</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllAirlines('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('return')">Reset</button>
+                </div>
+                <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersReturn.airlines">
+                  <input type="checkbox" [value]="airline" 
+                         (change)="roundtripOnAirlineFilterChange($event, 'return')"
+                         [checked]="roundtripSelectedAirlinesReturn.includes(airline)" />
+                  {{ airline }}
+                </label>
+              </div>
+
+              <!-- Price -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Price Range</h3>
+                <input type="range" [min]="roundtripDynamicFiltersReturn.min_price" 
+                       [max]="roundtripDynamicFiltersReturn.max_price"
+                       [(ngModel)]="roundtripPriceRangeReturn" class="price-range" 
+                       (input)="roundtripOnPriceChange('return')" />
+                <div class="price-range-label">
+                  ₹{{ roundtripDynamicFiltersReturn.min_price | number : "1.0-0" }} - ₹{{ roundtripPriceRangeReturn | number : "1.0-0" }}
+                </div>
+              </div>
+
+              <!-- Stops -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Number of Stops</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllStops('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('return')">Reset</button>
+                </div>
+                <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersReturn.stops">
+                  <input type="checkbox" [value]="stop" 
+                         (change)="roundtripOnStopFilterChange($event, 'return')"
+                         [checked]="roundtripSelectedStopsReturn.includes(stop)" />
+                  {{ stop === 0 ? "Non-stop" : stop + " Stop" + (stop > 1 ? "s" : "") }}
+                </label>
+              </div>
+
+              <!-- Time -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Departure from {{ flightInputData['toCity'] }}</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('return')">Reset</button>
+                </div>
+                <div class="departure-time-filter">
+                  <div class="time-slot" *ngFor="let slot of departureTimeSlots"
+                       (click)="roundtripToggleDepartureSlot(slot.label, 'return')"
+                       [class.selected]="roundtripSelectedDepartureSlotsReturn.has(slot.label)">
+                    <i [class]="slot.iconClass"></i>
+                    <div class="label">{{ slot.label }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Refundability -->
+              <div class="filter-section">
+                <h3 class="filter-subheading">Refundability</h3>
+                <div class="filter-buttons">
+                  <button class="btn-link" (click)="selectAllRefundability('return')">Select All</button>
+                  <button class="btn-link danger" (click)="resetRefundability('return')">Reset</button>
+                </div>
+                <label class="filter-option">
+                  <input type="checkbox" [(ngModel)]="showRefundableReturn" (change)="roundtripApplyAllFilters()" />
+                  Partially Refundable
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" [(ngModel)]="showNonRefundableReturn" (change)="roundtripApplyAllFilters()" />
+                  Non-refundable
+                </label>
+              </div>
+            </div>
+          </div>
+
           <!-- Left Column - Flight Results -->
           <div class="results-column">
             <!-- One Way Flights -->
@@ -327,66 +564,68 @@
                 <h3 class="section-title">Outbound Flights</h3>
                 <div class="flight-cards">
                   <div class="card" [class.selected]="selectedOutbound === flight" 
-                       (click)="selectBothwayOutbound(flight)" 
                        *ngFor="let flight of groupedFlights; let i = index">
-                    <!-- Similar card structure as one-way -->
-                    <div class="date-hanger">
-                      <div class="date-content">
-                        <span class="date-text">{{ flightInputData['departureDate'] | date : "d MMM, yyyy" }}</span>
+                    <label class="flight-radio-wrapper" (click)="selectBothwayOutbound(flight)">
+                      <input type="radio" name="outboundFlight" [value]="flight" [(ngModel)]="selectedOutbound" />
+                      <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
                       </div>
-                    </div>
-                    <div class="route">
-                      <div class="vehicle">
-                        <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
-                             [alt]="flight.Segments[0][0].Airline.AirlineName" />
-                        <div class="vehicle-info">
-                          <h3>{{ flight.Segments[0][0].Airline.AirlineName }}</h3>
+                      <!-- Similar card structure as one-way -->
+                      <div class="date-hanger">
+                        <div class="date-content">
+                          <span class="date-text">{{ flightInputData['departureDate'] | date : "d MMM, yyyy" }}</span>
                         </div>
                       </div>
-                      <div class="route-column">
-                        <div class="route-code">{{ flight.Segments[0][0].Origin.Airport.AirportCode }}</div>
-                        <div class="location">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
-                      </div>
-                      <div class="route-visualization">
-                        <div class="route-line-wrapper">
-                          <div class="route-line">
-                            <div class="route-node start-node"></div>
-                            <div class="route-car">
-                              <i class="fas fa-plane" style="font-size: 24px; color: #008b8b;"></i>
+                      <div class="route">
+                        <div class="vehicle">
+                          <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
+                               [alt]="flight.Segments[0][0].Airline.AirlineName" />
+                          <div class="vehicle-info">
+                            <h3>{{ flight.Segments[0][0].Airline.AirlineName }}</h3>
+                          </div>
+                        </div>
+                        <div class="route-column">
+                          <div class="route-code">{{ flight.Segments[0][0].Origin.Airport.AirportCode }}</div>
+                          <div class="location">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
+                        </div>
+                        <div class="route-visualization">
+                          <div class="route-line-wrapper">
+                            <div class="route-line">
+                              <div class="route-node start-node"></div>
+                              <div class="route-car">
+                                <i class="fas fa-plane" style="font-size: 24px; color: #008b8b;"></i>
+                              </div>
+                              <div class="route-node end-node"></div>
                             </div>
-                            <div class="route-node end-node"></div>
+                            <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
-                          <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
+                          <div class="route-details">
+                            <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+                            <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+                          </div>
                         </div>
-                        <div class="route-details">
-                          <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
-                          <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+                        <div class="route-column">
+                          <div class="route-code">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.AirportCode }}</div>
+                          <div class="location">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
                         </div>
-                      </div>
-                      <div class="route-column">
-                        <div class="route-code">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.AirportCode }}</div>
-                        <div class="location">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
-                      </div>
-                      <div class="price-info">
-                        <div class="price">₹{{ flight.price | number : "1.0-0" }}</div>
-                        <div style="margin-top: 18px;">
-                          <p>per adult</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="options">
-                      <div class="option-item">
-                        <div class="default-amenities">
-                          <div class="amenity-item">
-                            <i class="fas fa-plane-departure"></i>
-                            <span>{{ getStopsCount(flight) === 0 ? 'Non-stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</span>
+                        <div class="price-info">
+                          <div class="price">₹{{ flight.price | number : "1.0-0" }}</div>
+                          <div style="margin-top: 18px;">
+                            <p>per adult</p>
                           </div>
                         </div>
                       </div>
-                      <div class="select-btn-card">
-                        <button class="btn" (click)="selectBothwayOutbound(flight); $event.stopPropagation()">Select</button>
+                      <div class="options">
+                        <div class="option-item">
+                          <div class="default-amenities">
+                            <div class="amenity-item">
+                              <i class="fas fa-plane-departure"></i>
+                              <span>{{ getStopsCount(flight) === 0 ? 'Non-stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -396,151 +635,542 @@
                 <h3 class="section-title">Return Flights</h3>
                 <div class="flight-cards">
                   <div class="card" [class.selected]="selectedReturn === flight" 
-                       (click)="selectBothwayReturn(flight)" 
                        *ngFor="let flight of groupedFlightsOutbound; let i = index">
-                    <!-- Similar card structure -->
-                    <div class="date-hanger">
-                      <div class="date-content">
-                        <span class="date-text">{{ flightInputData['returnDate'] | date : "d MMM, yyyy" }}</span>
+                    <label class="flight-radio-wrapper" (click)="selectBothwayReturn(flight)">
+                      <input type="radio" name="returnFlight" [value]="flight" [(ngModel)]="selectedReturn" />
+                      <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
                       </div>
-                    </div>
-                    <div class="route">
-                      <div class="vehicle">
-                        <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
-                             [alt]="flight.Segments[0][0].Airline.AirlineName" />
-                        <div class="vehicle-info">
-                          <h3>{{ flight.Segments[0][0].Airline.AirlineName }}</h3>
+                      <!-- Similar card structure -->
+                      <div class="date-hanger">
+                        <div class="date-content">
+                          <span class="date-text">{{ flightInputData['returnDate'] | date : "d MMM, yyyy" }}</span>
                         </div>
                       </div>
-                      <div class="route-column">
-                        <div class="route-code">{{ flight.Segments[0][0].Origin.Airport.AirportCode }}</div>
-                        <div class="location">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
-                      </div>
-                      <div class="route-visualization">
-                        <div class="route-line-wrapper">
-                          <div class="route-line">
-                            <div class="route-node start-node"></div>
-                            <div class="route-car">
-                              <i class="fas fa-plane" style="font-size: 24px; color: #008b8b;"></i>
+                      <div class="route">
+                        <div class="vehicle">
+                          <img [src]="'assets/logos/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
+                               [alt]="flight.Segments[0][0].Airline.AirlineName" />
+                          <div class="vehicle-info">
+                            <h3>{{ flight.Segments[0][0].Airline.AirlineName }}</h3>
+                          </div>
+                        </div>
+                        <div class="route-column">
+                          <div class="route-code">{{ flight.Segments[0][0].Origin.Airport.AirportCode }}</div>
+                          <div class="location">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
+                        </div>
+                        <div class="route-visualization">
+                          <div class="route-line-wrapper">
+                            <div class="route-line">
+                              <div class="route-node start-node"></div>
+                              <div class="route-car">
+                                <i class="fas fa-plane" style="font-size: 24px; color: #008b8b;"></i>
+                              </div>
+                              <div class="route-node end-node"></div>
                             </div>
-                            <div class="route-node end-node"></div>
+                            <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
-                          <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
+                          <div class="route-details">
+                            <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+                            <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+                          </div>
                         </div>
-                        <div class="route-details">
-                          <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
-                          <div class="time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+                        <div class="route-column">
+                          <div class="route-code">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.AirportCode }}</div>
+                          <div class="location">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
                         </div>
-                      </div>
-                      <div class="route-column">
-                        <div class="route-code">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.AirportCode }}</div>
-                        <div class="location">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
-                      </div>
-                      <div class="price-info">
-                        <div class="price">₹{{ flight.price | number : "1.0-0" }}</div>
-                        <div style="margin-top: 18px;">
-                          <p>per adult</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="options">
-                      <div class="option-item">
-                        <div class="default-amenities">
-                          <div class="amenity-item">
-                            <i class="fas fa-plane-departure"></i>
-                            <span>{{ getStopsCount(flight) === 0 ? 'Non-stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</span>
+                        <div class="price-info">
+                          <div class="price">₹{{ flight.price | number : "1.0-0" }}</div>
+                          <div style="margin-top: 18px;">
+                            <p>per adult</p>
                           </div>
                         </div>
                       </div>
-                      <div class="select-btn-card">
-                        <button class="btn" (click)="selectBothwayReturn(flight); $event.stopPropagation()">Select</button>
+                      <div class="options">
+                        <div class="option-item">
+                          <div class="default-amenities">
+                            <div class="amenity-item">
+                              <i class="fas fa-plane-departure"></i>
+                              <span>{{ getStopsCount(flight) === 0 ? 'Non-stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </label>
                   </div>
                 </div>
               </div>
 
               <!-- Sticky Footer for Round Trip -->
-              <div class="sticky-footer" *ngIf="selectedOutbound && selectedReturn">
-                <div class="footer-content">
-                  <div class="selected-flights">
-                    <div class="flight-summary">
-                      <div>Departure: {{ selectedOutbound.airline }} - ₹ {{ selectedOutbound.price | number : "1.0-0" }}</div>
-                      <div>Return: {{ selectedReturn.airline }} - ₹ {{ selectedReturn.price | number : "1.0-0" }}</div>
+              <div class="flight-sticky-footer" *ngIf="selectedOutbound && selectedReturn">
+                <div class="footer-wrapper">
+                  <div class="flight-summary-block">
+                    <div class="flight-leg-label">Departure</div>
+                    <div class="flight-airline flight-row">
+                      <div>
+                        <img [src]="selectedOutbound.logo" alt="" width="20" />
+                        {{ selectedOutbound.airline }}
+                      </div>
+                      <div class="flight-link" (click)="toggleBothFlightDetails('departure')">Flight Details</div>
                     </div>
-                    <div class="total-price">
-                      Total: ₹ {{ (selectedOutbound.price + selectedReturn.price) | number : "1.0-0" }} per adult
+                    <div class="flight-times flight-row">
+                      <div>{{ selectedOutbound.departure }} → {{ selectedOutbound.arrival }}</div>
+                      <div class="flight-price">₹ {{ selectedOutbound.price | number : "1.0-0" }}</div>
                     </div>
                   </div>
-                  <button class="book-now-btn" (click)="openFareOptionsModalBothway()">BOOK NOW</button>
+                  <div class="flight-summary-block">
+                    <div class="flight-leg-label">Return</div>
+                    <div class="flight-airline flight-row">
+                      <div>
+                        <img [src]="selectedReturn.logo" alt="" width="20" />
+                        {{ selectedReturn.airline }}
+                      </div>
+                      <div class="flight-link" (click)="toggleBothFlightDetails('return')">Flight Details</div>
+                    </div>
+                    <div class="flight-times flight-row">
+                      <div>{{ selectedReturn.departure }} → {{ selectedReturn.arrival }}</div>
+                      <div class="flight-price">₹ {{ selectedReturn.price | number : "1.0-0" }}</div>
+                    </div>
+                  </div>
+                  <div class="total-summary">
+                    <div class="total-row">
+                      <div class="total-amount">
+                        ₹ {{ (selectedOutbound.price + selectedReturn.price) | number : "1.0-0" }}
+                        <span>per adult</span>
+                      </div>
+                      <div class="total-buttons">
+                        <button (click)="openFareOptionsModalBothway()" class="book-now-button">BOOK NOW</button>
+                        <button class="lock-price-btn">LOCK PRICE</button>
+                      </div>
+                    </div>
+                    <div class="fare-details-wrapper" (click)="toggleFareSummaryBothway()">
+                      Fare Details
+                      <div class="fare-summary-popup" *ngIf="showFareSummaryBothway">
+                        <div class="footer-collapse" (click)="toggleBothFlightDetails('close')">&times;</div>
+                        <div class="popup-title">Fare Summary</div>
+                        <div class="popup-row">
+                          <span class="faretag">Total base fare</span>
+                          <span class="faretag">₹ {{ getTotalFareComponent('BaseFare') | number : "1.0-2" }}</span>
+                        </div>
+                        <div class="popup-row">
+                          <span class="faretag">Total Surcharges</span>
+                          <span class="faretag">₹ {{ getTotalFareComponent('Tax') | number : "1.0-2" }}</span>
+                        </div>
+                        <hr />
+                        <div class="popup-row total">
+                          <span class="faretag">Total Amount</span>
+                          <span class="faretag">₹ {{ (getTotalFareComponent('BaseFare') + getTotalFareComponent('Tax')) | number : "1.0-2" }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expandable Flight Details Section -->
+              <div class="footer-expand-section" *ngIf="expandedFlightDetailsBothway">
+                <div class="footer-expand-inner">
+                  <div class="footer-expand-tabs">
+                    <div class="tab" [class.active]="expandedTypeBothway === 'departure'" (click)="toggleBothFlightDetails('departure')">Departure</div>
+                    <div class="tab" [class.active]="expandedTypeBothway === 'return'" (click)="toggleBothFlightDetails('return')">Return</div>
+                  </div>
+
+                  <!-- DEPARTURE DETAILS TAB SECTION -->
+                  <div class="footer-tab-content" *ngIf="expandedTypeBothway === 'departure'">
+                    <div class="flight-list-extention-div1">
+                      <div class="flight-tabs">
+                        <div class="tab" *ngFor="let tab of tabsBoth" 
+                             [class.active]="footerTabBothwayOutbound === tab.id"
+                             (click)="setFooterTabBothwayOutbound(tab.id)">
+                          {{ tab.label }}
+                        </div>
+                      </div>
+
+                      <!-- Flight Tab -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayOutbound === 'flight'">
+                        <div class="tab-heading">
+                          {{ selectedOutbound.Origin.Airport.CityName }} to {{ selectedOutbound.Destination.Airport.CityName }},
+                          {{ selectedOutbound.Origin.DepTime | date : "mediumDate" }}
+                        </div>
+                        <ng-container *ngFor="let segment of selectedOutbound.Segments[0]; let i = index">
+                          <div class="tab-content-section">
+                            <div class="flight-info">
+                              <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
+                              <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
+                              <div class="tag">{{ segment.Craft }}</div>
+                            </div>
+                            <div class="timing-row">
+                              <div class="time-block">
+                                <div class="time">{{ segment.Origin.DepTime | date : "shortTime" }}</div>
+                                <div class="date">{{ segment.Origin.DepTime | date : "mediumDate" }}</div>
+                                <div class="terminal">
+                                  Terminal - {{ segment.Origin.Airport.Terminal || "-" }}<br />
+                                  {{ segment.Origin.Airport.CityName }}
+                                </div>
+                              </div>
+                              <div class="duration">{{ segment.Duration / 60 | number : "1.0-0" }}h {{ segment.Duration % 60 }}m</div>
+                              <div class="time-block">
+                                <div class="time">{{ segment.Destination.ArrTime | date : "shortTime" }}</div>
+                                <div class="date">{{ segment.Destination.ArrTime | date : "mediumDate" }}</div>
+                                <div class="terminal">
+                                  Terminal - {{ segment.Destination.Airport.Terminal || "-" }}<br />
+                                  {{ segment.Destination.Airport.CityName }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="baggage-info">
+                              <div><strong>BAGGAGE:</strong> ADULT</div>
+                              <div><strong>CHECK IN : </strong>{{ segment.Baggage || "N/A" }}</div>
+                              <div><strong>CABIN : </strong>{{ segment.CabinBaggage || "N/A" }}</div>
+                            </div>
+                          </div>
+                          <div *ngIf="i < selectedOutbound.Segments[0].length - 1" class="layover-banner">
+                            <div class="layover-label">Change of planes</div>
+                            <div class="layover-text">
+                              <strong>{{ getLayoverFormattedDuration(selectedOutbound.Segments[0][i], selectedOutbound.Segments[0][i + 1]) }}</strong>
+                              Layover in {{ segment.Destination.Airport.CityName }}
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+
+                      <!-- Fare Summary -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayOutbound === 'fare'">
+                        <div class="tab-heading">Fare Summary</div>
+                        <table class="fare-summary-table">
+                          <tr>
+                            <th>Total</th>
+                            <td><strong>₹ {{ (selectedOutbound.FareOptions[0]?.Fare?.BaseFare + selectedOutbound.FareOptions[0]?.Fare?.Tax) | number : "1.0-0" }}</strong></td>
+                          </tr>
+                          <tr>
+                            <th>Base Fare</th>
+                            <td>₹ {{ selectedOutbound.FareOptions[0]?.Fare?.BaseFare | number : "1.0-0" }}</td>
+                          </tr>
+                          <tr>
+                            <th>Surcharges</th>
+                            <td>₹ {{ selectedOutbound.FareOptions[0]?.Fare?.Tax | number : "1.0-0" }}</td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <!-- Cancellation -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayOutbound === 'cancellation' && selectedOutbound.isRefundable">
+                        <div class="tab-heading">Cancellation Policy</div>
+                        <table class="cancellation-policy-table">
+                          <thead>
+                            <tr>
+                              <th>Route</th>
+                              <th>Time Frame</th>
+                              <th>Airline + Wizzride Fee</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let policy of selectedOutbound.FareOptions[0]?.cancellationPolicy">
+                              <td>{{ selectedOutbound.Origin.Airport.CityName }} - {{ selectedOutbound.Destination.Airport.CityName }}</td>
+                              <td>{{ policy.From }} {{ policy.Unit?.toLowerCase() }} to {{ policy.To || "departure" }} {{ policy.Unit?.toLowerCase() }}</td>
+                              <td><strong>ADULT:</strong> {{ policy.Details }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="disclaimer-note">*From the Time of Departure</div>
+                      </div>
+
+                      <!-- Date Change -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayOutbound === 'dateChange'">
+                        <div class="tab-heading">Date Change Policy</div>
+                        <table class="change-policy-table">
+                          <thead>
+                            <tr>
+                              <th>Route</th>
+                              <th>Time Frame</th>
+                              <th>Fee + Fare Difference</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let change of selectedOutbound.FareOptions[0]?.dateChangePolicy">
+                              <td>{{ selectedOutbound.Origin.Airport.CityName }} - {{ selectedOutbound.Destination.Airport.CityName }}</td>
+                              <td>{{ change.From }} {{ change.Unit?.toLowerCase() }} to {{ change.To || "departure" }} {{ change.Unit?.toLowerCase() }}</td>
+                              <td><strong>ADULT:</strong> {{ change.Details }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="disclaimer-note">
+                          *From the Time of Departure<br /><br />
+                          <strong>Important:</strong> The airline fee is indicative. Wizzride does not guarantee accuracy.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- RETURN DETAILS TAB SECTION -->
+                  <div class="footer-tab-content" *ngIf="expandedTypeBothway === 'return'">
+                    <div class="flight-list-extention-div1">
+                      <div class="flight-tabs">
+                        <div class="tab" *ngFor="let tab of tabsBoth" 
+                             [class.active]="footerTabBothwayReturn === tab.id"
+                             (click)="setFooterTabBothwayReturn(tab.id)">
+                          {{ tab.label }}
+                        </div>
+                      </div>
+
+                      <!-- Flight Tab -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayReturn === 'flight'">
+                        <div class="tab-heading">
+                          {{ selectedReturn.Origin.Airport.CityName }} to {{ selectedReturn.Destination.Airport.CityName }},
+                          {{ selectedReturn.Origin.DepTime | date : "mediumDate" }}
+                        </div>
+                        <ng-container *ngFor="let segment of selectedReturn.Segments[0]; let i = index">
+                          <div class="tab-content-section">
+                            <div class="flight-info">
+                              <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
+                              <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
+                              <div class="tag">{{ segment.Craft }}</div>
+                            </div>
+                            <div class="timing-row">
+                              <div class="time-block">
+                                <div class="time">{{ segment.Origin.DepTime | date : "shortTime" }}</div>
+                                <div class="date">{{ segment.Origin.DepTime | date : "mediumDate" }}</div>
+                                <div class="terminal">
+                                  Terminal - {{ segment.Origin.Airport.Terminal || "-" }}<br />
+                                  {{ segment.Origin.Airport.CityName }}
+                                </div>
+                              </div>
+                              <div class="duration">{{ segment.Duration / 60 | number : "1.0-0" }}h {{ segment.Duration % 60 }}m</div>
+                              <div class="time-block">
+                                <div class="time">{{ segment.Destination.ArrTime | date : "shortTime" }}</div>
+                                <div class="date">{{ segment.Destination.ArrTime | date : "mediumDate" }}</div>
+                                <div class="terminal">
+                                  Terminal - {{ segment.Destination.Airport.Terminal || "-" }}<br />
+                                  {{ segment.Destination.Airport.CityName }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="baggage-info">
+                              <div><strong>BAGGAGE:</strong> ADULT</div>
+                              <div><strong>CHECK IN : </strong>{{ segment.Baggage || "N/A" }}</div>
+                              <div><strong>CABIN : </strong>{{ segment.CabinBaggage || "N/A" }}</div>
+                            </div>
+                          </div>
+                          <div *ngIf="i < selectedReturn.Segments[0].length - 1" class="layover-banner">
+                            <div class="layover-label">Change of planes</div>
+                            <div class="layover-text">
+                              <strong>{{ getLayoverFormattedDuration(selectedReturn.Segments[0][i], selectedReturn.Segments[0][i + 1]) }}</strong>
+                              Layover in {{ segment.Destination.Airport.CityName }}
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+
+                      <!-- Fare Summary -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayReturn === 'fare'">
+                        <div class="tab-heading">Fare Summary</div>
+                        <table class="fare-summary-table">
+                          <tr>
+                            <th>Total</th>
+                            <td><strong>₹ {{ (selectedReturn.FareOptions[0]?.Fare?.BaseFare + selectedReturn.FareOptions[0]?.Fare?.Tax) | number : "1.0-0" }}</strong></td>
+                          </tr>
+                          <tr>
+                            <th>Base Fare</th>
+                            <td>₹ {{ selectedReturn.FareOptions[0]?.Fare?.BaseFare | number : "1.0-0" }}</td>
+                          </tr>
+                          <tr>
+                            <th>Surcharges</th>
+                            <td>₹ {{ selectedReturn.FareOptions[0]?.Fare?.Tax | number : "1.0-0" }}</td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <!-- Cancellation -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayReturn === 'cancellation' && selectedReturn.isRefundable">
+                        <div class="tab-heading">Cancellation Policy</div>
+                        <table class="cancellation-policy-table">
+                          <thead>
+                            <tr>
+                              <th>Route</th>
+                              <th>Time Frame</th>
+                              <th>Airline + Wizzride Fee</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let policy of selectedReturn.FareOptions[0]?.cancellationPolicy">
+                              <td>{{ selectedReturn.Origin.Airport.CityName }} - {{ selectedReturn.Destination.Airport.CityName }}</td>
+                              <td>{{ policy.From }} {{ policy.Unit?.toLowerCase() }} to {{ policy.To || "departure" }} {{ policy.Unit?.toLowerCase() }}</td>
+                              <td><strong>ADULT:</strong> {{ policy.Details }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="disclaimer-note">*From the Time of Departure</div>
+                      </div>
+
+                      <!-- Date Change -->
+                      <div class="flight-tab-content" *ngIf="footerTabBothwayReturn === 'dateChange'">
+                        <div class="tab-heading">Date Change Policy</div>
+                        <table class="change-policy-table">
+                          <thead>
+                            <tr>
+                              <th>Route</th>
+                              <th>Time Frame</th>
+                              <th>Fee + Fare Difference</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let change of selectedReturn.FareOptions[0]?.dateChangePolicy">
+                              <td>{{ selectedReturn.Origin.Airport.CityName }} - {{ selectedReturn.Destination.Airport.CityName }}</td>
+                              <td>{{ change.From }} {{ change.Unit?.toLowerCase() }} to {{ change.To || "departure" }} {{ change.Unit?.toLowerCase() }}</td>
+                              <td><strong>ADULT:</strong> {{ change.Details }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="disclaimer-note">
+                          *From the Time of Departure<br /><br />
+                          <strong>Important:</strong> The airline fee is indicative. Wizzride does not guarantee accuracy.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Right Column - Sidebar (matching booking-results design) -->
-          <div class="sidebar-column">
-            <div class="promotional-ads">
-              <!-- Japan Trip Ad -->
-              <div class="ad-card japan-ad">
-                <div class="ad-image">
-                  <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=300&h=200&fit=crop"
-                    alt="Japan Trip">
-                </div>
-                <div class="ad-content">
-                  <h3 class="ad-title">Japan Trip</h3>
-                  <p class="ad-description">
-                    8 Days Trip in September. Come with Us on a Trip of a Lifetime. Check more details.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Kazakhstan Ad -->
-              <div class="ad-card kazakhstan-ad">
-                <div class="ad-image">
-                  <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
-                    alt="Kazakhstan">
-                </div>
-                <div class="ad-content">
-                  <h3 class="ad-title">Kazakhstan</h3>
-                  <p class="ad-description">
-                    Explore the beautiful landscapes of Kazakhstan. 10 Days Adventure Package.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Europe Tour Ad -->
-              <div class="ad-card europe-ad">
-                <div class="ad-image">
-                  <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=300&h=200&fit=crop"
-                    alt="Europe Tour">
-                </div>
-                <div class="ad-content">
-                  <h3 class="ad-title">Europe Tour</h3>
-                  <p class="ad-description">
-                    Discover the charm of Europe. 15 Days Multi-Country Tour Package.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </main>
 
-    <!-- Fare Options Modal -->
-    <div class="modal-overlay" *ngIf="showFareModal" (click)="closeFareOptionsModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Fare Options Modal - One Way -->
+    <div class="custom-modal-overlay" *ngIf="showFareModal" (click)="closeFareOptionsModal()">
+      <div class="custom-modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
-        <h3>Fare Options</h3>
-        <div class="fare-options-list" *ngIf="selectedFlight">
-          <div class="fare-option-card" *ngFor="let fare of selectedFlight.FareOptions">
-            <div class="fare-price">₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }} per adult</div>
-            <div class="fare-details">
-              <div>Baggage: {{ fare.Segments?.[0]?.[0]?.Baggage || '15kg' }}</div>
-              <div>Cabin: {{ fare.Segments?.[0]?.[0]?.CabinBaggage || '7kg' }}</div>
+        <div class="fare-options-box">
+          <div class="fare-options-header">
+            <div class="fare-options-title">Fare Options available for your trip</div>
+            <div class="fare-options-subtitle" *ngIf="selectedFlight">
+              {{ selectedFlight.Origin?.Airport?.CityName }} ➝ {{ selectedFlight.Destination?.Airport?.CityName }} ·
+              {{ selectedFlight.Airline?.AirlineName }} ·
+              {{ selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
+              {{ selectedFlight.Destination?.ArrTime | date : "HH:mm (+1 day)" }}
             </div>
-            <button class="book-btn" (click)="finalizeSelection(fare)">BOOK NOW</button>
+          </div>
+          <div class="fare-scroll-wrapper">
+            <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
+            <div class="fare-scroll-container" #fareScrollContainer>
+              <div class="fare-card" *ngFor="let fare of selectedFlight?.FareOptions">
+                <div class="fare-price-oneway">
+                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
+                  <span class="per-adult">per adult</span>
+                </div>
+                <div class="fare-type">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+                <div class="fare-section">
+                  <strong>Baggage</strong>
+                  <ul>
+                    <li>✅ Cabin: {{ fare.Segments[0][0].CabinBaggage }}</li>
+                    <li>✅ Check-in: {{ fare.Segments[0][0].Baggage }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Flexibility</strong>
+                  <ul>
+                    <li>⚠️ Cancel: {{ getCancellationRule(fare) }}</li>
+                    <li>⚠️ Change: {{ getDateChangeRule(fare) }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Seats, Meals & More</strong>
+                  <ul>
+                    <li>🍽️ Meals: {{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</li>
+                    <li>💺 Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard seats free" : "Chargeable seats" }}</li>
+                    <li>{{ fare.FareRules[0]?.Details || "Check with airline" }}</li>
+                  </ul>
+                </div>
+                <button class="book-btn" (click)="finalizeSelection(fare)">BOOK NOW</button>
+              </div>
+            </div>
+            <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fare Options Modal - Round Trip -->
+    <div class="custom-modal-overlay" *ngIf="showFareModalBoth" (click)="closeFareOptionsModalBothWay()">
+      <div class="custom-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeFareOptionsModalBothWay()">×</button>
+        <div class="fare-options-box">
+          <div class="fare-options-header">
+            <div class="fare-options-title"><strong>MORE FARE OPTIONS</strong> available for your round trip.</div>
+            <!-- Tabs for ONWARD and RETURN -->
+            <div class="flight-tabs">
+              <div class="tab" [class.active]="activeFareTab === 'departure'" (click)="selectFareTab('departure')">ONWARD</div>
+              <div class="tab" [class.active]="activeFareTab === 'return'" (click)="selectFareTab('return')">RETURN</div>
+            </div>
+            <!-- Fare Subtitle -->
+            <div class="fare-options-subtitle" *ngIf="activeFareTab === 'departure' && selectedOutbound">
+              {{ selectedOutbound.Origin.Airport.CityName }} ➝ {{ selectedOutbound.Destination.Airport.CityName }} ·
+              {{ selectedOutbound.airline }} ·
+              {{ selectedOutbound.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
+              {{ selectedOutbound.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            </div>
+            <div class="fare-options-subtitle" *ngIf="activeFareTab === 'return' && selectedReturn">
+              {{ selectedReturn.Origin.Airport.CityName }} ➝ {{ selectedReturn.Destination.Airport.CityName }} ·
+              {{ selectedReturn.airline }} ·
+              {{ selectedReturn.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
+              {{ selectedReturn.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            </div>
+          </div>
+          <!-- Scrollable Fare Options -->
+          <div class="fare-scroll-wrapper">
+            <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
+            <div class="fare-scroll-container" #fareScrollContainer>
+              <div class="fare-card" 
+                   *ngFor="let fare of activeFareTab === 'departure' ? selectedOutbound?.FareOptions : selectedReturn?.FareOptions; let i = index">
+                <div class="fare-price-oneway">
+                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
+                  <span class="per-adult">per adult</span>
+                </div>
+                <div class="fare-type">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+                <div class="fare-section">
+                  <strong>Baggage</strong>
+                  <ul>
+                    <li>✅ Cabin: {{ fare.Segments[0][0].CabinBaggage }}</li>
+                    <li>✅ Check-in: {{ fare.Segments[0][0].Baggage }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Flexibility</strong>
+                  <ul>
+                    <li>⚠️ Cancel: {{ getCancellationRule(fare) }}</li>
+                    <li>⚠️ Change: {{ getDateChangeRule(fare) }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Seats, Meals & More</strong>
+                  <ul>
+                    <li>🍽️ Meals: {{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</li>
+                    <li>💺 Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard seats free" : "Chargeable seats" }}</li>
+                    <li>{{ fare.FareRules[0]?.Details || "Check with airline" }}</li>
+                  </ul>
+                </div>
+                <button class="book-btn" (click)="selectFare(activeFareTab, i)" [disabled]="isSelectedFare(activeFareTab, i)">
+                  {{ isSelectedFare(activeFareTab, i) ? "SELECTED" : "SELECT" }}
+                </button>
+              </div>
+            </div>
+            <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
+          </div>
+        </div>
+        <!-- Footer Summary -->
+        <div class="fare-modal-footer">
+          <div class="fare-total-block">
+            ₹ {{ (selectedOutbound?.price + selectedReturn?.price) | number : "1.0-0" }}<br />
+            <span>ROUNDTRIP FOR 1 ADULT</span>
+          </div>
+          <div class="fare-action-buttons">
+            <button class="lock-now-btn">LOCK NOW</button>
+            <button class="continue-book-btn" 
+                    [disabled]="(activeFareTab === 'departure' && !hasFareSelected('departure')) || (activeFareTab === 'return' && (!hasFareSelected('departure') || !hasFareSelected('return')))"
+                    (click)="onFareContinueOrBook()">
+              {{ activeFareTab === "departure" ? "CONTINUE" : "BOOK NOW" }}
+            </button>
           </div>
         </div>
       </div>
