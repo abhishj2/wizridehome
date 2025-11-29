@@ -1381,6 +1381,16 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return Math.floor((last.getTime() - first.getTime()) / (1000 * 60));
   }
 
+  getStopsSummary(flight: any): string {
+    const count = this.getStopsCount(flight);
+    if (count === 0) {
+      return 'Non-stop';
+    }
+    const cities = this.getStopCities(flight.Segments[0]).join(', ');
+    const label = count === 1 ? '1 stop' : `${count} stops`;
+    return cities ? `${label} via ${cities}` : label;
+  }
+
   getStopCities(segments: any[]): string[] {
     return segments.slice(0, -1).map(seg => seg.Destination.Airport.CityName);
   }

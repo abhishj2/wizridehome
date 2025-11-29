@@ -115,6 +115,26 @@
     <!-- Main Content Area -->
     <main class="results-main">
       <div class="container">
+        <!-- Date Slider spanning sidebar and results -->
+        <div class="date-slider-bar" *ngIf="flightType === 'oneway' && datePrices.length > 0">
+          <div class="date-slider-wrapper">
+            <button class="slider-nav left" (click)="scrollDates('left')">‹</button>
+            <div class="date-slider-scroll-wrapper" #scrollContainer>
+              <div class="date-slider-container">
+                <div
+                  class="date-card"
+                  *ngFor="let item of datePrices; let i = index"
+                  [class.selected]="item.date === highlightedDate"
+                  (click)="selectDateFromSlider(item.date, i)">
+                  <div class="date-label">{{ item.date | date : "d MMM, yy" }}</div>
+                  <div class="date-price">₹ {{ item.price | number : "1.2-2" }}</div>
+                </div>
+              </div>
+            </div>
+            <button class="slider-nav right" (click)="scrollDates('right')">›</button>
+          </div>
+        </div>
+
         <div class="results-layout">
           <!-- Filter Sidebar -->
           <div class="filter-sidebar-column" *ngIf="flightType === 'oneway'">
@@ -346,26 +366,6 @@
           <div class="results-column">
             <!-- One Way Flights -->
             <div *ngIf="flightType === 'oneway'" class="flight-list-container">
-              <!-- Date Slider -->
-              <div class="date-slider-bar" *ngIf="datePrices.length > 0">
-                <div class="date-slider-wrapper">
-                  <button class="slider-nav left" (click)="scrollDates('left')">‹</button>
-                  <div class="date-slider-scroll-wrapper" #scrollContainer>
-                    <div class="date-slider-container">
-                      <div
-                        class="date-card"
-                        *ngFor="let item of datePrices; let i = index"
-                        [class.selected]="item.date === highlightedDate"
-                        (click)="selectDateFromSlider(item.date, i)">
-                        <div class="date-label">{{ item.date | date : "d MMM, yy" }}</div>
-                        <div class="date-price">₹ {{ item.price | number : "1.2-2" }}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <button class="slider-nav right" (click)="scrollDates('right')">›</button>
-                </div>
-              </div>
-
               <!-- Flight Cards (matching booking-results card design) -->
               <div class="flight-cards" *ngIf="groupedFlights.length > 0">
                 <div class="card" [class.card-expanded]="flightDetailsExpanded[i]" *ngFor="let flight of groupedFlights; let i = index">
@@ -405,11 +405,7 @@
                           </div>
                           <div class="route-node end-node"></div>
                         </div>
-                        <div class="stops-summary">
-                          {{ getStopsCount(flight) === 0
-                            ? 'Non-stop'
-                            : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
-                        </div>
+                          <div class="stops-summary">{{ getStopsSummary(flight) }}</div>
                         <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                       </div>
                       <div class="route-details">
@@ -602,11 +598,7 @@
                               </div>
                               <div class="route-node end-node"></div>
                             </div>
-                          <div class="stops-summary">
-                            {{ getStopsCount(flight) === 0
-                              ? 'Non-stop'
-                              : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
-                          </div>
+                            <div class="stops-summary">{{ getStopsSummary(flight) }}</div>
                             <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
                           <div class="route-details">
@@ -678,11 +670,7 @@
                               </div>
                               <div class="route-node end-node"></div>
                             </div>
-                          <div class="stops-summary">
-                            {{ getStopsCount(flight) === 0
-                              ? 'Non-stop'
-                              : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}
-                          </div>
+                            <div class="stops-summary">{{ getStopsSummary(flight) }}</div>
                             <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                           </div>
                           <div class="route-details">
