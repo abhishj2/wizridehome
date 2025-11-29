@@ -605,6 +605,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           
           if (this.calendarFareMap && this.calendarFareMap.size > 0) {
             this.prepareDatePricesFromCalendarMap();
+          } else {
+            // If still empty, fetch it
+            if (this.flightInputData['fromAirportCode'] && this.flightInputData['toAirportCode'] && 
+                this.flightInputData['tboToken'] && this.flightInputData['ipAddress']) {
+              console.log('Calendar fare map still empty after fetch, fetching now...');
+              this.fetchFullYearCalendarFare('departure');
+            }
           }
         }
         this.loader = false;
@@ -861,8 +868,50 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    this.datePrices = sortedEntries;
-    console.log('Date prices populated:', this.datePrices.length, 'entries');
+    // Filter to show 31 days from selected date (or from today if no selection)
+    const referenceDate = selected ? new Date(selected + 'T00:00:00') : new Date();
+    // Strip time for comparison
+    const refDateOnly = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
+    const endDate = new Date(refDateOnly);
+    endDate.setDate(endDate.getDate() + 31); // Add 31 days
+    
+    console.log('Filtering dates from', refDateOnly.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
+    console.log('Total sorted entries before filter:', sortedEntries.length);
+    console.log('Sample entries:', sortedEntries.slice(0, 5).map(e => ({ date: e.date, price: e.price })));
+    
+    // Create a map of existing fare data for quick lookup
+    const fareDataMap = new Map<string, any>();
+    sortedEntries.forEach(item => {
+      const itemDateStr = item.date.split('T')[0];
+      fareDataMap.set(itemDateStr, item);
+    });
+    
+    // Generate all 31 dates from selected date, filling in fare data where available
+    const allDates: { date: string; price: number; isLowest: boolean }[] = [];
+    
+    for (let i = 0; i < 31; i++) {
+      const currentDate = new Date(refDateOnly);
+      currentDate.setDate(currentDate.getDate() + i);
+      const dateStr = this.formatToISO(currentDate);
+      
+      // Check if we have fare data for this date
+      const existingFare = fareDataMap.get(dateStr);
+      if (existingFare) {
+        allDates.push(existingFare);
+      } else {
+        // Add date with 0 price if no fare data available (will show as unavailable)
+        allDates.push({
+          date: dateStr,
+          price: 0,
+          isLowest: false
+        });
+      }
+    }
+    
+    this.datePrices = allDates;
+    console.log('Generated', allDates.length, 'dates for slider');
+    console.log('Dates with prices:', allDates.filter(d => d.price > 0).length);
+    console.log('Sample dates:', allDates.slice(0, 10).map(e => ({ date: e.date, price: e.price })));
 
     const selectedIndex = this.datePrices.findIndex(item => item.date === selected);
     if (selectedIndex >= 0) {
@@ -1582,16 +1631,21 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     mapToUse.clear();
 
     const today = new Date();
-    const startMonth = today.getMonth();
-    const startYear = today.getFullYear();
+    // Use selected date as starting point if it's in the future, otherwise use today
+    const selectedDate = this.flightInputData['departureDate'] ? new Date(this.flightInputData['departureDate']) : today;
+    const referenceDate = selectedDate > today ? selectedDate : today;
+    
+    const startMonth = referenceDate.getMonth();
+    const startYear = referenceDate.getFullYear();
     const fetchPromises: Promise<any>[] = [];
 
+    // Fetch 12 months starting from the selected date (or today)
     for (let i = 0; i < 12; i++) {
-      const start = i === 0 ? new Date(today) : new Date(startYear, startMonth + i, 1);
+      const start = i === 0 ? new Date(referenceDate) : new Date(startYear, startMonth + i, 1);
       const end = this.getMonthEndDate(new Date(startYear, startMonth + i, 1));
 
-      const startDate = this.formatToISO(start);
-      const endDate = this.formatToISO(end);
+      const startDateISO = this.formatToISO(start);
+      const endDateISO = this.formatToISO(end);
 
       const promise = this.apiService
         .getCalendarFare(
@@ -1601,8 +1655,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           fromCode,
           toCode,
           'all',
-          startDate,
-          endDate
+          startDateISO,
+          endDateISO
         )
         .toPromise()
         .then((res: any) => {
@@ -1632,7 +1686,22 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     Promise.all(fetchPromises).then(() => {
       console.log('Calendar fare map fetched, size:', mapToUse.size);
       if (direction === 'departure' && mapToUse.size > 0) {
+        // Update flightInputData with the new calendar fare map
+        this.flightInputData['calendarFareMap'] = Object.fromEntries(mapToUse);
         this.prepareDatePricesFromCalendarMap();
+        // Scroll to the selected date after prices are populated
+        this.cdr.detectChanges();
+        if (this.isBrowser) {
+          this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+            const selectedDate = this.flightInputData['departureDate'];
+            const selectedIndex = this.datePrices.findIndex(item => item.date === selectedDate);
+            if (selectedIndex >= 0) {
+              this.highlightedDate = selectedDate;
+              this.initialScrollIndex = selectedIndex;
+              this.centerScrollToIndex(selectedIndex);
+            }
+          });
+        }
       }
     });
   }
@@ -1668,6 +1737,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     console.log('New search values:', formValues);
     this.loader = true;
 
+    // Check if date changed - if so, refresh calendar fare map
+    const dateChanged = this.flightInputData['departureDate'] !== formValues.departureDate;
+    const routeChanged = this.flightInputData['fromAirportCode'] !== formValues.from || 
+                         this.flightInputData['toAirportCode'] !== formValues.to;
+
     // Update flightInputData with new values
     this.flightInputData['fromAirportCode'] = formValues.from;
     this.flightInputData['toAirportCode'] = formValues.to;
@@ -1677,6 +1751,14 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.flightInputData['children'] = formValues.children;
     this.flightInputData['infants'] = formValues.infants;
     this.flightInputData['travelClass'] = formValues.travelClass;
+
+    // If date or route changed, refresh calendar fare map
+    if (dateChanged || routeChanged) {
+      console.log('Date or route changed, refreshing calendar fare map...');
+      this.calendarFareMap.clear();
+      this.datePrices = []; // Clear existing date prices
+      this.fetchFullYearCalendarFare('departure');
+    }
 
     if (this.flightType === 'oneway') {
       this.fetchOneWayFlights();
