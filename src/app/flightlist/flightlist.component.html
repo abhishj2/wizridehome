@@ -116,7 +116,7 @@
     <main class="results-main">
       <div class="container">
         <!-- Date Slider spanning sidebar and results -->
-        <div class="date-slider-bar" *ngIf="flightType === 'oneway' && datePrices.length > 0">
+        <div class="date-slider-bar" *ngIf="flightType === 'oneway'">
           <div class="date-slider-wrapper">
             <button class="slider-nav left" (click)="scrollDates('left')">‹</button>
             <div class="date-slider-scroll-wrapper" #scrollContainer>
@@ -128,6 +128,9 @@
                   (click)="selectDateFromSlider(item.date, i)">
                   <div class="date-label">{{ item.date | date : "d MMM, yy" }}</div>
                   <div class="date-price">₹ {{ item.price | number : "1.2-2" }}</div>
+                </div>
+                <div *ngIf="datePrices.length === 0" class="date-slider-empty">
+                  Loading date prices...
                 </div>
               </div>
             </div>

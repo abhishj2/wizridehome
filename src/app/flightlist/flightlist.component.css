@@ -194,7 +194,7 @@ img {
 
 /* Main Content with Gradient Background */
 .results-main {
-  padding: 60px 0;
+  padding: 24px 0 60px 0;
   min-height: calc(100vh - 200px);
   position: relative;
   width: 100%;
@@ -527,14 +527,23 @@ img {
 
 /* Date Slider */
 .date-slider-bar {
-  background: white;
-  padding: 20px 24px;
+  background: white !important;
+  padding: 20px 24px !important;
   border-radius: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 24px !important;
+  margin-top: 0 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
-  width: 100%;
+  border: 2px solid #008b8b !important;
+  width: 100% !important;
   box-sizing: border-box;
+  display: block !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 100px !important;
+  overflow: visible !important;
 }
 
 .date-slider-wrapper {
@@ -576,6 +585,15 @@ img {
   gap: 12px;
   padding: 8px 0;
   min-width: max-content;
+  width: 100%;
+  min-height: 80px;
+}
+
+.date-slider-empty {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
   width: 100%;
 }
 

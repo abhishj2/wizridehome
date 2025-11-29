@@ -232,6 +232,12 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             this.flightType = val['tripType'];
             this.flightInputData = val;
             console.log("Flight input data from service:", this.flightInputData);
+            console.log("Calendar fare map in flightInputData:", {
+              hasCalendarFareMap: !!this.flightInputData['calendarFareMap'],
+              calendarFareMapType: typeof this.flightInputData['calendarFareMap'],
+              calendarFareMapKeys: this.flightInputData['calendarFareMap'] ? Object.keys(this.flightInputData['calendarFareMap']).length : 0,
+              calendarFareMapValue: this.flightInputData['calendarFareMap']
+            });
             this.ensureRequiredData().then(() => {
               // Wait for airports to load before initializing form
               if (this.cities.length > 0) {
@@ -396,14 +402,58 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   initializeFromFlightData(): void {
     if (!this.flightInputData) return;
 
-    // Initialize calendar fare maps
+    console.log('initializeFromFlightData called, checking for calendarFareMap...');
+    console.log('flightInputData keys:', Object.keys(this.flightInputData));
+    
+    // Initialize calendar fare maps - matching the working code format
     if (this.flightInputData['calendarFareMap']) {
-      this.calendarFareMap = new Map(Object.entries(this.flightInputData['calendarFareMap']));
-      this.prepareDatePricesFromCalendarMap();
+      const calendarData = this.flightInputData['calendarFareMap'];
+      console.log('Found calendarFareMap, type:', typeof calendarData, 'isObject:', typeof calendarData === 'object', 'isArray:', Array.isArray(calendarData));
+      
+      // Handle both Map and plain object formats
+      if (calendarData instanceof Map) {
+        this.calendarFareMap = calendarData;
+        console.log('Calendar fare map is already a Map, size:', this.calendarFareMap.size);
+      } else if (typeof calendarData === 'object' && calendarData !== null && !Array.isArray(calendarData)) {
+        const entries = Object.entries(calendarData);
+        console.log('Converting calendar fare map from object, entries count:', entries.length);
+        console.log('Sample entries (first 3):', entries.slice(0, 3));
+        this.calendarFareMap = new Map(entries);
+        console.log('Calendar fare map initialized (departure):', this.calendarFareMap.size, 'entries');
+      } else {
+        console.log('Calendar fare map is in unexpected format:', calendarData);
+      }
+      
+      if (this.calendarFareMap && this.calendarFareMap.size > 0) {
+        this.prepareDatePricesFromCalendarMap();
+      }
+    } else {
+      console.log('No calendarFareMap found in flightInputData. Available keys:', Object.keys(this.flightInputData));
+      // If calendar fare map is missing or empty, fetch it if we have the required data
+      if (this.flightInputData['fromAirportCode'] && this.flightInputData['toAirportCode'] && 
+          this.flightInputData['tboToken'] && this.flightInputData['ipAddress']) {
+        console.log('Fetching calendar fare map as it was not provided...');
+        this.fetchFullYearCalendarFare('departure');
+      }
+    }
+    
+    // Also check if calendar fare map exists but is empty
+    if (this.calendarFareMap && this.calendarFareMap.size === 0) {
+      if (this.flightInputData['fromAirportCode'] && this.flightInputData['toAirportCode'] && 
+          this.flightInputData['tboToken'] && this.flightInputData['ipAddress']) {
+        console.log('Calendar fare map is empty, fetching...');
+        this.fetchFullYearCalendarFare('departure');
+      }
     }
 
     if (this.flightInputData['calendarFareMapReturn']) {
-      this.calendarFareMapReturn = new Map(Object.entries(this.flightInputData['calendarFareMapReturn']));
+      const returnData = this.flightInputData['calendarFareMapReturn'];
+      if (returnData instanceof Map) {
+        this.calendarFareMapReturn = returnData;
+      } else if (typeof returnData === 'object' && returnData !== null) {
+        this.calendarFareMapReturn = new Map(Object.entries(returnData));
+      }
+      console.log('Calendar fare map initialized (return):', this.calendarFareMapReturn.size, 'entries');
     }
 
     // Populate modify search form with data from home page
@@ -538,6 +588,24 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.activeTabs = new Array(this.finalFinalList.length).fill('flight');
           this.groupFlights();
           this.generateDynamicFilters();
+          
+          // Ensure date prices are populated if calendar fare map exists
+          // Re-check and initialize calendar fare map if needed
+          if (!this.calendarFareMap || this.calendarFareMap.size === 0) {
+            if (this.flightInputData['calendarFareMap']) {
+              const calendarData = this.flightInputData['calendarFareMap'];
+              if (calendarData instanceof Map) {
+                this.calendarFareMap = calendarData;
+              } else if (typeof calendarData === 'object' && calendarData !== null) {
+                this.calendarFareMap = new Map(Object.entries(calendarData));
+              }
+              console.log('Re-initialized calendar fare map after flight fetch:', this.calendarFareMap.size, 'entries');
+            }
+          }
+          
+          if (this.calendarFareMap && this.calendarFareMap.size > 0) {
+            this.prepareDatePricesFromCalendarMap();
+          }
         }
         this.loader = false;
       },
@@ -749,13 +817,52 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
 
     const selected = this.flightInputData['departureDate'];
-    if (!this.calendarFareMap || this.calendarFareMap.size === 0) return;
+    console.log('prepareDatePricesFromCalendarMap called', {
+      calendarFareMapSize: this.calendarFareMap?.size || 0,
+      flightType: this.flightType,
+      selectedDate: selected,
+      calendarFareMapType: this.calendarFareMap ? 'Map' : 'null',
+      flightInputDataHasCalendar: !!this.flightInputData['calendarFareMap']
+    });
+    
+    if (!this.calendarFareMap || this.calendarFareMap.size === 0) {
+      console.log('Calendar fare map is empty or missing');
+      // Try to re-initialize from flightInputData if available
+      if (this.flightInputData['calendarFareMap']) {
+        const calendarData = this.flightInputData['calendarFareMap'];
+        console.log('Attempting to re-initialize calendar fare map from flightInputData', {
+          type: typeof calendarData,
+          isObject: typeof calendarData === 'object',
+          keys: typeof calendarData === 'object' ? Object.keys(calendarData).length : 0
+        });
+        
+        if (typeof calendarData === 'object' && calendarData !== null) {
+          this.calendarFareMap = new Map(Object.entries(calendarData));
+          console.log('Re-initialized calendar fare map, new size:', this.calendarFareMap.size);
+        }
+      }
+      
+      if (!this.calendarFareMap || this.calendarFareMap.size === 0) {
+        console.log('Calendar fare map still empty after re-initialization attempt');
+        return;
+      }
+    }
 
+    // Convert Map entries to datePrices array format (matching working code structure)
     const sortedEntries = Array.from(this.calendarFareMap.entries())
-      .map(([date, data]) => ({ date, ...data }))
+      .map(([date, data]) => {
+        // Handle both formats: {date, price, ...} or just {price, ...}
+        return {
+          date: data.date || date,
+          price: data.price || 0,
+          isLowest: data.isLowest || false,
+          ...data
+        };
+      })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     this.datePrices = sortedEntries;
+    console.log('Date prices populated:', this.datePrices.length, 'entries');
 
     const selectedIndex = this.datePrices.findIndex(item => item.date === selected);
     if (selectedIndex >= 0) {
@@ -1455,6 +1562,92 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   getDateChangeRule(fare: any): string {
     return fare.dateChangePolicy?.[0]?.Details || 'Not Available';
+  }
+
+  // Fetch calendar fare map if missing (matching hero section implementation)
+  fetchFullYearCalendarFare(direction: 'departure' | 'return' = 'departure'): void {
+    const fromCode = direction === 'departure' 
+      ? this.flightInputData['fromAirportCode'] 
+      : this.flightInputData['toAirportCode'];
+    const toCode = direction === 'departure' 
+      ? this.flightInputData['toAirportCode'] 
+      : this.flightInputData['fromAirportCode'];
+
+    if (!fromCode || !toCode || !this.flightInputData['tboToken'] || !this.flightInputData['ipAddress']) {
+      console.log('Missing required data to fetch calendar fare');
+      return;
+    }
+
+    const mapToUse = direction === 'departure' ? this.calendarFareMap : this.calendarFareMapReturn;
+    mapToUse.clear();
+
+    const today = new Date();
+    const startMonth = today.getMonth();
+    const startYear = today.getFullYear();
+    const fetchPromises: Promise<any>[] = [];
+
+    for (let i = 0; i < 12; i++) {
+      const start = i === 0 ? new Date(today) : new Date(startYear, startMonth + i, 1);
+      const end = this.getMonthEndDate(new Date(startYear, startMonth + i, 1));
+
+      const startDate = this.formatToISO(start);
+      const endDate = this.formatToISO(end);
+
+      const promise = this.apiService
+        .getCalendarFare(
+          this.flightInputData['ipAddress'],
+          this.flightInputData['tboToken'],
+          'oneway',
+          fromCode,
+          toCode,
+          'all',
+          startDate,
+          endDate
+        )
+        .toPromise()
+        .then((res: any) => {
+          console.log("Calendar fare response for month", i + 1, res);
+          const results = res?.Response?.SearchResults || [];
+
+          results.forEach((fareItem: any) => {
+            const raw = fareItem.DepartureDate;
+            const istDate = new Date(new Date(raw).getTime() + 5.5 * 60 * 60 * 1000);
+            const iso = this.formatToISO(istDate);
+
+            mapToUse.set(iso, {
+              date: iso,
+              price: fareItem.Fare,
+              airline: fareItem.AirlineName,
+              isLowest: fareItem.IsLowestFareOfMonth
+            });
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching calendar fare for month', i + 1, error);
+        });
+
+      fetchPromises.push(promise);
+    }
+
+    Promise.all(fetchPromises).then(() => {
+      console.log('Calendar fare map fetched, size:', mapToUse.size);
+      if (direction === 'departure' && mapToUse.size > 0) {
+        this.prepareDatePricesFromCalendarMap();
+      }
+    });
+  }
+
+  formatToISO(date: Date): string {
+    const istOffset = 5.5 * 60; // in minutes
+    const istTime = new Date(date.getTime() + istOffset * 60000);
+    const year = istTime.getUTCFullYear();
+    const month = (istTime.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = istTime.getUTCDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  getMonthEndDate(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
   }
 
   scrollLeft(): void {
