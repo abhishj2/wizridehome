@@ -292,7 +292,7 @@ this.addJsonLd({
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      this.http.post<any>('http://cms.wizztest.com/wp-json/wp/v2/media', formData)
+      this.http.post<any>('https://cms.wizztest.com/wp-json/wp/v2/media', formData)
         .subscribe({
           next: (response) => {
             console.log('File uploaded successfully:', response);
@@ -355,7 +355,7 @@ this.addJsonLd({
 
         console.log('Submitting career application:', submissionData);
 
-        this.http.post('http://cms.wizztest.com/wp-json/wp/v2/career_applications', submissionData)
+        this.http.post('https://cms.wizztest.com/wp-json/wp/v2/career_applications', submissionData)
           .subscribe({
             next: (response) => {
               console.log('Career application submitted successfully:', response);

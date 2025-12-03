@@ -570,12 +570,22 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       2
     ).subscribe({
       next: (val: any) => {
-        console.log('Flight Data', val);
+        console.log('=== ONE-WAY FLIGHT API RESPONSE ===');
+        console.log('Full Response:', JSON.stringify(val, null, 2));
+        console.log('Response Object:', val);
+        console.log('Response.Response exists?', !!val['Response']);
+        console.log('Response.Response.Results exists?', !!val['Response']?.['Results']);
+        console.log('Response.Response.Results type:', typeof val['Response']?.['Results']);
+        console.log('Response.Response.Results value:', val['Response']?.['Results']);
+        
         this.traceid = val['Response']?.['TraceId'];
-        console.log('Trace id ', this.traceid);
+        console.log('Trace ID:', this.traceid);
 
         if (val['Response']?.['Results']?.[0]) {
-          this.finalFinalList = val['Response']['Results'][0].map((flight: any) => {
+          const flightResults = val['Response']['Results'][0];
+          console.log('Raw flight results count:', flightResults.length);
+
+          this.finalFinalList = flightResults.map((flight: any) => {
             const rules = flight.MiniFareRules?.[0] || [];
             return {
               ...flight,
@@ -584,10 +594,30 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             };
           });
 
+          console.log('Processed finalFinalList count:', this.finalFinalList.length);
+
           this.flightDetailsExpanded = new Array(this.finalFinalList.length).fill(false);
           this.activeTabs = new Array(this.finalFinalList.length).fill('flight');
+          
+          // Group flights and generate filters
           this.groupFlights();
           this.generateDynamicFilters();
+          
+          // Initialize selectedFareOptions with lowest fare for each flight
+          this.selectedFareOptions = {};
+          this.groupedFlights.forEach((flight, index) => {
+            if (flight.FareOptions && flight.FareOptions.length > 0) {
+              const lowestFare = flight.FareOptions.reduce((a: any, b: any) => {
+                const fareA = a?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+                const fareB = b?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+                return fareA < fareB ? a : b;
+              });
+              this.selectedFareOptions[index] = lowestFare;
+            }
+          });
+          
+          console.log('After grouping - groupedFlights count:', this.groupedFlights.length);
+          console.log('Initialized selectedFareOptions for', Object.keys(this.selectedFareOptions).length, 'flights');
           
           // Ensure date prices are populated if calendar fare map exists
           // Re-check and initialize calendar fare map if needed
@@ -613,8 +643,34 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               this.fetchFullYearCalendarFare('departure');
             }
           }
+        } else {
+          console.warn('=== NO FLIGHT RESULTS ===');
+          console.warn('Response structure check:', {
+            hasResponse: !!val['Response'],
+            hasResults: !!val['Response']?.['Results'],
+            resultsLength: val['Response']?.['Results']?.length,
+            resultsIsArray: Array.isArray(val['Response']?.['Results']),
+            results: val['Response']?.['Results']
+          });
+          
+          // Check for error messages in response
+          if (val['Response']?.['Error']) {
+            console.error('API Error:', val['Response']['Error']);
+          }
+          if (val['Response']?.['Errors']) {
+            console.error('API Errors:', val['Response']['Errors']);
+          }
+          
+          // Check alternative response structures
+          console.log('Alternative check - val.Results:', val['Results']);
+          console.log('Alternative check - val.response:', val['response']);
+          console.log('Alternative check - val.data:', val['data']);
+          
+          this.finalFinalList = [];
+          this.groupedFlights = [];
         }
         this.loader = false;
+        console.log('Flight fetch complete. Loader set to false.');
       },
       error: (error) => {
         console.error('Error fetching one-way flights:', error);
@@ -683,12 +739,15 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       2
     ).subscribe({
       next: (val: any) => {
-        console.log('Flight Data', val);
+        console.log('Round-trip Flight API Response:', val);
         this.traceid = val['Response']?.['TraceId'];
-        console.log('Trace id ', this.traceid);
+        console.log('Trace ID:', this.traceid);
 
         if (val['Response']?.['Results']?.[0]) {
-          this.finalFinalList = val['Response']['Results'][0].map((flight: any) => {
+          const onwardResults = val['Response']['Results'][0];
+          console.log('Raw onward flight results count:', onwardResults.length);
+          
+          this.finalFinalList = onwardResults.map((flight: any) => {
             const rules = flight.MiniFareRules?.[0] || [];
             return {
               ...flight,
@@ -696,10 +755,17 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               dateChangePolicy: rules.filter((r: any) => r.Type === 'Reissue')
             };
           });
+          console.log('Processed finalFinalList (onward) count:', this.finalFinalList.length);
+        } else {
+          console.warn('No onward flight results in API response');
+          this.finalFinalList = [];
         }
 
         if (val['Response']?.['Results']?.[1]) {
-          this.finalFinalListOutbound = val['Response']['Results'][1].map((flight: any) => {
+          const returnResults = val['Response']['Results'][1];
+          console.log('Raw return flight results count:', returnResults.length);
+          
+          this.finalFinalListOutbound = returnResults.map((flight: any) => {
             const rules = flight.MiniFareRules?.[0] || [];
             return {
               ...flight,
@@ -707,12 +773,22 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               dateChangePolicy: rules.filter((r: any) => r.Type === 'Reissue')
             };
           });
+          console.log('Processed finalFinalListOutbound (return) count:', this.finalFinalListOutbound.length);
+        } else {
+          console.warn('No return flight results in API response');
+          this.finalFinalListOutbound = [];
         }
 
+        // Group both onward and return flights
         this.groupFlights();
         this.groupFlightsOutbound();
+        
+        console.log('After grouping - Onward:', this.groupedFlights.length, 'Return:', this.groupedFlightsOutbound.length);
+        
+        // Generate filters for round trip
         this.generateRoundtripDynamicFilters();
         this.loader = false;
+        console.log('Round-trip flight fetch complete. Loader set to false.');
       },
       error: (error) => {
         console.error('Error fetching round-trip flights:', error);
@@ -982,105 +1058,145 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   // Flight grouping and filtering methods
   groupFlights(): void {
+    console.log('groupFlights called, finalFinalList length:', this.finalFinalList?.length || 0);
+    
+    if (!this.finalFinalList || this.finalFinalList.length === 0) {
+      console.warn('finalFinalList is empty or undefined');
+      this.groupedFlights = [];
+      this.originalGroupedFlights = [];
+      return;
+    }
+
     const map = new Map<string, any>();
     for (const flight of this.finalFinalList) {
-      const firstSegment = flight.Segments[0][0];
-      const lastSegment = flight.Segments[0][flight.Segments[0].length - 1];
+      try {
+        const firstSegment = flight.Segments[0][0];
+        const lastSegment = flight.Segments[0][flight.Segments[0].length - 1];
 
-      let basePerAdult = 0;
-      let taxPerAdult = 0;
-      let totalPerAdult = 0;
-      const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
-      if (adultFare && adultFare.PassengerCount > 0) {
-        basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
-        taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
-        totalPerAdult = basePerAdult + taxPerAdult;
-      }
+        let basePerAdult = 0;
+        let taxPerAdult = 0;
+        let totalPerAdult = 0;
+        const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+        if (adultFare && adultFare.PassengerCount > 0) {
+          basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
+          taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
+          totalPerAdult = basePerAdult + taxPerAdult;
+        }
 
-      const key = `${firstSegment.Airline.AirlineCode}-${firstSegment.Airline.FlightNumber}-` +
-        `${firstSegment.Origin.DepTime}-${lastSegment.Destination.ArrTime}-` +
-        `${firstSegment.Origin.Airport.CityName}-${lastSegment.Destination.Airport.CityName}`;
+        const key = `${firstSegment.Airline.AirlineCode}-${firstSegment.Airline.FlightNumber}-` +
+          `${firstSegment.Origin.DepTime}-${lastSegment.Destination.ArrTime}-` +
+          `${firstSegment.Origin.Airport.CityName}-${lastSegment.Destination.Airport.CityName}`;
 
-      if (!map.has(key)) {
-        map.set(key, {
-          Segments: flight.Segments,
-          Airline: firstSegment.Airline,
-          Origin: firstSegment.Origin,
-          Destination: lastSegment.Destination,
-          FareOptions: [flight],
-          baseFarePerAdult: basePerAdult,
-          taxPerAdult: taxPerAdult,
-          price: totalPerAdult,
-          logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
-          isRefundable: flight.IsRefundable ?? false,
-          airline: firstSegment.Airline.AirlineName,
-          departure: firstSegment.Origin?.DepTime
-            ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            : 'N/A',
-          arrival: lastSegment.Destination?.ArrTime
-            ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            : 'N/A'
-        });
-      } else {
-        map.get(key).FareOptions.push(flight);
+        if (!map.has(key)) {
+          map.set(key, {
+            Segments: flight.Segments,
+            Airline: firstSegment.Airline,
+            Origin: firstSegment.Origin,
+            Destination: lastSegment.Destination,
+            FareOptions: [flight],
+            baseFarePerAdult: basePerAdult,
+            taxPerAdult: taxPerAdult,
+            price: totalPerAdult,
+            logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
+            isRefundable: flight.IsRefundable ?? false,
+            airline: firstSegment.Airline.AirlineName,
+            departure: firstSegment.Origin?.DepTime
+              ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : 'N/A',
+            arrival: lastSegment.Destination?.ArrTime
+              ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : 'N/A'
+          });
+        } else {
+          map.get(key).FareOptions.push(flight);
+        }
+      } catch (error) {
+        console.error('Error grouping flight:', error, flight);
       }
     }
+    
     this.groupedFlights = Array.from(map.values());
+    // Store original before any filters are applied
+    this.originalGroupedFlights = [...this.groupedFlights];
+    
     if (this.groupedFlights.length > 0) {
       this.selectedOutbound = this.groupedFlights[0];
+      console.log('Grouped flights successfully:', this.groupedFlights.length, 'flights');
+    } else {
+      console.warn('No flights after grouping');
     }
-    console.log("Group Flights", this.groupedFlights);
+    console.log("Group Flights Result:", this.groupedFlights);
   }
 
   groupFlightsOutbound(): void {
+    console.log('groupFlightsOutbound called, finalFinalListOutbound length:', this.finalFinalListOutbound?.length || 0);
+    
+    if (!this.finalFinalListOutbound || this.finalFinalListOutbound.length === 0) {
+      console.warn('finalFinalListOutbound is empty or undefined');
+      this.groupedFlightsOutbound = [];
+      this.originalGroupedFlightsOutbound = [];
+      return;
+    }
+
     const map = new Map<string, any>();
     for (const flight of this.finalFinalListOutbound) {
-      const firstSegment = flight.Segments[0][0];
-      const lastSegment = flight.Segments[0][flight.Segments[0].length - 1];
+      try {
+        const firstSegment = flight.Segments[0][0];
+        const lastSegment = flight.Segments[0][flight.Segments[0].length - 1];
 
-      let basePerAdult = 0;
-      let taxPerAdult = 0;
-      let totalPerAdult = 0;
-      const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
-      if (adultFare && adultFare.PassengerCount > 0) {
-        basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
-        taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
-        totalPerAdult = basePerAdult + taxPerAdult;
-      }
+        let basePerAdult = 0;
+        let taxPerAdult = 0;
+        let totalPerAdult = 0;
+        const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+        if (adultFare && adultFare.PassengerCount > 0) {
+          basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
+          taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
+          totalPerAdult = basePerAdult + taxPerAdult;
+        }
 
-      const key = `${firstSegment.Airline.AirlineCode}-${firstSegment.Airline.FlightNumber}-` +
-        `${firstSegment.Origin.DepTime}-${lastSegment.Destination.ArrTime}-` +
-        `${firstSegment.Origin.Airport.CityName}-${lastSegment.Destination.Airport.CityName}`;
+        const key = `${firstSegment.Airline.AirlineCode}-${firstSegment.Airline.FlightNumber}-` +
+          `${firstSegment.Origin.DepTime}-${lastSegment.Destination.ArrTime}-` +
+          `${firstSegment.Origin.Airport.CityName}-${lastSegment.Destination.Airport.CityName}`;
 
-      if (!map.has(key)) {
-        map.set(key, {
-          Segments: flight.Segments,
-          Airline: firstSegment.Airline,
-          Origin: firstSegment.Origin,
-          Destination: lastSegment.Destination,
-          FareOptions: [flight],
-          baseFarePerAdult: basePerAdult,
-          taxPerAdult: taxPerAdult,
-          price: totalPerAdult,
-          logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
-          isRefundable: flight.IsRefundable ?? false,
-          airline: firstSegment.Airline.AirlineName,
-          departure: firstSegment.Origin?.DepTime
-            ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            : 'N/A',
-          arrival: lastSegment.Destination?.ArrTime
-            ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            : 'N/A'
-        });
-      } else {
-        map.get(key).FareOptions.push(flight);
+        if (!map.has(key)) {
+          map.set(key, {
+            Segments: flight.Segments,
+            Airline: firstSegment.Airline,
+            Origin: firstSegment.Origin,
+            Destination: lastSegment.Destination,
+            FareOptions: [flight],
+            baseFarePerAdult: basePerAdult,
+            taxPerAdult: taxPerAdult,
+            price: totalPerAdult,
+            logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
+            isRefundable: flight.IsRefundable ?? false,
+            airline: firstSegment.Airline.AirlineName,
+            departure: firstSegment.Origin?.DepTime
+              ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : 'N/A',
+            arrival: lastSegment.Destination?.ArrTime
+              ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : 'N/A'
+          });
+        } else {
+          map.get(key).FareOptions.push(flight);
+        }
+      } catch (error) {
+        console.error('Error grouping outbound flight:', error, flight);
       }
     }
+    
     this.groupedFlightsOutbound = Array.from(map.values());
+    // Store original before any filters are applied
+    this.originalGroupedFlightsOutbound = [...this.groupedFlightsOutbound];
+    
     if (this.groupedFlightsOutbound.length > 0) {
       this.selectedReturn = this.groupedFlightsOutbound[0];
+      console.log('Grouped outbound flights successfully:', this.groupedFlightsOutbound.length, 'flights');
+    } else {
+      console.warn('No outbound flights after grouping');
     }
-    console.log("Group Flights Outbound", this.groupedFlightsOutbound);
+    console.log("Group Flights Outbound Result:", this.groupedFlightsOutbound);
   }
 
   generateDynamicFilters(): void {
@@ -1113,11 +1229,22 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   generateRoundtripDynamicFilters(): void {
-    if (!this.originalGroupedFlights?.length) {
-      this.originalGroupedFlights = [...this.groupedFlights];
+    console.log('generateRoundtripDynamicFilters called');
+    console.log('groupedFlights length:', this.groupedFlights?.length || 0);
+    console.log('groupedFlightsOutbound length:', this.groupedFlightsOutbound?.length || 0);
+
+    // Ensure original arrays are backed up (but don't overwrite if already set)
+    if (!this.originalGroupedFlights || this.originalGroupedFlights.length === 0) {
+      if (this.groupedFlights && this.groupedFlights.length > 0) {
+        this.originalGroupedFlights = [...this.groupedFlights];
+        console.log('Backed up originalGroupedFlights:', this.originalGroupedFlights.length);
+      }
     }
-    if (!this.originalGroupedFlightsOutbound?.length) {
-      this.originalGroupedFlightsOutbound = [...this.groupedFlightsOutbound];
+    if (!this.originalGroupedFlightsOutbound || this.originalGroupedFlightsOutbound.length === 0) {
+      if (this.groupedFlightsOutbound && this.groupedFlightsOutbound.length > 0) {
+        this.originalGroupedFlightsOutbound = [...this.groupedFlightsOutbound];
+        console.log('Backed up originalGroupedFlightsOutbound:', this.originalGroupedFlightsOutbound.length);
+      }
     }
 
     const generate = (flights: any[]) => {
@@ -1142,10 +1269,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       };
     };
 
-    this.roundtripDynamicFiltersOnward = generate(this.originalGroupedFlights);
-    this.roundtripDynamicFiltersReturn = generate(this.originalGroupedFlightsOutbound);
+    this.roundtripDynamicFiltersOnward = generate(this.originalGroupedFlights || this.groupedFlights);
+    this.roundtripDynamicFiltersReturn = generate(this.originalGroupedFlightsOutbound || this.groupedFlightsOutbound);
     this.roundtripPriceRangeOnward = this.roundtripDynamicFiltersOnward.max_price;
     this.roundtripPriceRangeReturn = this.roundtripDynamicFiltersReturn.max_price;
+    
+    console.log('Onward filters:', this.roundtripDynamicFiltersOnward);
+    console.log('Return filters:', this.roundtripDynamicFiltersReturn);
   }
 
   // Filter methods
@@ -1187,10 +1317,18 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   applyAllFilters(): void {
-    if (!this.originalGroupedFlights?.length) {
-      this.originalGroupedFlights = [...this.groupedFlights];
+    // Ensure we have original data backed up
+    if (!this.originalGroupedFlights || this.originalGroupedFlights.length === 0) {
+      if (this.groupedFlights && this.groupedFlights.length > 0) {
+        this.originalGroupedFlights = [...this.groupedFlights];
+      } else {
+        console.warn('No flights to filter');
+        return;
+      }
     }
 
+    console.log('Applying filters. Original flights count:', this.originalGroupedFlights.length);
+    
     this.groupedFlights = this.originalGroupedFlights.filter(flight => {
       const airlineMatch = this.selectedAirlines.length === 0 ||
         this.selectedAirlines.includes(flight.airline);
@@ -1216,6 +1354,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
       return airlineMatch && stopsMatch && priceMatch && timeSlotMatch && refundabilityMatch;
     });
+
+    console.log('After filtering:', this.groupedFlights.length, 'flights remain');
   }
 
   // Roundtrip filter methods
@@ -1371,10 +1511,19 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.flightDetailsExpanded[index] = !this.flightDetailsExpanded[index];
     if (this.flightDetailsExpanded[index]) {
       this.activeTabs[index] = 'flight';
-      const lowestFare = flight.FareOptions.reduce((a: any, b: any) =>
-        a.Fare.PublishedFare < b.Fare.PublishedFare ? a : b
-      );
-      this.selectedFareOptions[index] = lowestFare;
+      
+      // Find and set the lowest fare option for this flight
+      if (flight.FareOptions && flight.FareOptions.length > 0) {
+        const lowestFare = flight.FareOptions.reduce((a: any, b: any) => {
+          const fareA = a?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+          const fareB = b?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+          return fareA < fareB ? a : b;
+        });
+        this.selectedFareOptions[index] = lowestFare;
+        console.log('Selected lowest fare for flight', index, ':', lowestFare?.Fare?.PublishedFare);
+      } else {
+        console.warn('No fare options available for flight', index);
+      }
     }
   }
 
@@ -1386,7 +1535,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   openFareOptionsModal(flight: any): void {
     this.selectedFlight = flight;
     this.showFareModal = true;
-    console.log("selected flight", this.selectedFlight);
+    console.log("Selected flight for fare options:", this.selectedFlight);
+    console.log("Available fare options:", this.selectedFlight?.FareOptions?.length || 0);
   }
 
   closeFareOptionsModal(): void {

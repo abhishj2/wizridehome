@@ -371,8 +371,15 @@
           <div class="results-column">
             <!-- One Way Flights -->
             <div *ngIf="flightType === 'oneway'" class="flight-list-container">
+              <!-- Debug Info (remove after testing) -->
+              <!-- <div style="padding: 20px; background: #f0f0f0; margin: 10px 0;">
+                <p>Debug: flightType = {{ flightType }}</p>
+                <p>Debug: groupedFlights length = {{ groupedFlights?.length || 0 }}</p>
+                <p>Debug: loader = {{ loader }}</p>
+              </div> -->
+
               <!-- Flight Cards (matching booking-results card design) -->
-              <div class="flight-cards" *ngIf="groupedFlights.length > 0">
+              <div class="flight-cards" *ngIf="groupedFlights && groupedFlights.length > 0">
                 <div class="card" [class.card-expanded]="flightDetailsExpanded[i]" *ngFor="let flight of groupedFlights; let i = index">
                   <!-- Date Hanger -->
                   <div class="date-hanger">
@@ -558,15 +565,23 @@
               </div>
 
               <!-- No Flights Message -->
-              <div class="no-flights" *ngIf="groupedFlights.length === 0 && !loader">
+              <div class="no-flights" *ngIf="(!groupedFlights || groupedFlights.length === 0) && !loader">
                 <p>No flights found for your search criteria. Please try modifying your search.</p>
               </div>
             </div>
 
             <!-- Round Trip Flights -->
             <div *ngIf="flightType === 'round'" class="flight-list-container">
+              <!-- Debug Info (remove after testing) -->
+              <!-- <div style="padding: 20px; background: #f0f0f0; margin: 10px 0;">
+                <p>Debug: flightType = {{ flightType }}</p>
+                <p>Debug: groupedFlights (onward) length = {{ groupedFlights?.length || 0 }}</p>
+                <p>Debug: groupedFlightsOutbound (return) length = {{ groupedFlightsOutbound?.length || 0 }}</p>
+                <p>Debug: loader = {{ loader }}</p>
+              </div> -->
+
               <!-- Outbound Flights Section -->
-              <div class="flight-section">
+              <div class="flight-section" *ngIf="groupedFlights && groupedFlights.length > 0">
                 <h3 class="section-title">Outbound Flights</h3>
                 <div class="flight-cards">
                   <div class="card" [class.selected]="selectedOutbound === flight" 
@@ -638,7 +653,7 @@
               </div>
 
               <!-- Return Flights Section -->
-              <div class="flight-section">
+              <div class="flight-section" *ngIf="groupedFlightsOutbound && groupedFlightsOutbound.length > 0">
                 <h3 class="section-title">Return Flights</h3>
                 <div class="flight-cards">
                   <div class="card" [class.selected]="selectedReturn === flight" 
@@ -707,6 +722,17 @@
                     </label>
                   </div>
                 </div>
+              </div>
+
+              <!-- No Flights Messages for Round Trip -->
+              <div class="no-flights" *ngIf="(!groupedFlights || groupedFlights.length === 0) && !loader">
+                <h3>No Outbound Flights Found</h3>
+                <p>No outbound flights found for your search criteria. Please try modifying your search.</p>
+              </div>
+
+              <div class="no-flights" *ngIf="(!groupedFlightsOutbound || groupedFlightsOutbound.length === 0) && !loader && groupedFlights && groupedFlights.length > 0">
+                <h3>No Return Flights Found</h3>
+                <p>No return flights found for your search criteria. Please try modifying your search.</p>
               </div>
 
               <!-- Sticky Footer for Round Trip -->

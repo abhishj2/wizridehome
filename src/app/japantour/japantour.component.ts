@@ -705,7 +705,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Submitting Japan tour enquiry:', submissionData);
 
     // Submit to WordPress
-    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/japan_tour_enquiries', submissionData)
+    this.http.post('https://cms.wizztest.com/wp-json/wp/v2/japan_tour_enquiries', submissionData)
       .subscribe({
         next: (response: any) => {
           console.log('Japan tour enquiry submitted successfully:', response);

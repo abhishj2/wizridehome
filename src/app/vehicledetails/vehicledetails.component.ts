@@ -258,7 +258,7 @@ export class VehicledetailsComponent implements OnInit, OnDestroy {
 
   fetchVehicleDetails(): void {
     this.isLoadingVehicle = true;
-    this.http.get<Vehicle[]>(`http://cms.wizztest.com/wp-json/wp/v2/buy_sell_cars?include=${this.vehicleId}`)
+    this.http.get<Vehicle[]>(`https://cms.wizztest.com/wp-json/wp/v2/buy_sell_cars?include=${this.vehicleId}`)
       .subscribe({
         next: (data) => {
           if (data && data.length > 0) {
@@ -376,7 +376,7 @@ export class VehicledetailsComponent implements OnInit, OnDestroy {
 
     console.log('Submitting enquiry:', enquiryData);
 
-    this.http.post('http://cms.wizztest.com/wp-json/wp/v2/vehicle_enquiries', enquiryData)
+    this.http.post('https://cms.wizztest.com/wp-json/wp/v2/vehicle_enquiries', enquiryData)
       .subscribe({
         next: (response) => {
           console.log('Enquiry submitted successfully:', response);

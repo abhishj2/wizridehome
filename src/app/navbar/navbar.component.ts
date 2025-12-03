@@ -74,13 +74,15 @@ export class NavbarComponent {
       ]
     },
     {
+      name: 'Blogs',
+      hasDropdown: false,
+      link: '/blogs'
+    },
+    {
       name: 'Social',
-      hasDropdown: true,
-      dropdownItems: [
-        { name: 'News & Announcements', link: '/newsandannouncements' },
-        { name: 'Related Blogs', link: '/blogs' }
-        
-      ]
+      hasDropdown: false,
+      link: '/newsandannouncements'
+   
     },
     {
       name: 'Sell Your Car',

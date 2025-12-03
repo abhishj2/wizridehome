@@ -552,7 +552,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         cabinClass : cabinClass,
         departureDate : departureDate,
         resultFareType : fareType,
-        // env : 'test'
+        // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
         env : 'test'
       }    
   
@@ -580,8 +580,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         departureDate : departureDate,
         returnDate : returnDate,
         resultFareType : fareType,
+        // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
         // env : 'test'
-        env : 'test'
       }    
   
       console.log("Data for Sell Your Car",data)
