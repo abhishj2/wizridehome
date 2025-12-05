@@ -103,14 +103,14 @@ export class HomeComponent
       id: 1,
       title: 'International Packages',
       description: 'Explore the world with our curated international travel packages. Hassle-free planning for your global adventures.',
-      image: '../assets/images/international.jpg',
+      image: 'assets/images/international.jpg',
       link:'https://wizzride.com/ourservices/holidaystours/Wizzride-International-Holiday-Planner/'
     },
     {
       id: 2,
       title: 'Flight & Hotel Bookings',
       description: 'Simplify your travel with our flight and hotel booking services. Best deals, easy reservations, and 24/7 support.',
-      image: '../assets/images/flight.jpg',
+      image: 'assets/images/flight.jpg',
       link:'https://wizzride.com/flight-booking'
       
     },
@@ -118,7 +118,7 @@ export class HomeComponent
       id: 3,
       title: 'Luxury Shared Taxis',
       description: 'Enjoy premium shared taxi rides with top-notch comfort and convenience. On-time departures, spacious seating, and budget-friendly fares for all.',
-      image: 'https://wizzride.com/assets/images_new/wizcar.jpeg',
+      image: 'assets/images/wizcar.jpeg',
       link:'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/'
     },
     
@@ -127,14 +127,14 @@ export class HomeComponent
       id:4,
       title: 'Expert Holiday Planner',
       description: 'Let our experts plan your dream holiday. From itineraries to bookings, we ensure a seamless and memorable travel experience.',
-      image: '../assets/images/holiday.jpg',
+      image: 'assets/images/holiday.jpg',
       link:'https://wizzride.com/ourservices/holidaystours/'
     },
     {
       id: 5,
       title: 'Private Reserved Cabs',
       description: 'Book a private cab for a personalized travel experience. Perfect for families, groups, or solo travelers seeking privacy.',
-      image: 'https://wizzride.com/assets/images_new/ridetoairport_3.jpg',
+      image: 'assets/images/ridetoairport_3.jpg',
       link:'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/'
      
     },
@@ -150,6 +150,9 @@ export class HomeComponent
   reservedCabsStats: Array<{number: string, label: string}> = [];
   numbersSectionStats: Array<{number: string, label: string, description: string, icon: string}> = [];
   isLoadingStats = false;
+  
+  // Track home schema IDs for cleanup
+  private homeSchemaIds: string[] = ['home-breadcrumb-schema', 'home-org-schema'];
   
 // 3D Testimonial Carousel Properties
 @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
@@ -899,7 +902,7 @@ trackByOfferId(index: number, offer: any): number {
           "item": "https://www.wizzride.com/"
         }
       ]
-    });
+    }, 'home-breadcrumb-schema');
 
     // Organization Schema (JSON-LD)
     this.insertJsonLd({
@@ -948,7 +951,7 @@ trackByOfferId(index: number, offer: any): number {
         "ratingValue": "4.7",
         "reviewCount": "2411"
       }
-    });
+    }, 'home-org-schema');
 
     // Load offers for current tab
     this.loadOffers(this.currentTab);
@@ -961,8 +964,15 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   // Helper method to insert JSON-LD structured data
-  private insertJsonLd(schema: any): void {
+  private insertJsonLd(schema: any, id: string): void {
+    // Remove existing schema with same ID if it exists
+    const existingScript = this.document.getElementById(id);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
     const script = this.renderer2.createElement('script');
+    script.id = id;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schema);
     this.renderer2.appendChild(this.document.head, script);
@@ -972,13 +982,19 @@ trackByOfferId(index: number, offer: any): number {
   
 
   ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    // Clean up home schemas to prevent duplicates
+    this.homeSchemaIds.forEach(id => {
+      const script = this.document.getElementById(id);
+      if (script) {
+        script.remove();
+      }
+    });
+
     this.destroy$.next();
     this.destroy$.complete();
     
-        // Clean up 3D carousel interval
-        this.stopAutoplay();
+    // Clean up 3D carousel interval
+    this.stopAutoplay();
   }
 
   ngAfterViewInit() {

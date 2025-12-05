@@ -59,6 +59,14 @@ export class WordpressService {
     );
   }
 
+  getFAQs(): Observable<any> {
+    const url = `${this.baseUrl}/published_faqs?_embed&acf_format=standard&status=publish&per_page=100&orderby=menu_order&order=asc`;
+    
+    return this.http.get(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('WordPress API Error:', error);
     return throwError(() => new Error(`WordPress API Error: ${error.message}`));

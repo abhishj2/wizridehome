@@ -38,8 +38,8 @@ export class OurphilosophyComponent implements AfterViewInit {
     this.metaService.updateTag({ property: 'og:title', content: 'Wizzride Work Philosophy - Excellence, Commitment & Service' });
     this.metaService.updateTag({ property: 'og:description', content: "Discover Wizzride's work philosophy centered on excellence, customer satisfaction, and innovation. Learn how our values drive superior service and positive impact." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
-    this.metaService.updateTag({ property: 'og:url', content: 'h\https://wizzride.com/aboutcompany/ourworkphilosophy' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/aboutcompany/ourworkphilosophy' });
+    this.metaService.updateTag({ property: 'og:image', content: 'assets/images/aboutimages/aboutmain.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -47,7 +47,7 @@ export class OurphilosophyComponent implements AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride: Premier Shared Cab and Tour Services in Northeast India' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Discover Wizzride's work philosophy centered on excellence, customer satisfaction, and innovation. Learn how our values drive superior service and positive impact."});
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'assets/images/aboutimages/aboutmain.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

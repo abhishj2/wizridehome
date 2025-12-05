@@ -37,7 +37,7 @@ export class AboutCompanyComponent implements AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: 'Discover Wizzride, a leading travel management and shared cab company in Northeast India, offering reliable tour packages and comfortable travel solutions.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/aboutcompany' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'assets/images/aboutimages/aboutmain.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -45,7 +45,7 @@ export class AboutCompanyComponent implements AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride: Premier Shared Cab and Tour Services in Northeast India' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Discover Wizzride, a leading travel management and shared cab company in Northeast India, offering reliable tour packages and comfortable travel solutions.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'assets/images/aboutimages/aboutmain.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

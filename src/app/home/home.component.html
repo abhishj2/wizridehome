@@ -44,10 +44,10 @@
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
                 <span class="icon" *ngIf="tab === 'shared-cabs'"><img
-                        src="../../assets/images/shared-removebg-preview.png" /></span>
+                        src="assets/images/shared-removebg-preview.png" /></span>
                 <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" /></span>
                 <span class="icon" *ngIf="tab === 'flights'"><img
-                        src="../../assets/images/flight.png" /></span>
+                        src="assets/images/flight.png" /></span>
                 {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
             </button>
         </div>
@@ -913,13 +913,13 @@
     <button *ngFor="let tab of tabs" class="mobile-nav-tab" [class.active]="currentTab === tab"
         (click)="switchTab(tab)">
         <span class="mobile-icon" *ngIf="tab === 'shared-cabs'">
-            <img src="../../assets/images/shared-removebg-preview.png" />
+            <img src="assets/images/shared-removebg-preview.png" />
         </span>
         <span class="mobile-icon" *ngIf="tab === 'reserved-cabs'">
-            <img src="../../assets/images/reserved.png" />
+            <img src="assets/images/reserved.png" />
         </span>
         <span class="mobile-icon" *ngIf="tab === 'flights'">
-            <img src="../../assets/images/flight.png" />
+            <img src="assets/images/flight.png" />
         </span>
         <span class="mobile-label">{{ tab === 'shared-cabs' ? 'Shared' : tab === 'reserved-cabs' ? 'Reserve' : 'Flights' }}</span>
     </button>
@@ -1000,7 +1000,7 @@
                     </div>
 
                     <div class="connectivity-illustration">
-                        <img src="https://wizzride.com/illustration1.f909f03abb56d801.svg" alt="Travel Illustration">
+                        <img src="assets/images/illustration1.f909f03abb56d801.svg" alt="Travel Illustration">
                     </div>
                 </div>
             </section>
@@ -1030,7 +1030,7 @@
                         </div>
 
                         <div class="phone-mockup">
-                            <img src="../../assets/images/phonemockup.png" alt="WizzRide App Interface">
+                            <img src="assets/images/phonemockup.png" alt="WizzRide App Interface">
                         </div>
                     </div>
 
@@ -1050,7 +1050,7 @@
                             <div class="download-cta">
                                 <div class="qr-code-container">
                                     <div class="qr-code">
-                                        <img src="../../assets/images/qrframe.png" alt="wizrideappqr" />
+                                        <img src="assets/images/qrframe.png" alt="wizrideappqr" />
                                     </div>
                                     <span class="scan-text">Scan Me</span>
                                 </div>
@@ -1144,7 +1144,7 @@
 <section class="japan-experience-section">
     <!-- Video Background -->
     <video class="japan-video" autoplay muted loop playsinline preload="metadata">
-        <source src="../../assets/videos/JapanVideo.mp4" type="video/mp4">
+        <source src="assets/videos/JapanVideo.mp4" type="video/mp4">
         <!-- Fallback for browsers that don't support video -->
         Your browser does not support the video tag.
     </video>

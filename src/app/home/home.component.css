@@ -110,7 +110,7 @@ h2{
 }
 
 .booking-section-wrapper {
-    background:url('../../assets/images/newbg.jpg');
+    background:url('/assets/images/newbg.jpg');
     background-size:cover;
     background-repeat: no-repeat;
     padding: 80px 40px;

@@ -39,7 +39,7 @@ export class OurcommitmentComponent  implements AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: "Experience Wizzride's unwavering commitment to delivering luxury shared cab services. Our promise focuses on comfort, safety, and exceptional travel experiences." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/aboutcompany/ourcommittment' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'assets/images/aboutimages/commitment.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -48,7 +48,7 @@ export class OurcommitmentComponent  implements AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:title', content: 
     "Wizzride's Commitment to Excellence - Luxury Shared Cab Service" });
     this.metaService.updateTag({ name: 'twitter:description', content: "Experience Wizzride's unwavering commitment to delivering luxury shared cab services. Our promise focuses on comfort, safety, and exceptional travel experiences."});
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'assets/images/aboutimages/commitment.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  
