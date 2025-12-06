@@ -42,7 +42,7 @@ export class YuksomComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Explore Yuksom, Sikkim – a historic town with monasteries, trekking trails, and cultural heritage. Discover top attractions, best routes, and Wizzride cab services." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/yuksom/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/yuksom.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class YuksomComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Yuksom Travel Guide | Attractions, Trekking & Travel Tips' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Explore Yuksom, Sikkim – a historic town with monasteries, trekking trails, and cultural heritage. Discover top attractions, best routes, and Wizzride cab services." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/yuksom.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

@@ -42,7 +42,7 @@ export class KamakhyatempleComponent  implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ property: 'og:description', content: "Explore Kamakhya Temple, a sacred Shakti Peetha in Guwahati. Learn about its history, festivals, and how to visit with Wizzride cab services." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/kamakhya/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/Kamakhya.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class KamakhyatempleComponent  implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Kamakhya Temple Guide | History, Festivals & Travel Tips' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Explore Kamakhya Temple, a sacred Shakti Peetha in Guwahati. Learn about its history, festivals, and how to visit with Wizzride cab services." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Kamakhya.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

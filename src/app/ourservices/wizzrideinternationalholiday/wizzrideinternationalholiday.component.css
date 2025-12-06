@@ -383,7 +383,7 @@
   /* Adventure Hero */
   .adventure-hero {
     height: 400px;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://wizzride.com/assets/images/icons/Wizzride-Adventure-Tourism.png') center/cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/icons/Wizzride-Adventure-Tourism.png') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;

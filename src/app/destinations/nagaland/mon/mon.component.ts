@@ -42,7 +42,7 @@ export class MonComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Book reserved cabs to Mon Village with Wizzride. Safe travel from Dimapur, Mokokchung & Nagaland. Explore Konyak heritage, tattooed tribes & scenic hills." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/mon/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/monbanner.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class MonComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Mon Village Cab Booking | Wizzride Private Rides' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book reserved cabs to Mon Village with Wizzride. Safe travel from Dimapur, Mokokchung & Nagaland. Explore Konyak heritage, tattooed tribes & scenic hills." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/monbanner.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

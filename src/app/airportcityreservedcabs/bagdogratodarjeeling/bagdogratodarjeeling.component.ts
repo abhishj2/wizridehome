@@ -42,7 +42,7 @@ export class BagdogratodarjeelingComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ property: 'og:description', content: "Book a reserved cab from Bagdogra Airport to Darjeeling with Wizzride. Choose from SUVs, sedans, and luxury cars for a comfortable and affordable journey." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/airports/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Darjeeling_Reserved_Cab_Service' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/darjeeling.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagdogratodarjeelingComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra Airport to Darjeeling Reserved Cab Service | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a reserved cab from Bagdogra Airport to Darjeeling with Wizzride. Choose from SUVs, sedans, and luxury cars for a comfortable and affordable journey." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/darjeeling.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

@@ -74,7 +74,7 @@ export class HolidaytoursComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: "Discover Wizzride's boutique holiday packages, including the best holiday experiences and international group tour packages. Enjoy curated, seamless, and unforgettable journeys." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/holidaystours' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/holidayhero.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -82,7 +82,7 @@ export class HolidaytoursComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: "Best Holiday & International Group Tours - Boutique Packages" });
     this.metaService.updateTag({ name: 'twitter:description', content: "Discover Wizzride's boutique holiday packages, including the best holiday experiences and international group tour packages. Enjoy curated, seamless, and unforgettable journeys." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/holidayhero.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

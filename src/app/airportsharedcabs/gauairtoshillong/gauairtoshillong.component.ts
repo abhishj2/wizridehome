@@ -42,7 +42,7 @@ export class GauairtoshillongComponent implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ property: 'og:description', content: "Book a reliable shared cab from Guwahati to Shillong. Enjoy affordable, comfortable rides with Wizzride. The distance from Guwahati to Shillong is 100 km." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/sgil.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GauairtoshillongComponent implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Shillong - Shared Cab Service | Book Now' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a reliable shared cab from Guwahati to Shillong. Enjoy affordable, comfortable rides with Wizzride. The distance from Guwahati to Shillong is 100 km." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/sgil.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

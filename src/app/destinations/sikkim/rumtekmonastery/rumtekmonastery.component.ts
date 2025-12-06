@@ -42,7 +42,7 @@ export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ property: 'og:description', content: "Book safe private cabs to Rumtek Monastery with Wizzride. Travel from Gangtok, Bagdogra & Siliguri. Discover Sikkim’s famous monastery, culture & views." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/rumtek_monastery/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/rumtek-view.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Rumtek Monastery Cab Booking | Wizzride Private Rides' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book safe private cabs to Rumtek Monastery with Wizzride. Travel from Gangtok, Bagdogra & Siliguri. Discover Sikkim’s famous monastery, culture & views." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/rumtek-view.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

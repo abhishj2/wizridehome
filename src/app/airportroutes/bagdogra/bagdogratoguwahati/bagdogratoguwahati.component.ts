@@ -50,7 +50,7 @@ export class BagdogratoguwahatiComponent  implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra to Guwahati Flights | Cheap IXB to GAU Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Bagdogra to Guwahati flights with Wizzride. Compare fares & airlines, and enjoy a smooth journey between North Bengal and Assam. Reserve your ticket today" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/guwahatiairp.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

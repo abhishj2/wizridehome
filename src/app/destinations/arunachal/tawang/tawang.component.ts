@@ -42,7 +42,7 @@ export class TawangComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Book Wizzride cabs to Tawang and explore the Himalayas. Visit Tawang Monastery, Sela Pass, Madhuri Lake & Nuranang Falls with safe rides and local drivers." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/tawang/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/Tawang.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class TawangComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Tawang Cab Booking | Wizzride Rides to Monasteries & Lakes' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Wizzride cabs to Tawang and explore the Himalayas. Visit Tawang Monastery, Sela Pass, Madhuri Lake & Nuranang Falls with safe rides and local drivers." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Tawang.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

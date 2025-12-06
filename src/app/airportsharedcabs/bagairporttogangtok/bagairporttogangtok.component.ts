@@ -42,7 +42,7 @@ export class BagairporttogangtokComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Book a reliable shared cab from Bagdogra to Gangtok. Enjoy affordable, comfortable rides with Wizzride. Bagdogra to Gangtok Distance is 125km." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Luxury-Shared-Cabs/Bagdogra_Airport_to_Gangtok_Shared_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagairporttogangtokComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra to Gangtok - Shared Cab Service| Book with Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a reliable shared cab from Bagdogra to Gangtok. Enjoy affordable, comfortable rides with Wizzride. Bagdogra to Gangtok Distance is 125km." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

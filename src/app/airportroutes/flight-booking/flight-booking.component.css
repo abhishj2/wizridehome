@@ -7,7 +7,7 @@
         rgba(29, 170, 186, 0.85),
         rgba(10, 125, 140, 0.85)
     ),
-    url('../../../assets/images/airportroutes/guwahatiairp.jpg') !important;
+    url('/assets/images/airportroutes/guwahatiairp.jpg') !important;
     background-size: cover !important;
     background-position: center !important;
     background-attachment: fixed !important;

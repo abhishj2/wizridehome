@@ -33,7 +33,7 @@
     bottom: 0;
     background: linear-gradient(135deg,
         rgba(29, 170, 186, 0.9),
-        rgba(10, 125, 140, 0.9)), url('../../../assets/images/careermain.jpg');
+        rgba(10, 125, 140, 0.9)), url('/assets/images/careermain.jpg');
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -251,7 +251,7 @@
   }
 
   .form-image {
-    background: url('../../../assets/images/careerformimage.png') center/cover;
+    background: url('/assets/images/careerformimage.png') center/cover;
     position: relative;
   }
 

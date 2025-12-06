@@ -42,7 +42,7 @@ export class NathulapassComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Book safe and reliable cabs to Nathula Pass with Wizzride. Scenic travel from Gangtok to Sikkim’s iconic high-altitude pass." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/nathula_pass/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/nathula-lake.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class NathulapassComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Nathula Pass Cab Booking|Wizzride Shared and Reserved Rides' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book safe and reliable cabs to Nathula Pass with Wizzride. Scenic travel from Gangtok to Sikkim’s iconic high-altitude pass." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/nathula-lake.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

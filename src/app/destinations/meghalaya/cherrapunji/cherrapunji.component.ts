@@ -42,7 +42,7 @@ export class CherrapunjiComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Explore Cherrapunji, Meghalaya – the land of Living Root Bridges, stunning waterfalls, and eternal rain. Discover the best places, travel tips, and Wizzride cab services." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/cherrapunji/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/Cherrapunji_Hero.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class CherrapunjiComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Cherrapunji Travel Guide | Top Attractions & Travel Tips' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Explore Cherrapunji, Meghalaya – the land of Living Root Bridges, stunning waterfalls, and eternal rain. Discover the best places, travel tips, and Wizzride cab services." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Cherrapunji_Hero.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

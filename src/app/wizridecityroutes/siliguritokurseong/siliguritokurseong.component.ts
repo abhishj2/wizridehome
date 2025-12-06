@@ -42,7 +42,7 @@ export class SiliguritokurseongComponent  implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ property: 'og:description', content: "Book a reliable taxi or cab from Siliguri to Kurseong with Wizzride. Find taxi fares, schedules, and more for a comfortable journey." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Kurseong_Shared_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/kgn.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class SiliguritokurseongComponent  implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Siliguri to Kurseong Taxi & Cab Services | Book Shared Cabs, Fares & More' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a reliable taxi or cab from Siliguri to Kurseong with Wizzride. Find taxi fares, schedules, and more for a comfortable journey." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/kgn.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

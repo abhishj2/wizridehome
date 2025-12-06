@@ -42,7 +42,7 @@ export class ZirovalleyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Book private cabs to Ziro Valley with Wizzride. Travel safely from Itanagar, Guwahati & Arunachal. Explore lush landscapes, Apatani culture & the Ziro Music Festival." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/tawang/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/ziro-photography.879c0ae245257b97.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class ZirovalleyComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Ziro Valley Cab Booking | Wizzride Private Ride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book private cabs to Ziro Valley with Wizzride. Travel safely from Itanagar, Guwahati & Arunachal. Explore lush landscapes, Apatani culture & the Ziro Music Festival." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/ziro-photography.879c0ae245257b97.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

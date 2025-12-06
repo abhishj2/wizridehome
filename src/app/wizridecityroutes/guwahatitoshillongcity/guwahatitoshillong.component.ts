@@ -42,7 +42,7 @@ export class GuwahatitoshillongCityComponent implements OnInit, AfterViewInit, O
     this.metaService.updateTag({ property: 'og:description', content: "Book your shared cab from Guwahati Airport to Shillong with Wizzride. Comfortable, affordable rides with multiple pickup and drop points. Call +91-7478-4938-74 for instant booking and smooth travel." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Guwahati_To_Shillong_Shared_Cab_Service' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitoshillongCityComponent implements OnInit, AfterViewInit, O
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Shillong Shared Taxi | Wizzride Affordable Taxi Services' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book your shared cab from Guwahati Airport to Shillong with Wizzride. Comfortable, affordable rides with multiple pickup and drop points. Call +91-7478-4938-74 for instant booking and smooth travel." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

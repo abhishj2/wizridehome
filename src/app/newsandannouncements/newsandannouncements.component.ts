@@ -145,7 +145,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Stay updated with Wizzride's latest news, service announcements, travel updates, and important alerts for our cab services and tour packages across destinations." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/newsandannouncements' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/pexels-neosiam-590059.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -153,7 +153,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride News & Announcements - Latest Updates & Travel Alerts' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Stay updated with Wizzride's latest news, service announcements, travel updates, and important alerts for our cab services and tour packages across destinations."});
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/pexels-neosiam-590059.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // BreadcrumbList JSON-LD

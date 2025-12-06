@@ -42,7 +42,7 @@ export class SiliguritogangtokComponent  implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ property: 'og:description', content: "Book your shared cab from Siliguri to Gangtok with Wizzride. Affordable taxi service with multiple pickup points in Siliguri and drop-off locations in Gangtok." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Gangtok_Shared_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class SiliguritogangtokComponent  implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Siliguri to Gangtok Shared Taxi | Wizzride Affordable Taxi Services' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book your shared cab from Siliguri to Gangtok with Wizzride. Affordable taxi service with multiple pickup points in Siliguri and drop-off locations in Gangtok." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/gangtok.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

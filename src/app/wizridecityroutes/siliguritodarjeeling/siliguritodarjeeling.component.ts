@@ -42,7 +42,7 @@ export class SiliguritodarjeelingComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ property: 'og:description', content: "Book your shared cab from Siliguri to Darjeeling (Distance: 62.7 km) with Wizzride. Enjoy top attractions like Tiger Hill and Batasia Loop." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Siliguri_To_Darjeeling_Shared_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/darjeeling.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class SiliguritodarjeelingComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Siliguri to Darjeeling Shared Cab Service - Comfortable & Affordable Taxi | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book your shared cab from Siliguri to Darjeeling (Distance: 62.7 km) with Wizzride. Enjoy top attractions like Tiger Hill and Batasia Loop." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/darjeeling.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

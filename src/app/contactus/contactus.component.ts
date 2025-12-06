@@ -72,7 +72,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: 'Get in touch with WizzRide for taxi bookings in Sikkim, Darjeeling, Guwahati, and Shillong. For cancellations or inquiries, contact us at our service number.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/contactus' });
-    this.metaService.updateTag({ property: 'og:image', content: 'assets/images/contactmain.jpg' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/contactmain.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -80,7 +80,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Contact Us | WizzRide – Taxi Services in Sikkim, Darjeeling' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Get in touch with WizzRide for taxi bookings in Sikkim, Darjeeling, Guwahati, and Shillong. For cancellations or inquiries, contact us at our service number.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'assets/images/contactmain.jpg' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/contactmain.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

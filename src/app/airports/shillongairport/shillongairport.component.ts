@@ -42,7 +42,7 @@ export class ShillongairportComponent  implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ property: 'og:description', content: "Book Shillong Airport taxis with Wizzride. Affordable, safe rides to Guwahati, Cherrapunji, Dawki & other Northeast destinations." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/airports/guwahatiairport/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airports/shillongairport.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class ShillongairportComponent  implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Shillong Airport Taxi | Wizzride Cab Service' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Shillong Airport taxis with Wizzride. Affordable, safe rides to Guwahati, Cherrapunji, Dawki & other Northeast destinations." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airports/shillongairport.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

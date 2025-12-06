@@ -43,7 +43,7 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ property: 'og:description', content: "Plan your dream vacation to North East India with tailored tour packages for Sikkim, Darjeeling, Meghalaya, and Assam. Enjoy seamless and unforgettable travel!" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'hhttps://wizzride.com/ourservices/holidaystours/WizzTour-North-East-India-Holiday-Planner/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/Wizzride-destination-holiday-planner.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -51,7 +51,7 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: "Expert Holiday Planner for North East India | Wizzride" });
     this.metaService.updateTag({ name: 'twitter:description', content: "Plan your dream vacation to North East India with tailored tour packages for Sikkim, Darjeeling, Meghalaya, and Assam. Enjoy seamless and unforgettable travel!" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/Wizzride-destination-holiday-planner.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

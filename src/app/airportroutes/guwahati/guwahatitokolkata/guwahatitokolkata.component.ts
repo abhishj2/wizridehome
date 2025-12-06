@@ -42,7 +42,7 @@ export class GuwahatitokolkataComponent implements OnInit, AfterViewInit, OnDest
     this.metaService.updateTag({ property: 'og:description', content: "Reserve Guwahati (GAU) to Kolkata (CCU) flights with Wizzride. Compare fares, find timings & enjoy hassle-free travel with secure booking." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/guwahatitokolkata' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/kolkataairport.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitokolkataComponent implements OnInit, AfterViewInit, OnDest
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Kolkata Flights | Cheap GAU to CCU Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Reserve Guwahati (GAU) to Kolkata (CCU) flights with Wizzride. Compare fares, find timings & enjoy hassle-free travel with secure booking." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/kolkataairport.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

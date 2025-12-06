@@ -47,7 +47,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../../../assets/images/Wizzride-destination-holiday-planner.png') center/cover no-repeat;
+    background: url('/assets/images/Wizzride-destination-holiday-planner.png') center/cover no-repeat;
     background-attachment: fixed;
     opacity: 0.2;
     z-index: 1;
@@ -375,7 +375,7 @@
   /* Adventure Hero */
   .adventure-hero {
     height: 400px;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../../../assets/images/Wizzride-Adventure-Tourism.png') center/cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/Wizzride-Adventure-Tourism.png') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;

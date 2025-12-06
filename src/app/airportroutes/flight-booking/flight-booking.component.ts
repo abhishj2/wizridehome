@@ -73,7 +73,7 @@ export class FlightBookingComponent implements OnInit, AfterViewInit, OnDestroy 
     this.metaService.updateTag({ property: 'og:description', content: 'Book flights from Bagdogra, Guwahati, and Pakyong to major destinations across India. Browse all available flight routes and book your tickets with Wizzride for the best deals.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/guwahatiairp.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -81,7 +81,7 @@ export class FlightBookingComponent implements OnInit, AfterViewInit, OnDestroy 
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Flight Booking - All Air Routes | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Book flights from Bagdogra, Guwahati, and Pakyong to major destinations across India. Browse all available flight routes and book your tickets with Wizzride for the best deals.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/guwahatiairp.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // BreadcrumbList JSON-LD

@@ -42,7 +42,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
     this.metaService.updateTag({ property: 'og:description', content: "Find affordable Bagdogra to Mumbai (IXB–BOM) flight tickets with Wizzride. Enjoy smooth booking, flexible timings, and budget-friendly fares. Book your IXB to BOM flights today!" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratomumbai' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/mumbaiaitp.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagdogratomumbaiComponent  implements OnInit, AfterViewInit, OnDest
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra to Mumbai Flights – Book Affordable IXB to BOM Tickets with Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Find affordable Bagdogra to Mumbai (IXB–BOM) flight tickets with Wizzride. Enjoy smooth booking, flexible timings, and budget-friendly fares. Book your IXB to BOM flights today!" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/mumbaiaitp.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

@@ -42,7 +42,7 @@ export class MokokchungComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Book reserved cabs to Mokokchung with Wizzride. Safe travel from Dimapur, Kohima & Nagaland. Explore hills, Ao heritage & vibrant local culture." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/kohima/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/mokokchung-town-view.7963861e96a4d888.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class MokokchungComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Mokokchung Cab Booking | Wizzride Private Rides' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book reserved cabs to Mokokchung with Wizzride. Safe travel from Dimapur, Kohima & Nagaland. Explore hills, Ao heritage & vibrant local culture." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/mokokchung-town-view.7963861e96a4d888.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

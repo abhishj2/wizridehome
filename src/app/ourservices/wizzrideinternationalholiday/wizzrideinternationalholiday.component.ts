@@ -43,7 +43,7 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
     this.metaService.updateTag({ property: 'og:description', content: "Explore top destinations like Japan, South Korea, Singapore, Dubai, and Malaysia with Wizzride's luxury international packages." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/holidaystours/Wizzride-International-Holiday-Planner/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -51,7 +51,7 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: "Explore the World with Wizzride International Packages" });
     this.metaService.updateTag({ name: 'twitter:description', content: "Explore top destinations like Japan, South Korea, Singapore, Dubai, and Malaysia with Wizzride's luxury international packages." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

@@ -21,47 +21,47 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Gangtok",
-          img: "../../../assets/images/destinations/gangtok.jpg",
+          img: "assets/images/destinations/gangtok.jpg",
           link: "/destinations/gangtok"
         },
         {
           name: "Namchi",
-          img: "../../../assets/images/destinations/Samdruptse Hill & Statue of Guru Padmasambhava.jpg",
+          img: "assets/images/destinations/Samdruptse.jpg",
           link: "/destinations/namchi"
         },
         {
           name: "Yuksom",
-          img: "../../../assets/images/destinations/yuksom.jpeg",
+          img: "assets/images/destinations/yuksom.jpeg",
           link: "/destinations/yuksom"
         },
         {
           name: "Lachung",
-          img: "../../../assets/images/destinations/lachung.jpg",
+          img: "assets/images/destinations/lachung.jpg",
           link: "/destinations/lachung"
         },
         {
           name: "Tsomgo Lake",
-          img: "../../../assets/images/destinations/nathula-lake.jpg",
+          img: "assets/images/destinations/nathula-lake.jpg",
           link: "/destinations/tsomgo_lake"
         },
         {
           name: "Pelling",
-          img: "../../../assets/images/destinations/pelling-cover.jpg",
+          img: "assets/images/destinations/pelling-cover.jpg",
           link: "/destinations/pelling"
         },
         {
           name: "Nathula Pass",
-          img: "../../../assets/images/destinations/nathula-lake.jpg",
+          img: "assets/images/destinations/nathula-lake.jpg",
           link: "/destinations/nathula_pass"
         },
         {
           name: "Rumtek Monastery",
-          img: "../../../assets/images/destinations/rumtek-view.jpg",
+          img: "assets/images/destinations/rumtek-view.jpg",
           link: "/destinations/rumtek_monastery"
         },
         {
           name: "Zuluk",
-          img: "../../../assets/images/destinations/zulukloops.jpg",
+          img: "assets/images/destinations/zulukloops.jpg",
           link: "/destinations/zuluk"
         },
         {
@@ -93,41 +93,41 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Darjeeling",
-          img: "../../../assets/images/destinations/darjeeling.jpg",
+          img: "assets/images/destinations/darjeeling.jpg",
           link: "/destinations/darjeeling"
         },
         {
           name: "Tiger Hill",
-          img: "../../../assets/images/destinations/Tiger_Hill.jpg",
+          img: "assets/images/destinations/Tiger_Hill.jpg",
           link: "/destinations/tigerhill"
         },
         {
           name: "Ghoom Monastery",
-          img: "../../../assets/images/destinations/Ghoom_Monastery.jpg",
+          img: "assets/images/destinations/Ghoom_Monastery.jpg",
           link: "/destinations/ghoom-monastery"
         },
         {
           name: "Batasia Loop",
-          img: "../../../assets/images/destinations/batasia-loop.jpg",
+          img: "assets/images/destinations/batasia-loop.jpg",
           link: "/destinations/batasia-loop"
         },
         {
           name: "Himalayan Zoological Park",
-          img: "../../../assets/images/destinations/Himalayan_Zoological_Park.jpg",
+          img: "assets/images/destinations/Himalayan_Zoological_Park.jpg",
           link: "/destinations/himalayan-zoological-park"
         },
         {
           name: "Happy Valley Tea Estate",
-          img: "../../../assets/images/destinations/Happy_Valley_Tea_Estate.jpg",
+          img: "assets/images/destinations/Happy_Valley_Tea_Estate.jpg",
           link: "/destinations/happy-valley-tea-estate"
         }, {
           name: "Kurseong",
-          img: "../../../assets/images/destinations/kurseong.jpg",
+          img: "assets/images/destinations/kurseong.jpg",
           link: "/destinations/kurseong"
         },
         {
           name: "Kalimpong",
-          img: "../../../assets/images/destinations/kalimpong.jpg",
+          img: "assets/images/destinations/kalimpong.jpg",
           link: "/destinations/kalimpong"
         }
       ]
@@ -137,32 +137,32 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Kaziranga National Park",
-          img: "../../../assets/images/destinations/Kaziranga_Hero.jpg",
+          img: "assets/images/destinations/Kaziranga_Hero.jpg",
           link: "/destinations/kaziranga-national-park"
         },
         {
           name: "Majuli Island",
-          img: "../../../assets/images/destinations/Majuli_Island.jpg",
+          img: "assets/images/destinations/Majuli_Island.jpg",
           link: "/destinations/majuli-island"
         },
         {
           name: "Guwahati City",
-          img: "../../../assets/images/destinations/majuliboa.jpeg",
+          img: "assets/images/destinations/majuliboa.jpeg",
           link: "/destinations/guwahati"
         },
         {
           name: "Kamakhya Temple",
-          img: "../../../assets/images/destinations/Kamakhya.jpg",
+          img: "assets/images/destinations/Kamakhya.jpg",
           link: "/destinations/kamakhya"
         },
         {
           name: "Sivasagar",
-          img: "../../../assets/images/destinations/sivasagarboaat.jpeg",
+          img: "assets/images/destinations/sivasagarboaat.jpeg",
           link: "/destinations/sivasagar"
         },
         {
           name: "Tezpur",
-          img: "../../../assets/images/destinations/Tezpur.jpg",
+          img: "assets/images/destinations/Tezpur.jpg",
           link: "/destinations/tezpur"
         }
       ]
@@ -172,38 +172,38 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Shillong",
-          img: "../../../assets/images/destinations/LumdiengjriPeak.jpg",
+          img: "assets/images/destinations/LumdiengjriPeak.jpg",
           link: "/destinations/shillong"
         },
         {
           name: "Cherrapunji",
-          img: "../../../assets/images/destinations/Cherrapunji_Hero.jpg",
+          img: "assets/images/destinations/Cherrapunji_Hero.jpg",
           link: "/destinations/cherrapunji"
         },
         {
           name: "Mawsynram",
-          img: "../../../assets/images/destinations/mawsynram-cover.jpg",
+          img: "assets/images/destinations/mawsynram-cover.jpg",
           link: "/destinations/mawsynram"
         },
         {
           name: "Dawki",
-          img: "../../../assets/images/destinations/mawsynram-cover.jpg",
+          img: "assets/images/destinations/mawsynram-cover.jpg",
           link: "/destinations/dawki"
         },
         {
           name: "Umiam Lake",
-          img: "../../../assets/images/destinations/Umiam_Lake.jpg",
+          img: "assets/images/destinations/Umiam_Lake.jpg",
           link: "/destinations/umiam-lake"
         },
         {
           name: "Laitlum Canyons",
-          img: "../../../assets/images/destinations/laitlum-canyons-cover.jpg",
+          img: "assets/images/destinations/laitlum-canyons-cover.jpg",
           link: "/destinations/laitlum"
         },
         {
           name:'Wards Lake',
-          img:'../../../assets/images/destinations/Ward\'s_Lake\,_Shillong.jpg',
-          link:'destinations/wards-lake-shillong'
+          img:'assets/images/destinations/WardsLakeShillong.jpg',
+          link:'/destinations/wards-lake-shillong'
         }
       ]
     },
@@ -212,32 +212,32 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Tawang",
-          img: "../../../assets/images/destinations/Tawang.jpg",
+          img: "assets/images/destinations/Tawang.jpg",
           link: "/destinations/tawang"
         },
         {
           name: "Ziro Valley",
-          img: "../../../assets/images/destinations/ziro-photography.879c0ae245257b97.jpg",
+          img: "assets/images/destinations/ziro-photography.879c0ae245257b97.jpg",
           link: "/destinations/zirovalley"
         },
         {
           name: "Namdapha National Park",
-          img: "../../../assets/images/destinations/namdapha-forest.2b9dae05477a56b5.jpg",
+          img: "assets/images/destinations/namdapha-forest.2b9dae05477a56b5.jpg",
           link: "/destinations/namdaphanationalpark"
         },
         {
           name: "Itanagar",
-          img: "http://wizzride.com/Arunachal.edc6adb2c16bc584.jpeg",
+          img: "assets/images/destinations/Arunachal.edc6adb2c16bc584.jpeg",
           link: "/destinations/itanagar"
         },
         {
           name: "Bhalukpong",
-          img: "../../../assets/images/destinations/bhalukpong-nature.b390d3abf2003899.jpg",
+          img: "assets/images/destinations/bhalukpong-nature.b390d3abf2003899.jpg",
           link: "/destinations/bhalukpong"
         },
         {
           name: "Bomdila",
-          img: "../../../assets/images/destinations/bomdila-viewpoint.57afaa5c667d4515.jpg",
+          img: "assets/images/destinations/bomdila-viewpoint.57afaa5c667d4515.jpg",
           link: "/destinations/bomdila"
         }
       ]
@@ -247,32 +247,32 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
       places: [
         {
           name: "Kohima",
-          img: "../../../assets/images/destinations/kohima.3fb979cb315ab2bd.jpg",
+          img: "assets/images/destinations/kohima.3fb979cb315ab2bd.jpg",
           link: "/destinations/kohima"
         },
         {
           name: "Dimapur",
-          img: "../../../assets/images/destinations/dimapur-hills.6451ae835475b39d.jpg",
+          img: "assets/images/destinations/dimapur-hills.6451ae835475b39d.jpg",
           link: "/destinations/dimapur"
         },
         {
           name: "Mokokchung",
-          img: "../../../assets/images/destinations/mokokchung-town-view.7963861e96a4d888.jpg",
+          img: "assets/images/destinations/mokokchung-town-view.7963861e96a4d888.jpg",
           link: "/destinations/mokokchung"
         },
         {
           name: "Mon",
-          img: "../../../assets/images/destinations/monbanner.jpeg",
+          img: "assets/images/destinations/monbanner.jpeg",
           link: "/destinations/mon"
         },
         {
           name: "Khonoma Green Village",
-          img: "../../../assets/images/destinations/khonoma.jpeg",
+          img: "assets/images/destinations/khonoma.jpeg",
           link: "/destinations/khonomagreenvillage"
         },
         {
           name: "Dzukou Valley",
-          img: "../../../assets/images/destinations/dzukou-scenic-view.57aad113f3e15734.jpeg",
+          img: "assets/images/destinations/dzukou-scenic-view.57aad113f3e15734.jpeg",
           link: "/destinations/dzukouvalley"
         }
       ]
@@ -309,7 +309,7 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ property: 'og:description', content: "From the misty hills of Meghalaya and the serene valleys of Arunachal Pradesh to the tea-scented slopes of Darjeeling, the charming landscapes of Kalimpong, and the breathtaking beauty of Sikkim, Northeast India is a treasure trove of unforgettable experiences." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -317,7 +317,7 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: "Explore Our Destinations | WizzRide – Northeast India Travel" });
     this.metaService.updateTag({ name: 'twitter:description', content: "From the misty hills of Meghalaya and the serene valleys of Arunachal Pradesh to the tea-scented slopes of Darjeeling, the charming landscapes of Kalimpong, and the breathtaking beauty of Sikkim, Northeast India is a treasure trove of unforgettable experiences." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/icons/logo2.webp' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

@@ -42,7 +42,7 @@ export class GuwahatitoiimshillongComponent  implements OnInit, AfterViewInit, O
     this.metaService.updateTag({ property: 'og:description', content: "Book a comfortable and affordable cab from IIM Shillong to Guwahati.Enjoy a smooth, scenic 2.5-hour journey with reliable drivers and flexible pickup options." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Guwahati_Airport_To_Shillong_Reserved_Cab_Service'});
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/LumdiengjriPeak.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitoiimshillongComponent  implements OnInit, AfterViewInit, O
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'IIM Shillong to Guwahati - Shared Cab Service | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a comfortable and affordable cab from IIM Shillong to Guwahati.Enjoy a smooth, scenic 2.5-hour journey with reliable drivers and flexible pickup options." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/LumdiengjriPeak.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

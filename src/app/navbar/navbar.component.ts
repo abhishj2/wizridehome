@@ -78,12 +78,12 @@ export class NavbarComponent {
       hasDropdown: false,
       link: '/blogs'
     },
-    {
-      name: 'Social',
-      hasDropdown: false,
-      link: '/newsandannouncements'
+    // {
+    //   name: 'Social',
+    //   hasDropdown: false,
+    //   link: '/newsandannouncements'
    
-    },
+    // },
     {
       name: 'Sell Your Car',
       hasDropdown: false,

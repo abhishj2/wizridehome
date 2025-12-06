@@ -28,7 +28,7 @@
     position: relative;
     padding: 150px 0;
     background: linear-gradient(135deg, rgba(29, 170, 186, 0.9), rgba(10, 125, 140, 0.8)),
-      url('../../../assets/images/local-ride-hero.jpg') center/cover;
+      url('/assets/images/local-ride-hero.jpg') center/cover;
     background-attachment: fixed;
     display: flex;
     align-items: center;

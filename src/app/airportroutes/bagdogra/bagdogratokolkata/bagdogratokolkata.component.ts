@@ -42,7 +42,7 @@ export class BagdogratokolkataComponent  implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ property: 'og:description', content: "Book Bagdogra to Kolkata flights with Wizzride. Compare timings, fares & airlines for a seamless travel experience between North Bengal and Kolkata." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/bagdogratokolkata' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/kolkataairport.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagdogratokolkataComponent  implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra to Kolkata Flights | Cheap IXB to CCU Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Bagdogra to Kolkata flights with Wizzride. Compare timings, fares & airlines for a seamless travel experience between North Bengal and Kolkata." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/kolkataairport.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

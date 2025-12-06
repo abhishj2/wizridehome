@@ -41,7 +41,7 @@ export class NamdaphanationalparkComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ property: 'og:description', content: "Book private cabs to Namdapha National Park with Wizzride. Travel safely from Dibrugarh, Tinsukia & Arunachal. Explore forests, rare wildlife & adventures." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/namdaphanationalpark/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/namdapha-forest.2b9dae05477a56b5.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -49,7 +49,7 @@ export class NamdaphanationalparkComponent  implements OnInit, AfterViewInit, On
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Namdapha National Park Cab Booking | Wizzride Private Rides' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book private cabs to Namdapha National Park with Wizzride. Travel safely from Dibrugarh, Tinsukia & Arunachal. Explore forests, rare wildlife & adventures." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/namdapha-forest.2b9dae05477a56b5.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

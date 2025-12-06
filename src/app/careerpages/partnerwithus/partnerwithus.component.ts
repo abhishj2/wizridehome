@@ -185,7 +185,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: 'Join Wizzride as a partner to revolutionize luxury shared cab services. Collaborate with us to expand sustainable, comfortable, and high-quality travel solutions.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/applyforjob/partnerwithus' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/partnerwithus.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -193,7 +193,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Partner with Wizzride - Transform Luxury Cab Services Together' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Join Wizzride as a partner to revolutionize luxury shared cab services. Collaborate with us to expand sustainable, comfortable, and high-quality travel solutions.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/partnerwithus.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

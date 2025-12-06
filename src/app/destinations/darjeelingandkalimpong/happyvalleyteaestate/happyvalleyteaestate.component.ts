@@ -42,7 +42,7 @@ export class HappyvalleyteaestateComponent implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Step into the lush greenery of Happy Valley Tea Estate, one of Darjeeling’s oldest tea gardens. Explore the tea-making process, enjoy breathtaking views, and savor world-famous Darjeeling tea. Book your trip with Wizzride for a seamless journey." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/happy-valley-tea-estate/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/Happy_Valley_Tea_Estate.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class HappyvalleyteaestateComponent implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Happy Valley Tea Estate Darjeeling: Discover the Art of Tea-Making & Scenic Beauty' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Step into the lush greenery of Happy Valley Tea Estate, one of Darjeeling’s oldest tea gardens. Explore the tea-making process, enjoy breathtaking views, and savor world-famous Darjeeling tea. Book your trip with Wizzride for a seamless journey." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Happy_Valley_Tea_Estate.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

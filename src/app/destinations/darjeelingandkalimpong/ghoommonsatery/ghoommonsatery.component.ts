@@ -42,7 +42,7 @@ export class GhoommonsateryComponent implements OnInit, AfterViewInit, OnDestroy
     this.metaService.updateTag({ property: 'og:description', content: "Discover Ghoom Monastery, one of the oldest Tibetan Buddhist monasteries in Darjeeling. Book your Wizzride trip today for a seamless and comfortable journey." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/ghoom-monastery/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/Ghum_Monastery.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GhoommonsateryComponent implements OnInit, AfterViewInit, OnDestroy
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Ghoom Monastery Darjeeling: A Historic Buddhist Retreat' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Discover Ghoom Monastery, one of the oldest Tibetan Buddhist monasteries in Darjeeling. Book your Wizzride trip today for a seamless and comfortable journey." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Ghum_Monastery.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ BreadcrumbList JSON-LD

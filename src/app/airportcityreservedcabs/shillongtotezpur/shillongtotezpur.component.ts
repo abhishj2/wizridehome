@@ -42,7 +42,7 @@ export class ShillongtotezpurComponent   implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ property: 'og:description', content: "Book reliable Shillong to Tezpur taxi service with Wizzride. Comfortable rides, affordable fares, and easy online booking. Available for one-way and round trips." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Shillong_To_Tezpur_Reserved_Cab_Service/'});
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/tezpur.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class ShillongtotezpurComponent   implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Wizzride Taxi Service – Shillong to Tezpur & Vice Versa' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book reliable Shillong to Tezpur taxi service with Wizzride. Comfortable rides, affordable fares, and easy online booking. Available for one-way and round trips." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/tezpur.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

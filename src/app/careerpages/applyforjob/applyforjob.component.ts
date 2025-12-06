@@ -75,7 +75,7 @@ export class ApplyforjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: "Explore exciting job opportunities at Wizzride. Join our mission-driven team and build a career in travel, shared mobility, and customer service excellence." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/applyforjob' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/careermain.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -83,7 +83,7 @@ export class ApplyforjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Career Opportunities at Wizzride - Apply for Jobs Today' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Explore exciting job opportunities at Wizzride. Join our mission-driven team and build a career in travel, shared mobility, and customer service excellence." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/careermain.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
    // BreadcrumbList JSON-LD

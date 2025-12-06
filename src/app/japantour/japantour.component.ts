@@ -236,7 +236,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Travel to Mount Fuji Area.',
           description: 'Traveling from Tokyo to Mount Fuji offers a journey through contrasting landscapes, from the bustling metropolis to the serene countryside. The trip typically involves taking a train to one of the nearby stations like Kawaguchiko or Gotemba, followed by a bus ride or taxi to reach the base of the mountain. Along the way, travelers can enjoy scenic views of rural Japan and, on clear days, catch glimpses of the iconic peak looming in the distance.',
           images: [
-            './../../../../assets/images/WizzRide_Japan_Tour_Package.jpg',
+            'assets/images/WizzRide_Japan_Tour_Package.jpg',
             'https://images.pexels.com/photos/15829429/pexels-photo-15829429/free-photo-of-mount-fuji-in-autumn.jpeg?auto=compress&cs=tinysrgb&w=600',
             'https://images.pexels.com/photos/4077937/pexels-photo-4077937.jpeg?auto=compress&cs=tinysrgb&w=600'
           ]
@@ -523,7 +523,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: 'Experience Japan in its Most Mystical Autumn Season. 8 Days Tour of Tokyo - Hakone - Mt. Fuji - Kyoto - Hiroshima - Osaka. Tour Start Date: 31st August, 2024.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/japantour' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -531,7 +531,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Japan Tour Package - 8 Days Tokyo Hakone Kyoto Hiroshima Osaka | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Experience Japan in its Most Mystical Autumn Season. 8 Days Tour of Tokyo - Hakone - Mt. Fuji - Kyoto - Hiroshima - Osaka.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/Wizzride-Japan-Holiday-Package.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // BreadcrumbList JSON-LD

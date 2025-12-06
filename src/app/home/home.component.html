@@ -44,10 +44,10 @@
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
                 <span class="icon" *ngIf="tab === 'shared-cabs'"><img
-                        src="assets/images/shared-removebg-preview.png" /></span>
-                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" /></span>
+                        src="assets/images/shared-removebg-preview.png" alt="shared" /></span>
+                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" alt="reserved"/></span>
                 <span class="icon" *ngIf="tab === 'flights'"><img
-                        src="assets/images/flight.png" /></span>
+                        src="assets/images/flight.png" alt="flight" /></span>
                 {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
             </button>
         </div>
@@ -913,13 +913,13 @@
     <button *ngFor="let tab of tabs" class="mobile-nav-tab" [class.active]="currentTab === tab"
         (click)="switchTab(tab)">
         <span class="mobile-icon" *ngIf="tab === 'shared-cabs'">
-            <img src="assets/images/shared-removebg-preview.png" />
+            <img src="assets/images/shared-removebg-preview.png" alt="shared"/>
         </span>
         <span class="mobile-icon" *ngIf="tab === 'reserved-cabs'">
-            <img src="assets/images/reserved.png" />
+            <img src="assets/images/reserved.png" alt="reserved" />
         </span>
         <span class="mobile-icon" *ngIf="tab === 'flights'">
-            <img src="assets/images/flight.png" />
+            <img src="assets/images/flight.png" alt="flight" />
         </span>
         <span class="mobile-label">{{ tab === 'shared-cabs' ? 'Shared' : tab === 'reserved-cabs' ? 'Reserve' : 'Flights' }}</span>
     </button>

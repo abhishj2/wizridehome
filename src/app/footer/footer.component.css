@@ -775,3 +775,10 @@ ul.footer-links li{
   align-items:center;
   gap:10px;
 }
+
+h3.destinations-title a {
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #008b8b !important;
+  text-decoration: none !important;
+}

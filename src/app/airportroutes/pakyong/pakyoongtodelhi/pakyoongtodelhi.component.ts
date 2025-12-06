@@ -42,7 +42,7 @@ export class PakyoongtodelhiComponent implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ property: 'og:description', content: "Book Pakyong (PYG) to Delhi (DEL) flights with Wizzride. Compare fares & schedules for a smooth, budget-friendly travel experience." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/pakyongtodelhi' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/delhiairp.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class PakyoongtodelhiComponent implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Pakyong to Delhi Flights | Cheap PYG to DEL Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Pakyong (PYG) to Delhi (DEL) flights with Wizzride. Compare fares & schedules for a smooth, budget-friendly travel experience." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/delhiairp.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

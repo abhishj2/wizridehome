@@ -42,7 +42,7 @@ export class BagdogratokalimpongComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Bagdogra to Kalimpong taxi, reserved cab from Bagdogra, Kalimpong taxi, Wizzride, luxury innova, SUV, sedan taxi, private cab service" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Bagdogra_Airport_To_Kalimpong_Reserved_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/kalimpong.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagdogratokalimpongComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Reserved Cab from Bagdogra Airport to Kalimpong | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Bagdogra to Kalimpong taxi, reserved cab from Bagdogra, Kalimpong taxi, Wizzride, luxury innova, SUV, sedan taxi, private cab service" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/kalimpong.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

@@ -42,7 +42,7 @@ export class GuwahatitodibrugrahComponent implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ property: 'og:description', content: "Fly Guwahati (GAU) to Dibrugarh (DIB) with Wizzride. Get low fares, daily flights & secure booking for a seamless journey across Assam." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/guwahatitodibrugarh' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/dibriugarh.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitodibrugrahComponent implements OnInit, AfterViewInit, OnDe
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Dibrugarh Flights | Cheap GAU to DIB Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Fly Guwahati (GAU) to Dibrugarh (DIB) with Wizzride. Get low fares, daily flights & secure booking for a seamless journey across Assam." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/dibriugarh.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

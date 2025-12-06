@@ -72,7 +72,7 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: 'Wizzride offers corporate travel management, taxi hire, and tailored packages for MICE events. Experience seamless business tours with our corporate cabs and services.' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/corporatepackages/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/corporatheader.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -80,7 +80,7 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Corporate Travel Services - Wizzride Business Taxi & Tours' });
     this.metaService.updateTag({ name: 'twitter:description', content: 'Wizzride offers corporate travel management, taxi hire, and tailored packages for MICE events. Experience seamless business tours with our corporate cabs and services.' });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/corporatheader.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
  

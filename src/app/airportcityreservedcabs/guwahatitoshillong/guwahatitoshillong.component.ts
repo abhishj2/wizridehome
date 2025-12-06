@@ -42,7 +42,7 @@ export class GuwahatitoshillongComponent   implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Reserve a Cab from Guwahati.Book a reserved cab from Guwahati Airport to Shillong with Wizzride. Choose from Innova, SUVs, or sedans for a comfortable and affordable ride.ahati Airport to Shillong | Wizzride" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/Guwahati_Airport_To_Shillong_Reserved_Cab_Service'});
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/cityroutes/sgil.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitoshillongComponent   implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Reserve a Cab from Guwahati Airport to Shillong | Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Reserve a Cab from Guwahati.Book a reserved cab from Guwahati Airport to Shillong with Wizzride. Choose from Innova, SUVs, or sedans for a comfortable and affordable ride.ahati Airport to Shillong | Wizzride" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/cityroutes/sgil.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

@@ -42,7 +42,7 @@ export class BagairportkalimpongComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ property: 'og:description', content: "Book a shared cab from Bagdogra to Kalimpong. Enjoy a comfortable, affordable ride with scenic views of Kanchenjunga. Explore Kalimpongs best attractions." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/kalimpong.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class BagairportkalimpongComponent  implements OnInit, AfterViewInit, OnD
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Bagdogra to Kalimpong Shared Cab | Book Wizzride' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book a shared cab from Bagdogra to Kalimpong. Enjoy a comfortable, affordable ride with scenic views of Kanchenjunga. Explore Kalimpongs best attractions." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/kalimpong.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

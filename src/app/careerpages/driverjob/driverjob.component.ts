@@ -74,7 +74,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ property: 'og:description', content: "Apply for driver jobs at Wizzride and join our dedicated team of professionals." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/applyforjob/driverjob' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/wizcar.jpeg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -82,7 +82,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Driver Job Opportunities at Wizzride - Join Our Professional Team' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Apply for driver jobs at Wizzride and join our dedicated team of professionals." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/wizcar.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // BreadcrumbList JSON-LD

@@ -42,7 +42,7 @@ export class AritarlakeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ property: 'og:description', content: "Discover Aritar Lake (Lampokhari), an offbeat gem in East Sikkim known for boating, scenic views, monasteries, and nature trails. Explore attractions, things to do, how to reach, best time to visit, stays, and book your Aritar trip with Wizzride." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/aritarlake/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/lampokhari.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class AritarlakeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Aritar Lake – Top Attractions, How to Reach, Best Time & Wizzride Travel Guide' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Discover Aritar Lake (Lampokhari), an offbeat gem in East Sikkim known for boating, scenic views, monasteries, and nature trails. Explore attractions, things to do, how to reach, best time to visit, stays, and book your Aritar trip with Wizzride." });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/lampokhari.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD

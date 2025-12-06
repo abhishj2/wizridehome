@@ -42,7 +42,7 @@ export class GuwahatitoagartalaComponent implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ property: 'og:description', content: "Book Guwahati (GAU) to Agartala (IXA) flights with Wizzride. Compare fares & schedules, choose daily flights, and enjoy secure booking with 24/7 Support" });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/ourservices/flight-booking/guwahatitoagartala/' });
-    this.metaService.updateTag({ property: 'og:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/airportroutes/agartala.jpg' });
     this.metaService.updateTag({ property: 'og:site_name', content: 'Wizzride' });
     this.metaService.updateTag({ property: 'og:locale', content: 'en_IN' });
 
@@ -50,7 +50,7 @@ export class GuwahatitoagartalaComponent implements OnInit, AfterViewInit, OnDes
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Guwahati to Agartala Flights | Cheap GAU to IXA Booking' });
     this.metaService.updateTag({ name: 'twitter:description', content: "Book Guwahati (GAU) to Agartala (IXA) flights with Wizzride. Compare fares & schedules, choose daily flights, and enjoy secure booking with 24/7 Support" });
-    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizzride.com/assets/images/icons/logo2.webp' });
+    this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airportroutes/agartala.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD
