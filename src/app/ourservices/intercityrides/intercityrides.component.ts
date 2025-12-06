@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -146,24 +147,29 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
 
   ngAfterViewInit(): void {
-    // Initialize all interactive features
-    this.initSmoothScrolling();
-    this.initIntersectionObserver();
-    this.initStaggeredAnimations();
-    this.initCTAButton();
-    this.initTableRowHoverEffects();
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize all interactive features
+      this.initSmoothScrolling();
+      this.initIntersectionObserver();
+      this.initStaggeredAnimations();
+      this.initCTAButton();
+      this.initTableRowHoverEffects();
+    }
   }
 
   // Smooth scrolling for anchor links
   private initSmoothScrolling(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const anchors = this.elementRef.nativeElement.querySelectorAll('a[href^="#"]');
     
     anchors.forEach((anchor: HTMLAnchorElement) => {
@@ -185,6 +191,7 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -214,6 +221,7 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // Staggered animations for feature cards and step items
   private initStaggeredAnimations(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Add stagger delay to feature cards
     const featureCards = this.elementRef.nativeElement.querySelectorAll('.feature-card');
     featureCards.forEach((card: HTMLElement, index: number) => {
@@ -229,6 +237,7 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // CTA button click handler
   private initCTAButton(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const ctaButton = this.elementRef.nativeElement.querySelector('.cta-button');
     
     if (ctaButton) {
@@ -241,6 +250,7 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // Hover effects for table rows
   private initTableRowHoverEffects(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const tableRows = this.elementRef.nativeElement.querySelectorAll('.routes-table tbody tr');
     
     tableRows.forEach((row: HTMLElement) => {

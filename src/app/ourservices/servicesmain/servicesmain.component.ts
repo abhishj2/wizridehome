@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -20,7 +20,8 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -83,15 +84,19 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   ngAfterViewInit(): void {
-    // Initialize intersection observer for fade-scroll animations
-    this.initIntersectionObserver();
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize intersection observer for fade-scroll animations
+      this.initIntersectionObserver();
+    }
   }
 
   ngOnDestroy(): void {
@@ -103,6 +108,7 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Intersection Observer for fade-scroll animations
   private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
     const fadeElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
 
     this.intersectionObserver = new IntersectionObserver((entries, obs) => {

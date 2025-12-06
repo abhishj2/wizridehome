@@ -19,8 +19,7 @@ export class LaitlumcanyonsComponent   implements OnInit, AfterViewInit, OnDestr
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
+    @Inject(DOCUMENT) private document: Document,`r`n    @Inject(PLATFORM_ID) private platformId: Object`r`n  ) {}
 
   ngOnInit(): void {
     // Set canonical URL
@@ -131,12 +130,7 @@ export class LaitlumcanyonsComponent   implements OnInit, AfterViewInit, OnDestr
   }
 
   // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
-  }
+  private addJsonLd(schemaObject: any): void {`r`n    if (isPlatformBrowser(this.platformId)) {`r`n      const script = this.renderer.createElement('script');`r`n      script.type = 'application/ld+json';`r`n      script.text = JSON.stringify(schemaObject);`r`n      this.renderer.appendChild(this.document.head, script);`r`n    }`r`n  }
 
   ngAfterViewInit(): void {
     // Initialize all common destination page functionality

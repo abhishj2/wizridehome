@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -286,7 +286,8 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -349,18 +350,22 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   ngAfterViewInit(): void {
-    // Generate dynamic destinations content
-    this.generateDestinationsContent();
-    
-    // Initialize interactive features
-    this.initCardObserver();
+    if (isPlatformBrowser(this.platformId)) {
+      // Generate dynamic destinations content
+      this.generateDestinationsContent();
+      
+      // Initialize interactive features
+      this.initCardObserver();
+    }
   }
 
   ngOnDestroy(): void {
@@ -372,6 +377,7 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
 
   // Generate dynamic destinations content
   private generateDestinationsContent(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const root = this.elementRef.nativeElement.querySelector('#destinations-root');
     if (!root) return;
 
@@ -417,24 +423,27 @@ export class MaindestinationsComponent implements OnInit, AfterViewInit, OnDestr
 
   // Card observer for destination cards fade-ins
   private initCardObserver(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     setTimeout(() => {
-      this.cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).style.opacity = '1';
-            (entry.target as HTMLElement).style.transform = 'translateY(0)';
-          }
+      if (typeof IntersectionObserver !== 'undefined') {
+        this.cardObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              (entry.target as HTMLElement).style.opacity = '1';
+              (entry.target as HTMLElement).style.transform = 'translateY(0)';
+            }
+          });
         });
-      });
 
-      const destinationCards = this.elementRef.nativeElement.querySelectorAll('.destination-card');
-      destinationCards.forEach((card: HTMLElement, index: number) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.6s ease';
-        card.style.transitionDelay = `${(index % 6) * 0.1}s`;
-        this.cardObserver?.observe(card);
-      });
+        const destinationCards = this.elementRef.nativeElement.querySelectorAll('.destination-card');
+        destinationCards.forEach((card: HTMLElement, index: number) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          card.style.transition = 'all 0.6s ease';
+          card.style.transitionDelay = `${(index % 6) * 0.1}s`;
+          this.cardObserver?.observe(card);
+        });
+      }
     }, 200);
   }
 

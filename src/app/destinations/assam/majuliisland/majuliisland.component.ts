@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { CommonDestinationService } from '../../commondest';
 import { SeoService } from '../../../services/seo.service';
 
@@ -19,8 +19,7 @@ export class MajuliislandComponent implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
+    @Inject(DOCUMENT) private document: Document,`r`n    @Inject(PLATFORM_ID) private platformId: Object`r`n  ) {}
 
   ngOnInit(): void {
     // Set canonical URL
@@ -131,11 +130,10 @@ export class MajuliislandComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
+  private addJsonLd(schemaObject: any): void {`r`n    if (isPlatformBrowser(this.platformId)) {`r`n      const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    this.renderer.appendChild(this.document.head, script);`r`n    }
   }
 
   ngAfterViewInit(): void {

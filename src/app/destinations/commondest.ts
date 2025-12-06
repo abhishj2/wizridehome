@@ -1,4 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,10 @@ export class CommonDestinationService {
   private originalSlides: Element[] = [];
   private listeners: (() => void)[] = [];
 
-  constructor(private rendererFactory: RendererFactory2) {
+  constructor(
+    private rendererFactory: RendererFactory2,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -21,6 +25,7 @@ export class CommonDestinationService {
    * Call this from ngAfterViewInit in your component
    */
   initializeDestinationPage(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.initPageFadeIn();
     this.initSmoothScroll();
     this.initIntersectionObserver();
@@ -43,15 +48,19 @@ export class CommonDestinationService {
 
   // ================== PAGE LOAD FADE-IN ==================
   private initPageFadeIn(): void {
+    if (!isPlatformBrowser(this.platformId) || !document.body) return;
     document.body.style.opacity = "0";
     document.body.style.transition = "opacity 0.5s ease-in-out";
     setTimeout(() => {
-      document.body.style.opacity = "1";
+      if (document.body) {
+        document.body.style.opacity = "1";
+      }
     }, 100);
   }
 
   // ================== SMOOTH SCROLL ==================
   private initSmoothScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const links = document.querySelectorAll('a[href^="#"]');
     links.forEach(link => {
       const listener = this.renderer.listen(link, 'click', (e: Event) => {
@@ -70,6 +79,7 @@ export class CommonDestinationService {
 
   // ================== INTERSECTION OBSERVER ==================
   private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -83,6 +93,7 @@ export class CommonDestinationService {
 
   // ================== HOVER EFFECTS ==================
   private initHoverEffects(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Button hover effects
     document.querySelectorAll(".btn-c").forEach(button => {
       const mouseenterListener = this.renderer.listen(button, 'mouseenter', () => {
@@ -111,6 +122,7 @@ export class CommonDestinationService {
 
   // ================== TYPING EFFECT ==================
   private initTypingEffect(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const heroTitle = document.querySelector(".mainbann h1") as HTMLElement;
     if (heroTitle) {
       const text = heroTitle.textContent || '';
@@ -129,6 +141,7 @@ export class CommonDestinationService {
 
   // ================== SECTION TITLES ==================
   private initSectionTitles(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     document.querySelectorAll(".section-title, .section-subtitle").forEach((title, i) => {
       (title as HTMLElement).style.opacity = "0";
       (title as HTMLElement).style.transform = "translateY(20px)";
@@ -142,6 +155,7 @@ export class CommonDestinationService {
 
   // ================== HOW-TO STEPS ==================
   private initHowToSteps(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const steps = document.querySelectorAll(".howto-step");
     const revealSteps = () => {
       const triggerBottom = window.innerHeight * 0.85;
@@ -159,6 +173,7 @@ export class CommonDestinationService {
 
   // ================== SLIDER ==================
   private initSlider(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const sliderContainer = document.querySelector(".slider-container");
     if (!sliderContainer) return;
 

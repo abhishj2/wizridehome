@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../services/seo.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -491,6 +491,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     private seoService: SeoService,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private elementRef: ElementRef,
     private http: HttpClient,
     private captchaService: CaptchaService
@@ -611,18 +612,23 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   ngAfterViewInit(): void {
-    // Initialize scroll animations
-    this.initIntersectionObserver();
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize scroll animations
+      this.initIntersectionObserver();
+    }
   }
 
   private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -644,6 +650,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollToEnquiry(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const element = document.getElementById('enquiry-form');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });

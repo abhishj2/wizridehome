@@ -21,7 +21,8 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -104,17 +105,20 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
 
   ngAfterViewInit(): void {
-    // Initialize all interactive features
-    this.initIntersectionObserver();
-    this.initSmoothScrolling();
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize all interactive features
+      this.initIntersectionObserver();
+      this.initSmoothScrolling();
     this.initFormSubmission();
     this.initParallax();
     this.initCardAnimations();
@@ -167,6 +171,7 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
 
   // Smooth scrolling for anchor links
   private initSmoothScrolling(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const anchors = this.elementRef.nativeElement.querySelectorAll('a[href^="#"]');
     
     anchors.forEach((anchor: HTMLAnchorElement) => {
