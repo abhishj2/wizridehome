@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -22,7 +22,8 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +95,7 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -101,6 +103,7 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initSectionObserver();
     this.initCardObserver();
@@ -111,6 +114,7 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Disconnect intersection observers
     if (this.sectionObserver) {
       this.sectionObserver.disconnect();
@@ -125,37 +129,55 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
 
   // Intersection Observer for [data-animate] sections
   private initSectionObserver(): void {
-    this.sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('animate');
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      this.sectionObserver = new IO(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('animate');
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      );
 
-    const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
-    animateElements.forEach((el: Element) => {
-      this.sectionObserver?.observe(el);
-    });
+      const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
+      animateElements.forEach((el: Element) => {
+        this.sectionObserver?.observe(el);
+      });
+    } catch (e) {
+      console.warn('Error initializing section observer (likely SSR):', e);
+    }
   }
 
   // Card observer for individual card fade-ins
   private initCardObserver(): void {
-    this.cardObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          (entry.target as HTMLElement).style.opacity = '1';
-          (entry.target as HTMLElement).style.transform = 'translateY(0)';
-        }
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      this.cardObserver = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).style.opacity = '1';
+            (entry.target as HTMLElement).style.transform = 'translateY(0)';
+          }
+        });
       });
-    });
 
-    const contentCards = this.elementRef.nativeElement.querySelectorAll('.content-card');
-    contentCards.forEach((card: HTMLElement, index: number) => {
-      card.style.transitionDelay = `${index * 0.1}s`;
-      this.cardObserver?.observe(card);
-    });
+      const contentCards = this.elementRef.nativeElement.querySelectorAll('.content-card');
+      contentCards.forEach((card: HTMLElement, index: number) => {
+        card.style.transitionDelay = `${index * 0.1}s`;
+        this.cardObserver?.observe(card);
+      });
+    } catch (e) {
+      console.warn('Error initializing card observer (likely SSR):', e);
+    }
   }
 
   // Hover effects for cards and table rows
@@ -201,44 +223,62 @@ export class PrivacyandsecurityComponent implements OnInit, AfterViewInit, OnDes
 
   // Table container reveal
   private initTableObserver(): void {
-    this.tableObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).style.opacity = '1';
-            (entry.target as HTMLElement).style.transform = 'translateY(0)';
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      this.tableObserver = new IO(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              (entry.target as HTMLElement).style.opacity = '1';
+              (entry.target as HTMLElement).style.transform = 'translateY(0)';
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
 
-    const tables = this.elementRef.nativeElement.querySelectorAll('.table-container');
-    tables.forEach((table: HTMLElement) => {
-      table.style.opacity = '0';
-      table.style.transform = 'translateY(30px)';
-      table.style.transition = 'all 0.8s ease';
-      this.tableObserver?.observe(table);
-    });
+      const tables = this.elementRef.nativeElement.querySelectorAll('.table-container');
+      tables.forEach((table: HTMLElement) => {
+        table.style.opacity = '0';
+        table.style.transform = 'translateY(30px)';
+        table.style.transition = 'all 0.8s ease';
+        this.tableObserver?.observe(table);
+      });
+    } catch (e) {
+      console.warn('Error initializing table observer (likely SSR):', e);
+    }
   }
 
   // Fancy entrance for section titles
   private initSectionTitleAnimations(): void {
-    const sectionTitles = this.elementRef.nativeElement.querySelectorAll('.section-title');
-    sectionTitles.forEach((title: HTMLElement, index: number) => {
-      const titleObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              setTimeout(() => {
-                (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out both';
-              }, index * 100);
-            }
-          });
-        },
-        { threshold: 0.5 }
-      );
-      titleObserver.observe(title);
-    });
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
+      if (!IntersectionObserverClass) return;
+      
+      const sectionTitles = this.elementRef.nativeElement.querySelectorAll('.section-title');
+      sectionTitles.forEach((title: HTMLElement, index: number) => {
+        const titleObserver = new IntersectionObserverClass(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                setTimeout(() => {
+                  (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out both';
+                }, index * 100);
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+        titleObserver.observe(title);
+      });
+    } catch (e) {
+      console.warn('Error initializing section title animations (likely SSR):', e);
+    }
   }
 }

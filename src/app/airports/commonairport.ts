@@ -1,4 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2, Inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,11 @@ export class CommonAirportService {
   private renderer: Renderer2;
   private listeners: (() => void)[] = [];
 
-  constructor(private rendererFactory: RendererFactory2) {
+  constructor(
+    private rendererFactory: RendererFactory2,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -16,6 +21,7 @@ export class CommonAirportService {
    * Call this from ngAfterViewInit in your component
    */
   initializeAirportPage(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.initFadeScrollAnimations();
   }
 
@@ -30,18 +36,34 @@ export class CommonAirportService {
 
   // ================== FADE SCROLL ANIMATIONS ==================
   private initFadeScrollAnimations(): void {
-    const fadeElements = document.querySelectorAll(".fade-scroll");
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    // ALL YOUR DOM CODE SAFE HERE
+    try {
+      // Safely check for document and IntersectionObserver
+      const doc = this.document;
+      const IntersectionObserverClass = (globalThis as any).IntersectionObserver;
+      
+      if (!doc || typeof IntersectionObserverClass === 'undefined' || typeof doc.querySelectorAll !== 'function') {
+        return;
+      }
+      
+      const fadeElements = doc.querySelectorAll(".fade-scroll");
 
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          obs.unobserve(entry.target); // Animate once
-        }
-      });
-    }, { threshold: 0.15 });
+      const observer = new IntersectionObserverClass((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            obs.unobserve(entry.target); // Animate once
+          }
+        });
+      }, { threshold: 0.15 });
 
-    fadeElements.forEach(el => observer.observe(el));
+      fadeElements.forEach(el => observer.observe(el));
+    } catch (e) {
+      // Silently handle any SSR errors
+      console.warn('Error initializing fade scroll animations (likely SSR):', e);
+    }
   }
 
 }

@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../../services/seo.service';
 
 @Component({
@@ -19,7 +19,8 @@ export class GuwahatitokolkataComponent implements OnInit, AfterViewInit, OnDest
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -190,32 +191,40 @@ export class GuwahatitokolkataComponent implements OnInit, AfterViewInit, OnDest
 
   // ================== ANIMATION ON SCROLL ==================
   private initializeAnimations(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+    
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        this.observer?.observe(el);
       });
-    }, observerOptions);
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      this.observer?.observe(el);
-    });
-
-    // ================== STAGGERED DELAYS ==================
-    this.applyStaggeredDelay('.info-card');
-    this.applyStaggeredDelay('.feature-card');
-    this.applyStaggeredDelay('.airline-card');
-    this.applyStaggeredDelay('.attraction-card');
+      // ================== STAGGERED DELAYS ==================
+      this.applyStaggeredDelay('.info-card');
+      this.applyStaggeredDelay('.feature-card');
+      this.applyStaggeredDelay('.airline-card');
+      this.applyStaggeredDelay('.attraction-card');
+    } catch (e) {
+      console.warn('Error initializing animations (likely SSR):', e);
+    }
   }
 
   private applyStaggeredDelay(selector: string): void {
-    const cards = document.querySelectorAll(selector);
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
+    const cards = this.document.querySelectorAll(selector);
     cards.forEach((card, index) => {
       (card as HTMLElement).style.transitionDelay = `${index * 0.1}s`;
     });

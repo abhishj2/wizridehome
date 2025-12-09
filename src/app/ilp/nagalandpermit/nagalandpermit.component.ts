@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 import { IlpAnimations } from '../commonilp';
 
@@ -20,7 +20,8 @@ export class NagalandpermitComponent implements OnInit, AfterViewInit, OnDestroy
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -138,6 +139,7 @@ export class NagalandpermitComponent implements OnInit, AfterViewInit, OnDestroy
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -145,10 +147,12 @@ export class NagalandpermitComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.initializeAnimations();
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.cleanup();
     // Clean up animations when component is destroyed
     IlpAnimations.cleanup();
@@ -156,31 +160,44 @@ export class NagalandpermitComponent implements OnInit, AfterViewInit, OnDestroy
 
   // ================== ANIMATION ON SCROLL ==================
   private initializeAnimations(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.document) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      this.observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        this.observer?.observe(el);
       });
-    }, observerOptions);
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      this.observer?.observe(el);
-    });
-
-    // ================== STAGGERED DELAYS ==================
-    this.applyStaggeredDelay('.fourcol');
-    this.applyStaggeredDelay('.howto-step');
-    this.applyStaggeredDelay('.faq-item');
+      // ================== STAGGERED DELAYS ==================
+      this.applyStaggeredDelay('.fourcol');
+      this.applyStaggeredDelay('.howto-step');
+      this.applyStaggeredDelay('.faq-item');
+    } catch (e) {
+      // Ignore on SSR
+    }
   }
 
   private applyStaggeredDelay(selector: string): void {
-    const cards = document.querySelectorAll(selector);
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.document) return;
+    
+    const cards = this.document.querySelectorAll(selector);
     cards.forEach((card, index) => {
       (card as HTMLElement).style.transitionDelay = `${index * 0.1}s`;
     });

@@ -1,5 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, Renderer2, RendererFactory2, Inject, PLATFORM_ID, Optional } from '@angular/core';
+import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,8 @@ export class CommonDestinationService {
 
   constructor(
     private rendererFactory: RendererFactory2,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) @Optional() private document: Document | null
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
@@ -26,7 +27,7 @@ export class CommonDestinationService {
    */
   initializeDestinationPage(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    this.initPageFadeIn();
+    // initPageFadeIn disabled - causes SSR errors
     this.initSmoothScroll();
     this.initIntersectionObserver();
     this.initHoverEffects();
@@ -47,27 +48,24 @@ export class CommonDestinationService {
   }
 
   // ================== PAGE LOAD FADE-IN ==================
+  // DISABLED - Causes SSR errors. This is a visual enhancement only.
   private initPageFadeIn(): void {
-    if (!isPlatformBrowser(this.platformId) || !document.body) return;
-    document.body.style.opacity = "0";
-    document.body.style.transition = "opacity 0.5s ease-in-out";
-    setTimeout(() => {
-      if (document.body) {
-        document.body.style.opacity = "1";
-      }
-    }, 100);
+    // Fully disabled to avoid SSR access; keep as a no-op.
+    return;
   }
 
   // ================== SMOOTH SCROLL ==================
   private initSmoothScroll(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const links = document.querySelectorAll('a[href^="#"]');
+    if (!this.document) return;
+    
+    const links = this.document.querySelectorAll('a[href^="#"]');
     links.forEach(link => {
       const listener = this.renderer.listen(link, 'click', (e: Event) => {
         e.preventDefault();
         const targetId = (link as HTMLAnchorElement).getAttribute("href");
-        if (targetId) {
-          const target = document.querySelector(targetId);
+        if (targetId && this.document) {
+          const target = this.document.querySelector(targetId);
           if (target) {
             target.scrollIntoView({ behavior: "smooth", block: "start" });
           }
@@ -79,23 +77,34 @@ export class CommonDestinationService {
 
   // ================== INTERSECTION OBSERVER ==================
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("animate");
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.document) return;
+    
+    try {
+      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
+      if (!IntersectionObserverClass) return;
+      
+      const observer = new IntersectionObserverClass(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+          }
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
-    document.querySelectorAll(".animate-on-scroll").forEach(el => observer.observe(el));
+      this.document.querySelectorAll(".animate-on-scroll").forEach(el => observer.observe(el));
+    } catch {
+      // Silently ignore
+    }
   }
 
   // ================== HOVER EFFECTS ==================
   private initHoverEffects(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.document) return;
+    
     // Button hover effects
-    document.querySelectorAll(".btn-c").forEach(button => {
+    this.document.querySelectorAll(".btn-c").forEach(button => {
       const mouseenterListener = this.renderer.listen(button, 'mouseenter', () => {
         (button as HTMLElement).style.transform = "translateY(-3px) scale(1.02)";
       });
@@ -106,7 +115,7 @@ export class CommonDestinationService {
     });
 
     // Card hover effects
-    document.querySelectorAll(".carfe").forEach((card, i) => {
+    this.document.querySelectorAll(".carfe").forEach((card, i) => {
       const mouseenterListener = this.renderer.listen(card, 'mouseenter', () => {
         (card as HTMLElement).style.transform = "translateY(-10px) scale(1.02)";
         (card as HTMLElement).style.zIndex = "10";
@@ -123,13 +132,15 @@ export class CommonDestinationService {
   // ================== TYPING EFFECT ==================
   private initTypingEffect(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const heroTitle = document.querySelector(".mainbann h1") as HTMLElement;
+    if (!this.document) return;
+    
+    const heroTitle = this.document.querySelector(".mainbann h1") as HTMLElement;
     if (heroTitle) {
       const text = heroTitle.textContent || '';
       heroTitle.textContent = "";
       let i = 0;
       const typeWriter = () => {
-        if (i < text.length) {
+        if (i < text.length && isPlatformBrowser(this.platformId)) {
           heroTitle.textContent += text.charAt(i);
           i++;
           setTimeout(typeWriter, 50);
@@ -142,13 +153,17 @@ export class CommonDestinationService {
   // ================== SECTION TITLES ==================
   private initSectionTitles(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    document.querySelectorAll(".section-title, .section-subtitle").forEach((title, i) => {
+    if (!this.document) return;
+    
+    this.document.querySelectorAll(".section-title, .section-subtitle").forEach((title, i) => {
       (title as HTMLElement).style.opacity = "0";
       (title as HTMLElement).style.transform = "translateY(20px)";
       setTimeout(() => {
-        (title as HTMLElement).style.transition = "all 0.8s ease-out";
-        (title as HTMLElement).style.opacity = "1";
-        (title as HTMLElement).style.transform = "translateY(0)";
+        if (isPlatformBrowser(this.platformId)) {
+          (title as HTMLElement).style.transition = "all 0.8s ease-out";
+          (title as HTMLElement).style.opacity = "1";
+          (title as HTMLElement).style.transform = "translateY(0)";
+        }
       }, 300 + i * 200);
     });
   }
@@ -156,8 +171,11 @@ export class CommonDestinationService {
   // ================== HOW-TO STEPS ==================
   private initHowToSteps(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const steps = document.querySelectorAll(".howto-step");
+    if (!this.document || typeof window === 'undefined') return;
+    
+    const steps = this.document.querySelectorAll(".howto-step");
     const revealSteps = () => {
+      if (!isPlatformBrowser(this.platformId) || typeof window === 'undefined') return;
       const triggerBottom = window.innerHeight * 0.85;
       steps.forEach((step, i) => {
         if (step.getBoundingClientRect().top < triggerBottom) {
@@ -174,7 +192,9 @@ export class CommonDestinationService {
   // ================== SLIDER ==================
   private initSlider(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const sliderContainer = document.querySelector(".slider-container");
+    if (!this.document) return;
+    
+    const sliderContainer = this.document.querySelector(".slider-container");
     if (!sliderContainer) return;
 
     const sliderTrack = sliderContainer.querySelector(".slider-track") as HTMLElement;
@@ -248,7 +268,8 @@ export class CommonDestinationService {
       const slidesPerView = getSlidesPerView();
       const pageCount = Math.ceil(this.originalSlides.length / slidesPerView);
       for (let i = 0; i < pageCount; i++) {
-        const bullet = document.createElement("button");
+        if (!this.document) return;
+        const bullet = this.document.createElement("button");
         bullet.className = "bullet";
         bullet.setAttribute("aria-label", `Go to slide ${i + 1}`);
         const listener = this.renderer.listen(bullet, 'click', () => {

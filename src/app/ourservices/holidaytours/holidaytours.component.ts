@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -48,6 +48,7 @@ export class HolidaytoursComponent implements OnInit, AfterViewInit {
     private metaService: Meta,
     private elementRef: ElementRef,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
@@ -186,6 +187,7 @@ this.addJsonLd({
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initSmoothScrolling();
@@ -194,12 +196,17 @@ this.addJsonLd({
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    const IO = (globalThis as any).IntersectionObserver;
+    if (!IO) return;
+    
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animate');
@@ -207,11 +214,14 @@ this.addJsonLd({
       });
     }, observerOptions);
 
-    // Observe all elements with animate-on-scroll class
-    const animateElements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll');
-    animateElements.forEach((el: Element) => {
-      observer.observe(el);
-    });
+      // Observe all elements with animate-on-scroll class
+      const animateElements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll');
+      animateElements.forEach((el: Element) => {
+        observer.observe(el);
+      });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   // Smooth scrolling for anchor links

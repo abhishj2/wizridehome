@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -21,7 +21,8 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -83,6 +84,7 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -91,6 +93,7 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initSmoothScrolling();
@@ -104,6 +107,7 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Clean up event listeners
     if (this.scrollListener) {
       window.removeEventListener('scroll', this.scrollListener);
@@ -117,24 +121,36 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
 
   // Intersection Observer for animations
   private initIntersectionObserver(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      
+      if (!IO) {
+        return;
+      }
+      
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    this.intersectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      this.intersectionObserver = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all elements with data-animate attribute
+      const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
+      animateElements.forEach((el: Element) => {
+        this.intersectionObserver?.observe(el);
       });
-    }, observerOptions);
-
-    // Observe all elements with data-animate attribute
-    const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
-    animateElements.forEach((el: Element) => {
-      this.intersectionObserver?.observe(el);
-    });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   // Smooth scrolling for anchor links
@@ -190,45 +206,63 @@ export class CancellationpolicyComponent implements OnInit, AfterViewInit, OnDes
 
   // Add shimmer effect to tables
   private initTableShimmerEffect(): void {
-    const tables = this.elementRef.nativeElement.querySelectorAll('.table-container');
+    if (!isPlatformBrowser(this.platformId)) return;
     
-    const tableObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          (entry.target as HTMLElement).style.opacity = '1';
-          (entry.target as HTMLElement).style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.2 });
-
-    tables.forEach((table: HTMLElement, index: number) => {
-      table.style.opacity = '0';
-      table.style.transform = 'translateY(30px)';
-      table.style.transition = 'all 0.8s ease';
+    try {
+      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
+      if (!IntersectionObserverClass) return;
       
-      setTimeout(() => {
-        tableObserver.observe(table);
-      }, index * 200);
-    });
+      const tables = this.elementRef.nativeElement.querySelectorAll('.table-container');
+      
+      const tableObserver = new IntersectionObserverClass((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).style.opacity = '1';
+            (entry.target as HTMLElement).style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.2 });
+
+      tables.forEach((table: HTMLElement, index: number) => {
+        table.style.opacity = '0';
+        table.style.transform = 'translateY(30px)';
+        table.style.transition = 'all 0.8s ease';
+        
+        setTimeout(() => {
+          tableObserver.observe(table);
+        }, index * 200);
+      });
+    } catch (e) {
+      console.warn('Error initializing table shimmer effect (likely SSR):', e);
+    }
   }
 
   // Add bounce effect to section titles
   private initSectionTitleAnimations(): void {
-    const sectionTitles = this.elementRef.nativeElement.querySelectorAll('.section-title');
+    if (!isPlatformBrowser(this.platformId)) return;
     
-    sectionTitles.forEach((title: HTMLElement, index: number) => {
-      const titleObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out';
-            }, index * 100);
-          }
-        });
-      }, { threshold: 0.5 });
+    try {
+      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
+      if (!IntersectionObserverClass) return;
       
-      titleObserver.observe(title);
-    });
+      const sectionTitles = this.elementRef.nativeElement.querySelectorAll('.section-title');
+      
+      sectionTitles.forEach((title: HTMLElement, index: number) => {
+        const titleObserver = new IntersectionObserverClass((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out';
+              }, index * 100);
+            }
+          });
+        }, { threshold: 0.5 });
+        
+        titleObserver.observe(title);
+      });
+    } catch (e) {
+      console.warn('Error initializing section title animations (likely SSR):', e);
+    }
   }
 
 }

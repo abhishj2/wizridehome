@@ -68,7 +68,7 @@ export class WordpressService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.error('WordPress API Error:', error);
+    // console.error('WordPress API Error:', error);
     return throwError(() => new Error(`WordPress API Error: ${error.message}`));
   }
 }

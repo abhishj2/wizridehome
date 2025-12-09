@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -46,6 +46,7 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
     private metaService: Meta,
     private elementRef: ElementRef,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
@@ -231,6 +232,7 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initSmoothScrolling();
     this.initIntersectionObserver();
@@ -263,12 +265,16 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+    
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
+      const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           this.renderer.setStyle(entry.target, 'opacity', '1');
@@ -277,14 +283,18 @@ export class CorporatepackagesComponent implements OnInit, AfterViewInit {
       });
     }, observerOptions);
 
-    // Observe all target elements
-    const elements = this.elementRef.nativeElement.querySelectorAll('.feature-card, .content-card, .partner-logo, .enquiry-section');
-    elements.forEach((el: HTMLElement) => {
-      this.renderer.setStyle(el, 'opacity', '0');
-      this.renderer.setStyle(el, 'transform', 'translateY(30px)');
-      this.renderer.setStyle(el, 'transition', 'opacity 0.8s ease, transform 0.8s ease');
-      observer.observe(el);
-    });
+      // Observe all target elements
+      const elements = this.elementRef.nativeElement.querySelectorAll('.feature-card, .content-card, .partner-logo, .enquiry-section');
+      elements.forEach((el: HTMLElement) => {
+        this.renderer.setStyle(el, 'opacity', '0');
+        this.renderer.setStyle(el, 'transform', 'translateY(30px)');
+        this.renderer.setStyle(el, 'transition', 'opacity 0.8s ease, transform 0.8s ease');
+        observer.observe(el);
+      });
+    } catch (e) {
+      // Silently handle SSR errors
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   // Staggered animations for specific elements

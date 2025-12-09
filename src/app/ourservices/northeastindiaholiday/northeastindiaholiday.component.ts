@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -21,7 +21,8 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -112,6 +113,7 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initSmoothScrolling();
@@ -127,6 +129,7 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Clean up event listeners
     if (this.scrollListener) {
       window.removeEventListener('scroll', this.scrollListener);
@@ -140,29 +143,31 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
 
   // Intersection Observer for scroll animations with better performance
   private initIntersectionObserver(): void {
-    if ('IntersectionObserver' in window) {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -120px 0px',
-        threshold: 0.1
-      };
+    if (!isPlatformBrowser(this.platformId)) return;
+    const IO = (globalThis as any).IntersectionObserver;
+    if (!IO) return;
 
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            entry.target.classList.add('animate');
-            this.intersectionObserver?.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -120px 0px',
+      threshold: 0.1
+    };
 
-      // Observe all elements with fade-up and animate-on-scroll classes
-      const animateElements = this.elementRef.nativeElement.querySelectorAll('.fade-up, .animate-on-scroll');
-      animateElements.forEach((el: Element) => {
-        this.intersectionObserver?.observe(el);
+    this.intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          entry.target.classList.add('animate');
+          this.intersectionObserver?.unobserve(entry.target);
+        }
       });
-    }
+    }, observerOptions);
+
+    // Observe all elements with fade-up and animate-on-scroll classes
+    const animateElements = this.elementRef.nativeElement.querySelectorAll('.fade-up, .animate-on-scroll');
+    animateElements.forEach((el: Element) => {
+      this.intersectionObserver?.observe(el);
+    });
   }
 
   // Smooth scrolling for anchor links
@@ -228,6 +233,8 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
 
   // Smooth fade-in animation on scroll
   private animateOnScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (typeof window === 'undefined') return;
     const elements = this.elementRef.nativeElement.querySelectorAll('.fade-up');
     const windowHeight = window.innerHeight;
 
@@ -244,14 +251,17 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
   // Host listener for scroll events
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.animateOnScroll();
   }
 
   // Parallax effect for floating shapes
   private initParallax(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const shapes = this.elementRef.nativeElement.querySelectorAll('.shape');
 
     this.scrollListener = () => {
+      if (typeof window === 'undefined') return;
       const scrolled = window.pageYOffset;
 
       shapes.forEach((shape: HTMLElement, index: number) => {
@@ -260,7 +270,9 @@ export class NortheastindiaholidayComponent implements OnInit, AfterViewInit, On
       });
     };
 
-    window.addEventListener('scroll', this.scrollListener);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', this.scrollListener);
+    }
   }
 
   // Enhanced card interactions

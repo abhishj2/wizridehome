@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, OnDestroy, HostListener, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -119,20 +119,22 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
       // Initialize all interactive features
       this.initIntersectionObserver();
       this.initSmoothScrolling();
-    this.initFormSubmission();
-    this.initParallax();
-    this.initCardAnimations();
-    this.initBookingSystem();
-    this.initLoadingAnimation();
-    this.animateOnScroll();
+      this.initFormSubmission();
+      this.initParallax();
+      this.initCardAnimations();
+      this.initBookingSystem();
+      this.initLoadingAnimation();
+      this.animateOnScroll();
 
     // Enable smooth scrolling behavior
     this.document.documentElement.style.scrollBehavior = 'smooth';
   }
+  }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Clean up event listeners
-    if (this.scrollListener) {
+    if (this.scrollListener && typeof window !== 'undefined') {
       window.removeEventListener('scroll', this.scrollListener);
     }
 
@@ -144,29 +146,30 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
 
   // Intersection Observer for scroll animations with better performance
   private initIntersectionObserver(): void {
-    if ('IntersectionObserver' in window) {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -120px 0px',
-        threshold: 0.1
-      };
+    if (!isPlatformBrowser(this.platformId)) return;
+    const IO = (globalThis as any).IntersectionObserver;
+    if (!IO) return;
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -120px 0px',
+      threshold: 0.1
+    };
 
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            entry.target.classList.add('animate');
-            this.intersectionObserver?.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      // Observe all elements with fade-up and animate-on-scroll classes
-      const animateElements = this.elementRef.nativeElement.querySelectorAll('.fade-up, .animate-on-scroll');
-      animateElements.forEach((el: Element) => {
-        this.intersectionObserver?.observe(el);
+    this.intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          entry.target.classList.add('animate');
+          this.intersectionObserver?.unobserve(entry.target);
+        }
       });
-    }
+    }, observerOptions);
+
+    // Observe all elements with fade-up and animate-on-scroll classes
+    const animateElements = this.elementRef.nativeElement.querySelectorAll('.fade-up, .animate-on-scroll');
+    animateElements.forEach((el: Element) => {
+      this.intersectionObserver?.observe(el);
+    });
   }
 
   // Smooth scrolling for anchor links
@@ -233,6 +236,8 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
 
   // Smooth fade-in animation on scroll
   private animateOnScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (typeof window === 'undefined') return;
     const elements = this.elementRef.nativeElement.querySelectorAll('.fade-up');
     const windowHeight = window.innerHeight;
 
@@ -249,14 +254,17 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
   // Host listener for scroll events
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.animateOnScroll();
   }
 
   // Parallax effect for floating shapes
   private initParallax(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const shapes = this.elementRef.nativeElement.querySelectorAll('.shape');
 
     this.scrollListener = () => {
+      if (typeof window === 'undefined') return;
       const scrolled = window.pageYOffset;
 
       shapes.forEach((shape: HTMLElement, index: number) => {
@@ -265,7 +273,9 @@ export class WizzrideinternationalholidayComponent implements OnInit, AfterViewI
       });
     };
 
-    window.addEventListener('scroll', this.scrollListener);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', this.scrollListener);
+    }
   }
 
   // Enhanced card interactions

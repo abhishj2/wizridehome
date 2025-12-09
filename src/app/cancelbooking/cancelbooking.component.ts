@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -40,7 +40,8 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
     private router: Router,
     private apiService: ApiserviceService,
     private captchaService: CaptchaService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.initializeForm();
   }
@@ -136,6 +137,7 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -822,23 +824,36 @@ export class CancelbookingComponent implements OnInit, AfterViewInit {
   }    
 
   ngAfterViewInit(): void {
-    // Animation on scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      const doc = this.document;
+      
+      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
+        return;
+      }
+      
+      // Animation on scroll
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      doc.querySelectorAll('[data-animate]').forEach(el => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    document.querySelectorAll('[data-animate]').forEach(el => {
-      observer.observe(el);
-    });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
 }

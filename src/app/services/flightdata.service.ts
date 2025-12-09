@@ -18,7 +18,7 @@ export class FlightdataService {
           const parsedData = JSON.parse(storedData);
           this.flightDataSubject.next(parsedData);
         } catch (error) {
-          console.error('Error parsing flight data from localStorage:', error);
+          // console.error('Error parsing flight data from localStorage:', error);
         }
       }
     }

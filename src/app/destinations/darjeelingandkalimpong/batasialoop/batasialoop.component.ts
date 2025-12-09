@@ -19,7 +19,8 @@ export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -140,8 +141,9 @@ export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, ViewEncapsulation, ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../services/seo.service';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -39,6 +39,7 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
     private elementRef: ElementRef,
     private cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient
   ) {}
 
@@ -386,15 +387,19 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize only search and scroll features (FAQ accordion is handled globally)
     setTimeout(() => {
-      this.initFaqSearch();
-      this.initFadeScrollObserver();
-      this.initFormSubmissions();
+      if (isPlatformBrowser(this.platformId)) {
+        this.initFaqSearch();
+        this.initFadeScrollObserver();
+        this.initFormSubmissions();
+      }
     }, 100);
   }
 
   ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Disconnect intersection observer
     if (this.fadeScrollObserver) {
       this.fadeScrollObserver.disconnect();
@@ -571,22 +576,31 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
   // Fade scroll animation with IntersectionObserver
   private initFadeScrollObserver(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    this.fadeScrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+      this.fadeScrollObserver = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      const fadeScrollElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
+      fadeScrollElements.forEach((el: Element) => {
+        this.fadeScrollObserver?.observe(el);
       });
-    }, observerOptions);
-
-    const fadeScrollElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
-    fadeScrollElements.forEach((el: Element) => {
-      this.fadeScrollObserver?.observe(el);
-    });
+    } catch (e) {
+      console.warn('Error initializing fade scroll observer (likely SSR):', e);
+    }
   }
 }

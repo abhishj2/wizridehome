@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -47,6 +47,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private metaService: Meta,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
@@ -135,6 +136,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
 
   // Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -142,6 +144,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
@@ -153,29 +156,43 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
    * Initialize Intersection Observer for scroll animations
    */
   private initializeIntersectionObserver(): void {
-    const observerOptions: IntersectionObserverInit = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      const doc = this.document;
+      
+      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
+        return;
+      }
+      
+      const observerOptions: IntersectionObserverInit = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all elements with data-animate attribute
+      doc.querySelectorAll('[data-animate]').forEach(el => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    // Observe all elements with data-animate attribute
-    this.document.querySelectorAll('[data-animate]').forEach(el => {
-      observer.observe(el);
-    });
+    } catch (e) {
+      // Ignore on SSR
+    }
   }
 
   /**
    * Add typing animation effect to page title
    */
   private initializePageTitleAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const pageTitle = this.document.querySelector('.page-title') as HTMLElement;
     if (!pageTitle) return;
 
@@ -277,6 +294,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
    * Add focus animations to form inputs
    */
   private initializeFormInputAnimations(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.document.querySelectorAll('input, textarea, select').forEach(input => {
       const inputElement = input as HTMLElement;
       
@@ -298,6 +316,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
    * Parallax effect for form image
    */
   private initializeParallaxEffect(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     window.addEventListener('scroll', () => {
       const scrolled = window.pageYOffset;
       const formImage = this.document.querySelector('.form-image') as HTMLElement;

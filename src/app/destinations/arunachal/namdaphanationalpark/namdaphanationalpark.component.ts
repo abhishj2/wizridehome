@@ -18,7 +18,9 @@ export class NamdaphanationalparkComponent  implements OnInit, AfterViewInit, On
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document,`r`n    @Inject(PLATFORM_ID) private platformId: Object`r`n  ) {}
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
     // Set canonical URL
@@ -130,10 +132,13 @@ export class NamdaphanationalparkComponent  implements OnInit, AfterViewInit, On
   }
 
   // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {`r`n    if (isPlatformBrowser(this.platformId)) {`r`n      const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);`r`n    }
+  private addJsonLd(schemaObject: any): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   ngAfterViewInit(): void {

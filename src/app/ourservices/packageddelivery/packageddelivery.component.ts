@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class PackageddeliveryComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private metaService: Meta,
     private elementRef: ElementRef,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -152,6 +153,7 @@ this.addJsonLd({
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initStaggeredAnimations();
@@ -164,24 +166,32 @@ this.addJsonLd({
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    const IO = (globalThis as any).IntersectionObserver;
+    if (!IO) return;
+    
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all elements with data-animate attribute
+      const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
+      animateElements.forEach((el: Element) => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    // Observe all elements with data-animate attribute
-    const animateElements = this.elementRef.nativeElement.querySelectorAll('[data-animate]');
-    animateElements.forEach((el: Element) => {
-      observer.observe(el);
-    });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   // Stagger animation for feature cards

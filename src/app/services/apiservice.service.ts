@@ -24,7 +24,7 @@ readonly ROOT_URL = 'https://www.wizzride.com/app/api/testBed/getSrcDestPickDrop
       type: 'SOURCE',
       
     }
-    console.log("value of data",data)
+    // console.log("value of data",data)
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<SourceValue[]>(this.ROOT_URL,data,{headers});
   }
@@ -108,7 +108,7 @@ caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferre
     seats : seats
   }    
 
-  console.log("Value of Data",data)
+  // console.log("Value of Data",data)
   const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
   return this.http.post<any[]>(this.ROOT_URL,data,{headers});
 }
@@ -194,7 +194,7 @@ caraddditionrequest(fullName : any, contactNumber : any, emailId : any, preferre
       type : 'SHAREDWEB'
     }
 
-    console.log("value to temp details",data)
+    // console.log("value to temp details",data)
     
     // die();
 
@@ -501,7 +501,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
     message : message        
   }    
 
-  console.log("Data for Sell Your Car",data)
+  // console.log("Data for Sell Your Car",data)
   const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
   return this.http.post<any[]>(this.ROOT_URL,data,{headers});
 }
@@ -516,8 +516,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
 
       }    
 
-      console.log("Data for Sell Your Car",data)
-      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+      // console.log("Data for Sell Your Car",data)
+      // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -531,7 +531,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       
     }    
   
-    console.log("Data for Sell Your Car",data)
+    // console.log("Data for Sell Your Car",data)
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -556,7 +556,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         env : 'test'
       }    
   
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -584,7 +584,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         // env : 'test'
       }    
   
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -601,7 +601,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         env : 'test'
       }    
   
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -618,7 +618,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
           env : 'test'
       }    
   
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -635,7 +635,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'
       }    
   
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -658,7 +658,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'
     }    
   
-    console.log("Data for Sell Your Car",data)
+    // console.log("Data for Sell Your Car",data)
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -675,8 +675,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             // env : 'test'
             env : 'test'
     }    
-    console.log("Data for Sell Your Car",data)
-    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+    // console.log("Data for Sell Your Car",data)
+    // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -694,8 +694,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'
     }    
   
-    console.log("Data for Sell Your Car",data)
-    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+    // console.log("Data for Sell Your Car",data)
+    // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -714,8 +714,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'
     }    
   
-    console.log("Data for Sell Your Car",data)
-    console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+    // console.log("Data for Sell Your Car",data)
+    // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
   }
@@ -752,7 +752,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         page: 'getallairports',      
       }    
     
-      console.log("Data for Sell Your Car",data)
+      // console.log("Data for Sell Your Car",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -769,8 +769,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'    
       }    
   
-      console.log("Data for Sell Your Car",data)
-      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+      // console.log("Data for Sell Your Car",data)
+      // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -811,7 +811,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
   
       }    
   
-      console.log("Payment Data",data)
+      // console.log("Payment Data",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -825,7 +825,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         dev : 'test',
       }    
   
-      console.log("Payment Data",data)
+      // console.log("Payment Data",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -857,7 +857,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         PHONE : PHONE          
       }    
   
-      console.log("Payment Data",data)
+      // console.log("Payment Data",data)
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -875,8 +875,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         wizzpnr : finalPayload.wizzpnr
       }    
   
-      console.log("Data for Sell Your Car",data)
-      console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+      // console.log("Data for Sell Your Car",data)
+      // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
       const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
       return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -898,7 +898,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             env : 'test'
           }    
     
-          console.log("Data for Sell Your Car",data)
+          // console.log("Data for Sell Your Car",data)
           const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
           return this.http.post<any[]>(this.ROOT_URL,data,{headers});
       }
@@ -911,7 +911,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
           pnr : pnr
         }    
   
-        console.log("Data for Sell Your Car",data)
+        // console.log("Data for Sell Your Car",data)
         const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
         return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -927,8 +927,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
           contact : contact
         }    
   
-        console.log("Data for Sell Your Car",data)
-        console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+        // console.log("Data for Sell Your Car",data)
+        // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
         const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
         return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }
@@ -957,8 +957,8 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
   
         }    
   
-        console.log("Data for Sell Your Car",data)
-        console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
+        // console.log("Data for Sell Your Car",data)
+        // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
         const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
         return this.http.post<any[]>(this.ROOT_URL,data,{headers});
     }

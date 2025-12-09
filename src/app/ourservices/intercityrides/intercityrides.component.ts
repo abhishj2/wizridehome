@@ -191,20 +191,24 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
 
   // Intersection Observer for scroll animations
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    const IO = (globalThis as any).IntersectionObserver;
+    if (!IO) return;
+    
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          this.renderer.setStyle(entry.target, 'opacity', '1');
-          this.renderer.setStyle(entry.target, 'transform', 'translateY(0)');
-        }
-      });
-    }, observerOptions);
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            this.renderer.setStyle(entry.target, 'opacity', '1');
+            this.renderer.setStyle(entry.target, 'transform', 'translateY(0)');
+          }
+        });
+      }, observerOptions);
 
     // Observe elements for animation
     const elements = this.elementRef.nativeElement.querySelectorAll(
@@ -217,6 +221,9 @@ export class IntercityridesComponent implements OnInit, AfterViewInit {
       this.renderer.setStyle(el, 'transition', 'opacity 0.8s ease, transform 0.8s ease');
       observer.observe(el);
     });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   // Staggered animations for feature cards and step items

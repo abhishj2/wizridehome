@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, Inject, PLATFORM_ID } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
@@ -174,11 +174,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     public apiService: ApiserviceService,
     public flightDataService: FlightdataService,
     public router: Router,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngAfterViewInit(): void {
-    testhidemenu();
+    if (isPlatformBrowser(this.platformId) && typeof testhidemenu === 'function') {
+      testhidemenu();
+    }
   }
 
   ngOnInit(): void {

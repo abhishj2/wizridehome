@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
 interface BookingData {
@@ -45,11 +45,15 @@ export class ThankyouComponent implements OnInit {
   bookingReference = '';
   countdown = 10;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit() {
     // Get checkout data from localStorage
-    const checkoutData = localStorage.getItem('checkoutData');
+    if (!isPlatformBrowser(this.platformId)) return;
+    const checkoutData = typeof localStorage !== 'undefined' ? localStorage.getItem('checkoutData') : null;
     if (checkoutData) {
       const data = JSON.parse(checkoutData);
       this.bookingData = data.bookingData;

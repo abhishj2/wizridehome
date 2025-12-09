@@ -108,18 +108,26 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Intersection Observer for fade-scroll animations
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
-    const fadeElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      const fadeElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
 
-    this.intersectionObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
+      this.intersectionObserver = new IO((entries: IntersectionObserverEntry[], obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
 
-    fadeElements.forEach((el: Element) => this.intersectionObserver?.observe(el));
+      fadeElements.forEach((el: Element) => this.intersectionObserver?.observe(el));
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -17,7 +17,8 @@ export class OurvisionComponent implements AfterViewInit {
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     // Set canonical URL
@@ -93,6 +94,7 @@ export class OurvisionComponent implements AfterViewInit {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -101,31 +103,40 @@ export class OurvisionComponent implements AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    // Animation on scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+    // Avoid referencing missing IntersectionObserver on SSR
+    const IO = (globalThis as any).IntersectionObserver;
+    if (typeof IO === 'undefined') return;
+
+    try {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
+    } catch {
+      // Ignore on SSR
+    }
 
     // Staggered animation delays
-    function applyStaggeredDelay(selector: string) {
-      const elements = document.querySelectorAll(selector);
+    const applyStaggeredDelay = (selector: string) => {
+      const elements = this.document.querySelectorAll(selector);
       elements.forEach((element, index) => {
         (element as HTMLElement).style.transitionDelay = `${index * 0.2}s`;
       });
-    }
+    };
 
     applyStaggeredDelay('.value-card');
     applyStaggeredDelay('.timeline-item');

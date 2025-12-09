@@ -628,30 +628,38 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      if (!IO) return;
+      
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      const sections = this.elementRef.nativeElement.querySelectorAll('section');
+      sections.forEach((el: Element) => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    // Observe all sections
-    const sections = this.elementRef.nativeElement.querySelectorAll('section');
-    sections.forEach((el: Element) => {
-      observer.observe(el);
-    });
+    } catch (e) {
+      console.warn('Error initializing intersection observer (likely SSR):', e);
+    }
   }
 
   scrollToEnquiry(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const element = document.getElementById('enquiry-form');
+    const element = this.document.getElementById('enquiry-form');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

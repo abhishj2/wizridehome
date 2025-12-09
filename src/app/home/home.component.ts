@@ -10,7 +10,7 @@ import {
   Renderer2,
   HostListener
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -164,6 +164,7 @@ isHovered = false;
 
 // Initialize 3D carousel
 private init3DTestimonialCarousel(): void {
+  if (!isPlatformBrowser(this.platformId)) return;
   this.totalSlides = this.testimonials.length;
   setTimeout(() => {
     this.startAutoplay();
@@ -172,6 +173,7 @@ private init3DTestimonialCarousel(): void {
 
 // Auto-play functionality
 startAutoplay(): void {
+  if (!isPlatformBrowser(this.platformId)) return;
   if (this.autoplayInterval) {
     clearInterval(this.autoplayInterval);
   }
@@ -184,6 +186,7 @@ startAutoplay(): void {
 }
 
 stopAutoplay(): void {
+  if (!isPlatformBrowser(this.platformId)) return;
   if (this.autoplayInterval) {
     clearInterval(this.autoplayInterval);
     this.autoplayInterval = null;
@@ -770,25 +773,31 @@ trackByOfferId(index: number, offer: any): number {
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
 
     // Fetch TBO Token for flight booking
-    this.subscriptions.add(
-      this.apiService.getTboToken().subscribe((val: any) => {
-        console.log('TBo Token', val);
-        if (val) {
-          this.loader = false;
-          this.tboTokenId = val['TokenId'];
-        } else {
-          this.loader = true;
-        }
-      })
-    );
+    if (isPlatformBrowser(this.platformId)) {
+      
+      // 1. Fetch TBO Token (Browser Only)
+      this.subscriptions.add(
+        this.apiService.getTboToken().subscribe((val: any) => {
+          console.log('TBo Token', val);
+          if (val) {
+            this.loader = false;
+            this.tboTokenId = val['TokenId'];
+          } else {
+            this.loader = true;
+          }
+        })
+      );
+
+      this.subscriptions.add(
+        this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
+          this.ip = res.ip;
+          console.log('nIp', this.ip);
+        })
+      );
+    }
 
     // Fetch IP address
-    this.subscriptions.add(
-      this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
-        this.ip = res.ip;
-        console.log('nIp', this.ip);
-      })
-    );
+
 
     // Fetch source cities for shared cabs
     this.apiService.getSource().subscribe({
@@ -965,6 +974,7 @@ trackByOfferId(index: number, offer: any): number {
 
   // Helper method to insert JSON-LD structured data
   private insertJsonLd(schema: any, id: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Remove existing schema with same ID if it exists
     const existingScript = this.document.getElementById(id);
     if (existingScript) {
@@ -982,13 +992,15 @@ trackByOfferId(index: number, offer: any): number {
   
 
   ngOnDestroy() {
-    // Clean up home schemas to prevent duplicates
-    this.homeSchemaIds.forEach(id => {
-      const script = this.document.getElementById(id);
-      if (script) {
-        script.remove();
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      // Clean up home schemas to prevent duplicates
+      this.homeSchemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          script.remove();
+        }
+      });
+    }
 
     this.destroy$.next();
     this.destroy$.complete();
@@ -997,20 +1009,28 @@ trackByOfferId(index: number, offer: any): number {
     this.stopAutoplay();
   }
 
-  ngAfterViewInit() {
-    const currentIndex = this.tabs.indexOf(this.currentTab);
-    const navTabs = document.querySelector('.nav-tabs');
-    if (navTabs) {
-        navTabs.setAttribute('data-active', currentIndex.toString());
+  ngAfterViewInit(): void {
+    // 1. CRITICAL GUARD: This must be the very first line.
+    if (!isPlatformBrowser(this.platformId)) {
+      return; 
     }
 
-        // Initialize 3D testimonial carousel
-        this.init3DTestimonialCarousel();
-        
-        // Initialize clock display
-        if (this.formValues.reservedTime) {
-            this.updateClockDisplay(this.formValues.reservedTime);
-        }
+    // 2. Safe DOM operations (Only runs in browser)
+    // Make sure you use 'this.document', NOT global 'document'
+    const currentIndex = this.tabs.indexOf(this.currentTab);
+    const navTabs = this.document.querySelector('.nav-tabs'); // Use this.document
+    
+    if (navTabs) {
+      navTabs.setAttribute('data-active', currentIndex.toString());
+    }
+
+    // 3. Initialize 3D testimonial carousel
+    this.init3DTestimonialCarousel();
+    
+    // 4. Initialize clock display
+    if (this.formValues.reservedTime) {
+      this.updateClockDisplay(this.formValues.reservedTime);
+    }
   }
 
   /** -------------------
@@ -1066,10 +1086,12 @@ trackByOfferId(index: number, offer: any): number {
         this.isSliding = true;
 
         // Update nav tabs active state immediately for smooth color transition
-        const currentIndex = this.tabs.indexOf(tabName);
-        const navTabs = document.querySelector('.nav-tabs');
-        if (navTabs) {
-            navTabs.setAttribute('data-active', currentIndex.toString());
+        if (isPlatformBrowser(this.platformId)) {
+          const currentIndex = this.tabs.indexOf(tabName);
+          const navTabs = this.document.querySelector('.nav-tabs');
+          if (navTabs) {
+              navTabs.setAttribute('data-active', currentIndex.toString());
+          }
         }
 
         setTimeout(() => {
@@ -1129,9 +1151,11 @@ trackByOfferId(index: number, offer: any): number {
     this.showPhonePopup = true;
     
     // Scroll to top to ensure modal is visible
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
   }
 
   cancelPhonePopup() {
@@ -1177,6 +1201,7 @@ trackByOfferId(index: number, offer: any): number {
     console.log('Navigating to booking results with params:', searchParams);
     console.log('Router available:', !!this.router);
 
+    if (!isPlatformBrowser(this.platformId)) return;
     try {
       // Store search params in localStorage as fallback
       localStorage.setItem('bookingSearchParams', JSON.stringify(searchParams));
@@ -1188,18 +1213,24 @@ trackByOfferId(index: number, offer: any): number {
         if (!success) {
           console.log('Router navigation failed, trying window.location...');
           // Fallback to window.location
-          window.location.href = '/booking-results';
+          if (isPlatformBrowser(this.platformId)) {
+            window.location.href = '/booking-results';
+          }
         }
       }).catch(error => {
         console.error('Router navigation error:', error);
         console.log('Falling back to window.location...');
         // Fallback to window.location
-        window.location.href = '/booking-results';
+        if (isPlatformBrowser(this.platformId)) {
+          window.location.href = '/booking-results';
+        }
       });
     } catch (error) {
       console.error('Error during navigation:', error);
       // Final fallback
-      window.location.href = '/booking-results';
+      if (isPlatformBrowser(this.platformId)) {
+        window.location.href = '/booking-results';
+      }
     }
   }
 
@@ -2294,24 +2325,34 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   submitForm() {
-  const phone = prompt("Please enter your phone number:");
-
-  if (!phone) {
-    alert("Phone number is required!");
-    return;
+    if (!isPlatformBrowser(this.platformId)) return;
+  
+    Swal.fire({
+      title: 'Enter your phone number',
+      input: 'text',
+      inputLabel: 'Phone Number',
+      inputPlaceholder: 'Enter your phone number',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to write something!'
+        }
+        return null; // Return null if validation passes
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const phone = result.value;
+        const submissionData = {
+          ...this.formValues,
+          travelers: this.counts,
+          travelClass: this.selectedClass,
+          phoneNumber: phone
+        };
+        console.log("Form Submitted:", submissionData);
+        Swal.fire('Submitted!', 'Check console for details.', 'success');
+      }
+    });
   }
-
-  const submissionData = {
-    ...this.formValues,
-    travelers: this.counts,
-    travelClass: this.selectedClass,
-    phoneNumber: phone
-  };
-
-  console.log("Form Submitted:", submissionData);
-  alert("Form submitted! Check console for details.");
-}
-
 
   searchFlights() {
     const errors: string[] = [];
@@ -2597,7 +2638,8 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   scrollToSelectedHour() {
-    const hoursContainer = document.querySelector('.time-options') as HTMLElement;
+    if (!isPlatformBrowser(this.platformId)) return;
+    const hoursContainer = this.document.querySelector('.time-options') as HTMLElement;
     if (hoursContainer) {
       const selectedOption = hoursContainer.children[this.selectedHour - 1] as HTMLElement;
       if (selectedOption) {
@@ -2669,7 +2711,8 @@ trackByOfferId(index: number, offer: any): number {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(): void {
-    const bookingSection = document.querySelector('.booking-section-wrapper');
+    if (!isPlatformBrowser(this.platformId)) return;
+    const bookingSection = this.document.querySelector('.booking-section-wrapper');
     if (!bookingSection) return;
 
     const bookingSectionRect = bookingSection.getBoundingClientRect();
@@ -2685,8 +2728,9 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   scrollToContact(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Scroll to contact section or footer
-    const footer = document.querySelector('app-footer');
+    const footer = this.document.querySelector('app-footer');
     if (footer) {
       footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -2697,9 +2741,46 @@ trackByOfferId(index: number, offer: any): number {
    -------------------- */
   private decodeHtmlEntities(text: string): string {
     if (!text) return '';
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    
+    // SSR-safe: always use regex fallback first, then try DOM if available
+    if (!isPlatformBrowser(this.platformId) || typeof this.document === 'undefined') {
+      // SSR-safe fallback: decode common HTML entities using regex
+      return text
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8211;/g, '–')
+        .replace(/&#8212;/g, '—')
+        .replace(/&#8230;/g, '…');
+    }
+    
+    // Browser: use DOM for accurate decoding (only if document is available)
+    try {
+      if (this.document && typeof this.document.createElement === 'function') {
+        const textarea = this.document.createElement('textarea');
+        textarea.innerHTML = text;
+        return textarea.value;
+      }
+    } catch (e) {
+      // Fallback to regex if DOM method fails
+    }
+    
+    // Final fallback: regex decoding
+    return text
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&#8217;/g, "'")
+      .replace(/&#8211;/g, '–')
+      .replace(/&#8212;/g, '—')
+      .replace(/&#8230;/g, '…');
   }
 
   /** -------------------
@@ -2723,9 +2804,20 @@ trackByOfferId(index: number, offer: any): number {
           const decodedTitle = this.decodeHtmlEntities(wpOffer.title.rendered);
           
           // Extract description from content (strip HTML tags)
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = wpOffer.content.rendered;
-          const description = tempDiv.textContent || tempDiv.innerText || '';
+          let description = '';
+          if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
+            try {
+              const tempDiv = this.document.createElement('div');
+              tempDiv.innerHTML = wpOffer.content.rendered;
+              description = tempDiv.textContent || tempDiv.innerText || '';
+            } catch (e) {
+              // Fallback to regex if DOM method fails
+              description = wpOffer.content.rendered.replace(/<[^>]*>/g, '').trim();
+            }
+          } else {
+            // Fallback for SSR: strip HTML tags using regex
+            description = wpOffer.content.rendered.replace(/<[^>]*>/g, '').trim();
+          }
           
           // Decode HTML entities in subtitle
           const decodedSubtitle = this.decodeHtmlEntities(wpOffer.acf?.offer_subtitle || '');
@@ -2774,9 +2866,20 @@ trackByOfferId(index: number, offer: any): number {
           // Map WordPress reviews to testimonial structure
           this.testimonials = wpReviews.map((wpReview) => {
             // Extract text from content (strip HTML tags)
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = wpReview.content?.rendered || '';
-            const reviewText = tempDiv.textContent || tempDiv.innerText || '';
+            let reviewText = '';
+            if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
+              try {
+                const tempDiv = this.document.createElement('div');
+                tempDiv.innerHTML = wpReview.content?.rendered || '';
+                reviewText = tempDiv.textContent || tempDiv.innerText || '';
+              } catch (e) {
+                // Fallback to regex if DOM method fails
+                reviewText = (wpReview.content?.rendered || '').replace(/<[^>]*>/g, '').trim();
+              }
+            } else {
+              // Fallback for SSR: strip HTML tags using regex
+              reviewText = (wpReview.content?.rendered || '').replace(/<[^>]*>/g, '').trim();
+            }
             
             // Get avatar from featured image or ACF field
             let avatarUrl = wpReview.acf?.avatar_url || '';
@@ -3060,7 +3163,7 @@ trackByOfferId(index: number, offer: any): number {
     };
 
     // Store in localStorage for flightlist component
-    if (typeof localStorage !== 'undefined') {
+    if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('flightSearchData', JSON.stringify(flightData));
     }
 

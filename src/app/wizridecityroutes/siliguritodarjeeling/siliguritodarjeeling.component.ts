@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { CommonAirportService } from '../../airports/commonairport';
 import { SeoService } from '../../services/seo.service';
 
@@ -19,7 +19,8 @@ export class SiliguritodarjeelingComponent  implements OnInit, AfterViewInit, On
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -175,7 +176,9 @@ export class SiliguritodarjeelingComponent  implements OnInit, AfterViewInit, On
   }
 
   ngAfterViewInit(): void {
-    this.commonAirportService.initializeAirportPage();
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonAirportService.initializeAirportPage();
+    }
   }
 
   ngOnDestroy(): void {

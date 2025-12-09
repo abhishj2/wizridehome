@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { CommonDestinationService } from '../../commondest';
 import { SeoService } from '../../../services/seo.service';
 
@@ -19,7 +19,9 @@ export class WardslakeComponent  implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document,`r`n    @Inject(PLATFORM_ID) private platformId: Object`r`n  ) {}
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
     // Set canonical URL
@@ -132,7 +134,14 @@ export class WardslakeComponent  implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {`r`n    if (isPlatformBrowser(this.platformId)) {`r`n      const script = this.renderer.createElement('script');`r`n      script.type = 'application/ld+json';`r`n      script.text = JSON.stringify(schemaObject);`r`n      this.renderer.appendChild(this.document.head, script);`r`n    }`r`n  }
+  private addJsonLd(schemaObject: any): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
+  }
 
   ngAfterViewInit(): void {
     // Initialize all common destination page functionality

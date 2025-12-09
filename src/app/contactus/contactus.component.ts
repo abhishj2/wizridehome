@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -46,6 +46,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private metaService: Meta,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
@@ -117,6 +118,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
@@ -125,6 +127,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
@@ -214,23 +217,36 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Initialize Intersection Observer for scroll animations
    */
   private initializeIntersectionObserver(): void {
-    const observerOptions: IntersectionObserverInit = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IO = (globalThis as any).IntersectionObserver;
+      const doc = this.document;
+      
+      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
+        return;
+      }
+      
+      const observerOptions: IntersectionObserverInit = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
+      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all elements with data-animate attribute
+      doc.querySelectorAll('[data-animate]').forEach(el => {
+        observer.observe(el);
       });
-    }, observerOptions);
-
-    // Observe all elements with data-animate attribute
-    this.document.querySelectorAll('[data-animate]').forEach(el => {
-      observer.observe(el);
-    });
+    } catch (e) {
+      // Ignore on SSR
+    }
   }
 
   /**
@@ -318,27 +334,42 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Stagger animation for contact cards
    */
   private initializeStaggeredContactCards(): void {
-    this.document.querySelectorAll('.contact-card').forEach((card, index) => {
-      const cardElement = card as HTMLElement;
-      cardElement.style.animationDelay = `${index * 0.1}s`;
-      cardElement.style.opacity = '0';
-      cardElement.style.transform = 'translateY(30px)';
-      cardElement.style.transition = 'all 0.8s ease';
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
+      const doc = typeof document !== 'undefined' ? document : null;
       
-      // Animate when in view
-      const cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              (entry.target as HTMLElement).style.opacity = '1';
-              (entry.target as HTMLElement).style.transform = 'translateY(0)';
-            }, index * 100);
-          }
-        });
-      }, { threshold: 0.2 });
+      if (!IntersectionObserverClass || !doc || typeof doc.querySelectorAll !== 'function') {
+        return;
+      }
       
-      cardObserver.observe(cardElement);
-    });
+      doc.querySelectorAll('.contact-card').forEach((card, index) => {
+        const cardElement = card as HTMLElement;
+        cardElement.style.animationDelay = `${index * 0.1}s`;
+        cardElement.style.opacity = '0';
+        cardElement.style.transform = 'translateY(30px)';
+        cardElement.style.transition = 'all 0.8s ease';
+        
+        // Animate when in view
+        const cardObserver = new IntersectionObserverClass((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                if (isPlatformBrowser(this.platformId)) {
+                  (entry.target as HTMLElement).style.opacity = '1';
+                  (entry.target as HTMLElement).style.transform = 'translateY(0)';
+                }
+              }, index * 100);
+            }
+          });
+        }, { threshold: 0.2 });
+        
+        cardObserver.observe(cardElement);
+      });
+    } catch (e) {
+      console.warn('Error initializing staggered contact cards (likely SSR):', e);
+    }
   }
 
 }

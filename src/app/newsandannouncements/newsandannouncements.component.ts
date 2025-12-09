@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation, Renderer2, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewEncapsulation, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -112,7 +112,8 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -283,10 +284,19 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
   }
 
   getTruncatedContent(htmlContent: string, maxLength: number = 120): string {
-    // Strip HTML tags to get plain text
-    const temp = document.createElement('div');
-    temp.innerHTML = htmlContent;
-    const plainText = temp.textContent || temp.innerText || '';
+    // Always use SSR-safe regex method - works in both SSR and browser
+    // This method is called from template, so it must be SSR-safe
+    const plainText = htmlContent
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&[^;]+;/g, ' ') // Remove any remaining entities
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
     
     // Truncate and add ellipsis
     if (plainText.length > maxLength) {
@@ -315,7 +325,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
             if (this.modernSliderInstance) {
               this.modernSliderInstance.destroy();
             }
-            this.modernSliderInstance = new ModernSlider();
+            this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
             this.attachToggleDetailListeners();
             this.attachShareButtonListeners();
           }, 100);
@@ -347,7 +357,7 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
       if (this.modernSliderInstance) {
         this.modernSliderInstance.destroy();
       }
-      this.modernSliderInstance = new ModernSlider();
+      this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
       this.attachToggleDetailListeners();
       this.attachShareButtonListeners();
     }, 100);
@@ -408,15 +418,34 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
   }
 
   getPlainTextContent(htmlContent: string): string {
-    // Create a temporary div to strip HTML tags
-    const temp = document.createElement('div');
-    temp.innerHTML = htmlContent;
-    return temp.textContent || temp.innerText || '';
+    // SSR-safe: use regex to strip HTML tags (works in both SSR and browser)
+    // This method is called from template, so it must be SSR-safe
+    // NO document access - pure string manipulation only
+    if (!htmlContent) return '';
+    
+    try {
+      return htmlContent
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&[^;]+;/g, ' ') // Remove any remaining entities
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+    } catch {
+      // Fallback: return empty string if anything fails
+      return '';
+    }
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     // Initialize after view is ready
     setTimeout(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
       this.typeWriter();
       this.animateCounters();
       this.initializeSlider();
@@ -433,7 +462,9 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Typewriter Effect
   typeWriter(): void {
-    const typewriterElement = document.querySelector('.typewriter-line') as HTMLElement;
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
+    
+    const typewriterElement = this.document.querySelector('.typewriter-line') as HTMLElement;
     if (!typewriterElement) return;
 
     const text = 'News & Updates';
@@ -444,13 +475,16 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
     typewriterElement.style.borderRight = '3px solid #f59e0b';
 
     const type = () => {
+      if (!isPlatformBrowser(this.platformId)) return;
       if (i < text.length) {
         typewriterElement.textContent += text.charAt(i);
         i++;
         setTimeout(type, 150);
       } else {
         setTimeout(() => {
-          typewriterElement.style.animation = 'blink-cursor 1s infinite';
+          if (isPlatformBrowser(this.platformId)) {
+            typewriterElement.style.animation = 'blink-cursor 1s infinite';
+          }
         }, 500);
       }
     };
@@ -460,7 +494,8 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Hero Stats Counter Animation
   animateCounters(): void {
-    const statItems = document.querySelectorAll('.stat-item[data-counter]');
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
+    const statItems = this.document.querySelectorAll('.stat-item[data-counter]');
 
     statItems.forEach((item, index) => {
       const counter = item.getAttribute('data-counter');
@@ -498,13 +533,14 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Initialize Slider
   initializeSlider(): void {
-    this.modernSliderInstance = new ModernSlider();
+    this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
   }
 
   // Setup Event Listeners
   setupEventListeners(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
     // Action cards
-    document.querySelectorAll('.action-card').forEach(card => {
+    this.document.querySelectorAll('.action-card').forEach(card => {
       card.addEventListener('click', () => {
         const service = (card as HTMLElement).dataset['service'];
         console.log(`Exploring: ${service}`);
@@ -520,7 +556,8 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Attach Toggle Detail Listeners (for dynamically loaded content)
   attachToggleDetailListeners(): void {
-    document.querySelectorAll('.toggle-details').forEach(button => {
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
+    this.document.querySelectorAll('.toggle-details').forEach(button => {
       // Remove existing listener if any
       const newButton = button.cloneNode(true);
       button.parentNode?.replaceChild(newButton, button);
@@ -542,7 +579,8 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Attach Share Button Listeners (for dynamically loaded content)
   attachShareButtonListeners(): void {
-    document.querySelectorAll('.share-btn').forEach(btn => {
+    if (!isPlatformBrowser(this.platformId) || !this.document) return;
+    this.document.querySelectorAll('.share-btn').forEach(btn => {
       // Remove existing listener if any
       const newBtn = btn.cloneNode(true);
       btn.parentNode?.replaceChild(newBtn, btn);
@@ -610,11 +648,33 @@ class ModernSlider {
   onNextClick: () => void;
   onKeyDown: (e: KeyboardEvent) => void;
 
-  constructor() {
-    this.sliderContainer = document.querySelector('.slider-container');
-    this.sliderTrack = document.querySelector('.slider-track');
-    this.prevBtn = document.querySelector('.prev-btn');
-    this.nextBtn = document.querySelector('.next-btn');
+  constructor(
+    private document: Document,
+    private platformId: Object
+  ) {
+    if (!isPlatformBrowser(this.platformId) || !this.document) {
+      // Initialize with null values for SSR
+      this.sliderContainer = null;
+      this.sliderTrack = null;
+      this.prevBtn = null;
+      this.nextBtn = null;
+      this.slides = [];
+      this.dots = [];
+      this.slideCount = 0;
+      this.currentSlide = 0;
+      this.autoplayInterval = null;
+      this.autoplayDelay = 5000;
+      this.isHovered = false;
+      this.onPrevClick = () => {};
+      this.onNextClick = () => {};
+      this.onKeyDown = () => {};
+      return;
+    }
+    
+    this.sliderContainer = this.document.querySelector('.slider-container');
+    this.sliderTrack = this.document.querySelector('.slider-track');
+    this.prevBtn = this.document.querySelector('.prev-btn');
+    this.nextBtn = this.document.querySelector('.next-btn');
 
     this.onPrevClick = this.prevSlide.bind(this);
     this.onNextClick = this.nextSlide.bind(this);
@@ -665,7 +725,9 @@ class ModernSlider {
       this.handleSwipe(startX, endX);
     }) as EventListener);
 
-    document.addEventListener('keydown', this.onKeyDown);
+    if (this.document) {
+      this.document.addEventListener('keydown', this.onKeyDown);
+    }
   }
 
   destroy(): void {
@@ -680,15 +742,18 @@ class ModernSlider {
         }
       });
     }
-    document.removeEventListener('keydown', this.onKeyDown);
+    if (this.document) {
+      this.document.removeEventListener('keydown', this.onKeyDown);
+    }
   }
 
   updateSlideCount(): void {
-    this.slides = Array.from(document.querySelectorAll('.slide:not([style*="display: none"])'));
+    if (!this.document) return;
+    this.slides = Array.from(this.document.querySelectorAll('.slide:not([style*="display: none"])'));
     this.slideCount = this.slides.length;
     this.currentSlide = 0;
 
-    const dotsContainer = document.querySelector('.slider-dots');
+    const dotsContainer = this.document.querySelector('.slider-dots');
     if (!dotsContainer) return;
 
     // Check if dots already exist in HTML
@@ -717,7 +782,7 @@ class ModernSlider {
       this.dots = [];
 
       for (let i = 0; i < this.slideCount; i++) {
-        const dot = document.createElement('button');
+        const dot = this.document.createElement('button');
         dot.classList.add('dot');
         if (i === 0) dot.classList.add('active');
         dot.setAttribute('data-slide', i.toString());
