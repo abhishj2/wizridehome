@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
 import Swal from 'sweetalert2';
+
 interface City {
   name: string;
   code: string;
@@ -95,223 +96,216 @@ interface WordPressOffer {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
-    services = [
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+  services = [
     {
       id: 1,
       title: 'International Packages',
       description: 'Explore the world with our curated international travel packages. Hassle-free planning for your global adventures.',
       image: 'assets/images/international.jpg',
-      link:'https://wizzride.com/ourservices/holidaystours/Wizzride-International-Holiday-Planner/'
+      link: 'https://wizzride.com/ourservices/holidaystours/Wizzride-International-Holiday-Planner/'
     },
     {
       id: 2,
       title: 'Flight & Hotel Bookings',
       description: 'Simplify your travel with our flight and hotel booking services. Best deals, easy reservations, and 24/7 support.',
       image: 'assets/images/flight.jpg',
-      link:'https://wizzride.com/flight-booking'
-      
+      link: 'https://wizzride.com/flight-booking'
     },
     {
       id: 3,
       title: 'Luxury Shared Taxis',
       description: 'Enjoy premium shared taxi rides with top-notch comfort and convenience. On-time departures, spacious seating, and budget-friendly fares for all.',
       image: 'assets/images/wizcar.jpeg',
-      link:'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/'
+      link: 'https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/'
     },
-    
-   
     {
-      id:4,
+      id: 4,
       title: 'Expert Holiday Planner',
       description: 'Let our experts plan your dream holiday. From itineraries to bookings, we ensure a seamless and memorable travel experience.',
       image: 'assets/images/holiday.jpg',
-      link:'https://wizzride.com/ourservices/holidaystours/'
+      link: 'https://wizzride.com/ourservices/holidaystours/'
     },
     {
       id: 5,
       title: 'Private Reserved Cabs',
       description: 'Book a private cab for a personalized travel experience. Perfect for families, groups, or solo travelers seeking privacy.',
       image: 'assets/images/ridetoairport_3.jpg',
-      link:'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/'
-     
+      link: 'https://wizzride.com/ourservices/Luxury-Reserved-Cabs/'
     },
- 
   ];
-  testimonials: Testimonial[] = [];
 
+  testimonials: Testimonial[] = [];
   specialOffers: Offer[] = [];
   isLoadingOffers = false;
-  
+
   // Home statistics
-  sharedCabsStats: Array<{number: string, label: string}> = [];
-  reservedCabsStats: Array<{number: string, label: string}> = [];
-  numbersSectionStats: Array<{number: string, label: string, description: string, icon: string}> = [];
+  sharedCabsStats: Array<{ number: string, label: string }> = [];
+  reservedCabsStats: Array<{ number: string, label: string }> = [];
+  numbersSectionStats: Array<{ number: string, label: string, description: string, icon: string }> = [];
   isLoadingStats = false;
-  
+
   // Track home schema IDs for cleanup
   private homeSchemaIds: string[] = ['home-breadcrumb-schema', 'home-org-schema'];
-  
-// 3D Testimonial Carousel Properties
-@ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
-currentSlide = 0;
-totalSlides = 0;
-autoplayInterval: any = null;
-autoplayDuration = 5000; // 5 seconds
-isHovered = false;
 
-// Initialize 3D carousel
-private init3DTestimonialCarousel(): void {
-  if (!isPlatformBrowser(this.platformId)) return;
-  this.totalSlides = this.testimonials.length;
-  setTimeout(() => {
+  // 3D Testimonial Carousel Properties
+  @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
+  currentSlide = 0;
+  totalSlides = 0;
+  autoplayInterval: any = null;
+  autoplayDuration = 5000; // 5 seconds
+  isHovered = false;
+
+  // Initialize 3D carousel
+  private init3DTestimonialCarousel(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.totalSlides = this.testimonials.length;
+    setTimeout(() => {
+      this.startAutoplay();
+    }, 1000);
+  }
+
+  // Auto-play functionality
+  startAutoplay(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (this.autoplayInterval) {
+      clearInterval(this.autoplayInterval);
+    }
+
+    this.autoplayInterval = setInterval(() => {
+      if (!this.isHovered) {
+        this.nextSlide();
+      }
+    }, this.autoplayDuration);
+  }
+
+  stopAutoplay(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (this.autoplayInterval) {
+      clearInterval(this.autoplayInterval);
+      this.autoplayInterval = null;
+    }
+  }
+
+  // Navigation methods
+  nextSlide(): void {
+    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+    this.resetAutoplay();
+  }
+
+  prevSlide(): void {
+    this.currentSlide = this.currentSlide === 0
+      ? this.totalSlides - 1
+      : this.currentSlide - 1;
+    this.resetAutoplay();
+  }
+
+  goToSlide(slideIndex: number): void {
+    this.currentSlide = slideIndex;
+    this.resetAutoplay();
+  }
+
+  resetAutoplay(): void {
+    this.stopAutoplay();
     this.startAutoplay();
-  }, 1000);
-}
-
-// Auto-play functionality
-startAutoplay(): void {
-  if (!isPlatformBrowser(this.platformId)) return;
-  if (this.autoplayInterval) {
-    clearInterval(this.autoplayInterval);
   }
-  
-  this.autoplayInterval = setInterval(() => {
-    if (!this.isHovered) {
-      this.nextSlide();
-    }
-  }, this.autoplayDuration);
-}
 
-stopAutoplay(): void {
-  if (!isPlatformBrowser(this.platformId)) return;
-  if (this.autoplayInterval) {
-    clearInterval(this.autoplayInterval);
-    this.autoplayInterval = null;
-  }
-}
+  // Get slide class for positioning
+  getSlideClass(index: number): string {
+    const totalSlides = this.testimonials.length;
+    const position = (index - this.currentSlide + totalSlides) % totalSlides;
 
-// Navigation methods
-nextSlide(): void {
-  this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-  this.resetAutoplay();
-}
-
-prevSlide(): void {
-  this.currentSlide = this.currentSlide === 0 
-    ? this.totalSlides - 1 
-    : this.currentSlide - 1;
-  this.resetAutoplay();
-}
-
-goToSlide(slideIndex: number): void {
-  this.currentSlide = slideIndex;
-  this.resetAutoplay();
-}
-
-resetAutoplay(): void {
-  this.stopAutoplay();
-  this.startAutoplay();
-}
-
-// Get slide class for positioning - exact same logic as vanilla JS
-getSlideClass(index: number): string {
-  const totalSlides = this.testimonials.length;
-  const position = (index - this.currentSlide + totalSlides) % totalSlides;
-  
-  if (position === 0) {
-    return 'active';
-  } else if (position === 1 || position === totalSlides - 1) {
-    return position === 1 ? 'next' : 'prev';
-  } else if (position === 2 || position === totalSlides - 2) {
-    return position === 2 ? 'far-next' : 'far-prev';
-  } else {
-    return 'hidden';
-  }
-}
-
-// Mouse hover events
-onMouseEnter(): void {
-  this.isHovered = true;
-}
-
-onMouseLeave(): void {
-  this.isHovered = false;
-}
-
-// Touch/swipe functionality
-private startX = 0;
-private endX = 0;
-private minSwipeDistance = 50;
-
-onTouchStart(event: TouchEvent): void {
-  this.startX = event.touches[0].clientX;
-}
-
-onTouchEnd(event: TouchEvent): void {
-  this.endX = event.changedTouches[0].clientX;
-  this.handleSwipe();
-}
-
-private handleSwipe(): void {
-  const diffX = this.startX - this.endX;
-  
-  if (Math.abs(diffX) > this.minSwipeDistance) {
-    if (diffX > 0) {
-      this.nextSlide();
+    if (position === 0) {
+      return 'active';
+    } else if (position === 1 || position === totalSlides - 1) {
+      return position === 1 ? 'next' : 'prev';
+    } else if (position === 2 || position === totalSlides - 2) {
+      return position === 2 ? 'far-next' : 'far-prev';
     } else {
-      this.prevSlide();
+      return 'hidden';
     }
   }
-}
 
-// Mouse drag functionality
-private isDragging = false;
-
-onMouseDown(event: MouseEvent): void {
-  this.isDragging = true;
-  this.startX = event.clientX;
-}
-
-onMouseMove(event: MouseEvent): void {
-  if (!this.isDragging) return;
-  event.preventDefault();
-}
-
-onMouseUp(event: MouseEvent): void {
-  if (!this.isDragging) return;
-  this.isDragging = false;
-  this.endX = event.clientX;
-  this.handleSwipe();
-}
-
-onMouseUpLeave(): void {
-  this.isDragging = false;
-}
-
-// Keyboard navigation
-onKeyDown(event: KeyboardEvent): void {
-  if (event.key === 'ArrowLeft') {
-    this.prevSlide();
-  } else if (event.key === 'ArrowRight') {
-    this.nextSlide();
+  // Mouse hover events
+  onMouseEnter(): void {
+    this.isHovered = true;
   }
-}
 
-// TrackBy function for better performance
-trackByTestimonial(index: number, testimonial: Testimonial): number {
-  return testimonial.id;
-}
+  onMouseLeave(): void {
+    this.isHovered = false;
+  }
 
-get infiniteOffers() {
-  return [...this.specialOffers, ...this.specialOffers, ...this.specialOffers];
-}
+  // Touch/swipe functionality
+  private startX = 0;
+  private endX = 0;
+  private minSwipeDistance = 50;
 
-trackByOfferId(index: number, offer: any): number {
-  return offer.id;
-}
+  onTouchStart(event: TouchEvent): void {
+    this.startX = event.touches[0].clientX;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    this.endX = event.changedTouches[0].clientX;
+    this.handleSwipe();
+  }
+
+  private handleSwipe(): void {
+    const diffX = this.startX - this.endX;
+
+    if (Math.abs(diffX) > this.minSwipeDistance) {
+      if (diffX > 0) {
+        this.nextSlide();
+      } else {
+        this.prevSlide();
+      }
+    }
+  }
+
+  // Mouse drag functionality
+  private isDragging = false;
+
+  onMouseDown(event: MouseEvent): void {
+    this.isDragging = true;
+    this.startX = event.clientX;
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isDragging) return;
+    event.preventDefault();
+  }
+
+  onMouseUp(event: MouseEvent): void {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    this.endX = event.clientX;
+    this.handleSwipe();
+  }
+
+  onMouseUpLeave(): void {
+    this.isDragging = false;
+  }
+
+  // Keyboard navigation
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowLeft') {
+      this.prevSlide();
+    } else if (event.key === 'ArrowRight') {
+      this.nextSlide();
+    }
+  }
+
+  // TrackBy function for better performance
+  trackByTestimonial(index: number, testimonial: Testimonial): number {
+    return testimonial.id;
+  }
+
+  get infiniteOffers() {
+    return [...this.specialOffers, ...this.specialOffers, ...this.specialOffers];
+  }
+
+  trackByOfferId(index: number, offer: any): number {
+    return offer.id;
+  }
   // Duplicate services for infinite loop
   get infiniteServices() {
     return [...this.services, ...this.services, ...this.services];
@@ -328,17 +322,17 @@ trackByOfferId(index: number, offer: any): number {
   selectedClass = 'economy';
   tripType = 'one-way'; // 'one-way', 'round-trip', 'multi-city'
   counts: TravelerCounts = { adults: 1, children: 0, infants: 0 };
-  flightRoutes: { 
-    from: string; 
-    to: string; 
+  flightRoutes: {
+    from: string;
+    to: string;
     date: string;
   }[] = [
-    { 
-      from: 'Delhi', 
-      to: 'Mumbai', 
-      date: ''
-    }
-  ];
+      {
+        from: 'Delhi',
+        to: 'Mumbai',
+        date: ''
+      }
+    ];
 
   // TBO Token and IP for flight booking
   tboTokenId: string | null = null;
@@ -354,7 +348,7 @@ trackByOfferId(index: number, offer: any): number {
   // Selected flight airports
   selectedFromAirport: any = null;
   selectedToAirport: any = null;
-  
+
   // Selected flight airports as objects (matching working code)
   selectedFrom: any = null;
   selectedTo: any = null;
@@ -736,11 +730,11 @@ trackByOfferId(index: number, offer: any): number {
   // Validation methods
   isSameCitySelected(pickup: string, dropoff: string): boolean {
     if (!pickup || !dropoff) return false;
-    
+
     // Extract city names from display format (handle "Delhi (DEL)" format)
     const pickupCity = this.extractCityNameFromDisplay(pickup).toLowerCase();
     const dropoffCity = this.extractCityNameFromDisplay(dropoff).toLowerCase();
-    
+
     return pickupCity === dropoffCity;
   }
 
@@ -763,18 +757,18 @@ trackByOfferId(index: number, offer: any): number {
     private renderer2: Renderer2,
     private router: Router,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Set canonical URL using SEO service
     this.seoService.setCanonicalURL('https://wizzride.com/');
-    
+
     // Set page title
     this.titleService.setTitle('Wizzride | Cab Booking from Shillong, Darjeeling, Gangtok');
 
     // Fetch TBO Token for flight booking
     if (isPlatformBrowser(this.platformId)) {
-      
+
       // 1. Fetch TBO Token (Browser Only)
       this.subscriptions.add(
         this.apiService.getTboToken().subscribe((val: any) => {
@@ -859,10 +853,10 @@ trackByOfferId(index: number, offer: any): number {
             const cityName = item.CITY || item.city || item.NAME || item.name || '';
             const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
             const country = item.COUNTRY || item.country || '';
-            
+
             // Use just the city name for display
             const displayName = cityName || item.NAME || item.name || '';
-            
+
             return {
               name: displayName,
               code: airportCode || displayName.substring(0, 3).toUpperCase(),
@@ -870,7 +864,7 @@ trackByOfferId(index: number, offer: any): number {
             };
           });
           console.log('Flight airports populated:', this.flightAirports);
-          
+
           // Set dynamic default airports
           this.setDefaultAirports();
         }
@@ -964,23 +958,21 @@ trackByOfferId(index: number, offer: any): number {
 
     // Load offers for current tab
     this.loadOffers(this.currentTab);
-    
+
     // Load Google reviews
     this.loadGoogleReviews();
-    
+
     // Load home statistics
     this.loadHomeStatistics();
   }
 
   // Helper method to insert JSON-LD structured data
   private insertJsonLd(schema: any, id: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    // Remove existing schema with same ID if it exists
+    if (!this.document) return;
     const existingScript = this.document.getElementById(id);
     if (existingScript) {
-      existingScript.remove();
+      this.renderer2.removeChild(this.document.head, existingScript);
     }
-
     const script = this.renderer2.createElement('script');
     script.id = id;
     script.type = 'application/ld+json';
@@ -989,9 +981,12 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   // Helper method to set canonical URL
-  
+
 
   ngOnDestroy() {
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
     if (isPlatformBrowser(this.platformId)) {
       // Clean up home schemas to prevent duplicates
       this.homeSchemaIds.forEach(id => {
@@ -1004,7 +999,7 @@ trackByOfferId(index: number, offer: any): number {
 
     this.destroy$.next();
     this.destroy$.complete();
-    
+
     // Clean up 3D carousel interval
     this.stopAutoplay();
   }
@@ -1012,21 +1007,21 @@ trackByOfferId(index: number, offer: any): number {
   ngAfterViewInit(): void {
     // 1. CRITICAL GUARD: This must be the very first line.
     if (!isPlatformBrowser(this.platformId)) {
-      return; 
+      return;
     }
 
     // 2. Safe DOM operations (Only runs in browser)
     // Make sure you use 'this.document', NOT global 'document'
     const currentIndex = this.tabs.indexOf(this.currentTab);
     const navTabs = this.document.querySelector('.nav-tabs'); // Use this.document
-    
+
     if (navTabs) {
       navTabs.setAttribute('data-active', currentIndex.toString());
     }
 
     // 3. Initialize 3D testimonial carousel
     this.init3DTestimonialCarousel();
-    
+
     // 4. Initialize clock display
     if (this.formValues.reservedTime) {
       this.updateClockDisplay(this.formValues.reservedTime);
@@ -1035,8 +1030,8 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Custom Calendar Event Handlers
-   -------------------- */
-  
+   * -------------------- */
+
   // Shared cab date selection
   onSharedDateSelected(date: string) {
     this.formValues.sharedDateTime = date;
@@ -1079,59 +1074,59 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Tab Handling
-   -------------------- */
-   switchTab(tabName: string) {
+   * -------------------- */
+  switchTab(tabName: string) {
     if (tabName !== this.currentTab && !this.isSliding) {
-        this.previousTab = this.currentTab;
-        this.isSliding = true;
+      this.previousTab = this.currentTab;
+      this.isSliding = true;
 
-        // Update nav tabs active state immediately for smooth color transition
-        if (isPlatformBrowser(this.platformId)) {
-          const currentIndex = this.tabs.indexOf(tabName);
-          const navTabs = this.document.querySelector('.nav-tabs');
-          if (navTabs) {
-              navTabs.setAttribute('data-active', currentIndex.toString());
-          }
+      // Update nav tabs active state immediately for smooth color transition
+      if (isPlatformBrowser(this.platformId)) {
+        const currentIndex = this.tabs.indexOf(tabName);
+        const navTabs = this.document.querySelector('.nav-tabs');
+        if (navTabs) {
+          navTabs.setAttribute('data-active', currentIndex.toString());
         }
+      }
 
+      setTimeout(() => {
+        this.currentTab = tabName;
+        // Load offers for the new tab
+        this.loadOffers(tabName);
         setTimeout(() => {
-            this.currentTab = tabName;
-            // Load offers for the new tab
-            this.loadOffers(tabName);
-            setTimeout(() => {
-                this.previousTab = null;
-                this.isSliding = false;
-            }, 300);
-        }, 100);
+          this.previousTab = null;
+          this.isSliding = false;
+        }, 300);
+      }, 100);
     }
-}
+  }
   setTripType(type: string) {
     this.tripType = type;
-    
+
     // Reset routes based on trip type
     if (type === 'multi-city') {
       this.flightRoutes = [
-        { 
-          from: 'Delhi', 
-          to: 'Mumbai', 
+        {
+          from: 'Delhi',
+          to: 'Mumbai',
           date: ''
         },
-        { 
-          from: 'Mumbai', 
-          to: 'Bangalore', 
+        {
+          from: 'Mumbai',
+          to: 'Bangalore',
           date: ''
         }
       ];
     } else {
       this.flightRoutes = [
-        { 
-          from: 'Delhi', 
-          to: 'Mumbai', 
+        {
+          from: 'Delhi',
+          to: 'Mumbai',
           date: ''
         }
       ];
     }
-    
+
     setTimeout(() => {
       // Trip type changed - no need to re-initialize datepickers
     }, 0);
@@ -1139,17 +1134,17 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Phone modal handling
-   -------------------- */
+   * -------------------- */
   openPhonePopup(action: 'flights' | 'shared' | 'reserved') {
     this.pendingAction = action;
     this.popupTitle =
       action === 'flights'
         ? 'Enter your phone number to search flights'
         : action === 'shared'
-        ? 'Enter your phone number to search shared cabs'
-        : 'Enter your phone number to search reserved cabs';
+          ? 'Enter your phone number to search shared cabs'
+          : 'Enter your phone number to search reserved cabs';
     this.showPhonePopup = true;
-    
+
     // Scroll to top to ensure modal is visible
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
@@ -1205,7 +1200,7 @@ trackByOfferId(index: number, offer: any): number {
     try {
       // Store search params in localStorage as fallback
       localStorage.setItem('bookingSearchParams', JSON.stringify(searchParams));
-      
+
       // Try router navigation first
       console.log('Attempting router navigation...');
       this.router.navigate(['/booking-results'], { state: { searchParams } }).then(success => {
@@ -1303,15 +1298,15 @@ trackByOfferId(index: number, offer: any): number {
   onPhoneInput(event: any) {
     // Clear error when user starts typing
     this.phoneError = '';
-    
+
     // Remove any non-digit characters
     let value = event.target.value.replace(/\D/g, '');
-    
+
     // Limit to 10 digits
     if (value.length > 10) {
       value = value.substring(0, 10);
     }
-    
+
     this.phoneNumber = value;
     event.target.value = value;
   }
@@ -1327,7 +1322,7 @@ trackByOfferId(index: number, offer: any): number {
   confirmPhonePopup() {
     // Clear previous error
     this.phoneError = '';
-    
+
     if (!this.phoneNumber || !this.phoneNumber.trim()) {
       this.phoneError = 'Phone number is required!';
       return;
@@ -1340,7 +1335,7 @@ trackByOfferId(index: number, offer: any): number {
 
     // Validate phone number based on country code
     const fullPhoneNumber = this.selectedCountryCode + this.phoneNumber;
-    
+
     // Basic validation - at least 7 digits after country code
     const phoneRegex = /^\d{7,15}$/;
     if (!phoneRegex.test(this.phoneNumber)) {
@@ -1367,7 +1362,7 @@ trackByOfferId(index: number, offer: any): number {
 
   // Helper method to get location code from city name for reserved cabs
   private getReservedCityCode(cityName: string): string {
-    const city = this.reservedCities.find(c => 
+    const city = this.reservedCities.find(c =>
       c.name.toLowerCase() === cityName.toLowerCase()
     );
     return city ? city.code : '';
@@ -1390,10 +1385,10 @@ trackByOfferId(index: number, offer: any): number {
     const [hours, minutes] = timeString.split(':');
     const hour24 = parseInt(hours, 10);
     const minute = minutes || '00';
-    
+
     let hour12 = hour24;
     let period = 'A.M.';
-    
+
     if (hour24 === 0) {
       hour12 = 12;
       period = 'A.M.';
@@ -1407,7 +1402,7 @@ trackByOfferId(index: number, offer: any): number {
       hour12 = hour24 - 12;
       period = 'P.M.';
     }
-    
+
     return `${hour12.toString().padStart(2, '0')}:${minute.padStart(2, '0')} ${period}`;
   }
 
@@ -1471,11 +1466,11 @@ trackByOfferId(index: number, offer: any): number {
         console.log('Response:', JSON.stringify(data, null, 2));
         console.log('Response type:', typeof data);
         console.log('Is array:', Array.isArray(data));
-        
+
         // Check if response contains "SORRY NO CABS AVAILABLE"
         const responseString = JSON.stringify(data);
         let isNoCabsAvailable = false;
-        
+
         if (typeof data === 'string') {
           isNoCabsAvailable = (data as string).toUpperCase().includes('SORRY NO CABS AVAILABLE');
         } else if (Array.isArray(data)) {
@@ -1495,18 +1490,18 @@ trackByOfferId(index: number, offer: any): number {
             }
           } else {
             // Flat array structure: check for error message
-            isNoCabsAvailable = data.some(item => 
+            isNoCabsAvailable = data.some(item =>
               String(item).toUpperCase().includes('SORRY NO CABS AVAILABLE')
             );
           }
         } else {
           isNoCabsAvailable = responseString.toUpperCase().includes('SORRY NO CABS AVAILABLE');
         }
-        
+
         if (isNoCabsAvailable) {
           // Close phone popup before showing alert
           this.cancelPhonePopup();
-          
+
           // Show SweetAlert
           Swal.fire({
             icon: 'warning',
@@ -1517,7 +1512,7 @@ trackByOfferId(index: number, offer: any): number {
             showConfirmButton: false,
             allowOutsideClick: false
           });
-          
+
           console.log('No cabs available - SORRY NO CABS AVAILABLE in response');
         } else if (Array.isArray(data) && data.length > 0) {
           // Check nested array structure: [[{...}]]
@@ -1536,7 +1531,7 @@ trackByOfferId(index: number, offer: any): number {
             console.log('Cabs available - Found', data.length, 'vehicles');
             console.log('Vehicle details:', data);
           }
-          
+
           if (hasCabs) {
             this.submitCabs('reserved', phoneNumber);
             this.navigateToResults(phoneNumber);
@@ -1544,7 +1539,7 @@ trackByOfferId(index: number, offer: any): number {
           } else {
             // Close phone popup before showing alert
             this.cancelPhonePopup();
-            
+
             // Empty or unexpected response
             Swal.fire({
               icon: 'warning',
@@ -1560,7 +1555,7 @@ trackByOfferId(index: number, offer: any): number {
         } else {
           // Close phone popup before showing alert
           this.cancelPhonePopup();
-          
+
           // Empty or unexpected response
           Swal.fire({
             icon: 'warning',
@@ -1577,10 +1572,10 @@ trackByOfferId(index: number, offer: any): number {
       error: (error) => {
         // Close phone popup before showing error alert
         this.cancelPhonePopup();
-        
+
         console.error('=== Reserved Cab Availability Check Error ===');
         console.error('Error:', error);
-        
+
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -1628,11 +1623,11 @@ trackByOfferId(index: number, offer: any): number {
       next: (data: any) => {
         console.log('=== Route Availability Check Response ===');
         console.log('Response:', JSON.stringify(data, null, 2));
-        
+
         // Check if response contains "NOT_PRESENT"
         const responseString = JSON.stringify(data);
         let isNotPresent = false;
-        
+
         if (typeof data === 'string') {
           isNotPresent = (data as string).includes('NOT_PRESENT');
         } else if (Array.isArray(data)) {
@@ -1640,11 +1635,11 @@ trackByOfferId(index: number, offer: any): number {
         } else {
           isNotPresent = responseString.includes('NOT_PRESENT');
         }
-        
+
         if (isNotPresent) {
           // Close phone popup before showing alert
           this.cancelPhonePopup();
-          
+
           // Show SweetAlert for 5 seconds
           Swal.fire({
             icon: 'error',
@@ -1655,20 +1650,20 @@ trackByOfferId(index: number, offer: any): number {
             showConfirmButton: false,
             allowOutsideClick: false
           });
-          
+
           console.log('Route not available - NOT_PRESENT in response');
         } else if (Array.isArray(data) && data.length > 0) {
           // Data is present, navigate to booking results
           console.log('Route available - Found', data.length, 'vehicles');
           console.log('Vehicle details:', data);
-          
+
           this.submitCabs('shared', phoneNumber);
           this.navigateToResults(phoneNumber);
           this.cancelPhonePopup();
         } else {
           // Close phone popup before showing alert
           this.cancelPhonePopup();
-          
+
           // Empty or unexpected response
           Swal.fire({
             icon: 'warning',
@@ -1685,10 +1680,10 @@ trackByOfferId(index: number, offer: any): number {
       error: (error) => {
         // Close phone popup before showing error alert
         this.cancelPhonePopup();
-        
+
         console.error('=== Route Availability Check Error ===');
         console.error('Error:', error);
-        
+
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -1704,7 +1699,7 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Form Submissions
-   -------------------- */
+   * -------------------- */
   submitFlights(phoneNumber?: string) {
     let payload: any = {
       phoneNumber: phoneNumber || this.phoneNumber,
@@ -1717,16 +1712,16 @@ trackByOfferId(index: number, offer: any): number {
       payload.type = 'multi-city';
       payload.travelers = { ...this.counts };
       payload.travelClass = this.selectedClass;
-      
+
       // Debug: Show all routes before filtering
       // console.log('All routes before filtering:', this.flightRoutes);
       // console.log('Shared travelers:', this.counts);
       // console.log('Shared travel class:', this.selectedClass);
-      
+
       // Filter routes that have at least some data
       const validRoutes = this.flightRoutes.filter(route => route.from && route.to && route.date);
       // console.log('Valid routes found:', validRoutes);
-      
+
       // If no valid routes, include all routes for debugging
       if (validRoutes.length === 0) {
         console.log('No valid routes found, including all routes for debugging');
@@ -1838,33 +1833,33 @@ trackByOfferId(index: number, offer: any): number {
 
     // For shared cabs, exclude the city selected in the other field
     if (target === 'shared-pickup' && this.formValues.sharedDropoff) {
-      filteredCities = filteredCities.filter(city => 
+      filteredCities = filteredCities.filter(city =>
         city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
       );
     } else if (target === 'shared-dropoff' && this.formValues.sharedPickup) {
-      filteredCities = filteredCities.filter(city => 
+      filteredCities = filteredCities.filter(city =>
         city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
       );
     }
-    
+
     // For reserved cabs, exclude the city selected in the other field
     if (target === 'reserved-pickup' && this.formValues.reservedDropoff) {
-      filteredCities = filteredCities.filter(city => 
+      filteredCities = filteredCities.filter(city =>
         city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
       );
     } else if (target === 'reserved-dropoff' && this.formValues.reservedPickup) {
-      filteredCities = filteredCities.filter(city => 
+      filteredCities = filteredCities.filter(city =>
         city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
       );
     }
-    
+
     // For flights, exclude the airport selected in the other field of the same route
     if (target.startsWith('flight-from-')) {
       const routeIndex = parseInt(target.replace('flight-from-', ''));
       if (this.flightRoutes[routeIndex]?.to) {
         // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
         const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].to);
-        filteredCities = filteredCities.filter(city => 
+        filteredCities = filteredCities.filter(city =>
           city.name.toLowerCase() !== selectedCityName.toLowerCase()
         );
       }
@@ -1873,7 +1868,7 @@ trackByOfferId(index: number, offer: any): number {
       if (this.flightRoutes[routeIndex]?.from) {
         // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
         const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].from);
-        filteredCities = filteredCities.filter(city => 
+        filteredCities = filteredCities.filter(city =>
           city.name.toLowerCase() !== selectedCityName.toLowerCase()
         );
       }
@@ -1895,36 +1890,36 @@ trackByOfferId(index: number, offer: any): number {
     } else {
       citiesToShow = this.cities;
     }
-    
+
     // For shared cabs, exclude the city selected in the other field
     if (target === 'shared-pickup' && this.formValues.sharedDropoff) {
-      citiesToShow = citiesToShow.filter(city => 
+      citiesToShow = citiesToShow.filter(city =>
         city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
       );
     } else if (target === 'shared-dropoff' && this.formValues.sharedPickup) {
-      citiesToShow = citiesToShow.filter(city => 
+      citiesToShow = citiesToShow.filter(city =>
         city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
       );
     }
-    
+
     // For reserved cabs, exclude the city selected in the other field
     if (target === 'reserved-pickup' && this.formValues.reservedDropoff) {
-      citiesToShow = citiesToShow.filter(city => 
+      citiesToShow = citiesToShow.filter(city =>
         city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
       );
     } else if (target === 'reserved-dropoff' && this.formValues.reservedPickup) {
-      citiesToShow = citiesToShow.filter(city => 
+      citiesToShow = citiesToShow.filter(city =>
         city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
       );
     }
-    
+
     // For flights, exclude the airport selected in the other field of the same route
     if (target.startsWith('flight-from-')) {
       const routeIndex = parseInt(target.replace('flight-from-', ''));
       if (this.flightRoutes[routeIndex]?.to) {
         // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
         const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].to);
-        citiesToShow = citiesToShow.filter(city => 
+        citiesToShow = citiesToShow.filter(city =>
           city.name.toLowerCase() !== selectedCityName.toLowerCase()
         );
       }
@@ -1933,12 +1928,12 @@ trackByOfferId(index: number, offer: any): number {
       if (this.flightRoutes[routeIndex]?.from) {
         // Extract city name from display value (remove code part like "Delhi (DEL)" -> "Delhi")
         const selectedCityName = this.extractCityNameFromDisplay(this.flightRoutes[routeIndex].from);
-        citiesToShow = citiesToShow.filter(city => 
+        citiesToShow = citiesToShow.filter(city =>
           city.name.toLowerCase() !== selectedCityName.toLowerCase()
         );
       }
     }
-    
+
     // Show all cities when focusing on input
     this.activeSuggestions[target] = citiesToShow;
   }
@@ -1955,7 +1950,7 @@ trackByOfferId(index: number, offer: any): number {
     }
 
     let locations: string[] = [];
-    
+
     // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
       locations = this.sharedPickupLocations;
@@ -1981,7 +1976,7 @@ trackByOfferId(index: number, offer: any): number {
 
   showLocationSuggestionsOnFocus(target: string) {
     let locations: string[] = [];
-    
+
     // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
       locations = this.sharedPickupLocations;
@@ -2011,10 +2006,10 @@ trackByOfferId(index: number, offer: any): number {
   selectCity(cityName: string, cityCode: string, target: string) {
     // Update form value
     if (target.includes('flight')) {
-      const displayValue = cityCode 
+      const displayValue = cityCode
         ? `${cityName} (${cityCode})`
         : cityName;
-      
+
       if (target === 'flight-from') {
         this.formValues.flightFrom = displayValue;
         this.onAirportSelected('from', displayValue);
@@ -2097,7 +2092,7 @@ trackByOfferId(index: number, offer: any): number {
     if (target === 'shared-pickup' || target === 'shared-dropoff') {
       const source = this.selectedCities.shared.pickup;
       const destination = this.selectedCities.shared.dropoff;
-      
+
       // Clear previous locations when cities change
       if (target === 'shared-pickup') {
         this.sharedPickupLocations = [];
@@ -2106,7 +2101,7 @@ trackByOfferId(index: number, offer: any): number {
         this.sharedDropoffLocations = [];
         this.formValues.sharedDropoffLocation = '';
       }
-      
+
       if (source && destination && source !== destination) {
         this.apiService.getPickupDrop(source, destination).subscribe({
           next: (data) => {
@@ -2128,12 +2123,12 @@ trackByOfferId(index: number, offer: any): number {
   selectMultiCity(cityName: string, cityCode: string, target: string) {
     const routeIndex = parseInt(target.split('-')[2]);
     const field = target.split('-')[1]; // 'from' or 'to'
-    
+
     // Format: "CityName (CODE)"
-    const displayValue = cityCode 
+    const displayValue = cityCode
       ? `${cityName} (${cityCode})`
       : cityName;
-    
+
     if (field === 'from') {
       this.flightRoutes[routeIndex].from = displayValue;
       // Trigger calendar fare fetching for first route
@@ -2153,12 +2148,12 @@ trackByOfferId(index: number, offer: any): number {
 
   addFlightRoute() {
     if (this.flightRoutes.length < 5) {
-      this.flightRoutes.push({ 
-        from: '', 
-        to: '', 
+      this.flightRoutes.push({
+        from: '',
+        to: '',
         date: ''
       });
-      
+
       // Multi-city route added - no need to re-initialize datepickers
     }
   }
@@ -2195,7 +2190,7 @@ trackByOfferId(index: number, offer: any): number {
       const hasDropoffLocation = !!this.formValues.sharedDropoffLocation;
       const hasSourceCity = !!this.selectedCities.shared.pickup;
       const hasDestinationCity = !!this.selectedCities.shared.dropoff;
-      
+
       // API call is already handled in selectCity method when cities are selected
       // No need to call again here
     }
@@ -2210,7 +2205,7 @@ trackByOfferId(index: number, offer: any): number {
         this.locationDetailsVisible[tabType] = false;
         return;
       }
-      
+
       this.locationDetailsVisible[tabType] = true;
     }
   }
@@ -2225,12 +2220,12 @@ trackByOfferId(index: number, offer: any): number {
       const tempCity = this.selectedCities.shared.pickup;
       this.selectedCities.shared.pickup = this.selectedCities.shared.dropoff;
       this.selectedCities.shared.dropoff = tempCity;
-      
+
       // Swap locations and fetch new data
       const tempLocations = this.sharedPickupLocations;
       this.sharedPickupLocations = this.sharedDropoffLocations;
       this.sharedDropoffLocations = tempLocations;
-      
+
       // Fetch fresh data for swapped cities
       if (this.selectedCities.shared.pickup && this.selectedCities.shared.dropoff) {
         this.apiService.getPickupDrop(
@@ -2326,7 +2321,7 @@ trackByOfferId(index: number, offer: any): number {
 
   submitForm() {
     if (!isPlatformBrowser(this.platformId)) return;
-  
+
     Swal.fire({
       title: 'Enter your phone number',
       input: 'text',
@@ -2358,11 +2353,11 @@ trackByOfferId(index: number, offer: any): number {
     const errors: string[] = [];
 
     // Get selected airports from flightRoutes or formValues
-    const fromValue = this.tripType === 'multi-city' 
-      ? this.flightRoutes[0]?.from 
+    const fromValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.from
       : (this.flightRoutes[0]?.from || this.formValues.flightFrom);
-    const toValue = this.tripType === 'multi-city' 
-      ? this.flightRoutes[0]?.to 
+    const toValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.to
       : (this.flightRoutes[0]?.to || this.formValues.flightTo);
 
     // Extract airport codes
@@ -2377,8 +2372,8 @@ trackByOfferId(index: number, offer: any): number {
       errors.push("Departure and Destination airports cannot be the same.");
     }
 
-    const departureDate = this.tripType === 'multi-city' 
-      ? this.flightRoutes[0]?.date 
+    const departureDate = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.date
       : (this.flightRoutes[0]?.date || this.formValues.flightDeparture);
 
     if (!departureDate) {
@@ -2387,8 +2382,8 @@ trackByOfferId(index: number, offer: any): number {
 
     const today = new Date();
     const depDate = departureDate ? new Date(departureDate) : null;
-    const retDate = this.tripType === 'round-trip' && this.formValues.flightReturn 
-      ? new Date(this.formValues.flightReturn) 
+    const retDate = this.tripType === 'round-trip' && this.formValues.flightReturn
+      ? new Date(this.formValues.flightReturn)
       : null;
 
     if (depDate && depDate < this.stripTime(today)) {
@@ -2424,7 +2419,7 @@ trackByOfferId(index: number, offer: any): number {
         confirmButtonText: 'Ok',
         timer: 3000
       });
-      
+
       // Try to fetch token if missing
       if (!this.tboTokenId) {
         this.subscriptions.add(
@@ -2440,7 +2435,7 @@ trackByOfferId(index: number, offer: any): number {
           })
         );
       }
-      
+
       // Try to fetch IP if missing
       if (!this.ip) {
         this.subscriptions.add(
@@ -2456,21 +2451,21 @@ trackByOfferId(index: number, offer: any): number {
           })
         );
       }
-      
+
       return;
     }
 
     // Find airport objects from flightAirports list using already extracted codes
     const fromAirport = this.flightAirports.find(a => a.code === fromCode);
     const toAirport = this.flightAirports.find(a => a.code === toCode);
-    
+
     // Set selectedFrom and selectedTo as objects (matching working code)
     this.selectedFrom = fromAirport ? {
       name: fromAirport.name,
       code: fromAirport.code,
       airport: fromAirport.name // Using name as airport for now
     } : null;
-    
+
     this.selectedTo = toAirport ? {
       name: toAirport.name,
       code: toAirport.code,
@@ -2541,11 +2536,11 @@ trackByOfferId(index: number, offer: any): number {
       }
     }
 
-    const pickupLocation = type === 'shared' 
-      ? this.formValues.sharedPickupLocation 
+    const pickupLocation = type === 'shared'
+      ? this.formValues.sharedPickupLocation
       : this.formValues.reservedPickupLocation;
-    const dropoffLocation = type === 'shared' 
-      ? this.formValues.sharedDropoffLocation 
+    const dropoffLocation = type === 'shared'
+      ? this.formValues.sharedDropoffLocation
       : this.formValues.reservedDropoffLocation;
 
     if (!pickupLocation || !dropoffLocation) {
@@ -2562,11 +2557,11 @@ trackByOfferId(index: number, offer: any): number {
 
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
-    
+
     if (!target.closest('.travelers-dropdown')) {
       this.isTravelersOpen = false;
     }
-    
+
     if (!target.closest('.city-select')) {
       // Only clear suggestions if not clicking on a suggestion item
       if (!target.closest('.city-suggestion')) {
@@ -2579,19 +2574,19 @@ trackByOfferId(index: number, offer: any): number {
     return Array.isArray(arr) && arr.length > 0 && typeof arr[0] === 'object' && 'name' in arr[0];
   }
   trackByServiceId(index: number, service: any): number {
-  return service.id;
-}
+    return service.id;
+  }
 
   /** -------------------
    * Time Input Methods for Reserved Cabs
-   -------------------- */
-  
+   * -------------------- */
+
   // Time picker modal state
   timePickerVisible = false;
   selectedHour = 12;
   selectedMinute = '00';
   selectedPeriod = 'PM';
-  
+
   // Time options for the picker
   hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   minutes = ['00', '15', '30', '45'];
@@ -2611,7 +2606,7 @@ trackByOfferId(index: number, offer: any): number {
     const [hourStr, minuteStr] = currentTime.split(':');
     const hour = parseInt(hourStr);
     const minute = parseInt(minuteStr);
-    
+
     // Convert 24-hour to 12-hour format
     if (hour === 0) {
       this.selectedHour = 12;
@@ -2626,11 +2621,11 @@ trackByOfferId(index: number, offer: any): number {
       this.selectedHour = hour - 12;
       this.selectedPeriod = 'PM';
     }
-    
+
     // Set closest minute
     const closestMinute = Math.round(minute / 15) * 15;
     this.selectedMinute = closestMinute.toString().padStart(2, '0');
-    
+
     // Scroll to selected hour
     setTimeout(() => {
       this.scrollToSelectedHour();
@@ -2663,16 +2658,16 @@ trackByOfferId(index: number, offer: any): number {
   confirmTimeSelection() {
     // Convert 12-hour to 24-hour format
     let hour24 = this.selectedHour;
-    
+
     if (this.selectedPeriod === 'AM' && this.selectedHour === 12) {
       hour24 = 0;
     } else if (this.selectedPeriod === 'PM' && this.selectedHour !== 12) {
       hour24 = this.selectedHour + 12;
     }
-    
+
     // Format time as HH:mm
     const time24 = `${hour24.toString().padStart(2, '0')}:${this.selectedMinute}`;
-    
+
     this.formValues.reservedTime = time24;
     this.updateClockDisplay(time24);
     this.closeTimePicker();
@@ -2684,14 +2679,14 @@ trackByOfferId(index: number, offer: any): number {
 
   formatTimeDisplay(time: string): string {
     if (!time) return '12:00 PM';
-    
+
     const [hourStr, minuteStr] = time.split(':');
     const hour = parseInt(hourStr);
     const minute = parseInt(minuteStr);
-    
+
     let displayHour = hour;
     let period = 'AM';
-    
+
     if (hour === 0) {
       displayHour = 12;
       period = 'AM';
@@ -2705,7 +2700,7 @@ trackByOfferId(index: number, offer: any): number {
       displayHour = hour - 12;
       period = 'PM';
     }
-    
+
     return `${displayHour}:${minuteStr} ${period}`;
   }
 
@@ -2737,58 +2732,61 @@ trackByOfferId(index: number, offer: any): number {
   }
 
   /** -------------------
-   * Decode HTML entities
-   -------------------- */
+   * Helper Methods for SSR Safety
+   * -------------------- */
+
   private decodeHtmlEntities(text: string): string {
-    if (!text) return '';
-    
-    // SSR-safe: always use regex fallback first, then try DOM if available
-    if (!isPlatformBrowser(this.platformId) || typeof this.document === 'undefined') {
-      // SSR-safe fallback: decode common HTML entities using regex
-      return text
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&#8217;/g, "'")
-        .replace(/&#8211;/g, '–')
-        .replace(/&#8212;/g, '—')
-        .replace(/&#8230;/g, '…');
+    if (!text) {
+      return '';
     }
-    
-    // Browser: use DOM for accurate decoding (only if document is available)
-    try {
-      if (this.document && typeof this.document.createElement === 'function') {
-        const textarea = this.document.createElement('textarea');
-        textarea.innerHTML = text;
-        return textarea.value;
-      }
-    } catch (e) {
-      // Fallback to regex if DOM method fails
-    }
-    
-    // Final fallback: regex decoding
-    return text
+
+    // SSR-safe regex for common entities
+    const regexDecoded = text
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&#8217;/g, "'")
-      .replace(/&#8211;/g, '–')
-      .replace(/&#8212;/g, '—')
-      .replace(/&#8230;/g, '…');
+      .replace(/&#39;/g, '\'');
+
+    // Browser path: use DOM to decode entities safely
+    if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
+      try {
+        const textarea = this.document.createElement('textarea');
+        textarea.innerHTML = text;
+        return textarea.value;
+      } catch {
+        // Fall through to regex fallback if DOM fails
+        return regexDecoded;
+      }
+    }
+
+    // SSR fallback: regex replace of common entities
+    return regexDecoded;
+  }
+
+  // New helper to safely strip HTML tags
+  private stripHtmlTags(html: string): string {
+    if (!html) return '';
+
+    if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
+      try {
+        const tempDiv = this.document.createElement('div');
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || '';
+      } catch (e) {
+        // Fallback to regex
+      }
+    }
+    // SSR or Error fallback
+    return html.replace(/<[^>]*>/g, '').trim();
   }
 
   /** -------------------
    * Load Offers from WordPress
-   -------------------- */
+   * -------------------- */
   loadOffers(tab: string): void {
     this.isLoadingOffers = true;
-    
+
     this.wordpressService.getHomepageOffers().subscribe({
       next: (wpOffers: WordPressOffer[]) => {
         // Filter offers by tab using ACF field, then map to our Offer interface
@@ -2797,53 +2795,40 @@ trackByOfferId(index: number, offer: any): number {
           const offerTab = wpOffer.acf?.offer_tab;
           return !offerTab || offerTab === tab;
         });
-        
+
         // Map WordPress offers to our Offer interface
         this.specialOffers = filteredOffers.map((wpOffer) => {
           // Decode HTML entities in title
           const decodedTitle = this.decodeHtmlEntities(wpOffer.title.rendered);
-          
-          // Extract description from content (strip HTML tags)
-          let description = '';
-          if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
-            try {
-              const tempDiv = this.document.createElement('div');
-              tempDiv.innerHTML = wpOffer.content.rendered;
-              description = tempDiv.textContent || tempDiv.innerText || '';
-            } catch (e) {
-              // Fallback to regex if DOM method fails
-              description = wpOffer.content.rendered.replace(/<[^>]*>/g, '').trim();
-            }
-          } else {
-            // Fallback for SSR: strip HTML tags using regex
-            description = wpOffer.content.rendered.replace(/<[^>]*>/g, '').trim();
-          }
-          
+
+          // Extract description from content (strip HTML tags safely)
+          const description = this.stripHtmlTags(wpOffer.content?.rendered || '');
+
           // Decode HTML entities in subtitle
           const decodedSubtitle = this.decodeHtmlEntities(wpOffer.acf?.offer_subtitle || '');
-          
+
           // Get featured image
           let imageUrl = 'https://www.yatra.com/ythomepagecms/media/todayspick_home/2025/Aug/1dfd0ec10d44a54b92772dc7ea341368.jpg'; // Default fallback
-          
+
           if (wpOffer._embedded && wpOffer._embedded['wp:featuredmedia'] && wpOffer._embedded['wp:featuredmedia'][0]) {
             const featuredMedia = wpOffer._embedded['wp:featuredmedia'][0];
-            imageUrl = featuredMedia.source_url || 
-                      featuredMedia.media_details?.sizes?.large?.source_url ||
-                      featuredMedia.media_details?.sizes?.medium?.source_url ||
-                      featuredMedia.media_details?.sizes?.full?.source_url ||
-                      imageUrl;
+            imageUrl = featuredMedia.source_url ||
+              featuredMedia.media_details?.sizes?.large?.source_url ||
+              featuredMedia.media_details?.sizes?.medium?.source_url ||
+              featuredMedia.media_details?.sizes?.full?.source_url ||
+              imageUrl;
           }
-          
+
           return {
             id: wpOffer.id,
             title: decodedTitle,
-            description: description.trim(),
+            description: description,
             subtitle: decodedSubtitle,
             code: wpOffer.acf?.offer_code || '',
             image: imageUrl
           };
         });
-        
+
         this.isLoadingOffers = false;
         console.log('Offers loaded for tab:', tab, this.specialOffers);
       },
@@ -2858,55 +2843,42 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Load Google Reviews from WordPress
-   -------------------- */
+   * -------------------- */
   loadGoogleReviews(): void {
     this.wordpressService.getGoogleReviews(10).subscribe({
       next: (wpReviews: any[]) => {
         if (wpReviews && wpReviews.length > 0) {
           // Map WordPress reviews to testimonial structure
           this.testimonials = wpReviews.map((wpReview) => {
-            // Extract text from content (strip HTML tags)
-            let reviewText = '';
-            if (isPlatformBrowser(this.platformId) && this.document && typeof this.document.createElement === 'function') {
-              try {
-                const tempDiv = this.document.createElement('div');
-                tempDiv.innerHTML = wpReview.content?.rendered || '';
-                reviewText = tempDiv.textContent || tempDiv.innerText || '';
-              } catch (e) {
-                // Fallback to regex if DOM method fails
-                reviewText = (wpReview.content?.rendered || '').replace(/<[^>]*>/g, '').trim();
-              }
-            } else {
-              // Fallback for SSR: strip HTML tags using regex
-              reviewText = (wpReview.content?.rendered || '').replace(/<[^>]*>/g, '').trim();
-            }
-            
+            // Extract text from content (strip HTML tags safely)
+            const reviewText = this.stripHtmlTags(wpReview.content?.rendered || '');
+
             // Get avatar from featured image or ACF field
             let avatarUrl = wpReview.acf?.avatar_url || '';
             if (!avatarUrl && wpReview._embedded && wpReview._embedded['wp:featuredmedia'] && wpReview._embedded['wp:featuredmedia'][0]) {
               const featuredMedia = wpReview._embedded['wp:featuredmedia'][0];
-              avatarUrl = featuredMedia.source_url || 
-                         featuredMedia.media_details?.sizes?.thumbnail?.source_url ||
-                         featuredMedia.media_details?.sizes?.medium?.source_url ||
-                         '';
+              avatarUrl = featuredMedia.source_url ||
+                featuredMedia.media_details?.sizes?.thumbnail?.source_url ||
+                featuredMedia.media_details?.sizes?.medium?.source_url ||
+                '';
             }
-            
+
             // Fallback avatar if none provided
             if (!avatarUrl) {
               avatarUrl = 'https://via.placeholder.com/60';
             }
-            
+
             return {
               id: wpReview.id,
               name: this.decodeHtmlEntities(wpReview.title?.rendered || 'Anonymous'),
               location: wpReview.acf?.location || '',
               avatar: avatarUrl,
               rating: wpReview.acf?.rating ? parseInt(wpReview.acf.rating) : 5,
-              text: reviewText.trim(),
+              text: reviewText,
               isVerified: wpReview.acf?.is_verified !== undefined ? wpReview.acf.is_verified : true
             };
           });
-          
+
           // Initialize carousel after loading reviews
           setTimeout(() => {
             this.init3DTestimonialCarousel();
@@ -2927,16 +2899,16 @@ trackByOfferId(index: number, offer: any): number {
 
   /** -------------------
    * Load Home Statistics from WordPress
-   -------------------- */
+   * -------------------- */
   loadHomeStatistics(): void {
     this.isLoadingStats = true;
-    
+
     this.wordpressService.getHomeStatistics().subscribe({
       next: (data: any) => {
         if (data && data.shared_cabs && data.reserved_cabs) {
           this.sharedCabsStats = data.shared_cabs;
           this.reservedCabsStats = data.reserved_cabs;
-          
+
           // Load numbers section stats if available
           if (data.numbers_section && Array.isArray(data.numbers_section)) {
             this.numbersSectionStats = data.numbers_section;
@@ -3009,14 +2981,14 @@ trackByOfferId(index: number, offer: any): number {
     }
 
     // Try to find Delhi (DEL) and Mumbai (BOM) by code or name
-    const delhiAirport = this.flightAirports.find(airport => 
-      airport.code === 'DEL' || 
+    const delhiAirport = this.flightAirports.find(airport =>
+      airport.code === 'DEL' ||
       airport.name.toLowerCase().includes('delhi') ||
       airport.name.toLowerCase().includes('indira gandhi')
     );
 
-    const mumbaiAirport = this.flightAirports.find(airport => 
-      airport.code === 'BOM' || 
+    const mumbaiAirport = this.flightAirports.find(airport =>
+      airport.code === 'BOM' ||
       airport.name.toLowerCase().includes('mumbai') ||
       airport.name.toLowerCase().includes('chhatrapati')
     );
@@ -3026,30 +2998,30 @@ trackByOfferId(index: number, offer: any): number {
     const defaultTo = mumbaiAirport || (this.flightAirports.length > 1 ? this.flightAirports[1] : this.flightAirports[0]);
 
     // Format: "CityName (CODE)"
-    const defaultFromDisplay = defaultFrom.code 
+    const defaultFromDisplay = defaultFrom.code
       ? `${defaultFrom.name} (${defaultFrom.code})`
       : defaultFrom.name;
-    const defaultToDisplay = defaultTo.code 
+    const defaultToDisplay = defaultTo.code
       ? `${defaultTo.name} (${defaultTo.code})`
       : defaultTo.name;
 
     // Always update flightRoutes with dynamic defaults
     if (this.flightRoutes.length > 0) {
       // Only update if still using static defaults or empty
-      if (!this.flightRoutes[0].from || this.flightRoutes[0].from === 'Delhi' || 
-          this.flightRoutes[0].from === 'Mumbai' ||
-          !this.flightRoutes[0].to || this.flightRoutes[0].to === 'Delhi' || 
-          this.flightRoutes[0].to === 'Mumbai') {
+      if (!this.flightRoutes[0].from || this.flightRoutes[0].from === 'Delhi' ||
+        this.flightRoutes[0].from === 'Mumbai' ||
+        !this.flightRoutes[0].to || this.flightRoutes[0].to === 'Delhi' ||
+        this.flightRoutes[0].to === 'Mumbai') {
         this.flightRoutes[0].from = defaultFromDisplay;
         this.flightRoutes[0].to = defaultToDisplay;
       }
     }
 
     // Always update formValues with dynamic defaults
-    if (!this.formValues.flightFrom || this.formValues.flightFrom === 'Delhi' || 
-        this.formValues.flightFrom === 'Mumbai' ||
-        !this.formValues.flightTo || this.formValues.flightTo === 'Delhi' || 
-        this.formValues.flightTo === 'Mumbai') {
+    if (!this.formValues.flightFrom || this.formValues.flightFrom === 'Delhi' ||
+      this.formValues.flightFrom === 'Mumbai' ||
+      !this.formValues.flightTo || this.formValues.flightTo === 'Delhi' ||
+      this.formValues.flightTo === 'Mumbai') {
       this.formValues.flightFrom = defaultFromDisplay;
       this.formValues.flightTo = defaultToDisplay;
     }
@@ -3063,19 +3035,19 @@ trackByOfferId(index: number, offer: any): number {
    */
   private extractCityNameFromDisplay(displayValue: string): string {
     if (!displayValue) return '';
-    
+
     // If format is "CityName (CODE)", extract just the city name
     const matchWithParens = displayValue.match(/^([^(]+)\s*\(/);
     if (matchWithParens) {
       return matchWithParens[1].trim();
     }
-    
+
     // If format is "CODE - CityName", extract city name
     const matchWithDash = displayValue.match(/-\s*(.+)$/);
     if (matchWithDash) {
       return matchWithDash[1].trim();
     }
-    
+
     // Otherwise, return as is
     return displayValue.trim();
   }
@@ -3086,22 +3058,22 @@ trackByOfferId(index: number, offer: any): number {
    */
   private extractAirportCode(displayValue: string): string {
     if (!displayValue) return '';
-    
+
     // If format is "CityName (CODE)", extract the code
     const matchWithParens = displayValue.match(/\(([^)]+)\)/);
     if (matchWithParens) {
       return matchWithParens[1].trim();
     }
-    
+
     // If format is "CODE - CityName", extract code
     const matchWithDash = displayValue.match(/^([^-]+)\s*-/);
     if (matchWithDash) {
       return matchWithDash[1].trim();
     }
-    
+
     // Otherwise, try to find in flightAirports
     const cityName = this.extractCityNameFromDisplay(displayValue);
-    const airport = this.flightAirports.find(a => 
+    const airport = this.flightAirports.find(a =>
       a.name.toLowerCase() === cityName.toLowerCase()
     );
     return airport ? airport.code : '';
@@ -3118,11 +3090,11 @@ trackByOfferId(index: number, offer: any): number {
    * Store flight data for navigation to flightlist page
    */
   private storeFlightDataForNavigation(): void {
-    const fromValue = this.tripType === 'multi-city' 
-      ? this.flightRoutes[0]?.from 
+    const fromValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.from
       : (this.flightRoutes[0]?.from || this.formValues.flightFrom);
-    const toValue = this.tripType === 'multi-city' 
-      ? this.flightRoutes[0]?.to 
+    const toValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.to
       : (this.flightRoutes[0]?.to || this.formValues.flightTo);
 
     const fromCode = this.extractAirportCode(fromValue);
@@ -3144,8 +3116,8 @@ trackByOfferId(index: number, offer: any): number {
       toCity: toCity || '',
       toAirport: toAirport?.name || '',
       toAirportCode: toCode || '',
-      departureDate: this.tripType === 'multi-city' 
-        ? this.flightRoutes[0]?.date 
+      departureDate: this.tripType === 'multi-city'
+        ? this.flightRoutes[0]?.date
         : (this.flightRoutes[0]?.date || this.formValues.flightDeparture),
       returnDate: this.tripType === 'round-trip' ? this.formValues.flightReturn : null,
       fareType: 'regular', // Default fare type
@@ -3170,7 +3142,7 @@ trackByOfferId(index: number, offer: any): number {
     console.log('Flight data stored for navigation:', flightData);
     console.log('TBO Token being stored:', flightData.tboToken);
     console.log('IP Address being stored:', flightData.ipAddress);
-    
+
     // Validate critical data before storing
     if (!flightData.tboToken) {
       console.error('WARNING: TBO Token is null/undefined when storing flight data!');
@@ -3189,11 +3161,11 @@ trackByOfferId(index: number, offer: any): number {
       return;
     }
 
-    const fromCode = direction === 'departure' 
-      ? this.selectedFrom.code 
+    const fromCode = direction === 'departure'
+      ? this.selectedFrom.code
       : this.selectedTo.code;
-    const toCode = direction === 'departure' 
-      ? this.selectedTo.code 
+    const toCode = direction === 'departure'
+      ? this.selectedTo.code
       : this.selectedFrom.code;
 
     if (!fromCode || !toCode) {
@@ -3274,17 +3246,17 @@ trackByOfferId(index: number, offer: any): number {
   onAirportSelected(type: 'from' | 'to', airportValue: string): void {
     // Extract airport code from display value
     const airportCode = this.extractAirportCode(airportValue);
-    
+
     // Find airport object from flightAirports list
     const airport = this.flightAirports.find(a => a.code === airportCode);
-    
+
     if (airport) {
       const airportObj = {
         name: airport.name,
         code: airport.code,
         airport: airport.name // Using name as airport for now
       };
-      
+
       if (type === 'from') {
         this.selectedFrom = airportObj;
         this.selectedFromAirport = airportValue;
