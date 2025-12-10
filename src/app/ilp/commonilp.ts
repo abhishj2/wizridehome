@@ -6,8 +6,15 @@ export class IlpAnimations {
 
   /**
    * Initialize all ILP page animations
+   * Safe to call from Angular ngAfterViewInit
    */
   public static initializeAnimations(): void {
+    // Strict check to ensure we are in a browser environment
+    // This prevents server-side crashes during SSR
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
     this.initPageLoadFadeIn();
     this.initSmoothScroll();
     this.initIntersectionObserver();
@@ -20,19 +27,22 @@ export class IlpAnimations {
 
   /**
    * Clean up event listeners and observers
+   * Call this in ngOnDestroy
    */
   public static cleanup(): void {
+    if (typeof window === 'undefined') return;
+
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
     }
     
-    if (this.parallaxHandler && typeof window !== 'undefined') {
+    if (this.parallaxHandler) {
       window.removeEventListener("scroll", this.parallaxHandler);
       this.parallaxHandler = null;
     }
     
-    if (this.stepsHandler && typeof window !== 'undefined') {
+    if (this.stepsHandler) {
       window.removeEventListener("scroll", this.stepsHandler);
       this.stepsHandler = null;
     }
@@ -40,16 +50,21 @@ export class IlpAnimations {
 
   /**
    * Page load fade-in effect
+   * UPDATED: Checks for window to prevent hiding content on Server (SEO safe)
    */
   private static initPageLoadFadeIn(): void {
-    if (typeof document === 'undefined') return;
-    document.body.style.opacity = "0";
-    document.body.style.transition = "opacity 0.5s ease-in-out";
-    setTimeout(() => {
-      if (typeof document !== 'undefined') {
-        document.body.style.opacity = "1";
-      }
-    }, 100);
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
+    // Only fade in if not already visible (prevents double fade or stuck opacity)
+    if (document.body.style.opacity !== '1') {
+        document.body.style.opacity = "0";
+        document.body.style.transition = "opacity 0.5s ease-in-out";
+        
+        // Small delay to ensure CSS is applied before fading in
+        requestAnimationFrame(() => {
+            document.body.style.opacity = "1";
+        });
+    }
   }
 
   /**
@@ -58,11 +73,16 @@ export class IlpAnimations {
   private static initSmoothScroll(): void {
     if (typeof document === 'undefined') return;
     const anchorLinks: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('a[href^="#"]');
+    
     anchorLinks.forEach((link: HTMLAnchorElement) => {
-      link.addEventListener("click", (e: Event) => {
+      // Clone to remove existing listeners to prevent duplicates
+      const newLink = link.cloneNode(true) as HTMLAnchorElement;
+      link.parentNode?.replaceChild(newLink, link);
+      
+      newLink.addEventListener("click", (e: Event) => {
         e.preventDefault();
-        const targetId: string | null = link.getAttribute("href");
-        if (targetId && typeof document !== 'undefined') {
+        const targetId: string | null = newLink.getAttribute("href");
+        if (targetId && targetId !== '#') {
           const targetElement: Element | null = document.querySelector(targetId);
           if (targetElement) {
             targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -76,18 +96,27 @@ export class IlpAnimations {
    * Intersection Observer for scroll animations
    */
   private static initIntersectionObserver(): void {
-    if (typeof document === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    
     const animateElements: NodeListOf<Element> = document.querySelectorAll(".animate-on-scroll");
+    
+    if (this.observer) {
+        this.observer.disconnect();
+    }
+
     this.observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
         entries.forEach((entry: IntersectionObserverEntry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate");
+            // Optional: Stop observing once animated to save performance
+            // this.observer?.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
+    
     animateElements.forEach((el: Element) => this.observer!.observe(el));
   }
 
@@ -95,25 +124,25 @@ export class IlpAnimations {
    * Parallax effect for hero section
    */
   private static initParallax(): void {
-    if (typeof document === 'undefined' || typeof window === 'undefined') return;
-    const heroSection: Element | null = document.querySelector(".mainbann");
+    if (typeof window === 'undefined') return;
+    
+    const heroSection: HTMLElement | null = document.querySelector(".mainbann");
     if (heroSection) {
       const updateParallax = (): void => {
-        if (typeof window === 'undefined') return;
         const scrolled: number = window.pageYOffset;
         const rate: number = scrolled * -0.1;
-        (heroSection as HTMLElement).style.transform = `translateY(${rate}px)`;
+        heroSection.style.transform = `translateY(${rate}px)`;
         this.ticking = false;
       };
 
       this.parallaxHandler = (): void => {
-        if (!this.ticking && typeof window !== 'undefined') {
+        if (!this.ticking) {
           requestAnimationFrame(updateParallax);
           this.ticking = true;
         }
       };
 
-      window.addEventListener("scroll", this.parallaxHandler);
+      window.addEventListener("scroll", this.parallaxHandler, { passive: true });
     }
   }
 
@@ -122,28 +151,26 @@ export class IlpAnimations {
    */
   private static initHoverEffects(): void {
     if (typeof document === 'undefined') return;
-    const buttons: NodeListOf<HTMLElement> = document.querySelectorAll(".btn-c, .plan-trip-btn");
-    buttons.forEach((button: HTMLElement) => {
-      button.addEventListener("mouseenter", () => {
-        button.style.transform = "translateY(-3px) scale(1.02)";
-      });
-      button.addEventListener("mouseleave", () => {
-        button.style.transform = "translateY(0) scale(1)";
-      });
-    });
+    
+    const addHover = (selector: string, scale = 1.02, y = -3) => {
+        const elements: NodeListOf<HTMLElement> = document.querySelectorAll(selector);
+        elements.forEach((el: HTMLElement) => {
+            // Remove old listeners implicitly by referencing strict events
+            // but for simple hover CSS is often better. 
+            // JS approach:
+            el.onmouseenter = () => {
+                el.style.transform = `translateY(${y}px) scale(${scale})`;
+                if(selector.includes('card')) el.style.zIndex = "10";
+            };
+            el.onmouseleave = () => {
+                el.style.transform = "translateY(0) scale(1)";
+                if(selector.includes('card')) el.style.zIndex = "1";
+            };
+        });
+    };
 
-    const cards: NodeListOf<HTMLElement> = document.querySelectorAll(".carfe, .reach-card, .cultural-card");
-    cards.forEach((card: HTMLElement, index: number) => {
-      card.addEventListener("mouseenter", () => {
-        card.style.transform = "translateY(-10px) scale(1.02)";
-        card.style.zIndex = "10";
-      });
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "translateY(0) scale(1)";
-        card.style.zIndex = "1";
-      });
-      card.style.animationDelay = `${index * 0.1}s`;
-    });
+    addHover(".btn-c, .plan-trip-btn");
+    addHover(".carfe, .reach-card, .cultural-card", 1.02, -10);
   }
 
   /**
@@ -152,11 +179,14 @@ export class IlpAnimations {
   private static initTypingEffect(): void {
     if (typeof document === 'undefined') return;
     const heroTitle: Element | null = document.querySelector(".mainbann h1");
-    if (heroTitle) {
+    
+    // Only init if not already processed (prevents re-typing on navigation back)
+    if (heroTitle && !heroTitle.getAttribute('data-typed')) {
       const originalText: string = heroTitle.textContent || "";
       heroTitle.textContent = "";
+      heroTitle.setAttribute('data-typed', 'true');
+      
       let i: number = 0;
-
       const typeWriter = (): void => {
         if (i < originalText.length) {
           heroTitle.textContent += originalText.charAt(i);
@@ -176,6 +206,9 @@ export class IlpAnimations {
     if (typeof document === 'undefined') return;
     const titles: NodeListOf<HTMLElement> = document.querySelectorAll(".section-title, .section-subtitle");
     titles.forEach((title: HTMLElement, index: number) => {
+      // Check if already animated to prevent flicker
+      if(title.style.opacity === '1') return;
+
       title.style.opacity = "0";
       title.style.transform = "translateY(20px)";
       setTimeout(() => {
@@ -190,30 +223,25 @@ export class IlpAnimations {
    * Animate how-to steps on scroll
    */
   private static initHowToSteps(): void {
-    if (typeof document === 'undefined' || typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return;
+    
     const steps: NodeListOf<Element> = document.querySelectorAll(".howto-step");
+    if(steps.length === 0) return;
+
     const revealSteps = (): void => {
-      if (typeof window === 'undefined') return;
       const triggerBottom: number = window.innerHeight * 0.85;
       steps.forEach((step: Element, idx: number) => {
-        const stepTop: number = step.getBoundingClientRect().top;
-        if (stepTop < triggerBottom) {
+        const rect = step.getBoundingClientRect();
+        if (rect.top < triggerBottom && rect.bottom > 0) {
           setTimeout(() => step.classList.add("visible"), idx * 200);
         }
       });
     };
     
     this.stepsHandler = revealSteps;
-    window.addEventListener("scroll", this.stepsHandler);
+    window.addEventListener("scroll", this.stepsHandler, { passive: true });
+    
+    // Initial check in case elements are already in view
     revealSteps();
   }
 }
-
-// Auto-initialize when DOM is loaded (only in browser)
-if (typeof document !== 'undefined') {
-  document.addEventListener("DOMContentLoaded", () => {
-    IlpAnimations.initializeAnimations();
-  });
-}
-  
-  

@@ -61,6 +61,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   expandedMoments: { [key: number]: boolean } = {};
   readonly maxStoryLength = 200; // Characters to show before "Read More"
 
+  // Intersection Observer for animations
+  private intersectionObserver: IntersectionObserver | null = null;
+  
+  // IDs for cleaning up Schema scripts
+  private readonly schemaIds = ['japan-tour-breadcrumb', 'japan-tour-org', 'japan-tour-trip'];
+
   japanMoments: JapanMoment[] = [
     {
       author: 'Alexandre Mercier',
@@ -101,7 +107,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           time: '9:30 AM - 11:30 AM',
           title: 'Visit Tokyo Imperial Palace and East Gardens',
-          description: 'The Tokyo Imperial Palace is the primary residence of the Emperor of Japan, located on the site of the former Edo Castle. The palace complex is surrounded by walls and moats, covering approximately 1.15 square kilometers (0.44 square miles). The Kyūden (宮殿) is the main building where the Emperor conducts official duties and ceremonies. The East Gardens (東御苑, Higashi-gyoen) are a public area offering a serene escape with traditional Japanese gardens, ponds, bridges, and historic structures. The gardens include areas like Honmaru, Ninomaru, and Sannomaru, with the Ninomaru Garden featuring a pond, islands, and teahouses. The Fujimi yagura offers panoramic views of the palace grounds.',
+          description: 'The Tokyo Imperial Palace is the primary residence of the Emperor of Japan, located on the site of the former Edo Castle.  The palace complex is surrounded by walls and moats, covering approximately 1.15 square kilometers (0.44 square miles). The Kyūden (宮殿) is the main building where the Emperor conducts official duties and ceremonies. The East Gardens (東御苑, Higashi-gyoen) are a public area offering a serene escape with traditional Japanese gardens, ponds, bridges, and historic structures. The gardens include areas like Honmaru, Ninomaru, and Sannomaru, with the Ninomaru Garden featuring a pond, islands, and teahouses. The Fujimi yagura offers panoramic views of the palace grounds.',
           images: [
             'https://images.pexels.com/photos/5817295/pexels-photo-5817295.jpeg?auto=compress&cs=tinysrgb&w=800',
             'https://images.pexels.com/photos/5206573/pexels-photo-5206573.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -209,7 +215,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
             'https://images.unsplash.com/photo-1567597714138-3bdc30f4f493?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
           ]
         },
-       
+        
         {
           time:'6:00 PM - 7:30 PM. ',
           title:'Dinner nearby.',
@@ -220,7 +226,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Return to your Hotel. ',
           description:""
         }
-       
+        
       ]
     },
     {
@@ -280,12 +286,12 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           time: '7:00 AM - 8:00 AM.',
           title: 'Breakfast at Hotel',
           description: 'Enjoy breakfast at the hotel or partake in any arrangements provided by the company.',
-         
+          
         },
         {
           time: '8:30 AM - 11:30 AM. ',
           title: "Travel from Tokyo to Kyoto Japan's famous Bullet Train.",
-          description: "Japan's Shinkansen, also known as the bullet train, is renowned for its speed, efficiency, and punctuality. It operates on dedicated tracks, reaching speeds of up to 320 km/h (200 mph), connecting major cities like Tokyo, Osaka, and Kyoto in a matter of hours. The Shinkansen's sleek design, comfortable seating, and onboard amenities make it a preferred choice for travelers exploring Japan's diverse landscapes and cultural attractions.",
+          description: "Japan's Shinkansen, also known as the bullet train, is renowned for its speed, efficiency, and punctuality.  It operates on dedicated tracks, reaching speeds of up to 320 km/h (200 mph), connecting major cities like Tokyo, Osaka, and Kyoto in a matter of hours. The Shinkansen's sleek design, comfortable seating, and onboard amenities make it a preferred choice for travelers exploring Japan's diverse landscapes and cultural attractions.",
           images: [
             'https://images.pexels.com/photos/20627936/pexels-photo-20627936/free-photo-of-shinkansen-train-arriving-at-a-station.jpeg?auto=compress&cs=tinysrgb&w=600',
             'https://images.unsplash.com/photo-1695833913339-f2591ac948ef?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -297,13 +303,13 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           time: '11:30 AM - 12:30 PM.',
           title: 'Check-in at Hotel.',
           description: 'Drop off your luggages at the Hotel and check in.',
-         
+          
         },
         {
           time: '12:30 PM - 1:30 PM',
           title: 'Lunch at Hotel.',
           description: 'Have lunch near your hotel.',
-         
+          
         },
         {
           time: '2:00 PM - 4:00 PM ',
@@ -329,7 +335,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:' Dinner in Kyoto & Return to Hotel.',
           description:'',
         },
-       
+        
         
       ]
     },
@@ -559,7 +565,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       ]
-    });
+    }, 'japan-tour-breadcrumb');
 
     // Organization JSON-LD
     this.addJsonLd({
@@ -584,7 +590,7 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         "https://www.linkedin.com/company/in/wizzride-technologies-private-limited-33b0871a0/",
         "https://twitter.com/wizzride"
       ]
-    });
+    }, 'japan-tour-org');
 
     // TouristTrip JSON-LD
     this.addJsonLd({
@@ -608,52 +614,63 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         "priceCurrency": "INR",
         "availability": "https://schema.org/LimitedAvailability"
       }
-    });
+    }, 'japan-tour-trip');
   }
 
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // Initialize scroll animations
+      // Initialize scroll animations only on browser
       this.initIntersectionObserver();
     }
   }
 
+  // New method: Added missing logic to handle Intersection Observer safely
   private initIntersectionObserver(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     
-    try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
+    // Safety check for IntersectionObserver (Browser API)
+    if ('IntersectionObserver' in window) {
+      try {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-      const observer = new IO((entries: IntersectionObserverEntry[]) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
+        this.intersectionObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate');
+            }
+          });
+        }, observerOptions);
+
+        // Assuming there are elements with class 'animate-on-scroll' or generic sections
+        // Fallback to sections if no specific class is used in template yet
+        const elements = this.elementRef.nativeElement.querySelectorAll('.animate-on-scroll, section');
+        elements.forEach((el: Element) => {
+          this.intersectionObserver?.observe(el);
         });
-      }, observerOptions);
-
-      // Observe all sections
-      const sections = this.elementRef.nativeElement.querySelectorAll('section');
-      sections.forEach((el: Element) => {
-        observer.observe(el);
-      });
-    } catch (e) {
-      console.warn('Error initializing intersection observer (likely SSR):', e);
+      } catch (e) {
+        console.warn('Error initializing intersection observer:', e);
+      }
     }
   }
 
@@ -808,6 +825,19 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cleanup if needed
+    if (isPlatformBrowser(this.platformId)) {
+        // Disconnect observer
+        if (this.intersectionObserver) {
+            this.intersectionObserver.disconnect();
+        }
+        
+        // Remove schema scripts
+        this.schemaIds.forEach(id => {
+            const script = this.document.getElementById(id);
+            if (script) {
+                this.renderer.removeChild(this.document.head, script);
+            }
+        });
+    }
   }
 }

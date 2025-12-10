@@ -11,8 +11,11 @@ import { SeoService } from '../../../services/seo.service';
   templateUrl: './nathulapass.component.html',
   styleUrl: './nathulapass.component.css'
 })
-export class NathulapassComponent  implements OnInit, AfterViewInit, OnDestroy {
+export class NathulapassComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['nathula-faq', 'nathula-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,57 +57,55 @@ export class NathulapassComponent  implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/nathula-lake.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How far is Nathula Pass from Gangtok?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Nathula Pass is located about 55 kilometers from Gangtok. The drive usually takes around 2 to 3 hours depending on road and weather conditions."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are Wizzride cabs available to Nathula Pass?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride and other private taxis can be booked from Gangtok to Nathula Pass. However, only authorized vehicles with permits are allowed on this route."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is a permit required to visit Nathula Pass?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, an entry permit is mandatory for all visitors to Nathula Pass. Indian nationals can obtain it through registered tour operators in Gangtok. Foreign nationals are not allowed to visit Nathula Pass due to its location near the Indo-China border."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Best time to visit Nathula Pass?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The best time to visit Nathula Pass is from May to October when the weather is clear and the roads are accessible. The pass remains closed on Mondays and Tuesdays and during heavy snowfall in winter."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there accommodations near Nathula Pass?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "There are no hotels or guesthouses at Nathula Pass itself due to its high altitude and military presence. Tourists usually stay in Gangtok and make a day trip to Nathula Pass."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How far is Nathula Pass from Gangtok?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nathula Pass is located about 55 kilometers from Gangtok. The drive usually takes around 2 to 3 hours depending on road and weather conditions."
           }
-        ]
-      });
+        },
+        {
+          "@type": "Question",
+          "name": "Are Wizzride cabs available to Nathula Pass?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride and other private taxis can be booked from Gangtok to Nathula Pass. However, only authorized vehicles with permits are allowed on this route."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a permit required to visit Nathula Pass?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, an entry permit is mandatory for all visitors to Nathula Pass. Indian nationals can obtain it through registered tour operators in Gangtok. Foreign nationals are not allowed to visit Nathula Pass due to its location near the Indo-China border."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Best time to visit Nathula Pass?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best time to visit Nathula Pass is from May to October when the weather is clear and the roads are accessible. The pass remains closed on Mondays and Tuesdays and during heavy snowfall in winter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there accommodations near Nathula Pass?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There are no hotels or guesthouses at Nathula Pass itself due to its high altitude and military presence. Tourists usually stay in Gangtok and make a day trip to Nathula Pass."
+          }
+        }
+      ]
+    }, 'nathula-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,27 +129,47 @@ export class NathulapassComponent  implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/nathula_pass/"
         }
       ]
-    }
-    );
+    }, 'nathula-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

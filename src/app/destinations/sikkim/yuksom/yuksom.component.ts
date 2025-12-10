@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class YuksomComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['yuksom-faq', 'yuksom-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,57 +57,55 @@ export class YuksomComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/yuksom.jpeg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How far is Yuksom from Gangtok?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yuksom is approximately 120 kilometers from Gangtok. The journey by road takes around 5 to 6 hours, depending on traffic and road conditions."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are Wizzride cabs available to Yuksom?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride and other shared cab services are available for travel between Gangtok and Yuksom. Private taxis can also be hired for more convenience."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is a permit required to visit Yuksom?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No permit is required for Indian tourists to visit Yuksom. However, foreign nationals need a Restricted Area Permit (RAP) to enter Sikkim, which can be obtained online or at designated checkpoints."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Best time to visit Yuksom?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The best time to visit Yuksom is from March to May and from September to November. These months offer pleasant weather, clear skies, and excellent conditions for trekking and sightseeing."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there accommodations in Yuksom?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Yuksom has a variety of accommodations including guesthouses, homestays, and mid-range hotels. Most options are budget-friendly and provide basic facilities for trekkers and travelers."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How far is Yuksom from Gangtok?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yuksom is approximately 120 kilometers from Gangtok. The journey by road takes around 5 to 6 hours, depending on traffic and road conditions."
           }
-        ]
-      });
+        },
+        {
+          "@type": "Question",
+          "name": "Are Wizzride cabs available to Yuksom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride and other shared cab services are available for travel between Gangtok and Yuksom. Private taxis can also be hired for more convenience."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a permit required to visit Yuksom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No permit is required for Indian tourists to visit Yuksom. However, foreign nationals need a Restricted Area Permit (RAP) to enter Sikkim, which can be obtained online or at designated checkpoints."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Best time to visit Yuksom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best time to visit Yuksom is from March to May and from September to November. These months offer pleasant weather, clear skies, and excellent conditions for trekking and sightseeing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there accommodations in Yuksom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Yuksom has a variety of accommodations including guesthouses, homestays, and mid-range hotels. Most options are budget-friendly and provide basic facilities for trekkers and travelers."
+          }
+        }
+      ]
+    }, 'yuksom-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,27 +129,47 @@ export class YuksomComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/yuksom/"
         }
       ]
-    }
-    );
+    }, 'yuksom-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

@@ -14,6 +14,9 @@ import { IlpAnimations } from '../commonilp';
 export class ArunachalpermitComponent implements OnInit, AfterViewInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
   private listeners: (() => void)[] = [];
+  
+  // IDs to track and clean up injected scripts
+  private readonly schemaIds = ['arunachal-ilp-faq', 'arunachal-ilp-breadcrumb'];
 
   constructor(
     private seoService: SeoService,
@@ -101,7 +104,7 @@ export class ArunachalpermitComponent implements OnInit, AfterViewInit, OnDestro
           }
         }
       ]
-    });
+    }, 'arunachal-ilp-faq');
 
     // ✅ BreadcrumbList JSON-LD
     this.addJsonLd({
@@ -121,72 +124,92 @@ export class ArunachalpermitComponent implements OnInit, AfterViewInit, OnDestro
           "item": "https://wizzride.com/inner-line-permit/arunachal-inner-line-permit"
         }
       ]
-    });
-
-    
-
-    // Initialize animations when component loads
-    IlpAnimations.initializeAnimations();
+    }, 'arunachal-ilp-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Removed isPlatformBrowser check to allow SEO on Server (SSR)
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    this.initializeAnimations();
+    // Strictly Browser Only - Fixes "IntersectionObserver is not defined" & DOM crashes
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeAnimations();
+      
+      // Initialize external animations here instead of ngOnInit
+      if (IlpAnimations && typeof IlpAnimations.initializeAnimations === 'function') {
+        IlpAnimations.initializeAnimations();
+      }
+    }
   }
 
   ngOnDestroy(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    this.cleanup();
-    // Clean up animations when component is destroyed
-    IlpAnimations.cleanup();
+    if (isPlatformBrowser(this.platformId)) {
+      this.cleanup();
+      // Clean up animations when component is destroyed
+      if (IlpAnimations && typeof IlpAnimations.cleanup === 'function') {
+        IlpAnimations.cleanup();
+      }
+
+      // Remove injected schemas
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 
   // ================== ANIMATION ON SCROLL ==================
   private initializeAnimations(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
     if (!this.document) return;
     
-    try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
+    // Safety check for IntersectionObserver (Browser API)
+    if ('IntersectionObserver' in window) {
+      try {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-      this.observer = new IO((entries: IntersectionObserverEntry[]) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
+        this.observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate');
+            }
+          });
+        }, observerOptions);
+
+        this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
+          this.observer?.observe(el);
         });
-      }, observerOptions);
 
-      this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        this.observer?.observe(el);
-      });
-
-      // ================== STAGGERED DELAYS ==================
-      this.applyStaggeredDelay('.fourcol');
-      this.applyStaggeredDelay('.howto-step');
-      this.applyStaggeredDelay('.faq-item');
-    } catch (e) {
-      console.warn('Error initializing animations (likely SSR):', e);
+        // ================== STAGGERED DELAYS ==================
+        this.applyStaggeredDelay('.fourcol');
+        this.applyStaggeredDelay('.howto-step');
+        this.applyStaggeredDelay('.faq-item');
+      } catch (e) {
+        console.warn('Error initializing animations:', e);
+      }
     }
   }
 
   private applyStaggeredDelay(selector: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
     if (!this.document) return;
     
     const cards = this.document.querySelectorAll(selector);

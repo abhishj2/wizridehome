@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['gangtok-faq', 'gangtok-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -31,7 +34,7 @@ export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
     this.titleService.setTitle("Gangtok Travel Guide | Attractions, Culture & Travel Tips");
     this.metaService.updateTag({
       name: 'description',
-      content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions,local cuisine, and travel tips.Book your Wizzride cab for a seamless journey."
+      content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions, local cuisine, and travel tips. Book your Wizzride cab for a seamless journey."
     });
     this.metaService.updateTag({
       name: 'title',
@@ -40,7 +43,7 @@ export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Open Graph Tags
     this.metaService.updateTag({ property: 'og:title', content: 'Gangtok Travel Guide | Attractions, Culture & Travel Tips' });
-    this.metaService.updateTag({ property: 'og:description', content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions,local cuisine, and travel tips.Book your Wizzride cab for a seamless journey." });
+    this.metaService.updateTag({ property: 'og:description', content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions, local cuisine, and travel tips. Book your Wizzride cab for a seamless journey." });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     this.metaService.updateTag({ property: 'og:url', content: 'https://wizzride.com/destinations/gangtok/' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://wizztest.com/assets/images/destinations/gangtok.jpg' });
@@ -50,12 +53,12 @@ export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
     // Twitter Card Tags
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: 'Gangtok Travel Guide | Attractions, Culture & Travel Tips' });
-    this.metaService.updateTag({ name: 'twitter:description', content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions,local cuisine, and travel tips.Book your Wizzride cab for a seamless journey." });
+    this.metaService.updateTag({ name: 'twitter:description', content: "Discover the charm of Gangtok, the gateway to the Himalayas. Explore top attractions, local cuisine, and travel tips. Book your Wizzride cab for a seamless journey." });
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/gangtok.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  {
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
@@ -108,11 +111,9 @@ export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       ]
-    });
+    }, 'gangtok-faq');
 
- 
-
-    // ✅ TouristDestination JSON-LD (specific to Gangtok)
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -136,26 +137,47 @@ export class GangtokComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/gangtok/"
         }
       ]
-    });
+    }, 'gangtok-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

@@ -10,14 +10,18 @@ export class CommonDestinationService {
   private currentSlide = 0;
   private isAnimating = false;
   private cloneCount = 0;
-  private originalSlides: Element[] = [];
+  private originalSlides: any[] = []; // Changed to any[] to handle DOM elements safely
   private listeners: (() => void)[] = [];
+  
+  // CRITICAL FIX: Rename to _doc to avoid conflict with global 'document'
+  private _doc: Document;
 
   constructor(
     private rendererFactory: RendererFactory2,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) @Optional() private document: Document | null
+    @Inject(DOCUMENT) doc: any
   ) {
+    this._doc = doc; // Assign injected document to local property
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -26,8 +30,10 @@ export class CommonDestinationService {
    * Call this from ngAfterViewInit in your component
    */
   initializeDestinationPage(): void {
+    // 1. Guard: Stop immediately if running on Server
     if (!isPlatformBrowser(this.platformId)) return;
-    // initPageFadeIn disabled - causes SSR errors
+    
+    // 2. Run initializations safely
     this.initSmoothScroll();
     this.initIntersectionObserver();
     this.initHoverEffects();
@@ -48,24 +54,22 @@ export class CommonDestinationService {
   }
 
   // ================== PAGE LOAD FADE-IN ==================
-  // DISABLED - Causes SSR errors. This is a visual enhancement only.
   private initPageFadeIn(): void {
-    // Fully disabled to avoid SSR access; keep as a no-op.
+    // Keep disabled/empty to prevent SSR issues
     return;
   }
 
   // ================== SMOOTH SCROLL ==================
   private initSmoothScroll(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
     
-    const links = this.document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
+    const links = this._doc.querySelectorAll('a[href^="#"]');
+    links.forEach((link: any) => {
       const listener = this.renderer.listen(link, 'click', (e: Event) => {
         e.preventDefault();
-        const targetId = (link as HTMLAnchorElement).getAttribute("href");
-        if (targetId && this.document) {
-          const target = this.document.querySelector(targetId);
+        const targetId = link.getAttribute("href");
+        if (targetId) {
+          const target = this._doc.querySelector(targetId);
           if (target) {
             target.scrollIntoView({ behavior: "smooth", block: "start" });
           }
@@ -77,14 +81,10 @@ export class CommonDestinationService {
 
   // ================== INTERSECTION OBSERVER ==================
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
-      if (!IntersectionObserverClass) return;
-      
-      const observer = new IntersectionObserverClass(entries => {
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate");
@@ -92,39 +92,38 @@ export class CommonDestinationService {
         });
       }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
-      this.document.querySelectorAll(".animate-on-scroll").forEach(el => observer.observe(el));
+      this._doc.querySelectorAll(".animate-on-scroll").forEach((el: any) => observer.observe(el));
     } catch {
-      // Silently ignore
+      // Silently ignore errors
     }
   }
 
   // ================== HOVER EFFECTS ==================
   private initHoverEffects(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
     
     // Button hover effects
-    this.document.querySelectorAll(".btn-c").forEach(button => {
+    this._doc.querySelectorAll(".btn-c").forEach((button: any) => {
       const mouseenterListener = this.renderer.listen(button, 'mouseenter', () => {
-        (button as HTMLElement).style.transform = "translateY(-3px) scale(1.02)";
+        button.style.transform = "translateY(-3px) scale(1.02)";
       });
       const mouseleaveListener = this.renderer.listen(button, 'mouseleave', () => {
-        (button as HTMLElement).style.transform = "translateY(0) scale(1)";
+        button.style.transform = "translateY(0) scale(1)";
       });
       this.listeners.push(mouseenterListener, mouseleaveListener);
     });
 
     // Card hover effects
-    this.document.querySelectorAll(".carfe").forEach((card, i) => {
+    this._doc.querySelectorAll(".carfe").forEach((card: any, i: number) => {
       const mouseenterListener = this.renderer.listen(card, 'mouseenter', () => {
-        (card as HTMLElement).style.transform = "translateY(-10px) scale(1.02)";
-        (card as HTMLElement).style.zIndex = "10";
+        card.style.transform = "translateY(-10px) scale(1.02)";
+        card.style.zIndex = "10";
       });
       const mouseleaveListener = this.renderer.listen(card, 'mouseleave', () => {
-        (card as HTMLElement).style.transform = "translateY(0) scale(1)";
-        (card as HTMLElement).style.zIndex = "1";
+        card.style.transform = "translateY(0) scale(1)";
+        card.style.zIndex = "1";
       });
-      (card as HTMLElement).style.animationDelay = `${i * 0.1}s`;
+      card.style.animationDelay = `${i * 0.1}s`;
       this.listeners.push(mouseenterListener, mouseleaveListener);
     });
   }
@@ -132,9 +131,8 @@ export class CommonDestinationService {
   // ================== TYPING EFFECT ==================
   private initTypingEffect(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
     
-    const heroTitle = this.document.querySelector(".mainbann h1") as HTMLElement;
+    const heroTitle = this._doc.querySelector(".mainbann h1") as HTMLElement;
     if (heroTitle) {
       const text = heroTitle.textContent || '';
       heroTitle.textContent = "";
@@ -153,16 +151,15 @@ export class CommonDestinationService {
   // ================== SECTION TITLES ==================
   private initSectionTitles(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
     
-    this.document.querySelectorAll(".section-title, .section-subtitle").forEach((title, i) => {
-      (title as HTMLElement).style.opacity = "0";
-      (title as HTMLElement).style.transform = "translateY(20px)";
+    this._doc.querySelectorAll(".section-title, .section-subtitle").forEach((title: any, i: number) => {
+      title.style.opacity = "0";
+      title.style.transform = "translateY(20px)";
       setTimeout(() => {
         if (isPlatformBrowser(this.platformId)) {
-          (title as HTMLElement).style.transition = "all 0.8s ease-out";
-          (title as HTMLElement).style.opacity = "1";
-          (title as HTMLElement).style.transform = "translateY(0)";
+          title.style.transition = "all 0.8s ease-out";
+          title.style.opacity = "1";
+          title.style.transform = "translateY(0)";
         }
       }, 300 + i * 200);
     });
@@ -170,14 +167,13 @@ export class CommonDestinationService {
 
   // ================== HOW-TO STEPS ==================
   private initHowToSteps(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document || typeof window === 'undefined') return;
+    if (!isPlatformBrowser(this.platformId) || typeof window === 'undefined') return;
     
-    const steps = this.document.querySelectorAll(".howto-step");
+    const steps = this._doc.querySelectorAll(".howto-step");
     const revealSteps = () => {
-      if (!isPlatformBrowser(this.platformId) || typeof window === 'undefined') return;
+      if (!isPlatformBrowser(this.platformId)) return;
       const triggerBottom = window.innerHeight * 0.85;
-      steps.forEach((step, i) => {
+      steps.forEach((step: any, i: number) => {
         if (step.getBoundingClientRect().top < triggerBottom) {
           setTimeout(() => step.classList.add("visible"), i * 200);
         }
@@ -191,19 +187,22 @@ export class CommonDestinationService {
 
   // ================== SLIDER ==================
   private initSlider(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.document) return;
+    if (!isPlatformBrowser(this.platformId) || typeof window === 'undefined') return;
     
-    const sliderContainer = this.document.querySelector(".slider-container");
+    const sliderContainer = this._doc.querySelector(".slider-container");
     if (!sliderContainer) return;
 
     const sliderTrack = sliderContainer.querySelector(".slider-track") as HTMLElement;
     if (!sliderTrack) return;
 
-    this.originalSlides = Array.from(sliderContainer.querySelectorAll(".slide"));
+    // Use querySelectorAll on the container
+    const slideNodes = sliderContainer.querySelectorAll(".slide");
+    this.originalSlides = Array.from(slideNodes);
+    
     const bulletNav = sliderContainer.querySelector(".slider-nav .bullet-nav");
 
     const getSlidesPerView = () => {
+      if (typeof window === 'undefined') return 4; // Fallback
       if (window.innerWidth <= 768) return 1;
       if (window.innerWidth <= 1024) return 3;
       return 4;
@@ -268,8 +267,7 @@ export class CommonDestinationService {
       const slidesPerView = getSlidesPerView();
       const pageCount = Math.ceil(this.originalSlides.length / slidesPerView);
       for (let i = 0; i < pageCount; i++) {
-        if (!this.document) return;
-        const bullet = this.document.createElement("button");
+        const bullet = this._doc.createElement("button");
         bullet.className = "bullet";
         bullet.setAttribute("aria-label", `Go to slide ${i + 1}`);
         const listener = this.renderer.listen(bullet, 'click', () => {
@@ -285,7 +283,7 @@ export class CommonDestinationService {
       if (!bulletNav) return;
       const slidesPerView = getSlidesPerView();
       const activeIndex = Math.floor((this.currentSlide - this.cloneCount) / slidesPerView);
-      bulletNav.querySelectorAll(".bullet").forEach((b, i) => {
+      bulletNav.querySelectorAll(".bullet").forEach((b: any, i: number) => {
         b.classList.toggle("active", i === activeIndex);
       });
     };
@@ -340,4 +338,3 @@ export class CommonDestinationService {
     }
   }
 }
-

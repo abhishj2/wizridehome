@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class LachungComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['lachung-faq', 'lachung-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,57 +57,55 @@ export class LachungComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/lachung.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Is Lachung suitable for a family trip?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Lachung is a great family travel destination. It offers scenic landscapes, waterfalls, the Yumthang Valley, and a peaceful environment suitable for families with children and elders."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Do I need to carry cash in Lachung?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, it is advisable to carry sufficient cash while visiting Lachung, as ATMs and digital payment facilities are very limited in the region."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are permits required to visit Lachung?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, a Protected Area Permit (PAP) is required for both Indian and foreign tourists to visit Lachung. These permits can be arranged through registered tour operators in Sikkim."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What kind of clothing should I pack for Lachung?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Pack warm clothes, as Lachung is a cold destination throughout the year. Heavy woolens, jackets, gloves, and comfortable trekking shoes are recommended, especially in winter."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there medical facilities in Lachung?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Lachung has limited medical facilities with small health centers. For serious medical needs, tourists may need to travel back to Gangtok or larger towns. It is advisable to carry personal medicines."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Lachung suitable for a family trip?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Lachung is a great family travel destination. It offers scenic landscapes, waterfalls, the Yumthang Valley, and a peaceful environment suitable for families with children and elders."
           }
-        ]
-      });
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to carry cash in Lachung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, it is advisable to carry sufficient cash while visiting Lachung, as ATMs and digital payment facilities are very limited in the region."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are permits required to visit Lachung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, a Protected Area Permit (PAP) is required for both Indian and foreign tourists to visit Lachung. These permits can be arranged through registered tour operators in Sikkim."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What kind of clothing should I pack for Lachung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pack warm clothes, as Lachung is a cold destination throughout the year. Heavy woolens, jackets, gloves, and comfortable trekking shoes are recommended, especially in winter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there medical facilities in Lachung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lachung has limited medical facilities with small health centers. For serious medical needs, tourists may need to travel back to Gangtok or larger towns. It is advisable to carry personal medicines."
+          }
+        }
+      ]
+    }, 'lachung-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,27 +129,47 @@ export class LachungComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/lachung/"
         }
       ]
-    }
-    );
+    }, 'lachung-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

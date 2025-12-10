@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['batasia-faq', 'batasia-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,56 +57,53 @@ export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/ghum-monastery.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(     {
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
-              "@type": "Question",
-              "name": "What are the visiting hours of Batasia Loop?",
-              "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Batasia Loop is open daily from 5:00 AM to 8:00 PM. Early mornings are especially popular for views of the Himalayan peaks and the Toy Train passing through."
-              }
-          },
-          {
-              "@type": "Question",
-              "name": "Is there an entry fee for Batasia Loop?",
-              "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, there is a small entry fee for visitors to Batasia Loop, which goes towards the maintenance of the garden and war memorial."
-              }
-          },
-          {
-              "@type": "Question",
-              "name": "How long does it take to visit Batasia Loop?",
-              "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "A visit to Batasia Loop usually takes around 30 minutes to 1 hour, depending on whether you explore the gardens, war memorial, and enjoy the Toy Train experience."
-              }
-          },
-          {
-              "@type": "Question",
-              "name": "Can I take photographs inside the Batasia Loop?",
-              "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, photography is allowed inside Batasia Loop. It is one of the most scenic spots in Darjeeling, offering panoramic views of the Kanchenjunga range and the Toy Train."
-              }
-          },
-          {
-              "@type": "Question",
-              "name": "How can I reach Batasia Loop from Darjeeling?",
-              "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Batasia Loop is located about 5 kilometers from Darjeeling town. You can reach it by shared jeep, private taxi, or by riding the Darjeeling Himalayan Railway (Toy Train)."
-              }
+          "@type": "Question",
+          "name": "What are the visiting hours of Batasia Loop?",
+          "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Batasia Loop is open daily from 5:00 AM to 8:00 PM. Early mornings are especially popular for views of the Himalayan peaks and the Toy Train passing through."
           }
-      ]
-  });
+      },
+      {
+          "@type": "Question",
+          "name": "Is there an entry fee for Batasia Loop?",
+          "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, there is a small entry fee for visitors to Batasia Loop, which goes towards the maintenance of the garden and war memorial."
+          }
+      },
+      {
+          "@type": "Question",
+          "name": "How long does it take to visit Batasia Loop?",
+          "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A visit to Batasia Loop usually takes around 30 minutes to 1 hour, depending on whether you explore the gardens, war memorial, and enjoy the Toy Train experience."
+          }
+      },
+      {
+          "@type": "Question",
+          "name": "Can I take photographs inside the Batasia Loop?",
+          "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, photography is allowed inside Batasia Loop. It is one of the most scenic spots in Darjeeling, offering panoramic views of the Kanchenjunga range and the Toy Train."
+          }
+      },
+      {
+          "@type": "Question",
+          "name": "How can I reach Batasia Loop from Darjeeling?",
+          "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Batasia Loop is located about 5 kilometers from Darjeeling town. You can reach it by shared jeep, private taxi, or by riding the Darjeeling Himalayan Railway (Toy Train)."
+          }
+      }]
+    }, 'batasia-faq');
 
- 
-
-    // ✅ TouristDestination JSON-LD (specific to Gangtok)
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -127,27 +127,47 @@ export class BatasialoopComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/batasia-loop/"
         }
       ]
-    });
+    }, 'batasia-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // Updated: Runs on server (good for SEO) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
     if (isPlatformBrowser(this.platformId)) {
       this.commonDestService.initializeDestinationPage();
     }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

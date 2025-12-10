@@ -13,6 +13,8 @@ import { SeoService } from '../../services/seo.service';
 export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
   
   private intersectionObserver: IntersectionObserver | null = null;
+  // Unique IDs to track and clean up injected scripts
+  private readonly schemaIds = ['services-faq', 'services-breadcrumb'];
 
   constructor(
     private seoService: SeoService,
@@ -79,22 +81,31 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       ]
-    });
+    }, 'services-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Removed isPlatformBrowser check to allow SEO on Server (SSR)
+  // UPDATED: Added scriptId to prevent duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
+    // Strictly Browser Only - fixes server crash
     if (isPlatformBrowser(this.platformId)) {
-      // Initialize intersection observer for fade-scroll animations
       this.initIntersectionObserver();
     }
   }
@@ -104,19 +115,30 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
     }
+
+    // Clean up injected Schema scripts
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 
   // Intersection Observer for fade-scroll animations
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    // Safety check: Ensure we are in browser and IntersectionObserver exists
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) {
+      return;
+    }
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
       const fadeElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
+      if (fadeElements.length === 0) return;
 
-      this.intersectionObserver = new IO((entries: IntersectionObserverEntry[], obs) => {
+      this.intersectionObserver = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
@@ -127,7 +149,7 @@ export class ServicesmainComponent implements OnInit, AfterViewInit, OnDestroy {
 
       fadeElements.forEach((el: Element) => this.intersectionObserver?.observe(el));
     } catch (e) {
-      console.warn('Error initializing intersection observer (likely SSR):', e);
+      console.warn('Error initializing intersection observer:', e);
     }
   }
 }

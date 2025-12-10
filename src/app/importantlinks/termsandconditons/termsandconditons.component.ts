@@ -12,8 +12,17 @@ import { SeoService } from '../../services/seo.service';
 })
 export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // Track observers for cleanup
   private intersectionObserver: IntersectionObserver | null = null;
   private tableObserver: IntersectionObserver | null = null;
+  private sectionTitleObserver: IntersectionObserver | null = null;
+
+  // Track listeners for cleanup
+  private clickListeners: (() => void)[] = [];
+  private hoverListeners: (() => void)[] = [];
+
+  // Schema ID
+  private readonly schemaIds = ['terms-breadcrumb'];
 
   constructor(
     private seoService: SeoService,
@@ -89,20 +98,31 @@ export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDest
           }
         }
       ]
-    });
+    }, 'terms-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  // ✅ Utility: inject LD+JSON scripts safely
+  // Updated: Runs on server (good for SEO) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    if (!this.document) return;
+
+    // Remove existing script if it exists
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
+    // 1. CRITICAL: Stop Execution on Server
     if (!isPlatformBrowser(this.platformId)) return;
+
     // Initialize all interactive features
     this.initIntersectionObserver();
     this.initTypingAnimation();
@@ -115,30 +135,37 @@ export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnDestroy(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    // Disconnect intersection observers
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
-    }
-    if (this.tableObserver) {
-      this.tableObserver.disconnect();
+    // 1. Disconnect observers
+    if (this.intersectionObserver) this.intersectionObserver.disconnect();
+    if (this.tableObserver) this.tableObserver.disconnect();
+    if (this.sectionTitleObserver) this.sectionTitleObserver.disconnect();
+
+    // 2. Remove listeners
+    this.clickListeners.forEach(unlisten => unlisten());
+    this.hoverListeners.forEach(unlisten => unlisten());
+
+    // 3. Remove Schema Scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
     }
   }
 
   // Intersection Observer for animations
   private initIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
       const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
       };
 
-      this.intersectionObserver = new IO((entries: IntersectionObserverEntry[]) => {
+      this.intersectionObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate');
@@ -152,12 +179,14 @@ export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDest
         this.intersectionObserver?.observe(el);
       });
     } catch (e) {
-      console.warn('Error initializing intersection observer (likely SSR):', e);
+      console.warn('Error initializing intersection observer:', e);
     }
   }
 
   // Add typing animation effect to page title
   private initTypingAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const pageTitle = this.elementRef.nativeElement.querySelector('.page-title');
     if (pageTitle) {
       const titleText = pageTitle.textContent || '';
@@ -179,57 +208,65 @@ export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDest
 
   // Add hover effects to content cards
   private initContentCardHoverEffects(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const contentCards = this.elementRef.nativeElement.querySelectorAll('.content-card');
     
     contentCards.forEach((card: HTMLElement) => {
-      this.renderer.listen(card, 'mouseenter', () => {
+      const enter = this.renderer.listen(card, 'mouseenter', () => {
         card.style.boxShadow = '0 15px 35px rgba(29, 170, 186, 0.2)';
       });
       
-      this.renderer.listen(card, 'mouseleave', () => {
+      const leave = this.renderer.listen(card, 'mouseleave', () => {
         card.style.boxShadow = 'var(--card-shadow)';
       });
+      
+      this.hoverListeners.push(enter, leave);
     });
   }
 
   // Add hover effects to table rows
   private initTableHoverEffects(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const tableRows = this.elementRef.nativeElement.querySelectorAll('tbody tr');
     
     tableRows.forEach((row: HTMLElement) => {
-      this.renderer.listen(row, 'mouseenter', () => {
+      const enter = this.renderer.listen(row, 'mouseenter', () => {
         row.style.boxShadow = '0 5px 15px rgba(29, 170, 186, 0.2)';
       });
       
-      this.renderer.listen(row, 'mouseleave', () => {
+      const leave = this.renderer.listen(row, 'mouseleave', () => {
         row.style.boxShadow = 'none';
       });
+
+      this.hoverListeners.push(enter, leave);
     });
   }
 
   // Add click animation to list items
   private initTermsListClick(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const termsListItems = this.elementRef.nativeElement.querySelectorAll('.terms-list li');
     
     termsListItems.forEach((li: HTMLElement) => {
-      this.renderer.listen(li, 'click', () => {
+      const click = this.renderer.listen(li, 'click', () => {
         li.style.transform = 'translateX(15px) scale(1.02)';
         setTimeout(() => {
           li.style.transform = 'translateX(10px)';
         }, 150);
       });
+      this.clickListeners.push(click);
     });
   }
 
   // Initialize table animations
   private initTableAnimations(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
-      this.tableObserver = new IO((entries: IntersectionObserverEntry[]) => {
+      this.tableObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             (entry.target as HTMLElement).style.opacity = '1';
@@ -246,40 +283,39 @@ export class TermsandconditonsComponent implements OnInit, AfterViewInit, OnDest
         this.tableObserver?.observe(table);
       });
     } catch (e) {
-      console.warn('Error initializing table animations (likely SSR):', e);
+      console.warn('Error initializing table animations:', e);
     }
   }
 
   // Add bounce effect to section titles
   private initSectionTitleAnimations(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
-      if (!IntersectionObserverClass) return;
+      this.sectionTitleObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Using a generic timeout since we can't reliably pass index here without closure
+            setTimeout(() => {
+              (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out';
+            }, 100);
+          }
+        });
+      }, { threshold: 0.5 });
       
       const sectionTitles = this.elementRef.nativeElement.querySelectorAll('.section-title');
-      
-      sectionTitles.forEach((title: HTMLElement, index: number) => {
-        const titleObserver = new IntersectionObserverClass((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              setTimeout(() => {
-                (entry.target as HTMLElement).style.animation = 'slideInUp 0.8s ease-out';
-              }, index * 100);
-            }
-          });
-        }, { threshold: 0.5 });
-        
-        titleObserver.observe(title);
+      sectionTitles.forEach((title: HTMLElement) => {
+        this.sectionTitleObserver?.observe(title);
       });
     } catch (e) {
-      console.warn('Error initializing section title animations (likely SSR):', e);
+      console.warn('Error initializing section title animations:', e);
     }
   }
 
   // Stagger animation for content cards
   private initStaggerAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const contentCards = this.elementRef.nativeElement.querySelectorAll('.content-card');
     contentCards.forEach((card: HTMLElement, index: number) => {
       card.style.transitionDelay = `${index * 0.1}s`;

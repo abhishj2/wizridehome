@@ -14,6 +14,9 @@ import { IlpAnimations } from '../commonilp';
 export class SikkimpermitComponent implements OnInit, AfterViewInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
   private listeners: (() => void)[] = [];
+  
+  // IDs to track and clean up injected scripts
+  private readonly schemaIds = ['sikkim-permit-faq', 'sikkim-permit-breadcrumb'];
 
   constructor(
     private seoService: SeoService,
@@ -56,7 +59,7 @@ export class SikkimpermitComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
     // ✅ FAQ JSON-LD
-    this.addJsonLd(  {
+    this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
@@ -141,94 +144,121 @@ export class SikkimpermitComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       ]
-    });
+    }, 'sikkim-permit-faq');
 
     // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(        
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": {
-        "@type": "WebPage",
-        "@id": "https://www.wizzride.com/"
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Sikkim Permit Guide",
-      "item": {
-        "@type": "WebPage",
-        "@id": "https://www.wizzride.com/sikkim_permit_guide"
-      }
-    }
-  ]
-});
-
-    
-
-    // Initialize animations when component loads
-    IlpAnimations.initializeAnimations();
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Sikkim Permit Guide",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/sikkim_permit_guide"
+          }
+        }
+      ]
+    }, 'sikkim-permit-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
+    // Create and append new script
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    this.initializeAnimations();
+    // Strictly Browser Only - Fixes "IntersectionObserver is not defined" crash
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeAnimations();
+      
+      // Initialize external animations here instead of ngOnInit
+      // This prevents the server from crashing when trying to access DOM elements
+      if (IlpAnimations && typeof IlpAnimations.initializeAnimations === 'function') {
+        IlpAnimations.initializeAnimations();
+      }
+    }
   }
 
   ngOnDestroy(): void {
-    this.cleanup();
-    // Clean up animations when component is destroyed
-    IlpAnimations.cleanup();
+    if (isPlatformBrowser(this.platformId)) {
+      this.cleanup();
+      // Clean up animations when component is destroyed
+      if (IlpAnimations && typeof IlpAnimations.cleanup === 'function') {
+        IlpAnimations.cleanup();
+      }
+
+      // Clean up injected schemas
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 
   // ================== ANIMATION ON SCROLL ==================
   private initializeAnimations(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const IO = (globalThis as any).IntersectionObserver;
-    if (!IO) return;
+    if (!this.document) return;
     
-    try {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
+    // Safety check for IntersectionObserver (Browser API)
+    if ('IntersectionObserver' in window) {
+      try {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-      this.observer = new IO((entries: IntersectionObserverEntry[]) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
+        this.observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate');
+            }
+          });
+        }, observerOptions);
+
+        this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
+          this.observer?.observe(el);
         });
-      }, observerOptions);
 
-      this.document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        this.observer?.observe(el);
-      });
-    } catch (e) {
-      console.warn('Error initializing animations (likely SSR):', e);
+        // ================== STAGGERED DELAYS ==================
+        this.applyStaggeredDelay('.fourcol');
+        this.applyStaggeredDelay('.howto-step');
+        this.applyStaggeredDelay('.faq-item');
+      } catch (e) {
+        console.warn('Error initializing animations:', e);
+      }
     }
-
-    // ================== STAGGERED DELAYS ==================
-    this.applyStaggeredDelay('.fourcol');
-    this.applyStaggeredDelay('.howto-step');
-    this.applyStaggeredDelay('.faq-item');
   }
 
   private applyStaggeredDelay(selector: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
     if (!this.document) return;
     const cards = this.document.querySelectorAll(selector);
     cards.forEach((card, index) => {

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
@@ -21,7 +21,7 @@ interface CareerFormData {
   templateUrl: './applyforjob.component.html',
   styleUrl: './applyforjob.component.css'
 })
-export class ApplyforjobComponent implements OnInit, AfterViewInit {
+export class ApplyforjobComponent implements OnInit, AfterViewInit, OnDestroy {
 
   formData: CareerFormData = {
     fullName: '',
@@ -41,6 +41,12 @@ export class ApplyforjobComponent implements OnInit, AfterViewInit {
   isSubmitting: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
+
+  // Track Observers for cleanup
+  private observers: IntersectionObserver[] = [];
+  
+  // Schema IDs for cleanup
+  private readonly schemaIds = ['career-breadcrumb', 'career-job', 'career-org'];
 
   constructor(
     private seoService: SeoService,
@@ -87,113 +93,121 @@ export class ApplyforjobComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/careermain.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-   // BreadcrumbList JSON-LD
-this.addJsonLd({
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": {
-        "@type": "WebPage",
-        "@id": "https://www.wizzride.com/"
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Careers",
-      "item": {
-        "@type": "WebPage",
-        "@id": "https://www.wizzride.com/applyforjob"
-      }
-    }
-  ]
-});
+    // BreadcrumbList JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Careers",
+          "item": {
+            "@type": "WebPage",
+            "@id": "https://www.wizzride.com/applyforjob"
+          }
+        }
+      ]
+    }, 'career-breadcrumb');
 
-// JobPosting JSON-LD
-this.addJsonLd({
-  "@context": "https://schema.org",
-  "@type": "JobPosting",
-  "title": "Corporate Team Member",
-  "description": "Join the dynamic realm of Wizzride, where innovation meets passion, and excellence is the standard. Our corporate team is the brain and soul of our operations.",
-  "hiringOrganization": {
-    "@type": "Organization",
-    "name": "Wizzride Technologies Pvt Ltd",
-    "sameAs": "https://www.wizzride.com",
-    "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp"
-  },
-  "datePosted": "2024-01-01",
-  "jobLocationType": "TELECOMMUTE",
-  "applicantLocationRequirements": {
-    "@type": "Country",
-    "name": "India"
-  },
-  "employmentType": "FULL_TIME"
-});
+    // JobPosting JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      "title": "Corporate Team Member",
+      "description": "Join the dynamic realm of Wizzride, where innovation meets passion, and excellence is the standard. Our corporate team is the brain and soul of our operations.",
+      "hiringOrganization": {
+        "@type": "Organization",
+        "name": "Wizzride Technologies Pvt Ltd",
+        "sameAs": "https://www.wizzride.com",
+        "logo": "https://www.wizzride.com/assets/images/icons/logo2.webp"
+      },
+      "datePosted": "2024-01-01",
+      "jobLocationType": "TELECOMMUTE",
+      "applicantLocationRequirements": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "employmentType": "FULL_TIME"
+    }, 'career-job');
 
-// Organization JSON-LD
-this.addJsonLd({
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Wizzride",
-  "url": "https://wizzride.com",
-  "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png",
-  "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.",
-  "foundingDate": "2015",
-  "founders": [
-    {
-      "@type": "Person",
-      "name": "Wizzride Founders"
-    }
-  ],
-  "contactPoint": [
-    {
-      "@type": "ContactPoint",
-      "telephone": "+91-9775999444",
-      "contactType": "customer service",
-      "areaServed": "IN",
-      "availableLanguage": ["English", "Hindi"]
-    }
-  ],
-  "sameAs": [
-    "https://www.facebook.com/wizzride",
-    "https://twitter.com/wizzride",
-    "https://www.instagram.com/wizzride",
-    "https://www.linkedin.com/company/wizzride"
-  ],
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Gangtok, Sikkim",
-    "addressLocality": "Gangtok",
-    "addressRegion": "Sikkim",
-    "postalCode": "737101",
-    "addressCountry": "IN"
-  },
-  "department": [
-    {
+    // Organization JSON-LD
+    this.addJsonLd({
+      "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Wizzride Cab Booking",
-      "url": "https://wizzride.com/cab-booking/",
-      "description": "Book intercity and local cabs with flexible shared or reserved options."
-    },
-    {
-      "@type": "Organization",
-      "name": "Wizzride Flight Booking",
-      "url": "https://wizzride.com/flights/",
-      "description": "Compare and book domestic and international flights easily."
-    }
-  ]
-});
+      "name": "Wizzride",
+      "url": "https://wizzride.com",
+      "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png",
+      "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.",
+      "foundingDate": "2015",
+      "founders": [
+        {
+          "@type": "Person",
+          "name": "Wizzride Founders"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-9775999444",
+          "contactType": "customer service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/wizzride",
+        "https://twitter.com/wizzride",
+        "https://www.instagram.com/wizzride",
+        "https://www.linkedin.com/company/wizzride"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Gangtok, Sikkim",
+        "addressLocality": "Gangtok",
+        "addressRegion": "Sikkim",
+        "postalCode": "737101",
+        "addressCountry": "IN"
+      },
+      "department": [
+        {
+          "@type": "Organization",
+          "name": "Wizzride Cab Booking",
+          "url": "https://wizzride.com/cab-booking/",
+          "description": "Book intercity and local cabs with flexible shared or reserved options."
+        },
+        {
+          "@type": "Organization",
+          "name": "Wizzride Flight Booking",
+          "url": "https://wizzride.com/flights/",
+          "description": "Compare and book domestic and international flights easily."
+        }
+      ]
+    }, 'career-org');
   }
   
+  // Utility: inject LD+JSON scripts safely
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
 
-  // Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
@@ -201,6 +215,7 @@ this.addJsonLd({
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+    
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
@@ -211,32 +226,47 @@ this.addJsonLd({
     this.initializeParallaxEffect();
   }
 
+  ngOnDestroy(): void {
+    // 1. Disconnect all observers
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+
+    // 2. Remove Schema Scripts
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
+  }
+
   /**
    * Initialize Intersection Observer for scroll animations
    */
   private initializeIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    // CRITICAL FIX: Ensure browser environment and API existence
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
       const doc = this.document;
-      
-      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
-        return;
-      }
       
       const observerOptions: IntersectionObserverInit = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
       };
 
-      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+      const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate');
           }
         });
       }, observerOptions);
+
+      // Add to tracking array
+      this.observers.push(observer);
 
       // Observe all elements with data-animate attribute
       doc.querySelectorAll('[data-animate]').forEach(el => {
@@ -517,7 +547,9 @@ this.addJsonLd({
    * Stagger animation for feature cards
    */
   private initializeStaggeredFeatureCards(): void {
-    if (!isPlatformBrowser(this.platformId) || typeof IntersectionObserver === 'undefined') return;
+    // CRITICAL FIX: Ensure browser environment and API existence
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
+    
     this.document.querySelectorAll('.feature-card').forEach((card, index) => {
       const cardElement = card as HTMLElement;
       cardElement.style.opacity = '0';
@@ -535,6 +567,9 @@ this.addJsonLd({
           }
         });
       }, { threshold: 0.2 });
+      
+      // Track observer for cleanup
+      this.observers.push(cardObserver);
       
       cardObserver.observe(cardElement);
     });

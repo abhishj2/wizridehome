@@ -11,7 +11,10 @@ import { SeoService } from '../../services/seo.service';
   templateUrl: './pakyongairport.component.html',
   styleUrl: './pakyongairport.component.css'
 })
-export class PakyongairportComponent  implements OnInit, AfterViewInit, OnDestroy {
+export class PakyongairportComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['pakyong-faq', 'pakyong-breadcrumb'];
 
   constructor(
     private commonAirportService: CommonAirportService,
@@ -54,8 +57,8 @@ export class PakyongairportComponent  implements OnInit, AfterViewInit, OnDestro
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/airports/pakyonairport.png' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ FAQ JSON-LD
-    this.addJsonLd(   {
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
@@ -132,10 +135,9 @@ export class PakyongairportComponent  implements OnInit, AfterViewInit, OnDestro
           }
         }
       ]
-    }
-    );
+    }, 'pakyong-faq');
 
-    // ✅ BreadcrumbList JSON-LD
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -159,19 +161,31 @@ export class PakyongairportComponent  implements OnInit, AfterViewInit, OnDestro
           "item": "https://wizzride.com/airports/pakyongairport"
         }
       ]
-    });
+    }, 'pakyong-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
+    // Create and append new script
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
+    // Strictly Browser Only - prevents server crash in CommonAirportService
     if (isPlatformBrowser(this.platformId)) {
       this.commonAirportService.initializeAirportPage();
     }
@@ -179,5 +193,15 @@ export class PakyongairportComponent  implements OnInit, AfterViewInit, OnDestro
 
   ngOnDestroy(): void {
     this.commonAirportService.cleanup();
+
+    // Clean up injected Schema scripts
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

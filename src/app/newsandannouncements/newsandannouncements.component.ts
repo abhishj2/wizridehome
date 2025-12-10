@@ -225,10 +225,13 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    // Only inject if document is available
+    if(this.document && this.document.head) {
+      const script = this.renderer.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schemaObject);
+      this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   fetchBlogPosts(): void {
@@ -325,9 +328,12 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
             if (this.modernSliderInstance) {
               this.modernSliderInstance.destroy();
             }
-            this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
-            this.attachToggleDetailListeners();
-            this.attachShareButtonListeners();
+            // Check platform before accessing DOM
+            if (isPlatformBrowser(this.platformId)) {
+                this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
+                this.attachToggleDetailListeners();
+                this.attachShareButtonListeners();
+            }
           }, 100);
         },
         error: (error) => {
@@ -357,9 +363,12 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
       if (this.modernSliderInstance) {
         this.modernSliderInstance.destroy();
       }
-      this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
-      this.attachToggleDetailListeners();
-      this.attachShareButtonListeners();
+      
+      if (isPlatformBrowser(this.platformId)) {
+          this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
+          this.attachToggleDetailListeners();
+          this.attachShareButtonListeners();
+      }
     }, 100);
   }
 
@@ -533,7 +542,9 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Initialize Slider
   initializeSlider(): void {
-    this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
+    if (isPlatformBrowser(this.platformId)) {
+        this.modernSliderInstance = new ModernSlider(this.document, this.platformId);
+    }
   }
 
   // Setup Event Listeners
@@ -607,6 +618,8 @@ export class NewsandannouncementsComponent implements OnInit, AfterViewInit, OnD
 
   // Share Content
   shareContent(platform: string, title: string, link: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     const text = `${title} - Check out this amazing offer!`;
     const encodedText = encodeURIComponent(text);
     const encodedLink = encodeURIComponent(link);
@@ -693,6 +706,7 @@ class ModernSlider {
   }
 
   init(): void {
+    if (!this.sliderContainer) return;
     this.setupEventListeners();
     this.updateSlides();
     this.startAutoplay();

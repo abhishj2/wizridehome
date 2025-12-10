@@ -11,8 +11,11 @@ import { SeoService } from '../../../services/seo.service';
   templateUrl: './rumtekmonastery.component.html',
   styleUrl: './rumtekmonastery.component.css'
 })
-export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestroy {
+export class RumtekmonasteryComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['rumtek-faq', 'rumtek-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,57 +57,55 @@ export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestr
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/rumtek-view.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How far is Rumtek Monastery from Gangtok?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Rumtek Monastery is about 23 km from Gangtok and takes approximately 45 minutes to 1 hour by car."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are Wizzride cabs available to Rumtek Monastery?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride offers reserved cab services from Gangtok, Bagdogra, and Siliguri to Rumtek Monastery. Pre-booking is recommended."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is Rumtek Monastery famous for?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Rumtek Monastery is the largest monastery in Sikkim and the seat of the Karmapa of the Kagyu sect. It's known for its Tibetan Buddhist architecture, spiritual importance, and scenic surroundings."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Best time to visit Rumtek Monastery?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The best time to visit Rumtek is from March to June and October to December when the weather is pleasant and skies are clear."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there entry fees or permits for Rumtek Monastery?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "There is a small entry fee to enter Rumtek Monastery. No special permits are required for Indian or foreign tourists."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How far is Rumtek Monastery from Gangtok?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rumtek Monastery is about 23 km from Gangtok and takes approximately 45 minutes to 1 hour by car."
           }
-        ]
-      });
+        },
+        {
+          "@type": "Question",
+          "name": "Are Wizzride cabs available to Rumtek Monastery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride offers reserved cab services from Gangtok, Bagdogra, and Siliguri to Rumtek Monastery. Pre-booking is recommended."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Rumtek Monastery famous for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rumtek Monastery is the largest monastery in Sikkim and the seat of the Karmapa of the Kagyu sect. It's known for its Tibetan Buddhist architecture, spiritual importance, and scenic surroundings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Best time to visit Rumtek Monastery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best time to visit Rumtek is from March to June and October to December when the weather is pleasant and skies are clear."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there entry fees or permits for Rumtek Monastery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is a small entry fee to enter Rumtek Monastery. No special permits are required for Indian or foreign tourists."
+          }
+        }
+      ]
+    }, 'rumtek-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,27 +129,47 @@ export class RumtekmonasteryComponent  implements OnInit, AfterViewInit, OnDestr
           "item": "https://wizzride.com/destinations/rumtek_monastery/"
         }
       ]
-    }
-    );
+    }, 'rumtek-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

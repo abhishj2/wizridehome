@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, ViewChild, ElementRef, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../services/seo.service';
@@ -21,7 +21,7 @@ interface ContactFormData {
   templateUrl: './contactus.component.html',
   styleUrl: './contactus.component.css'
 })
-export class ContactusComponent implements OnInit, AfterViewInit {
+export class ContactusComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactForm') contactFormElement?: ElementRef<HTMLFormElement>;
   
   formData: ContactFormData = {
@@ -40,6 +40,13 @@ export class ContactusComponent implements OnInit, AfterViewInit {
   successMessage: string = '';
   errorMessage: string = '';
   
+  // Track observers and listeners for cleanup
+  private observers: IntersectionObserver[] = [];
+  private eventCleanups: (() => void)[] = [];
+
+  // Schema ID
+  private readonly schemaIds = ['contact-breadcrumb', 'contact-org'];
+
   constructor(
     private seoService: SeoService,
     private renderer: Renderer2,
@@ -50,6 +57,7 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     private captchaService: CaptchaService
   ) {}
+
   ngOnInit(): void {
     // Generate captcha
     this.captchaData = this.captchaService.generateCaptcha();
@@ -84,8 +92,6 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/contactmain.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
- 
-
     // ✅ BreadcrumbList JSON-LD
     this.addJsonLd({
       "@context": "https://schema.org",
@@ -110,24 +116,85 @@ export class ContactusComponent implements OnInit, AfterViewInit {
           }
         }
       ]
-    });
+    }, 'contact-breadcrumb');
 
     // ✅ Organization JSON-LD (for branding)
-        this.addJsonLd( { "@context": "https://schema.org", "@type": "Organization", "name": "Wizzride", "url": "https://wizzride.com", "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png", "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.", "foundingDate": "2015", "founders": [ { "@type": "Person", "name": "Wizzride Founders" } ], "contactPoint": [ { "@type": "ContactPoint", "telephone": "+91-9775999444", "contactType": "customer service", "areaServed": "IN", "availableLanguage": ["English", "Hindi"] } ], "sameAs": [ "https://www.facebook.com/wizzride", "https://twitter.com/wizzride", "https://www.instagram.com/wizzride", "https://www.linkedin.com/company/wizzride" ], "address": { "@type": "PostalAddress", "streetAddress": "Gangtok, Sikkim", "addressLocality": "Gangtok", "addressRegion": "Sikkim", "postalCode": "737101", "addressCountry": "IN" }, "department": [ { "@type": "Organization", "name": "Wizzride Cab Booking", "url": "https://wizzride.com/cab-booking/", "description": "Book intercity and local cabs with flexible shared or reserved options." }, { "@type": "Organization", "name": "Wizzride Flight Booking", "url": "https://wizzride.com/flights/", "description": "Compare and book domestic and international flights easily." } ] });
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Wizzride",
+      "url": "https://wizzride.com",
+      "logo": "https://wizzride.com/wp-content/uploads/2023/06/wizzride-logo.png",
+      "description": "Wizzride offers comfortable and reliable cab and flight booking services across India. Book shared or reserved cabs, flights, and more with ease through our platform.",
+      "foundingDate": "2015",
+      "founders": [
+        {
+          "@type": "Person",
+          "name": "Wizzride Founders"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-9775999444",
+          "contactType": "customer service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/wizzride",
+        "https://twitter.com/wizzride",
+        "https://www.instagram.com/wizzride",
+        "https://www.linkedin.com/company/wizzride"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Gangtok, Sikkim",
+        "addressLocality": "Gangtok",
+        "addressRegion": "Sikkim",
+        "postalCode": "737101",
+        "addressCountry": "IN"
+      },
+      "department": [
+        {
+          "@type": "Organization",
+          "name": "Wizzride Cab Booking",
+          "url": "https://wizzride.com/cab-booking/",
+          "description": "Book intercity and local cabs with flexible shared or reserved options."
+        },
+        {
+          "@type": "Organization",
+          "name": "Wizzride Flight Booking",
+          "url": "https://wizzride.com/flights/",
+          "description": "Compare and book domestic and international flights easily."
+        }
+      ]
+    }, 'contact-org');
   }    
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  // ✅ Utility: inject LD+JSON scripts safely
+  // Updated: Runs on server (good for SEO) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    if (!this.document) return;
+
+    // Remove existing script if it exists
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
-
   ngAfterViewInit(): void {
+    // 1. CRITICAL: Stop Execution on Server
     if (!isPlatformBrowser(this.platformId)) return;
+
     // Initialize all animations and interactions
     this.initializeIntersectionObserver();
     this.initializePageTitleAnimation();
@@ -135,6 +202,26 @@ export class ContactusComponent implements OnInit, AfterViewInit {
     this.initializeFormInputAnimations();
     this.initializeContactCardClickAnimations();
     this.initializeStaggeredContactCards();
+  }
+
+  ngOnDestroy(): void {
+    // 1. Disconnect observers
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+
+    // 2. Remove listeners
+    this.eventCleanups.forEach(cleanup => cleanup());
+    this.eventCleanups = [];
+
+    // 3. Remove Schema Scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 
   /**
@@ -217,22 +304,15 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Initialize Intersection Observer for scroll animations
    */
   private initializeIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
-      const doc = this.document;
-      
-      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
-        return;
-      }
-      
-      const observerOptions: IntersectionObserverInit = {
+      const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
       };
 
-      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+      const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate');
@@ -240,12 +320,14 @@ export class ContactusComponent implements OnInit, AfterViewInit {
         });
       }, observerOptions);
 
+      // Track observer
+      this.observers.push(observer);
+
       // Observe all elements with data-animate attribute
-      doc.querySelectorAll('[data-animate]').forEach(el => {
-        observer.observe(el);
-      });
+      const elements = this.document.querySelectorAll('[data-animate]');
+      elements.forEach(el => observer.observe(el));
     } catch (e) {
-      // Ignore on SSR
+      console.warn('Error initializing intersection observer:', e);
     }
   }
 
@@ -253,6 +335,8 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Add typing animation effect to page title
    */
   private initializePageTitleAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const pageTitle = this.document.querySelector('.page-title') as HTMLElement;
     if (!pageTitle) return;
 
@@ -276,16 +360,20 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Add hover effects to contact cards
    */
   private initializeContactCardAnimations(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.document.querySelectorAll('.contact-card').forEach(card => {
       const cardElement = card as HTMLElement;
       
-      cardElement.addEventListener('mouseenter', () => {
+      const enter = this.renderer.listen(cardElement, 'mouseenter', () => {
         cardElement.style.transform = 'translateX(15px) scale(1.02)';
       });
       
-      cardElement.addEventListener('mouseleave', () => {
+      const leave = this.renderer.listen(cardElement, 'mouseleave', () => {
         cardElement.style.transform = 'translateX(10px) scale(1)';
       });
+
+      this.eventCleanups.push(enter, leave);
     });
   }
 
@@ -293,20 +381,24 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Add focus animations to form inputs
    */
   private initializeFormInputAnimations(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.document.querySelectorAll('input, textarea').forEach(input => {
       const inputElement = input as HTMLElement;
       
-      inputElement.addEventListener('focus', () => {
+      const focus = this.renderer.listen(inputElement, 'focus', () => {
         if (inputElement.parentElement) {
           inputElement.parentElement.style.transform = 'translateY(-2px)';
         }
       });
       
-      inputElement.addEventListener('blur', () => {
+      const blur = this.renderer.listen(inputElement, 'blur', () => {
         if (inputElement.parentElement) {
           inputElement.parentElement.style.transform = 'translateY(0)';
         }
       });
+
+      this.eventCleanups.push(focus, blur);
     });
   }
 
@@ -314,19 +406,22 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Add click animation to contact cards
    */
   private initializeContactCardClickAnimations(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.document.querySelectorAll('.contact-card').forEach(card => {
       const cardElement = card as HTMLElement;
       
-      cardElement.addEventListener('click', () => {
+      const click = this.renderer.listen(cardElement, 'click', () => {
         const link = cardElement.querySelector('a') as HTMLAnchorElement;
         if (link && link.href.startsWith('mailto:')) {
-          // Visual feedback for email clicks
           cardElement.style.background = 'rgba(29, 170, 186, 0.1)';
           setTimeout(() => {
             cardElement.style.background = '';
           }, 300);
         }
       });
+
+      this.eventCleanups.push(click);
     });
   }
 
@@ -334,42 +429,39 @@ export class ContactusComponent implements OnInit, AfterViewInit {
    * Stagger animation for contact cards
    */
   private initializeStaggeredContactCards(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IntersectionObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : null;
-      const doc = typeof document !== 'undefined' ? document : null;
+      const cards = this.document.querySelectorAll('.contact-card');
+      if (cards.length === 0) return;
+
+      const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Using a captured index approach isn't straightforward with observer pattern inside loop.
+            // Better to rely on CSS classes or set timeout inside observer if absolutely needed.
+            // Here we just trigger animation.
+            (entry.target as HTMLElement).style.opacity = '1';
+            (entry.target as HTMLElement).style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.2 });
+
+      this.observers.push(cardObserver);
       
-      if (!IntersectionObserverClass || !doc || typeof doc.querySelectorAll !== 'function') {
-        return;
-      }
-      
-      doc.querySelectorAll('.contact-card').forEach((card, index) => {
+      cards.forEach((card, index) => {
         const cardElement = card as HTMLElement;
-        cardElement.style.animationDelay = `${index * 0.1}s`;
+        cardElement.style.transitionDelay = `${index * 0.1}s`; // Use CSS transition-delay instead
         cardElement.style.opacity = '0';
         cardElement.style.transform = 'translateY(30px)';
         cardElement.style.transition = 'all 0.8s ease';
-        
-        // Animate when in view
-        const cardObserver = new IntersectionObserverClass((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              setTimeout(() => {
-                if (isPlatformBrowser(this.platformId)) {
-                  (entry.target as HTMLElement).style.opacity = '1';
-                  (entry.target as HTMLElement).style.transform = 'translateY(0)';
-                }
-              }, index * 100);
-            }
-          });
-        }, { threshold: 0.2 });
+        // Re-apply delay property since we overwrote style above
+        cardElement.style.transitionDelay = `${index * 0.1}s`;
         
         cardObserver.observe(cardElement);
       });
     } catch (e) {
-      console.warn('Error initializing staggered contact cards (likely SSR):', e);
+      console.warn('Error initializing staggered contact cards:', e);
     }
   }
-
 }

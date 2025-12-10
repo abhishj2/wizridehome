@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class PellingComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['pelling-faq', 'pelling-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,57 +57,55 @@ export class PellingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/pelling-cover.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is the altitude of Pelling?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Pelling is located at an altitude of around 2,150 meters (7,200 feet) above sea level, offering panoramic views of the Himalayas including Mount Kanchenjunga."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Do I need a permit to visit Pelling?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No special permit is required for Indian tourists to visit Pelling. However, foreign nationals need a Restricted Area Permit (RAP) to enter Sikkim, which can be obtained online or at designated checkpoints."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there ATMs in Pelling?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Pelling has a few ATMs, but availability can be limited and cash shortages may occur. It is recommended to carry sufficient cash before traveling."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What souvenirs can I buy in Pelling?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "In Pelling, you can buy traditional handicrafts, woolen items, Tibetan carpets, Thangka paintings, prayer flags, and locally made organic products like tea and spices as souvenirs."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Pelling good for family vacations?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Pelling is a family-friendly destination with monasteries, waterfalls, scenic viewpoints, and safe accommodations. It is suitable for travelers of all age groups."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the altitude of Pelling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pelling is located at an altitude of around 2,150 meters (7,200 feet) above sea level, offering panoramic views of the Himalayas including Mount Kanchenjunga."
           }
-        ]
-      });
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a permit to visit Pelling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No special permit is required for Indian tourists to visit Pelling. However, foreign nationals need a Restricted Area Permit (RAP) to enter Sikkim, which can be obtained online or at designated checkpoints."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there ATMs in Pelling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Pelling has a few ATMs, but availability can be limited and cash shortages may occur. It is recommended to carry sufficient cash before traveling."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What souvenirs can I buy in Pelling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In Pelling, you can buy traditional handicrafts, woolen items, Tibetan carpets, Thangka paintings, prayer flags, and locally made organic products like tea and spices as souvenirs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Pelling good for family vacations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Pelling is a family-friendly destination with monasteries, waterfalls, scenic viewpoints, and safe accommodations. It is suitable for travelers of all age groups."
+          }
+        }
+      ]
+    }, 'pelling-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,27 +129,47 @@ export class PellingComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/pelling/"
         }
       ]
-    }
-    );
+    }, 'pelling-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

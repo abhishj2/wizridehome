@@ -205,7 +205,7 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   returnToHome(){
-    this.router.navigate(['/home']); 
+    this.router.navigate(['/']); 
   }
 
   ngAfterViewInit(): void {

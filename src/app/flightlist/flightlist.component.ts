@@ -219,7 +219,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this._Activateroute.paramMap.subscribe(params => {
         this.type = params.get('type');
         if (!this.type) {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }
       })
     );
@@ -332,7 +332,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         confirmButtonText: 'Go to Home',
         allowOutsideClick: false
       }).then((result) => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       });
       return;
     }
@@ -390,11 +390,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           }
         } catch (error) {
           console.error('Error parsing flight data from localStorage:', error);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }
       } else {
         console.warn('No flight data found, redirecting to home');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
     }
   }
@@ -510,7 +510,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.loader = false;
       // Multi-city handling will be implemented later
     } else {
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/');
     }
   }
 
@@ -541,7 +541,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         confirmButtonText: 'Go to Home',
         allowOutsideClick: false
       }).then(() => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       });
       this.loader = false;
       return;
@@ -708,7 +708,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         confirmButtonText: 'Go to Home',
         allowOutsideClick: false
       }).then(() => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       });
       this.loader = false;
       return;
@@ -831,7 +831,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   returnToHome(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 
   // Date slider methods

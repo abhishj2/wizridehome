@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class RavanglaComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['ravangla-faq', 'ravangla-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,58 +57,55 @@ export class RavanglaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/borong.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How far is Ravangla from Siliguri?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Ravangla is about 120 km from Siliguri and takes around 4.5 hours by Reserved Cab."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I book a Reserved Cab to Ravangla with Wizzride?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride offers exclusive Reserved Cab services from Siliguri, Bagdogra, and NJP to Ravangla."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is Ravangla famous for?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Ravangla is famous for Buddha Park, monasteries, scenic treks, and as the site of NIT Ravangla."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Ravangla good for family trips?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Ravangla is peaceful, family-friendly, and filled with natural and cultural attractions."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Why is NIT Ravangla important?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "NIT Ravangla is a national-level engineering institute that adds academic significance to this Himalayan town."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How far is Ravangla from Siliguri?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ravangla is about 120 km from Siliguri and takes around 4.5 hours by Reserved Cab."
           }
-        ]
-      }
-      );
+        },
+        {
+          "@type": "Question",
+          "name": "Can I book a Reserved Cab to Ravangla with Wizzride?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride offers exclusive Reserved Cab services from Siliguri, Bagdogra, and NJP to Ravangla."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Ravangla famous for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ravangla is famous for Buddha Park, monasteries, scenic treks, and as the site of NIT Ravangla."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ravangla good for family trips?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Ravangla is peaceful, family-friendly, and filled with natural and cultural attractions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is NIT Ravangla important?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "NIT Ravangla is a national-level engineering institute that adds academic significance to this Himalayan town."
+          }
+        }
+      ]
+    }, 'ravangla-faq');
 
- 
-
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -129,27 +129,47 @@ export class RavanglaComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/ravangla/"
         }
       ]
-    }
-    );
+    }, 'ravangla-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

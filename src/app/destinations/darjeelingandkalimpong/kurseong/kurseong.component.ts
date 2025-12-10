@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class KurseongComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['kurseong-faq', 'kurseong-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,59 +57,55 @@ export class KurseongComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/kurseong.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Do I need a permit to visit Kurseong?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No, permits are not required for Indian or foreign tourists to visit Kurseong."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How far is Kurseong from Siliguri?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Kurseong is about 32 km (1.5 hours) from Siliguri."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Kurseong good for family trips?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Kurseong is a safe and peaceful destination suitable for family vacations."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is Kurseong famous for?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Kurseong is famous for its tea estates, orchids, colonial schools, and heritage charm."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I book a Shared Cab to Kurseong?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride offers both Shared and Reserved Cabs from Siliguri, NJP, and Bagdogra to Kurseong."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I need a permit to visit Kurseong?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, permits are not required for Indian or foreign tourists to visit Kurseong."
           }
-        ]
-      }
-);
+        },
+        {
+          "@type": "Question",
+          "name": "How far is Kurseong from Siliguri?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kurseong is about 32 km (1.5 hours) from Siliguri."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Kurseong good for family trips?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Kurseong is a safe and peaceful destination suitable for family vacations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Kurseong famous for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kurseong is famous for its tea estates, orchids, colonial schools, and heritage charm."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I book a Shared Cab to Kurseong?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride offers both Shared and Reserved Cabs from Siliguri, NJP, and Bagdogra to Kurseong."
+          }
+        }
+      ]
+    }, 'kurseong-faq');
 
- 
-
-    // ✅ TouristDestination JSON-LD (specific to Gangtok)
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -130,26 +129,47 @@ export class KurseongComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/kurseong/"
         }
       ]
-    });
+    }, 'kurseong-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

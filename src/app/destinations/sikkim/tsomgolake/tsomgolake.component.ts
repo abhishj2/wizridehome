@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Renderer2, Inject } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { CommonDestinationService } from '../../commondest';
 import { SeoService } from '../../../services/seo.service';
 
@@ -19,15 +19,14 @@ export class TsomgolakeComponent implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private titleService: Title,
     private metaService: Meta,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
     // Set canonical URL
     this.seoService.setCanonicalURL('https://wizzride.com/destinations/tsomgo_lake/');
     
-    // ✅ SEO Metadata
+    // âœ… SEO Metadata
     this.titleService.setTitle("Tsomgo Lake Cab Booking | Wizzride Private Rides");
     this.metaService.updateTag({
       name: 'description',
@@ -54,7 +53,7 @@ export class TsomgolakeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/nathula-lake.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
+    // âœ… BreadcrumbList JSON-LD
     this.addJsonLd(  
       {
         "@context": "https://schema.org",
@@ -132,14 +131,12 @@ export class TsomgolakeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  // ✅ Utility: inject LD+JSON scripts
+  // âœ… Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
-    }
+    const script = this.renderer.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {

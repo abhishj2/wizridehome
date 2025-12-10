@@ -54,7 +54,7 @@ export class ZulukComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/zulukloops.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
+    // ✅ FAQ JSON-LD
     this.addJsonLd(  
       {
         "@context": "https://schema.org",
@@ -103,8 +103,7 @@ export class ZulukComponent implements OnInit, AfterViewInit, OnDestroy {
         ]
       });
 
- 
-
+    // ✅ Breadcrumb JSON-LD
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -128,23 +127,27 @@ export class ZulukComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/zuluk/"
         }
       ]
-    }
-    );
+    });
   }
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+    // We removed the isPlatformBrowser check here because
+    // JSON-LD is safe for Server Side Rendering (since we use injected document)
+    // and is required for SEO bots that don't run JS.
+    if(this.document) {
+        const script = this.renderer.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(schemaObject);
+        this.renderer.appendChild(this.document.head, script);
     }
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // ✅ CRITICAL FIX: Only run DOM animations in the browser
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {

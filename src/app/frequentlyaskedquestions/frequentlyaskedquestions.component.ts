@@ -380,21 +380,22 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
   // ✅ Utility: inject LD+JSON scripts
   private addJsonLd(schemaObject: any): void {
-    const script = this.renderer.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaObject);
-    this.renderer.appendChild(this.document.head, script);
+    if (isPlatformBrowser(this.platformId)) {
+        const script = this.renderer.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(schemaObject);
+        this.renderer.appendChild(this.document.head, script);
+    }
   }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+    
     // Initialize only search and scroll features (FAQ accordion is handled globally)
     setTimeout(() => {
-      if (isPlatformBrowser(this.platformId)) {
         this.initFaqSearch();
         this.initFadeScrollObserver();
         this.initFormSubmissions();
-      }
     }, 100);
   }
 
@@ -576,31 +577,32 @@ export class FrequentlyaskedquestionsComponent implements OnInit, AfterViewInit,
 
   // Fade scroll animation with IntersectionObserver
   private initFadeScrollObserver(): void {
+    // Only run on browser
     if (!isPlatformBrowser(this.platformId)) return;
     
-    try {
-      const IO = (globalThis as any).IntersectionObserver;
-      if (!IO) return;
-      
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
+    // Safety check for IntersectionObserver existence
+    if ('IntersectionObserver' in window) {
+      try {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-      this.fadeScrollObserver = new IO((entries: IntersectionObserverEntry[]) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
+        this.fadeScrollObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, observerOptions);
+
+        const fadeScrollElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
+        fadeScrollElements.forEach((el: Element) => {
+          this.fadeScrollObserver?.observe(el);
         });
-      }, observerOptions);
-
-      const fadeScrollElements = this.elementRef.nativeElement.querySelectorAll('.fade-scroll');
-      fadeScrollElements.forEach((el: Element) => {
-        this.fadeScrollObserver?.observe(el);
-      });
-    } catch (e) {
-      console.warn('Error initializing fade scroll observer (likely SSR):', e);
+      } catch (e) {
+        console.warn('Error utilizing IntersectionObserver:', e);
+      }
     }
   }
 }

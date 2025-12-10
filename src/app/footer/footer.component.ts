@@ -26,7 +26,7 @@ export class FooterComponent {
     { name: 'Facebook', url: 'https://www.facebook.com/wizzride', icon: 'fab fa-facebook-f' },
     { name: 'Instagram', url: 'https://www.instagram.com/wizzride', icon: 'fab fa-instagram' },
     { name: 'Twitter', url: 'https://x.com/wizzride', icon: 'fab fa-twitter' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/wizzride', icon: 'fab fa-linkedin-in' }
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/wizzridetechnologiesprivatelimited', icon: 'fab fa-linkedin-in' }
   ];
 
   // Navigation Sections
@@ -56,7 +56,7 @@ export class FooterComponent {
 
   quickLinks = [
     { name: 'FAQs', link: '/frequentlyaskedquestions' },
-    { name: 'Collaborate', link: '/influencerapply/' },
+    { name: 'Collaborate', link: '/https://wizztest.com/applyforjob/partnerwithus?id=4' },
     { name: 'Cancel Ticket', link: '/cancelticket' },
     { name: 'Apply for a Job', link: '/applyforjob' },
     { name: 'Enroll Your Car', link: '/applyforjob/partnerwithus/' }

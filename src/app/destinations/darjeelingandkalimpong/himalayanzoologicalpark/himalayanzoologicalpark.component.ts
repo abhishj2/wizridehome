@@ -11,8 +11,11 @@ import { SeoService } from '../../../services/seo.service';
   templateUrl: './himalayanzoologicalpark.component.html',
   styleUrl: './himalayanzoologicalpark.component.css'
 })
-export class HimalayanzoologicalparkComponent  implements OnInit, AfterViewInit, OnDestroy {
+export class HimalayanzoologicalparkComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['himalayan-zoo-faq', 'himalayan-zoo-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,59 +57,55 @@ export class HimalayanzoologicalparkComponent  implements OnInit, AfterViewInit,
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/Himalayan_Zoological_Park.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What are the visiting hours of Himalayan Zoological Park?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The Himalayan Zoological Park in Darjeeling is generally open from 8:30 AM to 4:00 PM in winter and until 5:00 PM in summer. It remains closed on Thursdays."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there an entry fee for the zoo?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, there is a nominal entry fee for the Himalayan Zoological Park. The fee helps maintain the zoo and its conservation programs."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I spot rare animals in the zoo?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, the zoo is home to several rare and endangered Himalayan species such as the Red Panda, Snow Leopard, Tibetan Wolf, and Himalayan Black Bear."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How long should I spend at the zoo?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Visitors usually spend around 1.5 to 2 hours exploring the Himalayan Zoological Park, depending on interest in wildlife and photography."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How can I reach the zoo from Darjeeling town?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The Himalayan Zoological Park is located about 3 kilometers from Darjeeling town. You can reach it by taxi, shared cab, or even by walking if you prefer a short uphill hike."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What are the visiting hours of Himalayan Zoological Park?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Himalayan Zoological Park in Darjeeling is generally open from 8:30 AM to 4:00 PM in winter and until 5:00 PM in summer. It remains closed on Thursdays."
           }
-        ]
-      }
-);
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an entry fee for the zoo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, there is a nominal entry fee for the Himalayan Zoological Park. The fee helps maintain the zoo and its conservation programs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I spot rare animals in the zoo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the zoo is home to several rare and endangered Himalayan species such as the Red Panda, Snow Leopard, Tibetan Wolf, and Himalayan Black Bear."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long should I spend at the zoo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Visitors usually spend around 1.5 to 2 hours exploring the Himalayan Zoological Park, depending on interest in wildlife and photography."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I reach the zoo from Darjeeling town?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Himalayan Zoological Park is located about 3 kilometers from Darjeeling town. You can reach it by taxi, shared cab, or even by walking if you prefer a short uphill hike."
+          }
+        }
+      ]
+    }, 'himalayan-zoo-faq');
 
- 
-
-    // ✅ TouristDestination JSON-LD (specific to Gangtok)
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -130,26 +129,47 @@ export class HimalayanzoologicalparkComponent  implements OnInit, AfterViewInit,
           "item": "https://wizzride.com/destinations/himalayan-zoological-park/"
         }
       ]
-    });
+    }, 'himalayan-zoo-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
@@ -22,7 +22,7 @@ interface DriverEnquiryFormData {
   templateUrl: './driverjob.component.html',
   styleUrl: './driverjob.component.css'
 })
-export class DriverjobComponent implements OnInit, AfterViewInit {
+export class DriverjobComponent implements OnInit, AfterViewInit, OnDestroy {
 
   formData: DriverEnquiryFormData = {
     fullName: '',
@@ -40,6 +40,10 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
   isSubmitting: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
+
+  // Tracking for cleanup
+  private observers: IntersectionObserver[] = [];
+  private readonly schemaIds = ['driver-breadcrumb', 'driver-job'];
 
   constructor(
     private seoService: SeoService,
@@ -110,7 +114,7 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
           }
         }
       ]
-    });
+    }, 'driver-breadcrumb');
 
     // JobPosting JSON-LD
     this.addJsonLd({
@@ -131,47 +135,70 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
         "name": "India"
       },
       "employmentType": ["FULL_TIME", "PART_TIME", "CONTRACTOR"]
-    });
+    }, 'driver-job');
   }
 
-  // Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  // Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
+    }
+
     const script = this.renderer.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaObject);
     this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    // Initialize all animations and interactions
-    this.initializeIntersectionObserver();
-    this.initializePageTitleAnimation();
-    this.initializeFormInputAnimations();
-    this.initializeParallaxEffect();
+    // Strictly Browser Only - prevents server crash
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeIntersectionObserver();
+      this.initializePageTitleAnimation();
+      this.initializeFormInputAnimations();
+      this.initializeParallaxEffect();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // 1. Disconnect all observers
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+
+    // 2. Remove Schema Scripts (if in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 
   /**
    * Initialize Intersection Observer for scroll animations
    */
   private initializeIntersectionObserver(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    // CRITICAL GUARD: Ensure browser environment and API existence
+    if (!isPlatformBrowser(this.platformId) || !('IntersectionObserver' in window)) return;
     
     try {
-      const IO = (globalThis as any).IntersectionObserver;
       const doc = this.document;
-      
-      if (!IO || !doc || typeof doc.querySelectorAll !== 'function') {
-        return;
-      }
       
       const observerOptions: IntersectionObserverInit = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
       };
 
-      const observer = new IO((entries: IntersectionObserverEntry[]) => {
+      const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate');
@@ -179,12 +206,16 @@ export class DriverjobComponent implements OnInit, AfterViewInit {
         });
       }, observerOptions);
 
+      // Track observer for cleanup
+      this.observers.push(observer);
+
       // Observe all elements with data-animate attribute
-      doc.querySelectorAll('[data-animate]').forEach(el => {
-        observer.observe(el);
-      });
+      const elements = doc.querySelectorAll('[data-animate]');
+      if (elements && elements.length > 0) {
+        elements.forEach(el => observer.observe(el));
+      }
     } catch (e) {
-      // Ignore on SSR
+      console.warn('Animation observer failed to initialize:', e);
     }
   }
 

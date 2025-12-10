@@ -13,6 +13,9 @@ import { SeoService } from '../../../services/seo.service';
 })
 export class KalimpongComponent implements OnInit, AfterViewInit, OnDestroy {
   
+  // IDs for tracking and cleaning up Schema scripts
+  private readonly schemaIds = ['kalimpong-faq', 'kalimpong-breadcrumb'];
+
   constructor(
     private commonDestService: CommonDestinationService,
     private seoService: SeoService,
@@ -54,59 +57,55 @@ export class KalimpongComponent implements OnInit, AfterViewInit, OnDestroy {
     this.metaService.updateTag({ name: 'twitter:image', content: 'https://wizztest.com/assets/images/destinations/kalimpong.jpg' });
     this.metaService.updateTag({ name: 'twitter:site', content: '@wizzride' });
 
-    // ✅ BreadcrumbList JSON-LD
-    this.addJsonLd(  
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How far is Kalimpong from Darjeeling?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Kalimpong is approximately 50 km from Darjeeling and takes around 2.5 hours by road."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What are the best activities to do in Kalimpong?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Some of the best activities include paragliding at Deolo Hill, visiting monasteries, exploring Lower Echhey Village, and shopping at Haat Bazaar."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there shared cabs available to Kalimpong?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Wizzride provides shared and reserved cabs from Bagdogra Airport, NJP Railway Station, Darjeeling, and Gangtok."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Kalimpong safe for solo travelers?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Kalimpong is one of the safest hill stations in India. The locals are friendly, and there is a low crime rate."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the ideal duration to explore Kalimpong?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "A 2 to 3-day trip is perfect to explore all the major attractions and enjoy a relaxing stay."
-            }
+    // ✅ FAQ JSON-LD (Passed with Unique ID)
+    this.addJsonLd({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How far is Kalimpong from Darjeeling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kalimpong is approximately 50 km from Darjeeling and takes around 2.5 hours by road."
           }
-        ]
-      }
-);
+        },
+        {
+          "@type": "Question",
+          "name": "What are the best activities to do in Kalimpong?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some of the best activities include paragliding at Deolo Hill, visiting monasteries, exploring Lower Echhey Village, and shopping at Haat Bazaar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there shared cabs available to Kalimpong?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Wizzride provides shared and reserved cabs from Bagdogra Airport, NJP Railway Station, Darjeeling, and Gangtok."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Kalimpong safe for solo travelers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Kalimpong is one of the safest hill stations in India. The locals are friendly, and there is a low crime rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the ideal duration to explore Kalimpong?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 2 to 3-day trip is perfect to explore all the major attractions and enjoy a relaxing stay."
+          }
+        }
+      ]
+    }, 'kalimpong-faq');
 
- 
-
-    // ✅ TouristDestination JSON-LD (specific to Gangtok)
+    // ✅ BreadcrumbList JSON-LD (Passed with Unique ID)
     this.addJsonLd({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -130,26 +129,47 @@ export class KalimpongComponent implements OnInit, AfterViewInit, OnDestroy {
           "item": "https://wizzride.com/destinations/kalimpong/"
         }
       ]
-    });
+    }, 'kalimpong-breadcrumb');
   }
 
-  // ✅ Utility: inject LD+JSON scripts
-  private addJsonLd(schemaObject: any): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const script = this.renderer.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schemaObject);
-      this.renderer.appendChild(this.document.head, script);
+  // ✅ Utility: inject LD+JSON scripts safely
+  // UPDATED: Allows SSR (removed isPlatformBrowser check) and prevents duplicates
+  private addJsonLd(schemaObject: any, scriptId: string): void {
+    // Safety check for document
+    if (!this.document) return;
+
+    // Remove existing script with same ID to prevent duplicates
+    const existingScript = this.document.getElementById(scriptId);
+    if (existingScript) {
+      this.renderer.removeChild(this.document.head, existingScript);
     }
+
+    // Create and append new script
+    const script = this.renderer.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaObject);
+    this.renderer.appendChild(this.document.head, script);
   }
 
   ngAfterViewInit(): void {
-    // Initialize all common destination page functionality
-    this.commonDestService.initializeDestinationPage();
+    // Strictly Browser Only - prevents server crash in CommonDestinationService
+    if (isPlatformBrowser(this.platformId)) {
+      this.commonDestService.initializeDestinationPage();
+    }
   }
 
   ngOnDestroy(): void {
-    // Clean up event listeners
     this.commonDestService.cleanup();
+
+    // Clean up injected Schema scripts (Browser only)
+    if (isPlatformBrowser(this.platformId)) {
+      this.schemaIds.forEach(id => {
+        const script = this.document.getElementById(id);
+        if (script) {
+          this.renderer.removeChild(this.document.head, script);
+        }
+      });
+    }
   }
 }

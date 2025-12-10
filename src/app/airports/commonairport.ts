@@ -11,7 +11,8 @@ export class CommonAirportService {
   constructor(
     private rendererFactory: RendererFactory2,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) private document: Document
+    // CRITICAL FIX: Rename property to _doc to avoid conflict with global 'document' variable
+    @Inject(DOCUMENT) private _doc: any 
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
@@ -21,7 +22,10 @@ export class CommonAirportService {
    * Call this from ngAfterViewInit in your component
    */
   initializeAirportPage(): void {
+    // 1. Guard: Stop immediately if running on Server
     if (!isPlatformBrowser(this.platformId)) return;
+    
+    // 2. Run initialization safely on browser
     this.initFadeScrollAnimations();
   }
 
@@ -36,21 +40,23 @@ export class CommonAirportService {
 
   // ================== FADE SCROLL ANIMATIONS ==================
   private initFadeScrollAnimations(): void {
+    // 1. Redundant Guard: Ensure we are in the browser
     if (!isPlatformBrowser(this.platformId)) return;
-    
-    // ALL YOUR DOM CODE SAFE HERE
+
     try {
-      // Safely check for document and IntersectionObserver
-      const doc = this.document;
-      const IntersectionObserverClass = (globalThis as any).IntersectionObserver;
-      
-      if (!doc || typeof IntersectionObserverClass === 'undefined' || typeof doc.querySelectorAll !== 'function') {
+      // 2. Use the INJECTED document (this._doc), NOT the global 'document'
+      const doc = this._doc;
+
+      // 3. Safety check: Ensure document and API exist
+      // We check 'window' here which is safe because of the isPlatformBrowser check above
+      if (!doc || !('IntersectionObserver' in window)) {
         return;
       }
-      
-      const fadeElements = doc.querySelectorAll(".fade-scroll");
 
-      const observer = new IntersectionObserverClass((entries, obs) => {
+      const fadeElements = doc.querySelectorAll(".fade-scroll");
+      if (!fadeElements || fadeElements.length === 0) return;
+
+      const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
@@ -59,11 +65,11 @@ export class CommonAirportService {
         });
       }, { threshold: 0.15 });
 
-      fadeElements.forEach(el => observer.observe(el));
+      fadeElements.forEach((el: any) => observer.observe(el));
+
     } catch (e) {
-      // Silently handle any SSR errors
-      console.warn('Error initializing fade scroll animations (likely SSR):', e);
+      // Silently handle any errors to prevent app crash
+      console.warn('Error initializing fade scroll animations:', e);
     }
   }
-
 }
