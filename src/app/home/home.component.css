@@ -3462,3 +3462,217 @@ button.nav-tab.active img{
 .japan-experience-section{
     width: auto !important;
 }
+
+/* ---------- MOBILE APP EXPERIENCE (wr-*) ---------- */
+.mobile-bottom-nav { display: none; }
+.wr-mobile-shell { display: none; }
+
+@media (max-width: 768px) {
+    /* Hide desktop-first layout on mobile */
+    .booking-section-wrapper,
+    .content-sections-wrapper,
+    .sliding-section-wrapper,
+    .airport-connectivity-section,
+    .app-download-section,
+    .statistics-section,
+    .testimonials-section,
+    .japan-experience-section,
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+
+    /* Show mobile shell */
+    .wr-mobile-shell {
+        display: block;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        background: radial-gradient(circle at 10% 10%, #e9fff6 0, #f8fffd 38%, #ffffff 72%);
+        font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+        padding-bottom: 24px;
+    }
+
+    .wr-hero { padding: 24px 14px 14px; }
+    .wr-hero-title { font-size: 28px; margin: 10px 0 6px; font-weight: 800; letter-spacing: -0.4px; color: #0f172a; }
+    .wr-hero-sub { color: #637083; font-size: 14px; margin: 4px 0; }
+
+    .wr-tabs-modern {
+        position: relative;
+        display: flex;
+        background: #ffffffdd;
+        padding: 12px;
+        border-radius: 14px;
+        margin: 20px 12px;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
+        gap: 6px;
+        backdrop-filter: blur(10px);
+    }
+    .wr-tab-indicator {
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 6px;
+        width: calc(33.33% - 6px);
+        background: linear-gradient(135deg, #0f9d92, #12c6b6);
+        border-radius: 12px;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+        transition: transform 0.28s cubic-bezier(.28,.11,.32,1.25);
+        z-index: 0;
+    }
+    .wr-tab-modern {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 5px 5px;
+        border-radius: 10px;
+        background: transparent;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        color: #5c6678;
+        transition: color 0.25s ease;
+        z-index: 2;
+    }
+    .wr-tab-modern--active { color: #ffffff; }
+    .wr-tab-icon img { width: 22px; height: 22px; opacity: .78; transition: transform 0.28s ease, filter 0.28s ease; }
+    .wr-tab-modern--active .wr-tab-icon img {
+        transform: scale(1.22);
+        filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(30, 195, 185, 0.85));
+        opacity: 1;
+    }
+
+    .wr-card {
+        background: #ffffff;
+        margin: 0 12px;
+        padding: 20px;
+        border-radius: 24px;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.10);
+        border: 1px solid #e8f1ef;
+    }
+    .wr-route-row { display: flex; justify-content: center; gap: 16px; align-items: center; }
+    .wr-route-col {
+        background: #f9fafb;
+        padding: 10px 12px;
+        border-radius: 16px;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: inset 0 1px 0 #eef2f7;
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .wr-route-col:active { transform: scale(0.99); box-shadow: inset 0 1px 0 #e2e8f0; }
+    .wr-route-city { font-size: 18px; font-weight: 600; text-align: center; }
+    .wr-route-code { color: #6b7280; font-size: 12px; text-align: center; }
+    .wr-field-label { color: #5f6a7a; font-size: 12px; margin-bottom: 8px; font-weight: 600; }
+    .wr-field-label-left-pad { padding-left: 35px; }
+    .wr-field-pill {
+        background: #f9fafb;
+        padding: 10px 14px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        border: 1px solid #e3eaef;
+    }
+    .wr-icon { width: 18px; height: 18px; color: #18b0a8; stroke: currentColor; stroke-width: 1.8; fill: none; }
+    .wr-divider { height: 1px; background: #e5e7eb; margin: 20px 0; }
+    .wr-primary-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #0fa79c, #14c8b6);
+        color: #f8fffe;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 12px 30px rgba(20, 167, 156, 0.35);
+    }
+    .wr-panel { display: none; }
+    .wr-panel.is-active { display: block; }
+    .wr-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .wr-grid-2-col { display: flex; flex-direction: column; }
+
+    .wr-offer-section { margin: 28px 0 0; padding-left: 12px; }
+    .wr-offer-header { display: flex; justify-content: space-between; align-items: flex-end; padding-right: 12px; margin-bottom: 10px; }
+    .wr-section-title { font-size: 17px; margin-bottom: 12px; font-weight: 600; }
+    .wr-offer-scroller { display: flex; gap: 12px; overflow-x: auto; padding: 0 12px 4px 0; scroll-snap-type: x mandatory; }
+    .wr-offer-card {
+        flex: 0 0 260px;
+        background: #fff;
+        border-radius: 26px;
+        padding: 0;
+        overflow: hidden;
+        text-align: left;
+        cursor: pointer;
+        scroll-snap-align: start;
+        box-shadow: 0 14px 30px rgba(15,23,42,0.10);
+        transition: transform .25s ease, box-shadow .25s ease;
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+    }
+    .wr-offer-media { position: relative; }
+    .wr-offer-img { width: 100%; height: 140px; object-fit: cover; display: block; }
+    .wr-offer-ribbon {
+        position: absolute; top: 12px; right: 14px;
+        background: linear-gradient(135deg, #ff5b45, #ff3d3d);
+        color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+    }
+    .wr-offer-content { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+    .wr-offer-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #0f172a; }
+    .wr-offer-sub { font-size: 11px; font-weight: 800; color: #0ca79c; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+    .wr-offer-desc { font-size: 13px; color: #4b5563; line-height: 1.4; }
+
+    .wr-routes-section { margin: 28px 0 0; padding-left: 12px; }
+    .wr-routes-header { display: flex; justify-content: space-between; align-items: center; padding-right: 12px; margin-bottom: 12px; }
+    .wr-routes-scroller { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x mandatory; }
+    .wr-route-card {
+        flex: 0 0 180px;
+        height: 170px;
+        background: white;
+        border-radius: 18px;
+        padding: 14px 16px;
+        box-shadow: 0 6px 16px rgba(15,23,42,0.08);
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid #eef2f7;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .wr-route-card:active { transform: scale(0.98); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+    .wr-route-icon-img { width: 38px; height: 38px; object-fit: contain; margin-bottom: 8px; }
+    .wr-route-main { font-size: 12px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+    .wr-route-sub { font-size: 11px; color: #6b7280; margin-bottom: 8px; }
+    .wr-route-info-row { font-size: 11px; display: flex; justify-content: space-between; color: #6b7280; }
+
+    .wr-stats-section { margin: 28px 12px 0; }
+    .wr-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .wr-stat-card { background: #ffffff; border-radius: 18px; padding: 12px 14px 14px; box-shadow: 0 10px 22px rgba(15,23,42,0.08); text-align: center; border: 1px solid #edf2f7; }
+    .wr-stat-number { font-size: 18px; font-weight: 800; margin-bottom: 3px; color: #0f9d92; letter-spacing: -0.2px; }
+    .wr-stat-label { font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #0f172a; }
+    .wr-stat-desc { font-size: 11px; color: #4b5563; }
+
+    .wr-app-download { margin: 28px 12px 0; }
+    .wr-app-card { position: relative; border-radius: 22px; padding: 16px; background: radial-gradient(circle at top left, #e6fffb, #ffffff 40%, #f3f4f6 100%); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+    .wr-app-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: rgba(17,155,143,0.06); font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 8px; }
+    .wr-app-tag-dot { width: 6px; height: 6px; border-radius: 999px; background: #1ec3b9; }
+    .wr-app-title { font-size: 20px; font-weight: 700; margin: 0 0 6px; }
+    .wr-app-title .highlight { background: linear-gradient(135deg, #119b8f, #1ec3b9); -webkit-background-clip: text; color: transparent; }
+    .wr-app-subtitle { font-size: 13px; color: #6b7280; margin: 0 0 14px; }
+    .wr-app-download-row { margin-top: 16px; display: flex; gap: 12px; align-items: center; justify-content: space-around; }
+    .wr-app-qr { width: 70px; height: 70px; border-radius: 12px; background: #ffffff; box-shadow: 0 8px 18px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .wr-app-qr img { width: 100%; height: 100%; object-fit: cover; }
+    .wr-store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 14px; background: #111827; color: #ffffff; text-decoration: none; box-shadow: 0 12px 24px rgba(15,23,42,0.20); }
+    .wr-store-btn--light { background: #ffffff; color: #111827; border: 1px solid rgba(0,0,0,0.06); }
+    .wr-store-icon { width: 20px; height: 20px; border-radius: 6px; background: #111827; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #ffffff; }
+    .wr-store-btn--light .wr-store-icon { background: #111827; color: #ffffff; }
+    .wr-store-text small { display: block; font-size: 9px; opacity: 0.8; }
+    .wr-store-text strong { display: block; font-size: 12px; font-weight: 600; }
+}

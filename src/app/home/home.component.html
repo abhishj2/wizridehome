@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<!-- Booking Form and Navigation Section -->
+<!-- Booking Form and Navigation Section (Desktop) -->
 <div class="booking-section-wrapper">
     <div class="container header" (click)="onDocumentClick($event)">
 
@@ -668,6 +668,226 @@
     </div>
 </div>
 <!-- End of Booking Form and Navigation Section -->
+
+<!-- Mobile App-Like Homepage (hidden on desktop, shown via media query) -->
+<div class="wr-mobile-shell">
+  <section class="wr-hero">
+    <p class="wr-hero-sub">Airport connectivity · Northeast India</p>
+    <h1 class="wr-hero-title">Airport rides made effortless.</h1>
+    <p class="wr-hero-sub">Shared, Reserved & Flights — all in one smooth booking experience.</p>
+  </section>
+
+  <div class="wr-tabs-modern">
+    <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'" ></div>
+    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'" (click)="setMobileTab('shared')">
+      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/shared-removebg-preview.png" width="23" /></span>
+      <span>Shared</span>
+    </button>
+    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'" (click)="setMobileTab('reserved')">
+      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/reserved.png" width="23" /></span>
+      <span>Reserved</span>
+    </button>
+    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'" (click)="setMobileTab('flights')">
+      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/flight.png" width="23" /></span>
+      <span>Flights</span>
+    </button>
+  </div>
+
+  <section class="wr-card" id="wr-mobile-booking">
+    <div class="wr-route-row">
+      <div class="wr-route-col">
+        <div class="wr-field-label wr-field-label-left-pad">From</div>
+        <div class="wr-route-city">GTK</div>
+        <div class="wr-route-code">Gangtok</div>
+      </div>
+      <div class="wr-route-col" style="text-align:right;">
+        <div class="wr-field-label wr-field-label-left-pad">To</div>
+        <div class="wr-route-city">IXB</div>
+        <div class="wr-route-code">Bagdogra Airport</div>
+      </div>
+    </div>
+
+    <div class="wr-divider"></div>
+
+    <div class="wr-panel" [class.is-active]="mobileTab === 'shared'">
+      <div class="wr-field-block">
+        <div class="wr-field-label">Pickup Point</div>
+        <div class="wr-field-pill">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+            <circle cx="12" cy="11" r="2.5"></circle>
+          </svg>
+          <span>Select pickup point</span>
+        </div>
+      </div>
+      <div class="wr-field-block">
+        <div class="wr-field-label">Drop Point</div>
+        <div class="wr-field-pill">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+            <circle cx="12" cy="11" r="2.5"></circle>
+          </svg>
+          <span>Select drop point</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
+      <div class="wr-field-block">
+        <div class="wr-field-label">Pickup Time</div>
+        <div class="wr-field-pill">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"></circle>
+            <polyline points="12 8 12 12 15 13.5"></polyline>
+          </svg>
+          <span>08:30 AM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
+      <div class="wr-grid-2">
+        <div class="wr-grid-2-col">
+          <div class="wr-field-label">Departure Date</div>
+          <div class="wr-field-pill">
+            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+              <line x1="4" y1="10" x2="20" y2="10"></line>
+              <line x1="9" y1="3" x2="9" y2="7"></line>
+              <line x1="15" y1="3" x2="15" y2="7"></line>
+            </svg>
+            <span>Today</span>
+          </div>
+        </div>
+        <div class="wr-grid-2-col">
+          <div class="wr-field-label">Cabin</div>
+          <div class="wr-field-pill">
+            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 12V7a3 3 0 0 1 3-3h4v8"></path>
+              <path d="M7 12h9l1 5H8a3 3 0 0 1-3-3v-2"></path>
+            </svg>
+            <span>Economy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wr-divider"></div>
+
+    <button class="wr-primary-btn">Search Ride</button>
+  </section>
+
+  <section class="wr-offer-section">
+    <div class="wr-offer-header">
+      <div class="wr-section-title">Special Offers</div>
+    </div>
+    <div class="wr-offer-scroller">
+      <button class="wr-offer-card">
+        <div class="wr-offer-media">
+          <img class="wr-offer-img" src="https://www.yatra.com/ythomepagecms/media/imagemanager/2025/Nov/608fa08a7ec7e57b76fa783f8e1ffbc5.jpg">
+          <div class="wr-offer-ribbon">Limited</div>
+        </div>
+        <div class="wr-offer-content">
+          <div class="wr-offer-title">₹200 OFF – IXB → Gangtok</div>
+          <div class="wr-offer-sub">Use code WIZZ200</div>
+          <div class="wr-offer-desc">Morning shared rides at a special reduced fare.</div>
+        </div>
+      </button>
+      <button class="wr-offer-card">
+        <div class="wr-offer-media">
+          <img class="wr-offer-img" src="https://i.imgur.com/Sjj8l0l.jpeg">
+          <div class="wr-offer-ribbon">Combo</div>
+        </div>
+        <div class="wr-offer-content">
+          <div class="wr-offer-title">5% OFF – Flights + Cab</div>
+          <div class="wr-offer-sub">Use code COMBO5</div>
+          <div class="wr-offer-desc">Book your flight and airport cab together & save extra.</div>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <section class="wr-routes-section">
+    <div class="wr-routes-header">
+      <div class="wr-section-title">Popular Routes</div>
+    </div>
+    <div class="wr-routes-scroller">
+      <div class="wr-route-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" class="wr-route-icon-img" />
+        <div>
+          <div class="wr-route-main">Bagdogra ↔ Gangtok</div>
+          <div class="wr-route-sub">Most booked</div>
+        </div>
+        <div class="wr-route-info-row">
+          <span>123 km</span>
+          <span>4 hr</span>
+        </div>
+      </div>
+      <div class="wr-route-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" class="wr-route-icon-img" />
+        <div>
+          <div class="wr-route-main">Guwahati ↔ Shillong</div>
+          <div class="wr-route-sub">Most booked</div>
+        </div>
+        <div class="wr-route-info-row">
+          <span>99 km</span>
+          <span>2.5 hr</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wr-stats-section">
+    <div class="wr-section-title">Our Numbers Say It All</div>
+    <div class="wr-stats-grid">
+      <div class="wr-stat-card">
+        <div class="wr-stat-number">7+</div>
+        <div class="wr-stat-label">Years of service</div>
+        <div class="wr-stat-desc">Trusted experience</div>
+      </div>
+      <div class="wr-stat-card">
+        <div class="wr-stat-number">200k+</div>
+        <div class="wr-stat-label">Passengers</div>
+        <div class="wr-stat-desc">Happy customers</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wr-app-download">
+    <div class="wr-app-card">
+      <div class="wr-app-tag">
+        <span class="wr-app-tag-dot"></span>
+        <span>Try on mobile</span>
+      </div>
+      <h2 class="wr-app-title">Life's much easier on the <span class="highlight">App.</span></h2>
+      <p class="wr-app-subtitle">Download the <span class="brand">WizzRide App</span> today for seamless travel booking.</p>
+      <div class="wr-app-download-row">
+        <div class="wr-app-qr-box">
+          <div class="wr-app-qr">
+            <img src="https://wizztest.com/assets/images/qrframe.png" alt="WizzRide App QR">
+          </div>
+          <span class="wr-app-scan-text">Scan Me</span>
+        </div>
+        <div class="wr-app-store-buttons">
+          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn">
+            <div class="wr-store-icon">▶</div>
+            <div class="wr-store-text">
+              <small>Get it on</small>
+              <strong>Google Play</strong>
+            </div>
+          </a>
+          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn wr-store-btn--light">
+            <div class="wr-store-icon"></div>
+            <div class="wr-store-text">
+              <small>Download on the</small>
+              <strong>App Store</strong>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
 <!-- Special Offers and Content Sections -->
 <div class="content-sections-wrapper">

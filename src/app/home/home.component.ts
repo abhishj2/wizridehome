@@ -97,6 +97,10 @@ interface WordPressOffer {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+  // Mobile tab state (mobile-only UI)
+  mobileTab: 'shared' | 'reserved' | 'flights' = 'shared';
+  private mobileTabOrder: Array<'shared' | 'reserved' | 'flights'> = ['shared', 'reserved', 'flights'];
+
   services = [
     {
       id: 1,
@@ -292,6 +296,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (event.key === 'ArrowRight') {
       this.nextSlide();
     }
+  }
+
+  setMobileTab(tab: 'shared' | 'reserved' | 'flights'): void {
+    this.mobileTab = tab;
+  }
+
+  getMobileTabIndex(tab: 'shared' | 'reserved' | 'flights'): number {
+    return this.mobileTabOrder.indexOf(tab);
   }
 
   // TrackBy function for better performance
