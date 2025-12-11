@@ -724,7 +724,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   tabs = ['shared-cabs', 'reserved-cabs', 'flights'];
-  showMobileBottomNav = true;
+  // showMobileBottomNav = true;
   lastScrollTop = 0;
 
   // Validation methods
@@ -2715,11 +2715,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Show bottom nav when booking section is visible
     // Hide when scrolled past the booking section
-    if (bookingSectionRect.bottom > 0 && bookingSectionRect.top < windowHeight) {
-      this.showMobileBottomNav = true;
-    } else {
-      this.showMobileBottomNav = false;
-    }
+    // if (bookingSectionRect.bottom > 0 && bookingSectionRect.top < windowHeight) {
+    //   this.showMobileBottomNav = true;
+    // } else {
+    //   this.showMobileBottomNav = false;
+    // }
   }
 
   scrollToContact(): void {
