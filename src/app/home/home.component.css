@@ -3719,6 +3719,11 @@ button.nav-tab.active img{
     .wr-field-block + .wr-field-block {
         margin-top: 10px;
     }
+
+    /* Extra spacing between form blocks on mobile */
+    .wr-panel .wr-field-block {
+        margin-bottom: 10px;
+    }
 }
 
 /* Mobile location popup */

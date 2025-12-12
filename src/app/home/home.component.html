@@ -697,13 +697,13 @@
     <div class="wr-route-row">
       <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
         <div class="wr-field-label wr-field-label-left-pad">From</div>
-        <input class="wr-route-city-input" [value]="getMobileCityCode('from')" readonly />
-        <div class="wr-route-code">{{ getMobileCityName('from') }}</div>
+        <input class="wr-route-city-input" [value]="getMobileCityName('from')" readonly />
+        <div class="wr-route-code">{{ getMobileCityCode('from') }}</div>
       </div>
       <div class="wr-route-col" style="text-align:right;" (click)="openMobileLocationPopup('to')">
         <div class="wr-field-label wr-field-label-left-pad">To</div>
-        <input class="wr-route-city-input" [value]="getMobileCityCode('to')" readonly />
-        <div class="wr-route-code">{{ getMobileCityName('to') }}</div>
+        <input class="wr-route-city-input" [value]="getMobileCityName('to')" readonly />
+        <div class="wr-route-code">{{ getMobileCityCode('to') }}</div>
       </div>
     </div>
 
