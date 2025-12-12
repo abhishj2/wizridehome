@@ -3676,3 +3676,185 @@ button.nav-tab.active img{
     .wr-store-text small { display: block; font-size: 9px; opacity: 0.8; }
     .wr-store-text strong { display: block; font-size: 12px; font-weight: 600; }
 }
+
+/* Mobile location popup */
+.mobile-location-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 9999;
+}
+.mobile-location-popup.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.mobile-location-popup-content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    transform: translateX(-100%);
+    transition: transform .28s ease;
+}
+.mobile-location-popup.active .mobile-location-popup-content {
+    transform: translateX(0);
+}
+.mobile-location-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.mobile-location-popup-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.mobile-location-popup-back,
+.mobile-location-popup-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #111827;
+    cursor: pointer;
+    padding: 6px;
+}
+.mobile-location-popup-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.mobile-location-popup-search i {
+    color: #9ca3af;
+    font-size: 16px;
+}
+.mobile-location-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #111827;
+}
+.mobile-location-search-input::placeholder {
+    color: #9ca3af;
+}
+.mobile-location-popup-suggestions {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    padding: 8px 0 16px;
+}
+.mobile-location-suggestion {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+}
+.mobile-location-suggestion:hover {
+    background: #f9fafb;
+}
+.mobile-location-suggestion i {
+    color: #18b0a8;
+    font-size: 16px;
+}
+.mobile-location-suggestion-name {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 14px;
+}
+.mobile-location-suggestion-state {
+    color: #6b7280;
+    font-size: 12px;
+}
+.mobile-location-no-results {
+    padding: 16px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.wr-route-city-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    pointer-events: none;
+}
+
+/* Mobile date picker */
+.mobile-date-picker-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 9999;
+}
+.mobile-date-picker-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.mobile-date-picker-modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    transform: translateX(-100%);
+    transition: transform .28s ease;
+    display: flex;
+    flex-direction: column;
+}
+.mobile-date-picker-overlay.active .mobile-date-picker-modal {
+    transform: translateX(0);
+}
+.mobile-date-picker-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.mobile-date-picker-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.mobile-date-picker-back,
+.mobile-date-picker-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #111827;
+    cursor: pointer;
+    padding: 6px;
+}
+.mobile-date-picker-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}

@@ -695,15 +695,15 @@
 
   <section class="wr-card" id="wr-mobile-booking">
     <div class="wr-route-row">
-      <div class="wr-route-col">
+      <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
         <div class="wr-field-label wr-field-label-left-pad">From</div>
-        <div class="wr-route-city">GTK</div>
-        <div class="wr-route-code">Gangtok</div>
+        <input class="wr-route-city-input" [value]="getMobileCityCode('from')" readonly />
+        <div class="wr-route-code">{{ getMobileCityName('from') }}</div>
       </div>
-      <div class="wr-route-col" style="text-align:right;">
+      <div class="wr-route-col" style="text-align:right;" (click)="openMobileLocationPopup('to')">
         <div class="wr-field-label wr-field-label-left-pad">To</div>
-        <div class="wr-route-city">IXB</div>
-        <div class="wr-route-code">Bagdogra Airport</div>
+        <input class="wr-route-city-input" [value]="getMobileCityCode('to')" readonly />
+        <div class="wr-route-code">{{ getMobileCityName('to') }}</div>
       </div>
     </div>
 
@@ -711,70 +711,93 @@
 
     <div class="wr-panel" [class.is-active]="mobileTab === 'shared'">
       <div class="wr-field-block">
+        <div class="wr-field-label">Date of Travel</div>
+        <app-custom-calendar
+          [selectedDate]="formValues.sharedDateTime"
+          [minDate]="getTodayDate()"
+          placeholder="Select Date"
+          (dateSelected)="onSharedDateSelected($event)">
+        </app-custom-calendar>
+      </div>
+      <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
         <div class="wr-field-label">Pickup Point</div>
-        <div class="wr-field-pill">
+        <div class="wr-field-pill" (click)="openMobileLocationPopup('pickup')">
           <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
             <circle cx="12" cy="11" r="2.5"></circle>
           </svg>
-          <span>Select pickup point</span>
+          <span>{{ formValues.sharedPickupLocation || 'Select pickup point' }}</span>
         </div>
       </div>
-      <div class="wr-field-block">
+      <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
         <div class="wr-field-label">Drop Point</div>
-        <div class="wr-field-pill">
+        <div class="wr-field-pill" (click)="openMobileLocationPopup('dropoff')">
           <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
             <circle cx="12" cy="11" r="2.5"></circle>
           </svg>
-          <span>Select drop point</span>
+          <span>{{ formValues.sharedDropoffLocation || 'Select drop point' }}</span>
         </div>
       </div>
     </div>
 
     <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
       <div class="wr-field-block">
+        <div class="wr-field-label">Date of Travel</div>
+        <app-custom-calendar
+          [selectedDate]="formValues.reservedDate"
+          [minDate]="getTodayDate()"
+          placeholder="Select Date"
+          (dateSelected)="onReservedDateSelected($event)">
+        </app-custom-calendar>
+      </div>
+      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
+        <div class="wr-field-label">Pickup Point</div>
+        <div class="wr-field-pill" (click)="openMobileLocationPopup('pickup')">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+            <circle cx="12" cy="11" r="2.5"></circle>
+          </svg>
+          <span>{{ formValues.reservedPickupLocation || 'Select pickup point' }}</span>
+        </div>
+      </div>
+      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
+        <div class="wr-field-label">Drop Point</div>
+        <div class="wr-field-pill" (click)="openMobileLocationPopup('dropoff')">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+            <circle cx="12" cy="11" r="2.5"></circle>
+          </svg>
+          <span>{{ formValues.reservedDropoffLocation || 'Select drop point' }}</span>
+        </div>
+      </div>
+      <div class="wr-field-block">
         <div class="wr-field-label">Pickup Time</div>
-        <div class="wr-field-pill">
+        <div class="wr-field-pill" (click)="openTimePicker()">
           <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="7"></circle>
             <polyline points="12 8 12 12 15 13.5"></polyline>
           </svg>
-          <span>08:30 AM</span>
+          <span>{{ formatTimeDisplay(formValues.reservedTime) || '08:30 AM' }}</span>
         </div>
       </div>
     </div>
 
     <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
-      <div class="wr-grid-2">
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Departure Date</div>
-          <div class="wr-field-pill">
-            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="4" y="5" width="16" height="15" rx="2"></rect>
-              <line x1="4" y1="10" x2="20" y2="10"></line>
-              <line x1="9" y1="3" x2="9" y2="7"></line>
-              <line x1="15" y1="3" x2="15" y2="7"></line>
-            </svg>
-            <span>Today</span>
-          </div>
-        </div>
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Cabin</div>
-          <div class="wr-field-pill">
-            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 12V7a3 3 0 0 1 3-3h4v8"></path>
-              <path d="M7 12h9l1 5H8a3 3 0 0 1-3-3v-2"></path>
-            </svg>
-            <span>Economy</span>
-          </div>
-        </div>
+      <div class="wr-field-block">
+        <div class="wr-field-label">Departure Date</div>
+        <app-custom-calendar
+          [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
+          [minDate]="getTodayDate()"
+          placeholder="Select Date"
+          (dateSelected)="onFlightDepartureDateSelected($event, 0)">
+        </app-custom-calendar>
       </div>
     </div>
 
     <div class="wr-divider"></div>
 
-    <button class="wr-primary-btn">Search Ride</button>
+    <button class="wr-primary-btn" (click)="onMobileSearch()">Search Ride</button>
   </section>
 
   <section class="wr-offer-section">
@@ -1461,4 +1484,55 @@
         </div>
     </div>
 </div>
+
+<!-- Mobile Location Selection Sliding Popup -->
+<div class="mobile-location-popup" [class.active]="showMobileLocationPopup" (click)="closeMobileLocationPopup()">
+    <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
+        <div class="mobile-location-popup-header">
+            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>{{ mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Select Pickup Point' : 'Select Drop Point' }}</h3>
+            <button class="mobile-location-popup-close" (click)="closeMobileLocationPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-location-popup-search">
+            <i class="fas fa-search"></i>
+            <input type="text" 
+                   class="mobile-location-search-input"
+                   [value]="mobileSearchQuery"
+                   (input)="onMobileLocationInput($any($event.target).value)"
+                   [placeholder]="mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Enter pickup location' : 'Enter drop location'">
+        </div>
+        <div class="mobile-location-popup-suggestions">
+            <ng-container *ngIf="isMobileCityArray()">
+                <div *ngFor="let city of getMobileCitySuggestionsList()" 
+                     class="mobile-location-suggestion"
+                     (click)="selectMobileCity(city.name, city.code)">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="mobile-location-suggestion-content">
+                        <div class="mobile-location-suggestion-name">{{ city.name }}</div>
+                        <div class="mobile-location-suggestion-state">{{ city.state }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!isMobileCityArray()">
+                <div *ngFor="let location of getMobileLocationSuggestionsList()" 
+                     class="mobile-location-suggestion"
+                     (click)="selectMobileLocation(location)">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="mobile-location-suggestion-content">
+                        <div class="mobile-location-suggestion-name">{{ location }}</div>
+                        <div class="mobile-location-suggestion-state">{{ mobileTab === 'shared' ? (selectedCities.shared.pickup || selectedCities.shared.dropoff) : (selectedCities.reserved.pickup || selectedCities.reserved.dropoff) }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <div *ngIf="getMobilePopupSuggestions().length === 0" class="mobile-location-no-results">
+                <p>No results found</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 

@@ -106,6 +106,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mobilePopupType: 'from' | 'to' | 'pickup' | 'dropoff' | null = null;
   mobilePopupTarget: string = '';
   mobileSearchQuery: string = '';
+  showMobileDatePicker = false;
+  mobileDatePickerType: 'shared' | 'reserved' | 'flights' | null = null;
 
   services = [
     {
@@ -314,6 +316,22 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Mobile popup methods
   openMobileLocationPopup(type: 'from' | 'to' | 'pickup' | 'dropoff'): void {
+    // Prevent pickup/drop selection until from & to chosen
+    if ((type === 'pickup' || type === 'dropoff')) {
+      if (this.mobileTab === 'shared' && (!this.formValues.sharedPickup || !this.formValues.sharedDropoff)) {
+        this.openMobileLocationPopup('from');
+        return;
+      }
+      if (this.mobileTab === 'reserved' && (!this.formValues.reservedPickup || !this.formValues.reservedDropoff)) {
+        this.openMobileLocationPopup('from');
+        return;
+      }
+      if (this.mobileTab === 'flights' && (!this.formValues.flightFrom || !this.formValues.flightTo)) {
+        this.openMobileLocationPopup('from');
+        return;
+      }
+    }
+
     this.mobilePopupType = type;
     this.mobileSearchQuery = '';
     
@@ -447,6 +465,174 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   isMobileCityArray(): boolean {
     const suggestions = this.activeSuggestions[this.mobilePopupTarget];
     return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'object';
+  }
+
+  getMobileCitySuggestionsList(): City[] {
+    const suggestions = this.getMobilePopupSuggestions();
+    return this.isMobileCityArray() ? (suggestions as City[]) : [];
+  }
+
+  getMobileLocationSuggestionsList(): string[] {
+    const suggestions = this.getMobilePopupSuggestions();
+    return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'string'
+      ? (suggestions as string[])
+      : [];
+  }
+
+  private normalizeTarget(target: string): string {
+    // Map mobile targets to desktop equivalents for suggestion logic
+    switch (target) {
+      case 'mobile-shared-pickup':
+        return 'shared-pickup';
+      case 'mobile-shared-dropoff':
+        return 'shared-dropoff';
+      case 'mobile-reserved-pickup':
+        return 'reserved-pickup';
+      case 'mobile-reserved-dropoff':
+        return 'reserved-dropoff';
+      case 'mobile-flight-from':
+        return 'flight-from-0';
+      case 'mobile-flight-to':
+        return 'flight-to-0';
+      case 'mobile-shared-pickup-specific':
+        return 'shared-pickup-specific';
+      case 'mobile-shared-dropoff-specific':
+        return 'shared-dropoff-specific';
+      case 'mobile-reserved-pickup-specific':
+        return 'reserved-pickup-specific';
+      case 'mobile-reserved-dropoff-specific':
+        return 'reserved-dropoff-specific';
+      default:
+        return target;
+    }
+  }
+
+  getMobileCityCode(type: 'from' | 'to'): string {
+    let cityValue = '';
+    if (type === 'from') {
+      if (this.mobileTab === 'shared') {
+        cityValue = this.formValues.sharedPickup || '';
+      } else if (this.mobileTab === 'reserved') {
+        cityValue = this.formValues.reservedPickup || '';
+      } else if (this.mobileTab === 'flights') {
+        cityValue = this.formValues.flightFrom || '';
+      }
+    } else {
+      if (this.mobileTab === 'shared') {
+        cityValue = this.formValues.sharedDropoff || '';
+      } else if (this.mobileTab === 'reserved') {
+        cityValue = this.formValues.reservedDropoff || '';
+      } else if (this.mobileTab === 'flights') {
+        cityValue = this.formValues.flightTo || '';
+      }
+    }
+
+    if (!cityValue) {
+      return type === 'from' ? 'GTK' : 'IXB';
+    }
+
+    // Extract code from display value like "Delhi (DEL)" -> "DEL"
+    const codeMatch = cityValue.match(/\(([^)]+)\)/);
+    if (codeMatch) {
+      return codeMatch[1];
+    }
+
+    // If no code, try to find in cities array
+    const cityName = this.extractCityNameFromDisplay(cityValue);
+    let citiesToSearch: City[] = [];
+    if (this.mobileTab === 'shared') {
+      citiesToSearch = this.sourceCities;
+    } else if (this.mobileTab === 'reserved') {
+      citiesToSearch = this.reservedCities;
+    } else if (this.mobileTab === 'flights') {
+      citiesToSearch = this.flightAirports;
+    }
+
+    const city = citiesToSearch.find(c => c.name.toLowerCase() === cityName.toLowerCase());
+    return city?.code || cityName.substring(0, 3).toUpperCase();
+  }
+
+  getMobileCityName(type: 'from' | 'to'): string {
+    let cityValue = '';
+    if (type === 'from') {
+      if (this.mobileTab === 'shared') {
+        cityValue = this.formValues.sharedPickup || '';
+      } else if (this.mobileTab === 'reserved') {
+        cityValue = this.formValues.reservedPickup || '';
+      } else if (this.mobileTab === 'flights') {
+        cityValue = this.formValues.flightFrom || '';
+      }
+    } else {
+      if (this.mobileTab === 'shared') {
+        cityValue = this.formValues.sharedDropoff || '';
+      } else if (this.mobileTab === 'reserved') {
+        cityValue = this.formValues.reservedDropoff || '';
+      } else if (this.mobileTab === 'flights') {
+        cityValue = this.formValues.flightTo || '';
+      }
+    }
+
+    if (!cityValue) {
+      return type === 'from' ? 'Gangtok' : 'Bagdogra Airport';
+    }
+
+    return this.extractCityNameFromDisplay(cityValue);
+  }
+
+  onMobileSearch(): void {
+    if (this.mobileTab === 'shared') {
+      this.searchCabs('shared');
+    } else if (this.mobileTab === 'reserved') {
+      this.searchCabs('reserved');
+    } else {
+      this.searchFlights();
+    }
+  }
+
+  openMobileDatePicker(type: 'shared' | 'reserved' | 'flights'): void {
+    this.mobileDatePickerType = type;
+    this.showMobileDatePicker = true;
+  }
+
+  closeMobileDatePicker(): void {
+    this.showMobileDatePicker = false;
+    this.mobileDatePickerType = null;
+  }
+
+  onMobileDateSelected(date: string): void {
+    if (this.mobileDatePickerType === 'shared') {
+      this.formValues.sharedDateTime = date;
+    } else if (this.mobileDatePickerType === 'reserved') {
+      this.formValues.reservedDate = date;
+    } else if (this.mobileDatePickerType === 'flights') {
+      this.formValues.flightDeparture = date;
+      if (this.flightRoutes[0]) {
+        this.flightRoutes[0].date = date;
+      }
+    }
+    this.closeMobileDatePicker();
+  }
+
+  formatMobileDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const dayNum = date.getDate();
+    const year = date.getFullYear();
+    return `${day}, ${month} ${dayNum}${this.getOrdinalSuffix(dayNum)} ${year}`;
+  }
+
+  private getOrdinalSuffix(day: number): string {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
   }
 
   // TrackBy function for better performance
@@ -1963,8 +2149,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showCitySuggestions(query: string, target: string) {
+    const storeTarget = target;
+    target = this.normalizeTarget(target);
     if (!query.trim()) {
-      delete this.activeSuggestions[target];
+      delete this.activeSuggestions[storeTarget];
       return;
     }
 
@@ -2030,10 +2218,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Show all matching cities
-    this.activeSuggestions[target] = filteredCities;
+    this.activeSuggestions[storeTarget] = filteredCities;
   }
 
   showCitySuggestionsOnFocus(target: string) {
+    const storeTarget = target;
+    target = this.normalizeTarget(target);
     // Use reservedCities for reserved cabs, sourceCities for shared cabs, flightAirports for flights, otherwise use cities
     let citiesToShow: City[];
     if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
@@ -2090,7 +2280,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Show all cities when focusing on input
-    this.activeSuggestions[target] = citiesToShow;
+    this.activeSuggestions[storeTarget] = citiesToShow;
   }
 
   getMultiCitySuggestions(target: string): City[] {
@@ -2099,20 +2289,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLocationSuggestions(query: string, target: string) {
+    const storeTarget = target;
+    target = this.normalizeTarget(target);
     if (!query.trim()) {
-      delete this.activeSuggestions[target];
+      delete this.activeSuggestions[storeTarget];
       return;
     }
 
     let locations: string[] = [];
 
-    // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
       locations = this.sharedPickupLocations;
     } else if (target.includes('shared-dropoff-specific')) {
       locations = this.sharedDropoffLocations;
     } else {
-      // For reserved cabs, use hardcoded locations
       let cityName = '';
       if (target.includes('reserved-pickup-specific')) {
         cityName = this.selectedCities.reserved.pickup;
@@ -2126,19 +2316,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       location.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 6);
 
-    this.activeSuggestions[target] = filteredLocations;
+    this.activeSuggestions[storeTarget] = filteredLocations;
   }
 
   showLocationSuggestionsOnFocus(target: string) {
+    const storeTarget = target;
+    target = this.normalizeTarget(target);
     let locations: string[] = [];
 
-    // For shared cabs, use API response data
     if (target.includes('shared-pickup-specific')) {
       locations = this.sharedPickupLocations;
     } else if (target.includes('shared-dropoff-specific')) {
       locations = this.sharedDropoffLocations;
     } else {
-      // For reserved cabs, use hardcoded locations
       let cityName = '';
       if (target.includes('reserved-pickup-specific')) {
         cityName = this.selectedCities.reserved.pickup;
@@ -2148,7 +2338,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       locations = this.locations[cityName] || [];
     }
 
-    this.activeSuggestions[target] = locations.slice(0, 6);
+    this.activeSuggestions[storeTarget] = locations.slice(0, 6);
   }
 
   hideLocationSuggestions(target: string) {
