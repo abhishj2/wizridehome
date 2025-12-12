@@ -100,6 +100,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Mobile tab state (mobile-only UI)
   mobileTab: 'shared' | 'reserved' | 'flights' = 'shared';
   private mobileTabOrder: Array<'shared' | 'reserved' | 'flights'> = ['shared', 'reserved', 'flights'];
+  
+  // Mobile popup state
+  showMobileLocationPopup = false;
+  mobilePopupType: 'from' | 'to' | 'pickup' | 'dropoff' | null = null;
+  mobilePopupTarget: string = '';
+  mobileSearchQuery: string = '';
 
   services = [
     {
@@ -304,6 +310,143 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getMobileTabIndex(tab: 'shared' | 'reserved' | 'flights'): number {
     return this.mobileTabOrder.indexOf(tab);
+  }
+
+  // Mobile popup methods
+  openMobileLocationPopup(type: 'from' | 'to' | 'pickup' | 'dropoff'): void {
+    this.mobilePopupType = type;
+    this.mobileSearchQuery = '';
+    
+    // Set target based on type and current tab
+    if (type === 'from') {
+      if (this.mobileTab === 'shared') {
+        this.mobilePopupTarget = 'mobile-shared-pickup';
+        this.mobileSearchQuery = this.formValues.sharedPickup || '';
+      } else if (this.mobileTab === 'reserved') {
+        this.mobilePopupTarget = 'mobile-reserved-pickup';
+        this.mobileSearchQuery = this.formValues.reservedPickup || '';
+      } else if (this.mobileTab === 'flights') {
+        this.mobilePopupTarget = 'mobile-flight-from';
+        this.mobileSearchQuery = this.formValues.flightFrom || '';
+      }
+    } else if (type === 'to') {
+      if (this.mobileTab === 'shared') {
+        this.mobilePopupTarget = 'mobile-shared-dropoff';
+        this.mobileSearchQuery = this.formValues.sharedDropoff || '';
+      } else if (this.mobileTab === 'reserved') {
+        this.mobilePopupTarget = 'mobile-reserved-dropoff';
+        this.mobileSearchQuery = this.formValues.reservedDropoff || '';
+      } else if (this.mobileTab === 'flights') {
+        this.mobilePopupTarget = 'mobile-flight-to';
+        this.mobileSearchQuery = this.formValues.flightTo || '';
+      }
+    } else if (type === 'pickup') {
+      if (this.mobileTab === 'shared') {
+        this.mobilePopupTarget = 'mobile-shared-pickup-specific';
+        this.mobileSearchQuery = this.formValues.sharedPickupLocation || '';
+      } else if (this.mobileTab === 'reserved') {
+        this.mobilePopupTarget = 'mobile-reserved-pickup-specific';
+        this.mobileSearchQuery = this.formValues.reservedPickupLocation || '';
+      }
+    } else if (type === 'dropoff') {
+      if (this.mobileTab === 'shared') {
+        this.mobilePopupTarget = 'mobile-shared-dropoff-specific';
+        this.mobileSearchQuery = this.formValues.sharedDropoffLocation || '';
+      } else if (this.mobileTab === 'reserved') {
+        this.mobilePopupTarget = 'mobile-reserved-dropoff-specific';
+        this.mobileSearchQuery = this.formValues.reservedDropoffLocation || '';
+      }
+    }
+    
+    this.showMobileLocationPopup = true;
+    
+    // Load suggestions
+    if (type === 'from' || type === 'to') {
+      if (this.mobileSearchQuery.trim()) {
+        this.showCitySuggestions(this.mobileSearchQuery, this.mobilePopupTarget);
+      } else {
+        this.showCitySuggestionsOnFocus(this.mobilePopupTarget);
+      }
+    } else {
+      if (this.mobileSearchQuery.trim()) {
+        this.showLocationSuggestions(this.mobileSearchQuery, this.mobilePopupTarget);
+      } else {
+        this.showLocationSuggestionsOnFocus(this.mobilePopupTarget);
+      }
+    }
+  }
+
+  closeMobileLocationPopup(): void {
+    this.showMobileLocationPopup = false;
+    this.mobilePopupType = null;
+    this.mobilePopupTarget = '';
+    this.mobileSearchQuery = '';
+    // Clear suggestions
+    if (this.mobilePopupTarget) {
+      delete this.activeSuggestions[this.mobilePopupTarget];
+    }
+  }
+
+  onMobileLocationInput(query: string): void {
+    this.mobileSearchQuery = query;
+    if (this.mobilePopupType === 'from' || this.mobilePopupType === 'to') {
+      this.showCitySuggestions(query, this.mobilePopupTarget);
+    } else {
+      this.showLocationSuggestions(query, this.mobilePopupTarget);
+    }
+  }
+
+  selectMobileCity(cityName: string, cityCode: string): void {
+    // Map mobile target to actual target
+    let actualTarget = '';
+    if (this.mobilePopupTarget === 'mobile-shared-pickup') {
+      actualTarget = 'shared-pickup';
+    } else if (this.mobilePopupTarget === 'mobile-shared-dropoff') {
+      actualTarget = 'shared-dropoff';
+    } else if (this.mobilePopupTarget === 'mobile-reserved-pickup') {
+      actualTarget = 'reserved-pickup';
+    } else if (this.mobilePopupTarget === 'mobile-reserved-dropoff') {
+      actualTarget = 'reserved-dropoff';
+    } else if (this.mobilePopupTarget === 'mobile-flight-from') {
+      actualTarget = 'flight-from-0';
+    } else if (this.mobilePopupTarget === 'mobile-flight-to') {
+      actualTarget = 'flight-to-0';
+    }
+    
+    if (actualTarget) {
+      this.selectCity(cityName, cityCode, actualTarget);
+    }
+    
+    this.closeMobileLocationPopup();
+  }
+
+  selectMobileLocation(locationName: string): void {
+    // Map mobile target to actual target
+    let actualTarget = '';
+    if (this.mobilePopupTarget === 'mobile-shared-pickup-specific') {
+      actualTarget = 'shared-pickup-specific';
+    } else if (this.mobilePopupTarget === 'mobile-shared-dropoff-specific') {
+      actualTarget = 'shared-dropoff-specific';
+    } else if (this.mobilePopupTarget === 'mobile-reserved-pickup-specific') {
+      actualTarget = 'reserved-pickup-specific';
+    } else if (this.mobilePopupTarget === 'mobile-reserved-dropoff-specific') {
+      actualTarget = 'reserved-dropoff-specific';
+    }
+    
+    if (actualTarget) {
+      this.selectLocation(locationName, actualTarget);
+    }
+    
+    this.closeMobileLocationPopup();
+  }
+
+  getMobilePopupSuggestions(): City[] | string[] {
+    return this.activeSuggestions[this.mobilePopupTarget] || [];
+  }
+
+  isMobileCityArray(): boolean {
+    const suggestions = this.activeSuggestions[this.mobilePopupTarget];
+    return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'object';
   }
 
   // TrackBy function for better performance

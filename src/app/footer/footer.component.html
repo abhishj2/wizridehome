@@ -293,4 +293,108 @@
     </div>
   </div>
 </div>
+
+<!-- Mobile Footer (shown only on mobile) -->
+<section class="wr-route-timeline">
+  <div class="wr-route-timeline-inner">
+    <header class="wr-route-timeline-head">
+      <h2>Where Wizzride Runs</h2>
+      <p>Clean, reliable connectivity across key city routes and regional airports.</p>
+    </header>
+
+    <div class="wr-route-timeline-track">
+      <!-- Item 1: Airport Routes - Shared Cabs -->
+      <article class="wr-route-item">
+        <div class="wr-route-marker"></div>
+        <div class="wr-route-content">
+          <div class="wr-route-title">
+            <h3>Airport Routes</h3>
+            <span class="wr-route-label">Shared Cabs</span>
+          </div>
+          <p class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportShared.routes; let last = last">
+              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+            </ng-container>
+          </p>
+        </div>
+      </article>
+
+      <!-- Item 2: City Routes - Shared Cabs -->
+      <article class="wr-route-item">
+        <div class="wr-route-marker"></div>
+        <div class="wr-route-content">
+          <div class="wr-route-title">
+            <h3>City Routes</h3>
+            <span class="wr-route-label">Shared Cabs</span>
+          </div>
+          <p class="wr-route-links">
+            <ng-container *ngFor="let route of routes.cityShared.routes; let last = last">
+              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+            </ng-container>
+          </p>
+        </div>
+      </article>
+
+      <!-- Item 3: Airport Connectivity - Reserved Cabs -->
+      <article class="wr-route-item">
+        <div class="wr-route-marker"></div>
+        <div class="wr-route-content">
+          <div class="wr-route-title">
+            <h3>Airport Connectivity</h3>
+            <span class="wr-route-label">Reserved Cabs</span>
+          </div>
+          <p class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportReserved.routes; let last = last">
+              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+            </ng-container>
+          </p>
+        </div>
+      </article>
+
+      <!-- Item 4: Airports Covered -->
+      <article class="wr-route-item">
+        <div class="wr-route-marker"></div>
+        <div class="wr-route-content">
+          <div class="wr-route-title">
+            <h3>Airports Covered</h3>
+            <span class="wr-route-label">Current Network</span>
+          </div>
+          <p class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportsCovered.routes; let last = last">
+              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+            </ng-container>
+          </p>
+        </div>
+      </article>
+
+      <!-- Item 5: Inner Line Permits -->
+      <article class="wr-route-item">
+        <div class="wr-route-marker"></div>
+        <div class="wr-route-content">
+          <div class="wr-route-title">
+            <h3>Inner Line Permits</h3>
+            <span class="wr-route-label">Travel Documents</span>
+          </div>
+          <p class="wr-route-links">
+            <ng-container *ngFor="let route of routes.innerlinepermits.route; let last = last">
+              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+            </ng-container>
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="wr-footer" id="contact">
+  <div class="wr-footer-links">
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/support">Support</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="wr-footer-small">
+    © {{ currentYear }} Wizz Ride · All rights reserved.
+  </div>
+</footer>
 </footer>
