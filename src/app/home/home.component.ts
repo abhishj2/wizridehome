@@ -479,6 +479,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       : [];
   }
 
+  getMobilePassengers(): number {
+    if (this.mobileTab === 'shared') return this.formValues.sharedPassengers || 1;
+    if (this.mobileTab === 'reserved') return this.formValues.reservedPassengers || 1;
+    return 1;
+  }
+
+  updateMobilePassengers(delta: number): void {
+    if (this.mobileTab === 'shared') {
+      this.updateSharedPassengers(delta);
+    } else if (this.mobileTab === 'reserved') {
+      this.updateReservedPassengers(delta);
+    }
+  }
+
   private normalizeTarget(target: string): string {
     // Map mobile targets to desktop equivalents for suggestion logic
     switch (target) {

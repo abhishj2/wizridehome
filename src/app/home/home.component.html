@@ -741,6 +741,17 @@
       </div>
     </div>
 
+    <div class="wr-panel" [class.is-active]="mobileTab === 'shared' || mobileTab === 'reserved'">
+      <div class="wr-field-block passenger-block">
+        <div class="wr-field-label">Passengers</div>
+        <div class="passenger-counter">
+          <button class="counter-btn" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">-</button>
+          <span class="counter-value">{{ getMobilePassengers() }}</span>
+          <button class="counter-btn" (click)="updateMobilePassengers(1)">+</button>
+        </div>
+      </div>
+    </div>
+
     <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
       <div class="wr-field-block">
         <div class="wr-field-label">Date of Travel</div>

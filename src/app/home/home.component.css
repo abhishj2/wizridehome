@@ -3710,6 +3710,14 @@ button.nav-tab.active img{
         color: #111827;
         font-size: 16px;
     }
+
+    .passenger-block {
+        margin-top: 12px;
+    }
+
+    .wr-field-block + .wr-field-block {
+        margin-top: 10px;
+    }
 }
 
 /* Mobile location popup */
