@@ -816,26 +816,15 @@
       <div class="wr-section-title">Special Offers</div>
     </div>
     <div class="wr-offer-scroller">
-      <button class="wr-offer-card">
+      <button class="wr-offer-card" *ngFor="let offer of infiniteOffers">
         <div class="wr-offer-media">
-          <img class="wr-offer-img" src="https://www.yatra.com/ythomepagecms/media/imagemanager/2025/Nov/608fa08a7ec7e57b76fa783f8e1ffbc5.jpg">
-          <div class="wr-offer-ribbon">Limited</div>
+          <img class="wr-offer-img" [src]="offer.image" [alt]="offer.title">
+          <div class="wr-offer-ribbon" *ngIf="offer.subtitle">{{offer.subtitle}}</div>
         </div>
         <div class="wr-offer-content">
-          <div class="wr-offer-title">₹200 OFF – IXB → Gangtok</div>
-          <div class="wr-offer-sub">Use code WIZZ200</div>
-          <div class="wr-offer-desc">Morning shared rides at a special reduced fare.</div>
-        </div>
-      </button>
-      <button class="wr-offer-card">
-        <div class="wr-offer-media">
-          <img class="wr-offer-img" src="https://i.imgur.com/Sjj8l0l.jpeg">
-          <div class="wr-offer-ribbon">Combo</div>
-        </div>
-        <div class="wr-offer-content">
-          <div class="wr-offer-title">5% OFF – Flights + Cab</div>
-          <div class="wr-offer-sub">Use code COMBO5</div>
-          <div class="wr-offer-desc">Book your flight and airport cab together & save extra.</div>
+          <div class="wr-offer-title">{{offer.title}}</div>
+          <div class="wr-offer-sub" *ngIf="offer.code">Use code {{offer.code}}</div>
+          <div class="wr-offer-desc">{{offer.description}}</div>
         </div>
       </button>
     </div>
