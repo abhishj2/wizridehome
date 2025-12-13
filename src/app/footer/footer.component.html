@@ -311,11 +311,11 @@
             <h3>Airport Routes</h3>
             <span class="wr-route-label">Shared Cabs</span>
           </div>
-          <p class="wr-route-links">
-            <ng-container *ngFor="let route of routes.airportShared.routes; let last = last">
-              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+          <div class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportShared.routes">
+              <a [href]="route.link" class="wr-route-pill">{{ route.name }}</a>
             </ng-container>
-          </p>
+          </div>
         </div>
       </article>
 
@@ -327,11 +327,11 @@
             <h3>City Routes</h3>
             <span class="wr-route-label">Shared Cabs</span>
           </div>
-          <p class="wr-route-links">
-            <ng-container *ngFor="let route of routes.cityShared.routes; let last = last">
-              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+          <div class="wr-route-links">
+            <ng-container *ngFor="let route of routes.cityShared.routes">
+              <a [href]="route.link" class="wr-route-pill">{{ route.name }}</a>
             </ng-container>
-          </p>
+          </div>
         </div>
       </article>
 
@@ -343,11 +343,11 @@
             <h3>Airport Connectivity</h3>
             <span class="wr-route-label">Reserved Cabs</span>
           </div>
-          <p class="wr-route-links">
-            <ng-container *ngFor="let route of routes.airportReserved.routes; let last = last">
-              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+          <div class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportReserved.routes">
+              <a [href]="route.link" class="wr-route-pill">{{ route.name }}</a>
             </ng-container>
-          </p>
+          </div>
         </div>
       </article>
 
@@ -359,11 +359,11 @@
             <h3>Airports Covered</h3>
             <span class="wr-route-label">Current Network</span>
           </div>
-          <p class="wr-route-links">
-            <ng-container *ngFor="let route of routes.airportsCovered.routes; let last = last">
-              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+          <div class="wr-route-links">
+            <ng-container *ngFor="let route of routes.airportsCovered.routes">
+              <a [href]="route.link" class="wr-route-pill">{{ route.name }}</a>
             </ng-container>
-          </p>
+          </div>
         </div>
       </article>
 
@@ -375,11 +375,11 @@
             <h3>Inner Line Permits</h3>
             <span class="wr-route-label">Travel Documents</span>
           </div>
-          <p class="wr-route-links">
-            <ng-container *ngFor="let route of routes.innerlinepermits.route; let last = last">
-              <a [href]="route.link">{{ route.name }}</a><span *ngIf="!last"> · </span>
+          <div class="wr-route-links">
+            <ng-container *ngFor="let route of routes.innerlinepermits.route">
+              <a [href]="route.link" class="wr-route-pill">{{ route.name }}</a>
             </ng-container>
-          </p>
+          </div>
         </div>
       </article>
     </div>
