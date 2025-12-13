@@ -1,5 +1,26 @@
 <!-- Main Navbar -->
 <nav class="navbar">
+  <!-- Mobile Header Wrapper (only visible on mobile) -->
+  <div class="mobile-header-wrapper">
+    <div class="mobile-header-inner">
+      <button 
+        class="mobile-menu-btn"
+        (click)="toggleMobileMenu()"
+        [class.active]="isMobileMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <div class="mobile-logo">
+        <a href="/"><img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide"></a>
+      </div>
+      
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
   <div class="navbar-container">
     <!-- Logo Section -->
     <div class="logo-section">
@@ -130,6 +151,45 @@
         <i class="fas fa-info"></i>
         <span>Information</span>
       </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Drawer (trial.html style) -->
+  <div class="mobile-nav-drawer" [class.open]="isMobileMenuOpen" (click)="closeMobileDrawer($event)">
+    <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()">×</button>
+    <div class="mobile-nav-drawer-items">
+      <div 
+        *ngFor="let item of navigationItems" 
+        class="mobile-nav-drawer-item">
+        
+        <a 
+          *ngIf="!item.hasDropdown"
+          [href]="item.link || '#'" 
+          class="mobile-nav-drawer-link"
+          (click)="closeMobileMenuOnClick()">
+          {{ item.name }}
+        </a>
+
+        <div 
+          *ngIf="item.hasDropdown"
+          class="mobile-nav-drawer-link"
+          (click)="handleMobileDrawerClick(item, $event)">
+          {{ item.name }}
+        </div>
+
+        <!-- Mobile Drawer Dropdown -->
+        <div 
+          *ngIf="item.hasDropdown && activeDropdown === item.name" 
+          class="mobile-nav-drawer-dropdown">
+          <a 
+            *ngFor="let dropdownItem of item.dropdownItems" 
+            [href]="dropdownItem.link" 
+            class="mobile-nav-drawer-dropdown-item"
+            (click)="closeMobileMenuOnClick()">
+            {{ dropdownItem.name }}
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </nav>

@@ -139,6 +139,27 @@ export class NavbarComponent {
     }
   }
 
+  handleMobileDrawerClick(item: any, event: Event) {
+    if (item.hasDropdown) {
+      event.preventDefault();
+      this.toggleDropdown(item.name);
+    }
+  }
+
+  closeMobileDrawer(event: Event) {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('mobile-nav-drawer')) {
+      this.isMobileMenuOpen = false;
+      this.activeDropdown = null;
+    }
+  }
+
+  closeMobileMenuOnClick() {
+    this.isMobileMenuOpen = false;
+    this.activeDropdown = null;
+    this.mobileClickCount = {};
+  }
+
   toggleSearch() {
     this.isSearchOpen = !this.isSearchOpen;
     if (this.isSearchOpen && isPlatformBrowser(this.platformId)) {
@@ -180,7 +201,7 @@ export class NavbarComponent {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.navbar')) {
+    if (!target.closest('.navbar') && !target.closest('.mobile-nav-drawer')) {
       this.activeDropdown = null;
       this.isMobileMenuOpen = false;
     }
