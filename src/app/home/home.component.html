@@ -967,15 +967,10 @@
   <section class="wr-stats-section">
     <div class="wr-section-title">Our Numbers Say It All</div>
     <div class="wr-stats-grid">
-      <div class="wr-stat-card">
-        <div class="wr-stat-number">7+</div>
-        <div class="wr-stat-label">Years of service</div>
-        <div class="wr-stat-desc">Trusted experience</div>
-      </div>
-      <div class="wr-stat-card">
-        <div class="wr-stat-number">200k+</div>
-        <div class="wr-stat-label">Passengers</div>
-        <div class="wr-stat-desc">Happy customers</div>
+      <div class="wr-stat-card" *ngFor="let stat of numbersSectionStats">
+        <div class="wr-stat-number">{{ stat.number }}</div>
+        <div class="wr-stat-label">{{ stat.label }}</div>
+        <div class="wr-stat-desc">{{ stat.description }}</div>
       </div>
     </div>
   </section>
