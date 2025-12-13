@@ -3525,19 +3525,19 @@ button.nav-tab.active img{
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 9px;
-        padding: 5px 5px;
+        gap: 6px;
+        padding: 4px 4px;
         border-radius: 10px;
         background: transparent;
         border: none;
-        font-size: 14px;
+        font-size: 12px;
         cursor: pointer;
         color: #5c6678;
         transition: color 0.25s ease;
         z-index: 2;
     }
     .wr-tab-modern--active { color: #ffffff; }
-    .wr-tab-icon img { width: 22px; height: 22px; opacity: .78; transition: transform 0.28s ease, filter 0.28s ease; }
+    .wr-tab-icon img { width: 16px; height: 16px; opacity: .78; transition: transform 0.28s ease, filter 0.28s ease; }
     .wr-tab-modern--active .wr-tab-icon img {
         transform: scale(1.22);
         filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(30, 195, 185, 0.85));
@@ -3678,39 +3678,157 @@ button.nav-tab.active img{
     .wr-store-text small { display: block; font-size: 9px; opacity: 0.8; }
     .wr-store-text strong { display: block; font-size: 12px; font-weight: 600; }
 
-    /* Passenger counter (mobile) */
-    .passenger-counter {
-        justify-content: flex-start;
-        gap: 12px;
-        padding: 10px 12px;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
+    /* Passenger counter (mobile) - matching trial.html */
+    .wr-counter {
         background: #f9fafb;
+        padding: 6px 12px;
+        border-radius: 10px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 14px;
+        justify-content: space-between;
     }
 
-    .passenger-counter .counter-btn {
-        width: 34px;
-        height: 34px;
-        border: 1px solid #d1d5db;
+    .wr-counter button {
+        width: 24px;
+        height: 24px;
         border-radius: 10px;
-        background: #ffffff;
+        border: none;
+        background: #e5e7eb;
+        font-size: 14px;
+        cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
-        color: #0f172a;
+        padding: 0;
     }
 
-    .passenger-counter .counter-btn:disabled {
+    .wr-counter button:disabled {
         opacity: 0.4;
+        cursor: not-allowed;
     }
 
-    .passenger-counter .counter-value {
-        min-width: 24px;
+    .wr-counter .wr-counter-value {
+        font-size: 14px;
+        min-width: 20px;
         text-align: center;
-        font-weight: 700;
+    }
+
+    /* Phone field styles matching trial.html */
+    .wr-phone-wrapper {
+        display: flex;
+        align-items: center;
+        padding-right: 10px;
+        gap: 10px;
+    }
+
+    .wr-country-select {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .wr-flag {
+        width: 20px;
+        height: 14px;
+        border-radius: 3px;
+        object-fit: cover;
+    }
+
+    .wr-country-dropdown {
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+        padding-right: 10px;
+        cursor: pointer;
+    }
+
+    .wr-input {
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        width: 100%;
+        outline: none;
+    }
+
+    /* Swap button styling */
+    .wr-swap-btn {
+        width: 34px;
+        height: 34px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .wr-swap-btn:hover {
+        background: #f9fafb;
+        border-color: #18b0a8;
+        transform: rotate(180deg);
+    }
+
+    .wr-swap-btn:active {
+        transform: rotate(180deg) scale(0.95);
+    }
+
+    .wr-swap-btn .wr-icon {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2;
+    }
+
+    /* Inline calendar styling */
+    .wr-calendar-inline {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .wr-calendar-inline ::ng-deep .calendar-input-wrapper {
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .wr-calendar-inline ::ng-deep .calendar-input {
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+        padding: 0;
+        cursor: pointer;
+        width: 100%;
+        opacity: 1;
+        position: static;
         color: #111827;
-        font-size: 16px;
+    }
+
+    .wr-calendar-inline ::ng-deep .calendar-arrow {
+        display: none;
+    }
+
+    .wr-calendar-inline ::ng-deep .input-icon {
+        position: static;
+        transform: none;
+        margin: 0;
+        color: #18b0a8;
+        margin-right: 6px;
+    }
+
+    .wr-calendar-inline ::ng-deep .input-with-icon {
+        display: flex;
+        align-items: center;
     }
 
     .passenger-block {
@@ -3723,7 +3841,7 @@ button.nav-tab.active img{
 
     /* Extra spacing between form blocks on mobile */
     .wr-panel .wr-field-block {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
 }
 

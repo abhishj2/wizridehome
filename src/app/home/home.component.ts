@@ -493,6 +493,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  getChildrenCount(): number {
+    return this.counts.children || 0;
+  }
+
+  updateChildrenCount(delta: number): void {
+    this.counts.children = Math.max(0, Math.min(9, (this.counts.children || 0) + delta));
+  }
+
   private normalizeTarget(target: string): string {
     // Map mobile targets to desktop equivalents for suggestion logic
     switch (target) {
@@ -542,7 +550,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (!cityValue) {
-      return type === 'from' ? 'GTK' : 'IXB';
+      return '';
     }
 
     // Extract code from display value like "Delhi (DEL)" -> "DEL"
@@ -587,19 +595,47 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (!cityValue) {
-      return type === 'from' ? 'Gangtok' : 'Bagdogra Airport';
+      return '';
     }
 
     return this.extractCityNameFromDisplay(cityValue);
   }
 
+  isMobileView(): boolean {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  }
+
   onMobileSearch(): void {
+    // Validate phone number from mobile form
+    if (!this.phoneNumber || !this.phoneNumber.trim()) {
+      alert('Please enter your phone number');
+      return;
+    }
+
+    if (!this.selectedCountryCode) {
+      alert('Please select a country code');
+      return;
+    }
+
+    // Validate phone number format
+    const phoneRegex = /^\d{7,15}$/;
+    if (!phoneRegex.test(this.phoneNumber)) {
+      alert('Please enter a valid phone number (7-15 digits)');
+      return;
+    }
+
+    // Store the complete phone number
+    const completePhoneNumber = this.selectedCountryCode + this.phoneNumber;
+
     if (this.mobileTab === 'shared') {
-      this.searchCabs('shared');
+      this.searchCabsMobile('shared', completePhoneNumber);
     } else if (this.mobileTab === 'reserved') {
-      this.searchCabs('reserved');
+      this.searchCabsMobile('reserved', completePhoneNumber);
     } else {
-      this.searchFlights();
+      this.searchFlightsMobile(completePhoneNumber);
     }
   }
 
@@ -637,6 +673,89 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const dayNum = date.getDate();
     const year = date.getFullYear();
     return `${day}, ${month} ${dayNum}${this.getOrdinalSuffix(dayNum)} ${year}`;
+  }
+
+  getMobileDateDisplay(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    
+    if (selectedDate.getTime() === today.getTime()) {
+      return 'Today';
+    }
+    return this.formatMobileDate(dateString);
+  }
+
+  getMobileFlagCode(): string {
+    const flagMap: { [key: string]: string } = {
+      '+1': 'us', '+7': 'ru', '+20': 'eg', '+27': 'za', '+30': 'gr',
+      '+31': 'nl', '+32': 'be', '+33': 'fr', '+34': 'es', '+36': 'hu',
+      '+39': 'it', '+40': 'ro', '+41': 'ch', '+43': 'at', '+44': 'gb',
+      '+45': 'dk', '+46': 'se', '+47': 'no', '+48': 'pl', '+49': 'de',
+      '+51': 'pe', '+52': 'mx', '+53': 'cu', '+54': 'ar', '+55': 'br',
+      '+56': 'cl', '+57': 'co', '+58': 've', '+60': 'my', '+61': 'au',
+      '+62': 'id', '+63': 'ph', '+64': 'nz', '+65': 'sg', '+66': 'th',
+      '+81': 'jp', '+82': 'kr', '+84': 'vn', '+86': 'cn', '+90': 'tr',
+      '+91': 'in', '+92': 'pk', '+93': 'af', '+94': 'lk', '+95': 'mm',
+      '+98': 'ir', '+212': 'ma', '+213': 'dz', '+216': 'tn', '+218': 'ly',
+      '+220': 'gm', '+221': 'sn', '+222': 'mr', '+223': 'ml', '+224': 'gn',
+      '+225': 'ci', '+226': 'bf', '+227': 'ne', '+228': 'tg', '+229': 'bj',
+      '+230': 'mu', '+231': 'lr', '+232': 'sl', '+233': 'gh', '+234': 'ng',
+      '+235': 'td', '+236': 'cf', '+237': 'cm', '+238': 'cv', '+239': 'st',
+      '+240': 'gq', '+241': 'ga', '+242': 'cg', '+243': 'cd', '+244': 'ao',
+      '+245': 'gw', '+246': 'io', '+248': 'sc', '+249': 'sd', '+250': 'rw',
+      '+251': 'et', '+252': 'so', '+253': 'dj', '+254': 'ke', '+255': 'tz',
+      '+256': 'ug', '+257': 'bi', '+258': 'mz', '+260': 'zm', '+261': 'mg',
+      '+262': 're', '+263': 'zw', '+264': 'na', '+265': 'mw', '+266': 'ls',
+      '+267': 'bw', '+268': 'sz', '+269': 'km', '+290': 'sh', '+291': 'er',
+      '+297': 'aw', '+298': 'fo', '+299': 'gl', '+350': 'gi', '+351': 'pt',
+      '+352': 'lu', '+353': 'ie', '+354': 'is', '+355': 'al', '+356': 'mt',
+      '+357': 'cy', '+358': 'fi', '+359': 'bg', '+370': 'lt', '+371': 'lv',
+      '+372': 'ee', '+373': 'md', '+374': 'am', '+375': 'by', '+376': 'ad',
+      '+377': 'mc', '+378': 'sm', '+380': 'ua', '+381': 'rs', '+382': 'me',
+      '+383': 'xk', '+385': 'hr', '+386': 'si', '+387': 'ba', '+389': 'mk',
+      '+420': 'cz', '+421': 'sk', '+423': 'li', '+500': 'fk', '+501': 'bz',
+      '+502': 'gt', '+503': 'sv', '+504': 'hn', '+505': 'ni', '+506': 'cr',
+      '+507': 'pa', '+508': 'pm', '+509': 'ht', '+590': 'bl', '+591': 'bo',
+      '+592': 'gy', '+593': 'ec', '+594': 'gf', '+595': 'py', '+596': 'mq',
+      '+597': 'sr', '+598': 'uy', '+599': 'cw', '+670': 'tl', '+672': 'nf',
+      '+673': 'bn', '+674': 'nr', '+675': 'pg', '+676': 'to', '+677': 'sb',
+      '+678': 'vu', '+679': 'fj', '+680': 'pw', '+681': 'wf', '+682': 'ck',
+      '+683': 'nu', '+685': 'ws', '+686': 'ki', '+687': 'nc', '+688': 'tv',
+      '+689': 'pf', '+690': 'tk', '+691': 'fm', '+692': 'mh', '+850': 'kp',
+      '+852': 'hk', '+853': 'mo', '+855': 'kh', '+856': 'la', '+880': 'bd',
+      '+886': 'tw', '+960': 'mv', '+961': 'lb', '+962': 'jo', '+963': 'sy',
+      '+964': 'iq', '+965': 'kw', '+966': 'sa', '+967': 'ye', '+968': 'om',
+      '+970': 'ps', '+971': 'ae', '+972': 'il', '+973': 'bh', '+974': 'qa',
+      '+975': 'bt', '+976': 'mn', '+977': 'np', '+992': 'tj', '+993': 'tm',
+      '+994': 'az', '+995': 'ge', '+996': 'kg', '+998': 'uz'
+    };
+    return flagMap[this.selectedCountryCode] || 'in';
+  }
+
+  onMobileCountryCodeChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedCountryCode = select.value;
+  }
+
+  swapMobileLocations(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    
+    if (this.mobileTab === 'shared') {
+      this.swapCabLocations('shared');
+    } else if (this.mobileTab === 'reserved') {
+      this.swapCabLocations('reserved');
+    } else if (this.mobileTab === 'flights') {
+      if (this.flightRoutes.length > 0) {
+        this.swapFlightLocations(0);
+      }
+    }
   }
 
   private getOrdinalSuffix(day: number): string {
@@ -2528,6 +2647,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const temp = route.from;
     route.from = route.to;
     route.to = temp;
+    
+    // Also swap formValues for flights
+    const tempFrom = this.formValues.flightFrom;
+    this.formValues.flightFrom = this.formValues.flightTo;
+    this.formValues.flightTo = tempFrom;
+    
+    // Swap selected cities if they exist
+    if (this.selectedCities.flights) {
+      const tempCity = this.selectedCities.flights.from;
+      this.selectedCities.flights.from = this.selectedCities.flights.to;
+      this.selectedCities.flights.to = tempCity;
+    }
   }
 
   selectLocation(locationName: string, target: string) {
@@ -2907,7 +3038,83 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.openPhonePopup(type);
+    // Check if mobile - if so, phone number should be in form, don't show popup
+    if (this.isMobileView()) {
+      // For mobile, phone number is already in the form, so we need to get it from there
+      // But since searchCabs is called from desktop, we'll keep the popup for desktop
+      this.openPhonePopup(type);
+    } else {
+      this.openPhonePopup(type);
+    }
+  }
+
+  searchCabsMobile(type: 'shared' | 'reserved', phoneNumber: string) {
+    const cities = this.selectedCities[type];
+
+    if (!cities.pickup || !cities.dropoff) {
+      alert('Please select both pickup and drop-off cities first.');
+      return;
+    }
+
+    // Validate date field
+    const dateField = type === 'shared' ? this.formValues.sharedDateTime : this.formValues.reservedDate;
+    if (!dateField || !dateField.trim()) {
+      alert('Please select a date first.');
+      return;
+    }
+
+    // For reserved cabs, validate time field
+    if (type === 'reserved') {
+      if (!this.formValues.reservedTime || !this.formValues.reservedTime.trim()) {
+        alert('Please select a pickup time first.');
+        return;
+      }
+    }
+
+    const pickupLocation = type === 'shared'
+      ? this.formValues.sharedPickupLocation
+      : this.formValues.reservedPickupLocation;
+    const dropoffLocation = type === 'shared'
+      ? this.formValues.sharedDropoffLocation
+      : this.formValues.reservedDropoffLocation;
+
+    if (!pickupLocation || !dropoffLocation) {
+      alert('Please enter specific pickup and drop-off locations within the selected cities.');
+      return;
+    }
+
+    // Use the phone number from mobile form and proceed directly
+    this.pendingAction = type;
+    if (type === 'shared') {
+      this.checkAndNavigateForSharedCabs(phoneNumber);
+    } else {
+      this.checkAndNavigateForReservedCabs(phoneNumber);
+    }
+  }
+
+  searchFlightsMobile(phoneNumber: string) {
+    // Get selected airports from flightRoutes or formValues
+    const fromValue = this.flightRoutes[0]?.from || this.formValues.flightFrom;
+    const toValue = this.flightRoutes[0]?.to || this.formValues.flightTo;
+
+    // Extract airport codes
+    const fromCode = this.extractAirportCode(fromValue);
+    const toCode = this.extractAirportCode(toValue);
+
+    if (!fromCode || !toCode) {
+      alert("Departure and Destination airports must be selected.");
+      return;
+    }
+
+    if (fromCode === toCode) {
+      alert("Departure and Destination airports cannot be the same.");
+      return;
+    }
+
+    // Use the phone number from mobile form and proceed directly
+    this.pendingAction = 'flights';
+    this.submitFlights(phoneNumber);
+    this.navigateToResults(phoneNumber);
   }
 
   createGroupBooking() {
