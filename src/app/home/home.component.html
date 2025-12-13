@@ -791,7 +791,7 @@
             <circle cx="12" cy="12" r="7"></circle>
             <polyline points="12 8 12 12 15 13.5"></polyline>
           </svg>
-          <span>{{ formatTimeDisplay(formValues.reservedTime) || '08:30 AM' }}</span>
+          <span>{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
         </div>
       </div>
 
@@ -803,7 +803,7 @@
               class="wr-calendar-inline"
               [selectedDate]="formValues.reservedDate"
               [minDate]="getTodayDate()"
-              placeholder=""
+              placeholder="Select date"
               (dateSelected)="onReservedDateSelected($event)">
             </app-custom-calendar>
           </div>
@@ -816,6 +816,21 @@
             <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
             <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
           </div>
+        </div>
+      </div>
+
+      <div class="wr-field-block">
+        <div class="wr-field-label">Your Mobile Number</div>
+        <div class="wr-field-pill wr-phone-wrapper">
+          <div class="wr-country-select">
+            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
+            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
+              <option *ngFor="let country of countryList" [value]="country.code">
+                {{ country.code }}
+              </option>
+            </select>
+          </div>
+          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}">
         </div>
       </div>
 
@@ -838,30 +853,6 @@
             <circle cx="12" cy="11" r="2.5"></circle>
           </svg>
           <span>{{ formValues.reservedDropoffLocation || 'Select drop point' }}</span>
-        </div>
-      </div>
-
-      <div class="wr-field-block">
-        <div class="wr-field-label">Children</div>
-        <div class="wr-counter" data-counter="children">
-          <button data-action="minus" [disabled]="getChildrenCount() <= 0" (click)="updateChildrenCount(-1)">−</button>
-          <span class="wr-counter-value">{{ getChildrenCount() }}</span>
-          <button data-action="plus" (click)="updateChildrenCount(1)">+</button>
-        </div>
-      </div>
-
-      <div class="wr-field-block">
-        <div class="wr-field-label">Your Mobile Number</div>
-        <div class="wr-field-pill wr-phone-wrapper">
-          <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
-              <option *ngFor="let country of countryList" [value]="country.code">
-                {{ country.code }}
-              </option>
-            </select>
-          </div>
-          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}">
         </div>
       </div>
     </div>
@@ -931,11 +922,12 @@
       <button class="wr-offer-card" *ngFor="let offer of infiniteOffers">
         <div class="wr-offer-media">
           <img class="wr-offer-img" [src]="offer.image" [alt]="offer.title">
-          <div class="wr-offer-ribbon" *ngIf="offer.subtitle">{{offer.subtitle}}</div>
+    
+          <div class="wr-offer-ribbon" *ngIf="offer.code">Use Code: {{offer.code}}</div>
         </div>
         <div class="wr-offer-content">
           <div class="wr-offer-title">{{offer.title}}</div>
-          <div class="wr-offer-sub" *ngIf="offer.code">Use code {{offer.code}}</div>
+          <div class="wr-offer-sub" *ngIf="offer.subtitle">{{offer.subtitle}}</div>
           <div class="wr-offer-desc">{{offer.description}}</div>
         </div>
       </button>

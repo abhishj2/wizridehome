@@ -746,20 +746,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getMobileCityCode(type: 'from' | 'to'): string {
+    // For reserved cabs, don't show codes (they are numeric location IDs, not display codes)
+    if (this.mobileTab === 'reserved') {
+      return '';
+    }
+
     let cityValue = '';
     if (type === 'from') {
       if (this.mobileTab === 'shared') {
         cityValue = this.formValues.sharedPickup || '';
-      } else if (this.mobileTab === 'reserved') {
-        cityValue = this.formValues.reservedPickup || '';
       } else if (this.mobileTab === 'flights') {
         cityValue = this.formValues.flightFrom || '';
       }
     } else {
       if (this.mobileTab === 'shared') {
         cityValue = this.formValues.sharedDropoff || '';
-      } else if (this.mobileTab === 'reserved') {
-        cityValue = this.formValues.reservedDropoff || '';
       } else if (this.mobileTab === 'flights') {
         cityValue = this.formValues.flightTo || '';
       }
@@ -780,8 +781,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let citiesToSearch: City[] = [];
     if (this.mobileTab === 'shared') {
       citiesToSearch = this.sourceCities;
-    } else if (this.mobileTab === 'reserved') {
-      citiesToSearch = this.reservedCities;
     } else if (this.mobileTab === 'flights') {
       citiesToSearch = this.flightAirports;
     }
