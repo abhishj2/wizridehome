@@ -467,6 +467,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isMobileCityArray(): boolean {
+    // For city selection (from/to), always return true since we're dealing with cities
+    if (this.mobilePopupType === 'from' || this.mobilePopupType === 'to') {
+      return true;
+    }
+    // For location selection (pickup/dropoff), check if suggestions are strings
     const suggestions = this.activeSuggestions[this.mobilePopupTarget];
     return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'object';
   }
@@ -483,24 +488,145 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       : [];
   }
 
+  // Map city name to state
+  private getCityState(cityName: string): string {
+    // Normalize city name: lowercase, trim, remove common suffixes
+    let name = cityName.toLowerCase().trim();
+    // Remove common suffixes like "airport", "city", etc. for better matching
+    name = name.replace(/\s*(airport|city|town|station)\s*$/i, '').trim();
+    
+    // Sikkim cities
+    const sikkimCities = ['gangtok', 'singtam', 'rangpo', 'namchi', '32nd mile', 'jorethang', 'pakyong', 'gyalshing', 'mangan', 'lachung', 'lachen'];
+    if (sikkimCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Sikkim';
+    }
+    
+    // West Bengal cities
+    const westBengalCities = ['bagdogra', 'siliguri', 'darjeeling', 'kalimpong', 'melli', 'chitrey', 'coronation bridge', 'kurseong', 'ghoom', 'dilaram', 'jorebungalow', 'batasia loop', 'jaigaon', 'rongbull', 'sonada', 'binnaguri', 'dooars', 'new jalpaiguri', 'njp'];
+    if (westBengalCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'West Bengal';
+    }
+    
+    // Assam cities
+    const assamCities = ['guwahati', 'tezpur', 'jorabat', 'jorhat', 'dibrugarh', 'sivasagar', 'tinsukia', 'nagaon', 'bongaigaon'];
+    if (assamCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Assam';
+    }
+    
+    // Meghalaya cities
+    const meghalayaCities = ['shillong', 'umiam', 'umsning', 'nongpoh', 'cherrapunji', 'mawphlang', 'jowai', 'williamnagar', 'tura', 'baghmara'];
+    if (meghalayaCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Meghalaya';
+    }
+    
+    // Bhutan cities
+    const bhutanCities = ['thimphu', 'phuentsholing', 'paro', 'punakha', 'wangdue', 'trongsa', 'bumthang'];
+    if (bhutanCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Bhutan';
+    }
+    
+    // Manipur cities
+    const manipurCities = ['imphal', 'ukhrul', 'churachandpur'];
+    if (manipurCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Manipur';
+    }
+    
+    // Tripura cities
+    const tripuraCities = ['agartala', 'udaipur', 'dharamanagar'];
+    if (tripuraCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Tripura';
+    }
+    
+    // Mizoram cities
+    const mizoramCities = ['aizawl', 'lunglei', 'saiha'];
+    if (mizoramCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Mizoram';
+    }
+    
+    // Nagaland cities
+    const nagalandCities = ['kohima', 'dimapur', 'mokokchung'];
+    if (nagalandCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Nagaland';
+    }
+    
+    // Arunachal Pradesh cities
+    const arunachalCities = ['itanagar', 'tawang', 'bomdila', 'ziro', 'pasighat', 'namsai'];
+    if (arunachalCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+      return 'Arunachal Pradesh';
+    }
+    
+    return 'Other';
+  }
+
   // Group cities by state for Popular Searches
   getCitiesGroupedByState(): { state: string; cities: City[]; expanded: boolean }[] {
-    const allCities = this.getMobileCitySuggestionsList();
+    // Get all cities from the appropriate source based on mobilePopupTarget
+    let allCities: City[] = [];
+    
+    if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
+      // When searching, use filtered suggestions
+      allCities = this.getMobileCitySuggestionsList();
+    } else {
+      // When not searching, get all cities from appropriate source
+      const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+      
+      if (normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff') {
+        allCities = [...this.reservedCities];
+      } else if (normalizedTarget === 'shared-pickup' || normalizedTarget === 'shared-dropoff') {
+        allCities = [...this.sourceCities];
+      } else if (normalizedTarget.startsWith('flight-from-') || normalizedTarget.startsWith('flight-to-')) {
+        allCities = [...this.flightAirports];
+      } else {
+        allCities = [...this.cities];
+      }
+
+      // Apply filtering logic (exclude selected city from the other field)
+      if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+        );
+      } else if (normalizedTarget === 'shared-dropoff' && this.formValues.sharedPickup) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+        );
+      } else if (normalizedTarget === 'reserved-pickup' && this.formValues.reservedDropoff) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+        );
+      } else if (normalizedTarget === 'reserved-dropoff' && this.formValues.reservedPickup) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
+        );
+      }
+    }
+
+    // Group by state - use city.state if available, otherwise use mapping
     const stateMap = new Map<string, City[]>();
 
     allCities.forEach(city => {
-      const state = city.state || 'Other';
+      // Use existing state if available and not empty, otherwise use city name mapping
+      const state = (city.state && city.state.trim()) ? city.state : this.getCityState(city.name);
       if (!stateMap.has(state)) {
         stateMap.set(state, []);
       }
       stateMap.get(state)!.push(city);
     });
 
-    return Array.from(stateMap.entries()).map(([state, cities]) => ({
-      state,
-      cities,
-      expanded: this.expandedStates.has(state)
-    }));
+    // Convert to array and sort states alphabetically, but keep 'Other' at the end
+    const stateGroups = Array.from(stateMap.entries())
+      .map(([state, cities]) => ({
+        state,
+        cities: cities.sort((a, b) => a.name.localeCompare(b.name)), // Sort cities within each state
+        expanded: this.expandedStates.has(state)
+      }))
+      .sort((a, b) => {
+        // Put 'Other' at the end
+        if (a.state === 'Other') return 1;
+        if (b.state === 'Other') return -1;
+        return a.state.localeCompare(b.state);
+      });
+
+    return stateGroups;
   }
 
   // Get initial cities per state (3-4 cities)
@@ -528,6 +654,45 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Set mobile location tab
   setMobileLocationTab(tab: 'popular' | 'seeall'): void {
     this.mobileLocationTab = tab;
+  }
+
+  // Get all cities for "See All" tab (sorted alphabetically)
+  getAllCitiesForSeeAll(): City[] {
+    // Get all cities from the appropriate source based on mobilePopupTarget
+    let allCities: City[] = [];
+    const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+    
+    if (normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff') {
+      allCities = [...this.reservedCities];
+    } else if (normalizedTarget === 'shared-pickup' || normalizedTarget === 'shared-dropoff') {
+      allCities = [...this.sourceCities];
+    } else if (normalizedTarget.startsWith('flight-from-') || normalizedTarget.startsWith('flight-to-')) {
+      allCities = [...this.flightAirports];
+    } else {
+      allCities = [...this.cities];
+    }
+
+    // Apply filtering logic (exclude selected city from the other field)
+    if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
+      allCities = allCities.filter(city =>
+        city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+      );
+    } else if (normalizedTarget === 'shared-dropoff' && this.formValues.sharedPickup) {
+      allCities = allCities.filter(city =>
+        city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+      );
+    } else if (normalizedTarget === 'reserved-pickup' && this.formValues.reservedDropoff) {
+      allCities = allCities.filter(city =>
+        city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+      );
+    } else if (normalizedTarget === 'reserved-dropoff' && this.formValues.reservedPickup) {
+      allCities = allCities.filter(city =>
+        city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
+      );
+    }
+
+    // Sort alphabetically by city name
+    return allCities.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   getMobilePassengers(): number {
@@ -1325,13 +1490,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Transform API data to City[] format for shared cabs
         if (Array.isArray(data)) {
           this.sourceCities = data.map((item: SourceValue | string) => {
-
             const name = typeof item === 'string' ? item : item.name;
             const id = typeof item === 'string' ? '' : item.id;
             return {
               name: name,
               code: id || name.substring(0, 3).toUpperCase(),
-              state: '' // State not available from API
+              state: this.getCityState(name)
             };
           });
           console.log('Source cities populated:', this.sourceCities);
@@ -1355,7 +1519,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               name: name,
               code: code || name.substring(0, 3).toUpperCase(),
-              state: '' // State not available from API
+              state: this.getCityState(name)
             };
           });
           console.log('Reserved cities populated:', this.reservedCities);
@@ -1382,10 +1546,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             // Use just the city name for display
             const displayName = cityName || item.NAME || item.name || '';
 
+            // Try to get state from city name first, fallback to country
+            const cityState = this.getCityState(displayName);
             return {
               name: displayName,
               code: airportCode || displayName.substring(0, 3).toUpperCase(),
-              state: country // Use country as state for airports
+              state: cityState !== 'Other' ? cityState : (country || 'Other') // Use city state mapping, fallback to country
             };
           });
           console.log('Flight airports populated:', this.flightAirports);

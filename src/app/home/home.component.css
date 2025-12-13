@@ -3980,6 +3980,14 @@ button.nav-tab.active img{
     background: #f9fafb;
 }
 
+.mobile-location-see-less {
+    color: #fbbf24;
+}
+
+.mobile-location-see-less:active {
+    background: #fffbeb;
+}
+
 .mobile-location-popup-suggestions {
     max-height: calc(100vh - 200px);
     overflow-y: auto;

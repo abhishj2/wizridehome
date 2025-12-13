@@ -1651,12 +1651,17 @@
                             (click)="toggleStateExpansion(stateGroup.state)">
                         See More..
                     </button>
+                    <button *ngIf="stateGroup.expanded && stateGroup.cities.length > 4" 
+                            class="mobile-location-see-more mobile-location-see-less"
+                            (click)="toggleStateExpansion(stateGroup.state)">
+                        See Less..
+                    </button>
                 </div>
             </ng-container>
 
             <!-- See All Tab - All Cities -->
             <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery">
-                <div *ngFor="let city of getMobileCitySuggestionsList()" 
+                <div *ngFor="let city of getAllCitiesForSeeAll()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">
                     <i class="fas fa-map-marker-alt"></i>
