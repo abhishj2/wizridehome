@@ -3716,6 +3716,8 @@ button.nav-tab.active img {
         gap: 8px;
         font-size: 14px;
         border: 1px solid #e3eaef;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 
     .wr-icon {
@@ -4139,14 +4141,16 @@ button.nav-tab.active img {
     /* Passenger counter (mobile) - matching trial.html */
     .wr-counter {
         background: #f9fafb;
-        padding: 8px 12px;
-        border-radius: 12px;
+        padding: 10px 12px;
+        border-radius: 16px;
         display: flex;
         gap: 12px;
         align-items: center;
         font-size: 14px;
         justify-content: space-between;
         border: 1px solid #e3eaef;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 
     .wr-field-block .wr-counter {
@@ -4154,12 +4158,12 @@ button.nav-tab.active img {
     }
 
     .wr-counter button {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         border: none;
         background: #e5e7eb;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: #374151;
         cursor: pointer;
@@ -4168,6 +4172,7 @@ button.nav-tab.active img {
         justify-content: center;
         padding: 0;
         transition: background-color 0.2s;
+        flex-shrink: 0;
     }
 
     .wr-counter button:hover:not(:disabled) {
