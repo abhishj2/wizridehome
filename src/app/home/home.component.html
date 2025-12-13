@@ -1617,8 +1617,45 @@
                    (input)="onMobileLocationInput($any($event.target).value)"
                    [placeholder]="mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Enter pickup location' : 'Enter drop location'">
         </div>
+
+        <!-- Tabs for Popular Searches and See All (only for from/to cities) -->
+        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery">
+            <button class="mobile-location-tab" 
+                    [class.active]="mobileLocationTab === 'popular'"
+                    (click)="setMobileLocationTab('popular')">
+                Popular Searches
+            </button>
+            <button class="mobile-location-tab" 
+                    [class.active]="mobileLocationTab === 'seeall'"
+                    (click)="setMobileLocationTab('seeall')">
+                See All
+            </button>
+        </div>
+
         <div class="mobile-location-popup-suggestions">
-            <ng-container *ngIf="isMobileCityArray()">
+            <!-- Popular Searches Tab - Grouped by State -->
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery">
+                <div *ngFor="let stateGroup of getCitiesGroupedByState()" class="mobile-location-state-group">
+                    <div class="mobile-location-state-header">{{ stateGroup.state }}</div>
+                    <div *ngFor="let city of getInitialCitiesForState(stateGroup)" 
+                         class="mobile-location-suggestion"
+                         (click)="selectMobileCity(city.name, city.code)">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="mobile-location-suggestion-content">
+                            <div class="mobile-location-suggestion-name">{{ city.name }}</div>
+                            <div class="mobile-location-suggestion-state">{{ city.state }}</div>
+                        </div>
+                    </div>
+                    <button *ngIf="hasMoreCities(stateGroup)" 
+                            class="mobile-location-see-more"
+                            (click)="toggleStateExpansion(stateGroup.state)">
+                        See More..
+                    </button>
+                </div>
+            </ng-container>
+
+            <!-- See All Tab - All Cities -->
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery">
                 <div *ngFor="let city of getMobileCitySuggestionsList()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">
@@ -1629,6 +1666,21 @@
                     </div>
                 </div>
             </ng-container>
+
+            <!-- Search Results (when user types) -->
+            <ng-container *ngIf="isMobileCityArray() && mobileSearchQuery">
+                <div *ngFor="let city of getMobileCitySuggestionsList()" 
+                     class="mobile-location-suggestion"
+                     (click)="selectMobileCity(city.name, city.code)">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="mobile-location-suggestion-content">
+                        <div class="mobile-location-suggestion-name">{{ city.name }}</div>
+                        <div class="mobile-location-suggestion-state">{{ city.state }}</div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Location Suggestions (for pickup/drop) -->
             <ng-container *ngIf="!isMobileCityArray()">
                 <div *ngFor="let location of getMobileLocationSuggestionsList()" 
                      class="mobile-location-suggestion"
@@ -1640,7 +1692,8 @@
                     </div>
                 </div>
             </ng-container>
-            <div *ngIf="getMobilePopupSuggestions().length === 0" class="mobile-location-no-results">
+
+            <div *ngIf="getMobilePopupSuggestions().length === 0 && mobileSearchQuery" class="mobile-location-no-results">
                 <p>No results found</p>
             </div>
         </div>

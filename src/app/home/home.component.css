@@ -3919,8 +3919,69 @@ button.nav-tab.active img{
 .mobile-location-search-input::placeholder {
     color: #9ca3af;
 }
+/* Mobile location popup tabs */
+.mobile-location-popup-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 16px;
+    gap: 0;
+}
+
+.mobile-location-tab {
+    flex: 1;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mobile-location-tab.active {
+    color: #18b0a8;
+    border-bottom-color: #18b0a8;
+    font-weight: 600;
+}
+
+/* State grouping */
+.mobile-location-state-group {
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.mobile-location-state-header {
+    padding: 12px 16px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.mobile-location-see-more {
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: #18b0a8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    border-top: 1px solid #f3f4f6;
+}
+
+.mobile-location-see-more:active {
+    background: #f9fafb;
+}
+
 .mobile-location-popup-suggestions {
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 200px);
     overflow-y: auto;
     padding: 8px 0 16px;
 }

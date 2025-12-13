@@ -108,6 +108,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mobileSearchQuery: string = '';
   showMobileDatePicker = false;
   mobileDatePickerType: 'shared' | 'reserved' | 'flights' | null = null;
+  mobileLocationTab: 'popular' | 'seeall' = 'popular';
+  expandedStates: Set<string> = new Set();
 
   services = [
     {
@@ -399,6 +401,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mobilePopupType = null;
     this.mobilePopupTarget = '';
     this.mobileSearchQuery = '';
+    this.mobileLocationTab = 'popular';
+    this.expandedStates.clear();
     // Clear suggestions
     if (this.mobilePopupTarget) {
       delete this.activeSuggestions[this.mobilePopupTarget];
@@ -477,6 +481,53 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'string'
       ? (suggestions as string[])
       : [];
+  }
+
+  // Group cities by state for Popular Searches
+  getCitiesGroupedByState(): { state: string; cities: City[]; expanded: boolean }[] {
+    const allCities = this.getMobileCitySuggestionsList();
+    const stateMap = new Map<string, City[]>();
+
+    allCities.forEach(city => {
+      const state = city.state || 'Other';
+      if (!stateMap.has(state)) {
+        stateMap.set(state, []);
+      }
+      stateMap.get(state)!.push(city);
+    });
+
+    return Array.from(stateMap.entries()).map(([state, cities]) => ({
+      state,
+      cities,
+      expanded: this.expandedStates.has(state)
+    }));
+  }
+
+  // Get initial cities per state (3-4 cities)
+  getInitialCitiesForState(stateGroup: { state: string; cities: City[]; expanded: boolean }): City[] {
+    if (stateGroup.expanded) {
+      return stateGroup.cities;
+    }
+    return stateGroup.cities.slice(0, 4);
+  }
+
+  // Toggle state expansion
+  toggleStateExpansion(state: string): void {
+    if (this.expandedStates.has(state)) {
+      this.expandedStates.delete(state);
+    } else {
+      this.expandedStates.add(state);
+    }
+  }
+
+  // Check if state has more cities to show
+  hasMoreCities(stateGroup: { state: string; cities: City[]; expanded: boolean }): boolean {
+    return !stateGroup.expanded && stateGroup.cities.length > 4;
+  }
+
+  // Set mobile location tab
+  setMobileLocationTab(tab: 'popular' | 'seeall'): void {
+    this.mobileLocationTab = tab;
   }
 
   getMobilePassengers(): number {
