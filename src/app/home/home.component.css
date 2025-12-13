@@ -3620,9 +3620,10 @@ button.nav-tab.active img{
     .wr-offer-media { position: relative; }
     .wr-offer-img { width: 100%; height: 140px; object-fit: cover; display: block; }
     .wr-offer-ribbon {
-        position: absolute; top: 12px; right: 14px;
+        position: absolute; top: 0; right: 0;
         background: linear-gradient(135deg, #ff5b45, #ff3d3d);
-        color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px;
+        color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 700;
+        border-radius: 0 12px 0 8px;
         box-shadow: 0 6px 14px rgba(0,0,0,0.22);
     }
     .wr-offer-content { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
@@ -3631,27 +3632,27 @@ button.nav-tab.active img{
     .wr-offer-desc { font-size: 13px; color: #4b5563; line-height: 1.4; }
 
     .wr-routes-section { margin: 28px 0 0; padding-left: 12px; }
-    .wr-routes-header { display: flex; justify-content: space-between; align-items: center; padding-right: 12px; margin-bottom: 12px; }
-    .wr-routes-scroller { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x mandatory; }
+    .wr-routes-header { display: flex; justify-content: space-between; align-items: center; padding: 0 12px 6px; margin-bottom: 10px; }
+    .wr-routes-scroller { display: flex; gap: 12px; overflow-x: auto; padding: 0 12px 6px; scroll-snap-type: x mandatory; }
     .wr-route-card {
-        flex: 0 0 180px;
-        height: 170px;
-        background: white;
-        border-radius: 18px;
-        padding: 14px 16px;
-        box-shadow: 0 6px 16px rgba(15,23,42,0.08);
+        flex: 0 0 200px;
+        min-height: 150px;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 12px 14px;
+        box-shadow: 0 8px 18px rgba(15,23,42,0.07);
         scroll-snap-align: start;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         border: 1px solid #eef2f7;
-        transition: transform .2s ease, box-shadow .2s ease;
+        transition: transform .18s ease, box-shadow .18s ease;
     }
-    .wr-route-card:active { transform: scale(0.98); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+    .wr-route-card:active { transform: scale(0.985); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
     .wr-route-icon-img { width: 38px; height: 38px; object-fit: contain; margin-bottom: 8px; }
-    .wr-route-main { font-size: 12px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+    .wr-route-main { font-size: 13px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; color: #0f172a; }
     .wr-route-sub { font-size: 11px; color: #6b7280; margin-bottom: 8px; }
-    .wr-route-info-row { font-size: 11px; display: flex; justify-content: space-between; color: #6b7280; }
+    .wr-route-info-row { font-size: 11px; display: flex; justify-content: space-between; color: #6b7280; font-weight: 600; }
 
     .wr-stats-section { margin: 28px 12px 0; }
     .wr-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
