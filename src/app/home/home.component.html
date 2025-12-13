@@ -1624,14 +1624,13 @@
             <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery">
                 <div *ngFor="let stateGroup of getCitiesGroupedByState()" class="mobile-location-state-group">
                     <div class="mobile-location-state-header">{{ stateGroup.state }}</div>
-                    <div *ngFor="let city of getInitialCitiesForState(stateGroup)" 
-                         class="mobile-location-suggestion"
-                         (click)="selectMobileCity(city.name, city.code)">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div class="mobile-location-suggestion-content">
-                            <div class="mobile-location-suggestion-name">{{ city.name }}</div>
-                            <div class="mobile-location-suggestion-state">{{ city.state }}</div>
-                        </div>
+                    <div class="mobile-location-pills-container">
+                        <button *ngFor="let city of getInitialCitiesForState(stateGroup)" 
+                                class="mobile-location-pill"
+                                (click)="selectMobileCity(city.name, city.code)">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ city.name }}</span>
+                        </button>
                     </div>
                     <button *ngIf="hasMoreCities(stateGroup)" 
                             class="mobile-location-see-more"

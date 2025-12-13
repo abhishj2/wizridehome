@@ -519,11 +519,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return 'Meghalaya';
     }
     
-    // Bhutan cities
-    const bhutanCities = ['thimphu', 'phuentsholing', 'paro', 'punakha', 'wangdue', 'trongsa', 'bumthang'];
-    if (bhutanCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Bhutan';
-    }
+    // // Bhutan cities
+    // const bhutanCities = ['thimphu', 'phuentsholing', 'paro', 'punakha', 'wangdue', 'trongsa', 'bumthang'];
+    // if (bhutanCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
+    //   return 'Bhutan';
+    // }
     
     // Manipur cities
     const manipurCities = ['imphal', 'ukhrul', 'churachandpur'];
@@ -612,19 +612,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       stateMap.get(state)!.push(city);
     });
 
-    // Convert to array and sort states alphabetically, but keep 'Other' at the end
+    // Convert to array and sort states alphabetically, exclude 'Other' state
     const stateGroups = Array.from(stateMap.entries())
+      .filter(([state]) => state !== 'Other') // Filter out 'Other' state
       .map(([state, cities]) => ({
         state,
         cities: cities.sort((a, b) => a.name.localeCompare(b.name)), // Sort cities within each state
         expanded: this.expandedStates.has(state)
       }))
-      .sort((a, b) => {
-        // Put 'Other' at the end
-        if (a.state === 'Other') return 1;
-        if (b.state === 'Other') return -1;
-        return a.state.localeCompare(b.state);
-      });
+      .sort((a, b) => a.state.localeCompare(b.state)); // Sort states alphabetically
 
     return stateGroups;
   }
