@@ -32,29 +32,25 @@ img {
 
 /* Glassmorphic Search Summary */
 .search-summary {
-  background: linear-gradient(90deg,rgba(42, 123, 155, 1) 34%, rgba(76, 181, 138, 1) 61%, rgba(87, 199, 133, 1) 80%) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 139, 139, 0.12);
-  /* border-radius: 24px; */
-  padding: 24px 32px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  border-radius: 12px;
+  padding: 10px 14px !important;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
+  margin: 10px 0 14px 0;
 }
 
-/* Sticky Header State */
+/* Sticky header disabled – keep same style when toggled */
 .search-summary.sticky {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  padding: 16px 32px;
-  box-shadow: 0 4px 20px rgba(0, 139, 139, 0.25);
-  animation: slideDown 0.3s ease;
+  position: static;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  padding: 10px 14px !important;
+  animation: none;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -72,14 +68,7 @@ img {
 }
 
 .search-summary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 139, 139, 0.1), transparent);
-  animation: shimmer 3s infinite;
+  display: none;
 }
 
 @keyframes shimmer {
@@ -128,19 +117,19 @@ img {
 }
 
 .route-summary .from, .route-summary .to {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  color: #fff;
+  color: #0f172a;
   position: relative;
 }
 
 .location-detail {
   font-size: 12px;
   font-weight: 500;
-  color: #fff !important;
-  opacity: 0.9;
-  line-height: 1.2;
-  max-width: 140px;
+  color: #475569 !important;
+  opacity: 1;
+  line-height: 1.3;
+  max-width: 160px;
   word-wrap: break-word;
 }
 
@@ -157,7 +146,7 @@ color: #000 !important;
 
 .route-summary i {
   font-size: 16px;
-  color: #fff;
+  color: #6b7280;
 }
 
 .summary-actions {
