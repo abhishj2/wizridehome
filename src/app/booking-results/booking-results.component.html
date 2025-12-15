@@ -94,7 +94,7 @@
                 </div>
                 <div class="route-details">
                   <div class="time">{{ searchParams && searchParams.type === 'reserved' && searchParams.pickupTime ? formatPickupTime(searchParams.pickupTime) : vehicle.departureTime }}</div>
-                  <div class="duration">{{ vehicle.duration }}</div>
+                  <div class="duration">{{ formatDuration(vehicle.duration) }}</div>
                 </div>
               </div>
 
@@ -112,6 +112,48 @@
                   <p>{{ vehicle.seatsLeft }} Seat Left</p>
                 </div>
               </div>
+            </div>
+
+            <!-- Mobile Amenities + Car Display -->
+            <div class="mobile-amenities">
+              <div class="amenities-list">
+                <div class="amenity">
+                  <i class="fas fa-snowflake"></i>
+                  <span>Air Conditioned</span>
+                </div>
+                <div class="amenity">
+                  <i class="fas fa-coffee"></i>
+                  <span>On-Board Refreshments</span>
+                </div>
+                <div class="amenity">
+                  <i class="fas fa-suitcase-rolling"></i>
+                  <span>1 Trolley &amp; 1 Hand Bag per seat</span>
+                </div>
+              </div>
+              <div class="mobile-vehicle-visual">
+                <img [src]="vehicle.image" [alt]="vehicle.name">
+                <div class="mobile-vehicle-name">{{ vehicle.name }}</div>
+              </div>
+            </div>
+
+            <!-- Mobile Price Row -->
+            <div class="mobile-price-row">
+              <div class="mobile-seats-left">
+                <i class="fas fa-chair"></i>
+                <span>Seats Left : {{ vehicle.seatsLeft }}</span>
+              </div>
+              <div class="mobile-start-price">
+                <span>Starts &#64;</span>
+                <span class="mobile-price">₹ {{ vehicle.price.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <!-- Mobile Booking Button -->
+            <div class="mobile-booking-row">
+              <button class="btn mobile-book-btn"
+                      (click)="searchParams?.type === 'shared' ? selectSeat(vehicle) : bookCab(vehicle); $event.stopPropagation()">
+                {{ searchParams?.type === 'shared' ? 'Select Seat' : 'Book Cab' }}
+              </button>
             </div>
 
             <!-- Details -->

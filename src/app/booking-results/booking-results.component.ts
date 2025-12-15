@@ -753,6 +753,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
   }
 
+  formatDuration(raw: string | undefined | null): string {
+    if (!raw) return '';
+    // Strip any leading minus sign and surrounding spaces
+    return raw.replace(/^\s*-+\s*/, '').trim();
+  }
+
   toggleExpandableSection(vehicleId: string, sectionType: string, event?: Event): void {
     if (event) {
       event.stopPropagation();
