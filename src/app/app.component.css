@@ -75,6 +75,26 @@ body {
         border-radius: 12px !important;
         box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
       }
+      
+      /* Override iOS slide animation with fade-in - iOS specific */
+      @supports (-webkit-touch-callout: none) {
+        .flatpickr-calendar {
+          transform: translateX(0) translateY(0) !important;
+          transition: opacity 0.2s ease-in-out !important;
+        }
+        
+        .flatpickr-calendar.animate {
+          transform: translateX(0) translateY(0) !important;
+          animation: none !important;
+          transition: opacity 0.2s ease-in-out !important;
+        }
+        
+        .flatpickr-calendar.open,
+        .flatpickr-calendar.animate.open {
+          transform: translateX(0) translateY(0) !important;
+          opacity: 1 !important;
+        }
+      }
 
       .flatpickr-months {
         padding: 8px 10px !important;
