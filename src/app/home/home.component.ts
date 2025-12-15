@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Mobile tab state (mobile-only UI)
   mobileTab: 'shared' | 'reserved' | 'flights' = 'shared';
   private mobileTabOrder: Array<'shared' | 'reserved' | 'flights'> = ['shared', 'reserved', 'flights'];
-  
+
   // Mobile popup state
   showMobileLocationPopup = false;
   mobilePopupType: 'from' | 'to' | 'pickup' | 'dropoff' | null = null;
@@ -3290,7 +3290,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       // But since searchCabs is called from desktop, we'll keep the popup for desktop
       this.openPhonePopup(type);
     } else {
-      this.openPhonePopup(type);
+    this.openPhonePopup(type);
     }
   }
 

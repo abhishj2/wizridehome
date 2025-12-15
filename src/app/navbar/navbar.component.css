@@ -443,6 +443,13 @@
     padding: 12px;
     background: linear-gradient(180deg, #effffa, transparent);
     backdrop-filter: blur(10px);
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0);
+  }
+  
+  /* Hide navbar when scrolling up */
+  .mobile-header-wrapper.navbar-hidden {
+    transform: translateY(-100%);
   }
 
   .mobile-header-inner {

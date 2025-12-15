@@ -1,7 +1,7 @@
 <!-- Main Navbar -->
 <nav class="navbar">
   <!-- Mobile Header Wrapper (only visible on mobile) -->
-  <div class="mobile-header-wrapper">
+  <div class="mobile-header-wrapper" [class.navbar-hidden]="!isNavbarVisible && isMobileView()">
     <div class="mobile-header-inner">
       <button 
         class="mobile-menu-btn"

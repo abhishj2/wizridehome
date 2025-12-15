@@ -15,6 +15,11 @@ export class NavbarComponent {
   isSearchOpen = false;
   activeDropdown: string | null = null;
   mobileClickCount: { [key: string]: number } = {};
+  
+  // Mobile navbar scroll behavior
+  lastScrollTop = 0;
+  isNavbarVisible = true;
+  hasReachedBookingSection = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -213,5 +218,58 @@ export class NavbarComponent {
       this.isMobileMenuOpen = false;
       this.activeDropdown = null;
     }
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    if (!isPlatformBrowser(this.platformId) || window.innerWidth > 768) {
+      return; // Only for mobile
+    }
+
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const bookingSection = document.getElementById('wr-mobile-booking');
+    
+    // Always show navbar at the top of the page
+    if (scrollTop <= 50) {
+      this.isNavbarVisible = true;
+      this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      return;
+    }
+    
+    // Check if we're currently in the booking section area (within viewport or slightly above)
+    let isInBookingSection = false;
+    if (bookingSection) {
+      const rect = bookingSection.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      // Consider booking section if it's visible in viewport or within 200px above/below
+      isInBookingSection = rect.top < windowHeight + 200 && rect.bottom > -200;
+    }
+
+    // Determine scroll direction
+    const scrollDifference = scrollTop - this.lastScrollTop;
+    
+    // If we're currently in booking section area, always show navbar
+    if (isInBookingSection) {
+      this.isNavbarVisible = true;
+    } else {
+      // Hide navbar when scrolling up, show when scrolling down
+      if (scrollDifference > 5) {
+        // Scrolling down
+        this.isNavbarVisible = true;
+      } else if (scrollDifference < -5) {
+        // Scrolling up
+        this.isNavbarVisible = false;
+      }
+      // If scroll difference is small, keep current state
+    }
+
+    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }
+
+  isMobileView(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      return window.innerWidth <= 768;
+    }
+    return false;
   }
 }
