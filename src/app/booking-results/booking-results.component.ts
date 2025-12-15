@@ -1040,6 +1040,65 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Helpers for time display
+  getDepartureDisplay(vehicle: VehicleOption): string {
+    const reservedPickup = this.searchParams && this.searchParams.type === 'reserved' && this.searchParams.pickupTime;
+    return reservedPickup ? this.formatPickupTime(this.searchParams!.pickupTime!) : vehicle.departureTime;
+  }
+
+  private parseTimeToMinutes(timeString: string): number | null {
+    if (!timeString) return null;
+    const normalized = timeString.trim().toLowerCase();
+
+    // 12-hour with am/pm
+    const match12 = normalized.match(/(\d{1,2}):(\d{2})\s*(am|pm)/);
+    if (match12) {
+      let hour = parseInt(match12[1], 10);
+      const minute = parseInt(match12[2], 10);
+      const period = match12[3];
+      if (period === 'pm' && hour !== 12) hour += 12;
+      if (period === 'am' && hour === 12) hour = 0;
+      return hour * 60 + minute;
+    }
+
+    // 24-hour fallback
+    const match24 = normalized.match(/(\d{1,2}):(\d{2})/);
+    if (match24) {
+      const hour = parseInt(match24[1], 10);
+      const minute = parseInt(match24[2], 10);
+      return hour * 60 + minute;
+    }
+
+    return null;
+  }
+
+  private parseDurationToMinutes(duration: string): number | null {
+    if (!duration) return null;
+    const hoursMatch = duration.match(/(\d+)\s*hr/i);
+    const minsMatch = duration.match(/(\d+)\s*min/i);
+    const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+    const minutes = minsMatch ? parseInt(minsMatch[1], 10) : 0;
+    if (isNaN(hours) && isNaN(minutes)) return null;
+    return hours * 60 + minutes;
+  }
+
+  private formatMinutesToTime(totalMinutes: number): string {
+    const mins = ((totalMinutes % 1440) + 1440) % 1440; // ensure positive wrap
+    const hours = Math.floor(mins / 60);
+    const minutes = mins % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+    return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
+  }
+
+  computeArrivalTime(departure: string | undefined | null, duration: string | undefined | null): string {
+    if (!departure || !duration) return '';
+    const depMinutes = this.parseTimeToMinutes(departure);
+    const durMinutes = this.parseDurationToMinutes(duration);
+    if (depMinutes === null || durMinutes === null) return '';
+    return this.formatMinutesToTime(depMinutes + durMinutes);
+  }
+
   // Time Picker Methods
   openTimePicker() {
     this.timePickerVisible = true;

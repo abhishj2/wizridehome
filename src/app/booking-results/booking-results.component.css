@@ -856,6 +856,10 @@ color: #000 !important;
   display: none;
 }
 
+.mobile-time {
+  display: none;
+}
+
 /* Sidebar */
 .sidebar-column {
   display: flex;
@@ -1685,6 +1689,11 @@ color: #000 !important;
     padding: 4px 8px;
   }
 
+  /* Hide central orange time pill on mobile; use side badges instead */
+  .route-details .time {
+    display: none;
+  }
+
   .price-info {
     margin-top: 12px;
   }
@@ -2347,6 +2356,35 @@ span.seat-price {
   .mobile-book-btn {
     width: 100%;
     max-width: 360px;
+  }
+
+  .mobile-time {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+  }
+
+  .time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1f2937;
+    background: #eef2f6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .time-pill.start {
+    background: #e0f2fe;
+    color: #0b2f6a;
+  }
+
+  .time-pill.end {
+    background: #e5f9ed;
+    color: #0f5132;
   }
 }
 

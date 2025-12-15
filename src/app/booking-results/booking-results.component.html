@@ -69,6 +69,7 @@
             </div>
 
             <!-- Route -->
+            <ng-container *ngIf="getDepartureDisplay(vehicle) as depTime">
             <div class="route">
               <div class="vehicle">
                 <img [src]="vehicle.image" [alt]="vehicle.name">
@@ -82,6 +83,9 @@
                 <div class="location">{{ vehicle.route.from.name }}
                   <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
                 </div>
+                <div class="mobile-time">
+                  <span class="time-pill start">{{ depTime }}</span>
+                </div>
               </div>
 
               <div class="route-visualization">
@@ -93,7 +97,7 @@
                   <div class="route-node end-node"></div>
                 </div>
                 <div class="route-details">
-                  <div class="time">{{ searchParams && searchParams.type === 'reserved' && searchParams.pickupTime ? formatPickupTime(searchParams.pickupTime) : vehicle.departureTime }}</div>
+                  <div class="time">{{ depTime }}</div>
                   <div class="duration">{{ formatDuration(vehicle.duration) }}</div>
                 </div>
               </div>
@@ -103,6 +107,11 @@
                 <div class="location">{{ vehicle.route.to.name }}
                   <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
                 </div>
+                <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
+                  <div class="mobile-time">
+                    <span class="time-pill end"> {{ arrivalTime }}</span>
+                  </div>
+                </ng-container>
               </div>
 
               <div class="price-info">
@@ -113,6 +122,7 @@
                 </div>
               </div>
             </div>
+            </ng-container>
 
             <!-- Mobile Amenities + Car Display -->
             <div class="mobile-amenities">
