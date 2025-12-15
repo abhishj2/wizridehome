@@ -694,8 +694,8 @@
   </div>
 
   <section class="wr-card" id="wr-mobile-booking">
-    <div class="wr-route-row">
-      <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
+  <div class="wr-route-row">
+    <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
         <div class="wr-field-label wr-field-label-left-pad">From</div>
         <div class="wr-route-city" *ngIf="getMobileCityCode('from')">{{ getMobileCityCode('from') }}</div>
         <div class="wr-route-code" *ngIf="getMobileCityName('from')">{{ getMobileCityName('from') }}</div>
@@ -743,7 +743,7 @@
         </div>
       </div>
 
-      <div class="wr-field-block">
+      <div class="wr-field-block wr-field-block--reserved-mobile">
         <div class="wr-field-label">Your Mobile Number</div>
         <div class="wr-field-pill wr-phone-wrapper">
           <div class="wr-country-select">
@@ -794,6 +794,20 @@
           <span>{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
         </div>
       </div>
+      <div class="wr-field-block">
+        <div class="wr-field-label">Your Mobile Number</div>
+        <div class="wr-field-pill wr-phone-wrapper">
+          <div class="wr-country-select">
+            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
+            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
+              <option *ngFor="let country of countryList" [value]="country.code">
+                {{ country.code }}
+              </option>
+            </select>
+          </div>
+          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (keydown.enter)="onPhoneEnter($event)">
+        </div>
+      </div>
 
       <div class="wr-grid-2">
         <div class="wr-grid-2-col">
@@ -819,40 +833,29 @@
         </div>
       </div>
 
-      <div class="wr-field-block">
-        <div class="wr-field-label">Your Mobile Number</div>
-        <div class="wr-field-pill wr-phone-wrapper">
-          <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
-              <option *ngFor="let country of countryList" [value]="country.code">
-                {{ country.code }}
-              </option>
-            </select>
-          </div>
-          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (keydown.enter)="onPhoneEnter($event)">
-        </div>
-      </div>
+     
 
-      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
+      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff" style="margin-top: 16px;">
         <div class="wr-field-label">Pickup Point</div>
-        <div class="wr-field-pill" (click)="openMobileLocationPopup('pickup')">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
-            <circle cx="12" cy="11" r="2.5"></circle>
-          </svg>
-          <span>{{ formValues.reservedPickupLocation || 'Select pickup point' }}</span>
+        <div class="wr-field-pill wr-field-pill--input">
+          <input
+            type="text"
+            class="wr-input"
+            placeholder="Enter specific pickup point"
+            [(ngModel)]="formValues.reservedPickupLocation"
+          />
         </div>
       </div>
 
       <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
         <div class="wr-field-label">Drop Point</div>
-        <div class="wr-field-pill" (click)="openMobileLocationPopup('dropoff')">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
-            <circle cx="12" cy="11" r="2.5"></circle>
-          </svg>
-          <span>{{ formValues.reservedDropoffLocation || 'Select drop point' }}</span>
+        <div class="wr-field-pill wr-field-pill--input">
+          <input
+            type="text"
+            class="wr-input"
+            placeholder="Enter specific drop point"
+            [(ngModel)]="formValues.reservedDropoffLocation"
+          />
         </div>
       </div>
     </div>
