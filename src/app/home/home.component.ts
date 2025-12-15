@@ -822,19 +822,40 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   onMobileSearch(): void {
     // Validate phone number from mobile form
     if (!this.phoneNumber || !this.phoneNumber.trim()) {
-      alert('Please enter your phone number');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Phone Number Required',
+        text: 'Please enter your phone number',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
     if (!this.selectedCountryCode) {
-      alert('Please select a country code');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Country Code Required',
+        text: 'Please select a country code',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
     // Validate phone number format
     const phoneRegex = /^\d{7,15}$/;
     if (!phoneRegex.test(this.phoneNumber)) {
-      alert('Please enter a valid phone number (7-15 digits)');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Phone Number',
+        text: 'Please enter a valid phone number (7-15 digits)',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
@@ -2002,6 +2023,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
+    }
+  }
+
+  onPhoneEnter(event: any) {
+    // Close mobile keyboard when Enter is pressed
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter' || keyboardEvent.keyCode === 13) {
+      const target = keyboardEvent.target as HTMLInputElement;
+      if (target) {
+        target.blur();
+      }
+      keyboardEvent.preventDefault();
+      keyboardEvent.stopPropagation();
     }
   }
 
@@ -3264,21 +3298,42 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const cities = this.selectedCities[type];
 
     if (!cities.pickup || !cities.dropoff) {
-      alert('Please select both pickup and drop-off cities first.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cities Required',
+        text: 'Please select both pickup and drop-off cities first.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
     // Validate date field
     const dateField = type === 'shared' ? this.formValues.sharedDateTime : this.formValues.reservedDate;
     if (!dateField || !dateField.trim()) {
-      alert('Please select a date first.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Date Required',
+        text: 'Please select a date first.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
     // For reserved cabs, validate time field
     if (type === 'reserved') {
       if (!this.formValues.reservedTime || !this.formValues.reservedTime.trim()) {
-        alert('Please select a pickup time first.');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Pickup Time Required',
+          text: 'Please select a pickup time first.',
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
         return;
       }
     }
@@ -3291,7 +3346,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       : this.formValues.reservedDropoffLocation;
 
     if (!pickupLocation || !dropoffLocation) {
-      alert('Please enter specific pickup and drop-off locations within the selected cities.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Locations Required',
+        text: 'Please enter specific pickup and drop-off locations within the selected cities.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
@@ -3314,12 +3376,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const toCode = this.extractAirportCode(toValue);
 
     if (!fromCode || !toCode) {
-      alert("Departure and Destination airports must be selected.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Airports Required',
+        text: 'Departure and Destination airports must be selected.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 
     if (fromCode === toCode) {
-      alert("Departure and Destination airports cannot be the same.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Selection',
+        text: 'Departure and Destination airports cannot be the same.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
       return;
     }
 

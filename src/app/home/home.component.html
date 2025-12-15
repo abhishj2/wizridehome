@@ -754,7 +754,7 @@
               </option>
             </select>
           </div>
-          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}">
+          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (keydown.enter)="onPhoneEnter($event)">
         </div>
       </div>
 
@@ -830,7 +830,7 @@
               </option>
             </select>
           </div>
-          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}">
+          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (keydown.enter)="onPhoneEnter($event)">
         </div>
       </div>
 
@@ -904,7 +904,7 @@
               </option>
             </select>
           </div>
-          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}">
+          <input type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (keydown.enter)="onPhoneEnter($event)">
         </div>
       </div>
     </div>

@@ -4224,6 +4224,14 @@ button.nav-tab.active img {
         outline: none;
         padding-right: 10px;
         cursor: pointer;
+        color: #111827;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    .wr-country-dropdown option {
+        color: #111827;
+        background: #ffffff;
     }
 
     .wr-input {

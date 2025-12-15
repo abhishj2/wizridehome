@@ -224,4 +224,75 @@ p,ul,li,a{
       padding: 0 25px 20px;
       font-size: 0.95rem;
   }
+
+  /* SweetAlert2 - Smaller icons on mobile */
+  .swal2-icon {
+    width: 60px !important;
+    height: 60px !important;
+    margin: 0 auto 20px !important;
+  }
+
+  .swal2-icon .swal2-icon-content {
+    font-size: 28px !important;
+    line-height: 60px !important;
+  }
+
+  .swal2-icon.swal2-warning {
+    border-color: #f8bb86 !important;
+    color: #f8bb86 !important;
+  }
+
+  .swal2-icon.swal2-error {
+    border-color: #f27474 !important;
+    color: #f27474 !important;
+  }
+
+  .swal2-icon.swal2-info {
+    border-color: #3fc3ee !important;
+    color: #3fc3ee !important;
+  }
+
+  .swal2-popup {
+    width: 85% !important;
+    max-width: 320px !important;
+    padding: 1.5rem !important;
+  }
+
+  .swal2-title {
+    font-size: 18px !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .swal2-html-container {
+    font-size: 14px !important;
+    margin: 0.5rem 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even smaller icons on very small screens */
+  .swal2-icon {
+    width: 50px !important;
+    height: 50px !important;
+    margin: 0 auto 16px !important;
+  }
+
+  .swal2-icon .swal2-icon-content {
+    font-size: 24px !important;
+    line-height: 50px !important;
+  }
+
+  .swal2-popup {
+    width: 90% !important;
+    max-width: 300px !important;
+    padding: 1.25rem !important;
+  }
+
+  .swal2-title {
+    font-size: 16px !important;
+  }
+
+  .swal2-html-container {
+    font-size: 13px !important;
+  }
 }
