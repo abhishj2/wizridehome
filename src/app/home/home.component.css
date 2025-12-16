@@ -3693,7 +3693,7 @@ button.nav-tab.active img {
 
     .wr-route-code {
         color: #6b7280;
-        font-size: 12px;
+        font-size: 11px  !important;
         text-align: center;
     }
 

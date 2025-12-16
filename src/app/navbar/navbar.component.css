@@ -4,11 +4,15 @@
 /* Main Navbar */
 .navbar {
   background: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: none;
+  border-bottom: none;
   position: sticky;
   top: 0;
   z-index: 1000;
   font-family: "Quicksand", sans-serif !important;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -440,11 +444,14 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    padding: 12px;
+    margin: 0;
+    padding-top: 0;
     background: linear-gradient(180deg, #effffa, transparent);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease-in-out;
     transform: translateY(0);
+    border: none;
+    border-bottom: none;
   }
   
   /* Hide navbar when scrolling up */
@@ -454,12 +461,14 @@
 
   .mobile-header-inner {
     background: white;
-    border-radius: 16px;
+    /* border-radius: 16px; */
     padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+    border: none;
+    border-bottom: none;
   }
 
   .mobile-menu-btn {
@@ -605,7 +614,9 @@
 
   .navbar {
     background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
   }
 }
 

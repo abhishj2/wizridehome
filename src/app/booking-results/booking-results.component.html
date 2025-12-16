@@ -1,5 +1,5 @@
-<!-- Compact Search Summary -->
-<div class="search-summary" *ngIf="searchParams">
+<!-- Compact Search Summary (Desktop Only) -->
+<div class="search-summary desktop-search-summary" *ngIf="searchParams">
   <div class="container">
   <div class="summary-content">
    
@@ -32,6 +32,17 @@
   <div class="container">
     
   </div>
+  </div>
+</div>
+
+<!-- Tell Us Section -->
+<div class="mobile-tell-us-section" *ngIf="searchParams?.type === 'shared'">
+  <div class="mobile-tell-us-header">
+    <div class="mobile-tell-us-content">
+      <h3 class="mobile-tell-us-title">Can't find your timings?</h3>
+      <p class="mobile-tell-us-subtitle">If you can't find your required timing below, suggest a preferred timing.</p>
+    </div>
+    <button class="mobile-tell-us-btn" (click)="requestCarAddition()">Tell Us</button>
   </div>
 </div>
 

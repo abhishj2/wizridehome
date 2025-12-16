@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
+import Swal from 'sweetalert2';
 
 interface BookingSearchParams {
   from: string;
@@ -153,6 +154,9 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     
     // Load vehicle options
     this.loadVehicleOptions();
+    
+    // Show attention alert on page load
+    this.showAttentionAlert();
   }
 
   ngOnDestroy() {
@@ -1206,5 +1210,31 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     }
     
     return `${displayHour}:${minuteStr} ${period}`;
+  }
+
+  showAttentionAlert() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    Swal.fire({
+      html: `
+        <div class="swal-attention-content">
+          <div class="swal-icon-circle">
+            <i class="fas fa-info"></i>
+          </div>
+          <h2>Attention!</h2>
+          <p>
+            The Journey Duration shown in the car list is NOT exact and DOES NOT take
+            into account delays due to traffic & landslides. Please keep at least
+            2 hours buffer time while planning your journey.
+          </p>
+        </div>
+      `,
+      confirmButtonText: 'Ok',
+      confirmButtonColor: '#8B5CF6',
+      customClass: {
+        popup: 'swal-attention-popup',
+        confirmButton: 'swal-attention-btn'
+      }
+    });
   }
 }

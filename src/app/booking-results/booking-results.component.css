@@ -637,7 +637,7 @@ color: #000 !important;
 }
 
 .amenity-item i {
-  font-size: 11x;
+  font-size: 11px;
   color: #4b5563;
 }
 
@@ -993,16 +993,10 @@ color: #000 !important;
   }
 }
 
-/* Force column layout on mobile */
+/* Hide sidebar on mobile */
 @media (max-width: 768px) {
-  .promotional-ads {
-    flex-direction: column !important;
-    overflow-x: hidden !important;
-  }
-  
-  .ad-card {
-    min-width: auto !important;
-    max-width: 100% !important;
+  .sidebar-column {
+    display: none !important;
   }
 }
 
@@ -1471,33 +1465,7 @@ color: #000 !important;
     white-space: nowrap;
   }
 
-  .sidebar-column {
-    order: -1;
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .promotional-ads {
-    flex-direction: column;
-    overflow-x: hidden;
-    gap: 20px;
-    padding-bottom: 0;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .ad-card {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    min-width: 0;
-  }
+  /* Sidebar hidden on mobile - removed mobile styles */
 }
 
 @media (max-width: 480px) {
@@ -1869,12 +1837,7 @@ color: #000 !important;
     text-overflow: ellipsis;
   }
   
-  .ad-card {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    min-width: 0;
-  }
+  /* Sidebar hidden on mobile - removed ad-card mobile styles */
 
   .ad-image {
     height: 160px;
@@ -3439,5 +3402,124 @@ span.seat-number {
   transform: translateX(-50%);
 }
 
+/* Tell Us Section (Mobile only) */
+.mobile-tell-us-section {
+  display: none !important;
+}
 
+.mobile-tell-us-header {
+  background: #4a5568;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.mobile-tell-us-content {
+  flex: 1;
+}
+
+.mobile-tell-us-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.mobile-tell-us-subtitle {
+  font-size: 13px;
+  color: #e2e8f0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.mobile-tell-us-btn {
+  background: #a8325f;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.mobile-tell-us-btn:hover {
+  background: #8b2a4f;
+  transform: translateY(-1px);
+}
+
+.mobile-tell-us-btn:active {
+  transform: translateY(0);
+}
+}
+/* Hide desktop search summary on mobile, show Tell Us section */
+@media (max-width: 768px) {
+  .desktop-search-summary {
+    display: none !important;
+  }
+  
+  .mobile-tell-us-section {
+    display: block !important;
+  }
+}
+
+/* Hide Tell Us section on desktop */
+@media (min-width: 769px) {
+  .mobile-tell-us-section {
+    display: none !important;
+  }
+}
+
+::ng-deep .swal-attention-popup {
+  width: 420px !important;
+  max-width: 90vw !important;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+/* Mobile full width */
+@media (max-width: 576px) {
+  ::ng-deep .swal-attention-popup {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 20px !important;
+    border-radius: 0 !important;
+  }
+}
+
+::ng-deep .swal-attention-content {
+  text-align: center;
+}
+
+::ng-deep .swal-attention-content h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+::ng-deep .swal-attention-content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* Icon circle */
+::ng-deep .swal-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: #87ceeb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+::ng-deep .swal-icon-circle i {
+  font-size: 36px;
+  color: #fff;
 }
