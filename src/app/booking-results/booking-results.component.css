@@ -2289,7 +2289,7 @@ span.seat-price {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font-size: 12px;
     color: #374151;
   }
 
@@ -2316,6 +2316,7 @@ span.seat-price {
     font-size: 12px;
     color: #1f2937;
     font-weight: 600;
+    text-transform: none;
   }
 
   .mobile-price-row {
