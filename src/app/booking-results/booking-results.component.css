@@ -860,6 +860,10 @@ color: #000 !important;
   display: none;
 }
 
+.mobile-time-row {
+  display: none;
+}
+
 /* Sidebar */
 .sidebar-column {
   display: flex;
@@ -1692,6 +1696,14 @@ color: #000 !important;
   /* Hide central orange time pill on mobile; use side badges instead */
   .route-details .time {
     display: none;
+  }
+
+  .mobile-time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 12px;
+    margin-top: 10px;
   }
 
   .price-info {

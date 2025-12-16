@@ -1012,6 +1012,45 @@
       </div>
     </div>
   </section>
+
+  <section class="wr-testimonials-section">
+    <div class="wr-testimonials-header">
+      <div class="wr-section-title">What Our Customers Say</div>
+      <p class="wr-testimonials-subtitle">Hear from our satisfied customers about their amazing travel experiences</p>
+    </div>
+    <div class="wr-testimonials-scroller">
+      <div class="wr-testimonial-card" *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
+        <div class="wr-testimonial-content">
+          <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="" class="wr-testimonial-quote">
+          <p class="wr-testimonial-text" [class.expanded]="isTestimonialExpanded(testimonial.id)">
+            <span *ngIf="!isTestimonialExpanded(testimonial.id) && shouldShowReadMore(testimonial.text)">
+              {{ getTruncatedText(testimonial.text) }}
+            </span>
+            <span *ngIf="isTestimonialExpanded(testimonial.id) || !shouldShowReadMore(testimonial.text)">
+              {{ testimonial.text }}
+            </span>
+          </p>
+          <button 
+            class="wr-read-more-btn" 
+            *ngIf="shouldShowReadMore(testimonial.text)"
+            (click)="toggleTestimonial(testimonial.id); $event.stopPropagation()">
+            {{ isTestimonialExpanded(testimonial.id) ? 'Read Less' : 'Read More' }}
+          </button>
+          <div class="wr-testimonial-author">
+            <div class="wr-testimonial-avatar">
+              <img [src]="testimonial.avatar" [alt]="testimonial.name" />
+            </div>
+            <div class="wr-testimonial-author-info">
+              <div class="wr-testimonial-name">{{ testimonial.name }}</div>
+              <div class="wr-testimonial-rating" *ngIf="testimonial.rating">
+                <span *ngFor="let star of [1,2,3,4,5]" class="wr-star" [class.active]="star <= testimonial.rating">★</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- Special Offers and Content Sections -->

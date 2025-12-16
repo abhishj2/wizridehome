@@ -83,9 +83,6 @@
                 <div class="location">{{ vehicle.route.from.name }}
                   <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
                 </div>
-                <div class="mobile-time">
-                  <span class="time-pill start">{{ depTime }}</span>
-                </div>
               </div>
 
               <div class="route-visualization">
@@ -107,11 +104,6 @@
                 <div class="location">{{ vehicle.route.to.name }}
                   <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
                 </div>
-                <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
-                  <div class="mobile-time">
-                    <span class="time-pill end"> {{ arrivalTime }}</span>
-                  </div>
-                </ng-container>
               </div>
 
               <div class="price-info">
@@ -122,6 +114,12 @@
                 </div>
               </div>
             </div>
+            <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
+              <div class="mobile-time-row">
+                <span class="time-pill start">{{ depTime }}</span>
+                <span class="time-pill end">{{ arrivalTime }}</span>
+              </div>
+            </ng-container>
             </ng-container>
 
             <!-- Mobile Amenities + Car Display -->

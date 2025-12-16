@@ -150,6 +150,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   testimonials: Testimonial[] = [];
+  expandedTestimonials: Set<number> = new Set();
   specialOffers: Offer[] = [];
   isLoadingOffers = false;
 
@@ -1003,6 +1004,31 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // TrackBy function for better performance
   trackByTestimonial(index: number, testimonial: Testimonial): number {
     return testimonial.id;
+  }
+
+  // Read More/Less functionality for mobile testimonials
+  isTestimonialExpanded(testimonialId: number): boolean {
+    return this.expandedTestimonials.has(testimonialId);
+  }
+
+  toggleTestimonial(testimonialId: number): void {
+    if (this.expandedTestimonials.has(testimonialId)) {
+      this.expandedTestimonials.delete(testimonialId);
+    } else {
+      this.expandedTestimonials.add(testimonialId);
+    }
+  }
+
+  shouldShowReadMore(text: string): boolean {
+    // Show read more if text is longer than approximately 150 characters (roughly 5 lines)
+    return !!(text && text.length > 150);
+  }
+
+  getTruncatedText(text: string): string {
+    if (!text || text.length <= 150) {
+      return text;
+    }
+    return text.substring(0, 150) + '...';
   }
 
   get infiniteOffers() {
