@@ -916,6 +916,10 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     this.currentSelectedVehicle = null;
   }
 
+  getTotalPrice(): number {
+    return this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+  }
+
   proceedToBooking() {
     if (this.selectedSeats.length > 0 && this.currentSelectedVehicle) {
       console.log('Proceeding to booking with seats:', this.selectedSeats);

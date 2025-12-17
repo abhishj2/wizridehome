@@ -94,6 +94,7 @@
               </div>
 
               <div class="route-visualization">
+                <div></div>
                 <div class="route-line">
                   <div class="route-node start-node"></div>
                   <div class="route-car">
@@ -123,10 +124,14 @@
               </div>
             </div>
             <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
-              <div class="mobile-time-row">
+              <!-- <div class="mobile-time-row">
                 <span class="time-pill start">{{ depTime }}</span>
                 <span class="time-pill end">{{ arrivalTime }}</span>
-              </div>
+              </div> -->
+              <div class="mtrc">
+              <div  class="mobile-time-row"><span class="time-pill start">Time:<i class="fas fa-clock"> </i></span><span class="time-pill end">{{ depTime }}</span></div>
+              </div>  
+              
             </ng-container>
             </ng-container>
 
@@ -379,98 +384,112 @@
   </div>
 </div>
 
-<!-- Seat Selection Popup -->
-<div class="seat-popup-overlay" *ngIf="showSeatPopup" (click)="closeSeatPopup()">
-  <div class="seat-popup" (click)="$event.stopPropagation()">
-    <!-- Popup Header -->
-    <div class="popup-header">
-      <div class="popup-title">
-        <h2>Select Your Seat</h2>
-        <p>All seats are front-facing</p>
-      </div>
-      <button class="close-btn" (click)="closeSeatPopup()">×</button>
+<!-- Modern Seat Selection Modal -->
+<div class="seat-modal-overlay" *ngIf="showSeatPopup" (click)="closeSeatPopup()">
+  <div class="seat-modal" (click)="$event.stopPropagation()">
+    <!-- Close Button -->
+    <button class="seat-modal-close" (click)="closeSeatPopup()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="seat-modal-header">
+      <h2>Choose Your Seat</h2>
+      <p>Tap on an available seat to select</p>
     </div>
 
-    <!-- Popup Content -->
-    <div class="popup-content">
-      <!-- Two Column Layout -->
-      <div class="modal-layout">
-        <!-- Left Column: Car Layout -->
-        <div class="car-layout-column">
-          <div class="car-container">
-            <!-- Car Image -->
-            <img src="../../assets/images/carmodule/car2.png" alt="Car" class="car-image">
+    <!-- Seat Grid Section -->
+    <div class="seat-modal-body">
+      <!-- Legend Strip -->
+      <div class="seat-legend-strip">
+        <div class="legend-chip available">
+          <span class="legend-dot"></span>
+          <span>Available</span>
+        </div>
+        <div class="legend-chip selected">
+          <span class="legend-dot"></span>
+          <span>Selected</span>
+        </div>
+        <div class="legend-chip booked">
+          <span class="legend-dot"></span>
+          <span>Booked</span>
+        </div>
+      </div>
 
-            <!-- Unified Seat Layout Container -->
-            <div class="unified-seat-grid">
-              <!-- Front Row: Driver + Passenger -->
-              <div class="seat-row front-row">
-                <div class="seat passenger-seat" [class.booked]="seat.status === 'booked'"
-                  [class.selected]="seat.status === 'selected'" (click)="selectSeatFromPopup(seat)"
-                  *ngFor="let seat of frontSeats; let i = index">
-                  <img src="../../assets/images/carmodule/seat.png" alt="Seat">
-                  <span class="seat-number">{{ seat.number }}</span>
-                  <span class="seat-price">₹{{ seat.price }}</span>
-                </div>
-                <div class="seat driver-seat">
-                  <img src="../../assets/images/carmodule/driver.png" alt="Driver">
-                  <!-- <span class="seat-number">Driver</span> -->
-                </div>
-              </div>
+      <!-- Seat Layout Card -->
+      <div class="seat-layout-card">
+        <!-- Car Background Image -->
+        <img src="../../assets/images/carmodule/car2.png" alt="Car" class="seat-car-bg">
 
-              <!-- Middle Row -->
-              <div class="seat-row middle-row">
-                <div class="seat passenger-seat" [class.booked]="seat.status === 'booked'"
-                  [class.selected]="seat.status === 'selected'" (click)="selectSeatFromPopup(seat)"
-                  *ngFor="let seat of middleSeats; let i = index">
-                  <img src="../../assets/images/carmodule/seat.png" alt="Seat">
-                  <span class="seat-number">{{ seat.number }}</span>
-                  <span class="seat-price">₹{{ seat.price }}</span>
-                </div>
+        <!-- Seats Grid -->
+        <div class="seats-grid">
+          <!-- Front Row with Driver -->
+          <div class="seat-row-modern front-row-modern">
+            <ng-container *ngFor="let seat of frontSeats">
+              <div class="seat-item" 
+                   [class.seat-available]="seat.status === 'available'"
+                   [class.seat-selected]="seat.status === 'selected'"
+                   [class.seat-booked]="seat.status === 'booked'"
+                   (click)="selectSeatFromPopup(seat)">
+                <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
+                <span class="seat-number-big">{{ seat.number }}</span>
               </div>
-
-              <!-- Back Row -->
-              <div class="seat-row back-row">
-                <div class="seat passenger-seat" [class.booked]="seat.status === 'booked'"
-                  [class.selected]="seat.status === 'selected'" (click)="selectSeatFromPopup(seat)"
-                  *ngFor="let seat of backSeats; let i = index">
-                  <img src="../../assets/images/carmodule/seat.png" alt="Seat">
-                  <span class="seat-number">{{ seat.number }}</span>
-                  <span class="seat-price">₹{{ seat.price }}</span>
-                </div>
-              </div>
+            </ng-container>
+            <!-- Driver Seat -->
+            <div class="driver-seat-box">
+              <div class="steering-icon"><img src="../../assets/images/carmodule/driver.png" alt="Driver" class="driver-img"></div>
+              <span>Driver</span>
             </div>
+          </div>
+
+          <!-- Middle Row -->
+          <div class="seat-row-modern middle-row-modern">
+            <ng-container *ngFor="let seat of middleSeats">
+              <div class="seat-item" 
+                   [class.seat-available]="seat.status === 'available'"
+                   [class.seat-selected]="seat.status === 'selected'"
+                   [class.seat-booked]="seat.status === 'booked'"
+                   (click)="selectSeatFromPopup(seat)">
+                <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
+                <span class="seat-number-big">{{ seat.number }}</span>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Back Row -->
+          <div class="seat-row-modern back-row-modern">
+            <ng-container *ngFor="let seat of backSeats">
+              <div class="seat-item" 
+                   [class.seat-available]="seat.status === 'available'"
+                   [class.seat-selected]="seat.status === 'selected'"
+                   [class.seat-booked]="seat.status === 'booked'"
+                   (click)="selectSeatFromPopup(seat)">
+                <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
+                <span class="seat-number-big">{{ seat.number }}</span>
+              </div>
+            </ng-container>
           </div>
         </div>
+      </div>
 
-        <!-- Right Column: Legend -->
-        <div class="legend-column">
-          <div class="seat-legend">
-            <div class="legend-item">
-              <img src="../../assets/images/carmodule/seat.png" alt="Available">
-              <span>Available Seat</span>
-            </div>
-            <div class="legend-item">
-              <img src="../../assets/images/carmodule/seat.png" alt="Selected" class="selected">
-              <span>Selected Seat</span>
-            </div>
-            <div class="legend-item">
-              <img src="../../assets/images/carmodule/driver.png" alt="Driver">
-              <span>Driver's Seat</span>
-            </div>
-            <div class="legend-item">
-              <img src="../../assets/images/carmodule/seat.png" alt="Booked" class="booked">
-              <span>Booked Seat</span>
-            </div>
-          </div>
+      <!-- Selection Summary -->
+      <div class="seat-selection-summary" *ngIf="selectedSeats.length > 0">
+        <div class="summary-row">
+          <span class="summary-label">Selected Seats</span>
+          <span class="summary-value">{{ selectedSeats.length }}</span>
+        </div>
+        <div class="summary-row total">
+          <span class="summary-label">Total Amount</span>
+          <span class="summary-value">₹{{ getTotalPrice() }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Popup Footer -->
-    <div class="popup-footer">
-      <button class="proceed-btn" (click)="proceedToBooking()" [disabled]="selectedSeats.length === 0">
-        Proceed ({{ selectedSeats.length }} seat{{ selectedSeats.length !== 1 ? 's' : '' }} selected)
+    <!-- Modal Footer -->
+    <div class="seat-modal-footer">
+      <button class="seat-proceed-btn" (click)="proceedToBooking()" [disabled]="selectedSeats.length === 0">
+        <span>Continue to Booking</span>
+        <i class="fas fa-arrow-right"></i>
       </button>
     </div>
   </div>
