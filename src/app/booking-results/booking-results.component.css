@@ -1170,21 +1170,25 @@ color: #000 !important;
     position: relative;
     left: auto;
     transform: none;
-    margin-bottom: -14px;
+    margin-bottom: -10px;
     text-align: center;
     top: 0;
   }
 
   .date-content {
-    padding: 6px 20px !important;
-    border-radius: 10px !important;
-    border: 1px solid #e5e7eb !important;
-    border-bottom: 1px solid #e5e7eb !important;
+    padding: 8px 24px !important;
+    border-radius: 20px !important;
+    border: 1px solid #d1d5db !important;
     display: inline-block;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
 
   .date-text {
     font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: 0.3px;
   }
   
   .route {
@@ -1674,8 +1678,17 @@ color: #000 !important;
   } */
 
   .time, .duration {
-    font-size: 10px;
-    padding: 4px 8px;
+    font-size: 11px;
+    padding: 6px 12px;
+    font-weight: 600;
+  }
+
+  .duration {
+    background: #f1f5f9;
+    border-radius: 12px;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
   }
 
   /* Hide central orange time pill on mobile; use side badges instead */
@@ -1686,9 +1699,10 @@ color: #000 !important;
   .mobile-time-row {
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    gap: 12px;
-    margin-top: 10px;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 12px;
+    padding: 0 8px;
   }
 
   .price-info {
@@ -2223,20 +2237,25 @@ span.seat-price {
 
   .card {
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   }
 
   .route {
-    background: #f5f7fa;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 16px 14px 12px;
   }
 
   .route-code {
-    background: #cde7ff;
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 18px;
-    font-weight: 800;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e40af;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+    border: 1px solid #93c5fd;
   }
 
   .route-details {
@@ -2250,107 +2269,135 @@ span.seat-price {
     text-align: center;
   }
 
+  .location {
+    font-size: 9px;
+    margin-top: 4px;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .sub-location {
+    font-size: 8px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
   .mobile-amenities {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 12px;
-    align-items: center;
-    padding: 12px 14px;
+    grid-template-columns: 1fr 0.85fr;
+    gap: 0;
+    align-items: stretch;
+    padding: 16px 18px;
     background: #ffffff;
+    border-top: 1px solid #f0f4f8;
   }
 
   .amenities-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    justify-content: center;
+    padding-right: 12px;
+    border-right: 1px solid #e5eaf0;
   }
 
   .mobile-amenities .amenity {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 10px;
-    color: #374151;
+    gap: 10px;
+    font-size: 11px;
+    color: #4b5563;
+    line-height: 1.3;
   }
 
   .mobile-amenities .amenity i {
-    width: 18px;
+    width: 20px;
+    min-width: 20px;
     text-align: center;
-    color: #1f2937;
+    color: #3b82f6;
+    font-size: 13px;
   }
 
   .mobile-vehicle-visual {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
+    padding-left: 12px;
   }
 
   .mobile-vehicle-visual img {
-    width: 120px;
+    width: 110px;
     height: auto;
     object-fit: contain;
   }
 
   .mobile-vehicle-name {
-    font-size: 10px;
-    color: #1f2937;
+    font-size: 11px;
+    color: #374151;
     font-weight: 600;
-    text-transform: none;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
 
   .mobile-price-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    background: #d8eaff;
-    border-radius: 0 0 12px 12px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #e8f4ff 0%, #d4e8fc 100%);
     border-top: 1px solid #c1daf8;
   }
-  .mobile-vehicle-visual img{
-    height:60px !important;
-}
+
+  .mobile-vehicle-visual img {
+    height: 65px !important;
+  }
+
   .mobile-seats-left {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    color: #1f2937;
+    font-size: 13px;
+    color: #374151;
     font-weight: 600;
   }
 
   .mobile-seats-left i {
-    font-size: 15px;
+    font-size: 16px;
+    color: #3b82f6;
   }
 
   .mobile-start-price {
     display: flex;
-    justify-content: flex-end;
-    gap: 6px;
-    font-size: 15px;
-    color: #1f2937;
-    font-weight: 700;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
   }
 
   .mobile-price {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: #0b2f6a;
+    letter-spacing: -0.5px;
   }
 
   .mobile-booking-row {
     display: flex;
     justify-content: center;
-    padding: 12px 14px 16px;
+    padding: 14px 18px 18px;
     background: #ffffff;
-    border-top: 1px solid #eef2f6;
   }
 
   .mobile-book-btn {
     width: 100%;
     max-width: 360px;
+    border-radius: 25px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
   }
 
   .mobile-time {
@@ -2363,23 +2410,27 @@ span.seat-price {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
     font-weight: 700;
     color: #1f2937;
-    background: #eef2f6;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    background: #f3f4f6;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    flex: 1;
+    justify-content: center;
   }
 
   .time-pill.start {
-    background: #e0f2fe;
-    color: #0b2f6a;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #93c5fd;
   }
 
   .time-pill.end {
-    background: #e5f9ed;
-    color: #0f5132;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    border: 1px solid #86efac;
   }
 }
 
@@ -2918,16 +2969,15 @@ span.seat-price {
 /* Responsive Modal */
 @media (max-width: 768px) {
   .car-addition-modal-overlay {
-    padding: 10px;
-    align-items: flex-start;
-    padding-top: 20px;
+    padding: 20px;
+    align-items: center;
   }
 
   .car-addition-modal {
     width: 100%;
     max-width: 100%;
     margin: 0;
-    border-radius: 16px 16px 0 0;
+    border-radius: 16px;
     max-height: 95vh;
   }
   
@@ -3004,15 +3054,15 @@ span.seat-price {
 
 @media (max-width: 480px) {
   .car-addition-modal-overlay {
-    padding: 0;
-    align-items: flex-end;
+    padding: 20px;
+    align-items: center;
   }
 
   .car-addition-modal {
     width: 100%;
     height: auto;
     max-height: 90vh;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px;
     margin: 0;
   }
   
