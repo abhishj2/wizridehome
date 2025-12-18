@@ -1502,6 +1502,34 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   // Flight details methods
+  toggleCardExpansion(index: number, event?: Event): void {
+    if (event) {
+      // Don't toggle if clicking on button or interactive elements
+      const target = event.target as HTMLElement;
+      if (target.closest('.btn') || target.closest('.dropdown') || target.closest('button')) {
+        return;
+      }
+    }
+    
+    this.flightDetailsExpanded = this.flightDetailsExpanded.map((_, i) => i === index ? !this.flightDetailsExpanded[i] : false);
+    this.farePanelExpanded[index] = false;
+    
+    if (this.flightDetailsExpanded[index] && this.groupedFlights && this.groupedFlights[index]) {
+      const flight = this.groupedFlights[index];
+      this.activeTabs[index] = 'flight';
+      
+      // Find and set the lowest fare option for this flight
+      if (flight.FareOptions && flight.FareOptions.length > 0) {
+        const lowestFare = flight.FareOptions.reduce((a: any, b: any) => {
+          const fareA = a?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+          const fareB = b?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+          return fareA < fareB ? a : b;
+        });
+        this.selectedFareOptions[index] = lowestFare;
+      }
+    }
+  }
+
   toggleDetails(index: number): void {
     this.flightDetailsExpanded = this.flightDetailsExpanded.map((_, i) => i === index ? !this.flightDetailsExpanded[i] : false);
     this.farePanelExpanded[index] = false;
