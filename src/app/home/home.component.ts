@@ -110,6 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mobileDatePickerType: 'shared' | 'reserved' | 'flights' | null = null;
   mobileLocationTab: 'popular' | 'seeall' = 'popular';
   expandedStates: Set<string> = new Set();
+  showMobileTravelersPopup = false;
 
   services = [
     {
@@ -753,13 +754,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.mobileTab === 'shared') {
         cityValue = this.formValues.sharedPickup || '';
       } else if (this.mobileTab === 'flights') {
-        cityValue = this.formValues.flightFrom || '';
+        // Check flightRoutes[0] first, then fallback to formValues
+        cityValue = (this.flightRoutes[0]?.from || this.formValues.flightFrom || '').trim();
+        // Return empty if no value selected for flights
+        if (!cityValue || cityValue === '') {
+          return '';
+        }
       }
     } else {
       if (this.mobileTab === 'shared') {
         cityValue = this.formValues.sharedDropoff || '';
       } else if (this.mobileTab === 'flights') {
-        cityValue = this.formValues.flightTo || '';
+        // Check flightRoutes[0] first, then fallback to formValues
+        cityValue = (this.flightRoutes[0]?.to || this.formValues.flightTo || '').trim();
+        // Return empty if no value selected for flights
+        if (!cityValue || cityValue === '') {
+          return '';
+        }
       }
     }
 
@@ -794,7 +805,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (this.mobileTab === 'reserved') {
         cityValue = this.formValues.reservedPickup || '';
       } else if (this.mobileTab === 'flights') {
-        cityValue = this.formValues.flightFrom || '';
+        // Check flightRoutes[0] first, then fallback to formValues
+        cityValue = (this.flightRoutes[0]?.from || this.formValues.flightFrom || '').trim();
+        // Return empty if no value selected for flights
+        if (!cityValue || cityValue === '') {
+          return '';
+        }
       }
     } else {
       if (this.mobileTab === 'shared') {
@@ -802,7 +818,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (this.mobileTab === 'reserved') {
         cityValue = this.formValues.reservedDropoff || '';
       } else if (this.mobileTab === 'flights') {
-        cityValue = this.formValues.flightTo || '';
+        // Check flightRoutes[0] first, then fallback to formValues
+        cityValue = (this.flightRoutes[0]?.to || this.formValues.flightTo || '').trim();
+        // Return empty if no value selected for flights
+        if (!cityValue || cityValue === '') {
+          return '';
+        }
       }
     }
 
@@ -1060,8 +1081,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     date: string;
   }[] = [
       {
-        from: 'Delhi',
-        to: 'Mumbai',
+        from: '',
+        to: '',
         date: ''
       }
     ];
@@ -1436,8 +1457,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Form values
   formValues = {
-    flightFrom: 'Delhi',
-    flightTo: 'Mumbai',
+    flightFrom: '',
+    flightTo: '',
     flightDeparture: '',
     flightReturn: '',
     sharedPickup: '',
@@ -1840,21 +1861,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (type === 'multi-city') {
       this.flightRoutes = [
         {
-          from: 'Delhi',
-          to: 'Mumbai',
+          from: '',
+          to: '',
           date: ''
         },
         {
-          from: 'Mumbai',
-          to: 'Bangalore',
+          from: '',
+          to: '',
           date: ''
         }
       ];
     } else {
       this.flightRoutes = [
         {
-          from: 'Delhi',
-          to: 'Mumbai',
+          from: '',
+          to: '',
           date: ''
         }
       ];
@@ -2760,12 +2781,29 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         ? `${cityName} (${cityCode})`
         : cityName;
 
-      if (target === 'flight-from') {
-        this.formValues.flightFrom = displayValue;
-        this.onAirportSelected('from', displayValue);
-      } else {
-        this.formValues.flightTo = displayValue;
-        this.onAirportSelected('to', displayValue);
+      // Handle flight-from-0 and flight-to-0 (for mobile and multi-city)
+      if (target.startsWith('flight-from-') || target === 'flight-from') {
+        const routeIndex = target.includes('-') && target.split('-').length > 2 
+          ? parseInt(target.split('-')[2]) 
+          : 0;
+        if (this.flightRoutes[routeIndex]) {
+          this.flightRoutes[routeIndex].from = displayValue;
+        }
+        if (routeIndex === 0) {
+          this.formValues.flightFrom = displayValue;
+          this.onAirportSelected('from', displayValue);
+        }
+      } else if (target.startsWith('flight-to-') || target === 'flight-to') {
+        const routeIndex = target.includes('-') && target.split('-').length > 2 
+          ? parseInt(target.split('-')[2]) 
+          : 0;
+        if (this.flightRoutes[routeIndex]) {
+          this.flightRoutes[routeIndex].to = displayValue;
+        }
+        if (routeIndex === 0) {
+          this.formValues.flightTo = displayValue;
+          this.onAirportSelected('to', displayValue);
+        }
       }
     } else {
       if (target === 'shared-pickup') {
@@ -2824,9 +2862,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.showCitySuggestionsOnFocus('reserved-pickup');
         }
       }
-    } else if (target === 'flight-from') {
+    } else if (target === 'flight-from' || target.startsWith('flight-from-')) {
       this.selectedCities.flights.from = cityName;
-    } else if (target === 'flight-to') {
+    } else if (target === 'flight-to' || target.startsWith('flight-to-')) {
       this.selectedCities.flights.to = cityName;
     }
 
@@ -3079,6 +3117,34 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   canDecrease(type: keyof TravelerCounts): boolean {
     if (type === 'adults') return this.counts[type] > 1;
     return this.counts[type] > 0;
+  }
+
+  // Mobile travelers popup methods
+  openMobileTravelersPopup(): void {
+    this.showMobileTravelersPopup = true;
+  }
+
+  closeMobileTravelersPopup(): void {
+    this.showMobileTravelersPopup = false;
+  }
+
+  getMobileTravelersDisplay(): string {
+    const total = this.counts.adults + this.counts.children;
+    if (total === 1) {
+      return '1 Passenger';
+    }
+    return `${total} Passengers`;
+  }
+
+  getMobileClassDisplay(): string {
+    return this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
+  }
+
+  getMobileTravelersText(): string {
+    const total = this.counts.adults + this.counts.children;
+    const classText = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
+    const travelers = total === 1 ? '1 Traveller' : `${total} Travellers`;
+    return `${travelers}, ${classText}`;
   }
 
   submitForm() {
@@ -3425,10 +3491,87 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // Use the phone number from mobile form and proceed directly
-    this.pendingAction = 'flights';
-    this.submitFlights(phoneNumber);
-    this.navigateToResults(phoneNumber);
+    const departureDate = this.flightRoutes[0]?.date || this.formValues.flightDeparture;
+    if (!departureDate) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Date Required',
+        text: 'Please select a departure date.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    // Validate that TBO token and IP address are available
+    if (!this.tboTokenId || !this.ip) {
+      Swal.fire({
+        title: 'Please Wait',
+        html: 'We are preparing your search. Please try again in a moment.',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+        timer: 3000
+      });
+      return;
+    }
+
+    // Find airport objects from flightAirports list
+    const fromAirport = this.flightAirports.find(a => a.code === fromCode);
+    const toAirport = this.flightAirports.find(a => a.code === toCode);
+
+    // Set selectedFrom and selectedTo as objects (matching desktop code)
+    this.selectedFrom = fromAirport ? {
+      name: fromAirport.name,
+      code: fromAirport.code,
+      airport: fromAirport.name
+    } : null;
+
+    this.selectedTo = toAirport ? {
+      name: toAirport.name,
+      code: toAirport.code,
+      airport: toAirport.name
+    } : null;
+
+    const returnDate = this.tripType === 'round-trip' ? this.formValues.flightReturn : null;
+
+    // Map tripType to match working code format
+    const tripTypeMapping: { [key: string]: string } = {
+      'one-way': 'oneway',
+      'round-trip': 'round',
+      'multi-city': 'multi'
+    };
+    const mappedTripType = tripTypeMapping[this.tripType] || 'oneway';
+
+    // Store flight data using flightDataService (same as desktop)
+    this.flightDataService.setStringValue({
+      tboToken: this.tboTokenId,
+      ipAddress: this.ip,
+      tripType: mappedTripType,
+      fromCity: this.selectedFrom?.name || '',
+      fromAirport: this.selectedFrom?.airport || '',
+      fromAirportCode: this.selectedFrom?.code || '',
+      toCity: this.selectedTo?.name || '',
+      toAirport: this.selectedTo?.airport || '',
+      toAirportCode: this.selectedTo?.code || '',
+      departureDate: departureDate,
+      returnDate: returnDate,
+      fareType: 'regular',
+      adults: this.counts.adults,
+      children: this.counts.children,
+      infants: this.counts.infants,
+      travelClass: this.selectedClass,
+      calendarFareMap: Object.fromEntries(this.calendarFareMap),
+      calendarFareMapReturn: Object.fromEntries(this.calendarFareMapReturn),
+      multiCityRoutes: this.tripType === 'multi-city' ? this.flightRoutes.map(route => ({
+        from: route.from,
+        to: route.to,
+        date: route.date
+      })) : []
+    } as FlightData);
+
+    // Navigate to flight list page (same as desktop)
+    this.router.navigate(['flightlist', 'FLIGHT']);
   }
 
   createGroupBooking() {
@@ -3857,6 +4000,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private setDefaultAirports(): void {
     if (!this.flightAirports || this.flightAirports.length === 0) {
+      return;
+    }
+
+    // Don't set defaults on mobile - let users select cities manually
+    if (this.isMobileView()) {
       return;
     }
 

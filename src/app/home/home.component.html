@@ -861,38 +861,29 @@
     </div>
 
     <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
-      <div class="wr-grid-2">
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Departure Date</div>
-          <div class="wr-field-pill">
-            <app-custom-calendar
-              class="wr-calendar-inline"
-              [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
-              [minDate]="getTodayDate()"
-              placeholder="Select date"
-              (dateSelected)="onFlightDepartureDateSelected($event, 0)">
-            </app-custom-calendar>
-          </div>
-        </div>
-
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Cabin</div>
-          <div class="wr-field-pill">
-            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 12V7a3 3 0 0 1 3-3h4v8"></path>
-              <path d="M7 12h9l1 5H8a3 3 0 0 1-3-3v-2"></path>
-            </svg>
-            <span>Economy</span>
-          </div>
+      <div class="wr-field-block">
+        <div class="wr-field-label">Departure Date</div>
+        <div class="wr-field-pill">
+          <app-custom-calendar
+            class="wr-calendar-inline"
+            [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
+            [minDate]="getTodayDate()"
+            placeholder="Select date"
+            (dateSelected)="onFlightDepartureDateSelected($event, 0)">
+          </app-custom-calendar>
         </div>
       </div>
 
       <div class="wr-field-block">
-        <div class="wr-field-label">Passengers</div>
-        <div class="wr-counter" data-counter="flightPassengers">
-          <button data-action="minus" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">−</button>
-          <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
-          <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
+        <div class="wr-field-label">Travellers & Class</div>
+        <div class="wr-field-pill" (click)="openMobileTravelersPopup()">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>{{ getMobileTravelersText() }}</span>
         </div>
       </div>
 
@@ -914,7 +905,7 @@
 
     <div class="wr-divider"></div>
 
-    <button class="wr-primary-btn" (click)="onMobileSearch()">Search Ride</button>
+    <button class="wr-primary-btn" (click)="onMobileSearch()">{{ mobileTab === 'flights' ? 'Search Flight' : 'Search Ride' }}</button>
   </section>
 
   <section class="wr-offer-section">
@@ -1729,6 +1720,97 @@
             <div *ngIf="getMobilePopupSuggestions().length === 0 && mobileSearchQuery" class="mobile-location-no-results">
                 <p>No results found</p>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Travelers & Class Selection Popup -->
+<div class="mobile-travelers-popup" [class.active]="showMobileTravelersPopup" (click)="closeMobileTravelersPopup()">
+    <div class="mobile-travelers-popup-content" (click)="$event.stopPropagation()">
+        <div class="mobile-travelers-popup-header">
+            <button class="mobile-travelers-popup-back" (click)="closeMobileTravelersPopup()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>Travellers & Class</h3>
+            <button class="mobile-travelers-popup-close" (click)="closeMobileTravelersPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-travelers-popup-body">
+            <div class="mobile-traveler-section">
+                <h4>Travellers</h4>
+                
+                <div class="mobile-traveler-row">
+                    <div class="mobile-traveler-info">
+                        <h5>Adults</h5>
+                        <p>12 yrs or above</p>
+                    </div>
+                    <div class="mobile-traveler-counter">
+                        <button class="mobile-counter-btn" [disabled]="!canDecrease('adults')"
+                                [class.active]="counts.adults > 1"
+                                (click)="updateCount('adults', -1)">−</button>
+                        <span class="mobile-counter-value">{{ counts.adults }}</span>
+                        <button class="mobile-counter-btn"
+                                (click)="updateCount('adults', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="mobile-traveler-row">
+                    <div class="mobile-traveler-info">
+                        <h5>Children</h5>
+                        <p>2 - 12 yrs</p>
+                    </div>
+                    <div class="mobile-traveler-counter">
+                        <button class="mobile-counter-btn" [disabled]="!canDecrease('children')"
+                                [class.active]="counts.children > 0"
+                                (click)="updateCount('children', -1)">−</button>
+                        <span class="mobile-counter-value">{{ counts.children }}</span>
+                        <button class="mobile-counter-btn"
+                                (click)="updateCount('children', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="mobile-traveler-row">
+                    <div class="mobile-traveler-info">
+                        <h5>Infants</h5>
+                        <p>0 - 2 yrs</p>
+                    </div>
+                    <div class="mobile-traveler-counter">
+                        <button class="mobile-counter-btn" [disabled]="!canDecrease('infants')"
+                                [class.active]="counts.infants > 0"
+                                (click)="updateCount('infants', -1)">−</button>
+                        <span class="mobile-counter-value">{{ counts.infants }}</span>
+                        <button class="mobile-counter-btn"
+                                (click)="updateCount('infants', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-class-section">
+                <h4>Travel Class</h4>
+                <div class="mobile-class-options">
+                    <button class="mobile-class-option"
+                            [class.active]="selectedClass === 'economy'"
+                            (click)="updateClass('economy')">
+                        Economy
+                    </button>
+                    <button class="mobile-class-option"
+                            [class.active]="selectedClass === 'business'"
+                            (click)="updateClass('business')">
+                        Business
+                    </button>
+                    <button class="mobile-class-option"
+                            [class.active]="selectedClass === 'first'"
+                            (click)="updateClass('first')">
+                        First
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mobile-travelers-popup-footer">
+            <button class="mobile-travelers-done-btn" (click)="closeMobileTravelersPopup()">Done</button>
         </div>
     </div>
 </div>
