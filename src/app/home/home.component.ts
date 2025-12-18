@@ -903,30 +903,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mobileDatePickerType = null;
   }
 
-  onMobileDateSelected(date: string): void {
-    if (this.mobileDatePickerType === 'shared') {
-      this.formValues.sharedDateTime = date;
-    } else if (this.mobileDatePickerType === 'reserved') {
-      this.formValues.reservedDate = date;
-    } else if (this.mobileDatePickerType === 'flights') {
-      this.formValues.flightDeparture = date;
-      if (this.flightRoutes[0]) {
-        this.flightRoutes[0].date = date;
-      }
+  onMobileDateSelected(date: string, type?: 'shared' | 'reserved' | 'flights'): void {
+    // If type is provided, use it; otherwise use mobileDatePickerType
+    const dateType = type || this.mobileDatePickerType;
+    
+    if (dateType === 'shared') {
+      this.onSharedDateSelected(date);
+    } else if (dateType === 'reserved') {
+      this.onReservedDateSelected(date);
+    } else if (dateType === 'flights') {
+      this.onFlightDepartureDateSelected(date, 0);
     }
     this.closeMobileDatePicker();
-  }
-
-  formatMobileDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const day = days[date.getDay()];
-    const month = months[date.getMonth()];
-    const dayNum = date.getDate();
-    const year = date.getFullYear();
-    return `${day}, ${month} ${dayNum}${this.getOrdinalSuffix(dayNum)} ${year}`;
   }
 
   getMobileDateDisplay(dateString: string): string {
@@ -941,6 +929,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return 'Today';
     }
     return this.formatMobileDate(dateString);
+  }
+
+  formatMobileDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const dayNum = date.getDate();
+    const year = date.getFullYear();
+    return `${day}, ${month} ${dayNum}${this.getOrdinalSuffix(dayNum)} ${year}`;
   }
 
   getMobileFlagCode(): string {

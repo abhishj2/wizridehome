@@ -1,6 +1,6 @@
-<div class="custom-calendar-container">
+<div class="custom-calendar-container" [class.always-open-container]="alwaysOpen">
   <!-- Input Field -->
-  <div class="calendar-input-wrapper" (click)="toggleCalendar()" [class.disabled]="disabled" #calendarInputWrapper>
+  <div class="calendar-input-wrapper" *ngIf="!alwaysOpen" (click)="toggleCalendar()" [class.disabled]="disabled" #calendarInputWrapper>
     <div class="input-with-icon">
       <i class="fas fa-calendar input-icon"></i>
       <input 
@@ -19,7 +19,8 @@
   <!-- Calendar Dropdown -->
   <div 
     class="calendar-dropdown" 
-    [class.active]="isOpen"
+    [class.active]="isOpen || alwaysOpen"
+    [class.always-open]="alwaysOpen"
     [class.open-upward]="openUpward"
     #calendarDropdown
     role="dialog"

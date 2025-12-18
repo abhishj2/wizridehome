@@ -553,3 +553,33 @@
     transform: none;
   }
 }
+
+/* Always open mode - for mobile modals */
+.custom-calendar-container.always-open-container {
+  display: flex !important;
+  flex-direction: column;
+  width: 100%;
+}
+
+.calendar-dropdown.always-open {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  max-height: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  height: auto;
+  width: 100%;
+}

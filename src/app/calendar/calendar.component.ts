@@ -13,6 +13,7 @@ export class CustomCalendarComponent implements OnInit {
   @Input() minDate: string = '';
   @Input() placeholder: string = 'Select Date';
   @Input() disabled: boolean = false;
+  @Input() alwaysOpen: boolean = false;
   @Output() dateSelected = new EventEmitter<string>();
   @Output() calendarClosed = new EventEmitter<void>();
 
@@ -36,6 +37,9 @@ export class CustomCalendarComponent implements OnInit {
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
+    if (this.alwaysOpen) {
+      this.isOpen = true;
+    }
     if (this.selectedDate) {
       this.selectedDateObj = new Date(this.selectedDate);
       this.displayMonth = new Date(this.selectedDate);
@@ -103,8 +107,10 @@ export class CustomCalendarComponent implements OnInit {
   }
 
   closeCalendar() {
-    this.isOpen = false;
-    this.calendarClosed.emit();
+    if (!this.alwaysOpen) {
+      this.isOpen = false;
+      this.calendarClosed.emit();
+    }
   }
 
   selectDate(date: Date) {

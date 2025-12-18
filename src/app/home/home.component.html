@@ -761,14 +761,12 @@
       <div class="wr-grid-2">
         <div class="wr-grid-2-col">
           <div class="wr-field-label">Date of Travel</div>
-          <div class="wr-field-pill">
-            <app-custom-calendar
-              class="wr-calendar-inline"
-              [selectedDate]="formValues.sharedDateTime"
-              [minDate]="getTodayDate()"
-              placeholder="Select date"
-              (dateSelected)="onSharedDateSelected($event)">
-            </app-custom-calendar>
+          <div class="wr-field-pill" (click)="openMobileDatePicker('shared')">
+            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="7"></circle>
+              <polyline points="12 8 12 12 15 13.5"></polyline>
+            </svg>
+            <span>{{ getMobileDateDisplay(formValues.sharedDateTime) || 'Select date' }}</span>
           </div>
         </div>
 
@@ -812,14 +810,12 @@
       <div class="wr-grid-2">
         <div class="wr-grid-2-col">
           <div class="wr-field-label">Date</div>
-          <div class="wr-field-pill">
-            <app-custom-calendar
-              class="wr-calendar-inline"
-              [selectedDate]="formValues.reservedDate"
-              [minDate]="getTodayDate()"
-              placeholder="Select date"
-              (dateSelected)="onReservedDateSelected($event)">
-            </app-custom-calendar>
+          <div class="wr-field-pill" (click)="openMobileDatePicker('reserved')">
+            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="7"></circle>
+              <polyline points="12 8 12 12 15 13.5"></polyline>
+            </svg>
+            <span>{{ getMobileDateDisplay(formValues.reservedDate) || 'Select date' }}</span>
           </div>
         </div>
 
@@ -863,14 +859,12 @@
     <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
       <div class="wr-field-block">
         <div class="wr-field-label">Departure Date</div>
-        <div class="wr-field-pill">
-          <app-custom-calendar
-            class="wr-calendar-inline"
-            [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
-            [minDate]="getTodayDate()"
-            placeholder="Select date"
-            (dateSelected)="onFlightDepartureDateSelected($event, 0)">
-          </app-custom-calendar>
+        <div class="wr-field-pill" (click)="openMobileDatePicker('flights')">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"></circle>
+            <polyline points="12 8 12 12 15 13.5"></polyline>
+          </svg>
+          <span>{{ getMobileDateDisplay(flightRoutes[0]?.date || formValues.flightDeparture) || 'Select date' }}</span>
         </div>
       </div>
 
@@ -1811,6 +1805,52 @@
         
         <div class="mobile-travelers-popup-footer">
             <button class="mobile-travelers-done-btn" (click)="closeMobileTravelersPopup()">Done</button>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Date Picker Modal -->
+<div class="mobile-date-picker-overlay" [class.active]="showMobileDatePicker" (click)="closeMobileDatePicker()">
+    <div class="mobile-date-picker-modal" (click)="$event.stopPropagation()">
+        <div class="mobile-date-picker-header">
+            <button class="mobile-date-picker-back" (click)="closeMobileDatePicker()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ? 'Select Date' : 'Select Departure Date' }}</h3>
+            <button class="mobile-date-picker-close" (click)="closeMobileDatePicker()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-date-picker-content">
+            <div class="mobile-calendar-wrapper">
+                <app-custom-calendar
+                    *ngIf="mobileDatePickerType === 'shared'"
+                    [selectedDate]="formValues.sharedDateTime"
+                    [minDate]="getTodayDate()"
+                    [alwaysOpen]="true"
+                    placeholder="Select date"
+                    (dateSelected)="onMobileDateSelected($event, 'shared')">
+                </app-custom-calendar>
+                
+                <app-custom-calendar
+                    *ngIf="mobileDatePickerType === 'reserved'"
+                    [selectedDate]="formValues.reservedDate"
+                    [minDate]="getTodayDate()"
+                    [alwaysOpen]="true"
+                    placeholder="Select date"
+                    (dateSelected)="onMobileDateSelected($event, 'reserved')">
+                </app-custom-calendar>
+                
+                <app-custom-calendar
+                    *ngIf="mobileDatePickerType === 'flights'"
+                    [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
+                    [minDate]="getTodayDate()"
+                    [alwaysOpen]="true"
+                    placeholder="Select date"
+                    (dateSelected)="onMobileDateSelected($event, 'flights')">
+                </app-custom-calendar>
+            </div>
         </div>
     </div>
 </div>
