@@ -107,10 +107,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mobilePopupTarget: string = '';
   mobileSearchQuery: string = '';
   showMobileDatePicker = false;
-  mobileDatePickerType: 'shared' | 'reserved' | 'flights' | null = null;
+  mobileDatePickerType: 'shared' | 'reserved' | 'flights' | 'flights-return' | null = null;
   mobileLocationTab: 'popular' | 'seeall' = 'popular';
   expandedStates: Set<string> = new Set();
   showMobileTravelersPopup = false;
+  showMobileMultiCityModal = false;
+  currentMultiCityRouteIndex: number = 0;
+  currentMultiCityField: 'from' | 'to' = 'from';
 
   services = [
     {
@@ -445,6 +448,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       actualTarget = 'flight-from-0';
     } else if (this.mobilePopupTarget === 'mobile-flight-to') {
       actualTarget = 'flight-to-0';
+    } else if (this.mobilePopupTarget && this.mobilePopupTarget.startsWith('flight-')) {
+      // Handle multi-city route selection directly
+      actualTarget = this.mobilePopupTarget;
+      const parts = this.mobilePopupTarget.split('-');
+      if (parts.length >= 3) {
+        const field = parts[1]; // 'from' or 'to'
+        const routeIndex = parseInt(parts[2]);
+        if (!isNaN(routeIndex)) {
+          this.selectMultiCity(cityName, cityCode, this.mobilePopupTarget);
+          this.closeMobileLocationPopup();
+          // Re-open multi-city modal after city selection
+          setTimeout(() => {
+            this.showMobileMultiCityModal = true;
+          }, 100);
+          return;
+        }
+      }
     }
     
     if (actualTarget) {
@@ -727,6 +747,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private normalizeTarget(target: string): string {
     // Map mobile targets to desktop equivalents for suggestion logic
+    // Handle multi-city flight targets (flight-from-0, flight-to-1, etc.) first
+    if (target.startsWith('flight-from-') || target.startsWith('flight-to-')) {
+      return target;
+    }
+    
     switch (target) {
       case 'mobile-shared-pickup':
         return 'shared-pickup';
@@ -908,12 +933,57 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showMobileDatePicker = true;
   }
 
+  openMobileReturnDatePicker(): void {
+    this.mobileDatePickerType = 'flights-return';
+    this.showMobileDatePicker = true;
+  }
+
+  openMobileMultiCityModal(): void {
+    this.showMobileMultiCityModal = true;
+  }
+
+  closeMobileMultiCityModal(): void {
+    this.showMobileMultiCityModal = false;
+  }
+
+  openMobileMultiCityLocationPopup(field: 'from' | 'to', routeIndex: number): void {
+    this.currentMultiCityRouteIndex = routeIndex;
+    this.currentMultiCityField = field;
+    this.mobilePopupTarget = `flight-${field}-${routeIndex}`;
+    this.mobilePopupType = field; // Set popup type to 'from' or 'to' for city suggestions
+    this.mobileSearchQuery = '';
+    // Close multi-city modal when opening location popup
+    this.showMobileMultiCityModal = false;
+    // Show city suggestions on focus
+    this.showCitySuggestionsOnFocus(this.mobilePopupTarget);
+    this.showMobileLocationPopup = true;
+  }
+
+  openMobileMultiCityDatePicker(routeIndex: number): void {
+    this.currentMultiCityRouteIndex = routeIndex;
+    this.mobileDatePickerType = `flights-multicity-${routeIndex}` as any;
+    this.showMobileDatePicker = true;
+    // Close multi-city modal when opening date picker
+    this.showMobileMultiCityModal = false;
+  }
+
+  getCityCodeFromDisplay(displayValue: string): string {
+    if (!displayValue) return '';
+    const codeMatch = displayValue.match(/\(([^)]+)\)/);
+    return codeMatch ? codeMatch[1] : '';
+  }
+
+  getCityNameFromDisplay(displayValue: string): string {
+    if (!displayValue) return '';
+    return displayValue.replace(/\s*\([^)]+\)\s*$/, '').trim();
+  }
+
   closeMobileDatePicker(): void {
     this.showMobileDatePicker = false;
     this.mobileDatePickerType = null;
   }
 
-  onMobileDateSelected(date: string, type?: 'shared' | 'reserved' | 'flights'): void {
+  onMobileDateSelected(date: string, type?: 'shared' | 'reserved' | 'flights' | 'flights-return' | string): void {
     // If type is provided, use it; otherwise use mobileDatePickerType
     const dateType = type || this.mobileDatePickerType;
     
@@ -923,6 +993,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.onReservedDateSelected(date);
     } else if (dateType === 'flights') {
       this.onFlightDepartureDateSelected(date, 0);
+    } else if (dateType === 'flights-return') {
+      this.onFlightReturnDateSelected(date);
+    } else if (dateType && typeof dateType === 'string' && dateType.startsWith('flights-multicity-')) {
+      // Handle multi-city date selection
+      const routeIndex = parseInt(dateType.split('-')[2]);
+      if (!isNaN(routeIndex) && this.flightRoutes[routeIndex]) {
+        this.onFlightDepartureDateSelected(date, routeIndex);
+        // Re-open multi-city modal after date selection
+        setTimeout(() => {
+          this.showMobileMultiCityModal = true;
+        }, 100);
+      }
     }
     this.closeMobileDatePicker();
   }

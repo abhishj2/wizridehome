@@ -694,6 +694,20 @@
   </div>
 
   <section class="wr-card" id="wr-mobile-booking">
+  
+  <!-- Trip Type Tabs for Flights (Mobile) -->
+  <div class="wr-trip-type-mobile" *ngIf="mobileTab === 'flights'">
+    <button class="wr-trip-type-btn" [class.active]="tripType === 'one-way'" (click)="setTripType('one-way')">
+      One Way
+    </button>
+    <button class="wr-trip-type-btn" [class.active]="tripType === 'round-trip'" (click)="setTripType('round-trip')">
+      Round Trip
+    </button>
+    <button class="wr-trip-type-btn" [class.active]="tripType === 'multi-city'" (click)="setTripType('multi-city')">
+      Multi City
+    </button>
+  </div>
+
   <div class="wr-route-row">
     <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
         <div class="wr-field-label wr-field-label-left-pad">From</div>
@@ -857,7 +871,23 @@
     </div>
 
     <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
-      <div class="wr-field-block">
+      <!-- Multi-City Routes Summary Button -->
+      <div class="wr-field-block" *ngIf="tripType === 'multi-city'">
+        <div class="wr-field-label">Routes</div>
+        <div class="wr-field-pill" (click)="openMobileMultiCityModal()">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span>{{ flightRoutes.length }} Route{{ flightRoutes.length > 1 ? 's' : '' }} Selected</span>
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true" style="margin-left: auto;">
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="wr-field-block" *ngIf="tripType !== 'multi-city'">
         <div class="wr-field-label">Departure Date</div>
         <div class="wr-field-pill" (click)="openMobileDatePicker('flights')">
           <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -865,6 +895,18 @@
             <polyline points="12 8 12 12 15 13.5"></polyline>
           </svg>
           <span>{{ getMobileDateDisplay(flightRoutes[0]?.date || formValues.flightDeparture) || 'Select date' }}</span>
+        </div>
+      </div>
+
+      <!-- Return Date Field (only for round-trip) -->
+      <div class="wr-field-block" *ngIf="tripType === 'round-trip'">
+        <div class="wr-field-label">Return Date</div>
+        <div class="wr-field-pill" (click)="openMobileReturnDatePicker()">
+          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"></circle>
+            <polyline points="12 8 12 12 15 13.5"></polyline>
+          </svg>
+          <span>{{ getMobileDateDisplay(formValues.flightReturn) || 'Select return date' }}</span>
         </div>
       </div>
 
@@ -1816,7 +1858,7 @@
             <button class="mobile-date-picker-back" (click)="closeMobileDatePicker()">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ? 'Select Date' : 'Select Departure Date' }}</h3>
+            <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ? 'Select Date' : mobileDatePickerType === 'flights-return' ? 'Select Return Date' : (mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')) ? 'Select Departure Date' : 'Select Departure Date' }}</h3>
             <button class="mobile-date-picker-close" (click)="closeMobileDatePicker()">
                 <i class="fas fa-times"></i>
             </button>
@@ -1850,7 +1892,87 @@
                     placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, 'flights')">
                 </app-custom-calendar>
+                
+                <app-custom-calendar
+                    *ngIf="mobileDatePickerType === 'flights-return'"
+                    [selectedDate]="formValues.flightReturn"
+                    [minDate]="getReturnMinDate()"
+                    [alwaysOpen]="true"
+                    placeholder="Select return date"
+                    (dateSelected)="onMobileDateSelected($event, 'flights-return')">
+                </app-custom-calendar>
+                
+                <app-custom-calendar
+                    *ngIf="mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')"
+                    [selectedDate]="(flightRoutes[currentMultiCityRouteIndex] && flightRoutes[currentMultiCityRouteIndex].date) ? flightRoutes[currentMultiCityRouteIndex].date : ''"
+                    [minDate]="getTodayDate()"
+                    [alwaysOpen]="true"
+                    placeholder="Select date"
+                    (dateSelected)="onMobileDateSelected($event, mobileDatePickerType.toString())">
+                </app-custom-calendar>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Multi-City Routes Modal -->
+<div class="mobile-multicity-overlay" [class.active]="showMobileMultiCityModal" (click)="closeMobileMultiCityModal()">
+    <div class="mobile-multicity-modal" (click)="$event.stopPropagation()">
+        <div class="mobile-multicity-header">
+            <button class="mobile-multicity-back" (click)="closeMobileMultiCityModal()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>Multi-City Routes</h3>
+            <button class="mobile-multicity-close" (click)="closeMobileMultiCityModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-multicity-content">
+            <div class="mobile-multicity-route" *ngFor="let route of flightRoutes; let i = index">
+                <div class="mobile-route-header">
+                    <span class="mobile-route-number">Route {{ i + 1 }}</span>
+                    <button class="mobile-remove-route-btn" 
+                            (click)="removeFlightRoute(i)"
+                            [disabled]="flightRoutes.length <= 1"
+                            *ngIf="flightRoutes.length > 1">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+
+                <div class="mobile-route-fields">
+                    <div class="mobile-route-field" (click)="openMobileMultiCityLocationPopup('from', i)">
+                        <div class="mobile-route-label">From</div>
+                        <div class="mobile-route-value">
+                            <span *ngIf="route.from" class="mobile-route-code">{{ getCityCodeFromDisplay(route.from) }}</span>
+                            <span *ngIf="route.from" class="mobile-route-city-name">{{ getCityNameFromDisplay(route.from) }}</span>
+                            <span *ngIf="!route.from" class="mobile-route-placeholder">Select city</span>
+                        </div>
+                    </div>
+
+                    <div class="mobile-route-field" (click)="openMobileMultiCityLocationPopup('to', i)">
+                        <div class="mobile-route-label">To</div>
+                        <div class="mobile-route-value">
+                            <span *ngIf="route.to" class="mobile-route-code">{{ getCityCodeFromDisplay(route.to) }}</span>
+                            <span *ngIf="route.to" class="mobile-route-city-name">{{ getCityNameFromDisplay(route.to) }}</span>
+                            <span *ngIf="!route.to" class="mobile-route-placeholder">Select city</span>
+                        </div>
+                    </div>
+
+                    <div class="mobile-route-field" (click)="openMobileMultiCityDatePicker(i)">
+                        <div class="mobile-route-label">Departure Date</div>
+                        <div class="mobile-route-value">
+                            <span>{{ getMobileDateDisplay(route.date) || 'Select date' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="mobile-add-route-btn" 
+                    (click)="addFlightRoute()"
+                    [disabled]="flightRoutes.length >= 5">
+                <i class="fas fa-plus"></i> Add Another Route
+            </button>
         </div>
     </div>
 </div>

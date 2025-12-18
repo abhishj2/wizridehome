@@ -4807,6 +4807,45 @@ button.nav-tab.active img {
     color: #0f172a;
 }
 
+/* Mobile Trip Type Tabs */
+.wr-trip-type-mobile {
+    display: flex;
+    gap: 6px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #e9ecef;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.wr-trip-type-btn {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: #474747;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.wr-trip-type-btn.active {
+    background: darkcyan;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+}
+
+.wr-trip-type-btn:not(.active):hover {
+    background: rgba(0, 139, 139, 0.1);
+    color: darkcyan;
+}
+
 .mobile-date-picker-back,
 .mobile-date-picker-close {
     background: none;
@@ -5056,6 +5095,196 @@ button.nav-tab.active img {
 .mobile-travelers-popup-footer {
     padding: 16px;
     border-top: 1px solid #e5e7eb;
+}
+
+/* Mobile Multi-City Modal */
+.mobile-multicity-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-multicity-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mobile-multicity-modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    transform: translateX(-100%);
+    transition: transform 0.28s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-multicity-overlay.active .mobile-multicity-modal {
+    transform: translateX(0);
+}
+
+.mobile-multicity-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.mobile-multicity-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.mobile-multicity-back,
+.mobile-multicity-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #111827;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.mobile-multicity-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.mobile-multicity-route {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.mobile-multicity-route:last-child {
+    margin-bottom: 0;
+}
+
+.mobile-route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.mobile-route-number {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.mobile-remove-route-btn {
+    background: #fee2e2;
+    border: none;
+    color: #dc2626;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.mobile-remove-route-btn:not(:disabled):hover {
+    background: #fecaca;
+}
+
+.mobile-remove-route-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.mobile-route-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mobile-route-field {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mobile-route-field:active {
+    background: #f3f4f6;
+}
+
+.mobile-route-label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.mobile-route-value {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mobile-route-code {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.mobile-route-city-name {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.mobile-route-placeholder {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.mobile-add-route-btn {
+    width: 100%;
+    padding: 14px;
+    background: darkcyan;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    transition: all 0.2s;
+}
+
+.mobile-add-route-btn:not(:disabled):hover {
+    background: #008b8b;
+}
+
+.mobile-add-route-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .mobile-travelers-done-btn {
