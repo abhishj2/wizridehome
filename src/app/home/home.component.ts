@@ -312,6 +312,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setMobileTab(tab: 'shared' | 'reserved' | 'flights'): void {
     this.mobileTab = tab;
+    
+    // On mobile, ensure flight fields are empty (no defaults) when switching to flights tab
+    if (tab === 'flights' && this.isMobileView()) {
+      if (this.flightRoutes.length > 0) {
+        this.flightRoutes[0].from = '';
+        this.flightRoutes[0].to = '';
+      }
+      this.formValues.flightFrom = '';
+      this.formValues.flightTo = '';
+    }
   }
 
   getMobileTabIndex(tab: 'shared' | 'reserved' | 'flights'): number {
@@ -1619,8 +1629,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           });
           console.log('Flight airports populated:', this.flightAirports);
 
-          // Set dynamic default airports
-          this.setDefaultAirports();
+          // Set dynamic default airports (only on desktop, not mobile)
+          if (!this.isMobileView()) {
+            this.setDefaultAirports();
+          } else {
+            // On mobile, ensure flight fields are empty (no defaults)
+            if (this.flightRoutes.length > 0) {
+              this.flightRoutes[0].from = '';
+              this.flightRoutes[0].to = '';
+            }
+            this.formValues.flightFrom = '';
+            this.formValues.flightTo = '';
+          }
         }
       },
       error: (error) => {
