@@ -1196,6 +1196,39 @@ img {
   margin-bottom: 20px;
 }
 
+.flight-segment-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.flight-info-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.flight-info-compact img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flight-name-number {
+  text-align: center;
+  font-size: 14px;
+}
+
+.flight-name-number strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
 .flight-info {
   display: flex;
   align-items: center;
@@ -1207,6 +1240,7 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex: 1;
   padding: 15px;
   background: #f9f9f9;
   border-radius: 4px;

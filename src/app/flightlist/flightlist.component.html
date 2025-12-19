@@ -533,11 +533,11 @@
                   </div>
 
                   <!-- Expandable Details -->
-                  <div class="flight-details-expanded" *ngIf="flightDetailsExpanded[i]">
+                  <div class="flight-details-expanded" *ngIf="flightDetailsExpanded[i]" (click)="$event.stopPropagation()">
                     <div class="flight-tabs">
                       <div class="tab" *ngFor="let tab of tabs" 
                            [class.active]="activeTabs[i] === tab.id"
-                           (click)="selectTab(i, tab.id)">
+                           (click)="selectTab(i, tab.id); $event.stopPropagation()">
                         {{ tab.label }}
                       </div>
                     </div>
@@ -545,19 +545,26 @@
                     <!-- Flight Details Tab -->
                     <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
                       <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
-                        <div class="flight-info">
-                          <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
-                          <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
-                        </div>
-                        <div class="timing-info">
-                          <div class="time-block">
-                            <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
-                            <div class="airport">{{ segment.Origin.Airport.CityName }} ({{ segment.Origin.Airport.AirportCode }})</div>
+                        <div class="flight-segment-layout">
+                          <div class="flight-info-compact">
+                            <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'" 
+                                 [alt]="segment.Airline.AirlineName"
+                                 width="60" height="60"
+                                 onerror="this.src='assets/images/default-airline.png'" />
+                            <div class="flight-name-number">
+                              <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
+                            </div>
                           </div>
-                          <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
-                          <div class="time-block">
-                            <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
-                            <div class="airport">{{ segment.Destination.Airport.CityName }} ({{ segment.Destination.Airport.AirportCode }})</div>
+                          <div class="timing-info">
+                            <div class="time-block">
+                              <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                              <div class="airport">{{ segment.Origin.Airport.CityName }} ({{ segment.Origin.Airport.AirportCode }})</div>
+                            </div>
+                            <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                            <div class="time-block">
+                              <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                              <div class="airport">{{ segment.Destination.Airport.CityName }} ({{ segment.Destination.Airport.AirportCode }})</div>
+                            </div>
                           </div>
                         </div>
                       </div>
