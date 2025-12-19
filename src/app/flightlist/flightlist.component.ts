@@ -139,6 +139,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   multicityTabData: any[] = [];
   multicitySelectedFares: { [index: number]: any } = {};
   farePanelExpanded: boolean[] = [];
+  showFareModalMultiCity = false;
+  selectedMultiCityFlight: any = null;
+  selectedMultiCitySegmentIndex = -1;
+  selectedMultiCityFlightIndex = -1;
 
   groupedFlights: any[] = [];
   groupedFlightsOutbound: any[] = [];
@@ -507,8 +511,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     } else if (this.flightType === 'round') {
       this.fetchRoundTripFlights();
     } else if (this.flightType === 'multi') {
-      this.loader = false;
-      // Multi-city handling will be implemented later
+      this.fetchMultiCityFlights();
     } else {
       this.router.navigateByUrl('/');
     }
@@ -803,6 +806,408 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         });
       }
     });
+  }
+
+  fetchMultiCityFlights(): void {
+    if (!this.flightInputData) {
+      console.error('Flight input data is missing');
+      this.loader = false;
+      return;
+    }
+
+    // Check for multiCityRoutes or multiCitySegment
+    const multiCityRoutes = this.flightInputData['multiCityRoutes'] || this.flightInputData['multiCitySegment'] || [];
+    
+    // Convert multiCityRoutes format to API format if needed
+    let formattedSegments: any[] = [];
+    if (multiCityRoutes.length > 0) {
+      // Check if already in API format (has Origin and Destination)
+      if (multiCityRoutes[0] && multiCityRoutes[0].Origin && multiCityRoutes[0].Destination) {
+        formattedSegments = multiCityRoutes;
+      } else {
+        // Convert from {from, to, date} format to API format
+        const cabinClassMap: { [key: string]: string } = {
+          'all': '1',
+          'Economy': '2',
+          'Premium Economy': '2',
+          'premiumeconomy': '3',
+          'business': '4',
+          'Business': '4',
+          'premiumbusiness': '5',
+          'first': '6',
+          'First': '6'
+        };
+        
+        const travelClass = this.flightInputData['travelClass'] || 'Economy';
+        const cabinCode = cabinClassMap[travelClass] || '2'; // Default to Economy
+        
+        formattedSegments = multiCityRoutes.map((route: any) => {
+          // Extract airport codes from display strings (e.g., "Delhi (DEL)" -> "DEL")
+          const extractCode = (str: string): string => {
+            if (!str) return '';
+            const codeMatch = str.match(/\(([^)]+)\)/);
+            if (codeMatch) return codeMatch[1];
+            // If no parentheses, assume it's already a code or try to find in cities
+            const found = this.cities.find(c => c.name === str || c.code === str);
+            return found?.code || str;
+          };
+          
+          const originCode = extractCode(route.from || '');
+          const destCode = extractCode(route.to || '');
+          
+          // Format date to ISO format
+          let preferredDepartureTime = '';
+          if (route.date) {
+            const departureDate = new Date(route.date);
+            if (!isNaN(departureDate.getTime())) {
+              const year = departureDate.getFullYear();
+              const month = String(departureDate.getMonth() + 1).padStart(2, '0');
+              const day = String(departureDate.getDate()).padStart(2, '0');
+              preferredDepartureTime = `${year}-${month}-${day}T00:00:00`;
+            }
+          }
+          
+          return {
+            Origin: originCode,
+            Destination: destCode,
+            FlightCabinClass: cabinCode,
+            PreferredDepartureTime: preferredDepartureTime,
+            PreferredArrivalTime: preferredDepartureTime
+          };
+        });
+      }
+    }
+
+    // Validate required fields for multi-city
+    if (!this.flightInputData['tboToken'] || !this.flightInputData['ipAddress'] || 
+        formattedSegments.length === 0) {
+      console.error('Missing required flight data for multi-city:', {
+        tboToken: !!this.flightInputData['tboToken'],
+        ipAddress: !!this.flightInputData['ipAddress'],
+        multiCityRoutes: !!this.flightInputData['multiCityRoutes'],
+        multiCitySegment: !!this.flightInputData['multiCitySegment'],
+        formattedSegmentsLength: formattedSegments.length,
+        flightInputDataKeys: Object.keys(this.flightInputData)
+      });
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Session Expired',
+        text: 'Some required information is missing. Please search for flights again from the home page.',
+        confirmButtonText: 'Go to Home',
+        allowOutsideClick: false
+      }).then(() => {
+        this.router.navigate(['/']);
+      });
+      this.loader = false;
+      return;
+    }
+
+    this.loader = true;
+    console.log('Fetching multi-city flights with data:', {
+      ipAddress: this.flightInputData['ipAddress'],
+      tboToken: this.flightInputData['tboToken'] ? 'Present' : 'Missing',
+      segments: formattedSegments,
+      adults: this.flightInputData['adults'],
+      children: this.flightInputData['children'],
+      infants: this.flightInputData['infants']
+    });
+
+    // Store formatted segments back in flightInputData for later use
+    this.flightInputData['multiCitySegment'] = formattedSegments;
+
+    this.apiService.getFlightDetailsMultiCity(
+      this.flightInputData['ipAddress'],
+      this.flightInputData['tboToken'],
+      this.flightInputData['adults'] || 1,
+      this.flightInputData['children'] || 0,
+      this.flightInputData['infants'] || 0,
+      formattedSegments,
+      this.flightInputData['fareType'] || 2
+    ).subscribe({
+      next: (val: any) => {
+        console.log('Multi-city Flight API Response:', val);
+        
+        // Check if response is null or undefined
+        if (!val || val === null) {
+          console.error('Multi-city API returned null response');
+          Swal.fire({
+            title: 'Sorry!',
+            html: 'No flights found for your multi-city search. Please try different dates or routes.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+          this.loader = false;
+          this.multicityTabData = [];
+          return;
+        }
+        
+        // Check for error response
+        if (val?.Response?.Error?.ErrorCode && val.Response.Error.ErrorCode !== 0) {
+          Swal.fire({
+            title: 'Sorry!',
+            html: val.Response.Error.ErrorMessage || 'An unexpected error occurred.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+          this.loader = false;
+          this.multicityTabData = [];
+          return;
+        }
+
+        // Check if Response exists
+        if (!val.Response) {
+          console.error('Multi-city API response missing Response object:', val);
+          Swal.fire({
+            title: 'Sorry!',
+            html: 'Invalid response from server. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+          this.loader = false;
+          this.multicityTabData = [];
+          return;
+        }
+
+        this.traceid = val['Response']?.['TraceId'];
+        console.log('Trace ID:', this.traceid);
+
+        // Multi-city API returns all flights in Results[0] (matching working code)
+        // Each flight contains multiple segments within it
+        const results = val?.Response?.Results?.[0] || [];
+        
+        console.log('Multi-city API Results:', {
+          resultsLength: results.length,
+          resultsType: Array.isArray(results) ? 'array' : typeof results,
+          sampleResult: results.length > 0 ? results[0] : null
+        });
+        
+        if (results.length === 0) {
+          console.warn('No multi-city flight results in API response');
+          Swal.fire({
+            title: 'No Flights Found',
+            html: 'No flights available for your selected multi-city routes. Please try different dates or routes.',
+            icon: 'info',
+            confirmButtonText: 'Ok'
+          });
+          this.multicityTabData = [];
+          this.loader = false;
+          return;
+        }
+
+        // Process all flights (matching working code approach)
+        // Each flight in results contains all segments for that multi-city route
+        const processedFlights = results.map((flight: any) => {
+          const rules = flight.MiniFareRules?.[0] || [];
+          return {
+            ...flight,
+            cancellationPolicy: rules.filter((r: any) => r.Type === 'Cancellation'),
+            dateChangePolicy: rules.filter((r: any) => r.Type === 'Reissue')
+          };
+        });
+
+        // Store in finalFinalList for grouping (matching working code)
+        this.finalFinalList = processedFlights;
+        
+        // Group flights using multi-city grouping method (matching working code)
+        this.groupFlightsMultiCity();
+        
+        // Generate filters
+        this.dynamicFilters = this.generateFiltersFromFlightArray(this.groupedFlights);
+        this.priceRange = this.dynamicFilters.max_price;
+        
+        // For multi-city, organize flights by segment for tab-based display
+        // Each flight contains all segments, but we organize by which segment to show
+        const segmentCount = this.flightInputData['multiCitySegment']?.length || 1;
+        this.multicityTabData = Array.from({ length: segmentCount }, (_, segmentIndex) => {
+          // For each segment tab, show all flights (they all contain this segment)
+          // The flight display will show the specific segment based on selectedMulticityTab
+          return {
+            segmentIndex: segmentIndex,
+            flights: processedFlights,
+            groupedFlights: this.groupedFlights, // All flights, will filter by segment in display
+            dynamicFilters: this.dynamicFilters
+          };
+        });
+
+        console.log('Processed multi-city tab data:', this.multicityTabData);
+        console.log('Grouped flights count:', this.groupedFlights.length);
+        this.loader = false;
+      },
+      error: (error) => {
+        console.error('Error fetching multi-city flights:', error);
+        this.loader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Unable to fetch flights. Please try again.',
+          confirmButtonText: 'Ok'
+        });
+      }
+    });
+  }
+
+  groupFlightsMultiCity(): void {
+    const map = new Map<string, any>();
+    console.log('groupFlightsMultiCity: Input finalFinalList', JSON.stringify(this.finalFinalList, null, 2));
+
+    for (const flight of this.finalFinalList) {
+      // Skip flights without valid Segments
+      if (!flight.Segments || !Array.isArray(flight.Segments) || flight.Segments.length === 0) {
+        console.warn('Skipping flight with no valid segments', JSON.stringify(flight, null, 2));
+        continue;
+      }
+
+      // Build key across all segments (matching working code)
+      const keyParts: string[] = [];
+      let firstSegment: any = null;
+      let lastSegment: any = null;
+
+      for (const segmentGroup of flight.Segments) {
+        if (!segmentGroup || !Array.isArray(segmentGroup)) continue;
+
+        for (const segment of segmentGroup) {
+          if (!firstSegment) firstSegment = segment;
+          lastSegment = segment;
+
+          keyParts.push(
+            `${segment.Airline.AirlineCode}-${segment.Airline.FlightNumber}-` +
+            `${segment.Origin.DepTime}-${segment.Destination.ArrTime}-` +
+            `${segment.Origin.Airport.CityName}-${segment.Destination.Airport.CityName}`
+          );
+        }
+      }
+
+      const key = keyParts.join('|');
+
+      // Fare Calculation
+      let basePerAdult = 0;
+      let taxPerAdult = 0;
+      let totalPerAdult = 0;
+
+      const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+      if (adultFare && adultFare.PassengerCount > 0) {
+        basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
+        taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
+        totalPerAdult = basePerAdult + taxPerAdult;
+      }
+
+      if (!map.has(key)) {
+        map.set(key, {
+          Segments: this.deepCopy(flight.Segments),
+          Airline: firstSegment.Airline,
+          Origin: firstSegment.Origin,
+          Destination: lastSegment.Destination,
+          FareOptions: [this.deepCopy(flight)],
+          baseFarePerAdult: basePerAdult,
+          taxPerAdult: taxPerAdult,
+          price: totalPerAdult,
+          logo: `assets/images/flightimages/${firstSegment.Airline.AirlineCode}.png`,
+          isRefundable: flight.IsRefundable ?? false,
+          airline: firstSegment.Airline.AirlineName,
+          departure: firstSegment.Origin?.DepTime
+            ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'N/A',
+          arrival: lastSegment.Destination?.ArrTime
+            ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'N/A'
+        });
+      } else {
+        map.get(key).FareOptions.push(this.deepCopy(flight));
+      }
+    }
+
+    this.groupedFlights = Array.from(map.values()).sort((a, b) => a.price - b.price);
+    this.originalGroupedFlights = this.deepCopy(this.groupedFlights);
+
+    console.log('groupFlightsMultiCity: Grouped flights', {
+      groupedFlightsCount: this.groupedFlights.length,
+      groupedFlights: JSON.stringify(this.groupedFlights, null, 2)
+    });
+  }
+
+  groupFlightsForSegment(flights: any[]): any[] {
+    const map = new Map<string, any>();
+
+    for (const flight of flights) {
+      if (!flight.Segments || !Array.isArray(flight.Segments) || flight.Segments.length === 0) {
+        console.warn('Skipping flight with no valid segments');
+        continue;
+      }
+
+      // Get the first segment group (multi-city may have nested segments)
+      const segmentGroup = flight.Segments[0];
+      if (!segmentGroup || !Array.isArray(segmentGroup) || segmentGroup.length === 0) {
+        continue;
+      }
+
+      const firstSegment = segmentGroup[0];
+      const lastSegment = segmentGroup[segmentGroup.length - 1];
+
+      let basePerAdult = 0;
+      let taxPerAdult = 0;
+      let totalPerAdult = 0;
+
+      const adultFare = flight.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+      if (adultFare && adultFare.PassengerCount > 0) {
+        basePerAdult = adultFare.BaseFare / adultFare.PassengerCount;
+        taxPerAdult = adultFare.Tax / adultFare.PassengerCount;
+        totalPerAdult = basePerAdult + taxPerAdult;
+      }
+
+      const key = `${firstSegment.Airline.AirlineCode}-${firstSegment.Airline.FlightNumber}-` +
+                  `${firstSegment.Origin.DepTime}-${lastSegment.Destination.ArrTime}-` +
+                  `${firstSegment.Origin.Airport.CityName}-${lastSegment.Destination.Airport.CityName}`;
+
+      if (!map.has(key)) {
+        map.set(key, {
+          Segments: flight.Segments,
+          Airline: firstSegment.Airline,
+          Origin: firstSegment.Origin,
+          Destination: lastSegment.Destination,
+          FareOptions: [this.deepCopy(flight)],
+          baseFarePerAdult: basePerAdult,
+          taxPerAdult: taxPerAdult,
+          price: totalPerAdult,
+          logo: `assets/images/flightimages/${firstSegment.Airline.AirlineCode}.png`,
+          isRefundable: flight.IsRefundable ?? false,
+          airline: firstSegment.Airline.AirlineName,
+          departure: firstSegment.Origin?.DepTime
+            ? new Date(firstSegment.Origin.DepTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'N/A',
+          arrival: lastSegment.Destination?.ArrTime
+            ? new Date(lastSegment.Destination.ArrTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'N/A'
+        });
+      } else {
+        map.get(key).FareOptions.push(this.deepCopy(flight));
+      }
+    }
+
+    return Array.from(map.values()).sort((a, b) => a.price - b.price);
+  }
+
+  // Utility function for deep copying objects and arrays
+  deepCopy(obj: any): any {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+
+    if (Array.isArray(obj)) {
+      const arrCopy: any[] = [];
+      for (const item of obj) {
+        arrCopy.push(this.deepCopy(item));
+      }
+      return arrCopy;
+    }
+
+    const objCopy: { [key: string]: any } = {};
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        objCopy[key] = this.deepCopy(obj[key]);
+      }
+    }
+    return objCopy;
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -1228,6 +1633,28 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.priceRange = this.dynamicFilters.max_price;
   }
 
+  generateFiltersFromFlightArray(flights: any[]): any {
+    const airlineSet = new Set<string>();
+    const stopSet = new Set<number>();
+    const prices: number[] = [];
+
+    for (const flight of flights) {
+      if (flight.airline) airlineSet.add(flight.airline);
+      if (flight.Segments?.[0]) {
+        const stops = flight.Segments[0].length - 1;
+        stopSet.add(stops);
+      }
+      if (flight.price) prices.push(flight.price);
+    }
+
+    return {
+      airlines: Array.from(airlineSet).sort(),
+      stops: Array.from(stopSet).sort((a, b) => a - b),
+      min_price: prices.length > 0 ? Math.min(...prices) : 0,
+      max_price: prices.length > 0 ? Math.max(...prices) : 0,
+    };
+  }
+
   generateRoundtripDynamicFilters(): void {
     console.log('generateRoundtripDynamicFilters called');
     console.log('groupedFlights length:', this.groupedFlights?.length || 0);
@@ -1247,30 +1674,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       }
     }
 
-    const generate = (flights: any[]) => {
-      const airlineSet = new Set<string>();
-      const stopSet = new Set<number>();
-      const prices: number[] = [];
-
-      for (const flight of flights) {
-        if (flight.airline) airlineSet.add(flight.airline);
-        if (flight.Segments?.[0]) {
-          const stops = flight.Segments[0].length - 1;
-          stopSet.add(stops);
-        }
-        if (flight.price) prices.push(flight.price);
-      }
-
-      return {
-        airlines: Array.from(airlineSet).sort(),
-        stops: Array.from(stopSet).sort((a, b) => a - b),
-        min_price: prices.length > 0 ? Math.min(...prices) : 0,
-        max_price: prices.length > 0 ? Math.max(...prices) : 0,
-      };
-    };
-
-    this.roundtripDynamicFiltersOnward = generate(this.originalGroupedFlights || this.groupedFlights);
-    this.roundtripDynamicFiltersReturn = generate(this.originalGroupedFlightsOutbound || this.groupedFlightsOutbound);
+    this.roundtripDynamicFiltersOnward = this.generateFiltersFromFlightArray(this.originalGroupedFlights || this.groupedFlights);
+    this.roundtripDynamicFiltersReturn = this.generateFiltersFromFlightArray(this.originalGroupedFlightsOutbound || this.groupedFlightsOutbound);
     this.roundtripPriceRangeOnward = this.roundtripDynamicFiltersOnward.max_price;
     this.roundtripPriceRangeReturn = this.roundtripDynamicFiltersReturn.max_price;
     
@@ -2018,9 +2423,12 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.router.navigate(['flightfinalsection']);
   }
 
-  // Multi-city methods (placeholder for future implementation)
+  // Multi-city methods
   selectMulticityTab(index: number): void {
-    this.selectedMulticityTab = index;
+    if (index >= 0 && index < this.multicityTabData.length) {
+      this.selectedMulticityTab = index;
+      console.log('Selected multi-city tab:', index);
+    }
   }
 
   scrollMulticityTabs(direction: 'left' | 'right'): void {
@@ -2034,8 +2442,62 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     });
   }
 
-  selectMulticityFare(tabIndex: number, flightIndex: number, fare: any): void {
-    // Implementation for multi-city fare selection
+  selectMulticityFlight(tabIndex: number, flightIndex: number, flight: any): void {
+    console.log('Selecting multi-city flight:', { tabIndex, flightIndex });
+    
+    if (!this.multicityTabData[tabIndex]) {
+      console.error('Invalid tab index:', tabIndex);
+      return;
+    }
+
+    const selectedGroupedFlight = this.multicityTabData[tabIndex].groupedFlights[flightIndex];
+    if (!selectedGroupedFlight) {
+      console.error('Invalid flight index:', flightIndex);
+      return;
+    }
+
+    // Store the selected flight (default to first fare option)
+    this.multicitySelectedFares[tabIndex] = {
+      groupedFlight: this.deepCopy(selectedGroupedFlight),
+      selectedFare: this.deepCopy(selectedGroupedFlight.FareOptions[0]),
+      price: selectedGroupedFlight.price
+    };
+
+    console.log('Updated multi-city selected flight:', this.multicitySelectedFares);
+  }
+
+  openFareOptionsModalMultiCity(segmentIndex: number, flight: any, flightIndex: number): void {
+    this.selectedMultiCitySegmentIndex = segmentIndex;
+    this.selectedMultiCityFlight = flight;
+    this.selectedMultiCityFlightIndex = flightIndex;
+    this.showFareModalMultiCity = true;
+    console.log('Opening multi-city fare modal:', { segmentIndex, flight, flightIndex });
+  }
+
+  closeFareOptionsModalMultiCity(): void {
+    this.showFareModalMultiCity = false;
+    this.selectedMultiCityFlight = null;
+    this.selectedMultiCitySegmentIndex = -1;
+    this.selectedMultiCityFlightIndex = -1;
+  }
+
+  selectMulticityFare(fare: any): void {
+    if (this.selectedMultiCitySegmentIndex === -1 || !this.selectedMultiCityFlight) {
+      console.error('Invalid fare selection state');
+      return;
+    }
+
+    const segmentIndex = this.selectedMultiCitySegmentIndex;
+    
+    // Update the selected fare for this segment
+    this.multicitySelectedFares[segmentIndex] = {
+      groupedFlight: this.deepCopy(this.selectedMultiCityFlight),
+      selectedFare: this.deepCopy(fare),
+      price: this.getAdultFarePerPerson(fare.FareBreakdown)
+    };
+
+    console.log('Selected multi-city fare:', this.multicitySelectedFares[segmentIndex]);
+    this.closeFareOptionsModalMultiCity();
   }
 
   get multicityTotalFare(): number {
@@ -2043,7 +2505,93 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   get multicityHasSelectedFares(): boolean {
-    return Object.keys(this.multicitySelectedFares).length > 0;
+    // Check if all segments have selected fares
+    if (!this.multicityTabData || this.multicityTabData.length === 0) {
+      return false;
+    }
+    return Object.keys(this.multicitySelectedFares).length === this.multicityTabData.length;
+  }
+
+  getMultiCityRouteOrigin(index: number): string {
+    const segment = this.flightInputData['multiCitySegment']?.[index];
+    if (!segment) return '';
+    
+    if (segment.Origin) {
+      // API format - return the code, try to find city name
+      const city = this.cities.find(c => c.code === segment.Origin);
+      return city ? `${city.name} (${segment.Origin})` : segment.Origin;
+    }
+    
+    // Fallback to multiCityRoutes format
+    const route = this.flightInputData['multiCityRoutes']?.[index];
+    return route?.from || '';
+  }
+
+  getMultiCityRouteDestination(index: number): string {
+    const segment = this.flightInputData['multiCitySegment']?.[index];
+    if (!segment) return '';
+    
+    if (segment.Destination) {
+      // API format - return the code, try to find city name
+      const city = this.cities.find(c => c.code === segment.Destination);
+      return city ? `${city.name} (${segment.Destination})` : segment.Destination;
+    }
+    
+    // Fallback to multiCityRoutes format
+    const route = this.flightInputData['multiCityRoutes']?.[index];
+    return route?.to || '';
+  }
+
+  getMultiCityRouteDate(index: number): string {
+    const segment = this.flightInputData['multiCitySegment']?.[index];
+    if (segment?.PreferredDepartureTime) {
+      return segment.PreferredDepartureTime;
+    }
+    
+    // Fallback to multiCityRoutes format
+    const route = this.flightInputData['multiCityRoutes']?.[index];
+    return route?.date || '';
+  }
+
+  proceedWithMultiCityBooking(): void {
+    if (!this.multicityHasSelectedFares) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Selection',
+        text: 'Please select flights for all segments.',
+        confirmButtonText: 'Ok'
+      });
+      return;
+    }
+
+    // Prepare flight data for final page
+    const flightData: any = {
+      tboToken: this.flightInputData['tboToken'],
+      ipAddress: this.flightInputData['ipAddress'],
+      tripType: 'multi',
+      multiCitySegment: this.flightInputData['multiCitySegment'],
+      multiCitySelectedFares: this.multicitySelectedFares,
+      fareType: this.flightInputData['fareType'] || 2,
+      adults: this.flightInputData['adults'] || 1,
+      children: this.flightInputData['children'] || 0,
+      infants: this.flightInputData['infants'] || 0,
+      travelClass: this.flightInputData['travelClass'] || 'Economy',
+      traceid: this.traceid,
+      // Multi-city specific fields (may not match FlightData interface exactly)
+      fromCity: this.flightInputData['multiCitySegment']?.[0]?.Origin || '',
+      toCity: this.flightInputData['multiCitySegment']?.[this.flightInputData['multiCitySegment'].length - 1]?.Destination || '',
+      fromAirport: '',
+      fromAirportCode: '',
+      toAirport: '',
+      toAirportCode: '',
+      departureDate: this.flightInputData['multiCitySegment']?.[0]?.PreferredDepartureTime || '',
+      returnDate: null,
+      multiCityRoutes: this.flightInputData['multiCitySegment']
+    };
+
+    console.log('Navigating with multi-city flight data:', flightData);
+    this.flightDataService.setStringValue(flightData);
+    this.router.navigate(['flightfinalsection']);
   }
 
   toggleFarePanel(index: number): void {

@@ -1288,6 +1288,168 @@
             </div>
           </div>
 
+            <!-- Multi-City Flights -->
+            <div *ngIf="flightType === 'multi'" class="flight-list-container">
+              <!-- Multi-City Tab Navigation -->
+              <div class="multicity-tabs-wrapper" *ngIf="multicityTabData && multicityTabData.length > 0">
+                <button class="tab-scroll-btn left" (click)="scrollMulticityTabs('left')" *ngIf="multicityTabData.length > 1">
+                  ‹
+                </button>
+                <div class="multicity-tabs-container" #multicityScrollContainer>
+                  <div class="multicity-tab" 
+                       *ngFor="let segment of multicityTabData; let i = index"
+                       [class.active]="selectedMulticityTab === i"
+                       (click)="selectMulticityTab(i)">
+                    <div class="multicity-tab-route">
+                      <span>{{ getMultiCityRouteOrigin(i) }}</span>
+                      <i class="fas fa-plane"></i>
+                      <span>{{ getMultiCityRouteDestination(i) }}</span>
+                    </div>
+                    <div class="multicity-tab-date">
+                      {{ getMultiCityRouteDate(i) | date : "d MMM" }}
+                    </div>
+                    <div class="multicity-tab-status" *ngIf="multicitySelectedFares[i]">
+                      <i class="fas fa-check-circle"></i> Selected
+                    </div>
+                  </div>
+                </div>
+                <button class="tab-scroll-btn right" (click)="scrollMulticityTabs('right')" *ngIf="multicityTabData.length > 1">
+                  ›
+                </button>
+              </div>
+
+              <!-- Selected Segment Flights -->
+              <div *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
+                <div class="segment-header">
+                  <h3 class="section-title">
+                    Route {{ selectedMulticityTab + 1 }}: 
+                    {{ getMultiCityRouteOrigin(selectedMulticityTab) }} → 
+                    {{ getMultiCityRouteDestination(selectedMulticityTab) }}
+                  </h3>
+                  <div class="segment-date">
+                    {{ getMultiCityRouteDate(selectedMulticityTab) | date : "d MMM, yyyy" }}
+                  </div>
+                </div>
+
+                <!-- Flight Cards for Current Segment -->
+                <div class="flight-cards">
+                  <div class="card" 
+                       [class.selected]="multicitySelectedFares[selectedMulticityTab]?.groupedFlight === flight" 
+                       *ngFor="let flight of multicityTabData[selectedMulticityTab].groupedFlights; let i = index">
+                    <label class="flight-radio-wrapper" (click)="selectMulticityFlight(selectedMulticityTab, i, flight)">
+                      <input type="radio" 
+                             [name]="'multicity-flight-' + selectedMulticityTab" 
+                             [checked]="multicitySelectedFares[selectedMulticityTab]?.groupedFlight === flight" />
+                      
+                      <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
+                      </div>
+
+                      <!-- Route Visualization -->
+                      <div class="route">
+                        <div class="vehicle">
+                          <img [src]="'assets/images/flightimages/' + (flight.Segments[selectedMulticityTab]?.[0]?.Airline?.AirlineCode || flight.Segments[0]?.[0]?.Airline?.AirlineCode || '') + '.png'" 
+                               [alt]="flight.Segments[selectedMulticityTab]?.[0]?.Airline?.AirlineName || flight.Segments[0]?.[0]?.Airline?.AirlineName"
+                               onerror="this.src='assets/images/default-airline.png'" />
+                        </div>
+
+                        <div class="route-column">
+                          <div class="route-code">{{ (flight.Segments[selectedMulticityTab]?.[0] || flight.Segments[0]?.[0])?.Origin?.Airport?.AirportCode }}</div>
+                          <div class="location">{{ (flight.Segments[selectedMulticityTab]?.[0] || flight.Segments[0]?.[0])?.Origin?.Airport?.CityName }}</div>
+                        </div>
+
+                        <div class="route-visualization">
+                          <div></div>
+                          <div class="route-line">
+                            <div class="route-node start-node"></div>
+                            <div class="route-car">
+                              <i class="fas fa-plane" style="font-size: 24px; color: #008b8b;"></i>
+                            </div>
+                            <div class="route-node end-node"></div>
+                          </div>
+                          <div class="route-details">
+                            <div class="time">
+                              {{ (flight.Segments[selectedMulticityTab]?.[0] || flight.Segments[0]?.[0])?.Origin?.DepTime | date : "HH:mm" }} - 
+                              {{ (flight.Segments[selectedMulticityTab] || flight.Segments[0])?.[(flight.Segments[selectedMulticityTab] || flight.Segments[0])?.length - 1]?.Destination?.ArrTime | date : "HH:mm" }}
+                            </div>
+                            <div class="duration">{{ getTotalDuration(flight.Segments[selectedMulticityTab] || flight.Segments[0]) }}</div>
+                          </div>
+                        </div>
+
+                        <div class="route-column">
+                          <div class="route-code">{{ (flight.Segments[selectedMulticityTab] || flight.Segments[0])?.[(flight.Segments[selectedMulticityTab] || flight.Segments[0])?.length - 1]?.Destination?.Airport?.AirportCode }}</div>
+                          <div class="location">{{ (flight.Segments[selectedMulticityTab] || flight.Segments[0])?.[(flight.Segments[selectedMulticityTab] || flight.Segments[0])?.length - 1]?.Destination?.Airport?.CityName }}</div>
+                        </div>
+                      </div>
+
+                      <!-- Options -->
+                      <div class="options">
+                        <div class="option-item">
+                          <div class="default-amenities">
+                            <div class="amenity-item">
+                              <i class="fas fa-plane-departure"></i>
+                              <span>{{ getStopsCount(flight) === 0 ? 'Non-stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="option-item">
+                          <div class="default-amenities">
+                            <div class="amenity-item">
+                              <i class="fas fa-suitcase"></i>
+                              <span>Baggage</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="option-item">
+                          <div class="default-amenities">
+                            <div class="amenity-item">
+                              <i class="fas fa-ban"></i>
+                              <span>Policy</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="select-btn-card">
+                          <button class="btn" (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
+                            View Prices
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Price Display -->
+                      <div class="mobile-price-row">
+                        <div class="mobile-start-price">
+                          <span>Starts </span>
+                          <span class="mobile-price">₹ {{ flight.price | number : "1.0-0" }}</span>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- No Flights Message -->
+                <div class="no-flights" *ngIf="(!multicityTabData[selectedMulticityTab].groupedFlights || multicityTabData[selectedMulticityTab].groupedFlights.length === 0) && !loader">
+                  <p>No flights found for this segment. Please try modifying your search.</p>
+                </div>
+              </div>
+
+              <!-- Multi-City Summary Footer -->
+              <div class="multicity-summary-footer" *ngIf="multicityTabData && multicityTabData.length > 0">
+                <div class="summary-total">
+                  <span class="total-label">Total Price:</span>
+                  <span class="total-amount">₹ {{ multicityTotalFare | number : "1.0-0" }}</span>
+                </div>
+                <button class="proceed-btn" 
+                        [class.disabled]="!multicityHasSelectedFares"
+                        [disabled]="!multicityHasSelectedFares"
+                        (click)="proceedWithMultiCityBooking()">
+                  {{ multicityHasSelectedFares ? 'Proceed to Booking' : 'Select All Segments' }}
+                </button>
+              </div>
+            </div>
+
         </div>
       </div>
     </main>
@@ -1425,6 +1587,77 @@
                     [disabled]="(activeFareTab === 'departure' && !hasFareSelected('departure')) || (activeFareTab === 'return' && (!hasFareSelected('departure') || !hasFareSelected('return')))"
                     (click)="onFareContinueOrBook()">
               {{ activeFareTab === "departure" ? "CONTINUE" : "BOOK NOW" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fare Options Modal - Multi-City -->
+    <div class="custom-modal-overlay" *ngIf="showFareModalMultiCity" (click)="closeFareOptionsModalMultiCity()">
+      <div class="custom-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeFareOptionsModalMultiCity()">×</button>
+        <div class="fare-options-box">
+          <div class="fare-options-header">
+            <div class="fare-options-title"><strong>MORE FARE OPTIONS</strong> available for segment {{ selectedMultiCitySegmentIndex + 1 }}.</div>
+            <div class="fare-options-subtitle" *ngIf="selectedMultiCityFlight">
+              {{ selectedMultiCityFlight.Origin.Airport.CityName }} ➝ {{ selectedMultiCityFlight.Destination.Airport.CityName }} ·
+              {{ selectedMultiCityFlight.airline }} ·
+              {{ selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
+              {{ selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            </div>
+          </div>
+          <!-- Scrollable Fare Options -->
+          <div class="fare-scroll-wrapper">
+            <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
+            <div class="fare-scroll-container" #fareScrollContainer>
+              <div class="fare-card" 
+                   *ngFor="let fare of selectedMultiCityFlight?.FareOptions; let i = index">
+                <div class="fare-price-oneway">
+                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
+                  <span class="per-adult">per adult</span>
+                </div>
+                <div class="fare-type">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+                <div class="fare-section">
+                  <strong>Baggage</strong>
+                  <ul>
+                    <li>✅ Cabin: {{ fare.Segments[0][0].CabinBaggage }}</li>
+                    <li>✅ Check-in: {{ fare.Segments[0][0].Baggage }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Flexibility</strong>
+                  <ul>
+                    <li>⚠️ Cancel: {{ getCancellationRule(fare) }}</li>
+                    <li>⚠️ Change: {{ getDateChangeRule(fare) }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Seats, Meals & More</strong>
+                  <ul>
+                    <li>🍽️ Meals: {{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</li>
+                    <li>💺 Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard seats free" : "Chargeable seats" }}</li>
+                    <li>{{ fare.FareRules[0]?.Details || "Check with airline" }}</li>
+                  </ul>
+                </div>
+                <button class="book-btn" (click)="selectMulticityFare(fare)">
+                  SELECT
+                </button>
+              </div>
+            </div>
+            <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
+          </div>
+        </div>
+        <!-- Footer Summary -->
+        <div class="fare-modal-footer">
+          <div class="fare-total-block">
+            ₹ {{ multicityTotalFare | number : "1.0-0" }}<br />
+            <span>TOTAL FOR ALL SEGMENTS (1 ADULT)</span>
+          </div>
+          <div class="fare-action-buttons">
+            <button class="continue-book-btn" 
+                    (click)="closeFareOptionsModalMultiCity()">
+              CONTINUE SELECTING
             </button>
           </div>
         </div>
