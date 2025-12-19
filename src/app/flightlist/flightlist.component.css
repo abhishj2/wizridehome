@@ -747,9 +747,6 @@ img {
   z-index: 10;
 }
 
-.card.selected {
-  border: 2px solid darkcyan;
-}
 
 /* Date Hanger Design */
 .date-hanger {
