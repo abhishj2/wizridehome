@@ -967,12 +967,9 @@
                 <div class="footer-wrapper">
                   <div class="flight-summary-block">
                     <div class="flight-leg-label">Departure</div>
-                    <div class="flight-airline flight-row">
-                      <div>
-                        <img [src]="selectedOutbound.logo" alt="" width="20" />
-                        {{ selectedOutbound.airline }}
-                      </div>
-                      <div class="flight-link" (click)="toggleBothFlightDetails('departure')">Flight Details</div>
+                    <div class="flight-airline">
+                      <img [src]="selectedOutbound.logo" alt="" class="flight-logo-small" />
+                      {{ selectedOutbound.airline }}
                     </div>
                     <div class="flight-times flight-row">
                       <div>{{ selectedOutbound.departure }} → {{ selectedOutbound.arrival }}</div>
@@ -981,12 +978,9 @@
                   </div>
                   <div class="flight-summary-block">
                     <div class="flight-leg-label">Return</div>
-                    <div class="flight-airline flight-row">
-                      <div>
-                        <img [src]="selectedReturn.logo" alt="" width="20" />
-                        {{ selectedReturn.airline }}
-                      </div>
-                      <div class="flight-link" (click)="toggleBothFlightDetails('return')">Flight Details</div>
+                    <div class="flight-airline">
+                      <img [src]="selectedReturn.logo" alt="" class="flight-logo-small" />
+                      {{ selectedReturn.airline }}
                     </div>
                     <div class="flight-times flight-row">
                       <div>{{ selectedReturn.departure }} → {{ selectedReturn.arrival }}</div>
@@ -1056,7 +1050,7 @@
                         <ng-container *ngFor="let segment of selectedOutbound.Segments[0]; let i = index">
                           <div class="tab-content-section">
                             <div class="flight-info">
-                              <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
+                              <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
                               <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
                               <div class="tag">{{ segment.Craft }}</div>
                             </div>
@@ -1183,7 +1177,7 @@
                         <ng-container *ngFor="let segment of selectedReturn.Segments[0]; let i = index">
                           <div class="tab-content-section">
                             <div class="flight-info">
-                              <img [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
+                              <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'" width="40" height="40" />
                               <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber }}
                               <div class="tag">{{ segment.Craft }}</div>
                             </div>

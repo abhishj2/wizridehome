@@ -1593,6 +1593,17 @@ img {
 .flight-airline {
   font-size: 14px;
   color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flight-logo-small {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 2px;
 }
 
 .flight-link {
@@ -1644,6 +1655,8 @@ img {
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .book-now-button {
@@ -1651,10 +1664,21 @@ img {
   color: white;
 }
 
+.book-now-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+}
+
 .lock-price-btn {
   background: white;
   color: #008b8b;
   border: 2px solid #008b8b;
+}
+
+.lock-price-btn:hover {
+  background: #f0f0f0;
+  border-color: #006b6b;
 }
 
 .fare-details-wrapper {
@@ -2493,5 +2517,155 @@ img {
   .summary-content {
     flex-direction: column;
     gap: 15px;
+  }
+
+  /* Refundability Tag Mobile */
+  .refundability-tag {
+    position: static;
+    display: block;
+    text-align: center;
+    margin: 12px auto;
+    width: fit-content;
+    padding: 6px 12px;
+  }
+
+  /* Flight Sticky Footer Mobile */
+  .flight-sticky-footer {
+    padding: 12px 16px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .footer-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 100%;
+    align-items: start;
+  }
+
+  .flight-summary-block {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: none;
+    padding: 0 8px 0 0;
+    flex-shrink: 0;
+  }
+
+  .flight-summary-block:last-of-type {
+    border-right: none;
+    padding: 0 0 0 8px;
+  }
+
+  .flight-leg-label {
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #666;
+    text-transform: uppercase;
+  }
+
+  .flight-airline {
+    font-size: 12px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .flight-logo-small {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  .flight-times {
+    font-size: 11px;
+    color: #666;
+  }
+
+  .flight-price {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .total-summary {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 8px;
+  }
+
+  .total-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .total-amount {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: left;
+    color: #333;
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+
+  .total-amount span {
+    font-size: 11px;
+    font-weight: 400;
+    color: #666;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .total-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  .book-now-button, .lock-price-btn {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 100px;
+    max-width: 150px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .book-now-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .lock-price-btn:hover {
+    background: #f0f0f0;
+  }
+
+  .fare-details-wrapper {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 12px;
+  }
+
+  /* Add padding to content to prevent overlap */
+  .flight-list-container {
+    padding-bottom: 140px;
   }
 }

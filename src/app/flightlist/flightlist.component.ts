@@ -1097,7 +1097,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             baseFarePerAdult: basePerAdult,
             taxPerAdult: taxPerAdult,
             price: totalPerAdult,
-            logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
+            logo: `assets/images/flightimages/${firstSegment.Airline.AirlineCode}.png`,
             isRefundable: flight.IsRefundable ?? false,
             airline: firstSegment.Airline.AirlineName,
             departure: firstSegment.Origin?.DepTime
@@ -1168,7 +1168,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             baseFarePerAdult: basePerAdult,
             taxPerAdult: taxPerAdult,
             price: totalPerAdult,
-            logo: `assets/logos/${firstSegment.Airline.AirlineCode}.png`,
+            logo: `assets/images/flightimages/${firstSegment.Airline.AirlineCode}.png`,
             isRefundable: flight.IsRefundable ?? false,
             airline: firstSegment.Airline.AirlineName,
             departure: firstSegment.Origin?.DepTime
