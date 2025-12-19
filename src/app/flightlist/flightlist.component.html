@@ -391,9 +391,18 @@
 
                   <!-- Route -->
                   <div class="route">
+                    <div class="vehicle">
+                      <img [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'" 
+                           [alt]="flight.Segments[0][0].Airline.AirlineName"
+                           onerror="this.src='assets/images/default-airline.png'" />
+                    </div>
+
                     <div class="route-column">
                       <div class="route-code">{{ flight.Segments[0][0].Origin.Airport.AirportCode }}</div>
-                      <div class="location">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
+                      <div class="location">
+                        {{ flight.Segments[0][0].Origin.Airport.CityName }}
+                        <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+                      </div>
                     </div>
 
                     <div class="route-visualization">
@@ -406,7 +415,6 @@
                         <div class="route-node end-node"></div>
                       </div>
                       <div class="route-details">
-                        <div class="time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
                         <div class="duration">{{ getTotalDuration(flight.Segments[0]) }}</div>
                       </div>
                     </div>
