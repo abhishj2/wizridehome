@@ -33,7 +33,9 @@
             </div>
           </div>
           <div class="summary-actions">
-            <button class="modify-btn" (click)="showModifyForm = !showModifyForm">Modify</button>
+            <button class="modify-btn" (click)="showModifyForm = !showModifyForm" title="Modify">
+              <i class="fas fa-edit"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -1598,13 +1600,13 @@
       <div class="custom-modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
         <div class="fare-options-box">
-          <div class="fare-options-header">
+            <div class="fare-options-header">
             <div class="fare-options-title">Fare Options available for your trip</div>
-            <div class="fare-options-subtitle" *ngIf="selectedFlight">
-              {{ selectedFlight.Origin?.Airport?.CityName }} ➝ {{ selectedFlight.Destination?.Airport?.CityName }} ·
-              {{ selectedFlight.Airline?.AirlineName }} ·
-              {{ selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
-              {{ selectedFlight.Destination?.ArrTime | date : "HH:mm (+1 day)" }}
+            <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
+              <span class="fare-trip-details-text">{{ selectedFlight.Origin?.Airport?.CityName }} → {{ selectedFlight.Destination?.Airport?.CityName }} · {{ selectedFlight.Airline?.AirlineName }} · {{ selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} · {{ selectedFlight.Origin?.DepTime | date : "HH:mm" }} - {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}</span>
+              <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModal(); $event.stopPropagation()" title="Modify">
+                <i class="fas fa-edit"></i>
+              </button>
             </div>
           </div>
           <div class="fare-scroll-wrapper">
@@ -1660,17 +1662,17 @@
               <div class="tab" [class.active]="activeFareTab === 'return'" (click)="selectFareTab('return')">RETURN</div>
             </div>
             <!-- Fare Subtitle -->
-            <div class="fare-options-subtitle" *ngIf="activeFareTab === 'departure' && selectedOutbound">
-              {{ selectedOutbound.Origin.Airport.CityName }} ➝ {{ selectedOutbound.Destination.Airport.CityName }} ·
-              {{ selectedOutbound.airline }} ·
-              {{ selectedOutbound.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
-              {{ selectedOutbound.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'departure' && selectedOutbound">
+              <span class="fare-trip-details-text">{{ selectedOutbound.Origin.Airport.CityName }} → {{ selectedOutbound.Destination.Airport.CityName }} · {{ selectedOutbound.airline }} · {{ selectedOutbound.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedOutbound.Origin.DepTime | date : "HH:mm" }} - {{ selectedOutbound.Destination.ArrTime | date : "HH:mm" }}</span>
+              <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()" title="Modify">
+                <i class="fas fa-edit"></i>
+              </button>
             </div>
-            <div class="fare-options-subtitle" *ngIf="activeFareTab === 'return' && selectedReturn">
-              {{ selectedReturn.Origin.Airport.CityName }} ➝ {{ selectedReturn.Destination.Airport.CityName }} ·
-              {{ selectedReturn.airline }} ·
-              {{ selectedReturn.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
-              {{ selectedReturn.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'return' && selectedReturn">
+              <span class="fare-trip-details-text">{{ selectedReturn.Origin.Airport.CityName }} → {{ selectedReturn.Destination.Airport.CityName }} · {{ selectedReturn.airline }} · {{ selectedReturn.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedReturn.Origin.DepTime | date : "HH:mm" }} - {{ selectedReturn.Destination.ArrTime | date : "HH:mm" }}</span>
+              <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()" title="Modify">
+                <i class="fas fa-edit"></i>
+              </button>
             </div>
           </div>
           <!-- Scrollable Fare Options -->
@@ -1739,11 +1741,11 @@
         <div class="fare-options-box">
           <div class="fare-options-header">
             <div class="fare-options-title"><strong>MORE FARE OPTIONS</strong> available for segment {{ selectedMultiCitySegmentIndex + 1 }}.</div>
-            <div class="fare-options-subtitle" *ngIf="selectedMultiCityFlight">
-              {{ selectedMultiCityFlight.Origin.Airport.CityName }} ➝ {{ selectedMultiCityFlight.Destination.Airport.CityName }} ·
-              {{ selectedMultiCityFlight.airline }} ·
-              {{ selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y · HH:mm" }} -
-              {{ selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm (+1 day)" }}
+            <div class="fare-options-subtitle-line" *ngIf="selectedMultiCityFlight">
+              <span class="fare-trip-details-text">{{ selectedMultiCityFlight.Origin.Airport.CityName }} → {{ selectedMultiCityFlight.Destination.Airport.CityName }} · {{ selectedMultiCityFlight.airline }} · {{ selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedMultiCityFlight.Origin.DepTime | date : "HH:mm" }} - {{ selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm" }}</span>
+              <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModalMultiCity(); $event.stopPropagation()" title="Modify">
+                <i class="fas fa-edit"></i>
+              </button>
             </div>
           </div>
           <!-- Scrollable Fare Options -->
@@ -1799,6 +1801,73 @@
               CONTINUE SELECTING
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Fare Popup (Mobile Only) -->
+    <div class="fare-popup-overlay-mobile" *ngIf="showMobileFarePopup" (click)="closeMobileFarePopup()"></div>
+    <div class="fare-popup animated" *ngIf="showMobileFarePopup && selectedFlightForMobile" (click)="$event.stopPropagation()">
+      <div class="fare-header">
+        <span>Select Package</span>
+        <button (click)="closeMobileFarePopup()">×</button>
+      </div>
+      <div class="fare-body">
+        <div class="fare-card" *ngFor="let fare of defaultFaresForMobile">
+          <div class="fare-top">
+            <div>
+              <div class="fare-title">{{ fare.type }}</div>
+              <div class="fare-sub">Fare Offered By Airline</div>
+            </div>
+            <div class="fare-price">
+              ₹ {{ fare.price | number : "1.2-2" }}
+              <div class="per">per Adult</div>
+            </div>
+          </div>
+          <div class="fare-detail">
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-suitcase"></i> Cabin Bag
+              </div>
+              <div class="fare-right">{{ fare.cabin }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-suitcase-rolling"></i> Check-in Bag
+              </div>
+              <div class="fare-right">{{ fare.checkIn }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-times-circle"></i> Cancellation
+              </div>
+              <div class="fare-right">{{ fare.cancel }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-exchange-alt"></i> Date Change
+              </div>
+              <div class="fare-right">{{ fare.dateChange }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-chair"></i> Seat Selection
+              </div>
+              <div class="fare-right">{{ fare.seat }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-utensils"></i> Meal
+              </div>
+              <div class="fare-right">{{ fare.meal }}</div>
+            </div>
+          </div>
+          <button
+            class="book-btn"
+            (click)="finalizeBookingMobile(selectedFlightForMobile, fare)"
+          >
+            BOOK
+          </button>
         </div>
       </div>
     </div>

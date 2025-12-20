@@ -152,6 +152,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   selectedFareOptions: { [key: number]: any } = {};
 
+  // Mobile fare popup (mobile only)
+  selectedFlightForMobile: any = null;
+  showMobileFarePopup: boolean = false;
+
   hoveredIndex = -1;
   hoveredReturnIndex = -1;
 
@@ -2053,10 +2057,29 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   // Fare options modal
   openFareOptionsModal(flight: any): void {
-    this.selectedFlight = flight;
-    this.showFareModal = true;
-    console.log("Selected flight for fare options:", this.selectedFlight);
-    console.log("Available fare options:", this.selectedFlight?.FareOptions?.length || 0);
+    // Check if mobile viewport
+    if (this.isBrowser && window.innerWidth <= 767) {
+      // Show mobile popup instead
+      this.selectedFlightForMobile = flight;
+      this.showMobileFarePopup = true;
+    } else {
+      // Desktop modal
+      this.selectedFlight = flight;
+      this.showFareModal = true;
+    }
+    console.log("Selected flight for fare options:", this.selectedFlight || this.selectedFlightForMobile);
+    console.log("Available fare options:", (this.selectedFlight || this.selectedFlightForMobile)?.FareOptions?.length || 0);
+  }
+
+  // Mobile fare popup methods
+  openMobileFarePopup(flight: any): void {
+    this.selectedFlightForMobile = flight;
+    this.showMobileFarePopup = true;
+  }
+
+  closeMobileFarePopup(): void {
+    this.selectedFlightForMobile = null;
+    this.showMobileFarePopup = false;
   }
 
   closeFareOptionsModal(): void {
@@ -2281,6 +2304,74 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   getDateChangeRule(fare: any): string {
     return fare.dateChangePolicy?.[0]?.Details || 'Not Available';
+  }
+
+  // Mobile fare popup: Transform FareOptions to mobile format
+  get defaultFaresForMobile(): any[] {
+    if (!this.selectedFlightForMobile || !this.selectedFlightForMobile.FareOptions) {
+      return [];
+    }
+    
+    return this.selectedFlightForMobile.FareOptions.map((fareOption: any, index: number) => {
+      const firstSegment = fareOption.Segments?.[0]?.[0] || {};
+      
+      // Calculate price per adult
+      const fareBreakdownPax1 = fareOption.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+      let calculatedPrice = 0;
+      if (fareBreakdownPax1 && fareBreakdownPax1.PassengerCount > 0) {
+        const baseFarePerPassenger = fareBreakdownPax1.BaseFare / fareBreakdownPax1.PassengerCount;
+        const taxPerPassenger = fareBreakdownPax1.Tax / fareBreakdownPax1.PassengerCount;
+        calculatedPrice = baseFarePerPassenger + taxPerPassenger;
+      }
+
+      // Get cancellation text
+      const cancelText = this.getCancellationTextForMobile(fareOption);
+      const dateChangeText = this.getDateChangeTextForMobile(fareOption);
+
+      return {
+        type: fareOption?.Segments?.[0]?.[0]?.SupplierFareClass || 'Standard',
+        price: calculatedPrice,
+        cabin: firstSegment.CabinBaggage || 'N/A',
+        checkIn: firstSegment.Baggage || 'N/A',
+        cancel: cancelText,
+        dateChange: dateChangeText,
+        seat: 'Chargeable',
+        meal: fareOption.IsFreeMealAvailable ? 'Included' : 'Chargeable',
+        originalFareOption: fareOption,
+        fareIndex: index
+      };
+    });
+  }
+
+  getCancellationTextForMobile(fare: any): string {
+    const cancelPolicies = fare.cancellationPolicy || fare.FareRules || [];
+    const validPolicy = Array.isArray(cancelPolicies) 
+      ? cancelPolicies.find((p: any) => p?.Details && p.Details.toLowerCase() !== 'nil' && p.Details.trim() !== '')
+      : null;
+    if (validPolicy) {
+      const details = validPolicy.Details.replace(/INR/gi, '').trim();
+      return `Charges starting ₹ ${details}`;
+    }
+    return 'Info Not Available';
+  }
+
+  getDateChangeTextForMobile(fare: any): string {
+    const changePolicies = fare.dateChangePolicy || [];
+    const validPolicy = Array.isArray(changePolicies)
+      ? changePolicies.find((p: any) => p?.Details && p.Details.toLowerCase() !== 'nil' && p.Details.trim() !== '')
+      : null;
+    if (validPolicy) {
+      const details = validPolicy.Details.replace(/INR/gi, '').trim();
+      return `Charges starting ₹ ${details}`;
+    }
+    return 'Info Not Available';
+  }
+
+  finalizeBookingMobile(flight: any, fare: any): void {
+    // Use the original fare option for booking
+    const selectedFareOption = fare.originalFareOption || this.selectedFlightForMobile.FareOptions[fare.fareIndex];
+    this.finalizeSelection(selectedFareOption);
+    this.closeMobileFarePopup();
   }
 
   // Fetch calendar fare map if missing (matching hero section implementation)
