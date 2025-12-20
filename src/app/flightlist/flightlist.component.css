@@ -25,8 +25,17 @@ img {
   margin: 0 auto;
   padding: 0 24px;
   width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+}
+
+/* Desktop container fixes */
+@media (min-width: 1201px) {
+  .container {
+    max-width: 1400px;
+    padding: 0 24px;
+  }
 }
 
 /* Flight List Component Styles */
@@ -192,6 +201,16 @@ img {
   box-sizing: border-box;
 }
 
+/* Desktop results main fixes */
+@media (min-width: 1201px) {
+  .results-main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 24px 0 60px 0;
+  }
+}
+
 .results-main::before {
   content: '';
   position: absolute;
@@ -211,10 +230,14 @@ img {
   justify-items: start;
   position: relative;
   width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   min-width: 0;
   box-sizing: border-box;
 }
+
+/* Desktop styles - ensure sidebar is visible (1024px and above) */
+/* Desktop styles moved to end of file to override mobile queries */
 
 .filter-sidebar-column {
   width: 100%;
@@ -226,6 +249,7 @@ img {
   justify-self: start;
   margin-top: 0;
   padding-top: 0;
+  display: block;
 }
 
 .filter-card {
@@ -366,11 +390,21 @@ img {
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   align-self: start;
   justify-self: start;
   margin-top: 0;
   padding-top: 0;
+}
+
+/* Desktop results column fixes */
+@media (min-width: 1201px) {
+  .results-column {
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    max-width: 100%;
+  }
 }
 
 .flight-list-container {
@@ -535,6 +569,7 @@ img {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: 2px solid #008b8b !important;
   width: 100% !important;
+  max-width: 100% !important;
   box-sizing: border-box;
   display: block !important;
   position: relative !important;
@@ -544,6 +579,7 @@ img {
   height: auto !important;
   min-height: 100px !important;
   overflow: visible !important;
+  grid-column: 1 / -1;
 }
 
 .date-slider-wrapper {
@@ -701,13 +737,6 @@ img {
   pointer-events: none;
 }
 
-/* Flight List Container */
-.flight-list-container {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
 /* Flight Cards (matching booking-results design) */
 .flight-cards {
   display: flex;
@@ -788,6 +817,31 @@ img {
   box-sizing: border-box;
   overflow: hidden;
   gap: 16px;
+}
+
+/* Desktop route layout fixes */
+@media (min-width: 769px) {
+  .route {
+    grid-template-columns: auto 2fr 3fr 2fr;
+    gap: 16px;
+    padding: 18px 24px;
+  }
+  
+  .route-column {
+    min-width: 0;
+    max-width: 100%;
+  }
+  
+  .route-visualization {
+    min-width: 0;
+    max-width: 100%;
+  }
+  
+  .vehicle {
+    display: flex;
+    min-width: 120px;
+    max-width: 120px;
+  }
 }
 
 .route-column {
@@ -1050,6 +1104,16 @@ img {
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
+}
+
+/* Desktop options row fixes */
+@media (min-width: 769px) {
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 10px 20px;
+  }
 }
 
 .option-item {
@@ -2117,8 +2181,8 @@ img {
   font-style: italic;
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
+/* Tablet and smaller - single column layout */
+@media (max-width: 1023px) {
   .results-layout {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -2129,6 +2193,11 @@ img {
     position: static;
     width: 100%;
     max-width: 100%;
+    display: block !important;
+  }
+  
+  .date-slider-bar {
+    grid-column: 1;
   }
   
   .promotional-ads {
@@ -2243,8 +2312,8 @@ img {
   .slider-nav {
     display: none;
   }
-}
-
+  
+  /* Mobile Route Layout */
   .route {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -3079,5 +3148,120 @@ img {
   .mobile-time-slot.selected .label {
     color: #007bff;
     font-weight: 600;
+  }
+}
+
+/* ================= DESKTOP OVERRIDE - MUST BE LAST TO OVERRIDE ALL MOBILE QUERIES ================= */
+/* Desktop styles - ensure sidebar is visible (1024px and above) - OVERRIDES MOBILE */
+@media (min-width: 1024px) {
+  .results-layout {
+    display: grid !important;
+    grid-template-columns: 260px 1fr !important;
+    gap: 24px !important;
+  }
+  
+  .filter-sidebar-column {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    max-width: 260px !important;
+    position: sticky !important;
+    top: 0 !important;
+    order: 0 !important;
+    opacity: 1 !important;
+    height: auto !important;
+  }
+  
+  .results-column {
+    width: 100% !important;
+    min-width: 0;
+    overflow: visible;
+  }
+  
+  .date-slider-bar {
+    grid-column: 1 / -1 !important;
+  }
+  
+  /* Desktop Route Layout - Override Mobile */
+  .route {
+    display: grid !important;
+    grid-template-columns: auto 2fr 3fr 2fr !important;
+    gap: 16px !important;
+    padding: 18px 24px !important;
+    align-items: center !important;
+    text-align: left !important;
+  }
+  
+  .route-column {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-top: 15px !important;
+    max-width: 100% !important;
+  }
+  
+  .route-column:first-child,
+  .route-column:last-child {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .route-visualization {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    margin-top: 15px !important;
+    padding: 0 !important;
+    align-self: flex-start !important;
+  }
+  
+  .route-details {
+    flex-direction: row !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+  }
+  
+  .time, .duration {
+    font-size: 14px !important;
+    padding: 4px 8px !important;
+  }
+  
+  .price-info {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    margin-top: 0 !important;
+  }
+  
+  .price {
+    font-size: 26px !important;
+  }
+  
+  /* Hide mobile sections on desktop */
+  .mobile-amenities,
+  .mobile-price-row,
+  .mobile-booking-row {
+    display: none !important;
+  }
+  
+  /* Show desktop sections */
+  .vehicle {
+    display: flex !important;
+  }
+  
+  .vehicle img {
+    display: block !important;
+  }
+  
+  .options {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  }
+  
+  .desktop-only {
+    display: block !important;
   }
 }
