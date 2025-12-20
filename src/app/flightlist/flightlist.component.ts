@@ -178,6 +178,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   selectedAirlines: string[] = [];
   selectedStops: number[] = [];
 
+  // Mobile Filter Properties
+  showMobileFilter = false;
+  mobileFilterActiveTab: 'sort' | 'filter' = 'filter';
+  selectedSort = 'Price: Low to High';
+  sortOptions = ['Price: Low to High', 'Price: High to Low', 'Duration: Shortest', 'Departure: Early', 'Departure: Late'];
+  showRefundableOnly = false;
+
   showPassengerDropdown = false;
   adults = 1;
   children = 0;
@@ -1708,7 +1715,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.applyAllFilters();
   }
 
-  toggleDepartureSlot(label: string): void {
+  toggleDepartureSlot(label: string | undefined): void {
+    if (!label) return;
     if (this.selectedDepartureSlots.has(label)) {
       this.selectedDepartureSlots.delete(label);
     } else {
@@ -1761,6 +1769,66 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     });
 
     console.log('After filtering:', this.groupedFlights.length, 'flights remain');
+  }
+
+  // Mobile Filter Methods
+  clearAllFilters(): void {
+    this.selectedAirlines = [];
+    this.selectedStops = [];
+    this.selectedDepartureSlots.clear();
+    this.showRefundableOnly = false;
+    this.priceRange = this.dynamicFilters.max_price;
+    this.applyAllFilters();
+  }
+
+  applyMobileFilters(): void {
+    // Update refundability filter based on showRefundableOnly
+    this.selectedRefundability.clear();
+    if (this.showRefundableOnly) {
+      this.selectedRefundability.add('refundable');
+    }
+    
+    this.applyAllFilters();
+    this.applySort();
+    this.showMobileFilter = false;
+  }
+
+  applySort(): void {
+    if (!this.groupedFlights || this.groupedFlights.length === 0) return;
+
+    switch (this.selectedSort) {
+      case 'Price: Low to High':
+        this.groupedFlights.sort((a, b) => (a.price || 0) - (b.price || 0));
+        break;
+      case 'Price: High to Low':
+        this.groupedFlights.sort((a, b) => (b.price || 0) - (a.price || 0));
+        break;
+      case 'Duration: Shortest':
+        this.groupedFlights.sort((a, b) => {
+          const durA = this.getTotalDurationMinutes(a.Segments[0]);
+          const durB = this.getTotalDurationMinutes(b.Segments[0]);
+          return durA - durB;
+        });
+        break;
+      case 'Departure: Early':
+        this.groupedFlights.sort((a, b) => {
+          const timeA = new Date(a.Segments[0][0].Origin.DepTime).getTime();
+          const timeB = new Date(b.Segments[0][0].Origin.DepTime).getTime();
+          return timeA - timeB;
+        });
+        break;
+      case 'Departure: Late':
+        this.groupedFlights.sort((a, b) => {
+          const timeA = new Date(a.Segments[0][0].Origin.DepTime).getTime();
+          const timeB = new Date(b.Segments[0][0].Origin.DepTime).getTime();
+          return timeB - timeA;
+        });
+        break;
+    }
+  }
+
+  getTotalDurationMinutes(segments: any[]): number {
+    return segments.reduce((total, seg) => total + (seg.Duration || 0), 0);
   }
 
   // Roundtrip filter methods

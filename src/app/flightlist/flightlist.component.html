@@ -140,6 +140,131 @@
           </div>
         </div>
 
+        <!-- Mobile Filter Button (only visible on mobile) -->
+        <div class="mobile-filter-button-wrapper" *ngIf="flightType === 'oneway' || flightType === 'round'">
+          <button class="mobile-filter-trigger-btn" (click)="showMobileFilter = !showMobileFilter">
+            <i class="fas fa-filter"></i>
+            <span>Filter & Sort</span>
+          </button>
+        </div>
+
+        <!-- Mobile Filter Popup -->
+        <div class="mobile-filter-backdrop" *ngIf="showMobileFilter" (click)="showMobileFilter = false"></div>
+        <div class="mobile-filter-popup" [class.active]="showMobileFilter" *ngIf="showMobileFilter">
+          <div class="mobile-filter-content" (click)="$event.stopPropagation()">
+            <div class="mobile-filter-header">
+              <span class="title">Refine Your Search</span>
+              <button class="mobile-filter-close-btn" (click)="showMobileFilter = false">&times;</button>
+            </div>
+
+            <div class="mobile-filter-tabs">
+              <span class="mobile-filter-tab" 
+                    [class.highlighted]="mobileFilterActiveTab === 'sort'"
+                    (click)="mobileFilterActiveTab = 'sort'">Sort</span>
+              <span class="mobile-filter-tab" 
+                    [class.highlighted]="mobileFilterActiveTab === 'filter'"
+                    (click)="mobileFilterActiveTab = 'filter'">Filter</span>
+            </div>
+
+            <!-- Sort Section -->
+            <div *ngIf="mobileFilterActiveTab === 'sort'" class="mobile-filter-section">
+              <div class="mobile-filter-block">
+                <label class="mobile-filter-block-title">Sort By</label>
+                <div class="mobile-checkbox-row" *ngFor="let sortOption of sortOptions || []">
+                  <input type="radio" 
+                         name="mobileSort" 
+                         [value]="sortOption"
+                         [checked]="selectedSort === sortOption"
+                         (change)="selectedSort = sortOption; applySort()" />
+                  <label>{{ sortOption }}</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div *ngIf="mobileFilterActiveTab === 'filter'" class="mobile-filter-section">
+              <!-- Stops Filter -->
+              <div class="mobile-filter-block" *ngIf="dynamicFilters?.stops && dynamicFilters.stops.length > 0">
+                <label class="mobile-filter-block-title">Stops</label>
+                <div class="mobile-checkbox-wrap">
+                  <label class="mobile-checkbox-inline" *ngFor="let stop of dynamicFilters?.stops || []">
+                    <input type="checkbox" 
+                           [value]="stop"
+                           (change)="onStopFilterChange($event)"
+                           [checked]="selectedStops.includes(stop)" />
+                    {{ stop === 0 ? "Non-stop" : stop + " Stop" + (stop > 1 ? "s" : "") }}
+                  </label>
+                </div>
+              </div>
+              <hr class="mobile-filter-hr" *ngIf="dynamicFilters?.stops && dynamicFilters.stops.length > 0" />
+
+              <!-- Airlines Filter -->
+              <div class="mobile-filter-block" *ngIf="dynamicFilters?.airlines && dynamicFilters.airlines.length > 0">
+                <label class="mobile-filter-block-title">Airlines</label>
+                <div class="mobile-checkbox-wrap">
+                  <label class="mobile-checkbox-inline" *ngFor="let airline of dynamicFilters?.airlines || []">
+                    <input type="checkbox" 
+                           [value]="airline"
+                           (change)="onAirlineFilterChange($event)"
+                           [checked]="selectedAirlines.includes(airline)" />
+                    {{ airline }}
+                  </label>
+                </div>
+              </div>
+              <hr class="mobile-filter-hr" *ngIf="dynamicFilters?.airlines && dynamicFilters.airlines.length > 0" />
+
+              <!-- Refundability Filter -->
+              <div class="mobile-filter-block">
+                <label class="mobile-filter-block-title">Refundable</label>
+                <div class="mobile-checkbox-wrap">
+                  <label class="mobile-checkbox-inline">
+                    <input type="checkbox" [(ngModel)]="showRefundableOnly" />
+                    Only Refundable
+                  </label>
+                </div>
+              </div>
+              <hr class="mobile-filter-hr" />
+
+              <!-- Departure Timings Filter -->
+              <div class="mobile-filter-block" *ngIf="departureTimeSlots && departureTimeSlots.length > 0">
+                <label class="mobile-filter-block-title">Departure Timings</label>
+                <div class="mobile-departure-time-filter">
+                  <div class="mobile-time-slot" 
+                       *ngFor="let slot of departureTimeSlots"
+                       [class.selected]="slot?.label && selectedDepartureSlots?.has(slot.label)"
+                       (click)="toggleDepartureSlot(slot?.label)">
+                    <i [class]="slot?.iconClass"></i>
+                    <div class="label">{{ slot?.label }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price Range Filter -->
+              <div class="mobile-filter-block" *ngIf="dynamicFilters?.min_price && dynamicFilters?.max_price">
+                <label class="mobile-filter-block-title">Price Range</label>
+                <input type="range" 
+                       [min]="dynamicFilters?.min_price || 0" 
+                       [max]="dynamicFilters?.max_price || 0" 
+                       [(ngModel)]="priceRange" 
+                       class="mobile-filter-price-range" 
+                       (input)="onPriceChange()" />
+                <div class="mobile-filter-price-range-label">
+                  ₹{{ (dynamicFilters?.min_price || 0) | number : "1.0-0" }} - ₹{{ priceRange | number : "1.0-0" }}
+                </div>
+              </div>
+
+              <div class="mobile-filter-button-row">
+                <button class="mobile-filter-clear-btn" (click)="clearAllFilters()">
+                  Clear All Filters
+                </button>
+                <button class="mobile-filter-apply-btn" (click)="applyMobileFilters()">
+                  Apply Filter
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="results-layout">
           <!-- Filter Sidebar -->
           <div class="filter-sidebar-column" *ngIf="flightType === 'oneway'">
