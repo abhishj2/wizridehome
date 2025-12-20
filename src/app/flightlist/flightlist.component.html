@@ -118,7 +118,6 @@
         <!-- Date Slider spanning sidebar and results -->
         <div class="date-slider-bar" *ngIf="flightType === 'oneway'">
           <div class="date-slider-wrapper">
-            <button class="slider-nav left" (click)="scrollDates('left')">‹</button>
             <div class="date-slider-scroll-wrapper" #scrollContainer>
               <div class="date-slider-container">
                 <div
@@ -127,7 +126,7 @@
                   [class.selected]="item.date === highlightedDate"
                   [class.no-price]="item.price === 0 || !item.price"
                   (click)="selectDateFromSlider(item.date, i)">
-                  <div class="date-label">{{ item.date | date : "d MMM, yy" }}</div>
+                  <div class="date-label">{{ item.date | date : "d MMM" }}</div>
                   <div class="date-price" *ngIf="item.price > 0">₹ {{ item.price | number : "1.2-2" }}</div>
                   <div class="date-price no-price-text" *ngIf="item.price === 0 || !item.price">N/A</div>
                 </div>
@@ -136,15 +135,30 @@
                 </div>
               </div>
             </div>
-            <button class="slider-nav right" (click)="scrollDates('right')">›</button>
           </div>
         </div>
 
-        <!-- Mobile Filter Button (only visible on mobile) -->
-        <div class="mobile-filter-button-wrapper" *ngIf="flightType === 'oneway' || flightType === 'round'">
-          <button class="mobile-filter-trigger-btn" (click)="showMobileFilter = !showMobileFilter">
-            <i class="fas fa-filter"></i>
-            <span>Filter & Sort</span>
+        <!-- Mobile Filter Chips and Button (only visible on mobile) -->
+        <div class="mobile-filter-chips-wrapper" *ngIf="flightType === 'oneway' || flightType === 'round'">
+          <div class="mobile-filter-chips">
+            <button class="mobile-filter-chip" 
+                    [class.active]="selectedStops.includes(0)"
+                    (click)="toggleNonStopFilter()">
+              Non Stop
+            </button>
+            <button class="mobile-filter-chip" 
+                    [class.active]="showRefundableOnly"
+                    (click)="toggleRefundableFilter()">
+              Refundable
+            </button>
+            <button class="mobile-filter-chip" 
+                    [class.active]="selectedAirlines.length > 0"
+                    (click)="showMobileFilter = true; mobileFilterActiveTab = 'filter'">
+              Airlines
+            </button>
+          </div>
+          <button class="mobile-filter-icon-btn" (click)="showMobileFilter = !showMobileFilter">
+            <i class="fas fa-sliders-h"></i>
           </button>
         </div>
 

@@ -1725,6 +1725,25 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.applyAllFilters();
   }
 
+  toggleNonStopFilter(): void {
+    if (this.selectedStops.includes(0)) {
+      this.selectedStops = this.selectedStops.filter(s => s !== 0);
+    } else {
+      this.selectedStops.push(0);
+    }
+    this.applyAllFilters();
+  }
+
+  toggleRefundableFilter(): void {
+    this.showRefundableOnly = !this.showRefundableOnly;
+    this.applyMobileFilters();
+  }
+
+  openDatePicker(): void {
+    // Open date picker modal or trigger date selection
+    // This can be implemented based on your date picker component
+  }
+
   getStopsCount(flight: any): number {
     return flight.Segments?.[0]?.length > 0 ? flight.Segments[0].length - 1 : 0;
   }
