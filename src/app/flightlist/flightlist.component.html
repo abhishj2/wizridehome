@@ -798,7 +798,7 @@
                       <div class="card" 
                            [class.roundtrip-selected]="selectedOutboundIndex === i"
                        *ngFor="let flight of groupedFlights; let i = index">
-                        <label class="flight-radio-wrapper" (click)="selectBothwayOutbound(flight, i)">
+                        <label class="flight-radio-wrapper" (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
                       <input type="radio" name="outboundFlight" [value]="flight" [(ngModel)]="selectedOutbound" />
                       <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
                         {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
@@ -965,7 +965,7 @@
                       <div class="card" 
                            [class.roundtrip-selected]="selectedReturnIndex === i"
                        *ngFor="let flight of groupedFlightsOutbound; let i = index">
-                        <label class="flight-radio-wrapper" (click)="selectBothwayReturn(flight, i)">
+                        <label class="flight-radio-wrapper" (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
                       <input type="radio" name="returnFlight" [value]="flight" [(ngModel)]="selectedReturn" />
                       <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
                         {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}

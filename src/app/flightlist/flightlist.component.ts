@@ -2109,23 +2109,20 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     });
   }
 
-  // Both-way methods - for opening modal (matches reference showPackagePopup exactly)
+  // Temporary storage for flight being viewed in modal (not yet selected)
+  tempFlightForModal: any = null;
+  tempFlightIndex: number = -1;
+  tempFlightType: 'onward' | 'return' | null = null;
+
+  // Both-way methods - for opening modal (don't set selectedOutbound until BOOK NOW is clicked)
   openFareOptionsModalForRoundTrip(flight: any, index: number, type: 'onward' | 'return'): void {
     // Set selectedFlight for modal (like reference)
     this.selectedFlight = Object.freeze(this.deepCopy(flight));
     
-    if (this.flightType === 'round') {
-      if (type === 'onward') {
-        // Set onward flight immediately (so black container shows) - matches reference
-        this.selectedOutbound = this.deepCopy(flight);
-        this.selectedOutboundIndex = index;
-        this.selectedOutboundFooter = this.deepCopy(flight);
-      } else {
-        // Set return flight
-        this.selectedReturn = this.deepCopy(flight);
-        this.selectedReturnIndex = index;
-      }
-    }
+    // Store temporarily (don't set selectedOutbound/selectedReturn yet)
+    this.tempFlightForModal = this.deepCopy(flight);
+    this.tempFlightIndex = index;
+    this.tempFlightType = type;
     
     // Use same modal structure as one-way (matches reference)
     if (this.isBrowser && window.innerWidth <= 767) {
@@ -2282,30 +2279,48 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return fares;
   }
   
-  // Finalize booking for round trip (matches reference finalizeBooking)
+  // Finalize booking for round trip - only set selectedOutbound/selectedReturn when BOOK NOW is clicked
   finalizeBookingForRoundTrip(flight: any, fare: any): void {
-    if (this.flightType === 'round') {
-      if (this.activeTab === 'onward') {
-        // Onward flight - already set in openFareOptionsModalForRoundTrip
+    if (this.flightType === 'round' && this.tempFlightForModal && this.tempFlightType) {
+      const flightWithFare = this.deepCopy(this.tempFlightForModal);
+      flightWithFare.selectedFareOption = fare.originalFareOption;
+      
+      if (this.tempFlightType === 'onward') {
+        // Set onward flight NOW (when BOOK NOW is clicked)
+        this.selectedOutbound = flightWithFare;
+        this.selectedOutboundIndex = this.tempFlightIndex;
+        this.selectedOutboundFooter = this.deepCopy(flightWithFare);
+        
         // Close modal and switch to return tab
         this.closeFareOptionsModal();
         setTimeout(() => {
           this.switchTab('return');
         }, 300);
       } else {
-        // Return flight - already set in openFareOptionsModalForRoundTrip
+        // Set return flight NOW (when BOOK NOW is clicked)
+        this.selectedReturn = flightWithFare;
+        this.selectedReturnIndex = this.tempFlightIndex;
+        
         // Close modal and proceed to checkout
         this.closeFareOptionsModal();
         
         // Both flights selected, proceed to final booking
         if (this.selectedOutbound && this.selectedReturn) {
-          // Navigate to checkout
+          // Navigate to checkout with both fares
+          const departureFare = this.selectedOutbound.selectedFareOption || this.selectedOutbound.FareOptions?.[0];
+          const returnFare = fare.originalFareOption;
+          
           this.finalizeSelection({
-            departureFare: this.selectedOutbound.FareOptions?.[0] || fare.originalFareOption,
-            returnFare: fare.originalFareOption
+            departureFare: departureFare,
+            returnFare: returnFare
           });
         }
       }
+      
+      // Clear temp storage
+      this.tempFlightForModal = null;
+      this.tempFlightIndex = -1;
+      this.tempFlightType = null;
     }
   }
 
@@ -2559,31 +2574,47 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   finalizeBookingMobile(flight: any, fare: any): void {
-    if (this.flightType === 'round') {
-      // Handle round trip
-      if (this.activeTab === 'onward') {
-        // Onward flight - already set in openFareOptionsModalForRoundTrip
+    if (this.flightType === 'round' && this.tempFlightForModal && this.tempFlightType) {
+      // Handle round trip - only set when BOOK NOW is clicked
+      const flightWithFare = this.deepCopy(this.tempFlightForModal);
+      flightWithFare.selectedFareOption = fare.originalFareOption;
+      
+      if (this.tempFlightType === 'onward') {
+        // Set onward flight NOW (when BOOK NOW is clicked)
+        this.selectedOutbound = flightWithFare;
+        this.selectedOutboundIndex = this.tempFlightIndex;
+        this.selectedOutboundFooter = this.deepCopy(flightWithFare);
+        
         // Close popup and switch to return tab
         this.closeMobileFarePopup();
         setTimeout(() => {
           this.switchTab('return');
         }, 300);
       } else {
-        // Return flight - already set in openFareOptionsModalForRoundTrip
+        // Set return flight NOW (when BOOK NOW is clicked)
+        this.selectedReturn = flightWithFare;
+        this.selectedReturnIndex = this.tempFlightIndex;
+        
         // Close popup and proceed to checkout
         this.closeMobileFarePopup();
         
         // Both flights selected, proceed to final booking
         if (this.selectedOutbound && this.selectedReturn) {
-          // Navigate to checkout
-          const departureFare = this.selectedOutbound.FareOptions?.[0] || fare.originalFareOption;
+          // Navigate to checkout with both fares
+          const departureFare = this.selectedOutbound.selectedFareOption || this.selectedOutbound.FareOptions?.[0];
+          const returnFare = fare.originalFareOption;
           
           this.finalizeSelection({
             departureFare: departureFare,
-            returnFare: fare.originalFareOption
+            returnFare: returnFare
           });
         }
       }
+      
+      // Clear temp storage
+      this.tempFlightForModal = null;
+      this.tempFlightIndex = -1;
+      this.tempFlightType = null;
     } else {
       // Use the original fare option for booking (one-way)
       const selectedFareOption = fare.originalFareOption || this.selectedFlightForMobile.FareOptions[fare.fareIndex];

@@ -3812,21 +3812,29 @@ img {
 
 @media (max-width: 768px) {
   .roundtrip-tab-bar {
-    flex-direction: column;
+    flex-direction: row; /* Keep tabs side by side even on mobile */
   }
   
   .tab-item {
     padding: 12px 16px;
+    font-size: 12px; /* Smaller font on mobile */
   }
   
   .tab-underline {
-    width: 100%;
-    transform: none !important;
-    display: none;
+    width: 50%; /* Keep at 50% for side by side */
+    transform: translateX(0); /* Will be updated by JS */
   }
   
   .tab-item.active {
-    border-bottom: 3px solid #008b8b;
+    border-bottom: none; /* Use underline instead */
+  }
+  
+  .tab-sector {
+    font-size: 12px;
+  }
+  
+  .tab-date {
+    font-size: 10px;
   }
   
   .segment-row {
