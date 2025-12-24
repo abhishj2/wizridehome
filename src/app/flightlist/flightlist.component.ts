@@ -2281,24 +2281,48 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   
   // Finalize booking for round trip - only set selectedOutbound/selectedReturn when BOOK NOW is clicked
   finalizeBookingForRoundTrip(flight: any, fare: any): void {
+    console.log('finalizeBookingForRoundTrip called', {
+      flightType: this.flightType,
+      tempFlightForModal: this.tempFlightForModal,
+      tempFlightType: this.tempFlightType,
+      fare: fare
+    });
+    
     if (this.flightType === 'round' && this.tempFlightForModal && this.tempFlightType) {
+      // Use the original flight structure, not the fare option structure
       const flightWithFare = this.deepCopy(this.tempFlightForModal);
       flightWithFare.selectedFareOption = fare.originalFareOption;
       
+      console.log('Setting selectedOutboundFooter with flight:', {
+        flightWithFare: flightWithFare,
+        hasSegments: !!flightWithFare.Segments,
+        segmentsLength: flightWithFare.Segments?.[0]?.length
+      });
+      
       if (this.tempFlightType === 'onward') {
         // Set onward flight NOW (when BOOK NOW is clicked)
-        this.selectedOutbound = flightWithFare;
+        this.selectedOutbound = this.deepCopy(flightWithFare);
         this.selectedOutboundIndex = this.tempFlightIndex;
         this.selectedOutboundFooter = this.deepCopy(flightWithFare);
+        
+        console.log('selectedOutboundFooter set:', {
+          selectedOutboundFooter: this.selectedOutboundFooter,
+          hasSegments: !!this.selectedOutboundFooter.Segments,
+          segmentsLength: this.selectedOutboundFooter.Segments?.[0]?.length
+        });
+        
+        // Trigger change detection
+        this.cdr.detectChanges();
         
         // Close modal and switch to return tab
         this.closeFareOptionsModal();
         setTimeout(() => {
           this.switchTab('return');
+          this.cdr.detectChanges();
         }, 300);
       } else {
         // Set return flight NOW (when BOOK NOW is clicked)
-        this.selectedReturn = flightWithFare;
+        this.selectedReturn = this.deepCopy(flightWithFare);
         this.selectedReturnIndex = this.tempFlightIndex;
         
         // Close modal and proceed to checkout
@@ -2574,25 +2598,48 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   finalizeBookingMobile(flight: any, fare: any): void {
+    console.log('finalizeBookingMobile called', {
+      flightType: this.flightType,
+      tempFlightForModal: this.tempFlightForModal,
+      tempFlightType: this.tempFlightType,
+      fare: fare
+    });
+    
     if (this.flightType === 'round' && this.tempFlightForModal && this.tempFlightType) {
       // Handle round trip - only set when BOOK NOW is clicked
       const flightWithFare = this.deepCopy(this.tempFlightForModal);
       flightWithFare.selectedFareOption = fare.originalFareOption;
       
+      console.log('Setting selectedOutboundFooter (mobile) with flight:', {
+        flightWithFare: flightWithFare,
+        hasSegments: !!flightWithFare.Segments,
+        segmentsLength: flightWithFare.Segments?.[0]?.length
+      });
+      
       if (this.tempFlightType === 'onward') {
         // Set onward flight NOW (when BOOK NOW is clicked)
-        this.selectedOutbound = flightWithFare;
+        this.selectedOutbound = this.deepCopy(flightWithFare);
         this.selectedOutboundIndex = this.tempFlightIndex;
         this.selectedOutboundFooter = this.deepCopy(flightWithFare);
+        
+        console.log('selectedOutboundFooter set (mobile):', {
+          selectedOutboundFooter: this.selectedOutboundFooter,
+          hasSegments: !!this.selectedOutboundFooter.Segments,
+          segmentsLength: this.selectedOutboundFooter.Segments?.[0]?.length
+        });
+        
+        // Trigger change detection
+        this.cdr.detectChanges();
         
         // Close popup and switch to return tab
         this.closeMobileFarePopup();
         setTimeout(() => {
           this.switchTab('return');
+          this.cdr.detectChanges();
         }, 300);
       } else {
         // Set return flight NOW (when BOOK NOW is clicked)
-        this.selectedReturn = flightWithFare;
+        this.selectedReturn = this.deepCopy(flightWithFare);
         this.selectedReturnIndex = this.tempFlightIndex;
         
         // Close popup and proceed to checkout
