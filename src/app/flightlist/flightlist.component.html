@@ -882,7 +882,7 @@
 
                       <!-- Mobile Booking Button -->
                       <div class="mobile-booking-row">
-                        <button class="btn mobile-book-btn" (click)="openFareOptionsModalBothway(); $event.stopPropagation()">
+                        <button class="btn mobile-book-btn" (click)="openFareOptionsModalForRoundTrip(flight, i, activeTab); $event.stopPropagation()">
                           View Prices
                         </button>
                       </div>
@@ -949,7 +949,7 @@
 
                         <!-- Column 4: View Prices Button -->
                         <div class="select-btn-card">
-                          <button class="btn" (click)="openFareOptionsModalBothway(); $event.stopPropagation()">View Prices</button>
+                          <button class="btn" (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">View Prices</button>
                         </div>
                       </div>
                     </label>
@@ -1049,7 +1049,7 @@
 
                       <!-- Mobile Booking Button -->
                       <div class="mobile-booking-row">
-                        <button class="btn mobile-book-btn" (click)="openFareOptionsModalBothway(); $event.stopPropagation()">
+                        <button class="btn mobile-book-btn" (click)="openFareOptionsModalForRoundTrip(flight, i, activeTab); $event.stopPropagation()">
                           View Prices
                         </button>
                       </div>
@@ -1116,13 +1116,13 @@
 
                         <!-- Column 4: View Prices Button -->
                         <div class="select-btn-card">
-                          <button class="btn" (click)="openFareOptionsModalBothway(); $event.stopPropagation()">View Prices</button>
+                          <button class="btn" (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">View Prices</button>
                         </div>
                       </div>
                     </label>
-                  </div>
                 </div>
-                    
+              </div>
+
                     <!-- Footer for Selected Onward Flight -->
                     <div
                       class="selected-flight-card-dark"
@@ -1160,9 +1160,9 @@
                             <!-- Only show Stop & Duration on last row -->
                             <span *ngIf="last" class="stop-duration-inline">
                               &nbsp;
-                              {{ selectedOutboundFooter.Segments[0].length - 1 }} Stop |
+                              {{ selectedOutboundFooter.Segments[0].length - 1 > 0 ? (selectedOutboundFooter.Segments[0].length - 1) + ' Stop |' : '0 Stop |' }}
                               <strong>Duration:</strong>
-                              {{ getTotalDuration(selectedOutboundFooter?.Segments?.[0] || []) }}
+                              {{ getTotalDurationForFlight(selectedOutboundFooter) }}
                             </span>
               </div>
 
@@ -1170,10 +1170,10 @@
                           <div class="segment-right" *ngIf="i === 0">
                             <strong>Dep. Time:</strong>
                             {{ seg?.Origin?.DepTime | date : "HH:mm" }}
-                          </div>
-                        </div>
-                      </div>
-              </div>
+                    </div>
+                    </div>
+                  </div>
+                    </div>
 
                     <!-- No Flights Messages -->
                     <div class="no-flights" *ngIf="(!groupedFlightsOutbound || groupedFlightsOutbound.length === 0) && !loader">
@@ -1181,73 +1181,13 @@
                 <p>No return flights found for your search criteria. Please try modifying your search.</p>
                     </div>
                   </div>
-                </div>
-              </div>
+                      </div>
+                      </div>
               
               <!-- No Flights Message for Onward -->
               <div class="no-flights" *ngIf="activeTab === 'onward' && (!groupedFlights || groupedFlights.length === 0) && !loader">
                 <h3>No Onward Flights Found</h3>
                 <p>No onward flights found for your search criteria. Please try modifying your search.</p>
-              </div>
-
-              <!-- Sticky Footer for Round Trip -->
-              <div class="flight-sticky-footer" *ngIf="selectedOutbound && selectedReturn">
-                <div class="footer-wrapper">
-                  <div class="flight-summary-block">
-                    <div class="flight-leg-label">Departure</div>
-                    <div class="flight-airline">
-                      <img [src]="selectedOutbound.logo" alt="" class="flight-logo-small" />
-                      {{ selectedOutbound.airline }}
-                    </div>
-                    <div class="flight-times flight-row">
-                      <div>{{ selectedOutbound.departure }} → {{ selectedOutbound.arrival }}</div>
-                      <div class="flight-price">₹ {{ selectedOutbound.price | number : "1.0-0" }}</div>
-                    </div>
-                  </div>
-                  <div class="flight-summary-block">
-                    <div class="flight-leg-label">Return</div>
-                    <div class="flight-airline">
-                      <img [src]="selectedReturn.logo" alt="" class="flight-logo-small" />
-                      {{ selectedReturn.airline }}
-                    </div>
-                    <div class="flight-times flight-row">
-                      <div>{{ selectedReturn.departure }} → {{ selectedReturn.arrival }}</div>
-                      <div class="flight-price">₹ {{ selectedReturn.price | number : "1.0-0" }}</div>
-                    </div>
-                  </div>
-                  <div class="total-summary">
-                    <div class="total-row">
-                      <div class="total-amount">
-                        ₹ {{ (selectedOutbound.price + selectedReturn.price) | number : "1.0-0" }}
-                        <span>per adult</span>
-                      </div>
-                      <div class="total-buttons">
-                        <button (click)="openFareOptionsModalBothway()" class="book-now-button">BOOK NOW</button>
-                        <button class="lock-price-btn">LOCK PRICE</button>
-                      </div>
-                    </div>
-                    <div class="fare-details-wrapper" (click)="toggleFareSummaryBothway()">
-                      Fare Details
-                      <div class="fare-summary-popup" *ngIf="showFareSummaryBothway">
-                        <div class="footer-collapse" (click)="toggleBothFlightDetails('close')">&times;</div>
-                        <div class="popup-title">Fare Summary</div>
-                        <div class="popup-row">
-                          <span class="faretag">Total base fare</span>
-                          <span class="faretag">₹ {{ getTotalFareComponent('BaseFare') | number : "1.0-2" }}</span>
-                        </div>
-                        <div class="popup-row">
-                          <span class="faretag">Total Surcharges</span>
-                          <span class="faretag">₹ {{ getTotalFareComponent('Tax') | number : "1.0-2" }}</span>
-                        </div>
-                        <hr />
-                        <div class="popup-row total">
-                          <span class="faretag">Total Amount</span>
-                          <span class="faretag">₹ {{ (getTotalFareComponent('BaseFare') + getTotalFareComponent('Tax')) | number : "1.0-2" }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Expandable Flight Details Section -->
@@ -1736,7 +1676,69 @@
       </div>
     </div>
 
-    <!-- Fare Options Modal - Round Trip -->
+    <!-- Fare Options Modal - Round Trip (using same structure as one-way) -->
+    <div class="custom-modal-overlay" *ngIf="showFareModal && flightType === 'round'" (click)="closeFareOptionsModal()">
+      <div class="custom-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
+        <div class="fare-options-box">
+          <div class="fare-options-header">
+            <div class="fare-options-title">Fare Options available for your trip</div>
+            <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
+              <span class="fare-trip-details-text">
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} → 
+                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.Airport?.CityName }} · 
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} · 
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} · 
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} - 
+                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime | date : "HH:mm" }}
+              </span>
+              <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModal(); $event.stopPropagation()" title="Modify">
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+          </div>
+          <div class="fare-scroll-wrapper">
+            <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
+            <div class="fare-scroll-container" #fareScrollContainer>
+              <div class="fare-card" *ngFor="let fare of defaultFares">
+                <div class="fare-price-oneway">
+                  ₹ {{ fare.price | number : "1.0-0" }}
+                  <span class="per-adult">per adult</span>
+                </div>
+                <div class="fare-type">{{ fare.type }}</div>
+                <div class="fare-section">
+                  <strong>Baggage</strong>
+                  <ul>
+                    <li>✅ Cabin: {{ fare.cabin }}</li>
+                    <li>✅ Check-in: {{ fare.checkIn }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Flexibility</strong>
+                  <ul>
+                    <li>⚠️ Cancel: {{ fare.cancel }}</li>
+                    <li>⚠️ Change: {{ fare.dateChange }}</li>
+                  </ul>
+                </div>
+                <div class="fare-section">
+                  <strong>Seats, Meals & More</strong>
+                  <ul>
+                    <li>🍽️ Meals: {{ fare.meal === 'Included' ? "Free meal available" : "Meal not included" }}</li>
+                    <li>💺 Seats: {{ fare.seat === 'Free' ? "Standard seats free" : "Chargeable seats" }}</li>
+                  </ul>
+                </div>
+                <button class="book-btn" (click)="finalizeBookingForRoundTrip(selectedFlight, fare)">
+                  BOOK NOW
+                </button>
+              </div>
+            </div>
+            <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Old Round Trip Modal (keeping for backward compatibility) -->
     <div class="custom-modal-overlay" *ngIf="showFareModalBoth" (click)="closeFareOptionsModalBothWay()">
       <div class="custom-modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModalBothWay()">×</button>
@@ -1750,13 +1752,27 @@
             </div>
             <!-- Fare Subtitle -->
             <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'departure' && selectedOutbound">
-              <span class="fare-trip-details-text">{{ selectedOutbound.Origin.Airport.CityName }} → {{ selectedOutbound.Destination.Airport.CityName }} · {{ selectedOutbound.airline }} · {{ selectedOutbound.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedOutbound.Origin.DepTime | date : "HH:mm" }} - {{ selectedOutbound.Destination.ArrTime | date : "HH:mm" }}</span>
+              <span class="fare-trip-details-text">
+                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} → 
+                {{ selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length - 1]?.Destination?.Airport?.CityName }} · 
+                {{ selectedOutbound?.Segments?.[0]?.[0]?.Airline?.AirlineName }} · 
+                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} · 
+                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} - 
+                {{ selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length - 1]?.Destination?.ArrTime | date : "HH:mm" }}
+              </span>
               <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()" title="Modify">
                 <i class="fas fa-edit"></i>
               </button>
             </div>
             <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'return' && selectedReturn">
-              <span class="fare-trip-details-text">{{ selectedReturn.Origin.Airport.CityName }} → {{ selectedReturn.Destination.Airport.CityName }} · {{ selectedReturn.airline }} · {{ selectedReturn.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedReturn.Origin.DepTime | date : "HH:mm" }} - {{ selectedReturn.Destination.ArrTime | date : "HH:mm" }}</span>
+              <span class="fare-trip-details-text">
+                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} → 
+                {{ selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length - 1]?.Destination?.Airport?.CityName }} · 
+                {{ selectedReturn?.Segments?.[0]?.[0]?.Airline?.AirlineName }} · 
+                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} · 
+                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} - 
+                {{ selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length - 1]?.Destination?.ArrTime | date : "HH:mm" }}
+              </span>
               <button class="fare-modify-btn" (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()" title="Modify">
                 <i class="fas fa-edit"></i>
               </button>

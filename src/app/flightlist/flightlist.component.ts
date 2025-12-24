@@ -2109,12 +2109,41 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     });
   }
 
-  // Both-way methods
+  // Both-way methods - for opening modal (matches reference showPackagePopup exactly)
+  openFareOptionsModalForRoundTrip(flight: any, index: number, type: 'onward' | 'return'): void {
+    // Set selectedFlight for modal (like reference)
+    this.selectedFlight = Object.freeze(this.deepCopy(flight));
+    
+    if (this.flightType === 'round') {
+      if (type === 'onward') {
+        // Set onward flight immediately (so black container shows) - matches reference
+        this.selectedOutbound = this.deepCopy(flight);
+        this.selectedOutboundIndex = index;
+        this.selectedOutboundFooter = this.deepCopy(flight);
+      } else {
+        // Set return flight
+        this.selectedReturn = this.deepCopy(flight);
+        this.selectedReturnIndex = index;
+      }
+    }
+    
+    // Use same modal structure as one-way (matches reference)
+    if (this.isBrowser && window.innerWidth <= 767) {
+      // Mobile - use mobile popup
+      this.selectedFlightForMobile = flight;
+      this.showMobileFarePopup = true;
+    } else {
+      // Desktop - use modal
+      this.showFareModal = true;
+    }
+  }
+  
+  // Select flight after booking from modal
   selectBothwayOutbound(flight: any, index: number): void {
     console.log("Selected Outbound", flight);
-    this.selectedOutbound = flight;
+    this.selectedOutbound = this.deepCopy(flight);
     this.selectedOutboundIndex = index;
-    this.selectedOutboundFooter = flight;
+    this.selectedOutboundFooter = this.deepCopy(flight);
     this.footerTabBothwayOutbound = 'flight';
     
     // Switch to return tab after selecting onward flight
@@ -2125,16 +2154,9 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   selectBothwayReturn(flight: any, index: number): void {
     console.log("Selected Return", flight);
-    this.selectedReturn = flight;
+    this.selectedReturn = this.deepCopy(flight);
     this.selectedReturnIndex = index;
     this.footerTabBothwayReturn = 'flight';
-    
-    // Open fare options modal when both flights are selected
-    if (this.selectedOutbound && this.selectedReturn) {
-      setTimeout(() => {
-        this.openFareOptionsModalBothway();
-      }, 300);
-    }
   }
   
   // Tab switching for round trip
@@ -2149,6 +2171,24 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.underlineStyle = {
       transform: `translateX(${tabIndex * 100}%)`
     };
+  }
+  
+  getTotalDurationForFlight(flight: any): string {
+    const segments = flight?.Segments?.[0];
+    if (!segments || segments.length === 0) return 'N/A';
+
+    const depTime = new Date(segments[0]?.Origin.DepTime);
+    const arrTime = new Date(segments[segments.length - 1]?.Destination.ArrTime);
+
+    if (isNaN(depTime.getTime()) || isNaN(arrTime.getTime())) {
+      return 'N/A';
+    }
+
+    const diffMs = arrTime.getTime() - depTime.getTime();
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${hours}hr ${minutes}min`;
   }
 
   toggleFareSummaryBothway(): void {
@@ -2186,12 +2226,14 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   openFareOptionsModalBothway(): void {
+    // This is for the old round trip modal - keeping for backward compatibility
     this.showFareModalBoth = true;
     this.activeFareTab = 'departure';
   }
 
   closeFareOptionsModalBothWay(): void {
     this.showFareModalBoth = false;
+    this.selectedFlight = null;
   }
 
   selectFareTab(tab: 'departure' | 'return'): void {
@@ -2202,6 +2244,68 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.selectedFareIndex[type] = index;
     if (type === 'departure') {
       this.selectFareTab('return');
+    }
+  }
+  
+  // Get defaultFares for modal (matches reference)
+  get defaultFares(): any[] {
+    if (!this.selectedFlight || !this.selectedFlight.FareOptions) {
+      return [];
+    }
+    
+    const fares = this.selectedFlight.FareOptions.map((fareOption: any, index: number) => {
+      const firstSegment = fareOption.Segments?.[0]?.[0] || {};
+      
+      // Extract fare breakdown for passenger type 1
+      const fareBreakdownPax1 = fareOption.FareBreakdown?.find((fb: any) => fb.PassengerType === 1);
+      let calculatedPrice = 0;
+      if (fareBreakdownPax1 && fareBreakdownPax1.PassengerCount > 0) {
+        const baseFarePerPassenger = fareBreakdownPax1.BaseFare / fareBreakdownPax1.PassengerCount;
+        const taxPerPassenger = fareBreakdownPax1.Tax / fareBreakdownPax1.PassengerCount;
+        calculatedPrice = baseFarePerPassenger + taxPerPassenger;
+      }
+
+      return {
+        type: fareOption?.Segments?.[0]?.[0]?.SupplierFareClass || 'Standard',
+        price: calculatedPrice,
+        cabin: firstSegment.CabinBaggage || 'N/A',
+        checkIn: firstSegment.Baggage || 'N/A',
+        cancel: this.getCancellationText(fareOption),
+        dateChange: this.getDateChangeText(fareOption),
+        seat: 'Chargeable',
+        meal: fareOption.IsFreeMealAvailable ? 'Included' : 'Chargeable',
+        originalFareOption: fareOption,
+        fareIndex: index
+      };
+    });
+
+    return fares;
+  }
+  
+  // Finalize booking for round trip (matches reference finalizeBooking)
+  finalizeBookingForRoundTrip(flight: any, fare: any): void {
+    if (this.flightType === 'round') {
+      if (this.activeTab === 'onward') {
+        // Onward flight - already set in openFareOptionsModalForRoundTrip
+        // Close modal and switch to return tab
+        this.closeFareOptionsModal();
+        setTimeout(() => {
+          this.switchTab('return');
+        }, 300);
+      } else {
+        // Return flight - already set in openFareOptionsModalForRoundTrip
+        // Close modal and proceed to checkout
+        this.closeFareOptionsModal();
+        
+        // Both flights selected, proceed to final booking
+        if (this.selectedOutbound && this.selectedReturn) {
+          // Navigate to checkout
+          this.finalizeSelection({
+            departureFare: this.selectedOutbound.FareOptions?.[0] || fare.originalFareOption,
+            returnFare: fare.originalFareOption
+          });
+        }
+      }
     }
   }
 
@@ -2346,6 +2450,52 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   getDateChangeRule(fare: any): string {
     return fare.dateChangePolicy?.[0]?.Details || 'Not Available';
   }
+  
+  // Get cancellation text (matches reference)
+  getCancellationText(fare: any): string {
+    const cancelPolicies = fare.cancellationPolicy || [];
+    const validPolicy = cancelPolicies.find((p: any) =>
+      p?.Details &&
+      p.Details.trim().toLowerCase() !== 'nil' &&
+      p.Details.trim() !== ''
+    );
+
+    let result = 'Info Not Available';
+
+    if (validPolicy) {
+      const detail = validPolicy.Details.trim().toUpperCase();
+      if (detail === 'REFER TO DETAILED FARE RULES') {
+        result = 'Refer to Fare Rules';
+      } else {
+        result = `Charges starting ₹ ${validPolicy.Details.replace('INR', '').trim()}`;
+      }
+    }
+
+    return result;
+  }
+
+  // Get date change text (matches reference)
+  getDateChangeText(fare: any): string {
+    const changePolicies = fare.dateChangePolicy || [];
+    const validPolicy = changePolicies.find((p: any) =>
+      p?.Details &&
+      p.Details.trim().toLowerCase() !== 'nil' &&
+      p.Details.trim() !== ''
+    );
+
+    let result = 'Info Not Available';
+
+    if (validPolicy) {
+      const detail = validPolicy.Details.trim().toUpperCase();
+      if (detail === 'REFER TO DETAILED FARE RULES') {
+        result = 'Refer to Fare Rules';
+      } else {
+        result = `Charges starting ₹ ${validPolicy.Details.replace('INR', '').trim()}`;
+      }
+    }
+
+    return result;
+  }
 
   // Mobile fare popup: Transform FareOptions to mobile format
   get defaultFaresForMobile(): any[] {
@@ -2409,10 +2559,37 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   finalizeBookingMobile(flight: any, fare: any): void {
-    // Use the original fare option for booking
-    const selectedFareOption = fare.originalFareOption || this.selectedFlightForMobile.FareOptions[fare.fareIndex];
-    this.finalizeSelection(selectedFareOption);
-    this.closeMobileFarePopup();
+    if (this.flightType === 'round') {
+      // Handle round trip
+      if (this.activeTab === 'onward') {
+        // Onward flight - already set in openFareOptionsModalForRoundTrip
+        // Close popup and switch to return tab
+        this.closeMobileFarePopup();
+        setTimeout(() => {
+          this.switchTab('return');
+        }, 300);
+      } else {
+        // Return flight - already set in openFareOptionsModalForRoundTrip
+        // Close popup and proceed to checkout
+        this.closeMobileFarePopup();
+        
+        // Both flights selected, proceed to final booking
+        if (this.selectedOutbound && this.selectedReturn) {
+          // Navigate to checkout
+          const departureFare = this.selectedOutbound.FareOptions?.[0] || fare.originalFareOption;
+          
+          this.finalizeSelection({
+            departureFare: departureFare,
+            returnFare: fare.originalFareOption
+          });
+        }
+      }
+    } else {
+      // Use the original fare option for booking (one-way)
+      const selectedFareOption = fare.originalFareOption || this.selectedFlightForMobile.FareOptions[fare.fareIndex];
+      this.finalizeSelection(selectedFareOption);
+      this.closeMobileFarePopup();
+    }
   }
 
   // Fetch calendar fare map if missing (matching hero section implementation)
