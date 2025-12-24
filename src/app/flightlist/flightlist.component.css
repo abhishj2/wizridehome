@@ -3632,3 +3632,206 @@ img {
     display: block !important;
   }
 }
+
+/* Round Trip Tab Design */
+.roundtrip-results-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.roundtrip-tab-bar {
+  display: flex;
+  position: relative;
+  background: #ffffff;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 16px 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  background: transparent;
+  border: none;
+}
+
+.tab-item:hover {
+  background: #f9fafb;
+}
+
+.tab-item.active {
+  color: #008b8b;
+  font-weight: 600;
+}
+
+.tab-sector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.tab-sector i {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.tab-item.active .tab-sector i {
+  color: #008b8b;
+}
+
+.tab-date {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.tab-item.active .tab-date {
+  color: #008b8b;
+}
+
+.tab-underline {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 50%;
+  height: 3px;
+  background: #008b8b;
+  transition: transform 0.3s ease;
+  transform: translateX(0%);
+}
+
+.tab-scroll-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.tab-pane {
+  width: 100%;
+}
+
+.tab-content {
+  width: 100%;
+  padding: 0;
+}
+
+.roundtrip-selected {
+  border: 2px solid #008b8b !important;
+  box-shadow: 0 0 0 3px rgba(0, 139, 139, 0.1) !important;
+}
+
+.selected-flight-card-dark {
+  background: #1f2937;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flight-row-header {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.segment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.segment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.segment-row:last-child {
+  border-bottom: none;
+}
+
+.segment-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.airline-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.flight-code {
+  font-weight: 600;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.segment-left span {
+  font-size: 12px;
+  color: #d1d5db;
+}
+
+.planemargin {
+  margin: 0 8px;
+  font-size: 10px;
+}
+
+.stop-duration-inline {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.segment-right {
+  font-size: 12px;
+  color: #ffffff;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .roundtrip-tab-bar {
+    flex-direction: column;
+  }
+  
+  .tab-item {
+    padding: 12px 16px;
+  }
+  
+  .tab-underline {
+    width: 100%;
+    transform: none !important;
+    display: none;
+  }
+  
+  .tab-item.active {
+    border-bottom: 3px solid #008b8b;
+  }
+  
+  .segment-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .segment-right {
+    text-align: left;
+    width: 100%;
+  }
+}

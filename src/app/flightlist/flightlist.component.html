@@ -753,22 +753,52 @@
             </div>
 
             <!-- Round Trip Flights -->
-            <div *ngIf="flightType === 'round'" class="flight-list-container">
-              <!-- Debug Info (remove after testing) -->
-              <!-- <div style="padding: 20px; background: #f0f0f0; margin: 10px 0;">
-                <p>Debug: flightType = {{ flightType }}</p>
-                <p>Debug: groupedFlights (onward) length = {{ groupedFlights?.length || 0 }}</p>
-                <p>Debug: groupedFlightsOutbound (return) length = {{ groupedFlightsOutbound?.length || 0 }}</p>
-                <p>Debug: loader = {{ loader }}</p>
-              </div> -->
+            <div *ngIf="flightType === 'round'" class="roundtrip-results-page">
+              <!-- Tab Bar -->
+              <div class="roundtrip-tab-bar" #tabBar>
+                <div
+                  class="tab-item"
+                  [class.active]="activeTab === 'onward'"
+                  (click)="switchTab('onward')"
+                  #onwardTab
+                >
+                  <div class="tab-sector">
+                    {{ flightInputData['fromAirportCode'] || flightInputData['fromCity'] }}
+                    <i class="fas fa-plane-departure"></i>
+                    {{ flightInputData['toAirportCode'] || flightInputData['toCity'] }}
+                  </div>
+                  <div class="tab-date">
+                    Onward : {{ flightInputData['departureDate'] | date : "EEE, dd MMM" }}
+                  </div>
+                </div>
+                <div
+                  class="tab-item"
+                  [class.active]="activeTab === 'return'"
+                  (click)="switchTab('return')"
+                  #returnTab
+                >
+                  <div class="tab-sector">
+                    {{ flightInputData['toAirportCode'] || flightInputData['toCity'] }}
+                    <i class="fas fa-plane-arrival"></i>
+                    {{ flightInputData['fromAirportCode'] || flightInputData['fromCity'] }}
+                  </div>
+                  <div class="tab-date">
+                    Return : {{ flightInputData['returnDate'] | date : "EEE, dd MMM" }}
+                  </div>
+                </div>
+                <div class="tab-underline" [ngStyle]="underlineStyle"></div>
+              </div>
 
-              <!-- Outbound Flights Section -->
-              <div class="flight-section" *ngIf="groupedFlights && groupedFlights.length > 0">
-                <h3 class="section-title">Outbound Flights</h3>
+              <!-- Scrollable Tab Content -->
+              <div class="tab-scroll-container" #scrollContainer>
+                <div class="tab-pane">
+                  <!-- Onward Tab Content -->
+                  <div class="tab-content" *ngIf="activeTab === 'onward'">
                 <div class="flight-cards">
-                  <div class="card" [class.selected]="selectedOutbound === flight" 
+                      <div class="card" 
+                           [class.roundtrip-selected]="selectedOutboundIndex === i"
                        *ngFor="let flight of groupedFlights; let i = index">
-                    <label class="flight-radio-wrapper" (click)="selectBothwayOutbound(flight)">
+                        <label class="flight-radio-wrapper" (click)="selectBothwayOutbound(flight, i)">
                       <input type="radio" name="outboundFlight" [value]="flight" [(ngModel)]="selectedOutbound" />
                       <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
                         {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
@@ -924,16 +954,18 @@
                       </div>
                     </label>
                   </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Return Flights Section -->
-              <div class="flight-section" *ngIf="groupedFlightsOutbound && groupedFlightsOutbound.length > 0">
-                <h3 class="section-title">Return Flights</h3>
+                <div class="tab-pane">
+                  <!-- Return Tab Content -->
+                  <div class="tab-content return-tab-content" *ngIf="activeTab === 'return'">
                 <div class="flight-cards">
-                  <div class="card" [class.selected]="selectedReturn === flight" 
+                      <div class="card" 
+                           [class.roundtrip-selected]="selectedReturnIndex === i"
                        *ngFor="let flight of groupedFlightsOutbound; let i = index">
-                    <label class="flight-radio-wrapper" (click)="selectBothwayReturn(flight)">
+                        <label class="flight-radio-wrapper" (click)="selectBothwayReturn(flight, i)">
                       <input type="radio" name="returnFlight" [value]="flight" [(ngModel)]="selectedReturn" />
                       <div class="refundability-tag" [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
                         {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
@@ -1090,17 +1122,72 @@
                     </label>
                   </div>
                 </div>
+                    
+                    <!-- Footer for Selected Onward Flight -->
+                    <div
+                      class="selected-flight-card-dark"
+                      *ngIf="flightType === 'round' && activeTab === 'return' && selectedOutboundFooter?.Segments?.[0]?.length"
+                    >
+                      <div class="flight-row-header">✅ Selected Onward Flight</div>
+
+                      <!-- Loop over segments -->
+                      <div class="segment-list">
+                        <div
+                          class="segment-row"
+                          *ngFor="
+                            let seg of selectedOutboundFooter.Segments[0];
+                            let i = index;
+                            let last = last
+                          "
+                        >
+                          <div class="segment-left">
+                            <img
+                              [src]="'assets/images/flightimages/' + seg?.Airline?.AirlineCode + '.png'"
+                              class="airline-logo"
+                              alt="logo"
+                              onerror="this.src='assets/images/default-airline.png'"
+                            />
+                            <span class="flight-code">
+                              {{ seg?.Airline?.AirlineCode }}
+                              {{ seg?.Airline?.FlightNumber }}
+                            </span>
+                            <span>
+                              {{ seg?.Origin?.Airport?.AirportCode }}
+                              <i class="fas fa-plane-arrival planemargin"></i>
+                              {{ seg?.Destination?.Airport?.AirportCode }}
+                            </span>
+
+                            <!-- Only show Stop & Duration on last row -->
+                            <span *ngIf="last" class="stop-duration-inline">
+                              &nbsp;
+                              {{ selectedOutboundFooter.Segments[0].length - 1 }} Stop |
+                              <strong>Duration:</strong>
+                              {{ getTotalDuration(selectedOutboundFooter?.Segments?.[0] || []) }}
+                            </span>
               </div>
 
-              <!-- No Flights Messages for Round Trip -->
-              <div class="no-flights" *ngIf="(!groupedFlights || groupedFlights.length === 0) && !loader">
-                <h3>No Outbound Flights Found</h3>
-                <p>No outbound flights found for your search criteria. Please try modifying your search.</p>
+                          <!-- First segment gets Dep Time -->
+                          <div class="segment-right" *ngIf="i === 0">
+                            <strong>Dep. Time:</strong>
+                            {{ seg?.Origin?.DepTime | date : "HH:mm" }}
+                          </div>
+                        </div>
+                      </div>
               </div>
 
-              <div class="no-flights" *ngIf="(!groupedFlightsOutbound || groupedFlightsOutbound.length === 0) && !loader && groupedFlights && groupedFlights.length > 0">
+                    <!-- No Flights Messages -->
+                    <div class="no-flights" *ngIf="(!groupedFlightsOutbound || groupedFlightsOutbound.length === 0) && !loader">
                 <h3>No Return Flights Found</h3>
                 <p>No return flights found for your search criteria. Please try modifying your search.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- No Flights Message for Onward -->
+              <div class="no-flights" *ngIf="activeTab === 'onward' && (!groupedFlights || groupedFlights.length === 0) && !loader">
+                <h3>No Onward Flights Found</h3>
+                <p>No onward flights found for your search criteria. Please try modifying your search.</p>
               </div>
 
               <!-- Sticky Footer for Round Trip -->

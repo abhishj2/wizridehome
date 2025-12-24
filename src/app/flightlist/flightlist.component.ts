@@ -93,6 +93,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   returnFlights: any[] = [];
   selectedOutbound: any = null;
   selectedReturn: any = null;
+  
+  // Round trip tab management
+  activeTab: 'onward' | 'return' = 'onward';
+  selectedOutboundIndex: number = -1;
+  selectedReturnIndex: number = -1;
+  selectedOutboundFooter: any = null;
+  underlineStyle: any = {};
 
   showFareSummary = false;
   showFareSummaryBothway = false;
@@ -1234,6 +1241,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         if (this.scrollContainer && this.initialScrollIndex >= 0) {
           this.centerScrollToIndex(this.initialScrollIndex);
         }
+        // Initialize round trip tab
+        if (this.flightType === 'round') {
+          this.activeTab = 'onward';
+          this.updateUnderlineStyle();
+        }
       });
     }
   }
@@ -2098,16 +2110,45 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   // Both-way methods
-  selectBothwayOutbound(flight: any): void {
+  selectBothwayOutbound(flight: any, index: number): void {
     console.log("Selected Outbound", flight);
     this.selectedOutbound = flight;
+    this.selectedOutboundIndex = index;
+    this.selectedOutboundFooter = flight;
     this.footerTabBothwayOutbound = 'flight';
+    
+    // Switch to return tab after selecting onward flight
+    setTimeout(() => {
+      this.switchTab('return');
+    }, 300);
   }
 
-  selectBothwayReturn(flight: any): void {
+  selectBothwayReturn(flight: any, index: number): void {
     console.log("Selected Return", flight);
     this.selectedReturn = flight;
+    this.selectedReturnIndex = index;
     this.footerTabBothwayReturn = 'flight';
+    
+    // Open fare options modal when both flights are selected
+    if (this.selectedOutbound && this.selectedReturn) {
+      setTimeout(() => {
+        this.openFareOptionsModalBothway();
+      }, 300);
+    }
+  }
+  
+  // Tab switching for round trip
+  switchTab(tab: 'onward' | 'return'): void {
+    this.activeTab = tab;
+    this.updateUnderlineStyle();
+  }
+  
+  updateUnderlineStyle(): void {
+    // Update underline position based on active tab
+    const tabIndex = this.activeTab === 'onward' ? 0 : 1;
+    this.underlineStyle = {
+      transform: `translateX(${tabIndex * 100}%)`
+    };
   }
 
   toggleFareSummaryBothway(): void {
