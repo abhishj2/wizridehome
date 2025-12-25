@@ -1,23 +1,24 @@
-<div class="car-list-body-class" id="car-list-class-id">
   <div *ngIf="loader">
-    <main class="shimmer-wrapper">
-      <div class="shimmer-main">
-        <div class="even-column">
+  <main class="shimmer-main">
+    <div class="shimmer-box-long"></div>
+    <p></p>
+    <div class="shimmer-box-long1"></div>
+    <br />
+    <div>
           <div class="shimmer-grid">
             <div class="container">
               <div class="flex-container-space-between">
                 <div class="shimmer-circle"></div>
                 <div class="shimmer-box1"></div>
               </div>
-              <br />
               <div class="shimmer-box"></div>
             </div>
+
             <div class="container">
               <div class="flex-container-space-between">
                 <div class="shimmer-circle"></div>
                 <div class="shimmer-box1"></div>
               </div>
-              <br />
               <div class="shimmer-box"></div>
             </div>
           </div>
@@ -29,538 +30,1501 @@
               <div class="flex-container-space-between">
                 <div class="shimmer-box-long1"></div>
               </div>
-              <br />
               <div class="shimmer-box"></div>
             </div>
+
             <div class="container">
               <div class="flex-container-space-between">
                 <div class="shimmer-box-long1"></div>
               </div>
-              <br />
               <div class="shimmer-box"></div>
             </div>
           </div>
           <br />
           <div class="shimmer-box-long1"></div>
-          <br />
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
         </div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
+          </div>
+        </div>
+      </div>
+      <div class="shimmer-box-long2"></div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long"></div>
       </div>
     </main>
   </div>
-  <div *ngIf="!loader">
-    <main class="flight-list-body-class" id="main-body-class-id">
-      <div class="booking-layout">
-        <!-- Scrollable Left Column -->
-        <div class="booking-left">
-          <h2 class="booking-heading">Complete your booking</h2>
-          
-          <!-- Outbound Journey -->
-          <div class="booking-card">
-            <div class="booking-card-header">
-              <div class="route-details">
-                <div class="route-main">
-                  {{ this.fullFlightData["fromCity"] }} →
-                  {{ this.fullFlightData["toCity"] }}
-                </div>
-                <div class="route-meta">
-                  <div class="route-date">
-                    {{ this.fullFlightData["departureDate"] | date : "EEEE, MMMM d" }}
-                  </div>
-                  <div class="route-duration">
-                    {{ this.stopSummary }} · {{ this.totalFlightDuration }}
-                  </div>
-                </div>
-              </div>
-              <div class="fare-actions">
-                <div class="cancellation-note" *ngIf="this.flightDataDeparture['IsRefundable']">
-                  CANCELLATION FEES APPLY
-                </div>
-                <div class="cancellation-note-non-refundable" *ngIf="!this.flightDataDeparture['IsRefundable']">
-                  NON - REFUNDABLE
-                </div>
-                <a class="policy-link" (click)="openFareModal('cancel')">View Fare Rules</a>
-              </div>
-            </div>
-            <div class="flight-info">
-              <div *ngFor="let segment of flightSegments; let idx = index">
-                <!-- Segment Header -->
-                <div class="airline-info-line">
-                  <div class="airline-left">
-                    <img class="airline-logo" [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" [alt]="segment.airline" onerror="this.src='assets/images/default-airline.png'" />
-                    <div class="airline-name">{{ segment.airline }}</div>
-                    <div class="flight-code">{{ segment.code }}</div>
-                    <div class="aircraft-pill">{{ segment.aircraft }}</div>
-                  </div>
-                  <div class="fare-class-info">
-                    <div class="fare-class">Economy</div>
-                    <div class="fare-tag" *ngIf="segment.fareTag">› {{ segment.fareTag }}</div>
-                  </div>
-                </div>
-                <!-- Segment Body -->
-                <div class="flight-segments">
-                  <div class="segment">
-                    <div class="segment-time">{{ segment.departureTime }}</div>
-                    <div class="segment-details">
-                      <div class="city-line">
-                        <div class="city-bullet">○</div>
-                        <div>
-                          <strong>{{ segment.from }}</strong> . {{ segment.fromAirport }}
-                        </div>
-                      </div>
-                      <div class="segment-duration">{{ segment.duration }}</div>
-                    </div>
-                  </div>
-                  <div class="segment">
-                    <div class="segment-time">{{ segment.arrivalTime }}</div>
-                    <div class="segment-details">
-                      <div class="city-line">
-                        <div class="city-bullet">○</div>
-                        <div>
-                          <strong>{{ segment.to }}</strong> . {{ segment.toAirport }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Baggage Info -->
-                <div class="baggage-info-line">
-                  <div>
-                    <i class="fas fa-suitcase baggage-icon brown-icon"></i>
-                    <strong>Cabin Baggage :</strong> {{ segment.cabinBaggage }}
-                  </div>
-                  <div>
-                    <i class="fas fa-luggage-cart baggage-icon brown-icon"></i>
-                    <strong>Check-In Baggage :</strong> {{ segment.checkInBaggage }}
-                  </div>
-                </div>
-                <!-- Layover Block -->
-                <div *ngIf="segment.layover" class="layover-block" [class.long-layover]="segment.layover.hours >= 3">
-                  <div class="layover-title">Change of planes</div>
-                  <div class="layover-duration">
-                    {{ segment.layover.duration }} Layover in {{ segment.layover.location }}
-                  </div>
-                </div>
-              </div>
-              <div class="baggage-warning" *ngIf="extraBaggageAvailable">
-                🧷 Sorry, extra check-in baggage allowance details are currently not available from the airline for
-                {{ this.fullFlightData["fromAirportCode"] }}-{{ this.fullFlightData["toAirportCode"] }}.
-              </div>
-              <div class="extra-baggage-row" *ngIf="!extraBaggageAvailable">
-                <div class="extra-baggage-info">
-                  <div class="extra-baggage-icon">🧳</div>
-                  <div class="extra-baggage-message">
-                    Got excess baggage? Don't stress, buy extra check-in baggage allowance for
-                    {{ this.fullFlightData["fromAirportCode"] }}-{{ this.fullFlightData["toAirportCode"] }}
-                    at fab rates!
-                  </div>
-                </div>
-                <a class="add-baggage-link" (click)="openBaggageModal()">
-                  {{ getTotalBaggageCount() > 0 ? "CHANGE" : "ADD BAGGAGE" }}
-                </a>
-              </div>
-              <!-- Add Baggage Modal (Departure) -->
-              <div class="modal-overlay" *ngIf="baggageModalOpenOutbound">
-                <div class="modal-content baggage-modal">
-                  <div class="modal-header">
-                    <h2>Add Extra Baggage</h2>
-                    <button class="close-btn" (click)="closeBaggageModal()">×</button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="flight-tag">
-                      <div class="flight-code-tag">
-                        {{ this.fullFlightData["fromCity"] }}-{{ this.fullFlightData["toCity"] }}
-                      </div>
-                      <p class="baggage-note">
-                        Included Check-in baggage per person - <strong class="included-baggage">15 KGS</strong>
-                      </p>
-                    </div>
-                    <div *ngFor="let option of baggageOptions" class="baggage-option">
-                      <div class="baggage-icon">🧳</div>
-                      <div class="baggage-label">Additional {{ option.kgs }} KG</div>
-                      <div class="baggage-price">₹ {{ option.price }}</div>
-                      <div class="quantity-selector">
-                        <button class="qty-btn" (click)="removeBaggage(option)" [disabled]="!selectedBaggageCounts[option.code]">−</button>
-                        <div class="qty-count">{{ selectedBaggageCounts[option.code] || 0 }}</div>
-                        <button class="qty-btn" (click)="addBaggage(option)" [disabled]="getTotalBaggageCount() >= travellers.length + children.length">+</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="baggage-footer">
-                    <div class="baggage-selected">
-                      {{ getTotalBaggageCount() }} of {{ travellers.length + children.length }} Baggage(s) Selected
-                    </div>
-                    <div class="baggage-limit-warning" *ngIf="getTotalBaggageCount() >= travellers.length + children.length">
-                      Maximum of {{ travellers.length + children.length }} baggage items can be selected.
-                    </div>
-                    <div class="baggage-summary">
-                      <div class="baggage-total-label">Added to fare</div>
-                      <div class="baggage-total-amount">₹ {{ baggageTotal }}</div>
-                    </div>
-                    <button class="baggage-done-btn" (click)="confirmBaggage()">DONE</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Return Journey -->
-          <div class="booking-card" *ngIf="this.fullFlightData['tripType'] == 'round' && flightSegmentsReturn.length > 0">
-            <div class="booking-card-header">
-              <div class="route-details">
-                <div class="route-main">
-                  {{ this.fullFlightData["toCity"] }} → {{ this.fullFlightData["fromCity"] }}
+<div class="scroll-wrapper" *ngIf="!loader">
+  <!-- Oneway Trip -->
+  <div class="flight-final-page" *ngIf="tripType == 'oneway'">
+    <!-- Flight Summary Card -->
+    <div class="card" *ngIf="flightSegments?.length">
+      <div class="flight-leg">
+        <div *ngFor="let segment of flightSegments; let i = index">
+          <!-- Airline Info -->
+          <div class="flight-airline">
+            <img [src]="segment.logo" class="logo" />
+            <div class="name">{{ segment.airline }}</div>
+            <div class="code">{{ segment.code }}</div>
                 </div>
-                <div class="route-meta">
-                  <div class="route-date">
-                    {{ this.fullFlightData["returnDate"] | date : "EEEE, MMMM d" }}
-                  </div>
-                  <div class="route-duration">
-                    {{ this.stopSummaryReturn }} · {{ this.totalFlightDurationReturn }}
-                  </div>
-                </div>
-              </div>
-              <div class="fare-actions">
-                <div class="cancellation-note" *ngIf="this.flightDataReturn && this.flightDataReturn['IsRefundable']">
-                  CANCELLATION FEES APPLY
-                </div>
-                <div class="cancellation-note-non-refundable" *ngIf="this.flightDataReturn && !this.flightDataReturn['IsRefundable']">
-                  NON - REFUNDABLE
-                </div>
-                <a class="policy-link" (click)="openFareModal('cancel')">View Fare Rules</a>
-              </div>
-            </div>
-            <div class="flight-info">
-              <div *ngFor="let segment of flightSegmentsReturn; let idx = index">
-                <!-- Similar structure to outbound -->
-                <div class="airline-info-line">
-                  <div class="airline-left">
-                    <img class="airline-logo" [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" [alt]="segment.airline" />
-                    <div class="airline-name">{{ segment.airline }}</div>
-                    <div class="flight-code">{{ segment.code }}</div>
-                    <div class="aircraft-pill">{{ segment.aircraft }}</div>
-                  </div>
-                  <div class="fare-class-info">
-                    <div class="fare-class">Economy</div>
-                    <div class="fare-tag" *ngIf="segment.fareTag">› {{ segment.fareTag }}</div>
-                  </div>
-                </div>
-                <div class="flight-segments">
-                  <div class="segment">
-                    <div class="segment-time">{{ segment.departureTime }}</div>
-                    <div class="segment-details">
-                      <div class="city-line">
-                        <div class="city-bullet">○</div>
-                        <div><strong>{{ segment.from }}</strong> . {{ segment.fromAirport }}</div>
-                      </div>
-                      <div class="segment-duration">{{ segment.duration }}</div>
-                    </div>
-                  </div>
-                  <div class="segment">
-                    <div class="segment-time">{{ segment.arrivalTime }}</div>
-                    <div class="segment-details">
-                      <div class="city-line">
-                        <div class="city-bullet">○</div>
-                        <div><strong>{{ segment.to }}</strong> . {{ segment.toAirport }}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="baggage-info-line">
-                  <div>
-                    <i class="fas fa-suitcase baggage-icon brown-icon"></i>
-                    <strong>Cabin Baggage :</strong> {{ segment.cabinBaggage }}
-                  </div>
-                  <div>
-                    <i class="fas fa-luggage-cart baggage-icon brown-icon"></i>
-                    <strong>Check-In Baggage :</strong> {{ segment.checkInBaggage }}
-                  </div>
-                </div>
-                <div *ngIf="segment.layover" class="layover-block" [class.long-layover]="segment.layover.hours >= 3">
-                  <div class="layover-title">Change of planes</div>
-                  <div class="layover-duration">
-                    {{ segment.layover.duration }} Layover in {{ segment.layover.location }}
-                  </div>
-                </div>
-              </div>
-              <div class="baggage-warning" *ngIf="extraBaggageAvailableReturn">
-                🧷 Sorry, extra check-in baggage allowance details are currently not available from the airline for
-                {{ this.fullFlightData["toAirportCode"] }}-{{ this.fullFlightData["fromAirportCode"] }}.
-              </div>
-              <div class="extra-baggage-row" *ngIf="!extraBaggageAvailableReturn">
-                <div class="extra-baggage-info">
-                  <div class="extra-baggage-icon">🧳</div>
-                  <div class="extra-baggage-message">
-                    Got excess baggage? Don't stress, buy extra check-in baggage allowance for
-                    {{ this.fullFlightData["toAirportCode"] }}-{{ this.fullFlightData["fromAirportCode"] }}
-                    at fab rates!
-                  </div>
-                </div>
-                <a class="add-baggage-link" (click)="openBaggageModal(true)">
-                  {{ getTotalBaggageCount(true) > 0 ? "CHANGE" : "ADD BAGGAGE" }}
-                </a>
-              </div>
-              <!-- Add Baggage Modal (Return) - Similar structure to outbound -->
-            </div>
-          </div>
 
-          <!-- Fare Rules Modal -->
-          <div class="modal-overlay" *ngIf="showModal">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h2>Fare rules</h2>
-                <button class="close-btn" (click)="closeModal()">×</button>
-              </div>
-              <div class="modal-tabs">
-                <div class="tab" [class.active]="selectedTab === 'cancel'" (click)="selectedTab = 'cancel'">
-                  Cancellation Charges
-                </div>
-                <div class="tab" [class.active]="selectedTab === 'change'" (click)="selectedTab = 'change'">
-                  Date change charges
-                </div>
-              </div>
-              <div class="modal-body">
-                <!-- Cancellation Tab -->
-                <div *ngIf="selectedTab === 'cancel'" class="tab-content">
-                  <div class="airline-header">
-                    ⭐ {{ fullFlightData?.fromAirportCode }} - {{ fullFlightData?.toAirportCode }}
+          <!-- Route Info -->
+          <div class="flight-route">
+            <div class="city">{{ segment.from }}</div>
+            <div class="plane-icon">
+              <i class="fas fa-plane-departure"></i>
                   </div>
-                  <table class="fare-table" *ngIf="cancellationPolicy && cancellationPolicy.length > 0">
-                    <thead>
-                      <tr>
-                        <th>Time frame<br /><small>(From Scheduled flight departure)</small></th>
-                        <th>Airline Fee<br /><small>(Per passenger)</small></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let policy of cancellationPolicy">
-                        <td>{{ policy.From }} {{ policy.Unit?.toLowerCase() }} to {{ policy.To || "departure" }} {{ policy.Unit?.toLowerCase() }}</td>
-                        <td>ADULT : ₹ {{ policy.Details }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div *ngIf="cancellationPolicyReturn && cancellationPolicyReturn.length > 0">
-                    <div class="airline-header">
-                      ⭐ {{ fullFlightData?.toAirportCode }} - {{ fullFlightData?.fromAirportCode }}
-                    </div>
-                    <table class="fare-table">
-                      <thead>
-                        <tr>
-                          <th>Time frame<br /><small>(From Scheduled flight departure)</small></th>
-                          <th>Airline Fee<br /><small>(Per passenger)</small></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let policy of cancellationPolicyReturn">
-                          <td>{{ policy.From }} {{ policy.Unit?.toLowerCase() }} to {{ policy.To || "departure" }} {{ policy.Unit?.toLowerCase() }}</td>
-                          <td>ADULT : ₹ {{ policy.Details }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+            <div class="city">{{ segment.to }}</div>
                   </div>
-                  <div class="note-text">*From the Time of Departure</div>
-                </div>
-                <!-- Date Change Tab -->
-                <div *ngIf="selectedTab === 'change'" class="tab-content">
-                  <!-- Similar structure for date change policies -->
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Traveller Details Section -->
-          <div class="traveller-section">
-            <h3 class="section-title">Traveller Details</h3>
-            <!-- ADULT SECTION -->
-            <div class="traveller-subtitle">ADULT (12 yrs+)</div>
-            <div class="traveller-note">
-              <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
+          <!-- Timing & Duration -->
+          <div class="flight-meta">
+            {{ segment.date | date : "EEE, dd MMM" }} |
+            {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+            {{ segment.duration }}
+                </div>
+
+          <!-- Layover if applicable -->
+          <div
+            class="layover-row"
+            *ngIf="i < flightSegments.length - 1 && segment.layover"
+          >
+            <div class="line"></div>
+            <div class="layover">
+              <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                + 1 Day
+              </div>
+              {{ segment.layover.duration }} Layover in
+              {{ segment.layover.location }}
+                </div>
+            <div class="line"></div>
+                </div>
+              </div>
             </div>
-            <div *ngFor="let traveller of travellers; let i = index" class="traveller-card">
-              <div class="traveller-header">
-                <input type="checkbox" [checked]="i === 0" disabled />
-                <label class="adult-label">ADULT {{ i + 1 }}</label>
-              </div>
-              <div class="input-group-row">
-                <input type="text" class="traveller-input" placeholder="First & Middle Name" [(ngModel)]="traveller.firstName" />
-                <input type="text" class="traveller-input" placeholder="Last Name" [(ngModel)]="traveller.lastName" />
-                <div class="gender-toggle">
-                  <button class="gender-btn" [class.active]="traveller.gender === 'MALE'" (click)="traveller.gender = 'MALE'">MALE</button>
-                  <button class="gender-btn" [class.active]="traveller.gender === 'FEMALE'" (click)="traveller.gender = 'FEMALE'">FEMALE</button>
-                </div>
-              </div>
-              <div class="input-group-row date-of-birth-row">
-                <label class="dob-label">Date of birth</label>
-                <select class="traveller-input" [(ngModel)]="traveller.dobDay">
-                  <option value="" disabled selected>DD</option>
-                  <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                </select>
-                <select class="traveller-input" [(ngModel)]="traveller.dobMonth">
-                  <option value="" disabled selected>MM</option>
-                  <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-                </select>
-                <select class="traveller-input" [(ngModel)]="traveller.dobYear">
-                  <option value="" disabled selected>YYYY</option>
-                  <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-                </select>
-              </div>
-              <!-- Passport fields if required -->
-              <div *ngIf="passportInfoRequired" class="input-group-row">
-                <div class="passport-expiry-wrapper">
-                  <label class="passport-expiry-label">Passport Number</label>
-                  <input type="text" class="traveller-input" placeholder="Passport Number" [(ngModel)]="traveller.passportNumber" />
-                </div>
-                <div class="passport-expiry-wrapper">
-                  <label class="passport-expiry-label">Passport Expiry</label>
-                  <div class="passport-expiry-row">
-                    <select class="traveller-input" [(ngModel)]="traveller.passportExpiryDay">
-                      <option value="">DD</option>
-                      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                    </select>
-                    <select class="traveller-input" [(ngModel)]="traveller.passportExpiryMonth">
-                      <option value="">MM</option>
-                      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-                    </select>
-                    <select class="traveller-input" [(ngModel)]="traveller.passportExpiryYear">
-                      <option value="">YYYY</option>
-                      <option *ngFor="let year of passportExpiryYears" [value]="year">{{ year }}</option>
-                    </select>
+      <!-- Trip Summary CTA -->
+      <button class="details-btn" (click)="openTripSummary()">
+        View Trip & Fare Details
+      </button>
                   </div>
+
+    <!-- Baggage Policy Card -->
+    <div class="card">
+      <div class="section-title">Baggage Policy</div>
+
+      <ng-container *ngFor="let segment of flightSegments; let i = index">
+        <div class="baggage-row">
+          <div class="baggage-header">
+            <img [src]="segment.logo" class="logo" />
+            <div class="name">{{ segment.airline }}</div>
+            <div class="code">{{ segment.code }}</div>
+                  </div>
+          <div class="baggage-info">
+            <div class="baggage-item">
+              <i class="fas fa-suitcase"></i>
+              <div>Cabin Bag :</div>
+              <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
                 </div>
-              </div>
-              <div class="input-group-row">
-                <select class="traveller-input" [(ngModel)]="traveller.countryCode">
-                  <option value="">Country Code (Optional)</option>
-                  <option value="91">India(+91)</option>
-                  <option value="1">USA(+1)</option>
-                </select>
-                <input type="text" class="traveller-input" placeholder="Mobile No (Optional)" [(ngModel)]="traveller.mobile" />
-                <input type="email" class="traveller-input" placeholder="Email (Optional)" [(ngModel)]="traveller.email" />
-              </div>
-              <div class="wheelchair-option">
-                <input type="checkbox" id="wheelchair-{{i}}" [(ngModel)]="traveller.wheelchair" />
-                <label for="wheelchair-{{i}}" class="optional-text">I require wheelchair (Optional)</label>
-              </div>
-              <div *ngIf="traveller.dobDay && traveller.dobMonth && traveller.dobYear && !validateAdultDOB(traveller)" class="error-text">
-                Date of Birth must be greater than or equal to 12 years.
+            <div class="baggage-item">
+              <i class="fas fa-suitcase-rolling"></i>
+              <div>Check-In Bag :</div>
+              <div class="value">
+                {{ segment.checkInBaggage || "N/A" }}
               </div>
             </div>
-            <div class="add-traveller-link" (click)="addTraveller()" *ngIf="travellers.length < totalAdults">
-              + ADD NEW ADULT
-            </div>
-            <!-- CHILD and INFANT sections similar structure -->
-          </div>
-
-          <!-- Contact Section -->
-          <div class="contact-summary">
-            <p class="summary-label">Booking details will be sent to</p>
-            <div class="input-group-row">
-              <select class="traveller-input" [(ngModel)]="contact.countryCode">
-                <option value="91">India(+91)</option>
-                <option value="1">USA(+1)</option>
-              </select>
-              <input type="text" class="traveller-input" placeholder="Mobile No" [(ngModel)]="contact.mobile" />
-              <input type="email" class="traveller-input" placeholder="Email" [(ngModel)]="contact.email" />
-            </div>
-            <div class="gst-checkbox">
-              <input type="checkbox" id="gst" [(ngModel)]="contact.hasGST" />
-              <label for="gst" class="gst-label">
-                I have a GST number <span class="optional-text">(Optional)</span>
-              </label>
-            </div>
-            <!-- GST details if hasGST -->
-          </div>
-
-          <!-- Proceed to Payment -->
-          <button class="proceed-btn" (click)="onContinueClicked()" [disabled]="!canProceed()">
-            Continue
-          </button>
-
-          <!-- Services Section (Seats, Meals, Special Services) -->
-          <div class="services-section" id="serviceSection" *ngIf="servicesUnlocked">
-            <!-- Journey Tabs for round trip -->
-            <div class="tab-header" *ngIf="this.fullFlightData['tripType'] == 'round'">
-              <button class="tab-btn" [class.active]="activeJourneyTab === 'departure'" (click)="activeJourneyTab = 'departure'">Departure</button>
-              <button class="tab-btn" [class.active]="activeJourneyTab === 'return'" (click)="activeJourneyTab = 'return'" [disabled]="!flightSegmentsReturn || flightSegmentsReturn.length === 0">Return</button>
-            </div>
-            <!-- Nested Tab: Seats / Meals -->
-            <div class="tab-header inner-tab">
-              <button class="tab-btn" [class.active]="activeServiceTab === 'seats'" (click)="activeServiceTab = 'seats'">🪑 Seats</button>
-              <button class="tab-btn" [class.active]="activeServiceTab === 'meals'" (click)="activeServiceTab = 'meals'">🍱 Meals</button>
-              <button class="tab-btn" [class.active]="activeServiceTab === 'services'" (click)="activeServiceTab = 'services'">🍱 Special Services</button>
-            </div>
-            <!-- Content for seats, meals, services - similar to provided code structure -->
           </div>
         </div>
+        <hr class="baggage-divider" *ngIf="i < flightSegments.length - 1" />
+      </ng-container>
 
-        <!-- Fixed Fare Summary -->
-        <div class="booking-right">
-          <div class="fare-summary-box">
-            <h3>Fare Summary</h3>
-            <br />
-            <div class="fare-group">
-              <div class="fare-header" (click)="toggleSection('base')">
-                <div class="toggle-icon">{{ expanded.base ? "➖" : "➕" }}</div>
-                <div class="fare-title">Base Fare</div>
-                <div class="fare-price">{{ this.formatCurrency(this.totalBaseFare) }}</div>
-              </div>
-              <div class="fare-details" *ngIf="expanded.base">
-                <div class="fare-line">
-                  <div>Adult(s) ({{ this.totalAdults }} X {{ this.formatCurrency(this.adultBaseFare + this.adultBaseFareReturn) }})</div>
-                  <div class="fare-price">{{ this.formatCurrency(this.totalAdultBaseFare) }}</div>
-                </div>
-                <!-- Children and Infant fares -->
-              </div>
-            </div>
-            <div class="fare-group">
-              <div class="fare-header" (click)="toggleSection('taxes')">
-                <div class="toggle-icon">{{ expanded.taxes ? "➖" : "➕" }}</div>
-                <div class="fare-title">Taxes and Surcharges</div>
-                <div class="fare-price">{{ this.formatCurrency(this.totalTaxes) }}</div>
-              </div>
-            </div>
-            <div class="fare-group" *ngIf="this.totalOtherService > 0">
-              <div class="fare-header" (click)="toggleSection('services')">
-                <div class="toggle-icon">{{ expanded.services ? "➖" : "➕" }}</div>
-                <div class="fare-title">Other Services</div>
-                <div class="fare-price">{{ this.formatCurrency(this.totalOtherService) }}</div>
-              </div>
-            </div>
-            <div class="total-fare-line">
-              <strong>Total Amount</strong>
-              <strong>{{ this.formatCurrency(this.finalAmount) }}</strong>
-            </div>
-          </div>
-          <br />
-          <div class="terms-acceptance">
-            <label class="terms-label">
-              <input type="checkbox" [(ngModel)]="termsAccepted" />
-              <span>
-                I understand and agree with
-                <a (click)="openFareRuleModal()" class="fare-rule-link">Fare Rules</a>, the 
-                <a href="#" class="fare-rule-link">Privacy Policy</a>, the
-                <a href="#" class="fare-rule-link">User Agreement</a> & the
-                <a href="#" class="fare-rule-link">Terms Of Services</a> of Wizzride.
-              </span>
-            </label>
-          </div>
-          <!-- Fare Rule Modal -->
-          <div class="modal-overlay" *ngIf="showFareRuleModal">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h2>Fare Rules</h2>
-                <button class="close-btn" (click)="closeFareRuleModal()">×</button>
-              </div>
-              <div class="modal-body">
-                <div class="fare-rule-body" [innerHTML]="fareRuleText"></div>
-              </div>
+      <div
+        class="add-baggage"
+        *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn"
+      >
+        <div class="add-left">
+          <div class="prompt">Have Excess Baggage ?</div>
+          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
+        </div>
+        <button class="add-btn" (click)="showAddBaggageModal = true">
+          + ADD
+        </button>
+      </div>
+    </div>
+
+    <!-- Cancellation & Rescheduling Policy Card -->
+    <div class="card">
+      <div
+        class="section-title-row"
+        (click)="showPolicyModal = true; activeTab = 'cancel'"
+      >
+        <div class="section-title">Cancellation & Rescheduling Policy</div>
+        <div class="section-arrow">›</div>
+      </div>
+
+      <ng-container
+        *ngFor="let segment of flightDataDeparture?.Segments[0]; let i = index"
+      >
+        <div class="cancellation-row">
+          <div class="flight-airline">
+            <img
+              [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+              class="logo"
+            />
+            <div class="name">{{ segment.Airline.AirlineName }}</div>
+            <div class="code">
+              {{ segment.Airline.AirlineCode }}
+              {{ segment.Airline.FlightNumber }}
             </div>
           </div>
-          <!-- Proceed to Payment -->
-          <button class="proceed-btn" (click)="proceedToPayment()" [disabled]="!continueClicked || !termsAccepted">
-            Proceed to Payment
+          <div class="criteria">
+            <div class="left">Cancellation Criteria</div>
+            <div class="right">Charges</div>
+          </div>
+          <div
+            class="criteria-detail"
+            *ngFor="let row of getCancellationRows(flightDataDeparture)"
+          >
+            <div class="left">{{ row.range }}</div>
+            <div class="right">{{ row.price }}</div>
+          </div>
+        </div>
+        <hr
+          class="baggage-divider"
+          *ngIf="i < flightDataDeparture?.Segments[0].length - 1"
+        />
+      </ng-container>
+    </div>
+
+    <!-- Add Passenger Card -->
+    <div class="card">
+      <div class="section-title">Add Passenger Details</div>
+      <div class="passenger-section">
+        <div class="passenger-title">Adults (12+ yrs)</div>
+        <div class="passenger-box" *ngFor="let adult of adults; let i = index">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              adult.firstName
+                ? adult.firstName + " " + adult.lastName
+                : "Adult " + (i + 1) + " (12 yrs+)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('adult', i)"
+          >
+            {{ adult.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-    </main>
+      <hr class="passenger-divider" />
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="children.length > 0">
+          Children (2-12 yrs old)
+        </div>
+        <div
+          class="passenger-box"
+          *ngFor="let child of children; let i = index"
+        >
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              child.firstName
+                ? child.firstName + " " + child.lastName
+                : "Child " + (i + 1) + " (2 to 12 yrs)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('child', i)"
+          >
+            {{ child.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+      <hr class="passenger-divider" />
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="infants.length > 0">
+          Infant (0-2 yrs old)
+        </div>
+        <div
+          class="passenger-box"
+          *ngFor="let infant of infants; let i = index"
+        >
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              infant.firstName
+                ? infant.firstName + " " + infant.lastName
+                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('infant', i)"
+          >
+            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GST Details Card -->
+    <div class="card">
+      <div class="section-title">GST - (Optional)</div>
+      <div class="gst-box" (click)="openGSTModal()">
+        <div class="icon"><i class="fas fa-building"></i></div>
+        <div class="label">
+          <span class="gst-label-text">
+            {{
+              gstDetails.companyName
+                ? gstDetails.companyName
+                : "Travelling for Business?"
+            }}
+          </span>
+        </div>
+        <button class="add-btn light small">
+          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Terms and Conditions Card -->
+    <div class="card">
+      <div class="terms-section">
+        <label class="terms-checkbox">
+          <input type="checkbox" [(ngModel)]="termsAgreed" />
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            I understand and agree with the
+            <span class="link-text" (click)="showFareRules = true"
+              >Fare Rules</span
+            >, the
+            <a
+              class="link-text"
+              href="https://wizzride.com/cancellationpolicy/privacypolicy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy Policy</a
+            >, the
+            <a
+              class="link-text"
+              href="https://wizzride.com/cancellationpolicy/useragreement"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              User Agreement</a
+            >
+            & the Terms of Service of Wizzride.
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Price Footer -->
+    <div class="footer-bar">
+      <div class="total" (click)="openFareSummary()" style="cursor: pointer">
+        ₹ Total Price<br />
+        <strong>{{ finalAmount | number : "1.2-2" }}</strong>
+      </div>
+      <button
+        class="proceed-btn"
+        [disabled]="!updateProceedButton()"
+        (click)="finalProceed()"
+      >
+        Proceed
+      </button>
+    </div>
+  </div>
+
+  <!-- Roundtrip -->
+  <div class="flight-final-page" *ngIf="tripType == 'roundtrip'">
+    <!-- Flight Summary Card -->
+    <div class="card">
+      <!-- Onward Flight Card -->
+      <div class="card" *ngIf="flightSegments?.length">
+        <div class="flight-leg">
+          <div *ngFor="let segment of flightSegments; let i = index">
+            <!-- Airline Info -->
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              <div class="city">{{ segment.to }}</div>
+            </div>
+
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover if applicable -->
+            <div
+              class="layover-row"
+              *ngIf="i < flightSegments.length - 1 && segment.layover"
+            >
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + 1 Day
+                </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
+              </div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return Flight Card -->
+      <div class="card" *ngIf="flightSegmentsReturn?.length">
+        <div class="flight-leg">
+          <div *ngFor="let segment of flightSegmentsReturn; let i = index">
+            <!-- Airline Info -->
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              <div class="city">{{ segment.to }}</div>
+            </div>
+
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover if applicable -->
+            <div
+              class="layover-row"
+              *ngIf="i < flightSegmentsReturn.length - 1 && segment.layover"
+            >
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + 1 Day
+                </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
+              </div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trip Summary CTA -->
+      <button class="details-btn" (click)="openTripSummary()">
+        View Trip & Fare Details
+      </button>
+    </div>
+
+    <!-- Baggage Policy Card with Tabs for Roundtrip -->
+    <div class="card">
+      <div class="section-title-roundtrip">Baggage Policy</div>
+
+      <!-- Tab Navigation -->
+      <div class="policy-tabs">
+        <div
+          [class.active]="activeBaggageTab === 'onward'"
+          (click)="activeBaggageTab = 'onward'"
+        >
+          Onward
+        </div>
+        <div
+          [class.active]="activeBaggageTab === 'return'"
+          (click)="activeBaggageTab = 'return'"
+        >
+          Return
+        </div>
+      </div>
+
+      <!-- Scrollable Tab Content -->
+      <div class="tab-content-container">
+        <div
+          class="tab-content-wrapper"
+          [class.return-active]="activeBaggageTab === 'return'"
+        >
+          <!-- Onward Tab Panel -->
+          <div class="tab-panel baggage-margin">
+            <ng-container *ngFor="let segment of flightSegments; let i = index">
+              <div class="baggage-row">
+                <div class="baggage-header">
+                  <img [src]="segment.logo" class="logo" />
+                  <div class="name">{{ segment.airline }}</div>
+                  <div class="code">{{ segment.code }}</div>
+                </div>
+                <div class="baggage-info">
+                  <div class="baggage-item">
+                    <i class="fas fa-suitcase"></i>
+                    <div>Cabin Bag :</div>
+                    <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
+                  </div>
+                  <div class="baggage-item">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <div>Check-In Bag :</div>
+                    <div class="value">
+                      {{ segment.checkInBaggage || "N/A" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr
+                class="baggage-divider"
+                *ngIf="i < flightSegments.length - 1"
+              />
+            </ng-container>
+          </div>
+
+          <!-- Return Tab Panel -->
+          <div class="tab-panel baggage-margin">
+            <ng-container
+              *ngFor="let segment of flightSegmentsReturn; let i = index"
+            >
+              <div class="baggage-row">
+                <div class="baggage-header">
+                  <img [src]="segment.logo" class="logo" />
+                  <div class="name">{{ segment.airline }}</div>
+                  <div class="code">{{ segment.code }}</div>
+                </div>
+                <div class="baggage-info">
+                  <div class="baggage-item">
+                    <i class="fas fa-suitcase"></i>
+                    <div>Cabin Bag :</div>
+                    <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
+                  </div>
+                  <div class="baggage-item">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <div>Check-In Bag :</div>
+                    <div class="value">
+                      {{ segment.checkInBaggage || "N/A" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr
+                class="baggage-divider"
+                *ngIf="i < flightSegmentsReturn.length - 1"
+              />
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Baggage Prompt -->
+      <div class="add-baggage">
+        <div class="add-left">
+          <div class="prompt">Have Excess Baggage ?</div>
+          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
+        </div>
+        <button class="add-btn" (click)="showAddBaggageModal = true">
+          + ADD
+        </button>
+      </div>
+    </div>
+
+    <!-- Cancellation & Rescheduling Policy Card -->
+    <div class="card">
+      <div
+        class="section-title-row"
+        (click)="showPolicyModal = true; activeTab = 'cancel'"
+      >
+        <div class="section-title">Cancellation & Rescheduling Policy</div>
+        <div class="section-arrow">›</div>
+      </div>
+
+      <!-- Onward / Return Tabs -->
+      <div class="policy-tabs">
+        <div
+          [class.active]="activePolicyTab === 'onward'"
+          (click)="activePolicyTab = 'onward'"
+        >
+          Onward
+        </div>
+        <div
+          [class.active]="activePolicyTab === 'return'"
+          (click)="activePolicyTab = 'return'"
+        >
+          Return
+        </div>
+      </div>
+
+      <!-- Tab Scroll Container -->
+      <div class="tab-content-container">
+        <div
+          class="tab-content-wrapper"
+          [class.return-active]="activePolicyTab === 'return'"
+        >
+          <!-- Onward Panel -->
+          <div class="tab-panel baggage-margin">
+            <ng-container
+              *ngFor="
+                let segment of flightDataDeparture?.Segments[0];
+                let i = index
+              "
+            >
+              <div class="cancellation-row">
+                <div class="flight-airline">
+                  <img
+                    [src]="
+                      'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'
+                    "
+                    class="logo"
+                  />
+                  <div class="name">{{ segment.Airline.AirlineName }}</div>
+                  <div class="code">
+                    {{ segment.Airline.AirlineCode }}
+                    {{ segment.Airline.FlightNumber }}
+                  </div>
+                </div>
+                <div class="criteria">
+                  <div class="left">Cancellation Criteria</div>
+                  <div class="right">Charges</div>
+                </div>
+                <div
+                  class="criteria-detail"
+                  *ngFor="let row of getCancellationRows(flightDataDeparture)"
+                >
+                  <div class="left">{{ row.range }}</div>
+                  <div class="right">{{ row.price }}</div>
+                </div>
+              </div>
+              <hr
+                class="baggage-divider"
+                *ngIf="i < flightDataDeparture?.Segments[0].length - 1"
+              />
+            </ng-container>
+          </div>
+
+          <!-- Return Panel -->
+          <div class="tab-panel baggage-margin">
+            <ng-container
+              *ngFor="
+                let segment of flightDataReturn?.Segments[0];
+                let i = index
+              "
+            >
+              <div class="cancellation-row">
+                <div class="flight-airline">
+                  <img
+                    [src]="
+                      'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'
+                    "
+                    class="logo"
+                  />
+                  <div class="name">{{ segment.Airline.AirlineName }}</div>
+                  <div class="code">
+                    {{ segment.Airline.AirlineCode }}
+                    {{ segment.Airline.FlightNumber }}
+                  </div>
+                </div>
+                <div class="criteria">
+                  <div class="left">Cancellation Criteria</div>
+                  <div class="right">Charges</div>
+                </div>
+                <div
+                  class="criteria-detail"
+                  *ngFor="let row of getCancellationRows(flightDataReturn)"
+                >
+                  <div class="left">{{ row.range }}</div>
+                  <div class="right">{{ row.price }}</div>
+                </div>
+              </div>
+              <hr
+                class="baggage-divider"
+                *ngIf="i < flightDataReturn?.Segments[0].length - 1"
+              />
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Passenger Card -->
+    <div class="card">
+      <div class="section-title">Add Passenger Details</div>
+      <div class="passenger-section">
+        <div class="passenger-title">Adults (12+ yrs)</div>
+        <div class="passenger-box" *ngFor="let adult of adults; let i = index">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              adult.firstName
+                ? adult.firstName + " " + adult.lastName
+                : "Adult " + (i + 1) + " (12 yrs+)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('adult', i)"
+          >
+            {{ adult.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+      <hr class="passenger-divider" />
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="children.length > 0">
+          Children (2-12 yrs old)
+        </div>
+        <div
+          class="passenger-box"
+          *ngFor="let child of children; let i = index"
+        >
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              child.firstName
+                ? child.firstName + " " + child.lastName
+                : "Child " + (i + 1) + " (2 to 12 yrs)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('child', i)"
+          >
+            {{ child.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+      <hr class="passenger-divider" />
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="infants.length > 0">
+          Infant (0-2 yrs old)
+        </div>
+        <div
+          class="passenger-box"
+          *ngFor="let infant of infants; let i = index"
+        >
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+              infant.firstName
+                ? infant.firstName + " " + infant.lastName
+                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+            }}
+          </div>
+          <button
+            class="add-btn light"
+            (click)="openPassengerModal('infant', i)"
+          >
+            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GST Details Card -->
+    <div class="card">
+      <div class="section-title">GST - (Optional)</div>
+      <div class="gst-box" (click)="openGSTModal()">
+        <div class="icon"><i class="fas fa-building"></i></div>
+        <div class="label">
+          <span class="gst-label-text">
+            {{
+              gstDetails.companyName
+                ? gstDetails.companyName
+                : "Travelling for Business?"
+            }}
+          </span>
+        </div>
+        <button class="add-btn light small">
+          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Terms and Conditions Card -->
+    <div class="card">
+      <div class="terms-section">
+        <label class="terms-checkbox">
+          <input type="checkbox" [(ngModel)]="termsAgreed" />
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            I understand and agree with the
+            <span class="link-text" (click)="showFareRules = true"
+              >Fare Rules</span
+            >, the Privacy Policy, the User Agreement & the Terms of Service of
+            Wizzride.
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Price Footer -->
+    <div class="footer-bar">
+      <div class="total" (click)="openFareSummary()" style="cursor: pointer">
+        ₹ Total Price<br />
+        <strong>{{ finalAmount | number : "1.2-2" }}</strong>
+      </div>
+      <button
+        class="proceed-btn"
+        [disabled]="!updateProceedButton()"
+        (click)="finalProceed()"
+      >
+        Proceed
+      </button>
+    </div>
+  </div>
+
+  <!-- Modals and Popups -->
+  <!-- Trip Summary Overlay -->
+  <div
+    class="trip-overlay"
+    *ngIf="showTripSummary"
+    (click)="closeTripSummary()"
+  ></div>
+
+  <!-- Trip Summary Bottom Sheet -->
+  <div class="trip-popup" *ngIf="showTripSummary && tripType !== 'roundtrip'">
+    <div class="trip-header">
+      <div>Trip Summary</div>
+      <button class="close-btn" (click)="closeTripSummary()">×</button>
+    </div>
+    <div class="trip-body">
+      <div class="trip-flight" *ngFor="let segment of flightSegments; let i = index">
+        <div class="trip-airline">
+          <img [src]="segment.logo" class="logo" />
+          <div>{{ segment.airline }}</div>
+          <div class="code">{{ segment.code }}</div>
+        </div>
+        <div class="trip-times">
+                        <div>
+            <div>{{ segment.departureTime }}</div>
+            <div class="trip-subtext">
+              {{ segment.date | date : "EEE, dd MMM" }}
+                        </div>
+                      </div>
+          <div>
+            <i class="fas fa-plane-arrival"></i>
+            <div class="trip-subtext">{{ segment.duration }}</div>
+                    </div>
+          <div class="trip-alignRight">
+            <div>{{ segment.arrivalTime }}</div>
+            <div class="trip-subtext">
+              {{ segment.date | date : "EEE, dd MMM" }}
+                  </div>
+          </div>
+        </div>
+        <div class="trip-meta">
+                        <div>
+            <strong>{{ segment.from }}</strong>
+            <div class="trip-subtext">{{ segment.fromAirport }}</div>
+                        </div>
+          <div></div>
+          <div style="text-align: right">
+            <strong>{{ segment.to }}</strong>
+            <div class="trip-subtext">{{ segment.toAirport }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    <div class="trip-footer">
+      <button class="proceed-btn" (click)="closeTripSummary()">DONE</button>
+    </div>
+  </div>
+
+  <!-- Round Trip Summary -->
+  <div class="trip-popup" *ngIf="showTripSummary && tripType === 'roundtrip'">
+    <div class="trip-header">
+      <div>Trip Summary</div>
+      <button class="close-btn" (click)="closeTripSummary()">×</button>
+    </div>
+    <div class="policy-tabs">
+      <div
+        [class.active]="activeTripTab === 'onward'"
+        (click)="activeTripTab = 'onward'"
+      >
+        Onward
+      </div>
+      <div
+        [class.active]="activeTripTab === 'return'"
+        (click)="activeTripTab = 'return'"
+      >
+        Return
+      </div>
+    </div>
+    <div class="tab-content-container">
+      <div
+        class="tab-content-wrapper"
+        [class.return-active]="activeTripTab === 'return'"
+      >
+        <div class="tab-panel">
+          <div class="trip-body">
+            <div class="trip-flight" *ngFor="let segment of flightSegments">
+              <div class="trip-airline">
+                <img [src]="segment.logo" class="logo" />
+                <div>{{ segment.airline }}</div>
+                <div class="code">{{ segment.code }}</div>
+              </div>
+              <div class="trip-times">
+                  <div>
+                  <div>{{ segment.departureTime }}</div>
+                  <div class="trip-subtext">
+                    {{ segment.date | date : "EEE, dd MMM" }}
+                  </div>
+                  </div>
+                  <div>
+                  <i class="fas fa-plane-arrival"></i>
+                  <div class="trip-subtext">{{ segment.duration }}</div>
+                  </div>
+                <div class="trip-alignRight">
+                  <div>{{ segment.arrivalTime }}</div>
+                  <div class="trip-subtext">
+                    {{ segment.date | date : "EEE, dd MMM" }}
+                </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+                  </div>
+        <div class="tab-panel">
+          <div class="trip-body">
+            <div class="trip-flight" *ngFor="let segment of flightSegmentsReturn">
+              <div class="trip-airline">
+                <img [src]="segment.logo" class="logo" />
+                <div>{{ segment.airline }}</div>
+                <div class="code">{{ segment.code }}</div>
+                </div>
+              <div class="trip-times">
+                <div>
+                  <div>{{ segment.departureTime }}</div>
+                  <div class="trip-subtext">
+                    {{ segment.date | date : "EEE, dd MMM" }}
+              </div>
+                  </div>
+                <div>
+                  <i class="fas fa-plane-arrival"></i>
+                  <div class="trip-subtext">{{ segment.duration }}</div>
+                      </div>
+                <div class="trip-alignRight">
+                  <div>{{ segment.arrivalTime }}</div>
+                  <div class="trip-subtext">
+                    {{ segment.date | date : "EEE, dd MMM" }}
+                    </div>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                    </div>
+                    </div>
+                  </div>
+    <div class="trip-footer">
+      <button class="proceed-btn" (click)="closeTripSummary()">DONE</button>
+                </div>
+              </div>
+
+  <!-- Fare Summary Modal -->
+  <div
+    class="trip-overlay"
+    *ngIf="showFareSummaryModal"
+    (click)="closeFareSummary()"
+  ></div>
+  <div class="trip-popup fare-summary-modal" *ngIf="showFareSummaryModal">
+    <div class="trip-header">
+      <div>Fare Summary</div>
+      <button class="close-btn" (click)="closeFareSummary()">×</button>
+    </div>
+    <div class="trip-body">
+      <div class="fare-summary-content">
+        <div class="fare-line">
+          <div>Base Fare</div>
+          <div>{{ formatCurrency(totalBaseFare) }}</div>
+        </div>
+        <div class="fare-line">
+          <div>Taxes and Surcharges</div>
+          <div>{{ formatCurrency(totalTaxes) }}</div>
+        </div>
+        <div class="fare-line total-line">
+          <strong>Total Amount</strong>
+          <strong>{{ formatCurrency(finalAmount) }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="trip-footer">
+      <button class="proceed-btn" (click)="closeFareSummary()">DONE</button>
+            </div>
+          </div>
+
+  <!-- Add Baggage Modal -->
+  <div
+    class="trip-overlay"
+    *ngIf="showAddBaggageModal"
+    (click)="showAddBaggageModal = false"
+  ></div>
+  <div class="baggage-popup baggage-modal" *ngIf="showAddBaggageModal && tripType !== 'roundtrip'">
+    <div class="trip-header">
+      <div>Add Baggage</div>
+      <button class="close-btn" (click)="showAddBaggageModal = false">×</button>
+                </div>
+    <div class="trip-body">
+      <div class="baggage-note">
+        <div class="note-header">
+          <i class="fas fa-suitcase-rolling"></i>
+          <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+                  </div>
+        <div class="note-text">
+          NOTE: Airlines might charge you extra for carrying more than 1 Bag per Adult.
+                  </div>
+                </div>
+      <ng-container *ngFor="let baggage of baggageOptions">
+        <div class="baggage-option">
+          <div class="option-left">
+            <i class="fas fa-suitcase-rolling"></i>
+            <div class="baggage-text">
+              <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
+              <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+              </div>
+                </div>
+          <div class="option-right">
+            <div class="button-wrapper">
+              <button
+                class="add-option-btn"
+                *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
+                (click)="incrementBaggage(baggage)"
+              >
+                ADD
+              </button>
+              <div
+                class="counter-wrapper"
+                *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+              >
+                <button class="counter-btn" (click)="decrementBaggage(baggage)">-</button>
+                <div class="counter-value">
+                  {{ baggageCounts[baggage.kgs || baggage.Code] || 0 }}
+                </div>
+                <button
+                  class="counter-btn"
+                  (click)="incrementBaggage(baggage)"
+                  [disabled]="getTotalOneWayBaggageCount() >= maxAllowedBaggageCount"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+                  </div>
+                  </div>
+      </ng-container>
+                </div>
+    <div class="baggage-footer">
+      <div class="total">
+        ₹ Total Price<br />
+        <strong>{{ calculateBaggageTotal() | number : "1.2-2" }}</strong>
+                      </div>
+      <button class="proceed-btn" (click)="showAddBaggageModal = false">DONE</button>
+                    </div>
+                  </div>
+
+  <!-- Roundtrip Baggage Modal -->
+  <div class="baggage-popup baggage-modal" *ngIf="tripType === 'roundtrip' && showAddBaggageModal">
+    <div class="trip-header">
+      <div>Add Baggage</div>
+      <button class="close-btn" (click)="showAddBaggageModal = false">×</button>
+                      </div>
+    <div class="policy-tabs">
+      <div
+        [class.active]="activeRoundBaggageTab === 'onward'"
+        (click)="activeRoundBaggageTab = 'onward'"
+      >
+        Onward
+                    </div>
+      <div
+        [class.active]="activeRoundBaggageTab === 'return'"
+        (click)="activeRoundBaggageTab = 'return'"
+      >
+        Return
+                  </div>
+                </div>
+    <div class="trip-body">
+      <div class="tab-content-container">
+        <div
+          class="tab-content-wrapper"
+          [class.return-active]="activeRoundBaggageTab === 'return'"
+        >
+          <div class="tab-panel">
+            <div class="baggage-note">
+              <div class="note-header">
+                <i class="fas fa-suitcase-rolling"></i>
+                <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+                  </div>
+                  </div>
+            <ng-container *ngFor="let baggage of baggageOptions">
+              <div class="baggage-option">
+                <div class="option-left">
+                  <i class="fas fa-suitcase-rolling"></i>
+                  <div class="baggage-text">
+                    <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
+                    <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+                </div>
+                  </div>
+                <div class="option-right">
+                  <div class="button-wrapper">
+                    <button
+                      class="add-option-btn"
+                      *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
+                      (click)="incrementRoundBaggage(baggage)"
+                    >
+                      ADD
+                    </button>
+                    <div
+                      class="counter-wrapper"
+                      *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+                    >
+                      <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
+                      <div class="counter-value">
+                        {{ onwardBaggageCounts[baggage.kgs || baggage.Code] || 0 }}
+                </div>
+                      <button
+                        class="counter-btn"
+                        (click)="incrementRoundBaggage(baggage)"
+                        [disabled]="!canAddMoreBaggage()"
+                      >
+                        +
+                      </button>
+              </div>
+              </div>
+                  </div>
+                </div>
+            </ng-container>
+              </div>
+          <div class="tab-panel">
+            <div class="baggage-note">
+              <div class="note-header">
+                <i class="fas fa-suitcase-rolling"></i>
+                <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+              </div>
+            </div>
+            <ng-container *ngFor="let baggage of baggageOptionsReturn">
+              <div class="baggage-option">
+                <div class="option-left">
+                  <i class="fas fa-suitcase-rolling"></i>
+                  <div class="baggage-text">
+                    <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
+                    <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+                  </div>
+                </div>
+                <div class="option-right">
+                  <div class="button-wrapper">
+                    <button
+                      class="add-option-btn"
+                      *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
+                      (click)="incrementRoundBaggage(baggage)"
+                    >
+                      ADD
+                    </button>
+                    <div
+                      class="counter-wrapper"
+                      *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+                    >
+                      <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
+                      <div class="counter-value">
+                        {{ returnBaggageCounts[baggage.kgs || baggage.Code] || 0 }}
+                      </div>
+                      <button
+                        class="counter-btn"
+                        (click)="incrementRoundBaggage(baggage)"
+                        [disabled]="!canAddMoreBaggage()"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="baggage-footer">
+      <div class="total">
+        ₹ Total Price<br />
+        <strong>{{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</strong>
+      </div>
+      <button class="proceed-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
+            </div>
+          </div>
+
+  <!-- Policy Modal -->
+  <div
+    class="trip-overlay"
+    *ngIf="showPolicyModal"
+    (click)="showPolicyModal = false"
+  ></div>
+  <div class="trip-popup" *ngIf="showPolicyModal && tripType !== 'roundtrip'">
+    <div class="trip-header">
+      <div>Cancellation & Rescheduling Policy</div>
+      <button class="close-btn" (click)="showPolicyModal = false">×</button>
+              </div>
+    <div class="policy-tabs">
+      <div
+        [class.active]="activeTab === 'cancel'"
+        (click)="activeTab = 'cancel'"
+      >
+        CANCELLATION
+                </div>
+      <div
+        [class.active]="activeTab === 'reschedule'"
+        (click)="activeTab = 'reschedule'"
+      >
+        RESCHEDULE
+                </div>
+              </div>
+    <div class="trip-body">
+      <div class="tab-content-container">
+        <div class="tab-content-wrapper" [class.return-active]="activeTab === 'reschedule'">
+          <div class="tab-panel">
+            <div class="trip-flight" *ngFor="let seg of flightSegments">
+              <div class="trip-airline">
+                <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                <div>{{ seg.airline }}</div>
+                <div class="code">{{ seg.code }}</div>
+                  </div>
+              <table class="policy-table" *ngIf="getCancellationRows(flightDataDeparture).length > 0">
+                <tr *ngFor="let row of getCancellationRows(flightDataDeparture)">
+                  <td>{{ row.range }}</td>
+                  <td>{{ row.price }}</td>
+                      </tr>
+                  </table>
+                    </div>
+          </div>
+          <div class="tab-panel">
+            <div class="trip-flight" *ngFor="let seg of flightSegments">
+              <div class="trip-airline">
+                <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                <div>{{ seg.airline }}</div>
+                <div class="code">{{ seg.code }}</div>
+              </div>
+              <table class="policy-table" *ngIf="getDateChangeRows(flightDataDeparture).length > 0">
+                <tr *ngFor="let row of getDateChangeRows(flightDataDeparture)">
+                  <td>{{ row.range }}</td>
+                  <td>{{ row.price }}</td>
+                        </tr>
+                    </table>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+  <!-- Roundtrip Policy Modal -->
+  <div class="trip-popup" *ngIf="showPolicyModal && tripType === 'roundtrip'">
+    <div class="trip-header">
+      <div>Cancellation & Rescheduling Policy</div>
+      <button class="close-btn" (click)="showPolicyModal = false">×</button>
+            </div>
+    <div class="policy-tabs">
+      <div
+        [class.active]="activePolicyLeg === 'departure'"
+        (click)="activePolicyLeg = 'departure'"
+      >
+        DEPARTURE
+              </div>
+      <div
+        [class.active]="activePolicyLeg === 'return'"
+        (click)="activePolicyLeg = 'return'"
+      >
+        RETURN
+                </div>
+              </div>
+    <div class="policy-tabs">
+      <div
+        [class.active]="activePolicySubTab === 'cancel'"
+        (click)="activePolicySubTab = 'cancel'"
+      >
+        CANCELLATION
+              </div>
+      <div
+        [class.active]="activePolicySubTab === 'reschedule'"
+        (click)="activePolicySubTab = 'reschedule'"
+      >
+        RESCHEDULE
+                </div>
+                  </div>
+    <div class="trip-body">
+      <div class="tab-content-container">
+        <div class="tab-content-wrapper" [class.return-active]="activePolicyLeg === 'return'">
+          <div class="tab-panel">
+            <div *ngIf="activePolicySubTab === 'cancel'">
+              <div class="trip-flight" *ngFor="let seg of flightSegments">
+                <div class="trip-airline">
+                  <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                  <div>{{ seg.airline }}</div>
+                  <div class="code">{{ seg.code }}</div>
+                </div>
+                <table class="policy-table" *ngIf="getCancellationRows(flightDataDeparture).length > 0">
+                  <tr *ngFor="let row of getCancellationRows(flightDataDeparture)">
+                    <td>{{ row.range }}</td>
+                    <td>{{ row.price }}</td>
+                  </tr>
+                </table>
+              </div>
+              </div>
+            <div *ngIf="activePolicySubTab === 'reschedule'">
+              <div class="trip-flight" *ngFor="let seg of flightSegments">
+                <div class="trip-airline">
+                  <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                  <div>{{ seg.airline }}</div>
+                  <div class="code">{{ seg.code }}</div>
+              </div>
+                <table class="policy-table" *ngIf="getDateChangeRows(flightDataDeparture).length > 0">
+                  <tr *ngFor="let row of getDateChangeRows(flightDataDeparture)">
+                    <td>{{ row.range }}</td>
+                    <td>{{ row.price }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            </div>
+          <div class="tab-panel">
+            <div *ngIf="activePolicySubTab === 'cancel'">
+              <div class="trip-flight" *ngFor="let seg of flightSegmentsReturn">
+                <div class="trip-airline">
+                  <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                  <div>{{ seg.airline }}</div>
+                  <div class="code">{{ seg.code }}</div>
+          </div>
+                <table class="policy-table" *ngIf="getCancellationRows(flightDataReturn).length > 0">
+                  <tr *ngFor="let row of getCancellationRows(flightDataReturn)">
+                    <td>{{ row.range }}</td>
+                    <td>{{ row.price }}</td>
+                  </tr>
+                </table>
+            </div>
+            </div>
+            <div *ngIf="activePolicySubTab === 'reschedule'">
+              <div class="trip-flight" *ngFor="let seg of flightSegmentsReturn">
+                <div class="trip-airline">
+                  <img [src]="'assets/images/flightimages/' + seg.code.split(' ')[0] + '.png'" class="logo" />
+                  <div>{{ seg.airline }}</div>
+                  <div class="code">{{ seg.code }}</div>
+          </div>
+                <table class="policy-table" *ngIf="getDateChangeRows(flightDataReturn).length > 0">
+                  <tr *ngFor="let row of getDateChangeRows(flightDataReturn)">
+                    <td>{{ row.range }}</td>
+                    <td>{{ row.price }}</td>
+                  </tr>
+                </table>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
+
+  <!-- GST Modal -->
+  <div
+    class="trip-overlay"
+    *ngIf="showGSTModal"
+    (click)="closeGSTModal()"
+  ></div>
+  <div class="gst-popup" *ngIf="showGSTModal">
+    <div class="gst-header">
+      <div>Add GST Details</div>
+      <button class="close-btn" (click)="closeGSTModal()">×</button>
+              </div>
+    <div class="gst-body">
+      <div class="gst-note">
+        <div class="note-header">
+          <i class="fas fa-info-circle"></i>
+          <div>NOTE</div>
+                </div>
+        <div class="note-text">
+          This is an optional section. Fill this if you wish to claim GST credit for this booking.
+              </div>
+            </div>
+      <div class="form-group">
+        <label>Company Name</label>
+        <input
+          type="text"
+          [(ngModel)]="gstDetails.companyName"
+          placeholder="Enter company name"
+        />
+              </div>
+      <div class="form-group">
+        <label>Company Billing Address</label>
+        <textarea
+          [(ngModel)]="gstDetails.companyAddress"
+          placeholder="Enter billing address"
+          rows="3"
+        ></textarea>
+            </div>
+      <div class="form-group">
+        <label>Company Phone Number</label>
+        <input
+          type="tel"
+          [(ngModel)]="gstDetails.companyPhone"
+          placeholder="Enter phone number"
+        />
+              </div>
+      <div class="form-group">
+        <label>Company Email Address</label>
+        <input
+          type="email"
+          [(ngModel)]="gstDetails.companyEmail"
+          placeholder="Enter email address"
+        />
+            </div>
+      <div class="form-group">
+        <label>GST Number</label>
+        <input
+          type="text"
+          [(ngModel)]="gstDetails.gstNumber"
+          placeholder="Enter GST number"
+        />
+            </div>
+          </div>
+    <div class="gst-footer">
+      <button class="proceed-btn" (click)="saveGSTDetails()">DONE</button>
+          </div>
+              </div>
+
+  <!-- Passenger Details Modal -->
+  <div
+    class="trip-overlay"
+    *ngIf="showPassengerModal"
+    (click)="closePassengerModal()"
+  ></div>
+  <div class="trip-popup" *ngIf="showPassengerModal">
+    <div class="trip-header">
+      <div>Add Passenger Details</div>
+      <button class="close-btn" (click)="closePassengerModal()">×</button>
+    </div>
+    <div class="trip-body">
+      <div class="form-group">
+        <label>First Name</label>
+        <input
+          type="text"
+          [(ngModel)]="currentPassengerDetails.firstName"
+          placeholder="First Name"
+        />
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input
+          type="text"
+          [(ngModel)]="currentPassengerDetails.lastName"
+          placeholder="Last Name"
+        />
+      </div>
+      <div class="form-group">
+        <label>Date of Birth</label>
+        <div class="input-group-row">
+          <select [(ngModel)]="currentPassengerDetails.dobDay">
+            <option value="">DD</option>
+            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+          </select>
+          <select [(ngModel)]="currentPassengerDetails.dobMonth">
+            <option value="">MM</option>
+            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+          </select>
+          <select [(ngModel)]="currentPassengerDetails.dobYear">
+            <option value="">YYYY</option>
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="passportInfoRequired">
+        <label>Passport Number</label>
+        <input
+          type="text"
+          [(ngModel)]="currentPassengerDetails.passportNumber"
+          placeholder="Passport Number"
+        />
+      </div>
+    </div>
+    <div class="trip-footer">
+      <button class="proceed-btn" (click)="savePassengerDetails(currentPassengerDetails)">SAVE</button>
+    </div>
+  </div>
+
+  <!-- Fare Rules Modal -->
+  <div
+    *ngIf="showFareRules"
+    class="trip-overlay"
+    (click)="showFareRules = false"
+  ></div>
+  <div *ngIf="showFareRules" class="trip-popup fare-summary-modal">
+    <div class="trip-header">
+      Fare Rules
+      <button (click)="showFareRules = false">×</button>
+              </div>
+    <div class="trip-body">
+      <div class="fare-tabs" *ngIf="tripType === 'roundtrip'">
+        <div
+          class="fare-tab"
+          [class.fare-tab-active]="fareTab === 'onward'"
+          (click)="fareTab = 'onward'"
+        >
+          Onward
+            </div>
+        <div
+          class="fare-tab"
+          [class.fare-tab-active]="fareTab === 'return'"
+          (click)="fareTab = 'return'"
+        >
+          Return
+          </div>
+        </div>
+      <div *ngIf="tripType === 'roundtrip'" class="fare-tab-panels">
+        <div *ngIf="fareTab === 'onward'" class="fare-tab-panel">
+          <div class="fare-info-text" *ngIf="fareRuleText" [innerHTML]="fareRuleText"></div>
+          <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
+      </div>
+        <div *ngIf="fareTab === 'return'" class="fare-tab-panel">
+          <div class="fare-info-text" *ngIf="fareRuleTextReturn" [innerHTML]="fareRuleTextReturn"></div>
+          <div class="fare-info-text" *ngIf="!fareRuleTextReturn">Fare rules not available.</div>
+        </div>
+      </div>
+      <div *ngIf="tripType !== 'roundtrip'">
+        <div class="fare-info-text" *ngIf="fareRuleText" [innerHTML]="fareRuleText"></div>
+        <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
+      </div>
+    </div>
   </div>
 </div>

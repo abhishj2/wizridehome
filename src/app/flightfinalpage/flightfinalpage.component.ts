@@ -149,16 +149,88 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   continueClicked = false;
   showModal: boolean = false;
   selectedTab: 'cancel' | 'change' = 'cancel';
+  activeTab: 'cancel' | 'reschedule' = 'cancel';
   gstMandatoryOnward: boolean = false;
   gstMandatoryReturn: boolean = false;
   selectedState: string = 'West Bengal';
   showFareRuleModal: boolean = false;
   fareRuleText: SafeHtml = '';
+  fareRuleTextReturn: SafeHtml = '';
   bookingSubmitted: boolean = false;
   
   // --- MISSING PROPERTIES ADDED HERE ---
   termsAccepted: boolean = false;
   servicesUnlocked: boolean = false;
+  termsAgreed: boolean = false;
+  
+  // Trip Type
+  tripType: 'oneway' | 'roundtrip' | 'multicity' = 'oneway';
+  
+  // Modal States
+  showTripSummary: boolean = false;
+  showFareSummaryModal: boolean = false;
+  showAddBaggageModal: boolean = false;
+  showPolicyModal: boolean = false;
+  showGSTModal: boolean = false;
+  showPassengerModal: boolean = false;
+  showFareRules: boolean = false;
+  
+  // Tab States
+  activeBaggageTab: 'onward' | 'return' = 'onward';
+  activePolicyTab: 'onward' | 'return' = 'onward';
+  activeTripTab: 'onward' | 'return' = 'onward';
+  activePolicyLeg: 'departure' | 'return' = 'departure';
+  activePolicySubTab: 'cancel' | 'reschedule' = 'cancel';
+  activeRoundBaggageTab: 'onward' | 'return' = 'onward';
+  fareTab: 'onward' | 'return' = 'onward';
+  
+  // Passenger Arrays (aliases for mobile template compatibility)
+  get adults() { return this.travellers; }
+  // Note: children and infants are already defined as properties above
+  
+  // GST Details (alias for mobile template)
+  gstDetails: any = {
+    companyName: '',
+    companyAddress: '',
+    companyPhone: '',
+    companyEmail: '',
+    gstNumber: ''
+  };
+  
+  // Passenger Modal
+  currentPassengerType: 'adult' | 'child' | 'infant' = 'adult';
+  currentPassengerIndex: number = 0;
+  currentPassengerDetails: any = null;
+  get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
+  
+  // Baggage Counts (for mobile template)
+  baggageCounts: { [key: number]: number } = {};
+  onwardBaggageCounts: { [key: number]: number } = {};
+  returnBaggageCounts: { [key: number]: number } = {};
+  maxAllowedBaggageCount: number = 0;
+  
+  // Fare Summary
+  onwardFareSummary: any = {};
+  returnFareSummary: any = {};
+  travelerCount: number = 0;
+  baggagePrices: any = {};
+  
+  // Date properties
+  departureDate: Date | null = null;
+  returnDate: Date | null = null;
+  
+  // Additional flags
+  panInfoRequired: boolean = false;
+  isUnifiedSegmentFormat: boolean = false;
+  
+  // Multicity support
+  flightSegmentGroups: any[] = [];
+  groupedFlightSegments: any[] = [];
+  activeTabIndex: number = 0;
+  activeCancelTabIndex: number = 0;
+  
+  // Math reference for template
+  Math = Math;
   // -------------------------------------
 
   states: string[] = [
@@ -233,6 +305,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
     this.flightDataDeparture = val['departureFlightData'];
     this.flightDataReturn = val['returnFlightData'];
+    
+    // Set trip type
+    const tripTypeVal = val['tripType'] || '';
+    if (tripTypeVal === 'round' || tripTypeVal === 'roundtrip') {
+      this.tripType = 'roundtrip';
+    } else if (tripTypeVal === 'multi' || tripTypeVal === 'multicity') {
+      this.tripType = 'multicity';
+    } else {
+      this.tripType = 'oneway';
+    }
+    
+    // Set dates
+    if (val['departureDate']) {
+      this.departureDate = new Date(val['departureDate']);
+    }
+    if (val['returnDate']) {
+      this.returnDate = new Date(val['returnDate']);
+    }
 
     if (this.flightDataDeparture) {
       this.processSegments(this.flightDataDeparture, false);
@@ -241,6 +331,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (this.flightDataReturn) {
       this.processSegments(this.flightDataReturn, true);
     }
+    
+    // Initialize baggage counts
+    this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
+    this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
     
     this.loadFareRules();
   }
@@ -268,7 +362,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         
         const segmentObj: any = {
             airline: seg.Airline?.AirlineName,
-            logo: `assets/logos/${seg.Airline?.AirlineCode}.png`,
+            logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
             code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
             aircraft: seg.Craft,
             departureTime: this.formatTime(depDate),
@@ -284,6 +378,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             layover: null,
             originCode: origin.AirportCode,
             destinationCode: destination.AirportCode,
+            date: depDate, // For mobile template
+            depDate: depDate, // For mobile template
+            arrDate: arrDate, // For mobile template
         };
 
         if (i < segments.length - 1) {
@@ -324,6 +421,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             this.fareRuleText = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
         })
     );
+    
+    if (this.resultIndexReturn) {
+      this.subscriptions.add(
+          this.apiService.getFareRule(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
+          .subscribe((val: any) => {
+              const rawHtml = val?.Response?.FareRules?.[0]?.FareRuleDetail || 'Fare rule not available.';
+              this.fareRuleTextReturn = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
+          })
+      );
+    }
   }
 
   callFareQuote() {
@@ -708,6 +815,152 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (this.continueClicked && !this.bookingSubmitted) {
       event.returnValue = true;
     }
+  }
+
+  // Mobile Template Methods
+  openTripSummary() { this.showTripSummary = true; }
+  closeTripSummary() { this.showTripSummary = false; }
+  openFareSummary() { this.showFareSummaryModal = true; }
+  closeFareSummary() { this.showFareSummaryModal = false; }
+  openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
+  closeGSTModal() { this.showGSTModal = false; }
+  saveGSTDetails() { this.gstInfo.companyName = this.gstDetails.companyName; this.gstInfo.registrationNo = this.gstDetails.gstNumber; this.contact.hasGST = !!this.gstDetails.companyName; this.closeGSTModal(); }
+  
+  openPassengerModal(type: 'adult' | 'child' | 'infant', index: number) {
+    this.currentPassengerType = type;
+    this.currentPassengerIndex = index;
+    const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
+    this.currentPassengerDetails = arr[index] ? { ...arr[index] } : this.getBlankPassenger(type);
+    this.showPassengerModal = true;
+  }
+  
+  getBlankPassenger(type: 'adult' | 'child' | 'infant') {
+    if (type === 'adult') return this.getBlankAdult();
+    if (type === 'child') return this.getBlankChild();
+    return this.getBlankInfant();
+  }
+  
+  closePassengerModal() { this.showPassengerModal = false; }
+  savePassengerDetails(details: any) {
+    const arr = this.currentPassengerType === 'adult' ? this.travellers : this.currentPassengerType === 'child' ? this.children : this.infants;
+    if (arr[this.currentPassengerIndex]) {
+      Object.assign(arr[this.currentPassengerIndex], details);
+    }
+    this.closePassengerModal();
+  }
+  
+  updateProceedButton(): boolean {
+    return this.termsAgreed && this.canProceed();
+  }
+  
+  finalProceed() {
+    if (!this.updateProceedButton()) {
+      Swal.fire('Incomplete', 'Please complete all required fields and accept terms', 'warning');
+      return;
+    }
+    this.proceedToPayment();
+  }
+  
+  // Baggage methods for mobile
+  incrementBaggage(baggage: any) {
+    const key = baggage.kgs || baggage.Code;
+    if (!this.baggageCounts[key]) this.baggageCounts[key] = 0;
+    this.baggageCounts[key]++;
+    this.updateBaggageTotal(false);
+  }
+  
+  decrementBaggage(baggage: any) {
+    const key = baggage.kgs || baggage.Code;
+    if (this.baggageCounts[key] > 0) {
+      this.baggageCounts[key]--;
+      this.updateBaggageTotal(false);
+    }
+  }
+  
+  incrementRoundBaggage(baggage: any) {
+    const key = baggage.kgs || baggage.Code;
+    const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
+    if (!counts[key]) counts[key] = 0;
+    counts[key]++;
+    this.updateRoundTripBaggageTotal();
+  }
+  
+  decrementRoundBaggage(baggage: any) {
+    const key = baggage.kgs || baggage.Code;
+    const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
+    if (counts[key] > 0) {
+      counts[key]--;
+      this.updateRoundTripBaggageTotal();
+    }
+  }
+  
+  getTotalOneWayBaggageCount(): number {
+    return Object.values(this.baggageCounts).reduce((a: number, b: number) => a + b, 0);
+  }
+  
+  canAddMoreBaggage(): boolean {
+    const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
+    const total = Object.values(counts).reduce((a: number, b: number) => a + b, 0);
+    return total < (this.totalAdults + this.totalChildren);
+  }
+  
+  calculateBaggageTotal(): number {
+    return this.baggageTotal;
+  }
+  
+  calculateRoundTripBaggageTotal(): number {
+    return this.baggageTotal + this.baggageTotalReturn;
+  }
+  
+  handleRoundTripBaggageDone() {
+    this.updateBaggageTotal(false);
+    this.updateBaggageTotal(true);
+    this.showAddBaggageModal = false;
+  }
+  
+  updateRoundTripBaggageTotal() {
+    let onwardTotal = 0, returnTotal = 0;
+    this.baggageOptions.forEach(opt => {
+      const key = opt.kgs || opt.Code;
+      onwardTotal += (this.onwardBaggageCounts[key] || 0) * opt.Price;
+    });
+    this.baggageOptionsReturn.forEach(opt => {
+      const key = opt.kgs || opt.Code;
+      returnTotal += (this.returnBaggageCounts[key] || 0) * opt.Price;
+    });
+    this.baggageTotal = onwardTotal;
+    this.baggageTotalReturn = returnTotal;
+    this.updateFinalFare();
+  }
+  
+  getCancellationRows(flightData: any): any[] {
+    if (!flightData?.cancellationPolicy) return [];
+    return flightData.cancellationPolicy.map((p: any) => ({
+      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
+      price: `₹ ${p.Details}`
+    }));
+  }
+  
+  getDateChangeRows(flightData: any): any[] {
+    if (!flightData?.dateChangePolicy) return [];
+    return flightData.dateChangePolicy.map((p: any) => ({
+      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
+      price: `₹ ${p.Details}`
+    }));
+  }
+  
+  calculateDayChange(arrDate: Date, depDate: Date): string {
+    if (!arrDate || !depDate) return '';
+    const diff = Math.floor((depDate.getTime() - arrDate.getTime()) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? `+ ${diff} Day${diff > 1 ? 's' : ''}` : '';
+  }
+  
+  calculateLayoverDuration(arrDate: Date, depDate: Date): string {
+    if (!arrDate || !depDate) return '';
+    const mins = Math.floor((depDate.getTime() - arrDate.getTime()) / 60000);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h}h ${m}m`;
   }
 
   ngOnDestroy(): void {
