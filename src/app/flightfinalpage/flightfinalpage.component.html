@@ -1389,7 +1389,9 @@
       <input type="text" [(ngModel)]="currentPassengerDetails.panNumber" placeholder="Enter PAN number" />
     </div>
   </div>
-  this
+  <div class="trip-footer">
+    <button class="proceed-btn" (click)="savePassengerDetails(currentPassengerDetails)">SAVE</button>
+  </div>
 </div>
 
 <!-- Fare Rules Modal -->

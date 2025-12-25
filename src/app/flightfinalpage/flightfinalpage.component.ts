@@ -632,8 +632,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   proceedToPayment(): void {
     // Check agreement
-    if(!this.termsAccepted) {
+    if(!this.termsAgreed) {
         Swal.fire('Terms & Conditions', 'Please accept the terms and conditions to proceed', 'warning');
+        this.loader = false;
         return;
     }
 
@@ -641,66 +642,319 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     
     if(!this.canProceed()) {
         Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
+        this.loader = false;
         return;
     }
 
     this.bookingSubmitted = true;
-    this.loader = true;
 
-    // Construct Booking Payload
-    const bookingPayload = {
-        Passengers: [...this.travellers, ...this.children, ...this.infants],
-        Contact: this.contact,
-        GST: this.contact.hasGST ? this.gstInfo : null,
-        Fare: {
-            TotalAmount: this.finalAmount,
-            BaseFare: this.totalBaseFare,
-            Taxes: this.totalTaxes
-        },
-        Segments: {
-            Outbound: this.flightSegments,
-            Return: this.flightSegmentsReturn
-        },
-        SSR: {
-            Baggage: this.selectedBaggage,
-            Meals: this.selectedMeals
-        }
+    // Get passenger details
+    const adults = this.travellers || [];
+    const children = this.children || [];
+    const infants = this.infants || [];
+
+    // Get contact details from first adult
+    const primaryAdult = adults[0];
+    if (!primaryAdult || !primaryAdult.email || !primaryAdult.mobileNumber) {
+      Swal.fire('Error', 'Please fill contact details (email and mobile) for the primary passenger', 'error');
+      this.loader = false;
+      return;
+    }
+
+    // Prepare customer details
+    const appid = primaryAdult.mobileNumber;
+    const orderId = 'FL' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    const customerName = `${primaryAdult.firstName} ${primaryAdult.lastName}`;
+    const customerEmail = primaryAdult.email;
+    const customerDialCountryCode = primaryAdult.mobileDialCode || '+91';
+    const customerPhone = primaryAdult.mobileNumber;
+
+    // Get flight data
+    const source = this.fullFlightData?.fromCity || '';
+    const destination = this.fullFlightData?.toCity || '';
+    const onwardDate = this.departureDate ? this.departureDate.toISOString().split('T')[0] : '';
+    const returnDate = this.returnDate ? this.returnDate.toISOString().split('T')[0] : null;
+
+    // Determine if LCC
+    const isLCC = this.fullFlightData?.departureFlightData?.selectedFare?.originalFareOption?.IsLCC || false;
+    const isLCCReturn = this.fullFlightData?.returnFlightData?.selectedFare?.originalFareOption?.IsLCC || false;
+
+    // Build booking payload (simplified version - you may need to adjust based on your API requirements)
+    const adultPassengers = adults.map((a: any) => ({
+      Title: a.title || 'Mr',
+      FirstName: a.firstName,
+      LastName: a.lastName,
+      DateOfBirth: `${a.dobYear}-${a.dobMonth}-${a.dobDay}`,
+      Gender: a.gender,
+      Email: a.email || '',
+      MobileCode: a.mobileDialCode || '+91',
+      MobileNumber: a.mobileNumber || '',
+      PassportNumber: a.passportNumber || '',
+      PassportExpiryDate: a.passportExpiryYear || '',
+      PANNumber: a.panNumber || '',
+      RequiresWheelchair: a.requiresWheelchair || false
+    }));
+    
+    const childPassengers = children.map((c: any) => ({
+      Title: c.title || 'Mstr',
+      FirstName: c.firstName,
+      LastName: c.lastName,
+      DateOfBirth: `${c.dobYear}-${c.dobMonth}-${c.dobDay}`,
+      Gender: c.gender,
+      Email: '',
+      MobileCode: '',
+      MobileNumber: '',
+      PassportNumber: c.passportNumber || '',
+      PassportExpiryDate: '',
+      PANNumber: c.panNumber || '',
+      RequiresWheelchair: c.requiresWheelchair || false
+    }));
+    
+    const infantPassengers = infants.map((i: any) => ({
+      Title: i.title || 'Mstr',
+      FirstName: i.firstName,
+      LastName: i.lastName,
+      DateOfBirth: `${i.dobYear}-${i.dobMonth}-${i.dobDay}`,
+      Gender: i.gender,
+      Email: '',
+      MobileCode: '',
+      MobileNumber: '',
+      PassportNumber: i.passportNumber || '',
+      PassportExpiryDate: '',
+      PANNumber: '',
+      RequiresWheelchair: false
+    }));
+    
+    const onwardPayload: any = {
+      Passengers: [...adultPassengers, ...childPassengers, ...infantPassengers],
+      Contact: {
+        Email: customerEmail,
+        MobileCode: customerDialCountryCode,
+        MobileNumber: customerPhone
+      },
+      GST: this.gstDetails?.companyName ? {
+        CompanyName: this.gstDetails.companyName,
+        RegistrationNo: this.gstDetails.gstNumber || ''
+      } : null,
+      Baggage: this.selectedBaggage || []
     };
 
-    // Save to Database or Navigate
-    console.log("Proceeding to payment...", bookingPayload);
-    
-    // Simulating API call
-    setTimeout(() => {
+    const returnPayload = this.tripType === 'roundtrip' ? onwardPayload : null;
+    const onwardAmount = this.tripType === 'roundtrip' ? this.getOnwardTotal() : this.finalAmount;
+    const returnAmount = this.tripType === 'roundtrip' ? this.getReturnTotal() : null;
+
+    console.log('Calling flightSuccess API with:', {
+      appid: appid,
+      orderId: orderId,
+      customerName: customerName,
+      customerEmail: customerEmail,
+      customerDialCountryCode: customerDialCountryCode,
+      customerPhone: customerPhone,
+      source: source,
+      destination: destination,
+      onwardDate: onwardDate,
+      returnDate: returnDate,
+      onwardPayload: onwardPayload,
+      returnPayload: returnPayload,
+      onwardAmount: onwardAmount,
+      returnAmount: returnAmount,
+      finalAmount: this.finalAmount,
+      isLCC: isLCC,
+      isLCCReturn: isLCCReturn
+    });
+
+    // Call payment API
+    this.subscriptions.add(
+      this.apiService.flightSuccess(
+        appid,
+        orderId,
+        this.tripType,
+        this.isUnifiedSegmentFormat,
+        customerName,
+        customerEmail,
+        customerDialCountryCode,
+        customerPhone,
+        source,
+        destination,
+        onwardDate,
+        returnDate,
+        onwardPayload,
+        returnPayload,
+        onwardAmount,
+        returnAmount,
+        this.finalAmount,
+        isLCC,
+        isLCCReturn
+      ).subscribe((val: any) => {
+        console.log('Payment API Response:', val);
+        
+        if (val && val['payment_session_id']) {
+          // Call cashfree payment gateway
+          if (typeof (window as any).cashfree === 'function') {
+            (window as any).cashfree(val['payment_session_id']);
+            console.log('Cashfree payment gateway opened with session:', val['payment_session_id']);
+          } else {
+            console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
+            Swal.fire('Error', 'Payment gateway not available. Please refresh the page.', 'error');
+            this.loader = false;
+          }
+        } else {
+          // Handle error response
+          const errorMessage = val?.message || 'Payment session creation failed';
+          const isEmailError = errorMessage.toString().toUpperCase().trim().includes('INVALID EMAIL');
+          
+          Swal.fire({
+            title: 'Sorry!',
+            html: isEmailError ? 'Please Enter Email ID in Correct Format.' : errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          this.loader = false;
+        }
+      }, (error: any) => {
+        console.error('Payment API Error:', error);
+        Swal.fire({
+          title: 'Error',
+          html: error?.message || 'Failed to create payment session. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
         this.loader = false;
-        // Navigate to payment gateway
-        // this.router.navigate(['/payment']); 
-        Swal.fire('Success', 'Proceeding to Payment Gateway', 'success');
-    }, 1500);
+      })
+    );
   }
 
   canProceed(): boolean {
-      // 1. Validate Contact Info
-      if(!this.contact.email || !this.contact.mobile || this.contact.mobile.length < 10) return false;
+      // Get passenger arrays (support both old and new structure)
+      const adults = this.travellers || [];
+      const children = this.children || [];
+      const infants = this.infants || [];
+      
+      // 1. Validate Contact Info from first adult (mobile template structure)
+      const primaryAdult = adults[0];
+      if (!primaryAdult) {
+        console.log('canProceed: No primary adult found');
+        return false;
+      }
+      
+      // Check email and mobile from primary adult
+      const hasValidEmail = primaryAdult.email && primaryAdult.email.trim().length > 0;
+      const hasValidMobile = primaryAdult.mobileNumber && primaryAdult.mobileNumber.length >= 10;
+      
+      if (!hasValidEmail || !hasValidMobile) {
+        // Fallback to old contact structure
+        const hasOldEmail = this.contact.email && this.contact.email.trim().length > 0;
+        const hasOldMobile = this.contact.mobile && this.contact.mobile.length >= 10;
+        if (!hasOldEmail || !hasOldMobile) {
+          console.log('canProceed: Missing contact info', { hasValidEmail, hasValidMobile, hasOldEmail, hasOldMobile });
+          return false;
+        }
+      }
       
       // 2. Validate Adult Details
-      for(let t of this.travellers) {
-          if(!t.firstName || !t.lastName) return false;
-          if(this.passportInfoRequired && (!t.passportNumber || !t.passportExpiryYear)) return false;
+      for(let i = 0; i < adults.length; i++) {
+          const t = adults[i];
+          if(!t.firstName || !t.firstName.trim()) {
+            console.log(`canProceed: Adult ${i+1} missing firstName`);
+            return false;
+          }
+          if(!t.lastName || !t.lastName.trim()) {
+            console.log(`canProceed: Adult ${i+1} missing lastName`);
+            return false;
+          }
+          if(!t.gender || !t.gender.trim()) {
+            console.log(`canProceed: Adult ${i+1} missing gender`);
+            return false;
+          }
+          if(!t.dobYear || !t.dobMonth || !t.dobDay) {
+            console.log(`canProceed: Adult ${i+1} missing DOB`, { dobYear: t.dobYear, dobMonth: t.dobMonth, dobDay: t.dobDay });
+            return false;
+          }
+          // Passport validation - only check passportNumber if required, expiryYear is optional
+          if(this.passportInfoRequired && (!t.passportNumber || !t.passportNumber.trim())) {
+            console.log(`canProceed: Adult ${i+1} missing passport number`);
+            return false;
+          }
+          if(this.panInfoRequired && (!t.panNumber || !t.panNumber.trim())) {
+            console.log(`canProceed: Adult ${i+1} missing PAN number`);
+            return false;
+          }
           // Date Validation for Adults check
-          if(t.dobYear && !this.validateAdultDOB(t)) return false;
+          if(t.dobYear && t.dobMonth && t.dobDay && !this.validateAdultDOB(t)) {
+            console.log(`canProceed: Adult ${i+1} DOB validation failed`);
+            return false;
+          }
       }
 
       // 3. Validate Child Details
-      for(let c of this.children) {
-          if(!c.firstName || !c.lastName || !c.dobYear) return false;
+      for(let i = 0; i < children.length; i++) {
+          const c = children[i];
+          if(!c.firstName || !c.firstName.trim()) {
+            console.log(`canProceed: Child ${i+1} missing firstName`);
+            return false;
+          }
+          if(!c.lastName || !c.lastName.trim()) {
+            console.log(`canProceed: Child ${i+1} missing lastName`);
+            return false;
+          }
+          if(!c.gender || !c.gender.trim()) {
+            console.log(`canProceed: Child ${i+1} missing gender`);
+            return false;
+          }
+          if(!c.dobYear || !c.dobMonth || !c.dobDay) {
+            console.log(`canProceed: Child ${i+1} missing DOB`);
+            return false;
+          }
+          if(this.passportInfoRequired && (!c.passportNumber || !c.passportNumber.trim())) {
+            console.log(`canProceed: Child ${i+1} missing passport number`);
+            return false;
+          }
+          if(this.panInfoRequired && (!c.panNumber || !c.panNumber.trim())) {
+            console.log(`canProceed: Child ${i+1} missing PAN number`);
+            return false;
+          }
       }
 
-      // 4. Validate GST if applicable
-      if(this.contact.hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
-          if(!this.gstInfo.companyName || !this.gstInfo.registrationNo) return false;
+      // 4. Validate Infant Details
+      for(let i = 0; i < infants.length; i++) {
+          const inf = infants[i];
+          if(!inf.firstName || !inf.firstName.trim()) {
+            console.log(`canProceed: Infant ${i+1} missing firstName`);
+            return false;
+          }
+          if(!inf.lastName || !inf.lastName.trim()) {
+            console.log(`canProceed: Infant ${i+1} missing lastName`);
+            return false;
+          }
+          if(!inf.gender || !inf.gender.trim()) {
+            console.log(`canProceed: Infant ${i+1} missing gender`);
+            return false;
+          }
+          if(!inf.dobYear || !inf.dobMonth || !inf.dobDay) {
+            console.log(`canProceed: Infant ${i+1} missing DOB`);
+            return false;
+          }
+          if(this.passportInfoRequired && (!inf.passportNumber || !inf.passportNumber.trim())) {
+            console.log(`canProceed: Infant ${i+1} missing passport number`);
+            return false;
+          }
       }
 
+      // 5. Validate GST if applicable
+      const hasGST = this.gstDetails?.companyName || this.contact.hasGST;
+      if(hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
+          const gstNumber = this.gstDetails?.gstNumber || this.gstInfo?.registrationNo;
+          if(!this.gstDetails?.companyName && !this.gstInfo?.companyName) {
+            console.log('canProceed: GST mandatory but company name missing');
+            return false;
+          }
+          if(!gstNumber || !gstNumber.trim()) {
+            console.log('canProceed: GST mandatory but GST number missing');
+            return false;
+          }
+      }
+
+      console.log('canProceed: All validations passed');
       return true;
   }
 
@@ -755,7 +1009,19 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   validateAdultDOB(traveller: any): boolean {
     if (!traveller.dobYear || !traveller.dobMonth || !traveller.dobDay) return true; // Skip if empty (handled by required check)
     
-    const dob = new Date(traveller.dobYear, parseInt(traveller.dobMonth) - 1, parseInt(traveller.dobDay));
+    // Handle month names (e.g., "January", "May") or numbers
+    let monthIndex: number;
+    if (typeof traveller.dobMonth === 'string' && isNaN(parseInt(traveller.dobMonth))) {
+      // Month is a name, find its index
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      monthIndex = monthNames.indexOf(traveller.dobMonth);
+      if (monthIndex === -1) return true; // Invalid month name, skip validation
+    } else {
+      // Month is a number
+      monthIndex = parseInt(traveller.dobMonth) - 1;
+    }
+    
+    const dob = new Date(parseInt(traveller.dobYear), monthIndex, parseInt(traveller.dobDay));
     const today = new Date();
     let age = today.getFullYear() - dob.getFullYear();
     const m = today.getMonth() - dob.getMonth();
@@ -849,6 +1115,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const arr = this.currentPassengerType === 'adult' ? this.travellers : this.currentPassengerType === 'child' ? this.children : this.infants;
     if (arr[this.currentPassengerIndex]) {
       Object.assign(arr[this.currentPassengerIndex], details);
+      // Trigger change detection to update the proceed button state
+      this.cdr.detectChanges();
     }
     this.closePassengerModal();
   }
@@ -862,6 +1130,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       Swal.fire('Incomplete', 'Please complete all required fields and accept terms', 'warning');
       return;
     }
+    
+    // Validate all passenger details
+    if (!this.canProceed()) {
+      Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
+      return;
+    }
+    
+    this.loader = true;
     this.proceedToPayment();
   }
   
