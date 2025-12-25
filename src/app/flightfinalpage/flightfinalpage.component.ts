@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, Inject, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, Inject, PLATFORM_ID } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -150,6 +150,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showModal: boolean = false;
   selectedTab: 'cancel' | 'change' = 'cancel';
   activeTab: 'cancel' | 'reschedule' = 'cancel';
+  
+  // Flag to prevent double execution of baggage done handler
+  private isProcessingBaggageDone: boolean = false;
   gstMandatoryOnward: boolean = false;
   gstMandatoryReturn: boolean = false;
   selectedState: string = 'West Bengal';
@@ -261,7 +264,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     public flightDataService: FlightdataService,
     public router: Router,
     private sanitizer: DomSanitizer,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit(): void {
@@ -867,6 +871,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!this.baggageCounts[key]) this.baggageCounts[key] = 0;
     this.baggageCounts[key]++;
     this.updateBaggageTotal(false);
+    this.updateFinalFare();
   }
   
   decrementBaggage(baggage: any) {
@@ -874,6 +879,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (this.baggageCounts[key] > 0) {
       this.baggageCounts[key]--;
       this.updateBaggageTotal(false);
+      this.updateFinalFare();
     }
   }
   
@@ -883,6 +889,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!counts[key]) counts[key] = 0;
     counts[key]++;
     this.updateRoundTripBaggageTotal();
+    this.updateFinalFare();
   }
   
   decrementRoundBaggage(baggage: any) {
@@ -891,6 +898,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (counts[key] > 0) {
       counts[key]--;
       this.updateRoundTripBaggageTotal();
+      this.updateFinalFare();
     }
   }
   
@@ -912,22 +920,96 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return this.baggageTotal + this.baggageTotalReturn;
   }
   
-  handleRoundTripBaggageDone() {
-    this.updateBaggageTotal(false);
-    this.updateBaggageTotal(true);
+  handleOneWayBaggageDone() {
+    // For one-way, just close modal
+    // updateBaggageTotal and updateFinalFare are already called on increment/decrement
     this.showAddBaggageModal = false;
+  }
+  
+  handleRoundTripBaggageDone() {
+    // Prevent double execution
+    if (this.isProcessingBaggageDone) {
+      return;
+    }
+    
+    this.isProcessingBaggageDone = true;
+    
+    // Update totals first
+    this.updateRoundTripBaggageTotal();
+    
+    // Check if user is on onward tab and has added baggage
+    if (this.activeRoundBaggageTab === 'onward') {
+      // Calculate current onward baggage total directly from counts
+      let onwardBaggageTotal = 0;
+      this.baggageOptions.forEach(opt => {
+        const key = opt.kgs || opt.Code;
+        const price = opt.Price || opt.price || 0;
+        onwardBaggageTotal += (this.onwardBaggageCounts[key] || 0) * price;
+      });
+      
+      // Check if return baggage is already added
+      const hasReturnBaggage = Object.values(this.returnBaggageCounts).some(count => count > 0);
+      
+      if (onwardBaggageTotal > 0 && !hasReturnBaggage) {
+        // Show alert asking if user wants to add return baggage
+        Swal.fire({
+          title: 'Add Return Baggage?',
+          text: 'Would you like to add baggage for your return journey as well?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Add Return Baggage',
+          cancelButtonText: 'No, Continue',
+          confirmButtonColor: '#008b8b',
+          cancelButtonColor: '#6c757d',
+          allowOutsideClick: false,
+          allowEscapeKey: true
+        }).then((result) => {
+          this.isProcessingBaggageDone = false;
+          
+          if (result.isConfirmed) {
+            // Switch to return tab and keep modal open
+            this.activeRoundBaggageTab = 'return';
+            // Ensure modal stays open - explicitly set it
+            this.showAddBaggageModal = true;
+            // Use setTimeout to ensure Swal overlay is closed before triggering change detection
+            setTimeout(() => {
+              this.cdr.detectChanges();
+            }, 50);
+          } else {
+            // Close modal
+            this.showAddBaggageModal = false;
+          }
+        });
+        return; // Exit early
+      }
+    }
+    
+    // If we reach here, either:
+    // - On return tab
+    // - No onward baggage
+    // - Return baggage already added
+    // Just close modal (totals already updated above)
+    this.showAddBaggageModal = false;
+    this.isProcessingBaggageDone = false;
   }
   
   updateRoundTripBaggageTotal() {
     let onwardTotal = 0, returnTotal = 0;
+    
+    // Calculate onward baggage total
     this.baggageOptions.forEach(opt => {
       const key = opt.kgs || opt.Code;
-      onwardTotal += (this.onwardBaggageCounts[key] || 0) * opt.Price;
+      const price = opt.Price || opt.price || 0;
+      onwardTotal += (this.onwardBaggageCounts[key] || 0) * price;
     });
+    
+    // Calculate return baggage total
     this.baggageOptionsReturn.forEach(opt => {
       const key = opt.kgs || opt.Code;
-      returnTotal += (this.returnBaggageCounts[key] || 0) * opt.Price;
+      const price = opt.Price || opt.price || 0;
+      returnTotal += (this.returnBaggageCounts[key] || 0) * price;
     });
+    
     this.baggageTotal = onwardTotal;
     this.baggageTotalReturn = returnTotal;
     this.updateFinalFare();
