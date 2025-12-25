@@ -924,6 +924,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // For one-way, just close modal
     // updateBaggageTotal and updateFinalFare are already called on increment/decrement
     this.showAddBaggageModal = false;
+    this.cdr.detectChanges();
   }
   
   handleRoundTripBaggageDone() {
@@ -931,8 +932,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (this.isProcessingBaggageDone) {
       return;
     }
-    
-    this.isProcessingBaggageDone = true;
     
     // Update totals first
     this.updateRoundTripBaggageTotal();
@@ -951,35 +950,33 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       const hasReturnBaggage = Object.values(this.returnBaggageCounts).some(count => count > 0);
       
       if (onwardBaggageTotal > 0 && !hasReturnBaggage) {
-        // Show alert asking if user wants to add return baggage
-        Swal.fire({
-          title: 'Add Return Baggage?',
-          text: 'Would you like to add baggage for your return journey as well?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, Add Return Baggage',
-          cancelButtonText: 'No, Continue',
-          confirmButtonColor: '#008b8b',
-          cancelButtonColor: '#6c757d',
-          allowOutsideClick: false,
-          allowEscapeKey: true
-        }).then((result) => {
-          this.isProcessingBaggageDone = false;
-          
-          if (result.isConfirmed) {
-            // Switch to return tab and keep modal open
-            this.activeRoundBaggageTab = 'return';
-            // Ensure modal stays open - explicitly set it
-            this.showAddBaggageModal = true;
-            // Use setTimeout to ensure Swal overlay is closed before triggering change detection
-            setTimeout(() => {
+        // Close modal first
+        this.showAddBaggageModal = false;
+        this.cdr.detectChanges();
+        
+        // Then show alert asking if user wants to add return baggage
+        setTimeout(() => {
+          Swal.fire({
+            title: 'Add Return Baggage?',
+            text: 'Would you like to add baggage for your return journey as well?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Add Return Baggage',
+            cancelButtonText: 'No, Continue',
+            confirmButtonColor: '#008b8b',
+            cancelButtonColor: '#6c757d',
+            allowOutsideClick: false,
+            allowEscapeKey: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Switch to return tab and reopen modal
+              this.activeRoundBaggageTab = 'return';
+              this.showAddBaggageModal = true;
               this.cdr.detectChanges();
-            }, 50);
-          } else {
-            // Close modal
-            this.showAddBaggageModal = false;
-          }
-        });
+            }
+            // If cancelled, modal stays closed
+          });
+        }, 100);
         return; // Exit early
       }
     }
@@ -990,7 +987,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // - Return baggage already added
     // Just close modal (totals already updated above)
     this.showAddBaggageModal = false;
-    this.isProcessingBaggageDone = false;
+    this.cdr.detectChanges();
   }
   
   updateRoundTripBaggageTotal() {

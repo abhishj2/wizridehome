@@ -1144,7 +1144,7 @@
         ₹ Total Price<br />
         <strong>{{ calculateBaggageTotal() | number : "1.2-2" }}</strong>
                       </div>
-      <button class="proceed-btn" (click)="handleOneWayBaggageDone(); $event.stopPropagation()">DONE</button>
+      <button class="proceed-btn" (click)="handleOneWayBaggageDone()">DONE</button>
                     </div>
                   </div>
 
@@ -1274,7 +1274,7 @@
         ₹ Total Price<br />
         <strong>{{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</strong>
       </div>
-      <button class="proceed-btn" (click)="handleRoundTripBaggageDone(); $event.stopPropagation()">DONE</button>
+      <button class="proceed-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
             </div>
           </div>
 
