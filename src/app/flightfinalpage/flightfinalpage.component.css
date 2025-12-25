@@ -2038,6 +2038,62 @@ select.traveller-input {
   min-height: 80px;
 }
 
+/* Phone Row - Country Code + Mobile Number */
+.phone-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.phone-row .dial-select {
+  flex: 0 0 auto;
+  min-width: 90px;
+  max-width: 120px;
+  padding: 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #212529;
+  background: #fff;
+  cursor: pointer;
+}
+
+.phone-row input[type="tel"] {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #212529;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  margin-bottom: 20px;
+}
+
+.checkbox-group .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #212529;
+  margin: 0;
+}
+
+.checkbox-group .checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkbox-group .checkbox-label span {
+  flex: 1;
+  line-height: 1.5;
+}
+
 .gst-footer {
   padding: 20px;
   border-top: 1px solid #e9ecef;

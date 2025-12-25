@@ -806,9 +806,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount);
   }
 
-  getBlankAdult() { return { firstName: '', lastName: '', gender: 'MALE', title: 'Mr', passportNumber: '', passportExpiryYear: '', dobDay: '', dobMonth: '', dobYear: '' }; }
-  getBlankChild() { return { firstName: '', lastName: '', gender: 'MALE', title: 'Mstr', dobDay: '', dobMonth: '', dobYear: '' }; }
-  getBlankInfant() { return { firstName: '', lastName: '', gender: 'MALE', title: 'Mstr', dobDay: '', dobMonth: '', dobYear: '' }; }
+  getBlankAdult() { return { firstName: '', lastName: '', gender: '', title: 'Mr', email: '', mobileDialCode: '+91', mobileNumber: '', requiresWheelchair: false, passportNumber: '', passportExpiryYear: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
+  getBlankChild() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', requiresWheelchair: false, passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
+  getBlankInfant() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
   
   openFareRuleModal() { this.showFareRuleModal = true; }
   closeFareRuleModal() { this.showFareRuleModal = false; }
