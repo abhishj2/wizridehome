@@ -30,7 +30,7 @@ html, body {
 .booking-left {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .booking-heading {
@@ -1222,7 +1222,13 @@ select.traveller-input {
   font-size: 18px;
   font-weight: 700;
   color: #212529;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 769px) {
+  .section-title {
+    margin-bottom: 14px;
+  }
 }
 
 .section-title-roundtrip {
@@ -2225,11 +2231,16 @@ select.traveller-input {
   }
 
   .flight-final-page > .card {
-    padding: 24px;
+    padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
     background: #ffffff;
+    margin-bottom: 16px;
+  }
+  
+  .flight-final-page > .card:last-child {
+    margin-bottom: 0;
   }
 
   .flight-final-page > .card:hover {
@@ -2241,8 +2252,8 @@ select.traveller-input {
   .flight-cards-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 16px;
   }
 
   .flight-cards-container .flight-card-item {
@@ -2269,11 +2280,11 @@ select.traveller-input {
   }
 
   .card.flight-summary-wrapper > .flight-cards-container {
-    padding: 24px 24px 0 24px;
+    padding: 20px 20px 0 20px;
   }
 
   .card.flight-summary-wrapper > .flight-cards-container + button.details-btn {
-    margin: 24px auto 0 auto;
+    margin: 16px auto 0 auto;
   }
 
   /* Flight Leg - Better spacing on desktop */
