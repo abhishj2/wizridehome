@@ -795,6 +795,34 @@ select.traveller-input {
   color: #6c757d;
 }
 
+.trip-fare-summary {
+  margin-top: 24px;
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.fare-summary-title-small {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 16px;
+}
+
+.trip-fare-summary .fare-line {
+  padding: 12px 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+.trip-fare-summary .fare-line.total-line {
+  border-top: 1px solid #e9ecef;
+  padding-top: 16px;
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
 .total-fare-line {
   display: flex;
   justify-content: space-between;
@@ -1176,8 +1204,9 @@ select.traveller-input {
 }
 
 .details-btn {
-  width: 100%;
-  padding: 14px;
+  display: block;
+  margin: 16px auto 0 auto;
+  padding: 14px 32px;
   background: #000000;
   color: #ffffff;
   border: none;
@@ -1185,7 +1214,7 @@ select.traveller-input {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 16px;
+  width: auto;
 }
 
 /* Section Title */
@@ -1353,7 +1382,7 @@ select.traveller-input {
 /* Tab Content Container */
 .tab-content-container {
   overflow: hidden;
-  position: relative;
+    position: relative;
 }
 
 .tab-content-wrapper {
@@ -1578,7 +1607,7 @@ select.traveller-input {
 /* Trip Popup/Modal */
 .trip-overlay {
   position: fixed;
-  top: 0;
+    top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -1605,6 +1634,15 @@ select.traveller-input {
   }
   to {
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -1642,11 +1680,11 @@ select.traveller-input {
 }
 
 .trip-body {
-  padding: 20px;
+  padding: 24px;
 }
 
 .trip-footer {
-  padding: 20px;
+  padding: 20px 24px;
   border-top: 1px solid #e9ecef;
   position: sticky;
   bottom: 0;
@@ -1654,20 +1692,22 @@ select.traveller-input {
 }
 
 .trip-flight {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #e9ecef;
 }
 
 .trip-flight:last-child {
   border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .trip-airline {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .trip-airline .logo {
@@ -1691,7 +1731,7 @@ select.traveller-input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .trip-times > div:first-child,
@@ -1714,7 +1754,7 @@ select.traveller-input {
 .trip-meta {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .trip-meta strong {
@@ -2063,9 +2103,9 @@ select.traveller-input {
   color: #495057;
   line-height: 1.6;
   padding: 20px;
-}
+  }
 
-.input-group-row {
+  .input-group-row {
   display: flex;
   gap: 8px;
 }
@@ -2074,35 +2114,517 @@ select.traveller-input {
   flex: 1;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .booking-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
+/* Desktop Styles - Enhance layout for larger screens */
+@media (min-width: 769px) {
+  /* Show fare summary on desktop */
+  .fare-summary-desktop {
+    display: block;
+  }
+  .scroll-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+    padding-bottom: 32px;
+    background: #f5f7fa;
   }
 
-  .booking-right {
+  .flight-final-page {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
     position: relative;
-    top: 0;
+  }
+
+  /* Left column - all cards and buttons */
+  .flight-final-page > .card,
+  .flight-final-page > button.details-btn {
+    grid-column: 1;
+  }
+
+  /* Footer Bar - Sticky sidebar on desktop */
+  .flight-final-page > .footer-bar {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    position: sticky;
+    top: 32px;
+    width: 100%;
+    left: auto;
+    right: auto;
+    transform: none;
+    border-radius: 16px;
+    padding: 28px;
+    margin: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: #ffffff;
+    height: fit-content;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  /* Fare Summary for Desktop */
+  .fare-summary-desktop {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+  }
+
+  .fare-summary-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .fare-summary-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-size: 14px;
+    color: #495057;
+  }
+
+  .fare-summary-line span:last-child {
+    font-weight: 600;
+    color: #212529;
+  }
+
+  .fare-summary-divider {
+    border: none;
+    border-top: 1px solid #e9ecef;
+    margin: 16px 0;
+  }
+
+  .footer-bar .total {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+    cursor: pointer;
+    padding: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    background: #f8f9fa;
+  }
+
+  .footer-bar .total:hover {
+    background: #e9ecef;
+  }
+
+  .footer-bar .total strong {
+    display: block;
+    font-size: 28px;
+    color: #212529;
+    margin-top: 10px;
+  }
+
+  .flight-final-page > .card {
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    background: #ffffff;
+  }
+
+  .flight-final-page > .card:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Flight Cards Container - 2 columns on desktop */
+  .flight-cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .flight-cards-container .flight-card-item {
+    width: 100%;
+  }
+
+  .flight-cards-container .flight-card-item > .card {
+    padding: 20px;
+    margin-bottom: 0;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    background: #ffffff;
+  }
+
+  .flight-cards-container .flight-card-item > .card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* Parent card containing flight-cards-container - remove default padding from nested cards area */
+  .card.flight-summary-wrapper {
+    padding: 0;
+  }
+
+  .card.flight-summary-wrapper > .flight-cards-container {
+    padding: 24px 24px 0 24px;
+  }
+
+  .card.flight-summary-wrapper > .flight-cards-container + button.details-btn {
+    margin: 24px auto 0 auto;
+  }
+
+  /* Flight Leg - Better spacing on desktop */
+  .flight-leg {
+    padding: 8px 0;
+  }
+
+  .flight-airline {
+    margin-bottom: 16px;
+  }
+
+  .flight-airline .logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .flight-airline .name {
+    font-size: 18px;
+  }
+
+  .flight-route {
+    margin-bottom: 12px;
+  }
+
+  .flight-route .city {
+    font-size: 20px;
+  }
+
+  .flight-meta {
+    font-size: 15px;
+  }
+
+  /* Baggage Row - Better layout */
+  .baggage-row {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .baggage-header .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .baggage-info {
+    flex-direction: row;
+    gap: 24px;
+    margin-top: 12px;
+  }
+
+  .baggage-item {
+    flex: 1;
+  }
+
+  /* Section Titles - Larger on desktop */
+  .section-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-title-roundtrip {
+    font-size: 20px;
+  }
+
+  /* Policy Tabs - Better spacing */
+  .policy-tabs > div {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  /* Passenger Box - Better spacing */
+  .passenger-box {
+    padding: 16px;
+    transition: background-color 0.2s ease;
+  }
+
+  .passenger-box:hover {
+    background: #e9ecef;
+  }
+
+  .passenger-box .icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .passenger-box .label {
+    font-size: 16px;
+  }
+
+  /* GST Box - Better spacing */
+  .gst-box {
+    padding: 20px;
+  }
+
+  .gst-box .icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .gst-label-text {
+    font-size: 16px;
+  }
+
+  /* Footer Bar - Sticky on desktop, move to sidebar position */
+  .footer-bar {
+    position: sticky;
+    top: 32px;
+    max-width: 100%;
+    left: auto;
+    right: auto;
+    transform: none;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .footer-bar .total {
+    font-size: 14px;
+  }
+
+  .footer-bar .total strong {
+    font-size: 24px;
+  }
+
+  .footer-bar .proceed-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 0;
+  }
+
+  /* Trip Popup - Center on desktop, no slide animation */
+  .trip-popup {
+    max-width: 600px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 16px;
+    bottom: auto;
+    top: 50%;
+    max-height: 85vh;
+    right: auto;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* Baggage Popup - Center on desktop, no slide animation */
+  .baggage-popup {
+    max-width: 550px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 16px;
+    bottom: auto;
+    top: 50%;
+    max-height: 80vh;
+    right: auto;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* GST Popup - Center on desktop, no slide animation */
+  .gst-popup {
+    max-width: 600px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 16px;
+    bottom: auto;
+    top: 50%;
+    max-height: 85vh;
+    right: auto;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* Modal overlays - Better for desktop */
+  .trip-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Details Button - Better styling */
+  .flight-final-page > button.details-btn {
+    padding: 16px 40px;
+    font-size: 17px;
+    transition: all 0.2s ease;
+    width: auto;
+    margin: 24px auto 0 auto;
+  }
+
+  .flight-final-page > button.details-btn:hover {
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Add Baggage Button - Better styling */
+  .add-btn {
+    padding: 12px 24px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+
+  .add-btn:hover:not(:disabled) {
+    background: #006666;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+  }
+
+  .add-btn.light:hover {
+    background: #e9ecef;
+  }
+
+  /* Cancellation Row - Better layout */
+  .cancellation-row {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .criteria {
+    padding: 14px 0;
+    font-size: 14px;
+  }
+
+  .criteria-detail {
+    padding: 10px 0;
+    font-size: 15px;
+  }
+
+  /* Form Groups - Better layout */
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-group label {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 14px;
+    font-size: 16px;
   }
 }
 
-@media (max-width: 768px) {
-  .flight-segments {
-    flex-direction: column;
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .scroll-wrapper {
+    padding: 24px;
   }
 
-  .input-group-row {
+  .flight-final-page {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Mobile Styles - Keep existing mobile styles */
+@media (max-width: 768px) {
+  .scroll-wrapper {
+    padding: 16px;
+    padding-bottom: 100px;
   }
 
-  .booking-card-header {
-    flex-direction: column;
+  .flight-final-page {
+    display: block;
+  }
+
+  .flight-final-page > .card,
+  .flight-final-page > button.details-btn,
+  .flight-final-page > .footer-bar {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .card {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* Flight cards stack vertically on mobile */
+  .flight-cards-container {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* Reset parent card padding on mobile */
+  .card.flight-summary-wrapper {
+    padding: 0;
+  }
+
+  .card.flight-summary-wrapper > .flight-cards-container {
+    padding: 16px 16px 0 16px;
+  }
+
+  .card.flight-summary-wrapper > .flight-cards-container + button.details-btn {
+    margin: 16px auto 0 auto;
+  }
+
+  /* Hide fare summary details on mobile, show simple total */
+  .fare-summary-desktop {
+    display: none;
+  }
+
+  /* Ensure footer stays at bottom on mobile */
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 16px;
   }
 
-  .fare-actions {
-    align-items: flex-start;
+  .footer-bar .total {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .footer-bar .total:hover {
+    background: transparent;
+  }
+
+  .footer-bar .proceed-btn {
+    flex-shrink: 0;
+    padding: 14px 24px;
+    margin: 0;
+  }
+
+  /* Ensure modals are bottom sheets on mobile */
+  .trip-popup,
+  .baggage-popup,
+  .gst-popup {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    transform: none;
+    border-radius: 20px 20px 0 0;
   }
 }
 

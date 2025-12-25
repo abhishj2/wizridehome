@@ -346,6 +346,22 @@
 
     <!-- Price Footer -->
     <div class="footer-bar">
+      <div class="fare-summary-desktop">
+        <div class="fare-summary-title">Fare Summary</div>
+        <div class="fare-summary-line">
+          <span>Base Fare</span>
+          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        </div>
+        <div class="fare-summary-line">
+          <span>Taxes & Surcharges</span>
+          <span>{{ formatCurrency(totalTaxes) }}</span>
+        </div>
+        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <span>Baggage</span>
+          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+        </div>
+        <hr class="fare-summary-divider" />
+      </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
         ₹ Total Price<br />
         <strong>{{ finalAmount | number : "1.2-2" }}</strong>
@@ -363,94 +379,100 @@
   <!-- Roundtrip -->
   <div class="flight-final-page" *ngIf="tripType == 'roundtrip'">
     <!-- Flight Summary Card -->
-    <div class="card">
-      <!-- Onward Flight Card -->
-      <div class="card" *ngIf="flightSegments?.length">
-        <div class="flight-leg">
-          <div *ngFor="let segment of flightSegments; let i = index">
-            <!-- Airline Info -->
-            <div class="flight-airline">
-              <img [src]="segment.logo" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-
-            <!-- Route Info -->
-            <div class="flight-route">
-              <div class="city">{{ segment.from }}</div>
-              <div class="plane-icon">
-                <i class="fas fa-plane-departure"></i>
-              </div>
-              <div class="city">{{ segment.to }}</div>
-            </div>
-
-            <!-- Timing & Duration -->
-            <div class="flight-meta">
-              {{ segment.date | date : "EEE, dd MMM" }} |
-              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-              {{ segment.duration }}
-            </div>
-
-            <!-- Layover if applicable -->
-            <div
-              class="layover-row"
-              *ngIf="i < flightSegments.length - 1 && segment.layover"
-            >
-              <div class="line"></div>
-              <div class="layover">
-                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
-                  + 1 Day
+    <div class="card flight-summary-wrapper">
+      <div class="flight-cards-container">
+        <!-- Onward Flight Card -->
+        <div class="flight-card-item" *ngIf="flightSegments?.length">
+          <div class="card">
+            <div class="flight-leg">
+              <div *ngFor="let segment of flightSegments; let i = index">
+                <!-- Airline Info -->
+                <div class="flight-airline">
+                  <img [src]="segment.logo" class="logo" />
+                  <div class="name">{{ segment.airline }}</div>
+                  <div class="code">{{ segment.code }}</div>
                 </div>
-                {{ segment.layover.duration }} Layover in
-                {{ segment.layover.location }}
+
+                <!-- Route Info -->
+                <div class="flight-route">
+                  <div class="city">{{ segment.from }}</div>
+                  <div class="plane-icon">
+                    <i class="fas fa-plane-departure"></i>
+                  </div>
+                  <div class="city">{{ segment.to }}</div>
+                </div>
+
+                <!-- Timing & Duration -->
+                <div class="flight-meta">
+                  {{ segment.date | date : "EEE, dd MMM" }} |
+                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+                  {{ segment.duration }}
+                </div>
+
+                <!-- Layover if applicable -->
+                <div
+                  class="layover-row"
+                  *ngIf="i < flightSegments.length - 1 && segment.layover"
+                >
+                  <div class="line"></div>
+                  <div class="layover">
+                    <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                      + 1 Day
+                    </div>
+                    {{ segment.layover.duration }} Layover in
+                    {{ segment.layover.location }}
+                  </div>
+                  <div class="line"></div>
+                </div>
               </div>
-              <div class="line"></div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Return Flight Card -->
-      <div class="card" *ngIf="flightSegmentsReturn?.length">
-        <div class="flight-leg">
-          <div *ngFor="let segment of flightSegmentsReturn; let i = index">
-            <!-- Airline Info -->
-            <div class="flight-airline">
-              <img [src]="segment.logo" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-
-            <!-- Route Info -->
-            <div class="flight-route">
-              <div class="city">{{ segment.from }}</div>
-              <div class="plane-icon">
-                <i class="fas fa-plane-departure"></i>
-              </div>
-              <div class="city">{{ segment.to }}</div>
-            </div>
-
-            <!-- Timing & Duration -->
-            <div class="flight-meta">
-              {{ segment.date | date : "EEE, dd MMM" }} |
-              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-              {{ segment.duration }}
-            </div>
-
-            <!-- Layover if applicable -->
-            <div
-              class="layover-row"
-              *ngIf="i < flightSegmentsReturn.length - 1 && segment.layover"
-            >
-              <div class="line"></div>
-              <div class="layover">
-                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
-                  + 1 Day
+        <!-- Return Flight Card -->
+        <div class="flight-card-item" *ngIf="flightSegmentsReturn?.length">
+          <div class="card">
+            <div class="flight-leg">
+              <div *ngFor="let segment of flightSegmentsReturn; let i = index">
+                <!-- Airline Info -->
+                <div class="flight-airline">
+                  <img [src]="segment.logo" class="logo" />
+                  <div class="name">{{ segment.airline }}</div>
+                  <div class="code">{{ segment.code }}</div>
                 </div>
-                {{ segment.layover.duration }} Layover in
-                {{ segment.layover.location }}
+
+                <!-- Route Info -->
+                <div class="flight-route">
+                  <div class="city">{{ segment.from }}</div>
+                  <div class="plane-icon">
+                    <i class="fas fa-plane-departure"></i>
+                  </div>
+                  <div class="city">{{ segment.to }}</div>
+                </div>
+
+                <!-- Timing & Duration -->
+                <div class="flight-meta">
+                  {{ segment.date | date : "EEE, dd MMM" }} |
+                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+                  {{ segment.duration }}
+                </div>
+
+                <!-- Layover if applicable -->
+                <div
+                  class="layover-row"
+                  *ngIf="i < flightSegmentsReturn.length - 1 && segment.layover"
+                >
+                  <div class="line"></div>
+                  <div class="layover">
+                    <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                      + 1 Day
+                    </div>
+                    {{ segment.layover.duration }} Layover in
+                    {{ segment.layover.location }}
+                  </div>
+                  <div class="line"></div>
+                </div>
               </div>
-              <div class="line"></div>
             </div>
           </div>
         </div>
@@ -796,6 +818,22 @@
 
     <!-- Price Footer -->
     <div class="footer-bar">
+      <div class="fare-summary-desktop">
+        <div class="fare-summary-title">Fare Summary</div>
+        <div class="fare-summary-line">
+          <span>Base Fare</span>
+          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        </div>
+        <div class="fare-summary-line">
+          <span>Taxes & Surcharges</span>
+          <span>{{ formatCurrency(totalTaxes) }}</span>
+        </div>
+        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <span>Baggage</span>
+          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+        </div>
+        <hr class="fare-summary-divider" />
+      </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
         ₹ Total Price<br />
         <strong>{{ finalAmount | number : "1.2-2" }}</strong>
@@ -861,6 +899,23 @@
                       </div>
                     </div>
                   </div>
+      
+      <!-- Fare Summary for Oneway -->
+      <div class="trip-fare-summary">
+        <div class="fare-summary-title-small">Fare Summary</div>
+        <div class="fare-line">
+          <div>Base Fare</div>
+          <div>{{ formatCurrency(getOnwardBaseFare()) }}</div>
+        </div>
+        <div class="fare-line">
+          <div>Taxes & Surcharges</div>
+          <div>{{ formatCurrency(getOnwardTaxes()) }}</div>
+        </div>
+        <div class="fare-line total-line">
+          <strong>Total</strong>
+          <strong>{{ formatCurrency(getOnwardTotal()) }}</strong>
+        </div>
+      </div>
                 </div>
     <div class="trip-footer">
       <button class="proceed-btn" (click)="closeTripSummary()">DONE</button>
@@ -920,6 +975,23 @@
                 </div>
               </div>
               </div>
+            
+            <!-- Onward Fare Summary -->
+            <div class="trip-fare-summary">
+              <div class="fare-summary-title-small">Fare Summary</div>
+              <div class="fare-line">
+                <div>Base Fare</div>
+                <div>{{ formatCurrency(getOnwardBaseFare()) }}</div>
+              </div>
+              <div class="fare-line">
+                <div>Taxes & Surcharges</div>
+                <div>{{ formatCurrency(getOnwardTaxes()) }}</div>
+              </div>
+              <div class="fare-line total-line">
+                <strong>Total</strong>
+                <strong>{{ formatCurrency(getOnwardTotal()) }}</strong>
+              </div>
+            </div>
                   </div>
         <div class="tab-panel">
           <div class="trip-body">
@@ -948,6 +1020,24 @@
                       </div>
                     </div>
                   </div>
+                    </div>
+            
+            <!-- Return Fare Summary -->
+            <div class="trip-fare-summary">
+              <div class="fare-summary-title-small">Fare Summary</div>
+              <div class="fare-line">
+                <div>Base Fare</div>
+                <div>{{ formatCurrency(getReturnBaseFare()) }}</div>
+              </div>
+              <div class="fare-line">
+                <div>Taxes & Surcharges</div>
+                <div>{{ formatCurrency(getReturnTaxes()) }}</div>
+              </div>
+              <div class="fare-line total-line">
+                <strong>Total</strong>
+                <strong>{{ formatCurrency(getReturnTotal()) }}</strong>
+              </div>
+            </div>
                     </div>
                     </div>
                     </div>
@@ -1515,7 +1605,7 @@
         <div *ngIf="fareTab === 'onward'" class="fare-tab-panel">
           <div class="fare-info-text" *ngIf="fareRuleText" [innerHTML]="fareRuleText"></div>
           <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
-      </div>
+        </div>
         <div *ngIf="fareTab === 'return'" class="fare-tab-panel">
           <div class="fare-info-text" *ngIf="fareRuleTextReturn" [innerHTML]="fareRuleTextReturn"></div>
           <div class="fare-info-text" *ngIf="!fareRuleTextReturn">Fare rules not available.</div>
@@ -1526,5 +1616,7 @@
         <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
       </div>
     </div>
+    <div class="trip-footer">
+      <button class="proceed-btn" (click)="showFareRules = false">DONE</button>
+    </div>
   </div>
-</div>

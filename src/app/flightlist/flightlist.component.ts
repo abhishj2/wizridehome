@@ -2285,13 +2285,60 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       flightType: this.flightType,
       tempFlightForModal: this.tempFlightForModal,
       tempFlightType: this.tempFlightType,
-      fare: fare
+      fare: fare,
+      hasOriginalFareOption: !!fare?.originalFareOption,
+      fareKeys: fare ? Object.keys(fare) : []
     });
     
     if (this.flightType === 'round' && this.tempFlightForModal && this.tempFlightType) {
       // Use the original flight structure, not the fare option structure
       const flightWithFare = this.deepCopy(this.tempFlightForModal);
-      flightWithFare.selectedFareOption = fare.originalFareOption;
+      
+      // Get the actual fare option - try multiple sources
+      let actualFareOption = null;
+      
+      // First try from fare.originalFareOption (should be set by defaultFares getter)
+      if (fare?.originalFareOption) {
+        actualFareOption = fare.originalFareOption;
+      } 
+      // Try from tempFlightForModal's FareOptions using fareIndex
+      else if (fare?.fareIndex !== undefined && this.tempFlightForModal?.FareOptions?.[fare.fareIndex]) {
+        actualFareOption = this.tempFlightForModal.FareOptions[fare.fareIndex];
+      }
+      // Try from selectedFlight's FareOptions (the flight shown in modal)
+      else if (this.selectedFlight?.FareOptions) {
+        const fareIndex = fare?.fareIndex;
+        if (fareIndex !== undefined && fareIndex >= 0 && this.selectedFlight.FareOptions[fareIndex]) {
+          actualFareOption = this.selectedFlight.FareOptions[fareIndex];
+        } else if (this.selectedFlight.FareOptions.length > 0) {
+          actualFareOption = this.selectedFlight.FareOptions[0];
+        }
+      }
+      // Last resort: try from flight parameter or tempFlightForModal
+      else if (flight?.FareOptions?.length > 0) {
+        const fareIndex = fare?.fareIndex;
+        actualFareOption = fareIndex !== undefined && fareIndex >= 0 
+          ? flight.FareOptions[fareIndex] 
+          : flight.FareOptions[0];
+      } else if (this.tempFlightForModal?.FareOptions?.length > 0) {
+        actualFareOption = this.tempFlightForModal.FareOptions[0];
+      }
+      
+      if (actualFareOption) {
+        flightWithFare.selectedFareOption = actualFareOption;
+        console.log('Fare option set for flightWithFare:', actualFareOption);
+      } else {
+        console.error('Could not find fare option!', {
+          fareHasOriginal: !!fare?.originalFareOption,
+          fareIndex: fare?.fareIndex,
+          hasTempFlight: !!this.tempFlightForModal,
+          tempFlightHasFareOptions: !!this.tempFlightForModal?.FareOptions,
+          hasSelectedFlight: !!this.selectedFlight,
+          selectedFlightHasFareOptions: !!this.selectedFlight?.FareOptions,
+          hasFlightParam: !!flight,
+          flightHasFareOptions: !!flight?.FareOptions
+        });
+      }
       
       console.log('Setting selectedOutboundFooter with flight:', {
         flightWithFare: flightWithFare,
@@ -2305,10 +2352,16 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.selectedOutboundIndex = this.tempFlightIndex;
         this.selectedOutboundFooter = this.deepCopy(flightWithFare);
         
+        // Ensure selectedFareOption is set on selectedOutbound
+        if (!this.selectedOutbound.selectedFareOption && flightWithFare.selectedFareOption) {
+          this.selectedOutbound.selectedFareOption = flightWithFare.selectedFareOption;
+        }
+        
         console.log('selectedOutboundFooter set:', {
           selectedOutboundFooter: this.selectedOutboundFooter,
           hasSegments: !!this.selectedOutboundFooter.Segments,
-          segmentsLength: this.selectedOutboundFooter.Segments?.[0]?.length
+          segmentsLength: this.selectedOutboundFooter.Segments?.[0]?.length,
+          selectedOutboundFareOption: !!this.selectedOutbound.selectedFareOption
         });
         
         // Trigger change detection
@@ -2320,31 +2373,93 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.switchTab('return');
           this.cdr.detectChanges();
         }, 300);
-      } else {
+      } else if (this.tempFlightType === 'return') {
         // Set return flight NOW (when BOOK NOW is clicked)
         this.selectedReturn = this.deepCopy(flightWithFare);
         this.selectedReturnIndex = this.tempFlightIndex;
         
-        // Close modal and proceed to checkout
+        // Get return fare from flightWithFare (which already has selectedFareOption set)
+        const returnFare = flightWithFare.selectedFareOption;
+        
+        // Get departure fare from selectedOutbound - check multiple sources
+        let departureFare = this.selectedOutbound?.selectedFareOption;
+        if (!departureFare) {
+          // Try to get from FareOptions if selectedFareOption is not set
+          if (this.selectedOutbound?.FareOptions?.length > 0) {
+            departureFare = this.selectedOutbound.FareOptions[0];
+          }
+        }
+        
+        console.log('Return flight selected, checking for onward flight:', {
+          selectedOutbound: !!this.selectedOutbound,
+          selectedReturn: !!this.selectedReturn,
+          departureFare: !!departureFare,
+          returnFare: !!returnFare,
+          flightWithFareSelectedFareOption: !!flightWithFare.selectedFareOption,
+          selectedOutboundSelectedFareOption: !!this.selectedOutbound?.selectedFareOption,
+          selectedOutboundFareOptionsLength: this.selectedOutbound?.FareOptions?.length
+        });
+        
+        // Clear temp storage AFTER storing what we need
+        this.tempFlightForModal = null;
+        this.tempFlightIndex = -1;
+        this.tempFlightType = null;
+        
+        // Close modal
         this.closeFareOptionsModal();
         
         // Both flights selected, proceed to final booking
-        if (this.selectedOutbound && this.selectedReturn) {
-          // Navigate to checkout with both fares
-          const departureFare = this.selectedOutbound.selectedFareOption || this.selectedOutbound.FareOptions?.[0];
-          const returnFare = fare.originalFareOption;
-          
-          this.finalizeSelection({
+        if (this.selectedOutbound && this.selectedReturn && departureFare && returnFare) {
+          console.log('Both flights selected, proceeding to finalizeSelection', {
+            selectedOutbound: this.selectedOutbound,
+            selectedReturn: this.selectedReturn,
             departureFare: departureFare,
             returnFare: returnFare
           });
+          
+          // Navigate immediately (matching mobile behavior)
+          try {
+            this.finalizeSelection({
+              departureFare: departureFare,
+              returnFare: returnFare
+            });
+          } catch (error) {
+            console.error('Error in finalizeSelection:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'An error occurred while processing your booking. Please try again.',
+              timer: 3000
+            });
+          }
+        } else {
+          console.error('Cannot proceed: missing flight selections or fares', {
+            selectedOutbound: !!this.selectedOutbound,
+            selectedReturn: !!this.selectedReturn,
+            departureFare: !!departureFare,
+            returnFare: !!returnFare,
+            selectedOutboundObj: this.selectedOutbound,
+            selectedReturnObj: this.selectedReturn
+          });
+          
+          // Show error to user
+          if (!this.selectedOutbound) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Missing Selection',
+              text: 'Please select an onward flight first.',
+              timer: 3000
+            });
+          } else if (!departureFare || !returnFare) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Missing Fare Data',
+              text: 'Unable to proceed. Please try selecting the flights again.',
+              timer: 3000
+            });
+          }
         }
       }
-      
-      // Clear temp storage
-      this.tempFlightForModal = null;
-      this.tempFlightIndex = -1;
-      this.tempFlightType = null;
     }
   }
 

@@ -963,6 +963,42 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return `${h}h ${m}m`;
   }
 
+  // Calculate onward fare breakdown
+  getOnwardBaseFare(): number {
+    return (this.adultBaseFare * this.totalAdults) + 
+           (this.childrenBaseFare * this.totalChildren) + 
+           (this.infantBaseFare * this.totalInfants);
+  }
+
+  getOnwardTaxes(): number {
+    return (this.adultTaxes * this.totalAdults) + 
+           (this.childrenTaxes * this.totalChildren) + 
+           (this.infantTaxes * this.totalInfants);
+  }
+
+  getOnwardTotal(): number {
+    return this.getOnwardBaseFare() + this.getOnwardTaxes();
+  }
+
+  // Calculate return fare breakdown
+  getReturnBaseFare(): number {
+    if (!this.resultIndexReturn) return 0;
+    return (this.adultBaseFareReturn * this.totalAdults) + 
+           (this.childrenBaseFareReturn * this.totalChildren) + 
+           (this.infantBaseFareReturn * this.totalInfants);
+  }
+
+  getReturnTaxes(): number {
+    if (!this.resultIndexReturn) return 0;
+    return (this.adultTaxesReturn * this.totalAdults) + 
+           (this.childrenTaxesReturn * this.totalChildren) + 
+           (this.infantTaxesReturn * this.totalInfants);
+  }
+
+  getReturnTotal(): number {
+    return this.getReturnBaseFare() + this.getReturnTaxes();
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
