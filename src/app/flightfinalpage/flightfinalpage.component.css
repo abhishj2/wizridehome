@@ -2236,7 +2236,7 @@ select.traveller-input {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
     background: #ffffff;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
   
   .flight-final-page > .card:last-child {
@@ -2470,7 +2470,7 @@ select.traveller-input {
     font-size: 17px;
     transition: all 0.2s ease;
     width: auto;
-    margin: 24px auto 0 auto;
+    margin: 24px auto 12px auto;
   }
 
   .flight-final-page > button.details-btn:hover {
