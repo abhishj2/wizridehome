@@ -2216,10 +2216,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const completePhoneNumber = this.selectedCountryCode + this.phoneNumber;
 
     if (this.pendingAction === 'flights') {
-      this.submitFlights(completePhoneNumber);
-      // Navigate to booking results for flights
-      this.navigateToResults(completePhoneNumber);
+      // Close the popup first
       this.cancelPhonePopup();
+      // Proceed with flight search
+      this.performFlightSearch();
     } else if (this.pendingAction === 'shared') {
       // For shared cabs, check API first before navigating
       this.checkAndNavigateForSharedCabs(completePhoneNumber);
@@ -3384,6 +3384,33 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
       return;
     }
+
+    // For desktop, show phone popup before proceeding with search
+    if (!this.isMobileView()) {
+      this.openPhonePopup('flights');
+      return;
+    }
+
+    // For mobile, proceed directly with search (phone number is in form)
+    this.performFlightSearch();
+  }
+
+  performFlightSearch() {
+    // Get selected airports from flightRoutes or formValues
+    const fromValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.from
+      : (this.flightRoutes[0]?.from || this.formValues.flightFrom);
+    const toValue = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.to
+      : (this.flightRoutes[0]?.to || this.formValues.flightTo);
+
+    // Extract airport codes
+    const fromCode = this.extractAirportCode(fromValue);
+    const toCode = this.extractAirportCode(toValue);
+
+    const departureDate = this.tripType === 'multi-city'
+      ? this.flightRoutes[0]?.date
+      : (this.flightRoutes[0]?.date || this.formValues.flightDeparture);
 
     // Find airport objects from flightAirports list using already extracted codes
     const fromAirport = this.flightAirports.find(a => a.code === fromCode);
