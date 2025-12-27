@@ -352,28 +352,58 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mobilePopupType = type;
     this.mobileSearchQuery = '';
     
-    // Set target based on type and current tab
+    // Set target based on type and current tab and clear the field for easy re-selection
     if (type === 'from') {
       if (this.mobileTab === 'shared') {
         this.mobilePopupTarget = 'mobile-shared-pickup';
-        this.mobileSearchQuery = this.formValues.sharedPickup || '';
+        // Clear the field when opening popup to change city
+        if (this.formValues.sharedPickup) {
+          this.formValues.sharedPickup = '';
+        }
+        this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'reserved') {
         this.mobilePopupTarget = 'mobile-reserved-pickup';
-        this.mobileSearchQuery = this.formValues.reservedPickup || '';
+        // Clear the field when opening popup to change city
+        if (this.formValues.reservedPickup) {
+          this.formValues.reservedPickup = '';
+        }
+        this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'flights') {
         this.mobilePopupTarget = 'mobile-flight-from';
-        this.mobileSearchQuery = this.formValues.flightFrom || '';
+        // Clear the field when opening popup to change city
+        if (this.flightRoutes[0]?.from) {
+          this.flightRoutes[0].from = '';
+        }
+        if (this.formValues.flightFrom) {
+          this.formValues.flightFrom = '';
+        }
+        this.mobileSearchQuery = '';
       }
     } else if (type === 'to') {
       if (this.mobileTab === 'shared') {
         this.mobilePopupTarget = 'mobile-shared-dropoff';
-        this.mobileSearchQuery = this.formValues.sharedDropoff || '';
+        // Clear the field when opening popup to change city
+        if (this.formValues.sharedDropoff) {
+          this.formValues.sharedDropoff = '';
+        }
+        this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'reserved') {
         this.mobilePopupTarget = 'mobile-reserved-dropoff';
-        this.mobileSearchQuery = this.formValues.reservedDropoff || '';
+        // Clear the field when opening popup to change city
+        if (this.formValues.reservedDropoff) {
+          this.formValues.reservedDropoff = '';
+        }
+        this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'flights') {
         this.mobilePopupTarget = 'mobile-flight-to';
-        this.mobileSearchQuery = this.formValues.flightTo || '';
+        // Clear the field when opening popup to change city
+        if (this.flightRoutes[0]?.to) {
+          this.flightRoutes[0].to = '';
+        }
+        if (this.formValues.flightTo) {
+          this.formValues.flightTo = '';
+        }
+        this.mobileSearchQuery = '';
       }
     } else if (type === 'pickup') {
       if (this.mobileTab === 'shared') {
@@ -2752,6 +2782,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showCitySuggestionsOnFocus(target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
+    
+    // Clear the field if it already has a value (for easy re-selection)
+    if (target === 'shared-pickup' && this.formValues.sharedPickup) {
+      this.formValues.sharedPickup = '';
+    } else if (target === 'shared-dropoff' && this.formValues.sharedDropoff) {
+      this.formValues.sharedDropoff = '';
+    } else if (target === 'reserved-pickup' && this.formValues.reservedPickup) {
+      this.formValues.reservedPickup = '';
+    } else if (target === 'reserved-dropoff' && this.formValues.reservedDropoff) {
+      this.formValues.reservedDropoff = '';
+    } else if (target.startsWith('flight-from-')) {
+      const routeIndex = parseInt(target.replace('flight-from-', ''));
+      if (this.flightRoutes[routeIndex]?.from) {
+        this.flightRoutes[routeIndex].from = '';
+      }
+    } else if (target.startsWith('flight-to-')) {
+      const routeIndex = parseInt(target.replace('flight-to-', ''));
+      if (this.flightRoutes[routeIndex]?.to) {
+        this.flightRoutes[routeIndex].to = '';
+      }
+    } else if (target === 'flight-from' || target === 'flight-to') {
+      const routeIndex = 0;
+      if (target === 'flight-from' && this.flightRoutes[routeIndex]?.from) {
+        this.flightRoutes[routeIndex].from = '';
+      } else if (target === 'flight-to' && this.flightRoutes[routeIndex]?.to) {
+        this.flightRoutes[routeIndex].to = '';
+      }
+    }
+    
     // Use reservedCities for reserved cabs, sourceCities for shared cabs, flightAirports for flights, otherwise use cities
     let citiesToShow: City[];
     if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
