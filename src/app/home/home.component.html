@@ -775,17 +775,17 @@
       <div class="wr-grid-2">
         <div class="wr-grid-2-col">
           <div class="wr-field-label">Date of Travel</div>
-          <div class="wr-field-pill" (click)="openMobileDatePicker('shared')">
+          <div class="wr-field-pill datecl" (click)="openMobileDatePicker('shared')">
             <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="7"></circle>
               <polyline points="12 8 12 12 15 13.5"></polyline>
             </svg>
-            <span>{{ getMobileDateDisplay(formValues.sharedDateTime) || 'Select date' }}</span>
+            <span class="datecltext">{{ getMobileDateDisplay(formValues.sharedDateTime) || 'Select date' }}</span>
           </div>
         </div>
 
         <div class="wr-grid-2-col">
-          <div class="wr-field-label">Passengers</div>
+          <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
           <div class="wr-counter" data-counter="sharedPassengers">
             <button data-action="minus" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">−</button>
             <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
@@ -798,12 +798,12 @@
     <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
       <div class="wr-field-block">
         <div class="wr-field-label">Pickup Time</div>
-        <div class="wr-field-pill" (click)="openTimePicker()">
+        <div class="wr-field-pill datecl" (click)="openTimePicker()">
           <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="7"></circle>
             <polyline points="12 8 12 12 15 13.5"></polyline>
           </svg>
-          <span>{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
+          <span class="datecltext">{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
         </div>
       </div>
       <div class="wr-field-block">
@@ -824,17 +824,17 @@
       <div class="wr-grid-2">
         <div class="wr-grid-2-col">
           <div class="wr-field-label">Date</div>
-          <div class="wr-field-pill" (click)="openMobileDatePicker('reserved')">
+          <div class="wr-field-pill datecl" (click)="openMobileDatePicker('reserved')">
             <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="7"></circle>
               <polyline points="12 8 12 12 15 13.5"></polyline>
             </svg>
-            <span>{{ getMobileDateDisplay(formValues.reservedDate) || 'Select date' }}</span>
+            <span class="datecltext">{{ getMobileDateDisplay(formValues.reservedDate) || 'Select date' }}</span>
           </div>
         </div>
 
         <div class="wr-grid-2-col">
-          <div class="wr-field-label">Passengers</div>
+          <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
           <div class="wr-counter" data-counter="reservedPassengers">
             <button data-action="minus" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">−</button>
             <span class="wr-counter-value">{{ getMobilePassengers() }}</span>

@@ -4299,7 +4299,7 @@ button.nav-tab.active img {
     /* Passenger counter (mobile) - matching trial.html */
     .wr-counter {
         background: #f9fafb;
-        padding: 10px 12px;
+        padding: 9px 12px;
         border-radius: 16px;
         display: flex;
         gap: 12px;
@@ -5303,4 +5303,14 @@ button.nav-tab.active img {
 .mobile-travelers-done-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(20, 167, 156, 0.3);
+}
+
+@media(max-width:767px){
+    .datecl{
+        padding:10px 6px !important;
+    }
+    
+    .datecl .datecltext{
+        font-size:12px !important;
+    }
 }

@@ -946,6 +946,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    // Validate phone number starts with 9, 8, 7, or 6
+    if (!/^[9876]/.test(this.phoneNumber)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Phone Number',
+        text: 'Phone number must start with 9, 8, 7, or 6',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+      return;
+    }
+
     // Store the complete phone number
     const completePhoneNumber = this.selectedCountryCode + this.phoneNumber;
 
@@ -2239,6 +2252,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const phoneRegex = /^\d{7,15}$/;
     if (!phoneRegex.test(this.phoneNumber)) {
       this.phoneError = 'Please enter a valid phone number (7-15 digits)';
+      return;
+    }
+
+    // Validate phone number starts with 9, 8, 7, or 6
+    if (!/^[9876]/.test(this.phoneNumber)) {
+      this.phoneError = 'Phone number must start with 9, 8, 7, or 6';
       return;
     }
 
