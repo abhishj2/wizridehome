@@ -4145,10 +4145,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           } else {
             // Fallback to default values
             this.numbersSectionStats = [
-              { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
-              { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
-              { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
-              { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+              { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'assets/images/icon1.png' },
+              { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'assets/images/icon2.png' },
+              { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'assets/images/icon3.png' },
+              { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'assets/images/icon4.png' }
             ];
           }
         } else {
@@ -4166,10 +4166,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             { number: '24/7', label: 'Available Service' }
           ];
           this.numbersSectionStats = [
-            { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
-            { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
-            { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
-            { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+            { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'assets/images/icon1.png' },
+            { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'assets/images/icon2.png' },
+            { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'assets/images/icon3.png' },
+            { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'assets/images/icon4.png' }
           ];
         }
         this.isLoadingStats = false;
@@ -4191,10 +4191,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           { number: '24/7', label: 'Available Service' }
         ];
         this.numbersSectionStats = [
-          { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'https://wizzride.com/assets/images/icon1.png' },
-          { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'https://wizzride.com/assets/images/icon2.png' },
-          { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'https://wizzride.com/assets/images/icon3.png' },
-          { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'https://wizzride.com/assets/images/icon4.png' }
+          { number: '7+', label: 'Years of service', description: 'Trusted experience in the travel industry', icon: 'assets/images/icon1.png' },
+          { number: '201,574+', label: 'Passengers Served', description: 'Happy customers who chose our service', icon: 'assets/images/icon2.png' },
+          { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'assets/images/icon3.png' },
+          { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'assets/images/icon4.png' }
         ];
         this.isLoadingStats = false;
       }
