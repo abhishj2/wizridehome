@@ -2651,7 +2651,7 @@ span.seat-price {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    justify-content: center;
+    justify-content: end;
     padding-right: 12px;
     border-right: 1px solid #e5eaf0;
   }
@@ -2706,7 +2706,7 @@ span.seat-price {
   }
 
   .mobile-vehicle-visual img {
-    height: 65px !important;
+    height: 40px !important;
   }
 
   .mobile-seats-left {
@@ -2764,7 +2764,7 @@ span.seat-price {
   .time-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     padding: 5px;
     border-radius: 6px;
     font-size: 10px;
@@ -2781,6 +2781,7 @@ span.seat-price {
     color: #1e40af !important;
     border: 1px solid #93c5fd !important;
     display: flex !important;
+    width: 125px;
   }
 
   .time-pill.end {
@@ -3968,7 +3969,22 @@ text-transform: uppercase !important;
   font-size: 9px !important;
   
 }
+::ng-deep .swal-attention-content p {
+  font-size: 12px !important;
+  line-height: 1.6;
+  color: #666;
+}
 
+::ng-deep .swal-icon-circle {
+  width: 60px !important;
+  height: 60px !important;
+ 
+}
 
+::ng-deep .swal-icon-circle i {
+  font-size: 28px !important; 
+  
+}
 
 }
+
