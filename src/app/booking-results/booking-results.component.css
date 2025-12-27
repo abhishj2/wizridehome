@@ -1647,7 +1647,7 @@ color: #000 !important;
   }
 
   .route-visualization {
-    padding: 0 4px;
+    padding: 1px 4px;
     min-width: 0;
     box-sizing: border-box;
     /* margin-top: 10px; */
