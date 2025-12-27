@@ -2121,7 +2121,12 @@ color: #000 !important;
 }
 
 .seat-item.seat-selected .seat-watermark { color: rgba(255,255,255,0.3); }
-.seat-item.seat-selected .seat-watermark-img { opacity: 1; filter: hue-rotate(120deg) saturate(2) brightness(0.8); }
+.seat-item.seat-selected .seat-watermark-img { 
+  opacity: 1; 
+  filter: invert(75%) sepia(9%) saturate(2661%) hue-rotate(86deg) brightness(93%) contrast(77%) !important;
+}
+
+
 .seat-item.seat-selected .seat-number-big { color: #0d9488; font-weight: 900; }
 
 .seat-item.seat-booked {
@@ -2131,7 +2136,10 @@ color: #000 !important;
 }
 
 .seat-item.seat-booked .seat-watermark { color: rgba(248, 113, 113, 0.3); }
-.seat-item.seat-booked .seat-watermark-img { opacity: 0.4; filter: sepia(1) saturate(5) hue-rotate(314deg); }
+.seat-item.seat-booked .seat-watermark-img { 
+  opacity: 0.7; 
+  filter: invert(44%) sepia(32%) saturate(4404%) hue-rotate(340deg) brightness(105%) contrast(104%);
+}
 .seat-item.seat-booked .seat-number-big { color: #f87171; }
 
 .seat-watermark {
@@ -2147,7 +2155,13 @@ color: #000 !important;
   height: 100%;
   object-fit: contain;
   opacity: 0.85;
- 
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Default available seat image - subtle gray tint */
+.seat-item:not(.seat-selected):not(.seat-booked) .seat-watermark-img {
+  filter: brightness(0.95) contrast(1.05);
+  opacity: 0.85;
 }
 
 .seat-item {
@@ -3078,6 +3092,7 @@ span.seat-price {
     margin: 0 auto;
   }
 
+  /* Mobile car image filters based on seat status */
   .seat-layout-card {
     padding: 2px;
     width: 100%;
