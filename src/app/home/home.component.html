@@ -1035,6 +1035,9 @@
     <div class="wr-section-title">Our Numbers Say It All</div>
     <div class="wr-stats-grid">
       <div class="wr-stat-card" *ngFor="let stat of numbersSectionStats">
+        <div class="wr-stat-icon">
+          <img [src]="stat.icon" [alt]="stat.label">
+        </div>
         <div class="wr-stat-number">{{ stat.number }}</div>
         <div class="wr-stat-label">{{ stat.label }}</div>
         <div class="wr-stat-desc">{{ stat.description }}</div>

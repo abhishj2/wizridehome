@@ -417,6 +417,7 @@ html, body {
     padding: 10px 14px;
     margin: 10px 16px 14px 16px;
     border-radius: 12px;
+    width: auto !important;
   }
   
   .booking-summary.sticky {
@@ -734,9 +735,14 @@ html, body {
   }
   
   .legal-text {
-    font-size: 11px;
-    line-height: 1.4;
-    margin-bottom: 10px;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 10px !important;
+  }
+
+  a.legal-link{
+    font-size: 11px !important;
+    text-decoration:none !important;
   }
   
   .proceed-payment-btn {
