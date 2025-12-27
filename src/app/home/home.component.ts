@@ -114,6 +114,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showMobileMultiCityModal = false;
   currentMultiCityRouteIndex: number = 0;
   currentMultiCityField: 'from' | 'to' = 'from';
+  showCustomKeypad = false;
+  activePhoneInput: HTMLInputElement | null = null;
 
   services = [
     {
@@ -2229,6 +2231,58 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       keyboardEvent.preventDefault();
       keyboardEvent.stopPropagation();
     }
+  }
+
+  // Custom keypad methods
+  openCustomKeypad(inputElement: HTMLInputElement): void {
+    if (this.isMobileView()) {
+      // Prevent default keyboard
+      inputElement.readOnly = true;
+      inputElement.setAttribute('inputmode', 'none');
+      
+      this.activePhoneInput = inputElement;
+      this.showCustomKeypad = true;
+      
+      // Focus the input for visual feedback
+      inputElement.focus();
+    }
+  }
+
+  closeCustomKeypad(): void {
+    if (this.activePhoneInput) {
+      this.activePhoneInput.blur();
+      this.activePhoneInput = null;
+    }
+    this.showCustomKeypad = false;
+  }
+
+  onKeypadNumberClick(number: string): void {
+    if (!this.activePhoneInput) return;
+    
+    const currentValue = this.activePhoneInput.value || '';
+    // Check maxlength (10 digits for mobile)
+    if (currentValue.length < 10) {
+      this.activePhoneInput.value = currentValue + number;
+      this.phoneNumber = this.activePhoneInput.value;
+      // Trigger ngModel update
+      this.activePhoneInput.dispatchEvent(new Event('input'));
+    }
+  }
+
+  onKeypadBackspace(): void {
+    if (!this.activePhoneInput) return;
+    
+    const currentValue = this.activePhoneInput.value || '';
+    if (currentValue.length > 0) {
+      this.activePhoneInput.value = currentValue.slice(0, -1);
+      this.phoneNumber = this.activePhoneInput.value;
+      // Trigger ngModel update
+      this.activePhoneInput.dispatchEvent(new Event('input'));
+    }
+  }
+
+  onKeypadDone(): void {
+    this.closeCustomKeypad();
   }
 
   confirmPhonePopup() {
