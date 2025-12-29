@@ -1714,8 +1714,8 @@
                    [placeholder]="mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Enter pickup location' : 'Enter drop location'">
         </div>
 
-        <!-- Tabs for Popular Searches and See All (only for from/to cities) -->
-        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery">
+        <!-- Tabs for Popular Searches and See All (only for from/to cities, NOT for flights) -->
+        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery && !isFlightPopup()">
             <button class="mobile-location-tab" 
                     [class.active]="mobileLocationTab === 'popular'"
                     (click)="setMobileLocationTab('popular')">
@@ -1729,8 +1729,8 @@
         </div>
 
         <div class="mobile-location-popup-suggestions">
-            <!-- Popular Searches Tab - Grouped by State -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery">
+            <!-- Popular Searches Tab - Grouped by State (NOT for flights) -->
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery && !isFlightPopup()">
                 <div *ngFor="let stateGroup of getCitiesGroupedByState()" class="mobile-location-state-group">
                     <div class="mobile-location-state-header">{{ stateGroup.state }}</div>
                     <div class="mobile-location-pills-container">
@@ -1754,8 +1754,8 @@
                 </div>
             </ng-container>
 
-            <!-- See All Tab - All Cities -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery">
+            <!-- See All Tab - All Cities (NOT for flights) -->
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery && !isFlightPopup()">
                 <div *ngFor="let city of getAllCitiesForSeeAll()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">
@@ -1767,8 +1767,8 @@
                 </div>
             </ng-container>
 
-            <!-- Search Results (when user types) -->
-            <ng-container *ngIf="isMobileCityArray() && mobileSearchQuery">
+            <!-- Search Results (when user types) OR for flights (always show search) -->
+            <ng-container *ngIf="isMobileCityArray() && (mobileSearchQuery || isFlightPopup())">
                 <div *ngFor="let city of getMobileCitySuggestionsList()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">

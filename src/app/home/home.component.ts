@@ -560,7 +560,51 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return Array.isArray(suggestions) && suggestions.length > 0 && typeof suggestions[0] === 'object';
   }
 
+  // Check if current popup is for flights
+  isFlightPopup(): boolean {
+    const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+    return normalizedTarget.startsWith('flight-from-') || normalizedTarget.startsWith('flight-to-');
+  }
+
   getMobileCitySuggestionsList(): City[] {
+    // For flights, show all airports (sorted with Indian first)
+    if (this.isFlightPopup()) {
+      const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+      let allAirports = [...this.flightAirports];
+      
+      // Filter based on search query
+      if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
+        const query = this.mobileSearchQuery.toLowerCase().trim();
+        allAirports = allAirports.filter(airport =>
+          airport.name.toLowerCase().includes(query) ||
+          airport.code.toLowerCase().includes(query) ||
+          (airport.state && airport.state.toLowerCase().includes(query))
+        );
+      }
+      
+      // Filter out selected airport from the other field
+      if (normalizedTarget.startsWith('flight-from-')) {
+        const selectedTo = this.flightRoutes[0]?.to || this.formValues.flightTo || '';
+        if (selectedTo) {
+          const toCityName = this.extractCityNameFromDisplay(selectedTo);
+          allAirports = allAirports.filter(airport =>
+            airport.name.toLowerCase() !== toCityName.toLowerCase()
+          );
+        }
+      } else if (normalizedTarget.startsWith('flight-to-')) {
+        const selectedFrom = this.flightRoutes[0]?.from || this.formValues.flightFrom || '';
+        if (selectedFrom) {
+          const fromCityName = this.extractCityNameFromDisplay(selectedFrom);
+          allAirports = allAirports.filter(airport =>
+            airport.name.toLowerCase() !== fromCityName.toLowerCase()
+          );
+        }
+      }
+      
+      return allAirports;
+    }
+    
+    // For non-flight popups, use existing logic
     const suggestions = this.getMobilePopupSuggestions();
     return this.isMobileCityArray() ? (suggestions as City[]) : [];
   }
@@ -1827,13 +1871,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (data) => {
         // console.log('Airport list data received:', data);
         // Transform API data to City[] format for flights
-        // API returns array with objects containing AIRPORTCODE, NAME, CITY, CITYCODE, COUNTRY
+        // API returns array with objects containing AIRPORTCODE, NAME, CITY, CITYCODE, COUNTRY, COUNTRYCODE
         if (Array.isArray(data)) {
-          this.flightAirports = data.map((item: any) => {
+          // Map airports to City[] format
+          const allAirports = data.map((item: any) => {
             // Use CITY if available, otherwise use NAME as city name
             const cityName = item.CITY || item.city || item.NAME || item.name || '';
             const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
             const country = item.COUNTRY || item.country || '';
+            const countryCode = item.COUNTRYCODE || item.countrycode || '';
 
             // Use just the city name for display
             const displayName = cityName || item.NAME || item.name || '';
@@ -1843,9 +1889,22 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               name: displayName,
               code: airportCode || displayName.substring(0, 3).toUpperCase(),
-              state: cityState !== 'Other' ? cityState : (country || 'Other') // Use city state mapping, fallback to country
+              state: cityState !== 'Other' ? cityState : (country || 'Other'), // Use city state mapping, fallback to country
+              countryCode: countryCode // Store country code for sorting
             };
           });
+
+          // Sort: Indian airports first (COUNTRYCODE === 'IN'), then others, both sorted alphabetically by city name
+          const indianAirports = allAirports
+            .filter(airport => (airport as any).countryCode === 'IN')
+            .sort((a, b) => a.name.localeCompare(b.name));
+          
+          const otherAirports = allAirports
+            .filter(airport => (airport as any).countryCode !== 'IN')
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          // Combine: Indian airports first, then others
+          this.flightAirports = [...indianAirports, ...otherAirports];
           // console.log('Flight airports populated:', this.flightAirports);
 
           // Set dynamic default airports (only on desktop, not mobile)
