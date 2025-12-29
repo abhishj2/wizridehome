@@ -5402,6 +5402,8 @@ button.nav-tab.active img {
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
     }
 
     .keypad-btn:active {
@@ -5425,6 +5427,8 @@ button.nav-tab.active img {
     .keypad-btn-backspace {
         background: #f3f4f6;
         color: #111827;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
     }
 
     .keypad-btn-backspace:active {
@@ -5458,6 +5462,8 @@ button.nav-tab.active img {
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         box-shadow: 0 2px 8px rgba(15, 157, 146, 0.3);
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
     }
 
     .keypad-btn-done:active {
@@ -5539,6 +5545,8 @@ button.nav-tab.active img {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
 }
 
 .keypad-btn:active {
@@ -5562,6 +5570,8 @@ button.nav-tab.active img {
 .keypad-btn-backspace {
     background: #f3f4f6;
     color: #111827;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
 }
 
 .keypad-btn-backspace:active {
@@ -5595,6 +5605,8 @@ button.nav-tab.active img {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 2px 8px rgba(15, 157, 146, 0.3);
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
 }
 
 .keypad-btn-done:active {

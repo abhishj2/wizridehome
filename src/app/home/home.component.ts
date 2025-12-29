@@ -2296,6 +2296,48 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private lastTouchTime = 0;
+  private touchStartTime = 0;
+
+  // Prevent iOS double-tap zoom on keypad buttons
+  onKeypadTouchStart(event: TouchEvent): void {
+    // Prevent default to stop zoom on multi-touch (pinch zoom)
+    if (event.touches.length > 1) {
+      event.preventDefault();
+      return;
+    }
+    this.touchStartTime = Date.now();
+  }
+
+  onKeypadTouchEnd(event: TouchEvent): void {
+    const now = Date.now();
+    const timeSinceLastTouch = now - this.lastTouchTime;
+    const touchDuration = now - this.touchStartTime;
+    
+    // Prevent zoom on rapid double-taps (within 300ms) - this is iOS double-tap zoom threshold
+    if (timeSinceLastTouch < 300 && touchDuration < 300) {
+      event.preventDefault();
+      // Trigger click manually to ensure functionality
+      const target = event.target as HTMLElement;
+      const button = target.closest('button');
+      if (button && !button.disabled) {
+        // Use setTimeout to ensure preventDefault is processed first
+        setTimeout(() => {
+          button.click();
+        }, 0);
+      }
+      this.lastTouchTime = now;
+      return;
+    }
+    
+    this.lastTouchTime = now;
+    
+    // For very quick taps (< 100ms), prevent default to avoid accidental zoom
+    if (touchDuration < 100) {
+      event.preventDefault();
+    }
+  }
+
   onKeypadBackspace(): void {
     if (!this.activePhoneInput) return;
     
