@@ -2245,6 +2245,33 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Focus the input for visual feedback
       inputElement.focus();
+      
+      // Scroll the input into view after keypad is shown
+      setTimeout(() => {
+        inputElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+        
+        // Additional scroll adjustment to account for keypad height
+        // Get the input's parent container (wr-field-pill or wr-phone-wrapper)
+        const inputContainer = inputElement.closest('.wr-field-pill, .wr-phone-wrapper');
+        if (inputContainer) {
+          const containerRect = inputContainer.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const keypadHeight = 350; // Approximate keypad height
+          
+          // If input is too close to bottom (where keypad will appear), scroll more
+          if (containerRect.bottom > viewportHeight - keypadHeight) {
+            const scrollAmount = containerRect.bottom - (viewportHeight - keypadHeight) + 20; // 20px padding
+            window.scrollBy({
+              top: scrollAmount,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 100);
     }
   }
 
