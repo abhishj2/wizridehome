@@ -644,9 +644,23 @@ export class CheckoutComponent implements OnInit {
   formatPickupTime(timeString: string): string {
     if (!timeString) return '';
     
-    const [hour, minute] = timeString.split(':');
+    // Remove any existing am/pm from the time string (case insensitive)
+    let cleanTime = timeString.replace(/\s*(am|pm|AM|PM)\s*/gi, '').trim();
+    
+    // Split by colon and clean up minute part if it has am/pm
+    const parts = cleanTime.split(':');
+    if (parts.length < 2) return timeString;
+    
+    const hour = parts[0].trim();
+    let minute = parts[1].trim();
+    
+    // Remove any remaining am/pm from minute part
+    minute = minute.replace(/\s*(am|pm|AM|PM)\s*/gi, '').trim();
+    
     const hourNum = parseInt(hour);
     const minuteNum = parseInt(minute);
+    
+    if (isNaN(hourNum) || isNaN(minuteNum)) return timeString;
     
     let displayHour = hourNum;
     let period = 'AM';

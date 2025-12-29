@@ -8,7 +8,7 @@
           <!-- Top Row: City Codes and Route Line -->
           <div class="route-top-row">
             <div class="route-column">
-              <div class="route-code">{{ getLocationCode(bookingData.searchParams.from) }}</div>
+              <div class="route-code">{{ bookingData.vehicleDetails?.route?.from?.code || getLocationCode(bookingData.searchParams.from) }}</div>
             </div>
 
             <div class="route-visualization">
@@ -22,7 +22,7 @@
             </div>
 
             <div class="route-column">
-              <div class="route-code">{{ getLocationCode(bookingData.searchParams.to) }}</div>
+              <div class="route-code">{{ bookingData.vehicleDetails?.route?.to?.code || getLocationCode(bookingData.searchParams.to) }}</div>
             </div>
           </div>
 
@@ -48,6 +48,9 @@
             <span class="date-text">{{ formatDate(bookingData.searchParams.date) }}</span>
             <span class="time-pill" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">
               {{ formatPickupTime(bookingData.searchParams.pickupTime) }}
+            </span>
+            <span class="time-pill" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">
+              {{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}
             </span>
           </div>
           <div class="timing-item-right">
@@ -82,7 +85,7 @@
       <!-- Left Column: Passenger Details Form -->
       <div class="left-column">
         <div class="form-card">
-          <h2 class="form-title">Enter Primary Passenger Details</h2>
+          <h2 class="form-title"> Primary Passenger Details</h2>
           
           <form (ngSubmit)="onSubmit()" #checkoutForm="ngForm">
             <div class="form-row">
