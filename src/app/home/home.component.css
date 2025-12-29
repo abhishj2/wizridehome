@@ -4270,7 +4270,7 @@ button.nav-tab.active img {
     .wr-app-store-buttons {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 10px;
     }
 
     .wr-store-btn {
