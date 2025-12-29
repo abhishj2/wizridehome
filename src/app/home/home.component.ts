@@ -569,73 +569,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       : [];
   }
 
-  // Map city name to state
+  // Map city name to state (fallback method - state info should come from API)
   private getCityState(cityName: string): string {
-    // Normalize city name: lowercase, trim, remove common suffixes
-    let name = cityName.toLowerCase().trim();
-    // Remove common suffixes like "airport", "city", etc. for better matching
-    name = name.replace(/\s*(airport|city|town|station)\s*$/i, '').trim();
-    
-    // Sikkim cities
-    const sikkimCities = ['gangtok', 'singtam', 'rangpo', 'namchi', '32nd mile', 'jorethang', 'pakyong', 'gyalshing', 'mangan', 'lachung', 'lachen'];
-    if (sikkimCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Sikkim';
-    }
-    
-    // West Bengal cities
-    const westBengalCities = ['bagdogra', 'siliguri', 'darjeeling', 'kalimpong', 'melli', 'chitrey', 'coronation bridge', 'kurseong', 'ghoom', 'dilaram', 'jorebungalow', 'batasia loop', 'jaigaon', 'rongbull', 'sonada', 'binnaguri', 'dooars', 'new jalpaiguri', 'njp'];
-    if (westBengalCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'West Bengal';
-    }
-    
-    // Assam cities
-    const assamCities = ['guwahati', 'tezpur', 'jorabat', 'jorhat', 'dibrugarh', 'sivasagar', 'tinsukia', 'nagaon', 'bongaigaon'];
-    if (assamCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Assam';
-    }
-    
-    // Meghalaya cities
-    const meghalayaCities = ['shillong', 'umiam', 'umsning', 'nongpoh', 'cherrapunji', 'mawphlang', 'jowai', 'williamnagar', 'tura', 'baghmara'];
-    if (meghalayaCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Meghalaya';
-    }
-    
-    // // Bhutan cities
-    // const bhutanCities = ['thimphu', 'phuentsholing', 'paro', 'punakha', 'wangdue', 'trongsa', 'bumthang'];
-    // if (bhutanCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-    //   return 'Bhutan';
-    // }
-    
-    // Manipur cities
-    const manipurCities = ['imphal', 'ukhrul', 'churachandpur'];
-    if (manipurCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Manipur';
-    }
-    
-    // Tripura cities
-    const tripuraCities = ['agartala', 'udaipur', 'dharamanagar'];
-    if (tripuraCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Tripura';
-    }
-    
-    // Mizoram cities
-    const mizoramCities = ['aizawl', 'lunglei', 'saiha'];
-    if (mizoramCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Mizoram';
-    }
-    
-    // Nagaland cities
-    const nagalandCities = ['kohima', 'dimapur', 'mokokchung'];
-    if (nagalandCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Nagaland';
-    }
-    
-    // Arunachal Pradesh cities
-    const arunachalCities = ['itanagar', 'tawang', 'bomdila', 'ziro', 'pasighat', 'namsai'];
-    if (arunachalCities.some(n => name.startsWith(n) || name === n || (name.includes(n) && n.length > 4))) {
-      return 'Arunachal Pradesh';
-    }
-    
+    // Since state-wise cities API provides state information directly,
+    // this is now just a fallback for other APIs that might not have state info
+    // Returns 'Other' as default since we rely on API data for accurate state information
     return 'Other';
   }
 
