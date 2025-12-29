@@ -31,6 +31,228 @@ html, body {
   margin: 10px auto 14px auto;
 }
 
+/* Hide mobile-only sections on desktop */
+.journey-timing,
+.vehicle-seat-section {
+  display: none;
+}
+
+/* Route Section - Desktop Layout */
+.route {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr 2fr 1fr;
+  align-items: center;
+  padding: 18px 24px;
+  background: #f5f7fa;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.route-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 15px;
+  position: relative;
+}
+
+.route-code {
+  background-color: #add8e6;
+  font-weight: bolder;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.location {
+  font-size: 13px;
+  color: #2e3137;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.sub-location {
+  font-weight: 100;
+  font-size: 12px;
+  color: gray;
+}
+
+.route-visualization {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  margin-top: 15px;
+  align-self: flex-start;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+  max-width: 100%;
+  position: relative;
+  padding-bottom: 20px;
+  margin-top: -20px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.route-line:before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 16px;
+  height: 3px;
+  background: #47474770;
+  z-index: 1;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px #008b8b4d;
+  max-width: calc(100% - 21px);
+  box-sizing: border-box;
+}
+
+.route-node {
+  width: 12px;
+  height: 12px;
+  border-radius: 60%;
+  background: #47474770;
+  z-index: 2;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
+.route-car {
+  background: transparent;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  position: relative;
+}
+
+.route-car img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.route-details {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-width: 0;
+  margin-top: 30px;
+  align-items: center;
+}
+
+.time {
+  font-size: 16px;
+  color: #009688;
+  font-weight: 600;
+  background: linear-gradient(293deg, #e94057, #f27121);
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  box-shadow: 0 1px 4px #008b8b33;
+  justify-content: center;
+  display: flex;
+}
+
+.duration {
+  font-size: 16px;
+  background: transparent;
+  color: #474747;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  box-shadow: 0 1px 4px #008b8b33;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.vehicle {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.vehicle img {
+  width: 90%;
+  max-width: 100%;
+  height: auto;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.price-info p {
+  display: flex;
+  justify-content: center;
+  margin: 0px;
+  font-size: 12.8px;
+  color: #6b7280;
+}
+
+.price {
+  font-size: 24px;
+  color: #e53935;
+  font-weight: bold;
+  font-size: 26px;
+  font-weight: bold;
+  color: #474747;
+  line-height: 1;
+  text-shadow: 1px -2px 1px #ccc;
+}
+
 .booking-summary.sticky {
   position: static;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
@@ -414,63 +636,324 @@ html, body {
   }
   
   .booking-summary {
-    padding: 10px 14px;
+    padding: 0;
     margin: 10px 16px 14px 16px;
     border-radius: 12px;
     width: auto !important;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
   }
   
   .booking-summary.sticky {
-    padding: 10px 14px;
+    padding: 0;
   }
   
   .summary-content {
     flex-direction: column;
-    gap: 16px;
-  }
-  
-  .route-summary {
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
+    gap: 0;
     width: 100%;
-    flex-wrap: wrap;
+  }
+
+  .summary-info {
+    width: 100%;
+  }
+
+  /* Date Hanger */
+  .date-hanger {
+    display: block !important;
+    position: relative;
+    left: auto;
+    transform: none;
+    margin-bottom: -10px;
+    text-align: center;
+    top: 0;
+  }
+
+  .date-content {
+    padding: 8px 24px !important;
+    border-radius: 20px !important;
+    border: 1px solid #d1d5db !important;
+    display: inline-block;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .date-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: 0.3px;
+  }
+
+  /* Route Section - Mobile Layout */
+  .route {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: #ffffff;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+
+  .route-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .route-bottom-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .route-column {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 0;
+    max-width: 40%;
+    flex-shrink: 0;
+  }
+
+  .route-code {
+    background: #bfdbfe;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1e40af;
+    display: inline-block;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .location {
+    font-size: 13px;
+    margin-top: 0;
+    color: #1f2937;
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    line-height: 1.4;
+  }
+
+  .sub-location {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+    font-weight: 400;
+    line-height: 1.3;
+    display: block;
   }
   
-  .route-locations {
-    flex-direction: row;
+  .route-visualization {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0 4px;
+    height: 24px;
+    align-self: center;
+  }
+
+  .route-visualization-spacer {
+    flex: 1;
+    min-width: 0;
+    max-width: 24%;
+    height: 1px;
+  }
+
+  .route-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    min-width: 0;
+    height: 24px;
+  }
+
+  .route-line:before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: #cbd5e1;
+    z-index: 1;
+    border-radius: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-sizing: border-box;
+  }
+
+  .route-node {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #94a3b8;
+    z-index: 2;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .route-car {
+    background: transparent;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .route-car img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    opacity: 0.7;
+    filter: grayscale(0.5) brightness(0.85);
+  }
+
+  /* Hide price on mobile */
+  .price-info {
+    display: none !important;
+  }
+
+  /* Journey Timing Section */
+  .journey-timing {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
     gap: 12px;
+  }
+
+  .timing-item-left,
+  .timing-item-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     flex: 1;
   }
-  
-  .route-locations i {
-    transform: none;
-    flex-shrink: 0;
+
+  .timing-item-left {
+    justify-content: flex-start;
   }
-  
-  .location-group {
-    flex: 0 1 auto;
-    min-width: 0;
+
+  .timing-item-right {
+    justify-content: flex-end;
   }
-  
-  .location-detail {
-    max-width: 100%;
+
+  .date-text {
+    font-size: 13px;
+    color: #1f2937;
+    font-weight: 400;
+    line-height: 1.4;
   }
-  
-  .journey-details {
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  
-  .route-summary .date, .route-summary .seats, .route-summary .seat-selected,
-  .route-summary .pickup-time {
-    font-size: 12px;
-    padding: 5px 10px;
+
+  .time-pill {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #14b8a6;
+    color: #ffffff;
     white-space: nowrap;
-    flex-shrink: 0;
+  }
+
+  .duration-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 400;
+  }
+
+  .duration-pill {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #14b8a6;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  /* Vehicle and Seat Section */
+  .vehicle-seat-section {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .vehicle-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+
+  .vehicle-info img {
+    width: 60px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .vehicle-name {
+    font-size: 12px;
+    color: #1f2937;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-top: 2px;
+  }
+
+  .seat-info {
+    font-size: 13px;
+    color: #475569;
+    font-weight: 400;
+    text-align: right;
+    flex: 1;
+    padding-left: 16px;
+    line-height: 1.4;
   }
   
   .checkout-container {

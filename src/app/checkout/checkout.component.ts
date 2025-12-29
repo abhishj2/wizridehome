@@ -626,6 +626,54 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  getLocationCode(location: string): string {
+    const codes: { [key: string]: string } = {
+      'Gangtok': 'GTK',
+      'Bagdogra Airport': 'IXB',
+      'Darjeeling': 'DJL',
+      'Siliguri': 'SLG',
+      'Kolkata': 'CCU',
+      'Delhi': 'DEL',
+      'Mumbai': 'BOM'
+    };
+    
+    const locationName = location.split('(')[0].trim();
+    return codes[locationName] || locationName.substring(0, 3).toUpperCase();
+  }
+
+  formatPickupTime(timeString: string): string {
+    if (!timeString) return '';
+    
+    const [hour, minute] = timeString.split(':');
+    const hourNum = parseInt(hour);
+    const minuteNum = parseInt(minute);
+    
+    let displayHour = hourNum;
+    let period = 'AM';
+    
+    if (hourNum === 0) {
+      displayHour = 12;
+      period = 'AM';
+    } else if (hourNum < 12) {
+      displayHour = hourNum;
+      period = 'AM';
+    } else if (hourNum === 12) {
+      displayHour = 12;
+      period = 'PM';
+    } else {
+      displayHour = hourNum - 12;
+      period = 'PM';
+    }
+    
+    return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
+  }
+
+  formatDuration(raw: string | undefined | null): string {
+    if (!raw) return '';
+    // Strip any leading minus sign and surrounding spaces
+    return raw.replace(/^\s*-+\s*/, '').trim();
+  }
+
   calculateFare() {
     if (!this.bookingData) {
       return;
