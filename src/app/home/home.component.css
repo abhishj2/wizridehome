@@ -4426,6 +4426,8 @@ button.nav-tab.active img {
 
     .wr-input {
         border: none;
+        caret-color: #0f9d92 !important;
+        cursor: text !important;
         background: transparent;
         font-size: 14px;
         width: 100%;
@@ -5485,14 +5487,33 @@ button.nav-tab.active img {
 
     /* Ensure input doesn't show cursor/caret on mobile when readonly */
     .wr-input[readonly] {
-        caret-color: transparent;
-        cursor: pointer;
+        caret-color: #0f9d92 !important;
+        cursor: text !important;
     }
 
     .wr-input[readonly]:focus {
         outline: none;
         border-color: transparent;
+        caret-color: #0f9d92 !important;
+        cursor: text !important;
     }
+}
+
+/* Custom cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.custom-phone-cursor {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background-color: #0f9d92;
+  display: inline-block;
+  animation: blink 1s infinite;
+  pointer-events: none;
+  z-index: 1000;
 }
 
 /* Custom keypad styles for all screen sizes where mobile view applies */
@@ -5630,11 +5651,13 @@ button.nav-tab.active img {
 
 /* Ensure input doesn't show cursor/caret on mobile when readonly */
 .wr-input[readonly] {
-    caret-color: transparent;
-    cursor: pointer;
+    caret-color: #0f9d92 !important;
+    cursor: text !important;
 }
 
 .wr-input[readonly]:focus {
     outline: none;
     border-color: transparent;
+    caret-color: #0f9d92 !important;
+    cursor: text !important;
 }

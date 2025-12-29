@@ -8,7 +8,8 @@ import {
   ElementRef,
   ViewChild,
   Renderer2,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
@@ -129,6 +130,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentMultiCityField: 'from' | 'to' = 'from';
   showCustomKeypad = false;
   activePhoneInput: HTMLInputElement | null = null;
+  phoneInputCursorPosition: number = 0;
+  customCursorElement: HTMLElement | null = null;
 
   // State-wise city data from API
   stateWiseCities: StateWiseCity[] = [];
@@ -1734,7 +1737,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -2394,14 +2398,48 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Custom keypad methods
-  openCustomKeypad(inputElement: HTMLInputElement): void {
+  openCustomKeypad(inputElement: HTMLInputElement, event?: Event): void {
     if (this.isMobileView()) {
-      // Scroll to input immediately when clicked/focused
-      this.scrollToInput(inputElement);
+      // Prevent native keyboard from opening immediately
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       
-      // Prevent default keyboard
+      // Store cursor position
+      this.phoneInputCursorPosition = inputElement.selectionStart || inputElement.value.length;
+      
+      // CRITICAL: Use readonly to prevent native keyboard, and create custom cursor
       inputElement.readOnly = true;
+      inputElement.setAttribute('readonly', 'readonly');
       inputElement.setAttribute('inputmode', 'none');
+      
+      // Create and show custom cursor
+      this.createCustomCursor(inputElement);
+      
+      // Add event listeners to track cursor position and prevent native keyboard
+      // Use arrow functions to maintain 'this' context
+      const clickHandler = (e: MouseEvent) => this.onPhoneInputClick(e);
+      const keyDownHandler = (e: KeyboardEvent) => this.onPhoneInputKeyDown(e);
+      const inputHandler = (e: Event) => this.onPhoneInputInput(e);
+      const selectHandler = (e: Event) => this.onPhoneInputSelect(e);
+      const focusHandler = (e: FocusEvent) => this.onPhoneInputFocus(e);
+      const touchStartHandler = (e: TouchEvent) => this.onPhoneInputTouchStart(e);
+      
+      // Store handlers on the element for later removal
+      (inputElement as any)._phoneInputClickHandler = clickHandler;
+      (inputElement as any)._phoneInputKeyDownHandler = keyDownHandler;
+      (inputElement as any)._phoneInputInputHandler = inputHandler;
+      (inputElement as any)._phoneInputSelectHandler = selectHandler;
+      (inputElement as any)._phoneInputFocusHandler = focusHandler;
+      (inputElement as any)._phoneInputTouchStartHandler = touchStartHandler;
+      
+      inputElement.addEventListener('click', clickHandler, true);
+      inputElement.addEventListener('keydown', keyDownHandler, true);
+      inputElement.addEventListener('input', inputHandler, true);
+      inputElement.addEventListener('select', selectHandler, true);
+      inputElement.addEventListener('focus', focusHandler, true);
+      inputElement.addEventListener('touchstart', touchStartHandler, true);
       
       this.activePhoneInput = inputElement;
       this.showCustomKeypad = true;
@@ -2409,10 +2447,206 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       // Focus the input for visual feedback
       inputElement.focus();
       
-      // Scroll again after keypad is shown to account for keypad height
-      setTimeout(() => {
-        this.scrollToInput(inputElement, true);
-      }, 50);
+      // Update custom cursor position
+      this.updateCustomCursorPosition();
+      
+      // Scroll immediately - no delay
+      this.scrollToInput(inputElement, true);
+    }
+  }
+
+  // Prevent native keyboard on touchstart (mobile) and handle tap position
+  private onPhoneInputTouchStart(event: TouchEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      // CRITICAL: Prevent default to stop native keyboard
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Calculate cursor position based on touch position
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        const touchX = touch.clientX;
+        const inputRect = input.getBoundingClientRect();
+        const inputStyles = getComputedStyle(input);
+        const paddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
+        
+        const value = input.value || '';
+        const relativeX = touchX - inputRect.left - paddingLeft;
+        
+        // Find the best cursor position
+        let bestPos = value.length;
+        let minDistance = Infinity;
+        
+        const tempSpan = this.document.createElement('span');
+        tempSpan.style.cssText = `
+          position: absolute;
+          visibility: hidden;
+          white-space: pre;
+          font-family: ${inputStyles.fontFamily};
+          font-size: ${inputStyles.fontSize};
+          font-weight: ${inputStyles.fontWeight};
+          letter-spacing: ${inputStyles.letterSpacing};
+        `;
+        
+        const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
+        if (wrapper) {
+          wrapper.appendChild(tempSpan);
+          
+          for (let i = 0; i <= value.length; i++) {
+            tempSpan.textContent = value.substring(0, i);
+            const textWidth = tempSpan.offsetWidth;
+            const distance = Math.abs(textWidth - relativeX);
+            
+            if (distance < minDistance) {
+              minDistance = distance;
+              bestPos = i;
+            }
+          }
+          
+          wrapper.removeChild(tempSpan);
+        }
+        
+        this.phoneInputCursorPosition = bestPos;
+        this.updateCustomCursorPosition();
+      }
+    }
+  }
+
+  // Prevent native keyboard on focus - keep readonly to prevent native cursor
+  private onPhoneInputFocus(event: FocusEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      // Ensure readonly is set to prevent native keyboard and cursor
+      input.setAttribute('inputmode', 'none');
+      input.readOnly = true;
+      input.setAttribute('readonly', 'readonly');
+      // Update custom cursor position
+      this.updateCustomCursorPosition();
+    }
+  }
+
+  // Track cursor position on input click - immediate update for fast response
+  private onPhoneInputClick(event: MouseEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Calculate cursor position based on click position accurately
+      const clickX = event.clientX;
+      const inputRect = input.getBoundingClientRect();
+      const inputStyles = getComputedStyle(input);
+      const paddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
+      
+      // Get the text before cursor to measure width
+      const value = input.value || '';
+      const relativeX = clickX - inputRect.left - paddingLeft;
+      
+      // Binary search or linear search to find the correct position
+      let bestPos = value.length;
+      let minDistance = Infinity;
+      
+      // Create temporary span for measurement
+      const tempSpan = this.document.createElement('span');
+      tempSpan.style.cssText = `
+        position: absolute;
+        visibility: hidden;
+        white-space: pre;
+        font-family: ${inputStyles.fontFamily};
+        font-size: ${inputStyles.fontSize};
+        font-weight: ${inputStyles.fontWeight};
+        letter-spacing: ${inputStyles.letterSpacing};
+      `;
+      
+      const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
+      if (wrapper) {
+        wrapper.appendChild(tempSpan);
+        
+        // Try each position to find the closest match
+        for (let i = 0; i <= value.length; i++) {
+          tempSpan.textContent = value.substring(0, i);
+          const textWidth = tempSpan.offsetWidth;
+          const distance = Math.abs(textWidth - relativeX);
+          
+          if (distance < minDistance) {
+            minDistance = distance;
+            bestPos = i;
+          }
+        }
+        
+        wrapper.removeChild(tempSpan);
+      }
+      
+      this.phoneInputCursorPosition = bestPos;
+      
+      // Update custom cursor position
+      this.updateCustomCursorPosition();
+    }
+  }
+
+  // Track cursor position on input - allow native input events for cursor
+  private onPhoneInputInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      // Only prevent if it's actual text input (not cursor movement)
+      // Allow cursor movement events
+      const newValue = input.value;
+      const oldValue = this.phoneNumber || '';
+      
+      // If value changed and it's not from our keypad, prevent it
+      // But allow cursor position updates
+      if (newValue !== oldValue && newValue.length > oldValue.length) {
+        // This might be native keyboard input - restore old value
+        input.value = oldValue;
+        this.phoneInputCursorPosition = input.selectionStart || input.value.length;
+        event.preventDefault();
+        event.stopPropagation();
+      } else {
+        // Just cursor movement - allow it
+        this.phoneInputCursorPosition = input.selectionStart || input.value.length;
+      }
+    }
+  }
+
+  // Track cursor position on selection
+  private onPhoneInputSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      this.phoneInputCursorPosition = input.selectionStart || input.value.length;
+    }
+  }
+
+  // Prevent native keyboard but allow cursor movement
+  private onPhoneInputKeyDown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input === this.activePhoneInput) {
+      // Allow cursor movement keys and backspace/delete for editing
+      const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Backspace', 'Delete', 'Tab'];
+      if (allowedKeys.includes(event.key)) {
+        // Update cursor position immediately - no delay
+        this.phoneInputCursorPosition = input.selectionStart || input.value.length;
+        // Update model if value changed (backspace/delete) - immediate
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+          this.phoneNumber = input.value;
+          this.cdr.markForCheck();
+        }
+        return;
+      }
+      // Prevent all other keys (native keyboard) - but allow numbers from our keypad
+      // Numbers typed directly should be blocked, only our keypad should work
+      if (event.key.length === 1 && /[0-9]/.test(event.key)) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      // Allow other control keys
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+      // Block everything else
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -2449,31 +2683,178 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeCustomKeypad(): void {
+    // Remove custom cursor
+    this.removeCustomCursor();
+    
     if (this.activePhoneInput) {
+      // Remove event listeners using stored handlers
+      const clickHandler = (this.activePhoneInput as any)._phoneInputClickHandler;
+      const keyDownHandler = (this.activePhoneInput as any)._phoneInputKeyDownHandler;
+      const inputHandler = (this.activePhoneInput as any)._phoneInputInputHandler;
+      const selectHandler = (this.activePhoneInput as any)._phoneInputSelectHandler;
+      const focusHandler = (this.activePhoneInput as any)._phoneInputFocusHandler;
+      const touchStartHandler = (this.activePhoneInput as any)._phoneInputTouchStartHandler;
+      
+      if (clickHandler) {
+        this.activePhoneInput.removeEventListener('click', clickHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputClickHandler;
+      }
+      if (keyDownHandler) {
+        this.activePhoneInput.removeEventListener('keydown', keyDownHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputKeyDownHandler;
+      }
+      if (inputHandler) {
+        this.activePhoneInput.removeEventListener('input', inputHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputInputHandler;
+      }
+      if (selectHandler) {
+        this.activePhoneInput.removeEventListener('select', selectHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputSelectHandler;
+      }
+      if (focusHandler) {
+        this.activePhoneInput.removeEventListener('focus', focusHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputFocusHandler;
+      }
+      if (touchStartHandler) {
+        this.activePhoneInput.removeEventListener('touchstart', touchStartHandler, true);
+        delete (this.activePhoneInput as any)._phoneInputTouchStartHandler;
+      }
+      
+      // Restore normal behavior
+      this.activePhoneInput.readOnly = false;
+      this.activePhoneInput.removeAttribute('inputmode');
+      this.activePhoneInput.removeAttribute('readonly');
+      
       this.activePhoneInput.blur();
       this.activePhoneInput = null;
     }
     this.showCustomKeypad = false;
+    this.phoneInputCursorPosition = 0;
+  }
+
+  // Create custom cursor element
+  private createCustomCursor(inputElement: HTMLInputElement): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    // Remove existing cursor if any
+    this.removeCustomCursor();
+    
+    // Create cursor element
+    const cursor = this.document.createElement('span');
+    cursor.className = 'custom-phone-cursor';
+    cursor.style.cssText = `
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background-color: #0f9d92;
+      display: inline-block;
+      animation: blink 1s infinite;
+      pointer-events: none;
+      z-index: 1000;
+    `;
+    
+    this.customCursorElement = cursor;
+    
+    // Add to input wrapper
+    const wrapper = inputElement.closest('.wr-phone-wrapper') || inputElement.parentElement;
+    if (wrapper) {
+      (wrapper as HTMLElement).style.position = 'relative';
+      wrapper.appendChild(cursor);
+    }
+    
+    // Update position
+    this.updateCustomCursorPosition();
+  }
+
+  // Update custom cursor position
+  private updateCustomCursorPosition(): void {
+    if (!this.customCursorElement || !this.activePhoneInput || !isPlatformBrowser(this.platformId)) return;
+    
+    const input = this.activePhoneInput;
+    const cursor = this.customCursorElement;
+    const value = input.value || '';
+    const cursorPos = this.phoneInputCursorPosition || value.length;
+    
+    // Get computed styles for accurate measurement
+    const inputStyles = getComputedStyle(input);
+    const inputRect = input.getBoundingClientRect();
+    
+    // Create a temporary span to measure text width with exact same styling
+    const tempSpan = this.document.createElement('span');
+    tempSpan.style.cssText = `
+      position: absolute;
+      visibility: hidden;
+      white-space: pre;
+      font-family: ${inputStyles.fontFamily};
+      font-size: ${inputStyles.fontSize};
+      font-weight: ${inputStyles.fontWeight};
+      letter-spacing: ${inputStyles.letterSpacing};
+      padding-left: ${inputStyles.paddingLeft};
+      padding-right: ${inputStyles.paddingRight};
+    `;
+    tempSpan.textContent = value.substring(0, cursorPos);
+    
+    const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
+    if (wrapper) {
+      const wrapperRect = wrapper.getBoundingClientRect();
+      
+      // Measure text width
+      wrapper.appendChild(tempSpan);
+      const textWidth = tempSpan.offsetWidth;
+      wrapper.removeChild(tempSpan);
+      
+      // Calculate position relative to input's left edge (not wrapper)
+      // Account for input's padding and position within wrapper
+      const inputLeftInWrapper = inputRect.left - wrapperRect.left;
+      const inputPaddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
+      const leftOffset = inputLeftInWrapper + inputPaddingLeft + textWidth;
+      
+      // Position cursor
+      cursor.style.left = `${leftOffset}px`;
+      cursor.style.top = `${inputRect.top - wrapperRect.top + (inputRect.height - 20) / 2}px`;
+    }
+  }
+
+  // Remove custom cursor
+  private removeCustomCursor(): void {
+    if (this.customCursorElement && this.customCursorElement.parentElement) {
+      this.customCursorElement.parentElement.removeChild(this.customCursorElement);
+    }
+    this.customCursorElement = null;
   }
 
   onKeypadNumberClick(number: string): void {
     if (!this.activePhoneInput) return;
     
+    // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
-    // Check maxlength (10 digits for mobile)
-    if (currentValue.length < 10) {
-      this.activePhoneInput.value = currentValue + number;
-      this.phoneNumber = this.activePhoneInput.value;
-      // Trigger ngModel update immediately
-      this.activePhoneInput.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    }
+    const cursorPos = this.phoneInputCursorPosition || currentValue.length;
+    
+    // Check maxlength (10 digits for mobile) - fast exit
+    if (currentValue.length >= 10) return;
+    
+    // Insert number at cursor position - optimized string manipulation
+    const newValue = currentValue.slice(0, cursorPos) + number + currentValue.slice(cursorPos);
+    const newCursorPos = cursorPos + 1;
+    
+    // Update everything synchronously - no async operations
+    this.activePhoneInput.value = newValue;
+    this.phoneNumber = newValue;
+    this.phoneInputCursorPosition = newCursorPos;
+    
+    // Update custom cursor position
+    this.updateCustomCursorPosition();
+    
+    // Trigger change detection immediately - use markForCheck for better performance
+    this.cdr.markForCheck();
   }
 
   private lastTouchTime = 0;
+  private lastTouchTarget: EventTarget | null = null;
   private touchStartTime = 0;
+  private touchStartTarget: EventTarget | null = null;
 
-  // Prevent iOS double-tap zoom on keypad buttons - optimized for speed
-  // Note: These handlers are minimal and only prevent default when necessary
+  // Prevent iOS double-tap zoom on keypad buttons while allowing rapid consecutive taps
   // CSS touch-action: manipulation handles most zoom prevention, these are fallback
   onKeypadTouchStart(event: TouchEvent): void {
     // Only prevent default for multi-touch (pinch zoom) - this is necessary
@@ -2482,40 +2863,59 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     this.touchStartTime = Date.now();
+    this.touchStartTarget = event.target;
   }
 
   onKeypadTouchEnd(event: TouchEvent): void {
+    // Optimized for speed - minimal processing
     const now = Date.now();
     const timeSinceLastTouch = now - this.lastTouchTime;
     const touchDuration = now - this.touchStartTime;
+    const currentTarget = event.target;
     
-    // Only prevent default for rapid double-taps (within 300ms) to prevent zoom
-    // This is necessary to prevent iOS double-tap zoom
-    if (timeSinceLastTouch < 300 && touchDuration < 300) {
+    // Only prevent default for actual problematic zoom scenarios
+    // Allow ALL rapid taps for fast typing - only block obvious accidental double-taps
+    const isSameButtonDoubleTap = currentTarget === this.lastTouchTarget && 
+                                   timeSinceLastTouch < 150 && 
+                                   touchDuration < 150;
+    
+    // Only prevent for very obvious accidental taps (< 20ms) - allow everything else
+    const isAccidentalTap = touchDuration < 20;
+    
+    // Minimal blocking - allow fast typing
+    if (isSameButtonDoubleTap || isAccidentalTap) {
       event.preventDefault();
-      this.lastTouchTime = now;
-      return;
     }
     
+    // Update tracking - minimal overhead
     this.lastTouchTime = now;
-    
-    // Only prevent default for very quick taps (< 50ms) to avoid accidental zoom
-    // Normal taps proceed normally and trigger click immediately
-    if (touchDuration < 50) {
-      event.preventDefault();
-    }
+    this.lastTouchTarget = currentTarget;
   }
 
   onKeypadBackspace(): void {
     if (!this.activePhoneInput) return;
     
+    // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
-    if (currentValue.length > 0) {
-      this.activePhoneInput.value = currentValue.slice(0, -1);
-      this.phoneNumber = this.activePhoneInput.value;
-      // Trigger ngModel update immediately
-      this.activePhoneInput.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    }
+    const cursorPos = this.phoneInputCursorPosition || currentValue.length;
+    
+    // Fast exit if nothing to delete
+    if (currentValue.length === 0 || cursorPos === 0) return;
+    
+    // Delete character at cursor position - optimized string manipulation
+    const newValue = currentValue.slice(0, cursorPos - 1) + currentValue.slice(cursorPos);
+    const newCursorPos = cursorPos - 1;
+    
+    // Update everything synchronously - no async operations
+    this.activePhoneInput.value = newValue;
+    this.phoneNumber = newValue;
+    this.phoneInputCursorPosition = newCursorPos;
+    
+    // Update custom cursor position
+    this.updateCustomCursorPosition();
+    
+    // Trigger change detection immediately - use markForCheck for better performance
+    this.cdr.markForCheck();
   }
 
   onKeypadDone(): void {

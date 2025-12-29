@@ -768,7 +768,7 @@
               </option>
             </select>
           </div>
-          <input #phoneInputShared type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputShared)" (click)="openCustomKeypad(phoneInputShared)" [readonly]="isMobileView()">
+          <input #phoneInputShared type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputShared, $event)" (click)="openCustomKeypad(phoneInputShared, $event)" [readonly]="isMobileView()">
         </div>
       </div>
 
@@ -817,7 +817,7 @@
               </option>
             </select>
           </div>
-          <input #phoneInputReserved type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputReserved)" (click)="openCustomKeypad(phoneInputReserved)" [readonly]="isMobileView()">
+          <input #phoneInputReserved type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputReserved, $event)" (click)="openCustomKeypad(phoneInputReserved, $event)" [readonly]="isMobileView()">
         </div>
       </div>
 
@@ -971,7 +971,7 @@
               </option>
             </select>
           </div>
-          <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputFlights)" (click)="openCustomKeypad(phoneInputFlights)" [readonly]="isMobileView()">
+          <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputFlights, $event)" (click)="openCustomKeypad(phoneInputFlights, $event)" [readonly]="isMobileView()">
         </div>
       </div>
     </div>
