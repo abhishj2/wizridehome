@@ -5377,8 +5377,8 @@ button.nav-tab.active img {
     .keypad-row {
         display: flex;
         justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 10px;
+        margin-bottom: 10px;
     }
 
     .keypad-row:last-of-type {
@@ -5387,11 +5387,11 @@ button.nav-tab.active img {
 
     .keypad-btn {
         flex: 1;
-        height: 56px;
+        height: 48px;
         background: #ffffff;
         border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 24px;
+        border-radius: 10px;
+        font-size: 20px;
         font-weight: 600;
         color: #111827;
         cursor: pointer;
@@ -5404,6 +5404,8 @@ button.nav-tab.active img {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         touch-action: manipulation;
         -webkit-touch-callout: none;
+        min-width: 0;
+        padding: 0 4px;
     }
 
     .keypad-btn:active {
@@ -5436,8 +5438,8 @@ button.nav-tab.active img {
     }
 
     .keypad-btn-backspace svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     .keypad-row-done {
@@ -5520,8 +5522,8 @@ button.nav-tab.active img {
 .keypad-row {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .keypad-row:last-of-type {
@@ -5530,11 +5532,11 @@ button.nav-tab.active img {
 
 .keypad-btn {
     flex: 1;
-    height: 56px;
+    height: 48px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 24px;
+    border-radius: 10px;
+    font-size: 20px;
     font-weight: 600;
     color: #111827;
     cursor: pointer;
@@ -5547,6 +5549,8 @@ button.nav-tab.active img {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     touch-action: manipulation;
     -webkit-touch-callout: none;
+    min-width: 0;
+    padding: 0 4px;
 }
 
 .keypad-btn:active {
@@ -5579,8 +5583,8 @@ button.nav-tab.active img {
 }
 
 .keypad-btn-backspace svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
 
 .keypad-row-done {

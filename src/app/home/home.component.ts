@@ -703,13 +703,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Get initial cities per state (show ONLY popular cities initially)
   getInitialCitiesForState(stateGroup: { state: string; cities: City[]; expanded: boolean }): City[] {
     if (!stateGroup || !stateGroup.cities || stateGroup.cities.length === 0) {
-      console.log('getInitialCitiesForState: No cities in stateGroup', stateGroup);
+      // console.log('getInitialCitiesForState: No cities in stateGroup', stateGroup);
       return [];
     }
 
     if (stateGroup.expanded) {
       // When expanded (See More clicked), show ALL cities (both popular and non-popular)
-      console.log(`State ${stateGroup.state} expanded - showing ALL ${stateGroup.cities.length} cities (popular + non-popular)`);
+      // console.log(`State ${stateGroup.state} expanded - showing ALL ${stateGroup.cities.length} cities (popular + non-popular)`);
       return stateGroup.cities;
     }
     
@@ -717,9 +717,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const popularCities = stateGroup.cities.filter(city => {
       return city.popular === true;
     });
-    console.log(`State ${stateGroup.state} - showing ${popularCities.length} popular cities out of ${stateGroup.cities.length} total`);
+    // console.log(`State ${stateGroup.state} - showing ${popularCities.length} popular cities out of ${stateGroup.cities.length} total`);
     if (popularCities.length === 0) {
-      console.warn(`No popular cities found for ${stateGroup.state}. Sample cities:`, stateGroup.cities.slice(0, 3).map(c => ({ name: c.name, popular: c.popular, type: typeof c.popular })));
+      // console.warn(`No popular cities found for ${stateGroup.state}. Sample cities:`, stateGroup.cities.slice(0, 3).map(c => ({ name: c.name, popular: c.popular, type: typeof c.popular })));
     }
     return popularCities;
   }
@@ -1748,9 +1748,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isPlatformBrowser(this.platformId)) {
 
       // 1. Fetch TBO Token (Browser Only)
-      this.subscriptions.add(
+        this.subscriptions.add(
         this.apiService.getTboToken().subscribe((val: any) => {
-          console.log('TBo Token', val);
+          // console.log('TBo Token', val);
           if (val) {
             this.loader = false;
             this.tboTokenId = val['TokenId'];
@@ -1760,10 +1760,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
 
-      this.subscriptions.add(
+        this.subscriptions.add(
         this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
           this.ip = res.ip;
-          console.log('nIp', this.ip);
+          // console.log('nIp', this.ip);
         })
       );
     }
@@ -1774,7 +1774,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     // Fetch source cities for shared cabs
     this.apiService.getSource().subscribe({
       next: (data) => {
-        console.log('data received in HomeComponent:', data);
+        // console.log('data received in HomeComponent:', data);
         // Transform API data to City[] format for shared cabs
         if (Array.isArray(data)) {
           this.sourceCities = data.map((item: SourceValue | string) => {
@@ -1786,18 +1786,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               state: this.getCityState(name)
             };
           });
-          console.log('Source cities populated:', this.sourceCities);
+          // console.log('Source cities populated:', this.sourceCities);
         }
       },
       error: (error) => {
-        console.error('Error fetching source data:', error);
+        // console.error('Error fetching source data:', error);
       }
     });
 
     // Fetch cities for reserved cabs (same API for source and destination)
     this.apiService.getSourceDestinationFb().subscribe({
       next: (data) => {
-        console.log('Reserved cities data received:', data);
+        // console.log('Reserved cities data received:', data);
         // Transform API data to City[] format for reserved cabs
         // API returns array with objects containing LOCATIONCODE and LOCATION
         if (Array.isArray(data)) {
@@ -1810,18 +1810,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               state: this.getCityState(name)
             };
           });
-          console.log('Reserved cities populated:', this.reservedCities);
+          // console.log('Reserved cities populated:', this.reservedCities);
         }
       },
       error: (error) => {
-        console.error('Error fetching reserved cities data:', error);
+        // console.error('Error fetching reserved cities data:', error);
       }
     });
 
     // Fetch airports for flight booking
     this.apiService.getFullAiportList().subscribe({
       next: (data) => {
-        console.log('Airport list data received:', data);
+        // console.log('Airport list data received:', data);
         // Transform API data to City[] format for flights
         // API returns array with objects containing AIRPORTCODE, NAME, CITY, CITYCODE, COUNTRY
         if (Array.isArray(data)) {
@@ -1842,7 +1842,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               state: cityState !== 'Other' ? cityState : (country || 'Other') // Use city state mapping, fallback to country
             };
           });
-          console.log('Flight airports populated:', this.flightAirports);
+          // console.log('Flight airports populated:', this.flightAirports);
 
           // Set dynamic default airports (only on desktop, not mobile)
           if (!this.isMobileView()) {
@@ -1859,52 +1859,52 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
       error: (error) => {
-        console.error('Error fetching airport data:', error);
+        // console.error('Error fetching airport data:', error);
       }
     });
 
     // Fetch state-wise cities with popularity
-    console.log('=== FETCHING STATE-WISE CITIES API ===');
+    // console.log('=== FETCHING STATE-WISE CITIES API ===');
     this.apiService.getstatewisecitywithpopularity().subscribe((data: any) => {
-      console.log('=== API RESPONSE RECEIVED ===');
-      console.log('Raw API Response:', data);
-      console.log('Response Type:', typeof data);
-      console.log('Is Array:', Array.isArray(data));
-      console.log('Response Keys:', data && typeof data === 'object' ? Object.keys(data) : 'N/A');
+      // console.log('=== API RESPONSE RECEIVED ===');
+      // console.log('Raw API Response:', data);
+      // console.log('Response Type:', typeof data);
+      // console.log('Is Array:', Array.isArray(data));
+      // console.log('Response Keys:', data && typeof data === 'object' ? Object.keys(data) : 'N/A');
       
       // API returns array of state objects directly: [{state: "Sikkim", cities: [{city: "Gangtok", popular: true}, ...]}, ...]
       let locations: StateWiseCity[] = [];
       if (Array.isArray(data)) {
-        console.log('API returned array directly, length:', data.length);
+        // console.log('API returned array directly, length:', data.length);
         // API returns array directly - each element is {state: string, cities: Array}
         locations = data;
         if (data.length > 0) {
-          console.log('First state sample:', JSON.stringify(data[0], null, 2));
+          // console.log('First state sample:', JSON.stringify(data[0], null, 2));
         }
       } else if (data && data.locations && Array.isArray(data.locations)) {
-        console.log('API returned object with locations property, length:', data.locations.length);
+        // console.log('API returned object with locations property, length:', data.locations.length);
         // If API returns object with locations property
         locations = data.locations;
         if (data.locations.length > 0) {
-          console.log('First state sample:', JSON.stringify(data.locations[0], null, 2));
+          // console.log('First state sample:', JSON.stringify(data.locations[0], null, 2));
         }
       } else if (data && typeof data === 'object') {
-        console.log('API returned single object, wrapping in array');
+        // console.log('API returned single object, wrapping in array');
         // If single object, wrap in array
         locations = [data];
-        console.log('State sample:', JSON.stringify(data, null, 2));
+        // console.log('State sample:', JSON.stringify(data, null, 2));
       } else {
-        console.warn('Unexpected API response format:', data);
+        // console.warn('Unexpected API response format:', data);
       }
       
-      console.log('Processed locations count:', locations.length);
+      // console.log('Processed locations count:', locations.length);
       
       if (locations.length > 0) {
         this.stateWiseCities = locations;
         this.stateWiseCitiesLoaded = true;
-        console.log('=== STATE-WISE CITIES POPULATED ===');
-        console.log('Total states:', this.stateWiseCities.length);
-        console.log('Full state-wise cities data:', JSON.stringify(this.stateWiseCities, null, 2));
+        // console.log('=== STATE-WISE CITIES POPULATED ===');
+        // console.log('Total states:', this.stateWiseCities.length);
+        // console.log('Full state-wise cities data:', JSON.stringify(this.stateWiseCities, null, 2));
         
         this.stateWiseCities.forEach((state, index) => {
           const popularCount = state.cities.filter(c => {
@@ -1913,25 +1913,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             if (c.popular === 1) return true;
             return false;
           }).length;
-          console.log(`State ${index + 1}: ${state.state}`);
-          console.log(`  - Total Cities: ${state.cities.length}`);
-          console.log(`  - Popular Cities: ${popularCount}`);
-          console.log(`  - Non-Popular Cities: ${state.cities.length - popularCount}`);
-          console.log(`  - Sample cities:`, state.cities.slice(0, 5).map(c => ({ 
-            name: c.city, 
-            popular: c.popular, 
-            popularType: typeof c.popular 
-          })));
+          // console.log(`State ${index + 1}: ${state.state}`);
+          // console.log(`  - Total Cities: ${state.cities.length}`);
+          // console.log(`  - Popular Cities: ${popularCount}`);
+          // console.log(`  - Non-Popular Cities: ${state.cities.length - popularCount}`);
+          // console.log(`  - Sample cities:`, state.cities.slice(0, 5).map(c => ({ 
+          //   name: c.city, 
+          //   popular: c.popular, 
+          //   popularType: typeof c.popular 
+          // })));
         });
       } else {
-        console.warn('=== NO STATE-WISE CITIES DATA ===');
-        console.warn('No state-wise cities data received from API');
-        console.warn('Raw data was:', data);
+        // console.warn('=== NO STATE-WISE CITIES DATA ===');
+        // console.warn('No state-wise cities data received from API');
+        // console.warn('Raw data was:', data);
       }
     }, (error) => {
-      console.error('=== API ERROR ===');
-      console.error('Error fetching state-wise cities data:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
+      // console.error('=== API ERROR ===');
+      // console.error('Error fetching state-wise cities data:', error);
+      // console.error('Error details:', JSON.stringify(error, null, 2));
       this.stateWiseCitiesLoaded = false;
     });
 
@@ -2230,7 +2230,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   navigateToResults(phoneNumber: string) {
     if (!this.pendingAction) {
-      console.log('No pending action, cannot navigate');
+      // console.log('No pending action, cannot navigate');
       return;
     }
 
@@ -2254,8 +2254,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       searchParams.tolocid = this.getReservedCityCode(destination);
     }
 
-    console.log('Navigating to booking results with params:', searchParams);
-    console.log('Router available:', !!this.router);
+    // console.log('Navigating to booking results with params:', searchParams);
+    // console.log('Router available:', !!this.router);
 
     if (!isPlatformBrowser(this.platformId)) return;
     try {
@@ -2263,26 +2263,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       localStorage.setItem('bookingSearchParams', JSON.stringify(searchParams));
 
       // Try router navigation first
-      console.log('Attempting router navigation...');
+      // console.log('Attempting router navigation...');
       this.router.navigate(['/booking-results'], { state: { searchParams } }).then(success => {
-        console.log('Router navigation success:', success);
+        // console.log('Router navigation success:', success);
         if (!success) {
-          console.log('Router navigation failed, trying window.location...');
+          // console.log('Router navigation failed, trying window.location...');
           // Fallback to window.location
           if (isPlatformBrowser(this.platformId)) {
             window.location.href = '/booking-results';
           }
         }
       }).catch(error => {
-        console.error('Router navigation error:', error);
-        console.log('Falling back to window.location...');
+        // console.error('Router navigation error:', error);
+        // console.log('Falling back to window.location...');
         // Fallback to window.location
         if (isPlatformBrowser(this.platformId)) {
           window.location.href = '/booking-results';
         }
       });
     } catch (error) {
-      console.error('Error during navigation:', error);
+      // console.error('Error during navigation:', error);
       // Final fallback
       if (isPlatformBrowser(this.platformId)) {
         window.location.href = '/booking-results';
@@ -2396,6 +2396,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Custom keypad methods
   openCustomKeypad(inputElement: HTMLInputElement): void {
     if (this.isMobileView()) {
+      // Scroll to input immediately when clicked/focused
+      this.scrollToInput(inputElement);
+      
       // Prevent default keyboard
       inputElement.readOnly = true;
       inputElement.setAttribute('inputmode', 'none');
@@ -2406,32 +2409,42 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       // Focus the input for visual feedback
       inputElement.focus();
       
-      // Scroll the input into view after keypad is shown
+      // Scroll again after keypad is shown to account for keypad height
       setTimeout(() => {
-        inputElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center',
-          inline: 'nearest'
-        });
-        
-        // Additional scroll adjustment to account for keypad height
-        // Get the input's parent container (wr-field-pill or wr-phone-wrapper)
-        const inputContainer = inputElement.closest('.wr-field-pill, .wr-phone-wrapper');
-        if (inputContainer) {
-          const containerRect = inputContainer.getBoundingClientRect();
-          const viewportHeight = window.innerHeight;
-          const keypadHeight = 350; // Approximate keypad height
-          
-          // If input is too close to bottom (where keypad will appear), scroll more
-          if (containerRect.bottom > viewportHeight - keypadHeight) {
-            const scrollAmount = containerRect.bottom - (viewportHeight - keypadHeight) + 20; // 20px padding
-            window.scrollBy({
-              top: scrollAmount,
-              behavior: 'smooth'
-            });
-          }
-        }
-      }, 100);
+        this.scrollToInput(inputElement, true);
+      }, 50);
+    }
+  }
+
+  // Helper method to scroll input into view
+  private scrollToInput(inputElement: HTMLInputElement, accountForKeypad: boolean = false): void {
+    if (!inputElement || !isPlatformBrowser(this.platformId)) return;
+    
+    const inputContainer = inputElement.closest('.wr-field-pill, .wr-phone-wrapper') || inputElement;
+    const containerRect = inputContainer.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const keypadHeight = accountForKeypad ? 350 : 0; // Keypad height when shown
+    const padding = 20;
+    
+    // Calculate target scroll position to center input in visible area
+    const inputTop = containerRect.top + window.scrollY;
+    const inputHeight = containerRect.height;
+    const availableHeight = viewportHeight - keypadHeight - padding;
+    const targetScroll = inputTop - (availableHeight / 2) + (inputHeight / 2);
+    
+    // Check if input is too close to bottom (where keypad will appear)
+    if (accountForKeypad && containerRect.bottom > viewportHeight - keypadHeight) {
+      const scrollAmount = containerRect.bottom - (viewportHeight - keypadHeight) + padding;
+      window.scrollTo({
+        top: window.scrollY + scrollAmount,
+        behavior: 'auto' // Instant scroll
+      });
+    } else {
+      // Scroll to center the input
+      window.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: 'auto' // Instant scroll
+      });
     }
   }
 
@@ -2451,17 +2464,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (currentValue.length < 10) {
       this.activePhoneInput.value = currentValue + number;
       this.phoneNumber = this.activePhoneInput.value;
-      // Trigger ngModel update
-      this.activePhoneInput.dispatchEvent(new Event('input'));
+      // Trigger ngModel update immediately
+      this.activePhoneInput.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     }
   }
 
   private lastTouchTime = 0;
   private touchStartTime = 0;
 
-  // Prevent iOS double-tap zoom on keypad buttons
+  // Prevent iOS double-tap zoom on keypad buttons - optimized for speed
+  // Note: These handlers are minimal and only prevent default when necessary
+  // CSS touch-action: manipulation handles most zoom prevention, these are fallback
   onKeypadTouchStart(event: TouchEvent): void {
-    // Prevent default to stop zoom on multi-touch (pinch zoom)
+    // Only prevent default for multi-touch (pinch zoom) - this is necessary
     if (event.touches.length > 1) {
       event.preventDefault();
       return;
@@ -2474,26 +2489,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const timeSinceLastTouch = now - this.lastTouchTime;
     const touchDuration = now - this.touchStartTime;
     
-    // Prevent zoom on rapid double-taps (within 300ms) - this is iOS double-tap zoom threshold
+    // Only prevent default for rapid double-taps (within 300ms) to prevent zoom
+    // This is necessary to prevent iOS double-tap zoom
     if (timeSinceLastTouch < 300 && touchDuration < 300) {
       event.preventDefault();
-      // Trigger click manually to ensure functionality
-      const target = event.target as HTMLElement;
-      const button = target.closest('button');
-      if (button && !button.disabled) {
-        // Use setTimeout to ensure preventDefault is processed first
-        setTimeout(() => {
-          button.click();
-        }, 0);
-      }
       this.lastTouchTime = now;
       return;
     }
     
     this.lastTouchTime = now;
     
-    // For very quick taps (< 100ms), prevent default to avoid accidental zoom
-    if (touchDuration < 100) {
+    // Only prevent default for very quick taps (< 50ms) to avoid accidental zoom
+    // Normal taps proceed normally and trigger click immediately
+    if (touchDuration < 50) {
       event.preventDefault();
     }
   }
@@ -2505,8 +2513,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (currentValue.length > 0) {
       this.activePhoneInput.value = currentValue.slice(0, -1);
       this.phoneNumber = this.activePhoneInput.value;
-      // Trigger ngModel update
-      this.activePhoneInput.dispatchEvent(new Event('input'));
+      // Trigger ngModel update immediately
+      this.activePhoneInput.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     }
   }
 
@@ -2649,11 +2657,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const formattedDate = this.formatDateForAPI(travelDate);
     const formattedTime = this.formatTimeForAPI(travelTime);
 
-    console.log('=== Checking reserved cab availability before navigation ===');
-    console.log('Source:', source, 'Code:', fromlocid);
-    console.log('Destination:', destination, 'Code:', tolocid);
-    console.log('Travel Date (original):', travelDate, 'Formatted:', formattedDate);
-    console.log('Travel Time (original):', travelTime, 'Formatted:', formattedTime);
+    // console.log('=== Checking reserved cab availability before navigation ===');
+    // console.log('Source:', source, 'Code:', fromlocid);
+    // console.log('Destination:', destination, 'Code:', tolocid);
+    // console.log('Travel Date (original):', travelDate, 'Formatted:', formattedDate);
+    // console.log('Travel Time (original):', travelTime, 'Formatted:', formattedTime);
 
     // Call API to check if reserved cabs are available
     this.apiService.getReservedCarList(
@@ -2663,10 +2671,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       formattedTime
     ).subscribe({
       next: (data: any) => {
-        console.log('=== Reserved Cab Availability Check Response ===');
-        console.log('Response:', JSON.stringify(data, null, 2));
-        console.log('Response type:', typeof data);
-        console.log('Is array:', Array.isArray(data));
+        // console.log('=== Reserved Cab Availability Check Response ===');
+        // console.log('Response:', JSON.stringify(data, null, 2));
+        // console.log('Response type:', typeof data);
+        // console.log('Is array:', Array.isArray(data));
 
         // Check if response contains "SORRY NO CABS AVAILABLE"
         const responseString = JSON.stringify(data);
@@ -2714,7 +2722,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             allowOutsideClick: false
           });
 
-          console.log('No cabs available - SORRY NO CABS AVAILABLE in response');
+          // console.log('No cabs available - SORRY NO CABS AVAILABLE in response');
         } else if (Array.isArray(data) && data.length > 0) {
           // Check nested array structure: [[{...}]]
           let hasCabs = false;
@@ -2723,14 +2731,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             const firstCab = data[0][0];
             if (firstCab && typeof firstCab === 'object' && firstCab.CTD) {
               hasCabs = true;
-              console.log('Cabs available - Found', data[0].length, 'vehicles in nested array');
-              console.log('Vehicle details:', data[0]);
+              // console.log('Cabs available - Found', data[0].length, 'vehicles in nested array');
+              // console.log('Vehicle details:', data[0]);
             }
           } else if (data.length > 0 && typeof data[0] === 'object' && data[0].CTD) {
             // Flat array structure with cab objects
             hasCabs = true;
-            console.log('Cabs available - Found', data.length, 'vehicles');
-            console.log('Vehicle details:', data);
+            // console.log('Cabs available - Found', data.length, 'vehicles');
+            // console.log('Vehicle details:', data);
           }
 
           if (hasCabs) {
@@ -2751,7 +2759,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               showConfirmButton: false,
               allowOutsideClick: false
             });
-            console.log('No vehicles found in response');
+            // console.log('No vehicles found in response');
           }
         } else {
           // Close phone popup before showing alert
@@ -2767,15 +2775,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             showConfirmButton: false,
             allowOutsideClick: false
           });
-          console.log('No vehicles found in response');
+          // console.log('No vehicles found in response');
         }
       },
       error: (error) => {
         // Close phone popup before showing error alert
         this.cancelPhonePopup();
 
-        console.error('=== Reserved Cab Availability Check Error ===');
-        console.error('Error:', error);
+        // console.error('=== Reserved Cab Availability Check Error ===');
+        // console.error('Error:', error);
 
         Swal.fire({
           icon: 'error',
@@ -2803,13 +2811,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    console.log('=== Checking route availability before navigation ===');
-    console.log('Source:', source);
-    console.log('Destination:', destination);
-    console.log('Pickup:', pickup);
-    console.log('Dropoff:', drop);
-    console.log('Seats:', seats);
-    console.log('Travel Date:', traveldate);
+    // console.log('=== Checking route availability before navigation ===');
+    // console.log('Source:', source);
+    // console.log('Destination:', destination);
+    // console.log('Pickup:', pickup);
+    // console.log('Dropoff:', drop);
+    // console.log('Seats:', seats);
+    // console.log('Travel Date:', traveldate);
 
     // Call API to check if route is available
     this.apiService.getSharedCarList(
@@ -2822,8 +2830,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       traveldate
     ).subscribe({
       next: (data: any) => {
-        console.log('=== Route Availability Check Response ===');
-        console.log('Response:', JSON.stringify(data, null, 2));
+        // console.log('=== Route Availability Check Response ===');
+        // console.log('Response:', JSON.stringify(data, null, 2));
 
         // Check if response contains "NOT_PRESENT"
         const responseString = JSON.stringify(data);
@@ -2852,11 +2860,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             allowOutsideClick: false
           });
 
-          console.log('Route not available - NOT_PRESENT in response');
+          // console.log('Route not available - NOT_PRESENT in response');
         } else if (Array.isArray(data) && data.length > 0) {
           // Data is present, navigate to booking results
-          console.log('Route available - Found', data.length, 'vehicles');
-          console.log('Vehicle details:', data);
+          // console.log('Route available - Found', data.length, 'vehicles');
+          // console.log('Vehicle details:', data);
 
           this.submitCabs('shared', phoneNumber);
           this.navigateToResults(phoneNumber);
@@ -2875,15 +2883,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             showConfirmButton: false,
             allowOutsideClick: false
           });
-          console.log('No vehicles found in response');
+          // console.log('No vehicles found in response');
         }
       },
       error: (error) => {
         // Close phone popup before showing error alert
         this.cancelPhonePopup();
 
-        console.error('=== Route Availability Check Error ===');
-        console.error('Error:', error);
+        // console.error('=== Route Availability Check Error ===');
+        // console.error('Error:', error);
 
         Swal.fire({
           icon: 'error',
@@ -2925,7 +2933,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
       // If no valid routes, include all routes for debugging
       if (validRoutes.length === 0) {
-        console.log('No valid routes found, including all routes for debugging');
+        // console.log('No valid routes found, including all routes for debugging');
         payload.routes = this.flightRoutes.map(route => ({
           from: route.from || '',
           to: route.to || '',
@@ -2951,7 +2959,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    console.log('Final payload:', payload);
+    // console.log('Final payload:', payload);
     alert('Flight booking submitted! Check console for details.');
   }
 
@@ -2987,7 +2995,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         pickupLocation: this.formValues.sharedPickupLocation,
         dropoffLocation: this.formValues.sharedDropoffLocation,
       };
-      console.log('Submitting shared cab booking:', payload);
+      // console.log('Submitting shared cab booking:', payload);
       alert('Shared cab booking submitted! Check console for details.');
       return;
     }
@@ -3004,7 +3012,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       pickupLocation: this.formValues.reservedPickupLocation,
       dropoffLocation: this.formValues.reservedDropoffLocation,
     };
-    console.log('[ReservedCab] Submitting booking payload', payload);
+    // console.log('[ReservedCab] Submitting booking payload', payload);
     alert('Reserved cab booking submitted! Check console for details.');
   }
 
@@ -3362,7 +3370,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           },
           error: (error) => {
-            console.error('Error fetching pickup/dropoff locations:', error);
+            // console.error('Error fetching pickup/dropoff locations:', error);
             this.sharedPickupLocations = [];
             this.sharedDropoffLocations = [];
           }
@@ -3502,7 +3510,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           },
           error: (error) => {
-            console.error('Error fetching pickup/dropoff locations:', error);
+            // console.error('Error fetching pickup/dropoff locations:', error);
           }
         });
       }
@@ -3634,7 +3642,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           travelClass: this.selectedClass,
           phoneNumber: phone
         };
-        console.log("Form Submitted:", submissionData);
+        // console.log("Form Submitted:", submissionData);
         Swal.fire('Submitted!', 'Check console for details.', 'success');
       }
     });
@@ -3715,7 +3723,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.tboTokenId) {
         this.subscriptions.add(
           this.apiService.getTboToken().subscribe((val: any) => {
-            console.log('TBo Token', val);
+            // console.log('TBo Token', val);
             if (val && val['TokenId']) {
               this.tboTokenId = val['TokenId'];
               // Retry search after token is fetched
@@ -3732,7 +3740,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.subscriptions.add(
           this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
             this.ip = res.ip;
-            console.log('nIp', this.ip);
+            // console.log('nIp', this.ip);
             // Retry search after IP is fetched
             if (this.tboTokenId) {
               setTimeout(() => {
@@ -4343,10 +4351,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.isLoadingOffers = false;
-        console.log('Offers loaded for tab:', tab, this.specialOffers);
+        // console.log('Offers loaded for tab:', tab, this.specialOffers);
       },
       error: (error) => {
-        console.error('Error loading offers:', error);
+        // console.error('Error loading offers:', error);
         this.isLoadingOffers = false;
         // Keep empty array or show fallback offers
         this.specialOffers = [];
@@ -4400,10 +4408,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           // No reviews found - keep testimonials empty
           this.testimonials = [];
         }
-        console.log('Google reviews loaded:', this.testimonials);
+        // console.log('Google reviews loaded:', this.testimonials);
       },
       error: (error) => {
-        console.error('Error loading Google reviews:', error);
+        // console.error('Error loading Google reviews:', error);
         // Keep testimonials empty on error
         this.testimonials = [];
       }
@@ -4456,10 +4464,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           ];
         }
         this.isLoadingStats = false;
-        console.log('Home statistics loaded:', { shared: this.sharedCabsStats, reserved: this.reservedCabsStats, numbers: this.numbersSectionStats });
+        // console.log('Home statistics loaded:', { shared: this.sharedCabsStats, reserved: this.reservedCabsStats, numbers: this.numbersSectionStats });
       },
       error: (error) => {
-        console.error('Error loading home statistics:', error);
+        // console.error('Error loading home statistics:', error);
         // Fallback to default values on error
         this.sharedCabsStats = [
           { number: '60%', label: 'Cost Savings' },
@@ -4544,7 +4552,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.formValues.flightTo = defaultToDisplay;
     }
 
-    console.log('Default airports set:', { from: defaultFromDisplay, to: defaultToDisplay });
+    // console.log('Default airports set:', { from: defaultFromDisplay, to: defaultToDisplay });
   }
 
   /**
@@ -4657,16 +4665,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       localStorage.setItem('flightSearchData', JSON.stringify(flightData));
     }
 
-    console.log('Flight data stored for navigation:', flightData);
-    console.log('TBO Token being stored:', flightData.tboToken);
-    console.log('IP Address being stored:', flightData.ipAddress);
+    // console.log('Flight data stored for navigation:', flightData);
+    // console.log('TBO Token being stored:', flightData.tboToken);
+    // console.log('IP Address being stored:', flightData.ipAddress);
 
     // Validate critical data before storing
     if (!flightData.tboToken) {
-      console.error('WARNING: TBO Token is null/undefined when storing flight data!');
+      // console.error('WARNING: TBO Token is null/undefined when storing flight data!');
     }
     if (!flightData.ipAddress) {
-      console.error('WARNING: IP Address is missing when storing flight data!');
+      // console.error('WARNING: IP Address is missing when storing flight data!');
     }
   }
 
@@ -4709,7 +4717,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         .getCalendarFare(this.ip, this.tboTokenId, 'oneway', fromCode, toCode, 'all', startDate, endDate)
         .toPromise()
         .then((res: any) => {
-          console.log("values of calendar", res);
+          // console.log("values of calendar", res);
           const results = res?.Response?.SearchResults || [];
 
           results.forEach((fareItem: any) => {
@@ -4734,7 +4742,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calendarFareFetched = true;
       }
       // Calendar fare fetched successfully
-      console.log('Calendar fare fetched for', direction);
+      // console.log('Calendar fare fetched for', direction);
     });
   }
 
