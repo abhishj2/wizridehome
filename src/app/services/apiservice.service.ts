@@ -29,6 +29,14 @@ readonly ROOT_URL = 'https://www.wizzride.com/app/api/testBed/getSrcDestPickDrop
     return this.http.post<SourceValue[]>(this.ROOT_URL,data,{headers});
   }
 
+  getstatewisecitywithpopularity() {
+    const data = {
+      page: 'getnewsourcedestnames'
+    };
+  
+    const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+    return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+  }
   getPickupDrop(source:any, destination : any)
   {
     const data = {

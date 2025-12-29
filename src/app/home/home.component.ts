@@ -29,6 +29,19 @@ interface City {
   name: string;
   code: string;
   state: string;
+  popular?: boolean;
+}
+
+interface StateWiseCity {
+  state: string;
+  cities: Array<{
+    city: string;
+    popular: boolean | string | number | undefined;
+  }>;
+}
+
+interface ApiLocationResponse {
+  locations: StateWiseCity[];
 }
 
 interface TravelerCounts {
@@ -116,6 +129,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentMultiCityField: 'from' | 'to' = 'from';
   showCustomKeypad = false;
   activePhoneInput: HTMLInputElement | null = null;
+
+  // State-wise city data from API
+  stateWiseCities: StateWiseCity[] = [];
+  stateWiseCitiesLoaded = false;
 
   services = [
     {
@@ -624,14 +641,74 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Group cities by state for Popular Searches
   getCitiesGroupedByState(): { state: string; cities: City[]; expanded: boolean }[] {
-    // Get all cities from the appropriate source based on mobilePopupTarget
+    // If state-wise cities are loaded, use them
+    if (this.stateWiseCitiesLoaded && this.stateWiseCities.length > 0) {
+      return this.stateWiseCities.map(stateData => {
+        // Convert API format to City[] format
+        const cities: City[] = stateData.cities.map(cityData => {
+          // Normalize popular value to boolean
+          let popularValue: boolean | undefined = undefined;
+          if (cityData.popular === true || cityData.popular === 1) {
+            popularValue = true;
+          } else if (cityData.popular === false || cityData.popular === 0) {
+            popularValue = false;
+          } else if (typeof cityData.popular === 'string') {
+            popularValue = cityData.popular.toLowerCase() === 'true';
+          }
+          
+          return {
+            name: cityData.city,
+            code: cityData.city.substring(0, 3).toUpperCase(), // Generate code from city name
+            state: stateData.state,
+            popular: popularValue
+          };
+        });
+
+        // Sort cities: popular first, then alphabetically
+        const sortedCities = cities.sort((a, b) => {
+          // Popular cities first
+          if (a.popular && !b.popular) return -1;
+          if (!a.popular && b.popular) return 1;
+          // Then alphabetically
+          return a.name.localeCompare(b.name);
+        });
+
+        // Apply filtering logic (exclude selected city from the other field)
+        const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+        let filteredCities = sortedCities;
+
+        if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
+          filteredCities = sortedCities.filter(city =>
+            city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+          );
+        } else if (normalizedTarget === 'shared-dropoff' && this.formValues.sharedPickup) {
+          filteredCities = sortedCities.filter(city =>
+            city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+          );
+        } else if (normalizedTarget === 'reserved-pickup' && this.formValues.reservedDropoff) {
+          filteredCities = sortedCities.filter(city =>
+            city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+          );
+        } else if (normalizedTarget === 'reserved-dropoff' && this.formValues.reservedPickup) {
+          filteredCities = sortedCities.filter(city =>
+            city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
+          );
+        }
+
+        return {
+          state: stateData.state,
+          cities: filteredCities,
+          expanded: this.expandedStates.has(stateData.state)
+        };
+      });
+    }
+
+    // Fallback to old logic if API data not loaded
     let allCities: City[] = [];
     
     if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
-      // When searching, use filtered suggestions
       allCities = this.getMobileCitySuggestionsList();
     } else {
-      // When not searching, get all cities from appropriate source
       const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
       
       if (normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff') {
@@ -644,7 +721,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         allCities = [...this.cities];
       }
 
-      // Apply filtering logic (exclude selected city from the other field)
       if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
         allCities = allCities.filter(city =>
           city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
@@ -664,11 +740,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    // Group by state - use city.state if available, otherwise use mapping
     const stateMap = new Map<string, City[]>();
 
     allCities.forEach(city => {
-      // Use existing state if available and not empty, otherwise use city name mapping
       const state = (city.state && city.state.trim()) ? city.state : this.getCityState(city.name);
       if (!stateMap.has(state)) {
         stateMap.set(state, []);
@@ -676,25 +750,40 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       stateMap.get(state)!.push(city);
     });
 
-    // Convert to array and sort states alphabetically, exclude 'Other' state
     const stateGroups = Array.from(stateMap.entries())
-      .filter(([state]) => state !== 'Other') // Filter out 'Other' state
+      .filter(([state]) => state !== 'Other')
       .map(([state, cities]) => ({
         state,
-        cities: cities.sort((a, b) => a.name.localeCompare(b.name)), // Sort cities within each state
+        cities: cities.sort((a, b) => a.name.localeCompare(b.name)),
         expanded: this.expandedStates.has(state)
       }))
-      .sort((a, b) => a.state.localeCompare(b.state)); // Sort states alphabetically
+      .sort((a, b) => a.state.localeCompare(b.state));
 
     return stateGroups;
   }
 
-  // Get initial cities per state (3-4 cities)
+  // Get initial cities per state (show ONLY popular cities initially)
   getInitialCitiesForState(stateGroup: { state: string; cities: City[]; expanded: boolean }): City[] {
+    if (!stateGroup || !stateGroup.cities || stateGroup.cities.length === 0) {
+      console.log('getInitialCitiesForState: No cities in stateGroup', stateGroup);
+      return [];
+    }
+
     if (stateGroup.expanded) {
+      // When expanded (See More clicked), show ALL cities (both popular and non-popular)
+      console.log(`State ${stateGroup.state} expanded - showing ALL ${stateGroup.cities.length} cities (popular + non-popular)`);
       return stateGroup.cities;
     }
-    return stateGroup.cities.slice(0, 4);
+    
+    // When not expanded, show ONLY popular cities (popular = true)
+    const popularCities = stateGroup.cities.filter(city => {
+      return city.popular === true;
+    });
+    console.log(`State ${stateGroup.state} - showing ${popularCities.length} popular cities out of ${stateGroup.cities.length} total`);
+    if (popularCities.length === 0) {
+      console.warn(`No popular cities found for ${stateGroup.state}. Sample cities:`, stateGroup.cities.slice(0, 3).map(c => ({ name: c.name, popular: c.popular, type: typeof c.popular })));
+    }
+    return popularCities;
   }
 
   // Toggle state expansion
@@ -706,9 +795,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // Check if state has more cities to show
+  // Check if state has more cities to show (non-popular cities exist)
   hasMoreCities(stateGroup: { state: string; cities: City[]; expanded: boolean }): boolean {
-    return !stateGroup.expanded && stateGroup.cities.length > 4;
+    if (stateGroup.expanded) {
+      return false; // Already showing non-popular cities
+    }
+    // Check if there are non-popular cities to show
+    const nonPopularCount = stateGroup.cities.filter(city => city.popular === false || city.popular === undefined).length;
+    return nonPopularCount > 0; // Has non-popular cities
+  }
+
+  // Check if state has non-popular cities (for See Less button)
+  hasNonPopularCities(stateGroup: { state: string; cities: City[]; expanded: boolean }): boolean {
+    const nonPopularCount = stateGroup.cities.filter(city => city.popular === false || city.popular === undefined).length;
+    return nonPopularCount > 0;
   }
 
   // Set mobile location tab
@@ -718,7 +818,59 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Get all cities for "See All" tab (sorted alphabetically)
   getAllCitiesForSeeAll(): City[] {
-    // Get all cities from the appropriate source based on mobilePopupTarget
+    // If state-wise cities are loaded, use them
+    if (this.stateWiseCitiesLoaded && this.stateWiseCities.length > 0) {
+      let allCities: City[] = [];
+      
+      // Flatten all cities from all states
+      this.stateWiseCities.forEach(stateData => {
+        const cities: City[] = stateData.cities.map(cityData => {
+          // Normalize popular value to boolean
+          let popularValue: boolean | undefined = undefined;
+          if (cityData.popular === true || cityData.popular === 1) {
+            popularValue = true;
+          } else if (cityData.popular === false || cityData.popular === 0) {
+            popularValue = false;
+          } else if (typeof cityData.popular === 'string') {
+            popularValue = cityData.popular.toLowerCase() === 'true';
+          }
+          
+          return {
+            name: cityData.city,
+            code: cityData.city.substring(0, 3).toUpperCase(),
+            state: stateData.state,
+            popular: popularValue
+          };
+        });
+        allCities = allCities.concat(cities);
+      });
+
+      // Apply filtering logic (exclude selected city from the other field)
+      const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+      
+      if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
+        );
+      } else if (normalizedTarget === 'shared-dropoff' && this.formValues.sharedPickup) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.sharedPickup.toLowerCase()
+        );
+      } else if (normalizedTarget === 'reserved-pickup' && this.formValues.reservedDropoff) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase()
+        );
+      } else if (normalizedTarget === 'reserved-dropoff' && this.formValues.reservedPickup) {
+        allCities = allCities.filter(city =>
+          city.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase()
+        );
+      }
+
+      // Sort alphabetically by city name
+      return allCities.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Fallback to old logic if API data not loaded
     let allCities: City[] = [];
     const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
     
@@ -732,7 +884,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       allCities = [...this.cities];
     }
 
-    // Apply filtering logic (exclude selected city from the other field)
     if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
       allCities = allCities.filter(city =>
         city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
@@ -751,7 +902,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
 
-    // Sort alphabetically by city name
     return allCities.sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -1773,6 +1923,78 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       error: (error) => {
         console.error('Error fetching airport data:', error);
       }
+    });
+
+    // Fetch state-wise cities with popularity
+    console.log('=== FETCHING STATE-WISE CITIES API ===');
+    this.apiService.getstatewisecitywithpopularity().subscribe((data: any) => {
+      console.log('=== API RESPONSE RECEIVED ===');
+      console.log('Raw API Response:', data);
+      console.log('Response Type:', typeof data);
+      console.log('Is Array:', Array.isArray(data));
+      console.log('Response Keys:', data && typeof data === 'object' ? Object.keys(data) : 'N/A');
+      
+      // API returns array of state objects directly: [{state: "Sikkim", cities: [{city: "Gangtok", popular: true}, ...]}, ...]
+      let locations: StateWiseCity[] = [];
+      if (Array.isArray(data)) {
+        console.log('API returned array directly, length:', data.length);
+        // API returns array directly - each element is {state: string, cities: Array}
+        locations = data;
+        if (data.length > 0) {
+          console.log('First state sample:', JSON.stringify(data[0], null, 2));
+        }
+      } else if (data && data.locations && Array.isArray(data.locations)) {
+        console.log('API returned object with locations property, length:', data.locations.length);
+        // If API returns object with locations property
+        locations = data.locations;
+        if (data.locations.length > 0) {
+          console.log('First state sample:', JSON.stringify(data.locations[0], null, 2));
+        }
+      } else if (data && typeof data === 'object') {
+        console.log('API returned single object, wrapping in array');
+        // If single object, wrap in array
+        locations = [data];
+        console.log('State sample:', JSON.stringify(data, null, 2));
+      } else {
+        console.warn('Unexpected API response format:', data);
+      }
+      
+      console.log('Processed locations count:', locations.length);
+      
+      if (locations.length > 0) {
+        this.stateWiseCities = locations;
+        this.stateWiseCitiesLoaded = true;
+        console.log('=== STATE-WISE CITIES POPULATED ===');
+        console.log('Total states:', this.stateWiseCities.length);
+        console.log('Full state-wise cities data:', JSON.stringify(this.stateWiseCities, null, 2));
+        
+        this.stateWiseCities.forEach((state, index) => {
+          const popularCount = state.cities.filter(c => {
+            if (c.popular === true) return true;
+            if (typeof c.popular === 'string' && c.popular.toLowerCase() === 'true') return true;
+            if (c.popular === 1) return true;
+            return false;
+          }).length;
+          console.log(`State ${index + 1}: ${state.state}`);
+          console.log(`  - Total Cities: ${state.cities.length}`);
+          console.log(`  - Popular Cities: ${popularCount}`);
+          console.log(`  - Non-Popular Cities: ${state.cities.length - popularCount}`);
+          console.log(`  - Sample cities:`, state.cities.slice(0, 5).map(c => ({ 
+            name: c.city, 
+            popular: c.popular, 
+            popularType: typeof c.popular 
+          })));
+        });
+      } else {
+        console.warn('=== NO STATE-WISE CITIES DATA ===');
+        console.warn('No state-wise cities data received from API');
+        console.warn('Raw data was:', data);
+      }
+    }, (error) => {
+      console.error('=== API ERROR ===');
+      console.error('Error fetching state-wise cities data:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      this.stateWiseCitiesLoaded = false;
     });
 
     // Meta Description
