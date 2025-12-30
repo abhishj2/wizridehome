@@ -31,6 +31,76 @@ html, body {
   margin: 10px auto 14px auto;
 }
 
+/* Desktop Booking Summary - Ribbon Style */
+.desktop-booking-summary {
+  display: block;
+}
+
+.mobile-booking-summary {
+  display: none;
+}
+
+/* Desktop Route Summary Styles */
+.route-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.route-locations {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.location-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.journey-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.route-summary .from, .route-summary .to {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  position: relative;
+}
+
+.location-detail {
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569 !important;
+  line-height: 1.2;
+  max-width: 140px;
+  word-wrap: break-word;
+}
+
+.route-summary .date, .route-summary .passengers, .route-summary .pickup-time {
+  background: #fff !important;
+  padding: 8px 16px !important;
+  border-radius: 15px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(0, 139, 139, 0.25) !important;
+  color: #000 !important;
+}
+
+.route-summary i {
+  font-size: 16px;
+  color: #6b7280;
+}
+
 /* Hide mobile-only sections on desktop */
 .journey-timing,
 .vehicle-seat-section {
@@ -621,6 +691,18 @@ html, body {
 }
 
 /* Responsive Design */
+@media (min-width: 769px) {
+  /* Hide mobile version on desktop */
+  .mobile-booking-summary {
+    display: none !important;
+  }
+  
+  /* Show desktop version on desktop */
+  .desktop-booking-summary {
+    display: block !important;
+  }
+}
+
 @media (max-width: 1024px) {
   .checkout-content {
     gap: 24px;
@@ -632,6 +714,16 @@ html, body {
 }
 
 @media (max-width: 768px) {
+  /* Hide desktop version on mobile */
+  .desktop-booking-summary {
+    display: none !important;
+  }
+  
+  /* Show mobile version on mobile */
+  .mobile-booking-summary {
+    display: block !important;
+  }
+  
   .container {
     padding: 0 16px;
   }

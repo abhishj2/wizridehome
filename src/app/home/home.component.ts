@@ -3475,9 +3475,29 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     alert('Reserved cab booking submitted! Check console for details.');
   }
 
+  /**
+   * Closes all other dropdowns except the one specified by currentTarget
+   * @param currentTarget - The target that should remain open (empty string to close all)
+   */
+  closeAllOtherDropdowns(currentTarget: string) {
+    // Close travelers panel
+    this.isTravelersOpen = false;
+    
+    // Close all city/location suggestion dropdowns except the current one
+    Object.keys(this.activeSuggestions).forEach(key => {
+      if (key !== currentTarget) {
+        delete this.activeSuggestions[key];
+      }
+    });
+  }
+
   showCitySuggestions(query: string, target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
+    
+    // Close all other dropdowns before opening this one
+    this.closeAllOtherDropdowns(storeTarget);
+    
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
       return;
@@ -3551,6 +3571,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showCitySuggestionsOnFocus(target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
+    
+    // Close all other dropdowns before opening this one
+    this.closeAllOtherDropdowns(storeTarget);
     
     // Clear the field if it already has a value (for easy re-selection)
     if (target === 'shared-pickup' && this.formValues.sharedPickup) {
@@ -3647,6 +3670,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showLocationSuggestions(query: string, target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
+    
+    // Close all other dropdowns before opening this one
+    this.closeAllOtherDropdowns(storeTarget);
+    
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
       return;
@@ -3678,6 +3705,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showLocationSuggestionsOnFocus(target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
+    
+    // Close all other dropdowns before opening this one
+    this.closeAllOtherDropdowns(storeTarget);
+    
     let locations: string[] = [];
 
     if (target.includes('shared-pickup-specific')) {
@@ -3997,6 +4028,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toggleTravelersPanel() {
+    // Close all city/location dropdowns when opening travelers panel
+    if (!this.isTravelersOpen) {
+      this.closeAllOtherDropdowns('');
+    }
     this.isTravelersOpen = !this.isTravelersOpen;
   }
 
