@@ -325,10 +325,12 @@ html, body {
 }
 
 .booking-summary.sticky {
-  position: static;
+  position: sticky;
+  position:-webkit-sticky;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
   padding: 10px 14px;
   animation: none;
+  z-index: 99999999;
 }
 
 @keyframes slideDown {
@@ -739,17 +741,16 @@ html, body {
     border: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    position: static !important;
-    transform: none !important;
-    transition: none !important;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.3s ease;
   }
   
-  .booking-summary.sticky {
-    padding: 0;
-    position: static !important;
-    transform: none !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  }
+  /* .booking-summary.sticky {
+    margin: 4px 0 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  } */
   
   .summary-content {
     flex-direction: column;
@@ -797,7 +798,13 @@ html, body {
     border-radius: 12px 12px 0 0;
     margin-bottom: 0;
     min-height: 90px;
+    transition: padding 0.3s ease, min-height 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-section-mobile {
+    padding: 12px 16px;
+    min-height: 75px;
+  } */
 
   .route-top-mobile {
     display: flex;
@@ -806,7 +813,13 @@ html, body {
     gap: 6px;
     width: 100%;
     min-height: 60px;
+    transition: gap 0.3s ease, min-height 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-top-mobile {
+    gap: 4px;
+    min-height: 55px;
+  } */
 
   .route-location-group {
     flex: 0 0 auto;
@@ -817,7 +830,12 @@ html, body {
     min-width: 0;
     max-width: calc(50% - 60px);
     flex-grow: 0;
+    transition: gap 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-location-group {
+    gap: 4px;
+  } */
 
   .route-location-group:last-child {
     align-items: flex-end;
@@ -839,7 +857,13 @@ html, body {
     margin-bottom: 0;
     flex-shrink: 0;
     white-space: nowrap;
+    transition: padding 0.3s ease, font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-code-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+  } */
 
   .route-location-group:last-child .route-code-badge {
     margin-left: auto;
@@ -855,7 +879,12 @@ html, body {
     margin-top: 0;
     width: 100%;
     white-space: nowrap;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-location-name {
+    font-size: 12px;
+  } */
 
   .route-location-group:last-child .route-location-name {
     text-align: right;
@@ -869,7 +898,12 @@ html, body {
     margin-top: 0;
     width: 100%;
     white-space: nowrap;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-location-sub {
+    font-size: 10px;
+  } */
 
   .route-location-group:last-child .route-location-sub {
     text-align: right;
@@ -887,7 +921,12 @@ html, body {
     padding-top: 4px;
     flex-shrink: 0;
     /* margin-left: -30px; */
+    transition: padding-top 0.3s ease;
   }
+
+  /* .booking-summary.sticky .route-line-container {
+    padding-top: 2px;
+  } */
 
   .route-line-mobile {
     display: flex;
@@ -961,28 +1000,48 @@ html, body {
     background: #ffffff;
     gap: 12px;
     border-top: 1px solid #e5e7eb;
+    transition: padding 0.3s ease;
   }
+
+  /* .booking-summary.sticky .journey-timing-mobile {
+    padding: 10px 16px;
+  } */
 
   .timing-left-mobile {
     display: flex;
     align-items: center;
     gap: 10px;
     flex: 1;
+    transition: gap 0.3s ease;
   }
+
+  /* .booking-summary.sticky .timing-left-mobile {
+    gap: 8px;
+  } */
 
   .timing-right-mobile {
     display: flex;
     align-items: center;
     gap: 8px;
     flex: 0 0 auto;
+    transition: gap 0.3s ease;
   }
+
+  /* .booking-summary.sticky .timing-right-mobile {
+    gap: 6px;
+  } */
 
   .date-display-mobile {
     font-size: 11px;
     color: #1f2937;
     font-weight: 500;
     line-height: 1.4;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .date-display-mobile {
+    font-size: 10px;
+  } */
 
   .time-badge-mobile {
     display: inline-block;
@@ -994,13 +1053,24 @@ html, body {
     color: #ffffff;
     white-space: nowrap;
     line-height: 1.4;
+    transition: padding 0.3s ease, font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .time-badge-mobile {
+    padding: 3px 8px;
+    font-size: 10px;
+  } */
 
   .duration-label-mobile {
     font-size: 11px;
     color: #64748b;
     font-weight: 500;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .duration-label-mobile {
+    font-size: 10px;
+  } */
 
   .duration-badge-mobile {
     display: inline-block;
@@ -1012,7 +1082,13 @@ html, body {
     color: #ffffff;
     white-space: nowrap;
     line-height: 1.4;
+    transition: padding 0.3s ease, font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .duration-badge-mobile {
+    padding: 3px 8px;
+    font-size: 10px;
+  } */
 
   /* Vehicle and Seat Section - Redesigned */
   .vehicle-seat-mobile {
@@ -1024,7 +1100,13 @@ html, body {
     border-top: 1px solid #e5e7eb;
     border-radius: 0 0 12px 12px;
     gap: 16px;
+    transition: padding 0.3s ease, gap 0.3s ease;
   }
+
+  /* .booking-summary.sticky .vehicle-seat-mobile {
+    padding: 10px 16px;
+    gap: 12px;
+  } */
 
   .vehicle-info-mobile {
     display: flex;
@@ -1037,7 +1119,12 @@ html, body {
     width: 50px;
     height: auto;
     object-fit: contain;
+    transition: width 0.3s ease;
   }
+
+  /* .booking-summary.sticky .vehicle-img-mobile {
+    width: 42px;
+  } */
 
   .vehicle-name-mobile {
     font-size: 11px;
@@ -1045,7 +1132,12 @@ html, body {
     font-weight: 500;
     text-transform: capitalize;
     letter-spacing: 0.2px;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .vehicle-name-mobile {
+    font-size: 10px;
+  } */
 
   .seat-info-mobile {
     font-size: 11px;
@@ -1054,7 +1146,12 @@ html, body {
     text-align: right;
     flex: 1;
     line-height: 1.4;
+    transition: font-size 0.3s ease;
   }
+
+  /* .booking-summary.sticky .seat-info-mobile {
+    font-size: 10px;
+  } */
   
   .checkout-container {
     padding: 24px 0;
