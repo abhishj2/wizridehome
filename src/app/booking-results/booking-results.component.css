@@ -1,5 +1,12 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
+/* Component Host - Ensure no overflow constraints that prevent sticky positioning */
+:host {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
 /* Global Styles with Modern Typography */
 * {
   box-sizing: border-box;
@@ -29,20 +36,28 @@ img {
   overflow-x: hidden;
   box-sizing: border-box;
 }
+.steering-icon img{
+  width:90% !important;
+}
 
-/* Glassmorphic Search Summary */
+/* Glassmorphic Search Summary - Sticky Positioning */
+/* Note: For sticky to work, parent containers must NOT have overflow: hidden/auto/scroll */
+/* top: 75px accounts for navbar height (approximately 70-75px) */
 .search-summary {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #e5e7eb; */
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
   border-radius: 12px;
   padding: 15px !important;
-  position: relative;
-  overflow: hidden;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 75px;
+  z-index: 99;
   transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
-  margin: 10px 0 14px 0;
+  /* margin: 10px 0 14px 0; */
+  will-change: transform;
 }
 
 /* Sticky header disabled – keep same style when toggled */

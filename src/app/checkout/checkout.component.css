@@ -237,7 +237,6 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  margin-bottom: 24px;
 }
 
 .form-field {
