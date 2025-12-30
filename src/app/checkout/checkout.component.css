@@ -20,7 +20,7 @@ html, body {
 .booking-summary {
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border-radius: 12px;
   padding: 10px 14px;
   position: relative;
@@ -518,7 +518,7 @@ html, body {
     width: auto !important;
     background: #ffffff;
     border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     overflow: hidden;
     position: sticky;
     top: 0;
@@ -1209,6 +1209,9 @@ html, body {
     font-size: 15px;
     margin-top: 16px;
   }
+  .booking-summary.mobile-booking-summary {
+    margin:10px
+}
 }
 
 /* Coupon Section Styles */
