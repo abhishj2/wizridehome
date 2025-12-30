@@ -33,70 +33,59 @@
     <div class="summary-content">
       <div class="summary-info">
         <!-- Route Section -->
-        <div class="route">
-          <!-- Top Row: City Codes and Route Line -->
-          <div class="route-top-row">
-            <div class="route-column">
-              <div class="route-code">{{ bookingData.vehicleDetails?.route?.from?.code || getLocationCode(bookingData.searchParams.from) }}</div>
+        <div class="route-section-mobile">
+          <!-- Top Row: Route Codes and Line -->
+          <div class="route-top-mobile">
+            <div class="route-location-group">
+              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.from?.code || getLocationCode(bookingData.searchParams.from) }}</div>
+              <div class="route-location-name">{{ bookingData.searchParams.from }}</div>
+              <div class="route-location-sub" *ngIf="bookingData.searchParams.pickupLocation">{{ bookingData.searchParams.pickupLocation }}</div>
             </div>
 
-            <div class="route-visualization">
-              <div class="route-line">
-                <div class="route-node start-node"></div>
-                <div class="route-car">
+            <div class="route-line-container">
+              <div class="route-line-mobile">
+                <div class="route-node-mobile start"></div>
+                <div class="route-car-mobile">
                   <img src="../../assets/images/bgremovecar.png" alt="Car">
                 </div>
-                <div class="route-node end-node"></div>
+                <div class="route-node-mobile end"></div>
               </div>
             </div>
 
-            <div class="route-column">
-              <div class="route-code">{{ bookingData.vehicleDetails?.route?.to?.code || getLocationCode(bookingData.searchParams.to) }}</div>
-            </div>
-          </div>
-
-          <!-- Bottom Row: Location Names -->
-          <div class="route-bottom-row">
-            <div class="route-column">
-              <div class="location">{{ bookingData.searchParams.from }}</div>
-              <div class="sub-location" *ngIf="bookingData.searchParams.pickupLocation">{{ bookingData.searchParams.pickupLocation }}</div>
-            </div>
-
-            <div class="route-visualization-spacer"></div>
-
-            <div class="route-column">
-              <div class="location">{{ bookingData.searchParams.to }}</div>
-              <div class="sub-location" *ngIf="bookingData.searchParams.dropLocation">{{ bookingData.searchParams.dropLocation }}</div>
+            <div class="route-location-group">
+              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.to?.code || getLocationCode(bookingData.searchParams.to) }}</div>
+              <div class="route-location-name">{{ bookingData.searchParams.to }}</div>
+              <div class="route-location-sub" *ngIf="bookingData.searchParams.dropLocation">{{ bookingData.searchParams.dropLocation }}</div>
             </div>
           </div>
         </div>
 
         <!-- Journey Timing Section -->
-        <div class="journey-timing">
-          <div class="timing-item-left">
-            <span class="date-text">{{ formatDate(bookingData.searchParams.date) }}</span>
-            <span class="time-pill" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">
+        <div class="journey-timing-mobile">
+          <div class="timing-left-mobile">
+            <span class="date-display-mobile">{{ formatDate(bookingData.searchParams.date) }}</span>
+            <span class="time-badge-mobile" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">
               {{ formatPickupTime(bookingData.searchParams.pickupTime) }}
             </span>
-            <span class="time-pill" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">
+            <span class="time-badge-mobile" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">
               {{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}
             </span>
           </div>
-          <div class="timing-item-right">
-            <span class="duration-label">Duration</span>
-            <span class="duration-pill" *ngIf="bookingData.vehicleDetails?.duration">
+          <div class="timing-right-mobile">
+            <span class="duration-label-mobile">Duration</span>
+            <span class="duration-badge-mobile" *ngIf="bookingData.vehicleDetails?.duration">
               {{ formatDuration(bookingData.vehicleDetails.duration).replace(' ', '') }}
             </span>
           </div>
         </div>
 
         <!-- Vehicle and Seat Details Section -->
-        <div class="vehicle-seat-section">
-          <div class="vehicle-info">
-            <img [src]="bookingData.vehicleDetails.image" [alt]="bookingData.vehicleDetails.name" *ngIf="bookingData.vehicleDetails">
-            <div class="vehicle-name" *ngIf="bookingData.vehicleDetails">{{ bookingData.vehicleDetails.name }}</div>
+        <div class="vehicle-seat-mobile">
+          <div class="vehicle-info-mobile">
+            <img [src]="bookingData.vehicleDetails.image" [alt]="bookingData.vehicleDetails.name" *ngIf="bookingData.vehicleDetails" class="vehicle-img-mobile">
+            <span class="vehicle-name-mobile" *ngIf="bookingData.vehicleDetails">{{ bookingData.vehicleDetails.name }}</span>
           </div>
-          <div class="seat-info">
+          <div class="seat-info-mobile">
             <span *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected :{{ getSelectedSeats() }}</span>
             <span *ngIf="bookingData.bookingType === 'reserved'">Total Seats: {{ bookingData.searchParams.passengers }}</span>
           </div>
