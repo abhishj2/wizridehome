@@ -791,7 +791,7 @@ html, body {
 
   .route-top-mobile {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 8px;
     width: 100%;
@@ -804,7 +804,7 @@ html, body {
     align-items: flex-start;
     gap: 4px;
     min-width: 0;
-    max-width: calc(50% - 30px);
+    max-width: calc(50% - 45px);
   }
 
   .route-code-badge {
@@ -845,8 +845,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px;
-    min-width: 60px;
+    padding: 0 4px;
+    min-width: 80px;
+    max-width: 90px;
     height: 60px;
   }
 
@@ -856,7 +857,8 @@ html, body {
     justify-content: space-between;
     width: 100%;
     position: relative;
-    height: 3px;
+    height: 24px;
+    min-width: 80px;
   }
 
   .route-line-mobile:before {
@@ -885,13 +887,16 @@ html, body {
   .route-car-mobile {
     background: transparent;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3;
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     flex-shrink: 0;
   }
 
