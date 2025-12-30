@@ -724,6 +724,14 @@ export class CheckoutComponent implements OnInit {
     return '1'; // Default for reserved cabs
   }
 
+  getTotalSeatsCount(): number {
+    if (this.bookingData?.selectedSeats?.length) {
+      return this.bookingData.selectedSeats.length;
+    }
+    // For reserved cabs, use passengers count
+    return this.bookingData?.searchParams?.passengers || 1;
+  }
+
   getRoundedTotalFare(): number {
     return Math.round(this.totalFare);
   }

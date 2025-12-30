@@ -82,12 +82,11 @@
         <!-- Vehicle and Seat Details Section -->
         <div class="vehicle-seat-mobile">
           <div class="vehicle-info-mobile">
-            <img [src]="bookingData.vehicleDetails.image" [alt]="bookingData.vehicleDetails.name" *ngIf="bookingData.vehicleDetails" class="vehicle-img-mobile">
-            <span class="vehicle-name-mobile" *ngIf="bookingData.vehicleDetails">{{ bookingData.vehicleDetails.name }}</span>
+            <span class="total-seats-mobile">Total Seats: {{ getTotalSeatsCount() }}</span>
           </div>
           <div class="seat-info-mobile">
             <span *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected :{{ getSelectedSeats() }}</span>
-            <span *ngIf="bookingData.bookingType === 'reserved'">Total Seats: {{ bookingData.searchParams.passengers }}</span>
+            <span *ngIf="bookingData.bookingType === 'reserved'">Seat No. Selected :{{ getSelectedSeats() }}</span>
           </div>
         </div>
       </div>
