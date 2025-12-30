@@ -3030,15 +3030,16 @@ span.seat-price {
 
   /* Mobile seat modal styles */
   .seat-modal-overlay {
-    align-items: flex-end;
-    padding: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
 
   .seat-modal {
     max-width: 100%;
     width: 100%;
-    border-radius: 20px 20px 0 0;
-    max-height: 95vh;
+    border-radius: 20px;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     height: auto;
