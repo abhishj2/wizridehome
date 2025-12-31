@@ -19,7 +19,8 @@
             <span class="date">{{ formatDate(bookingData.searchParams.date) }}</span>
             <span class="pickup-time" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">{{ formatPickupTime(bookingData.searchParams.pickupTime) }}</span>
             <span class="pickup-time" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">{{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}</span>
-            <span class="passengers">{{ bookingData.searchParams.passengers }} seats</span>
+            <span class="passengers">{{ getTotalSeatsCount() }} seats</span>
+            <span class="passengers" *ngIf="bookingData?.selectedSeats?.length">Seat No: {{ getSelectedSeats() }}</span>
           </div>
         </div>
       </div>
