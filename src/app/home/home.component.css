@@ -137,6 +137,11 @@ h2 {
     overflow: hidden;
 }
 
+/* Allow dropdowns to overflow when active */
+.tabs-container.dropdown-active {
+    overflow: visible;
+}
+
 .tab-content {
     position: absolute;
     width: 100%;
@@ -167,7 +172,9 @@ h2 {
     z-index: 1;
     animation: slideOutToLeft 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
-
+.city-suggestions.active {
+    overflow-x:hidden;
+}
 /* Booking Form */
 .booking-form {
     border: 2px solid transparent;

@@ -3500,6 +3500,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
+      this.toggleDropdownActiveClass();
       return;
     }
 
@@ -3566,6 +3567,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Show all matching cities
     this.activeSuggestions[storeTarget] = filteredCities;
+    
+    // Toggle dropdown-active class on tabs-container
+    this.toggleDropdownActiveClass();
   }
 
   showCitySuggestionsOnFocus(target: string) {
@@ -3660,6 +3664,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Show all cities when focusing on input
     this.activeSuggestions[storeTarget] = citiesToShow;
+    
+    // Toggle dropdown-active class on tabs-container
+    this.toggleDropdownActiveClass();
   }
 
   getMultiCitySuggestions(target: string): City[] {
@@ -3676,6 +3683,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
+      this.toggleDropdownActiveClass();
       return;
     }
 
@@ -3700,6 +3708,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     ).slice(0, 6);
 
     this.activeSuggestions[storeTarget] = filteredLocations;
+    this.toggleDropdownActiveClass();
   }
 
   showLocationSuggestionsOnFocus(target: string) {
@@ -3726,12 +3735,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.activeSuggestions[storeTarget] = locations.slice(0, 6);
+    this.toggleDropdownActiveClass();
   }
 
   hideLocationSuggestions(target: string) {
     // Add a small delay to allow click events to register before hiding
     setTimeout(() => {
       delete this.activeSuggestions[target];
+      this.toggleDropdownActiveClass();
     }, 200);
   }
 
@@ -3831,6 +3842,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Clear suggestions
     delete this.activeSuggestions[target];
+    this.toggleDropdownActiveClass();
 
     // Check for location details
     if (target.includes('shared') || target.includes('reserved')) {
@@ -4570,6 +4582,37 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     alert('Redirecting to group booking... This would redirect to a specialized group booking form.');
   }
 
+  toggleDropdownActiveClass(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const tabsContainer = this.document.querySelector('.tabs-container') as HTMLElement;
+    if (!tabsContainer) return;
+
+    // Check if any dropdown is active (city suggestions or calendar)
+    const hasActiveDropdown = Object.keys(this.activeSuggestions).length > 0;
+    const hasActiveCalendar = this.isCalendarOpen;
+
+    if (hasActiveDropdown || hasActiveCalendar) {
+      tabsContainer.classList.add('dropdown-active');
+    } else {
+      tabsContainer.classList.remove('dropdown-active');
+    }
+  }
+
+  isCalendarOpen: boolean = false;
+
+  onCalendarOpened(): void {
+    this.isCalendarOpen = true;
+    this.toggleDropdownActiveClass();
+  }
+
+  onCalendarClosed(): void {
+    this.isCalendarOpen = false;
+    this.toggleDropdownActiveClass();
+  }
+
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
 
@@ -4581,6 +4624,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       // Only clear suggestions if not clicking on a suggestion item
       if (!target.closest('.city-suggestion')) {
         this.activeSuggestions = {};
+        this.toggleDropdownActiveClass();
       }
     }
   }
@@ -4719,7 +4763,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return `${displayHour}:${minuteStr} ${period}`;
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const bookingSection = this.document.querySelector('.booking-section-wrapper');

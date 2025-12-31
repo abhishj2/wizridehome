@@ -122,7 +122,9 @@
                                             [selectedDate]="formValues.sharedDateTime"
                                             [minDate]="getTodayDate()"
                                             placeholder="Select Date"
-                                            (dateSelected)="onSharedDateSelected($event)">
+                                            (dateSelected)="onSharedDateSelected($event)"
+                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 
@@ -388,7 +390,9 @@
                                             [selectedDate]="route.date"
                                             [minDate]="getTodayDate()"
                                             placeholder="Select Date"
-                                            (dateSelected)="onFlightDepartureDateSelected($event, i)">
+                                            (dateSelected)="onFlightDepartureDateSelected($event, i)"
+                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 
@@ -399,7 +403,9 @@
                                             [selectedDate]="formValues.flightReturn"
                                             [minDate]="getReturnMinDate()"
                                             placeholder="Select Return Date"
-                                            (dateSelected)="onFlightReturnDateSelected($event)">
+                                            (dateSelected)="onFlightReturnDateSelected($event)"
+                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 
@@ -582,7 +588,9 @@
                                             [selectedDate]="formValues.reservedDate"
                                             [minDate]="getTodayDate()"
                                             placeholder="Select Date"
-                                            (dateSelected)="onReservedDateSelected($event)">
+                                            (dateSelected)="onReservedDateSelected($event)"
+                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 

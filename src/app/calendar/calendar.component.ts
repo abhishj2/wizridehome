@@ -15,6 +15,7 @@ export class CustomCalendarComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() alwaysOpen: boolean = false;
   @Output() dateSelected = new EventEmitter<string>();
+  @Output() calendarOpened = new EventEmitter<void>();
   @Output() calendarClosed = new EventEmitter<void>();
 
   @ViewChild('calendarDropdown', { static: false }) calendarDropdown!: ElementRef;
@@ -74,7 +75,9 @@ export class CustomCalendarComponent implements OnInit {
     }
     
     this.isOpen = !this.isOpen;
-    if (!this.isOpen) {
+    if (this.isOpen) {
+      this.calendarOpened.emit();
+    } else {
       this.calendarClosed.emit();
     }
   }
@@ -243,7 +246,7 @@ export class CustomCalendarComponent implements OnInit {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onWindowResize() {
     if (this.isOpen) {
       this.checkAvailableSpace();
