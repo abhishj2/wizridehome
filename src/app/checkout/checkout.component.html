@@ -102,10 +102,10 @@
       
       <!-- Left Column: Passenger Details Form -->
       <div class="left-column">
-        <div class="form-card">
+        <div class="form-card" #formTop>
           <h2 class="form-title"> Primary Passenger Details</h2>
           
-          <form (ngSubmit)="onSubmit()" #checkoutForm="ngForm">
+          <form (ngSubmit)="onSubmit(checkoutForm, $event)" #checkoutForm="ngForm">
             <div class="form-row">
               <div class="form-field">
                 <label class="field-label">First Name</label>
@@ -115,7 +115,11 @@
                   placeholder="Enter First Name of Primary Passenger."
                   [(ngModel)]="passengerDetails.firstName"
                   name="firstName"
+                  #firstNameCtrl="ngModel"
                   required>
+                <div class="field-error" *ngIf="(formSubmitted || firstNameCtrl.touched) && firstNameCtrl.invalid">
+                  <span *ngIf="firstNameCtrl.errors?.['required']">First name is required.</span>
+                </div>
               </div>
               
               <div class="form-field">
@@ -126,7 +130,11 @@
                   placeholder="Enter Last Name of Primary Passenger."
                   [(ngModel)]="passengerDetails.lastName"
                   name="lastName"
+                  #lastNameCtrl="ngModel"
                   required>
+                <div class="field-error" *ngIf="(formSubmitted || lastNameCtrl.touched) && lastNameCtrl.invalid">
+                  <span *ngIf="lastNameCtrl.errors?.['required']">Last name is required.</span>
+                </div>
               </div>
             </div>
             
@@ -138,7 +146,12 @@
                 placeholder="Enter Email ID of Primary Passenger (for e-ticket)."
                 [(ngModel)]="passengerDetails.emailId"
                 name="emailId"
+                #emailCtrl="ngModel"
                 required>
+              <div class="field-error" *ngIf="(formSubmitted || emailCtrl.touched) && emailCtrl.invalid">
+                <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+                <span *ngIf="emailCtrl.errors?.['email']">Please enter a valid email.</span>
+              </div>
             </div>
             
             <div class="form-field">
@@ -155,9 +168,15 @@
                   placeholder="Enter Primary Phone No."
                   [(ngModel)]="passengerDetails.primaryContactNo"
                   name="primaryContactNo"
+                  #primaryPhoneCtrl="ngModel"
                   maxlength="10"
+                  minlength="10"
                   pattern="[0-9]{10}"
                   required>
+              </div>
+              <div class="field-error" *ngIf="(formSubmitted || primaryPhoneCtrl.touched) && primaryPhoneCtrl.invalid">
+                <span *ngIf="primaryPhoneCtrl.errors?.['required']">Primary phone is required.</span>
+                <span *ngIf="primaryPhoneCtrl.errors?.['minlength'] || primaryPhoneCtrl.errors?.['maxlength'] || primaryPhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
               </div>
             </div>
             
@@ -175,8 +194,12 @@
                   placeholder="Enter Alternate Phone No."
                   [(ngModel)]="passengerDetails.alternateContactNo"
                   name="alternateContactNo"
+                  #alternatePhoneCtrl="ngModel"
                   maxlength="10"
                   pattern="[0-9]{10}">
+              </div>
+              <div class="field-error" *ngIf="alternatePhoneCtrl.value && (formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
+                <span *ngIf="alternatePhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
               </div>
             </div>
           </form>
@@ -298,7 +321,7 @@
       <button 
         type="button"
         class="proceed-payment-btn" 
-        (click)="onSubmit($event)"
+        (click)="onSubmit(checkoutForm, $event)"
         [disabled]="isCheckingDeficit">
         <span *ngIf="isCheckingDeficit">Checking...</span>
         <span *ngIf="!isCheckingDeficit">Proceed to Payment</span>

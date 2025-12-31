@@ -236,6 +236,12 @@ html, body {
   border: 1px solid #e9ecef;
 }
 
+.field-error {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #d9534f;
+}
+
 .form-title {
   font-size: 24px;
   font-weight: 700;

@@ -688,15 +688,15 @@
   <div class="wr-tabs-modern">
     <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'" ></div>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'" (click)="setMobileTab('shared')">
-      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/shared-removebg-preview.png" width="23" /></span>
+      <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23" alt="shared"/></span>
       <span>Shared</span>
     </button>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'" (click)="setMobileTab('reserved')">
-      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/reserved.png" width="23" /></span>
+      <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23" alt="reserved"/></span>
       <span>Reserved</span>
     </button>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'" (click)="setMobileTab('flights')">
-      <span class="wr-tab-icon"><img src="https://wizztest.com/assets/images/flight.png" width="23" /></span>
+      <span class="wr-tab-icon"><img src="assets/images/flight.png" width="23" alt="flight" /></span>
       <span>Flights</span>
     </button>
   </div>
@@ -721,7 +721,7 @@
         <div class="wr-field-label wr-field-label-left-pad">From</div>
         <div class="wr-route-city" *ngIf="getMobileCityCode('from')">{{ getMobileCityCode('from') }}</div>
         <div class="wr-route-code" *ngIf="getMobileCityName('from')">{{ getMobileCityName('from') }}</div>
-        <div class="wr-route-code" *ngIf="!getMobileCityCode('from') && !getMobileCityName('from')" style="color: #9ca3af;">Select city</div>
+        <div class="wr-route-code" *ngIf="!getMobileCityCode('from') && !getMobileCityName('from')" style="color: #374151;">Select city</div>
       </div>
 
       <button class="wr-swap-btn" type="button" (click)="swapMobileLocations($event)" aria-label="Swap route">
@@ -735,7 +735,7 @@
         <div class="wr-field-label wr-field-label-left-pad">To</div>
         <div class="wr-route-city" *ngIf="getMobileCityCode('to')">{{ getMobileCityCode('to') }}</div>
         <div class="wr-route-code" *ngIf="getMobileCityName('to')">{{ getMobileCityName('to') }}</div>
-        <div class="wr-route-code" *ngIf="!getMobileCityCode('to') && !getMobileCityName('to')" style="color: #9ca3af;">Select city</div>
+        <div class="wr-route-code" *ngIf="!getMobileCityCode('to') && !getMobileCityName('to')" style="color: #374151;">Select city</div>
       </div>
     </div>
 
@@ -769,8 +769,8 @@
         <div class="wr-field-label">Your Mobile Number</div>
         <div class="wr-field-pill wr-phone-wrapper">
           <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
+            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
+            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)" aria-label="Mobile country code">
               <option *ngFor="let country of countryList" [value]="country.code">
                 {{ country.code }}
               </option>
@@ -818,7 +818,7 @@
         <div class="wr-field-label">Your Mobile Number</div>
         <div class="wr-field-pill wr-phone-wrapper">
           <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
+            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
             <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
               <option *ngFor="let country of countryList" [value]="country.code">
                 {{ country.code }}
@@ -972,7 +972,7 @@
         <div class="wr-field-label">Your Mobile Number</div>
         <div class="wr-field-pill wr-phone-wrapper">
           <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag">
+            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
             <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
               <option *ngFor="let country of countryList" [value]="country.code">
                 {{ country.code }}
@@ -1015,7 +1015,7 @@
     </div>
     <div class="wr-routes-scroller">
       <div class="wr-route-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" class="wr-route-icon-img" />
+        <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
         <div>
           <div class="wr-route-main">Bagdogra ↔ Gangtok</div>
           <div class="wr-route-sub">Most booked</div>
@@ -1026,7 +1026,7 @@
         </div>
       </div>
       <div class="wr-route-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" class="wr-route-icon-img" />
+        <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
         <div>
           <div class="wr-route-main">Guwahati ↔ Shillong</div>
           <div class="wr-route-sub">Most booked</div>
@@ -1064,7 +1064,7 @@
       <div class="wr-app-download-row">
         <div class="wr-app-qr-box">
           <div class="wr-app-qr">
-            <img src="https://wizztest.com/assets/images/qrframe.png" alt="WizzRide App QR">
+            <img src="assets/images/qrframe.png" alt="WizzRide App QR">
           </div>
           <span class="wr-app-scan-text">Scan Me</span>
         </div>
@@ -1096,7 +1096,7 @@
     <div class="wr-testimonials-scroller">
       <div class="wr-testimonial-card" *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
         <div class="wr-testimonial-content">
-          <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="" class="wr-testimonial-quote">
+          <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="Quote icon" class="wr-testimonial-quote">
           <p class="wr-testimonial-text" [class.expanded]="isTestimonialExpanded(testimonial.id)">
             <span *ngIf="!isTestimonialExpanded(testimonial.id) && shouldShowReadMore(testimonial.text)">
               {{ getTruncatedText(testimonial.text) }}
@@ -1578,7 +1578,7 @@
                     (click)="goToSlide(i)">
 
                     <div class="testimonialbox">
-                        <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="" class="quote">
+                        <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="quoteicon" class="quote">
 
                         <div class="content">
                             <p>{{ testimonial.text }}</p>

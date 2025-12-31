@@ -3873,7 +3873,7 @@ button.nav-tab.active img {
     .wr-offer-sub {
         font-size: 11px;
         font-weight: 800;
-        color: #0ca79c;
+        color: #086f67;
         letter-spacing: .05em;
         text-transform: uppercase;
         margin-bottom: 6px;
@@ -3881,7 +3881,7 @@ button.nav-tab.active img {
 
     .wr-offer-desc {
         font-size: 13px;
-        color: #4b5563;
+        color: #374151 ;
         line-height: 1.4;
     }
 
@@ -4049,7 +4049,7 @@ button.nav-tab.active img {
     .wr-read-more-btn {
         background: transparent;
         border: none;
-        color: #0ca79c;
+        color: #086f67;
         font-size: 13px;
         font-weight: 600;
         padding: 0;
@@ -4907,45 +4907,7 @@ button.nav-tab.active img {
     margin: 0;
 }
 
-.mobile-calendar-wrapper .custom-calendar-container {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
 
-.mobile-calendar-wrapper .calendar-input-wrapper {
-    display: none !important;
-}
-
-.mobile-calendar-wrapper .calendar-dropdown {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    max-height: none !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    display: flex !important;
-    flex-direction: column;
-    flex: 1;
-    height: auto;
-}
-
-.mobile-calendar-wrapper .calendar-dropdown.active {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-}
 
 /* Mobile Travelers Popup */
 .mobile-travelers-popup {

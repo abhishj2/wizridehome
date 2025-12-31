@@ -1,6 +1,6 @@
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
 import Swal from 'sweetalert2';
@@ -37,6 +37,7 @@ interface PassengerDetails {
 export class CheckoutComponent implements OnInit {
   Math = Math; // Expose Math for use in template
   bookingData: BookingData | null = null;
+  @ViewChild('formTop') formTop!: ElementRef;
   passengerDetails: PassengerDetails = {
     firstName: '',
     lastName: '',
@@ -210,6 +211,7 @@ export class CheckoutComponent implements OnInit {
 
   // GST Number (for business travel)
   gstNumber: string = '';
+  formSubmitted = false;
 
   constructor(
     private router: Router, 
@@ -258,11 +260,17 @@ export class CheckoutComponent implements OnInit {
     this.isHeaderSticky = scrollPosition > 50;
   }
 
-  onSubmit(event?: Event) {
+  onSubmit(form?: NgForm, event?: Event) {
     // Always prevent default form submission
     if (event) {
       event.preventDefault();
       event.stopPropagation();
+    }
+
+    this.formSubmitted = true;
+    if (form && form.invalid) {
+      this.scrollToForm();
+      return;
     }
     
     // Prevent multiple clicks while checking
@@ -278,11 +286,9 @@ export class CheckoutComponent implements OnInit {
       return;
     }
     
-    if (this.validateForm()) {
-      // Check deficit amount before proceeding to payment
-      console.log('onSubmit called - checking deficit amount');
-      this.checkDeficitAmount();
-    }
+    // Check deficit amount before proceeding to payment
+    console.log('onSubmit called - checking deficit amount');
+    this.checkDeficitAmount();
   }
 
   checkDeficitAmount() {
@@ -585,36 +591,15 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  validateForm(): boolean {
-    const required = ['firstName', 'lastName', 'emailId', 'primaryContactNo'];
-    for (const field of required) {
-      if (!this.passengerDetails[field as keyof PassengerDetails]) {
-        alert(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-        return false;
-      }
+  private scrollToForm(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const el = this.formTop?.nativeElement || document.querySelector('.checkout-container');
+    if (el) {
+      const headerOffset = 140; // account for sticky navbar + ribbon
+      const elementPosition = (el as HTMLElement).getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({ top: Math.max(offsetPosition, 0), behavior: 'smooth' });
     }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.passengerDetails.emailId)) {
-      alert('Please enter a valid email address');
-      return false;
-    }
-
-    // Phone number validation (exactly 10 digits)
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(this.passengerDetails.primaryContactNo)) {
-      alert('Please enter a valid 10-digit phone number');
-      return false;
-    }
-
-    // Alternate contact validation (if provided)
-    if (this.passengerDetails.alternateContactNo && !phoneRegex.test(this.passengerDetails.alternateContactNo)) {
-      alert('Please enter a valid 10-digit alternate phone number');
-      return false;
-    }
-
-    return true;
   }
 
   formatDate(dateString: string): string {
