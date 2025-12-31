@@ -44,8 +44,8 @@
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
                 <span class="icon" *ngIf="tab === 'shared-cabs'"><img
-                        src="assets/images/shared-removebg-preview.png" alt="shared" /></span>
-                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" alt="reserved"/></span>
+                        src="assets/images/shared-removebg-preview.png" alt="Wizzride shared cab service" /></span>
+                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" alt="Wizzride reserved cab service"/></span>
                 <span class="icon" *ngIf="tab === 'flights'"><img
                         src="assets/images/flight.png" alt="flight" /></span>
                 {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
@@ -688,11 +688,11 @@
   <div class="wr-tabs-modern">
     <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'" ></div>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'" (click)="setMobileTab('shared')">
-      <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23" alt="shared"/></span>
+      <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23" alt="Wizzride shared cab service"/></span>
       <span>Shared</span>
     </button>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'" (click)="setMobileTab('reserved')">
-      <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23" alt="reserved"/></span>
+      <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23" alt="Wizzride reserved cab service"/></span>
       <span>Reserved</span>
     </button>
     <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'" (click)="setMobileTab('flights')">
@@ -1723,7 +1723,7 @@
         </div>
 
         <!-- Tabs for Popular Searches and See All (only for from/to cities, NOT for flights) -->
-        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery && !isFlightPopup()">
+        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
             <button class="mobile-location-tab" 
                     [class.active]="mobileLocationTab === 'popular'"
                     (click)="setMobileLocationTab('popular')">
@@ -1738,7 +1738,7 @@
 
         <div class="mobile-location-popup-suggestions">
             <!-- Popular Searches Tab - Grouped by State (NOT for flights) -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery && !isFlightPopup()">
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
                 <div *ngFor="let stateGroup of getCitiesGroupedByState()" class="mobile-location-state-group">
                     <div class="mobile-location-state-header">{{ stateGroup.state }}</div>
                     <div class="mobile-location-pills-container">
@@ -1763,7 +1763,7 @@
             </ng-container>
 
             <!-- See All Tab - All Cities (NOT for flights) -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery && !isFlightPopup()">
+            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
                 <div *ngFor="let city of getAllCitiesForSeeAll()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">
@@ -1776,7 +1776,7 @@
             </ng-container>
 
             <!-- Search Results (when user types) OR for flights (always show search) -->
-            <ng-container *ngIf="isMobileCityArray() && (mobileSearchQuery || isFlightPopup())">
+            <ng-container *ngIf="isMobileCityArray() && (mobileSearchQuery || isFlightPopup() || mobileTab === 'reserved')">
                 <div *ngFor="let city of getMobileCitySuggestionsList()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">

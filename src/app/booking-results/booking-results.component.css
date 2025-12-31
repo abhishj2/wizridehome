@@ -4165,3 +4165,25 @@ text-transform: uppercase !important;
 
 }
 
+
+
+@media(min-width:767px){
+  img.seat-car-bg{
+    width:70% !important;
+}
+.steering-icon {
+        display: flex;
+    justify-content: center;
+    width: 75%;
+
+}
+
+img.seat-watermark-img {
+    width:75% !important;
+    height:75% !important}
+
+.seat-row-modern,
+.seats-grid{
+    gap:0px !important;
+}
+}

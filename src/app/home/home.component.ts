@@ -373,6 +373,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.mobilePopupType = type;
     this.mobileSearchQuery = '';
+    // Preload suggestions for city selection popups
+    if (type === 'from' || type === 'to') {
+      const targetToLoad = (this.mobileTab === 'shared')
+        ? (type === 'from' ? 'mobile-shared-pickup' : 'mobile-shared-dropoff')
+        : (this.mobileTab === 'reserved'
+          ? (type === 'from' ? 'mobile-reserved-pickup' : 'mobile-reserved-dropoff')
+          : (type === 'from' ? 'mobile-flight-from' : 'mobile-flight-to'));
+      this.showCitySuggestionsOnFocus(targetToLoad);
+    }
     
     // Set target based on type and current tab and clear the field for easy re-selection
     if (type === 'from') {
@@ -388,6 +397,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear the field when opening popup to change city
         if (this.formValues.reservedPickup) {
           this.formValues.reservedPickup = '';
+          this.selectedReservedCodes.pickup = '';
         }
         this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'flights') {
@@ -414,6 +424,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear the field when opening popup to change city
         if (this.formValues.reservedDropoff) {
           this.formValues.reservedDropoff = '';
+          this.selectedReservedCodes.dropoff = '';
         }
         this.mobileSearchQuery = '';
       } else if (this.mobileTab === 'flights') {
@@ -602,6 +613,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       
       return allAirports;
+    }
+    
+    // For reserved (mobile) from/to show full reserved list by default
+    const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
+    if ((normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff')) {
+      let cities = [...this.reservedCities];
+      // Exclude opposite selection
+      if (normalizedTarget === 'reserved-pickup' && this.formValues.reservedDropoff) {
+        cities = cities.filter(c => c.name.toLowerCase() !== this.formValues.reservedDropoff.toLowerCase());
+      } else if (normalizedTarget === 'reserved-dropoff' && this.formValues.reservedPickup) {
+        cities = cities.filter(c => c.name.toLowerCase() !== this.formValues.reservedPickup.toLowerCase());
+      }
+      if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
+        const q = this.mobileSearchQuery.toLowerCase().trim();
+        cities = cities.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
+      }
+      return cities;
     }
     
     // For non-flight popups, use existing logic
@@ -1601,6 +1629,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     reserved: { pickup: '', dropoff: '' },
     flights: { from: 'Chandigarh', to: 'Bagdogra' },
   };
+
+  // Track selected reserved city codes separately for mobile API usage
+  selectedReservedCodes = { pickup: '', dropoff: '' };
 
   // Source cities from API for shared cabs
   sourceCities: City[] = [];
@@ -3095,8 +3126,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Get location codes from selected cities
-    const fromlocid = this.getReservedCityCode(source);
-    const tolocid = this.getReservedCityCode(destination);
+    const fromlocid = this.selectedReservedCodes.pickup || this.getReservedCityCode(source);
+    const tolocid = this.selectedReservedCodes.dropoff || this.getReservedCityCode(destination);
 
     if (!fromlocid || !tolocid) {
       this.cancelPhonePopup();
@@ -3419,7 +3450,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // console.log('Final payload:', payload);
-    this.showSwal('Flight booking submitted! Check console for details.', 'success', 2500);
+    // this.showSwal('Flight booking submitted! Check console for details.', 'success', 2500);
   }
 
   submitCabs(type: 'shared' | 'reserved', phoneNumber?: string) {
@@ -3586,8 +3617,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.formValues.sharedDropoff = '';
     } else if (target === 'reserved-pickup' && this.formValues.reservedPickup) {
       this.formValues.reservedPickup = '';
+      this.selectedReservedCodes.pickup = '';
     } else if (target === 'reserved-dropoff' && this.formValues.reservedDropoff) {
       this.formValues.reservedDropoff = '';
+      this.selectedReservedCodes.dropoff = '';
     } else if (target.startsWith('flight-from-')) {
       const routeIndex = parseInt(target.replace('flight-from-', ''));
       if (this.flightRoutes[routeIndex]?.from) {
@@ -3814,6 +3847,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else if (target === 'reserved-pickup') {
       this.selectedCities.reserved.pickup = cityName;
+      this.selectedReservedCodes.pickup = cityCode || this.getReservedCityCode(cityName);
       // Refresh suggestions for reserved-dropoff to exclude the selected pickup city
       if (this.activeSuggestions['reserved-dropoff']) {
         const currentQuery = this.formValues.reservedDropoff || '';
@@ -3825,6 +3859,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else if (target === 'reserved-dropoff') {
       this.selectedCities.reserved.dropoff = cityName;
+      this.selectedReservedCodes.dropoff = cityCode || this.getReservedCityCode(cityName);
       // Refresh suggestions for reserved-pickup to exclude the selected dropoff city
       if (this.activeSuggestions['reserved-pickup']) {
         const currentQuery = this.formValues.reservedPickup || '';
@@ -4024,6 +4059,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       const tempCity = this.selectedCities.reserved.pickup;
       this.selectedCities.reserved.pickup = this.selectedCities.reserved.dropoff;
       this.selectedCities.reserved.dropoff = tempCity;
+
+      const tempCode = this.selectedReservedCodes.pickup;
+      this.selectedReservedCodes.pickup = this.selectedReservedCodes.dropoff;
+      this.selectedReservedCodes.dropoff = tempCode;
     }
   }
 
