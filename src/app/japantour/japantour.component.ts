@@ -109,9 +109,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Tokyo Imperial Palace and East Gardens',
           description: 'The Tokyo Imperial Palace is the primary residence of the Emperor of Japan, located on the site of the former Edo Castle.  The palace complex is surrounded by walls and moats, covering approximately 1.15 square kilometers (0.44 square miles). The Kyūden (宮殿) is the main building where the Emperor conducts official duties and ceremonies. The East Gardens (東御苑, Higashi-gyoen) are a public area offering a serene escape with traditional Japanese gardens, ponds, bridges, and historic structures. The gardens include areas like Honmaru, Ninomaru, and Sannomaru, with the Ninomaru Garden featuring a pond, islands, and teahouses. The Fujimi yagura offers panoramic views of the palace grounds.',
           images: [
-            'https://images.pexels.com/photos/5817295/pexels-photo-5817295.jpeg?auto=compress&cs=tinysrgb&w=800',
-            'https://images.pexels.com/photos/5206573/pexels-photo-5206573.jpeg?auto=compress&cs=tinysrgb&w=800',
-            'https://images.pexels.com/photos/14892395/pexels-photo-14892395.jpeg?auto=compress&cs=tinysrgb&w=800'
+            'assets/images/japan/pexels-photo-5817295.jpeg',
+            'assets/images/japan/pexels-photo-5206573.jpeg',
+            'assets/images/japan/pexels-photo-14892395.jpeg'
           ]
         },
         {
@@ -124,9 +124,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Visit Asakusa and Senso-ji Temple.',
           description:"Asakusa, a historic district in Tokyo, is home to Senso-ji Temple, the city's oldest and most revered Buddhist temple. Established in 628 AD, Senso-ji's origins are tied to a legend where two fishermen, Hinokuma Hamanari and his brother Takenari, discovered a statue of Kannon, the Buddhist goddess of mercy, in the Sumida River. This event led to the founding of the temple, which has since become a significant spiritual center. Senso-ji Temple has played a crucial role in the cultural and religious life of Tokyo. During the Edo period (1603-1868), it was a major pilgrimage site and the surrounding area, Asakusa, flourished as an entertainment district filled with theaters, shops, and bustling markets. The temple's rich history is intertwined with the development of Tokyo, reflecting the city's growth from a small fishing village to a bustling metropolis. The temple complex itself, with its iconic Kaminarimon (Thunder Gate), Nakamise shopping street, and the grand Hondo (main hall), stands as a testament to traditional Japanese architecture and religious devotion. The annual Sanja Matsuri festival, one of Tokyo's largest and most vibrant, is held in honor of the temple's founders and showcases Asakusa's enduring cultural vitality. Senso-ji Temple remains a symbol of resilience and continuity, having been rebuilt multiple times due to fires and bombings, yet continuing to draw millions of visitors seeking spiritual solace and a connection to Tokyo's historical roots.",
           images: [
-            'https://images.pexels.com/photos/861446/pexels-photo-861446.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/13598687/pexels-photo-13598687.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/13598682/pexels-photo-13598682.jpeg?auto=compress&cs=tinysrgb&w=600'
+            'assets/images/japan/pexels-photo-861446.jpeg',
+            'assets/images/japan/pexels-photo-13598687.jpeg',
+            'assets/images/japan/pexels-photo-13598682.jpeg'
           ]
         },
         {
@@ -134,9 +134,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Visit the Tokyo Skytree.',
           description:"Tokyo Skytree, soaring at 634 meters, is the tallest structure in Japan and one of the tallest towers in the world. Located in the Sumida district, it has become an iconic symbol of Tokyo's skyline since its completion in 2012. Designed primarily as a broadcasting tower, Tokyo Skytree also serves as a major tourist attraction, offering breathtaking panoramic views of the city. The tower features two observation decks: Tembo Deck, at 350 meters, and Tembo Galleria, at 450 meters. The Tembo Deck provides a 360-degree view of Tokyo, where visitors can see landmarks like Mount Fuji on clear days. The Tembo Galleria, known as the world's highest skywalk, offers an exhilarating experience with its spiraling glass corridor. Tokyo Skytree is more than just an observation tower; it houses the Tokyo Solamachi complex, a large shopping and entertainment area with over 300 shops, restaurants, an aquarium, and a planetarium. The tower is also beautifully illuminated at night, with a lighting design that changes according to the season and events, adding to its allure. Tokyo Skytree stands as a testament to modern engineering and design, providing a unique vantage point to appreciate the vast and dynamic cityscape of Tokyo.",
           images: [
-            'https://images.pexels.com/photos/10237794/pexels-photo-10237794.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/17399791/pexels-photo-17399791/free-photo-of-wall-of-tokyo-skytree.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/21759451/pexels-photo-21759451/free-photo-of-sky-tree.jpeg?auto=compress&cs=tinysrgb&w=600'
+            'assets/images/japan/pexels-photo-10237794.webp',
+            'assets/images/japan/free-photo-of-wall-of-tokyo-skytree.jpeg',
+            'assets/images/japan/free-photo-of-sky-tree.jpeg'
           ]
         },
         {
@@ -144,9 +144,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Shibuya Crossing & Hatchiko Statue.',
           description:"Shibuya Crossing, located in the heart of Tokyo, is one of the busiest pedestrian intersections in the world and a must-see for visitors. Known for its mesmerizing chaos, the crossing sees thousands of people from all directions navigating through the scramble, creating a dynamic and iconic scene emblematic of Tokyo's urban energy. Visiting Shibuya Crossing offers a unique opportunity to experience the vibrant pulse of the city firsthand. The surrounding area is filled with towering neon signs, trendy shops, and bustling cafes, making it a perfect spot for shopping, dining, and people-watching. Adjacent to Shibuya Crossing is the Hachiko Statue, a poignant symbol of loyalty and devotion. The statue commemorates Hachiko, an Akita dog who waited daily at Shibuya Station for his deceased owner for nearly ten years. The story of Hachiko has touched the hearts of many, and his statue stands as a testament to unwavering loyalty and the bond between humans and animals. Visiting the Hachiko Statue offers a moment of reflection amid the hustle and bustle of Shibuya. Together, Shibuya Crossing and the Hachiko Statue encapsulate the essence of Tokyo—its fast-paced, vibrant urban life juxtaposed with touching stories of personal devotion. This combination makes the area a compelling destination for any traveler.",
           images: [
-            'https://images.pexels.com/photos/5905658/pexels-photo-5905658.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/3402955/pexels-photo-3402955.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/18848590/pexels-photo-18848590/free-photo-of-hachiko-memorial-statue-in-tokyo-japan.jpeg?auto=compress&cs=tinysrgb&w=600'
+            'assets/images/japan/pexels-photo-5905658.jpeg',
+            'assets/images/japan/pexels-photo-3402955.jpeg',
+            'assets/images/japan/free-photo-of-hachiko-memorial-statue-in-tokyo-japan.jpeg'
           ]
         },
         {
@@ -175,9 +175,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Visit Tokyo Meiji Shrine.',
           description:"Meiji Shrine, nestled in a lush forest in the heart of Tokyo, is a significant cultural and historical landmark dedicated to Emperor Meiji and Empress Shoken. Constructed in 1920, the shrine honors the emperor who played a pivotal role in transforming Japan from a feudal society into a modern nation-state during the Meiji Restoration (1868-1912). This period marked Japan's emergence as a major global power, characterized by significant political, economic, and social reforms. The shrine is not only a tribute to Emperor Meiji's legacy but also a symbol of Japan's rich cultural heritage. It was built through the collective efforts of citizens who donated time, money, and materials, reflecting the deep respect and admiration they held for the emperor and empress. The expansive forest surrounding the shrine, with over 100,000 trees donated from across Japan, creates a serene and contemplative atmosphere, providing a stark contrast to the bustling metropolis outside its gates. Meiji Shrine serves as an important site for traditional Shinto practices, including weddings and the annual New Year's prayers, drawing millions of visitors each year. The shrine's historical significance lies in its embodiment of Japan's journey through modernization while retaining its cultural and spiritual roots. Visiting Meiji Shrine offers a profound glimpse into the country's history and its enduring traditions, making it a must-visit destination in Tokyo.",
           images: [
-            'https://images.pexels.com/photos/3800108/pexels-photo-3800108.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://lh3.googleusercontent.com/p/AF1QipOv8VA-Y43m4YnYxdvRuAnLmD_ody0e-sl395-2=s680-w680-h510',
-            'https://lh3.googleusercontent.com/p/AF1QipPKWc660H5so2e8RJ9MruQmuVqdbmvD6wH9pPP5=s680-w680-h510'
+            'assets/images/japan/pexels-photo-3800108.jpeg',
+            'assets/images/japan/20230613_100938.jpg',
+            'assets/images/japan/2021-12-27.jpg'
           ]
         },
         {
@@ -185,9 +185,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Visit Harajuku.',
           description:"Visiting Harajuku offers a vibrant and eclectic experience that captures the essence of Tokyo's dynamic youth culture and cutting-edge fashion scene. Known globally for its unique street style, Harajuku is the epicenter of avant-garde fashion and creative expression. Takeshita Street, the main artery of Harajuku, is lined with trendy boutiques, quirky shops, and colorful cafes. Here, you can find everything from the latest fashion trends to eccentric accessories and delicious crepes. Harajuku is also home to the serene and historic Meiji Shrine, providing a peaceful retreat from the bustling streets. The contrast between the tranquil shrine and the lively shopping district highlights the unique blend of traditional and modern aspects of Tokyo. In addition to shopping and cultural experiences, Harajuku boasts an array of art galleries and themed cafes, such as the popular Kawaii Monster Cafe. The area is a haven for photographers and street art enthusiasts, with vibrant murals and graffiti adding to its artistic appeal. Visiting Harajuku is a sensory adventure, offering a mix of shopping, culture, and art. Whether you're exploring the latest fashion trends, delving into Tokyo's pop culture, or seeking a peaceful moment at Meiji Shrine, Harajuku provides a multifaceted experience that is quintessentially Tokyo.",
           images: [
-            'https://images.pexels.com/photos/15829196/pexels-photo-15829196/free-photo-of-crowded-takeshita-street-harajuku-in-tokyo-japan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.unsplash.com/photo-1542062700-9b61ccbc1696?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://t3.ftcdn.net/jpg/06/86/34/38/240_F_686343802_QtNJY7tCzO3rxBr9rb2BzTrdnpusTmmt.jpg'
+            'assets/images/japan/free-photo-of-crowded-takeshita-street-harajuku-in-tokyo-japan.jpeg',
+            'assets/images/japan/photo-1542062700-9b61ccbc1696.jpg',
+            'assets/images/japan/240_F_686343802_QtNJY7tCzO3rxBr9rb2BzTrdnpusTmmt.jpg'
           ]
         },
         {
@@ -200,19 +200,20 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title:'Visit TeamLab Borderless.',
           description:"Visiting teamLab Borderless in Tokyo offers a mesmerizing and immersive experience unlike any other. This digital art museum, created by the innovative art collective teamLab, blurs the boundaries between art and technology, allowing visitors to become an integral part of the art itself. The museum is renowned for its interactive and ever-changing exhibits that create a world of endless possibilities, where digital art installations seamlessly flow and transform around you. One of the main attractions of teamLab Borderless is its immersive environment, where visitors can explore freely without a fixed route. This freedom encourages personal discovery and a unique experience for each visitor. The dynamic installations respond to your presence and movements, creating a deeply engaging and personalized interaction with the art. Highlights include the 'Forest of Resonating Lamps,' a stunning room filled with hanging lamps that change color and intensity as you move through the space, and the 'Crystal World,' where thousands of LED lights create an awe-inspiring, constantly shifting lightscape. teamLab Borderless is not just a visual feast but also a place of wonder and contemplation. It challenges perceptions, evokes emotions, and stimulates creativity. Visiting this extraordinary museum provides a profound and unforgettable experience, making it a must-see destination for anyone in Tokyo.",
           images: [
-            'https://images.unsplash.com/photo-1593073637686-cc056c151c1e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dGVhbWxhYnxlbnwwfHwwfHx8MA%3D%3D',
-            'https://images.unsplash.com/photo-1593140991451-790e6b246cd5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHRlYW1sYWJ8ZW58MHx8MHx8fDA%3D',
-            'https://images.unsplash.com/photo-1555670600-170aa4c926f6?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'assets/images/japan/photo-1593073637686-cc056c151c1e.jpg',
+            'assets/images/japan/photo-1593140991451-790e6b246cd5.jpg',
+            'assets/images/japan/photo-1555670600-170aa4c926f6.jpg'
           ]
         },
         {
           time:'4:00 PM - 6:00 PM ',
           title:'Visit Odaiba.',
           description:"Visiting Odaiba offers a unique blend of futuristic attractions, entertainment, and stunning waterfront views, making it a must-see destination in Tokyo. This man-made island in Tokyo Bay is renowned for its modern architecture, expansive shopping malls, and diverse recreational activities. Odaiba is home to several iconic landmarks, such as the life-sized Unicorn Gundam statue, the futuristic Fuji TV Building, and the replica of the Statue of Liberty. These attractions provide great photo opportunities and a glimpse into Japan's pop culture and technological prowess. The area boasts numerous shopping and entertainment complexes like DiverCity Tokyo Plaza and Aqua City, where visitors can enjoy shopping, dining, and various amusements. TeamLab Borderless, an immersive digital art museum, offers a mesmerizing experience that combines art, technology, and interaction, making it a highlight of any visit to Odaiba. Odaiba also features beautiful waterfront parks and beaches, perfect for leisurely strolls and picnics while enjoying panoramic views of the Rainbow Bridge and Tokyo Tower. The Oedo-Onsen Monogatari, a hot spring theme park, offers relaxation with its traditional baths and Edo-period ambiance. Overall, Odaiba's mix of futuristic attractions, cultural experiences, and scenic beauty makes it a versatile and exciting destination for travelers seeking a modern yet relaxing experience in Tokyo.",
+          
           images: [
-            'https://images.unsplash.com/photo-1558671434-ef7468f42a80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://images.unsplash.com/958bi4L1N9s.JPG?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://images.unsplash.com/photo-1567597714138-3bdc30f4f493?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'assets/images/japan/photo-1558671434-ef7468f42a80.jpg',
+            'assets/images/japan/958bi4L1N9s.jpg',
+            'assets/images/japan/photo-1567597714138-3bdc30f4f493.jpg'
           ]
         },
         
@@ -242,9 +243,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Travel to Mount Fuji Area.',
           description: 'Traveling from Tokyo to Mount Fuji offers a journey through contrasting landscapes, from the bustling metropolis to the serene countryside. The trip typically involves taking a train to one of the nearby stations like Kawaguchiko or Gotemba, followed by a bus ride or taxi to reach the base of the mountain. Along the way, travelers can enjoy scenic views of rural Japan and, on clear days, catch glimpses of the iconic peak looming in the distance.',
           images: [
-            'assets/images/WizzRide_Japan_Tour_Package.jpg',
-            'https://images.pexels.com/photos/15829429/pexels-photo-15829429/free-photo-of-mount-fuji-in-autumn.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/4077937/pexels-photo-4077937.jpeg?auto=compress&cs=tinysrgb&w=600'
+           
+            'assets/images/japan/free-photo-of-mount-fuji-in-autumn.jpeg',
+            'assets/images/japan/pexels-photo-4077937.jpeg'
           ]
         },
         {
@@ -293,9 +294,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: "Travel from Tokyo to Kyoto Japan's famous Bullet Train.",
           description: "Japan's Shinkansen, also known as the bullet train, is renowned for its speed, efficiency, and punctuality.  It operates on dedicated tracks, reaching speeds of up to 320 km/h (200 mph), connecting major cities like Tokyo, Osaka, and Kyoto in a matter of hours. The Shinkansen's sleek design, comfortable seating, and onboard amenities make it a preferred choice for travelers exploring Japan's diverse landscapes and cultural attractions.",
           images: [
-            'https://images.pexels.com/photos/20627936/pexels-photo-20627936/free-photo-of-shinkansen-train-arriving-at-a-station.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.unsplash.com/photo-1695833913339-f2591ac948ef?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://images.unsplash.com/photo-1627052699797-b1a1b3ebb1bd?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'assets/images/japan/free-photo-of-shinkansen-train-arriving-at-a-station.jpeg',
+            'assets/images/japan/photo-1695833913339-f2591ac948ef.jpg',
+            'assets/images/japan/photo-1627052699797-b1a1b3ebb1bd.jpg'
           ]
           
         },
@@ -316,9 +317,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Kinkaku-ji (Golden Pavilion)',
           description: "Kinkaku-ji, or the Golden Pavilion, is a Zen Buddhist temple located in Kyoto, Japan. Originally built in 1397 as a retirement villa for shogun Ashikaga Yoshimitsu, it was later converted into a Zen temple following his death. The temple is renowned for its stunning architecture and its top two floors covered entirely in gold leaf, giving it the iconic appearance that reflects beautifully on the surrounding pond. The significance of Kinkaku-ji lies not only in its breathtaking beauty but also in its cultural and historical importance. It represents the pinnacle of Muromachi period (1336-1573) architecture and design, characterized by its harmonious blend of Shinden, Samurai, and Zen temple styles. The temple's reflection on the Mirror Pond (Kyoko-chi) is symbolic of the relationship between heaven and earth, a central concept in Buddhism. Kinkaku-ji is also closely associated with the concept of wabi-sabi, finding beauty in imperfection and transience. Despite being rebuilt after a fire in 1950 (the original structure was burned down by a monk in 1950), the temple continues to evoke a sense of timeless elegance and serenity. As a UNESCO World Heritage site and one of Kyoto's most visited landmarks, Kinkaku-ji attracts millions of visitors annually who come to admire its architecture, stroll through its meticulously landscaped gardens, and experience a moment of tranquility and contemplation in the presence of this cultural treasure.",
           images: [
-            'https://images.unsplash.com/photo-1573700947337-61ff53eb00d5?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://lh3.googleusercontent.com/p/AF1QipOvYFbJ9JXlGH4LwCQDXvhGweo84pm83rj8NpkT=s680-w680-h510',
-            'https://lh3.googleusercontent.com/p/AF1QipO88HaAgI3AnuuRUDik-hR-DOUZ4VveWXx11DBv=s680-w680-h510'
+            'assets/images/japan/photo-1573700947337-61ff53eb00d5.jpg',
+            'assets/images/japan/20210912_120801.jpg',
+            'assets/images/japan/AF1QipO88HaAgI3AnuuRUDik-hR-DOUZ.jpg'
           ]
         },
         {
@@ -326,9 +327,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Nijo Castle.',
           description: "Nijo Castle (Nijojo) in Kyoto is a UNESCO World Heritage site and a symbol of the power and wealth of the Tokugawa shogunate during the Edo period (1603-1868). Built in 1603 by Tokugawa Ieyasu, the founder of the Tokugawa shogunate, Nijo Castle served as the residence for the shoguns when they visited Kyoto. The castle is renowned for its unique architectural design, featuring two concentric rings of fortifications, the Ninomaru Palace, and the Honmaru Palace. The Ninomaru Palace, in particular, is famous for its 'nightingale floors' (uguisubari), which squeak when walked upon to alert against intruders. The palace interiors are adorned with exquisite sliding doors and intricate wood carvings, showcasing the wealth and power of the Tokugawa shogunate. Beyond its architectural beauty, Nijo Castle holds historical significance as the place where the Tokugawa shogunate formally handed over power to the Meiji Restoration government in 1867. This event marked the end of the samurai era and the beginning of Japan's modernization",
           images: [
-            'https://images.pexels.com/photos/19191148/pexels-photo-19191148/free-photo-of-outer-walls-of-nijo-castle-in-kyoto-japan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.unsplash.com/photo-1682849759434-1abb8720049a?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://images.unsplash.com/photo-1685845284509-2202d6e0e2eb?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'assets/images/japan/free-photo-of-outer-walls-of-nijo-castle-in-kyoto-japan.jpeg',
+            'assets/images/japan/photo-1682849759434-1abb8720049a.jpg',
+            'assets/images/japan/photo-1685845284509-2202d6e0e2eb.jpg'
           ]
         },{
           time:'6:30 PM - 8:00 PM.',
@@ -353,9 +354,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit the famous Fushimi Inari Shrine.',
           description: "Fushimi Inari Shrine, located in Kyoto, Japan, is one of the most iconic and revered Shinto shrines in the country. It is famous for its thousands of vermillion torii gates that form pathways leading into the wooded forest of Mount Inari, creating a stunning and mystical atmosphere. Each torii gate is donated by individuals and businesses, symbolizing their wishes and prayers. The shrine is dedicated to Inari, the Shinto god of rice, prosperity, and business. Foxes (kitsune), believed to be Inari's messengers, can be seen throughout the shrine grounds. Visitors can explore the network of trails that wind up the mountain, passing by smaller shrines and offering breathtaking views of Kyoto from various viewpoints along the way. Fushimi Inari Shrine holds significant cultural and spiritual importance, attracting millions of visitors annually. It is a place where visitors can experience both the tranquility of nature and the vibrancy of Japanese religious culture. The shrine's unique and picturesque setting, combined with its deep cultural heritage, makes it a must-visit destination for anyone traveling to Kyoto.",
           images: [
-            'https://images.pexels.com/photos/25797659/pexels-photo-25797659/free-photo-of-kyoto-perspective.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.pexels.com/photos/15857473/pexels-photo-15857473/free-photo-of-fushimi-inari-taisha-shrine-in-japan.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/15802349/pexels-photo-15802349/free-photo-of-interior-of-the-fushimi-inari-taisha-temple-in-kyoto-japan.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'
+            'assets/images/japan/free-photo-of-kyoto-perspective.jpeg',
+            'assets/images/japan/free-photo-of-fushimi-inari-taisha-shrine-in-japan.jpeg',
+            'assets/images/japan/free-photo-of-interior-of-the-fushimi-inari-taisha-temple-in-kyoto-japan.jpeg'
           ]
         },
         {
@@ -363,9 +364,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Kiyomizu-dera.',
           description: "Kiyomizu-dera, officially known as Otowa-san Kiyomizu-dera, is a historic Buddhist temple located in the Higashiyama district of Kyoto, Japan. Founded in 778 AD, the temple is part of the Historic Monuments of Ancient Kyoto UNESCO World Heritage site. Its name, Kiyomizu-dera, translates to 'Pure Water Temple,' named after the Otowa Waterfall within the temple grounds. One of the most iconic features of Kiyomizu-dera is its wooden stage, known as the Kiyomizu Stage, that juts out from the main hall 13 meters above the hillside below. The stage offers visitors panoramic views of the city of Kyoto and is particularly stunning during cherry blossom season and autumn foliage. The main hall, known as the Hondo, houses a statue of Kannon Bodhisattva, the Buddhist deity of mercy and compassion. Visitors to the temple can also drink from the Otowa Waterfall using long-handled cups, which is said to grant wishes related to longevity, success in studies, and a fortunate love life. Kiyomizu-dera is surrounded by lush greenery and maple trees, creating a serene and picturesque setting that changes with the seasons. The temple complex includes several other halls and shrines, such as Jishu Shrine dedicated to the deity of love and matchmaking. The temple holds cultural and historical significance as a center of Buddhist practice and as a testament to Japanese architecture and craftsmanship. It has been rebuilt multiple times due to fires and earthquakes, with the current structures dating from the early Edo period (1633). Kiyomizu-dera remains a popular destination for tourists and pilgrims alike, offering a spiritual retreat and a glimpse into Japan's rich cultural heritage.",
           images: [
-            'https://images.pexels.com/photos/19651827/pexels-photo-19651827/free-photo-of-kiyomizu-dera-temple-in-kyoto.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/10889285/pexels-photo-10889285.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.unsplash.com/photo-1678107658651-fccc4bdae865?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTZ8fEtpeW9taXp1JTIwZGVyYXxlbnwwfHwwfHx8MA%3D%3D'
+            'assets/images/japan/free-photo-of-kiyomizu-dera-temple-in-kyoto.jpeg',
+            'assets/images/japan/pexels-photo-10889285.jpeg',
+            'assets/images/japan/photo-1678107658651-fccc4bdae865.jpg'
           ]
         },
         {
@@ -379,9 +380,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Arashiyama Bamboo Grove.',
           description: "Arashiyama Bamboo Grove, located in the western outskirts of Kyoto, Japan, is a mesmerizing natural attraction known for its towering bamboo groves that create a surreal and tranquil atmosphere. Walking through the grove feels like stepping into another world, where the tall bamboo stalks sway gently in the breeze, casting enchanting patterns of light and shadow. The main path through the grove leads to the entrance of the iconic Tenryu-ji Temple, a UNESCO World Heritage site and one of Kyoto's five great Zen temples. The temple's sprawling garden, designed by the renowned garden designer Muso Soseki, offers a peaceful retreat surrounded by lush greenery and views of the Arashiyama mountains. Visitors can explore various paths and trails that wind through the bamboo grove, providing opportunities for quiet contemplation and photography. The grove is particularly atmospheric early in the morning or late in the afternoon when the sunlight filters through the bamboo, creating a magical ambiance. Arashiyama Bamboo Grove is not only a natural wonder but also holds cultural significance, symbolizing resilience and longevity in Japanese culture. Bamboo is revered for its strength, flexibility, and rapid growth, embodying the spirit of perseverance and adaptation. Beyond the bamboo grove, the Arashiyama area offers other attractions such as the historic Togetsukyo Bridge, scenic boat rides on the Hozu River, and the charming Sagano scenic railway. Together, these attractions make Arashiyama a must-visit destination for travelers seeking natural beauty, cultural heritage, and tranquility in Kyoto.",
           images: [
-            'https://images.pexels.com/photos/4323662/pexels-photo-4323662.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.unsplash.com/photo-1598497646896-7e0d0347195b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGFyYXNoaXlhbWElMjBiYW1ib298ZW58MHx8MHx8fDA%3D',
-            'https://images.pexels.com/photos/15829779/pexels-photo-15829779/free-photo-of-man-walking-down-the-road-in-a-bamboo-forest.jpeg?auto=compress&cs=tinysrgb&w=600'
+            'assets/images/japan/pexels-photo-4323662.jpeg',
+            'assets/images/japan/photo-1598497646896-7e0d0347195b.jpg',
+            'assets/images/japan/free-photo-of-man-walking-down-the-road-in-a-bamboo-forest.jpeg'
           ]
         },
         {
@@ -411,9 +412,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Arrive at Nara & visit the Toda-ji temple and the famous Nara Deer Park.',
           description: "Tōdai-ji, located in Nara, Japan, is one of the country's most significant and impressive historical landmarks. Originally constructed in 752 AD, this Buddhist temple is renowned for housing the world's largest bronze statue of the Great Buddha (Daibutsu). The statue, standing at an imposing 15 meters (49 feet) tall, is a breathtaking representation of Vairocana Buddha and attracts millions of visitors annually. The main hall of Tōdai-ji, known as the Daibutsuden (Great Buddha Hall), is the largest wooden building in Japan. Despite being rebuilt twice due to fires, the current structure, completed in 1709, remains a monumental achievement in wooden architecture, showcasing the grandeur and skill of ancient Japanese craftsmanship. Tōdai-ji's historical and cultural significance extends beyond its architectural marvels. It played a crucial role in the spread of Buddhism in Japan and served as the head temple of all provincial Buddhist temples. The temple complex includes various other significant buildings, such as the Nandaimon (Great South Gate), which features two imposing statues of Nio guardians, and the Nigatsu-do and Sangatsu-do halls, known for their cultural treasures and annual rituals. As a UNESCO World Heritage site, Tōdai-ji not only embodies the spiritual and cultural heritage of Japan but also stands as a testament to the country's architectural and artistic achievements. Visiting Tōdai-ji offers a profound glimpse into Japan's rich history and religious traditions, making it an essential destination for travelers.",
           images: [
-            'https://images.pexels.com/photos/16807973/pexels-photo-16807973/free-photo-of-photo-of-todaiji-temple-in-nara-japan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.pexels.com/photos/1717887/pexels-photo-1717887.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.unsplash.com/photo-1522209637010-422a41972d2c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bmFyYSUyMHBhcmt8ZW58MHx8MHx8fDA%3D'
+            'assets/images/japan/free-photo-of-photo-of-todaiji-temple-in-nara-japan.jpeg',
+            'assets/images/japan/pexels-photo-1717887.jpeg',
+            'assets/images/japan/photo-1522209637010-422a41972d2c.jpg'
           ]
         },
         
@@ -432,9 +433,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Osaka Castle',
           description: 'Osaka Castle is one of Japan\'s most famous landmarks, offering visitors a fascinating glimpse into the country\'s rich history and culture. Originally built in 1583 by Toyotomi Hideyoshi, a key figure in Japan\'s unification, the castle has played a significant role in various historical events, including the Siege of Osaka. The castle\'s striking main tower, surrounded by moats and impressive stone walls, stands as a testament to the architectural ingenuity of the time. Visiting Osaka Castle provides an opportunity to explore its expansive grounds, which include beautifully landscaped gardens, such as the Nishinomaru Garden, offering spectacular views of the castle tower against a backdrop of cherry blossoms in spring. The castle\'s interior has been transformed into a modern museum, showcasing a vast collection of historical artifacts, samurai armor, and informative displays detailing the castle\'s storied past. The observation deck at the top of the main tower offers panoramic views of Osaka, allowing visitors to appreciate the city\'s blend of historical and modern elements. The castle grounds are also a hub for cultural events and festivals, providing a vibrant atmosphere throughout the year. Overall, Osaka Castle is a must-visit destination for history enthusiasts, architecture lovers, and anyone looking to experience the cultural heritage of Japan. Its blend of historical significance, architectural beauty, and cultural activities makes it a highlight of any visit to Osaka.',
           images: [
-            'https://images.pexels.com/photos/4058519/pexels-photo-4058519.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/6226339/pexels-photo-6226339.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/16961076/pexels-photo-16961076/free-photo-of-illuminated-osaka-castle-at-night.jpeg?auto=compress&cs=tinysrgb&w=600'
+            'assets/images/japan/pexels-photo-4058519.jpeg',
+            'assets/images/japan/pexels-photo-6226339.jpeg',
+            'assets/images/japan/free-photo-of-illuminated-osaka-castle-at-night.jpeg'
           ]
         },
         {
@@ -442,9 +443,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Dotonbori, Osaka',
           description: 'Dotonbori, located in Osaka, is a must-visit destination for anyone traveling to Japan. This vibrant entertainment district is famous for its lively atmosphere, neon lights, and diverse culinary offerings. As you stroll along the Dotonbori Canal, you\'ll be captivated by the bright, animated billboards, including the iconic Glico Running Man and the giant Kani Doraku crab sign, which have become symbols of the area. Dotonbori is a food lover\'s paradise, offering an array of delicious street food and local delicacies. From takoyaki (octopus balls) and okonomiyaki (savory pancakes) to kushikatsu (deep-fried skewers) and fugu (pufferfish), the district is renowned for its diverse and mouth-watering cuisine. The numerous restaurants and food stalls ensure that visitors can indulge in Osaka\'s culinary delights at any time of day. The area is also home to a variety of entertainment options, including theaters, bars, and shops, making it a bustling hub of activity both day and night. The nearby Dotonbori Arcade offers a unique shopping experience with its eclectic mix of stores. Visiting Dotonbori allows travelers to experience the vibrant energy and rich culinary culture of Osaka. Whether you\'re savoring local dishes, exploring the bustling streets, or enjoying the dazzling lights along the canal, Dotonbori promises an unforgettable and immersive experience that captures the essence of Osaka\'s lively spirit.',
           images: [
-            'https://images.pexels.com/photos/2070026/pexels-photo-2070026.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.pexels.com/photos/4504684/pexels-photo-4504684.jpeg?auto=compress&cs=tinysrgb&w=600',
-            'https://images.pexels.com/photos/8050487/pexels-photo-8050487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+            'assets/images/japan/pexels-photo-2070026.jpeg',
+            'assets/images/japan/pexels-photo-4504684.jpeg',
+            'assets/images/japan/pexels-photo-8050487.jpeg'
           ]
         },
         {
@@ -467,9 +468,9 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
           title: 'Visit Peace park, Memorial Museum and Atomic Bomb dome at Hiroshima.',
           description:"Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome are profound symbols of the impact of nuclear warfare and the enduring hope for global peace. Located in Hiroshima, Japan, the park was established to honor the victims of the atomic bomb dropped on the city on August 6, 1945, and to advocate for the abolition of nuclear weapons. The Atomic Bomb Dome, originally the Hiroshima Prefectural Industrial Promotion Hall, is the most iconic structure in the park. Left in its ruined state, it serves as a stark reminder of the destruction caused by the bomb and stands as a powerful symbol of resilience and peace. Designated as a UNESCO World Heritage site, it is a place of reflection and a poignant reminder of the need for nuclear disarmament. The Hiroshima Peace Memorial Museum, located within the park, provides a comprehensive and moving account of the events leading up to, during, and after the bombing. Exhibits include personal artifacts, photographs, and testimonies from survivors, offering a deeply human perspective on the tragedy. The museum aims to educate visitors about the horrors of nuclear warfare and to promote a message of peace. The park itself is a serene space, featuring various memorials and monuments, such as the Cenotaph for A-bomb Victims and the Children's Peace Monument. It offers a place for contemplation and prayer, with thousands of paper cranes left by visitors symbolizing wishes for peace. Visiting Hiroshima Peace Memorial Park, Memorial Museum, and Atomic Bomb Dome provides a powerful, emotional experience that underscores the importance of striving for a world free from the threat of nuclear war.",
           images: [
-            'https://images.pexels.com/photos/18385203/pexels-photo-18385203/free-photo-of-hiroshima-peace-memorial.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            'https://images.unsplash.com/photo-1699444114670-6b36a988ec38?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            'https://images.unsplash.com/photo-1697604733264-81a69ee2315e?q=80&w=1646&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'assets/images/japan/free-photo-of-hiroshima-peace-memorial.jpeg',
+            'assets/images/japan/photo-1699444114670-6b36a988ec38.jpg',
+            'assets/images/japan/photo-1697604733264-81a69ee2315e.jpg'
           ]
         },
         {
