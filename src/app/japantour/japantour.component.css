@@ -821,6 +821,12 @@
     min-height: 120px;
 }
 
+.field-error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #ffe0e0;
+}
+
 .submit-btn {
     width: 100%;
     padding: 15px 30px;
