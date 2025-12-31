@@ -3266,7 +3266,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const traveldate = this.formValues.sharedDateTime || '';
 
     if (!source || !destination || !pickup || !drop) {
-      alert('Please fill in all required fields.');
+      this.showSwal('Please fill in all required fields.', 'warning');
       return;
     }
 
@@ -3419,13 +3419,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // console.log('Final payload:', payload);
-    alert('Flight booking submitted! Check console for details.');
+    this.showSwal('Flight booking submitted! Check console for details.', 'success', 2500);
   }
 
   submitCabs(type: 'shared' | 'reserved', phoneNumber?: string) {
     const cities = this.selectedCities[type];
     if (!cities.pickup || !cities.dropoff) {
-      alert('Please select both pickup and drop-off cities first.');
+      this.showSwal('Please select both pickup and drop-off cities first.', 'warning');
       return;
     }
 
@@ -3439,7 +3439,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         : this.formValues.reservedDropoffLocation;
 
     if (!pickupLocation || !dropoffLocation) {
-      alert('Please enter specific pickup and drop-off locations within the selected cities.');
+      this.showSwal('Please enter specific pickup and drop-off locations within the selected cities.', 'warning');
       return;
     }
 
@@ -3455,7 +3455,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         dropoffLocation: this.formValues.sharedDropoffLocation,
       };
       // console.log('Submitting shared cab booking:', payload);
-      alert('Shared cab booking submitted! Check console for details.');
+    this.showSwal('Shared cab booking submitted! Check console for details.', 'success', 2500);
       return;
     }
 
@@ -3472,7 +3472,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       dropoffLocation: this.formValues.reservedDropoffLocation,
     };
     // console.log('[ReservedCab] Submitting booking payload', payload);
-    alert('Reserved cab booking submitted! Check console for details.');
+  this.showSwal('Reserved cab booking submitted! Check console for details.', 'success', 2500);
   }
 
   /**
@@ -4349,21 +4349,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const cities = this.selectedCities[type];
 
     if (!cities.pickup || !cities.dropoff) {
-      alert('Please select both pickup and drop-off cities first.');
+      this.showSwal('Please select both pickup and drop-off cities first.', 'warning');
       return;
     }
 
     // Validate date field
     const dateField = type === 'shared' ? this.formValues.sharedDateTime : this.formValues.reservedDate;
     if (!dateField || !dateField.trim()) {
-      alert('Please select a date first.');
+      this.showSwal('Please select a date first.', 'warning');
       return;
     }
 
     // For reserved cabs, validate time field
     if (type === 'reserved') {
       if (!this.formValues.reservedTime || !this.formValues.reservedTime.trim()) {
-        alert('Please select a pickup time first.');
+        this.showSwal('Please select a pickup time first.', 'warning');
         return;
       }
     }
@@ -4376,7 +4376,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       : this.formValues.reservedDropoffLocation;
 
     if (!pickupLocation || !dropoffLocation) {
-      alert('Please enter specific pickup and drop-off locations within the selected cities.');
+      this.showSwal('Please enter specific pickup and drop-off locations within the selected cities.', 'warning');
       return;
     }
 
@@ -4579,7 +4579,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   createGroupBooking() {
-    alert('Redirecting to group booking... This would redirect to a specialized group booking form.');
+    this.showSwal('Redirecting to group booking... This would redirect to a specialized group booking form.', 'info', 2500);
   }
 
   toggleDropdownActiveClass(): void {
@@ -4634,6 +4634,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   trackByServiceId(index: number, service: any): number {
     return service.id;
+  }
+
+  /**
+   * Show a SweetAlert message (replaces native alert).
+   * Defaults to warning icon; use timers for toasts if needed.
+   */
+  private showSwal(
+    message: string,
+    icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'warning',
+    timerMs?: number
+  ): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    Swal.fire({
+      icon,
+      title: message,
+      timer: timerMs,
+      timerProgressBar: !!timerMs,
+      showConfirmButton: !timerMs,
+      confirmButtonColor: '#149494'
+    });
   }
 
   /** -------------------
