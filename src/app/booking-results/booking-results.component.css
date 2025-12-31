@@ -810,6 +810,10 @@ color: #000 !important;
   border: 1px solid #e5e7eb;
 }
 
+.dropdown-content i{
+  color:darkcyan !important;
+}
+
 /* Show dropdown content on hover, focus, and active for mobile */
 .dropdown:hover .dropdown-content,
 .dropdown:focus .dropdown-content,
@@ -3207,11 +3211,17 @@ span.seat-price {
   }
 
   .seat-selection-summary {
-    margin-top: 8px;
+    margin-top: 0px;
     padding: 8px 12px;
     flex-shrink: 0;
   }
 
+  .summary-row total{
+    margin-top: 0 !important;
+  }
+  .summary-row {
+    padding:0px !important;
+  }
   .seat-modal-footer {
     padding: 10px 16px;
     flex-shrink: 0;

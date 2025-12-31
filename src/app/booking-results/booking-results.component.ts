@@ -810,6 +810,10 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     console.log('showSeatPopup set to:', this.showSeatPopup);
   }
 
+  getSelectedSeatList(): string {
+    return this.selectedSeats.map(seat => seat.number).join(', ');
+  }
+
   fetchSeatDetails(tid: string, price: number) {
     console.log('========== CALLING getSeatDetails API ==========');
     console.log('TID:', tid);
