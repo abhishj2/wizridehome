@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { SeoService } from '../services/seo.service';
 import { ApiserviceService } from '../services/apiservice.service';
 import { CaptchaService, CaptchaData } from '../services/captcha.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cancelbooking',
@@ -237,7 +238,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
     const captchaAnswer = formData.captcha || this.userCaptchaAnswer;
     if (!this.captchaService.validateCaptcha(captchaAnswer, this.captchaData.answer)) {
       this.isLoading = false;
-      alert('Incorrect captcha answer! Please solve the math problem correctly.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Captcha',
+        text: 'Incorrect captcha answer! Please solve the math problem correctly.',
+        confirmButtonColor: '#1daaba'
+      });
       this.userCaptchaAnswer = '';
       this.captchaData = this.captchaService.generateCaptcha();
       this.cancelForm.patchValue({ captcha: '' });
@@ -252,7 +258,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       this.checkSharedPNRAndSendOTP(pnr, mobileNumber);
     } else {
       this.isLoading = false;
-      alert('Invalid PNR length. PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid PNR',
+        text: 'PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).',
+        confirmButtonColor: '#1daaba'
+      });
       this.cdr.detectChanges();
     }
   }
@@ -265,14 +276,24 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         
         if (String(val).trim() === 'NOT_FOUND') {
           this.isLoading = false;
-          alert('PNR not found. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'PNR Not Found',
+            text: 'Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
         
         if (!val || !Array.isArray(val) || val.length === 0) {
           this.isLoading = false;
-          alert('PNR not found. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'PNR Not Found',
+            text: 'Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
@@ -281,14 +302,24 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         
         if (bookingData.STATUS === 'CANCEL-ADMIN' || bookingData.STATUS === 'CANCELLED-VERIFIED') {
           this.isLoading = false;
-          alert('Ticket Already Cancelled');
+          Swal.fire({
+            icon: 'info',
+            title: 'Already Cancelled',
+            text: 'This ticket has already been cancelled.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
         
         if (bookingData.PASSENGERNUMBER != mobileNumber) {
           this.isLoading = false;
-          alert("Primary Number doesn't match. Please enter the registered mobile number.");
+          Swal.fire({
+            icon: 'warning',
+            title: 'Mobile Number Mismatch',
+            text: "Primary Number doesn't match. Please enter the registered mobile number.",
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
@@ -298,7 +329,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('FBPNR Details API Error:', error);
-        alert('Failed to verify PNR. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Verification Failed',
+          text: 'Failed to verify PNR. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cdr.detectChanges();
       }
     });
@@ -312,14 +348,24 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         
         if (String(val).trim() === 'NOT_FOUND') {
           this.isLoading = false;
-          alert('PNR not found. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'PNR Not Found',
+            text: 'Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
         
         if (!val || !Array.isArray(val) || val.length === 0) {
           this.isLoading = false;
-          alert('PNR not found. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'PNR Not Found',
+            text: 'Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
@@ -328,14 +374,24 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         
         if (bookingData.status === 'CANCELLED-ADMIN' || bookingData.status === 'CANCELLED-VERIFIED') {
           this.isLoading = false;
-          alert('Ticket Already Cancelled');
+          Swal.fire({
+            icon: 'info',
+            title: 'Already Cancelled',
+            text: 'This ticket has already been cancelled.',
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
         
         if (bookingData.passengerNumber != mobileNumber) {
           this.isLoading = false;
-          alert("Primary Number doesn't match. Please enter the registered mobile number.");
+          Swal.fire({
+            icon: 'warning',
+            title: 'Mobile Number Mismatch',
+            text: "Primary Number doesn't match. Please enter the registered mobile number.",
+            confirmButtonColor: '#1daaba'
+          });
           this.cdr.detectChanges();
           return;
         }
@@ -345,7 +401,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Shared PNR Details API Error:', error);
-        alert('Failed to verify PNR. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Verification Failed',
+          text: 'Failed to verify PNR. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cdr.detectChanges();
       }
     });
@@ -376,12 +437,24 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
           
           console.log('OTP received:', this.receivedOTP);
           
-          alert(`OTP sent successfully to ${this.cancelForm.get('mobile')?.value}`);
+          Swal.fire({
+            icon: 'success',
+            title: 'OTP Sent!',
+            text: `OTP sent successfully to ${this.cancelForm.get('mobile')?.value}`,
+            confirmButtonColor: '#1daaba',
+            timer: 3000,
+            timerProgressBar: true
+          });
           
           this.cancelForm.get('otp')?.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
           this.cancelForm.get('otp')?.updateValueAndValidity();
         } else {
-          alert('Failed to send OTP. Please try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'OTP Failed',
+            text: 'Failed to send OTP. Please try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Invalid OTP response format:', val);
         }
         
@@ -390,7 +463,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('OTP API Error:', error);
-        alert('Failed to send OTP. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'OTP Failed',
+          text: 'Failed to send OTP. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cdr.detectChanges();
       }
     });
@@ -407,7 +485,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       console.log('OTP Verified Successfully:', formData);
       this.fetchTicketDetails(formData.pnr);
     } else {
-      alert('Invalid OTP. Please try again.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid OTP',
+        text: 'Please enter the correct OTP.',
+        confirmButtonColor: '#1daaba'
+      });
       console.log('Invalid OTP. Entered:', enteredOTP, 'Expected:', this.receivedOTP);
     }
     
@@ -427,7 +510,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       this.fetchSharedPNRDetails(pnr);
     } else {
       this.isLoading = false;
-      alert('Invalid PNR length. PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid PNR',
+        text: 'PNR must be 6 digits (Shared Cab) or 7 digits (Reserved Cab).',
+        confirmButtonColor: '#1daaba'
+      });
       this.cdr.detectChanges();
     }
   }
@@ -473,7 +561,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
           console.log('Shared Cab Ticket Details Mapped:', this.ticketDetails);
           this.currentStep = 2;
         } else {
-          alert('No ticket details found for this PNR. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'No Ticket Found',
+            text: 'No ticket details found for this PNR. Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Invalid or empty PNR response:', response);
           this.ticketDetails = null;
         }
@@ -483,7 +576,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Shared PNR Details API Error:', error);
-        alert('Failed to fetch ticket details. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Fetch Failed',
+          text: 'Failed to fetch ticket details. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.ticketDetails = null;
         this.cdr.detectChanges();
       }
@@ -532,7 +630,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
           console.log('Reserved Cab Ticket Details Mapped:', this.ticketDetails);
           this.currentStep = 2;
         } else {
-          alert('No ticket details found for this PNR. Please verify the PNR and try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'No Ticket Found',
+            text: 'No ticket details found for this PNR. Please verify the PNR and try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Invalid or empty PNR response:', response);
           this.ticketDetails = null;
         }
@@ -542,7 +645,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Reserved PNR Details API Error:', error);
-        alert('Failed to fetch ticket details. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Fetch Failed',
+          text: 'Failed to fetch ticket details. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.ticketDetails = null;
         this.cdr.detectChanges();
       }
@@ -560,7 +668,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
   // Calculate cancellation charges using API
   calculateCancellationCharges(): void {
     if (!this.ticketDetails || !this.ticketDetails.pnr) {
-      alert('Ticket details not available. Please try again.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Ticket Details Missing',
+        text: 'Ticket details not available. Please try again.',
+        confirmButtonColor: '#1daaba'
+      });
       return;
     }
     
@@ -603,7 +716,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
           console.log('Cancellation Details from API:', this.cancellationDetails);
           this.currentStep = 3;
         } else {
-          alert('Failed to calculate cancellation charges. Please try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Calculation Failed',
+            text: 'Failed to calculate cancellation charges. Please try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Invalid cancellation criteria response:', response);
           this.cancellationDetails = null;
         }
@@ -613,7 +731,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Cancellation Criteria API Error:', error);
-        alert('Failed to fetch cancellation charges. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Fetch Failed',
+          text: 'Failed to fetch cancellation charges. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cancellationDetails = null;
         this.cdr.detectChanges();
       }
@@ -623,7 +746,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
   // Confirm cancellation using API
   confirmCancellation(): void {
     if (!this.cancellationDetails || !this.ticketDetails) {
-      alert('Cancellation details not available. Please try again.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Details Missing',
+        text: 'Cancellation details not available. Please try again.',
+        confirmButtonColor: '#1daaba'
+      });
       return;
     }
     
@@ -673,11 +801,22 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         console.log('Cancellation response check:', { response, responseString, type: typeof response });
         
         if (responseString === 'CANCEL_SUCCESS' || String(response).trim() === 'CANCEL_SUCCESS') {
-          alert('Cancellation confirmed! You will receive a refund of ' + this.cancellationDetails.refundAmount);
+          Swal.fire({
+            icon: 'success',
+            title: 'Cancellation Confirmed!',
+            html: `Your ticket has been cancelled successfully.<br><br>You will receive a refund of <strong>${this.cancellationDetails.refundAmount}</strong>`,
+            confirmButtonColor: '#1daaba',
+            confirmButtonText: 'OK'
+          });
           console.log('Cancellation Confirmed Successfully:', response);
           this.currentStep = 4;
         } else {
-          alert('Failed to confirm cancellation. Please try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Cancellation Failed',
+            text: 'Failed to confirm cancellation. Please try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Cancellation failed. Response:', response, 'Response String:', responseString);
         }
         
@@ -686,7 +825,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Cancel Ticket API Error:', error);
-        alert('Failed to confirm cancellation. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Cancellation Failed',
+          text: 'Failed to confirm cancellation. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cdr.detectChanges();
       }
     });
@@ -724,9 +868,21 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
         if (otpValue && /^\d+$/.test(otpValue)) {
           this.receivedOTP = otpValue;
           console.log('OTP resent from API:', this.receivedOTP);
-          alert(`OTP resent successfully to ${mobileValue}`);
+          Swal.fire({
+            icon: 'success',
+            title: 'OTP Resent!',
+            text: `OTP resent successfully to ${mobileValue}`,
+            confirmButtonColor: '#1daaba',
+            timer: 3000,
+            timerProgressBar: true
+          });
         } else {
-          alert('Failed to resend OTP. Please try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Resend Failed',
+            text: 'Failed to resend OTP. Please try again.',
+            confirmButtonColor: '#1daaba'
+          });
           console.error('Invalid OTP response format:', response);
         }
         
@@ -735,7 +891,12 @@ export class CancelbookingComponent implements OnInit, AfterViewInit, OnDestroy 
       error: (error) => {
         this.isLoading = false;
         console.error('Resend OTP API Error:', error);
-        alert('Failed to resend OTP. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Resend Failed',
+          text: 'Failed to resend OTP. Please try again.',
+          confirmButtonColor: '#1daaba'
+        });
         this.cdr.detectChanges();
       }
     });
