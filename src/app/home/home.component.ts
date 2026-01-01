@@ -4101,10 +4101,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.closeAllOtherDropdowns('');
     }
     this.isTravelersOpen = !this.isTravelersOpen;
+    
+    // Toggle dropdown-active class on tabs-container
+    this.toggleDropdownActiveClass();
   }
 
   closeTravelersPanel() {
     this.isTravelersOpen = false;
+    
+    // Toggle dropdown-active class on tabs-container
+    this.toggleDropdownActiveClass();
   }
 
   updateCount(type: keyof TravelerCounts, delta: number) {
@@ -4646,11 +4652,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const tabsContainer = this.document.querySelector('.tabs-container') as HTMLElement;
     if (!tabsContainer) return;
 
-    // Check if any dropdown is active (city suggestions or calendar)
+    // Check if any dropdown is active (city suggestions, calendar, or travelers panel)
     const hasActiveDropdown = Object.keys(this.activeSuggestions).length > 0;
     const hasActiveCalendar = this.isCalendarOpen;
+    const hasTravelersOpen = this.isTravelersOpen;
 
-    if (hasActiveDropdown || hasActiveCalendar) {
+    if (hasActiveDropdown || hasActiveCalendar || hasTravelersOpen) {
       tabsContainer.classList.add('dropdown-active');
     } else {
       tabsContainer.classList.remove('dropdown-active');
@@ -4674,6 +4681,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!target.closest('.travelers-dropdown')) {
       this.isTravelersOpen = false;
+      this.toggleDropdownActiveClass();
     }
 
     if (!target.closest('.city-select')) {
