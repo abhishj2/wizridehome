@@ -30,6 +30,9 @@ interface City {
   name: string;
   code: string;
   state: string;
+  countryCode?: string;
+  lat?: number;
+  lng?: number;
   popular?: boolean;
 }
 
@@ -1642,6 +1645,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Flight airports from API
   flightAirports: City[] = [];
 
+  // Geo helpers for airport sorting
+  userLocation: { lat: number; lng: number } | null = null;
+  geolocationRequested = false;
+
   // API response locations for shared cabs
   sharedPickupLocations: string[] = [];
   sharedDropoffLocations: string[] = [];
@@ -1897,6 +1904,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
+    // Kick off geolocation early (browser only) so we can sort airports once list arrives
+    this.requestUserLocationForAirports();
+
     // Fetch airports for flight booking
     this.apiService.getFullAiportList().subscribe({
       next: (data) => {
@@ -1911,6 +1921,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
             const country = item.COUNTRY || item.country || '';
             const countryCode = item.COUNTRYCODE || item.countrycode || '';
+            const coords = this.extractAirportCoordinates(item);
 
             // Use just the city name for display
             const displayName = cityName || item.NAME || item.name || '';
@@ -1921,7 +1932,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               name: displayName,
               code: airportCode || displayName.substring(0, 3).toUpperCase(),
               state: cityState !== 'Other' ? cityState : (country || 'Other'), // Use city state mapping, fallback to country
-              countryCode: countryCode // Store country code for sorting
+              countryCode: countryCode, // Store country code for sorting
+              lat: coords.lat,
+              lng: coords.lng
             };
           });
 
@@ -1936,6 +1949,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
           // Combine: Indian airports first, then others
           this.flightAirports = [...indianAirports, ...otherAirports];
+          // Reorder by proximity if we already have the user location
+          this.sortAirportsByDistance();
+          // Or request geolocation now if not available yet
+          this.requestUserLocationForAirports();
           // console.log('Flight airports populated:', this.flightAirports);
 
           // Set dynamic default airports (only on desktop, not mobile)
@@ -3486,7 +3503,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         dropoffLocation: this.formValues.sharedDropoffLocation,
       };
       // console.log('Submitting shared cab booking:', payload);
-    this.showSwal('Shared cab booking submitted! Check console for details.', 'success', 2500);
+    // this.showSwal('Shared cab booking submitted! Check console for details.', 'success', 2500);
       return;
     }
 
@@ -3503,7 +3520,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       dropoffLocation: this.formValues.reservedDropoffLocation,
     };
     // console.log('[ReservedCab] Submitting booking payload', payload);
-  this.showSwal('Reserved cab booking submitted! Check console for details.', 'success', 2500);
+  // this.showSwal('Reserved cab booking submitted! Check console for details.', 'success', 2500);
   }
 
   /**
@@ -4188,7 +4205,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           phoneNumber: phone
         };
         // console.log("Form Submitted:", submissionData);
-        Swal.fire('Submitted!', 'Check console for details.', 'success');
+        // Swal.fire('Submitted!', 'Check console for details.', 'success');
       }
     });
   }
@@ -5151,6 +5168,95 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // console.log('Default airports set:', { from: defaultFromDisplay, to: defaultToDisplay });
+  }
+
+  /**
+   * Try to read browser geolocation and re-order airports so nearest appear first.
+   * Silent no-op if permission denied or coords unavailable.
+   */
+  private requestUserLocationForAirports(): void {
+    if (!isPlatformBrowser(this.platformId) || this.geolocationRequested) {
+      return;
+    }
+
+    this.geolocationRequested = true;
+
+    if (!('geolocation' in navigator)) {
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        this.sortAirportsByDistance();
+      },
+      () => {
+        // Ignore errors (user denied or unavailable); keep default ordering
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 300000
+      }
+    );
+  }
+
+  /**
+   * Sort flightAirports in-place by distance to the user's coordinates, keeping
+   * airports without coordinates at the end.
+   */
+  private sortAirportsByDistance(): void {
+    if (!this.userLocation || !this.flightAirports || this.flightAirports.length === 0) {
+      return;
+    }
+
+    const { lat: userLat, lng: userLng } = this.userLocation;
+
+    const withCoords = this.flightAirports.filter(a => this.hasAirportCoordinates(a));
+    const withoutCoords = this.flightAirports.filter(a => !this.hasAirportCoordinates(a));
+
+    withCoords.sort((a, b) => {
+      const distA = this.calculateDistanceKm(userLat, userLng, a.lat!, a.lng!);
+      const distB = this.calculateDistanceKm(userLat, userLng, b.lat!, b.lng!);
+      return distA - distB;
+    });
+
+    this.flightAirports = [...withCoords, ...withoutCoords];
+  }
+
+  private hasAirportCoordinates(airport: City): airport is City & { lat: number; lng: number } {
+    return typeof airport.lat === 'number' && !isNaN(airport.lat) &&
+      typeof airport.lng === 'number' && !isNaN(airport.lng);
+  }
+
+  // Haversine formula
+  private calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const toRad = (value: number) => value * Math.PI / 180;
+    const R = 6371; // Earth radius in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private extractAirportCoordinates(item: any): { lat?: number; lng?: number } {
+    const latCandidate = item?.LATITUDE ?? item?.latitude ?? item?.LAT ?? item?.lat;
+    const lngCandidate = item?.LONGITUDE ?? item?.longitude ?? item?.LON ?? item?.lon ?? item?.LNG ?? item?.lng;
+
+    const lat = latCandidate !== undefined ? parseFloat(latCandidate) : undefined;
+    const lng = lngCandidate !== undefined ? parseFloat(lngCandidate) : undefined;
+
+    return {
+      lat: Number.isFinite(lat) ? lat : undefined,
+      lng: Number.isFinite(lng) ? lng : undefined
+    };
   }
 
   /**

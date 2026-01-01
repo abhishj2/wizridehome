@@ -235,10 +235,16 @@
                     <i class="fas fa-ban"></i>
                     <span>Cancellation Policy</span>
                     <div class="dropdown-content">
-                      
-                      <i class="fas fa-hand-point-right"></i> > 24 hrs before travel: ₹100/seat<br/>
-                      <i class="fas fa-hand-point-right"></i> 12–24 hrs before travel: ₹200/seat<br/>
-                      <i class="fas fa-hand-point-right"></i> < 12 hrs before travel: No refund
+                      <ng-container *ngIf="searchParams?.type === 'shared'; else reservedCancelPolicy">
+                        <i class="fas fa-hand-point-right"></i> &gt; 24 hrs before travel: ₹100/seat<br/>
+                        <i class="fas fa-hand-point-right"></i> 12–24 hrs before travel: ₹200/seat<br/>
+                        <i class="fas fa-hand-point-right"></i> &lt; 12 hrs before travel: No refund
+                      </ng-container>
+                      <ng-template #reservedCancelPolicy>
+                        <i class="fas fa-hand-point-right"></i> &gt; 5 days before travel: 20% charge<br/>
+                        <i class="fas fa-hand-point-right"></i> 1–5 days before travel: 50% charge<br/>
+                        <i class="fas fa-hand-point-right"></i> &lt; 24 hrs before travel: No refund
+                      </ng-template>
                     </div>
                   </div>
                 </div>
