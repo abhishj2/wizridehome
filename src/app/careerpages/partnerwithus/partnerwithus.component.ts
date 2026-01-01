@@ -462,6 +462,42 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Handle mobile number input - only allow digits and limit to 10
+   */
+  onMobileNumberInput(event: Event, formType: string): void {
+    const input = event.target as HTMLInputElement;
+    // Remove any non-digit characters
+    let value = input.value.replace(/\D/g, '');
+    // Limit to 10 digits
+    if (value.length > 10) {
+      value = value.substring(0, 10);
+    }
+    // Update the model based on form type
+    switch (formType) {
+      case 'car-attachment':
+        this.carAttachmentForm.contactNumber = value;
+        break;
+      case 'investor':
+        this.investorForm.contactNumber = value;
+        break;
+      case 'agent':
+        this.agentForm.contactNumber = value;
+        break;
+      case 'influencer':
+        this.influencerForm.contactNumber = value;
+        break;
+      case 'b2b':
+        this.b2bForm.contactNumber = value;
+        break;
+      case 'corporateprivate':
+        this.corporateForm.contactNumber = value;
+        break;
+    }
+    // Update the input value
+    input.value = value;
+  }
+
+  /**
    * Submit Car Attachment Form
    */
   onSubmitCarAttachment(): void {
@@ -665,6 +701,16 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    // Validate mobile number - must be exactly 10 digits
+    const mobileNumber = formData.contactNumber.replace(/\D/g, ''); // Remove non-digits
+    if (mobileNumber.length !== 10) {
+      this.errorMessages[formType] = 'Mobile number must be exactly 10 digits.';
+      return;
+    }
+    
+    // Update formData with cleaned mobile number
+    formData.contactNumber = mobileNumber;
+
     this.isSubmitting[formType] = true;
     submissionData.status = 'publish';
 
@@ -675,19 +721,19 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
         next: (response) => {
           console.log(`${formType} form submitted successfully:`, response);
           this.isSubmitting[formType] = false;
-          this.successMessages[formType] = 'Thank you! Your request has been submitted successfully. We will contact you soon.';
           
-          // Reset form
-          resetCallback();
-          this.userCaptchaAnswers[formType] = '';
-          
-          // Generate new captcha
-          this.captchaData[formType] = this.captchaService.generateCaptcha();
+          // Prepare form data for thank you page based on form type
+          const formData = this.getThankYouFormData(formType);
 
-          // Clear success message after 5 seconds
-          setTimeout(() => {
-            this.successMessages[formType] = '';
-          }, 5000);
+          // Store in localStorage as fallback (for page refresh)
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('thankyouFormData', JSON.stringify(formData));
+          }
+
+          // Navigate with router state (clean URL, no query params)
+          this.router.navigate(['/thankyou-form'], {
+            state: { formData: formData }
+          });
         },
         error: (error) => {
           console.error(`Error submitting ${formType} form:`, error);
@@ -808,6 +854,88 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
   // Helper method to safely get captcha question for SSR compatibility
   getCaptchaQuestion(formType: string): string {
     return this.captchaData[formType]?.question || '';
+  }
+
+  /**
+   * Get thank you form data based on form type
+   */
+  private getThankYouFormData(formType: string): any {
+    const baseData = {
+      redirectUrl: '/applyforjob/partnerwithus',
+      redirectText: 'Back to Partnership Options'
+    };
+
+    switch (formType) {
+      case 'car-attachment':
+        return {
+          ...baseData,
+          title: 'Thank You for Your Car Attachment Request!',
+          message: 'Your request to attach your car with Wizzride has been submitted successfully.',
+          subtitle: 'We have received your application and will review it shortly. Our team will contact you soon to discuss the next steps.',
+          formType: 'caraddition',
+          additionalInfo: 'For any urgent queries, please contact us at +91-7478-4938-74 or email us at customersupport@wizzride.com.'
+        };
+      
+      case 'investor':
+        return {
+          ...baseData,
+          title: 'Thank You for Your Investment Interest!',
+          message: 'Your investment inquiry has been submitted successfully.',
+          subtitle: 'We appreciate your interest in investing in Wizzride. Our investment team will review your inquiry and contact you within 2-3 business days.',
+          formType: 'investor',
+          additionalInfo: 'For investment-related queries, please contact us at communications@wizzride.com.'
+        };
+      
+      case 'agent':
+        return {
+          ...baseData,
+          title: 'Thank You for Your Agent Application!',
+          message: 'Your application to become a Wizzride agent has been submitted successfully.',
+          subtitle: 'We have received your application and will review your credentials. Our team will get back to you within 3-5 business days.',
+          formType: 'agent',
+          additionalInfo: 'For agent-related queries, please contact us at careers@wizzride.com.'
+        };
+      
+      case 'influencer':
+        return {
+          ...baseData,
+          title: 'Thank You for Your Collaboration Interest!',
+          message: 'Your influencer collaboration request has been submitted successfully.',
+          subtitle: 'We are excited about the possibility of collaborating with you! Our marketing team will review your profile and contact you soon.',
+          formType: 'collaborate',
+          additionalInfo: 'For collaboration inquiries, please contact us at communications@wizzride.com.'
+        };
+      
+      case 'b2b':
+        return {
+          ...baseData,
+          title: 'Thank You for Your B2B Partnership Proposal!',
+          message: 'Your B2B partnership proposal has been submitted successfully.',
+          subtitle: 'We have received your business partnership proposal and will review it carefully. Our business development team will contact you within 3-5 business days.',
+          formType: 'b2b',
+          additionalInfo: 'For B2B partnership queries, please contact us at communications@wizzride.com.'
+        };
+      
+      case 'corporateprivate':
+        return {
+          ...baseData,
+          title: 'Thank You for Your Event Inquiry!',
+          message: 'Your corporate/private event inquiry has been submitted successfully.',
+          subtitle: 'We have received your event requirements and will prepare a customized proposal for you. Our events team will contact you within 24-48 hours.',
+          formType: 'corporate-events',
+          additionalInfo: 'For event-related queries, please contact us at +91-7478-4938-74 or email us at customersupport@wizzride.com.'
+        };
+      
+      default:
+        return {
+          ...baseData,
+          title: 'Thank You!',
+          message: 'Your request has been submitted successfully.',
+          subtitle: 'We have received your information and will contact you soon.',
+          formType: 'partnership',
+          additionalInfo: 'For any queries, please contact us at customersupport@wizzride.com.'
+        };
+    }
   }
 
 }

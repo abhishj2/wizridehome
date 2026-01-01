@@ -124,6 +124,7 @@ import { BabamandirComponent } from './destinations/sikkim/babamandir/babamandir
 import { ResultpageComponent } from './resultpage/resultpage.component';
 import { FlightlistComponent } from './flightlist/flightlist.component';
 import { FlightfinalpageComponent } from './flightfinalpage/flightfinalpage.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 
@@ -283,7 +284,8 @@ export const routes: Routes = [
       {path:'destinations/babamandir',component:BabamandirComponent},
       {path: 'result/:orderId/:orderAmount/:type', component:ResultpageComponent},
 
-
+      // 404 Page - Must be last route (wildcard route)
+      {path: '**', component: NotFoundComponent}
 
 ];
 

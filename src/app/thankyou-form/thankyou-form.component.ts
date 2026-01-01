@@ -120,6 +120,30 @@ export class ThankyouFormComponent implements OnInit {
           ? 'Your Japan Tour enquiry has been received. We will contact you soon with more details and a personalized quote.' 
           : this.message;
         break;
+      case 'agent':
+        this.title = this.title === 'Thank You!' ? 'Thank You for Your Agent Application!' : this.title;
+        this.message = this.message === 'Your form has been submitted successfully.' 
+          ? 'Your agent application has been received. Our team will review your credentials and contact you soon.' 
+          : this.message;
+        break;
+      case 'investor':
+        this.title = this.title === 'Thank You!' ? 'Thank You for Your Investment Interest!' : this.title;
+        this.message = this.message === 'Your form has been submitted successfully.' 
+          ? 'Your investment inquiry has been received. Our investment team will review it and contact you soon.' 
+          : this.message;
+        break;
+      case 'b2b':
+        this.title = this.title === 'Thank You!' ? 'Thank You for Your B2B Partnership Proposal!' : this.title;
+        this.message = this.message === 'Your form has been submitted successfully.' 
+          ? 'Your B2B partnership proposal has been received. Our business development team will contact you soon.' 
+          : this.message;
+        break;
+      case 'corporate-events':
+        this.title = this.title === 'Thank You!' ? 'Thank You for Your Event Inquiry!' : this.title;
+        this.message = this.message === 'Your form has been submitted successfully.' 
+          ? 'Your corporate/private event inquiry has been received. Our events team will contact you soon with a customized proposal.' 
+          : this.message;
+        break;
     }
   }
 

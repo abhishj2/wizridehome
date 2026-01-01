@@ -1,0 +1,49 @@
+<div class="not-found-container">
+  <div class="not-found-content">
+    <!-- Animated 404 Number -->
+    <div class="error-code">
+      <span class="digit">4</span>
+      <span class="digit">0</span>
+      <span class="digit">4</span>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message">
+      <h1 class="error-title">Page Not Found</h1>
+      <p class="error-description">
+        Oops! The page you're looking for seems to have taken a wrong turn.
+        It might have been moved, deleted, or never existed.
+      </p>
+    </div>
+
+    <!-- Illustration/Icon -->
+    <div class="error-illustration">
+      <div class="illustration-circle">
+        <i class="fas fa-map-marked-alt"></i>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="goHome()">
+        <i class="fas fa-home"></i>
+        Go to Homepage
+      </button>
+      <button class="btn btn-secondary" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        Go Back
+      </button>
+    </div>
+
+    <!-- Helpful Links -->
+    <div class="helpful-links">
+      <p class="links-title">You might be looking for:</p>
+      <ul class="links-list">
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/contactus">Contact Us</a></li>
+        <li><a routerLink="/applyforjob">Careers</a></li>
+        <li><a routerLink="/frequentlyaskedquestions">FAQs</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
