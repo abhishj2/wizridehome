@@ -32,7 +32,7 @@ export class NavbarComponent {
       dropdownItems: [
         { name: 'About the Company ', link: '/aboutcompany' },
         { name: 'Our Vision ', link: '/aboutcompany/ourvision' },
-        { name: 'Our Commitent ', link: '/aboutcompany/ourcommittment' },
+        { name: 'Our Commitment ', link: '/aboutcompany/ourcommittment' },
         { name: 'Our Philosophy ', link: '/aboutcompany/ourworkphilosophy' }
       ]
     },
@@ -58,8 +58,8 @@ export class NavbarComponent {
       dropdownItems: [
         { name: 'Join our Corporate Team ', link: '/applyforjob' },
         { name: 'Apply for Driver Job ', link: '/applyforjob/driverjob' },
-        { name: 'Attach Your Car ', link: '/applyforjob/partnerwithus' },
-        { name: 'Become an Agent', link: '/applyforjob/partnerwithus?id=3' }
+        { name: 'Attach Your Car ', link: '/applyforjob/partnerwithus/car-attachment' },
+        { name: 'Become an Agent', link: '/applyforjob/partnerwithus/agent' }
       ]
     },
     {
@@ -72,10 +72,10 @@ export class NavbarComponent {
       name: 'Collaborate',
       hasDropdown: true,
       dropdownItems: [
-        { name: 'Influencer', link: '/applyforjob/partnerwithus?id=4' },
+        { name: 'Influencer', link: '/applyforjob/partnerwithus/influencer' },
         { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
-        { name: 'Private Events', link: '/applyforjob/partnerwithus?id=6' },
-        { name: 'Investor Center ', link: '/applyforjob/partnerwithus?id=2' },
+        { name: 'Private Events', link: '/applyforjob/partnerwithus/corporate-events' },
+        { name: 'Investor Center ', link: '/applyforjob/partnerwithus/investor' },
       ]
     },
     {

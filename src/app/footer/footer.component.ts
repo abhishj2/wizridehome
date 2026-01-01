@@ -56,7 +56,7 @@ export class FooterComponent {
 
   quickLinks = [
     { name: 'FAQs', link: '/frequentlyaskedquestions' },
-    { name: 'Collaborate', link: '/https://wizztest.com/applyforjob/partnerwithus?id=4' },
+    { name: 'Collaborate', link: '/applyforjob/partnerwithus/influencer' },
     { name: 'Cancel Ticket', link: '/cancelticket' },
     { name: 'Apply for a Job', link: '/applyforjob' },
     { name: 'Enroll Your Car', link: '/applyforjob/partnerwithus/' }

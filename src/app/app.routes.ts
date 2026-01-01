@@ -144,6 +144,7 @@ export const routes: Routes = [
       {path:'applyforjob',component:ApplyforjobComponent},
       {path:'applyforjob/driverjob',component:DriverjobComponent},
       {path:'applyforjob/partnerwithus',component:PartnerwithusComponent},
+      {path:'applyforjob/partnerwithus/:tabName',component:PartnerwithusComponent},
       // {path:'influencerapply',component:InfulencerapplyComponent},
       {path:'ourservices/corporatepackages',component:CorporatepackagesComponent},
       {path:'ourservices/intercityrides',component:IntercityridesComponent},

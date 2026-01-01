@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, Renderer2, OnInit, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -133,6 +133,7 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     private metaService: Meta,
     private elementRef: ElementRef,
     private route: ActivatedRoute,
+    private router: Router,
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
@@ -149,11 +150,36 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
       this.errorMessages[formType] = '';
     });
 
-    // Get query parameters
+    // Get route parameters (SEO-friendly, no query params)
+    this.route.params.subscribe(params => {
+      const tabName = params['tabName'];
+      if (tabName) {
+        // Map URL-friendly tab names to form IDs
+        const tabMapping: { [key: string]: string } = {
+          'car-attachment': 'car-attachment',
+          'attach-your-car': 'car-attachment',
+          'investor': 'investor',
+          'become-investor': 'investor',
+          'agent': 'agent',
+          'become-agent': 'agent',
+          'influencer': 'influencer',
+          'influencer-collaboration': 'influencer',
+          'b2b': 'b2b',
+          'b2b-partners': 'b2b',
+          'corporate-private': 'corporateprivate',
+          'corporateprivate': 'corporateprivate',
+          'corporate-events': 'corporateprivate',
+          'private-events': 'corporateprivate'
+        };
+        this.selectedTabId = tabMapping[tabName.toLowerCase()] || null;
+      }
+    });
+
+    // Fallback: Support old query parameter format for backward compatibility
     this.route.queryParams.subscribe(params => {
       const tabId = params['id'];
-      if (tabId) {
-        // Map ID to form name
+      if (tabId && !this.selectedTabId) {
+        // Map ID to form name (backward compatibility)
         const tabMapping: { [key: string]: string } = {
           '1': 'car-attachment',
           '2': 'investor',
@@ -391,6 +417,16 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
     const optionBtns = this.elementRef.nativeElement.querySelectorAll('.option-btn');
     const formContainers = this.elementRef.nativeElement.querySelectorAll('.form-container');
 
+    // Map form IDs to URL-friendly names
+    const formIdToUrlName: { [key: string]: string } = {
+      'car-attachment': 'car-attachment',
+      'investor': 'investor',
+      'agent': 'agent',
+      'influencer': 'influencer',
+      'b2b': 'b2b',
+      'corporateprivate': 'corporate-events'
+    };
+
     optionBtns.forEach((btn: HTMLElement) => {
       this.renderer.listen(btn, 'click', () => {
         // Remove active class from all buttons
@@ -413,6 +449,13 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
           if (targetForm) {
             this.renderer.addClass(targetForm, 'active');
           }
+
+          // Update URL with SEO-friendly route parameter (without page reload)
+          const urlName = formIdToUrlName[targetFormId] || targetFormId;
+          this.router.navigate(['/applyforjob/partnerwithus', urlName], { 
+            replaceUrl: true,
+            skipLocationChange: false 
+          });
         }
       });
     });
