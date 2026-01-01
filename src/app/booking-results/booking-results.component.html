@@ -35,6 +35,170 @@
   </div>
 </div>
 
+<!-- Inline Modify Form -->
+<div class="modify-form-container" *ngIf="showModifyForm && searchParams">
+  <div class="container">
+    <div class="modify-form-header">
+      <h3>Modify Your Search</h3>
+      <button class="close-modify-btn" (click)="cancelModifyForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <form class="modify-form" (ngSubmit)="submitModifyForm()">
+      <div class="modify-form-row">
+        <!-- From City -->
+        <div class="modify-form-group">
+          <label>From</label>
+          <div class="modify-input-wrapper">
+            <input 
+              type="text" 
+              class="modify-input"
+              [(ngModel)]="modifyFormValues.from"
+              (input)="onModifyCityInput($event, 'from')"
+              (focus)="showModifyCitySuggestions(modifyFormValues.from, 'from')"
+              placeholder="Select city"
+              name="modifyFrom"
+              required>
+            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-from']?.length">
+              <div 
+                class="suggestion-item"
+                *ngFor="let city of modifyFormSuggestions['modify-from']"
+                (click)="onModifyCitySelect(city.name, 'from')">
+                {{ city.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- To City -->
+        <div class="modify-form-group">
+          <label>To</label>
+          <div class="modify-input-wrapper">
+            <input 
+              type="text" 
+              class="modify-input"
+              [(ngModel)]="modifyFormValues.to"
+              (input)="onModifyCityInput($event, 'to')"
+              (focus)="showModifyCitySuggestions(modifyFormValues.to, 'to')"
+              placeholder="Select city"
+              name="modifyTo"
+              required>
+            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-to']?.length">
+              <div 
+                class="suggestion-item"
+                *ngFor="let city of modifyFormSuggestions['modify-to']"
+                (click)="onModifyCitySelect(city.name, 'to')">
+                {{ city.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="modify-form-group">
+          <label>Date</label>
+          <input 
+            type="date" 
+            class="modify-input"
+            [(ngModel)]="modifyFormValues.date"
+            name="modifyDate"
+            required>
+        </div>
+
+        <!-- Pickup Time (for reserved cabs) -->
+        <div class="modify-form-group" *ngIf="searchParams?.type === 'reserved'">
+          <label>Pickup Time</label>
+          <input 
+            type="time" 
+            class="modify-input"
+            [(ngModel)]="modifyFormValues.pickupTime"
+            name="modifyPickupTime"
+            required>
+        </div>
+
+        <!-- Passengers -->
+        <div class="modify-form-group">
+          <label>Passengers</label>
+          <div class="modify-passenger-counter">
+            <button 
+              type="button"
+              class="modify-counter-btn" 
+              [disabled]="modifyFormValues.passengers <= 1"
+              (click)="modifyFormValues.passengers = modifyFormValues.passengers > 1 ? modifyFormValues.passengers - 1 : 1">
+              -
+            </button>
+            <span class="modify-counter-value">{{ modifyFormValues.passengers }}</span>
+            <button 
+              type="button"
+              class="modify-counter-btn" 
+              (click)="modifyFormValues.passengers = modifyFormValues.passengers + 1">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pickup and Drop Locations (shown when cities are selected) -->
+      <div class="modify-form-row" *ngIf="modifyFormLocationDetailsVisible || (modifyFormValues.pickupLocation && modifyFormValues.dropLocation)">
+        <!-- Pickup Location -->
+        <div class="modify-form-group">
+          <label>Pickup Location</label>
+          <div class="modify-input-wrapper">
+            <input 
+              type="text" 
+              class="modify-input"
+              [(ngModel)]="modifyFormValues.pickupLocation"
+              (input)="onModifyLocationInput($event, 'pickupLocation')"
+              (focus)="showModifyLocationSuggestions(modifyFormValues.pickupLocation, 'pickupLocation')"
+              placeholder="Select pickup location"
+              name="modifyPickupLocation"
+              required>
+            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-pickupLocation']?.length">
+              <div 
+                class="suggestion-item"
+                *ngFor="let location of modifyFormSuggestions['modify-pickupLocation']"
+                (click)="onModifyLocationSelect(location, 'pickupLocation')">
+                {{ location }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drop Location -->
+        <div class="modify-form-group">
+          <label>Drop Location</label>
+          <div class="modify-input-wrapper">
+            <input 
+              type="text" 
+              class="modify-input"
+              [(ngModel)]="modifyFormValues.dropLocation"
+              (input)="onModifyLocationInput($event, 'dropLocation')"
+              (focus)="showModifyLocationSuggestions(modifyFormValues.dropLocation, 'dropLocation')"
+              placeholder="Select drop location"
+              name="modifyDropLocation"
+              required>
+            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-dropLocation']?.length">
+              <div 
+                class="suggestion-item"
+                *ngFor="let location of modifyFormSuggestions['modify-dropLocation']"
+                (click)="onModifyLocationSelect(location, 'dropLocation')">
+                {{ location }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="modify-form-actions">
+        <button type="button" class="modify-cancel-btn" (click)="cancelModifyForm()">Cancel</button>
+        <button type="submit" class="modify-submit-btn">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Tell Us Section -->
 <div class="mobile-tell-us-section" *ngIf="searchParams?.type === 'shared'">
   <div class="mobile-tell-us-header">

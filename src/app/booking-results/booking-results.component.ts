@@ -94,6 +94,27 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   // Sticky header property
   isHeaderSticky = false;
 
+  // Modify form properties
+  showModifyForm = false;
+  modifyFormValues: any = {
+    from: '',
+    to: '',
+    pickupLocation: '',
+    dropLocation: '',
+    date: '',
+    pickupTime: '',
+    passengers: 1,
+    phoneNumber: ''
+  };
+  
+  // Location data for modify form
+  sourceCities: any[] = [];
+  reservedCities: any[] = [];
+  sharedPickupLocations: string[] = [];
+  sharedDropoffLocations: string[] = [];
+  modifyFormSuggestions: { [key: string]: any[] } = {};
+  modifyFormLocationDetailsVisible = false;
+
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
@@ -591,9 +612,254 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
 
   modifySearch() {
-    // Clear localStorage when navigating back to modify search
-    localStorage.removeItem('bookingSearchParams');
-    this.router.navigate(['/']);
+    // Toggle modify form visibility
+    this.showModifyForm = !this.showModifyForm;
+    
+    if (this.showModifyForm && this.searchParams) {
+      // Initialize form with current search params
+      this.modifyFormValues = {
+        from: this.searchParams.from || '',
+        to: this.searchParams.to || '',
+        pickupLocation: this.searchParams.pickupLocation || '',
+        dropLocation: this.searchParams.dropLocation || '',
+        date: this.searchParams.date || '',
+        pickupTime: this.searchParams.pickupTime || '',
+        passengers: this.searchParams.passengers || 1,
+        phoneNumber: this.searchParams.phoneNumber || ''
+      };
+      
+      // Load location data based on cab type
+      this.loadModifyFormLocationData();
+    }
+  }
+
+  loadModifyFormLocationData() {
+    if (!this.searchParams) return;
+
+    if (this.searchParams.type === 'shared') {
+      // Load source cities for shared cabs
+      this.apiService.getSource().subscribe({
+        next: (data) => {
+          if (Array.isArray(data)) {
+            this.sourceCities = data.map((item: any) => {
+              const name = typeof item === 'string' ? item : item.name;
+              const id = typeof item === 'string' ? '' : item.id;
+              return {
+                name: name,
+                code: id || name.substring(0, 3).toUpperCase(),
+                state: this.getCityState(name)
+              };
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching source cities:', error);
+        }
+      });
+
+      // Load pickup/drop locations if cities are selected
+      if (this.modifyFormValues.from && this.modifyFormValues.to) {
+        this.loadSharedPickupDropLocations();
+      }
+    } else if (this.searchParams.type === 'reserved') {
+      // Load reserved cities
+      this.apiService.getSourceDestinationFb().subscribe({
+        next: (data) => {
+          if (Array.isArray(data)) {
+            this.reservedCities = data.map((item: any) => {
+              const name = item.LOCATION || item.location || '';
+              const code = item.LOCATIONCODE || item.locationcode || '';
+              return {
+                name: name,
+                code: code || name.substring(0, 3).toUpperCase(),
+                state: this.getCityState(name)
+              };
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching reserved cities:', error);
+        }
+      });
+    }
+  }
+
+  loadSharedPickupDropLocations() {
+    if (!this.modifyFormValues.from || !this.modifyFormValues.to) return;
+
+    this.apiService.getPickupDrop(
+      this.modifyFormValues.from,
+      this.modifyFormValues.to
+    ).subscribe({
+      next: (data) => {
+        if (Array.isArray(data) && data.length >= 2) {
+          this.sharedPickupLocations = Array.isArray(data[0]) ? data[0] : [];
+          this.sharedDropoffLocations = Array.isArray(data[1]) ? data[1] : [];
+          this.modifyFormLocationDetailsVisible = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching pickup/dropoff locations:', error);
+        this.sharedPickupLocations = [];
+        this.sharedDropoffLocations = [];
+      }
+    });
+  }
+
+  onModifyCitySelect(cityName: string, field: 'from' | 'to') {
+    this.modifyFormValues[field] = cityName;
+    
+    // Clear suggestions
+    delete this.modifyFormSuggestions[`modify-${field}`];
+    
+    // For shared cabs, load pickup/drop locations when both cities are selected
+    if (this.searchParams?.type === 'shared') {
+      if (this.modifyFormValues.from && this.modifyFormValues.to) {
+        this.loadSharedPickupDropLocations();
+      } else {
+        // Clear locations if cities are not both selected
+        this.sharedPickupLocations = [];
+        this.sharedDropoffLocations = [];
+        this.modifyFormLocationDetailsVisible = false;
+        this.modifyFormValues.pickupLocation = '';
+        this.modifyFormValues.dropLocation = '';
+      }
+    }
+  }
+
+  onModifyLocationSelect(locationName: string, field: 'pickupLocation' | 'dropLocation') {
+    this.modifyFormValues[field] = locationName;
+    delete this.modifyFormSuggestions[`modify-${field}`];
+  }
+
+  onModifyCityInput(event: Event, field: 'from' | 'to') {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    this.showModifyCitySuggestions(value, field);
+  }
+
+  showModifyCitySuggestions(query: string, field: 'from' | 'to') {
+    const cities = this.searchParams?.type === 'shared' ? this.sourceCities : this.reservedCities;
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    if (!normalizedQuery) {
+      this.modifyFormSuggestions[`modify-${field}`] = cities.slice(0, 10);
+      return;
+    }
+    
+    const filtered = cities.filter(city => 
+      city.name.toLowerCase().includes(normalizedQuery)
+    ).slice(0, 10);
+    
+    this.modifyFormSuggestions[`modify-${field}`] = filtered;
+  }
+
+  onModifyLocationInput(event: Event, field: 'pickupLocation' | 'dropLocation') {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    this.showModifyLocationSuggestions(value, field);
+  }
+
+  showModifyLocationSuggestions(query: string, field: 'pickupLocation' | 'dropLocation') {
+    const locations = field === 'pickupLocation' 
+      ? this.sharedPickupLocations 
+      : this.sharedDropoffLocations;
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    if (!normalizedQuery) {
+      this.modifyFormSuggestions[`modify-${field}`] = locations.slice(0, 10);
+      return;
+    }
+    
+    const filtered = locations.filter((loc: string) => 
+      loc.toLowerCase().includes(normalizedQuery)
+    ).slice(0, 10);
+    
+    this.modifyFormSuggestions[`modify-${field}`] = filtered;
+  }
+
+  submitModifyForm() {
+    if (!this.searchParams) return;
+
+    // Validate form
+    if (!this.modifyFormValues.from || !this.modifyFormValues.to) {
+      alert('Please select both pickup and drop-off cities.');
+      return;
+    }
+
+    if (!this.modifyFormValues.date) {
+      alert('Please select a date.');
+      return;
+    }
+
+    if (this.searchParams.type === 'reserved' && !this.modifyFormValues.pickupTime) {
+      alert('Please select a pickup time.');
+      return;
+    }
+
+    if (!this.modifyFormValues.pickupLocation || !this.modifyFormValues.dropLocation) {
+      alert('Please enter specific pickup and drop-off locations.');
+      return;
+    }
+
+    // For reserved cabs, get location codes
+    if (this.searchParams.type === 'reserved') {
+      const fromCity = this.reservedCities.find(c => c.name === this.modifyFormValues.from);
+      const toCity = this.reservedCities.find(c => c.name === this.modifyFormValues.to);
+      
+      if (!fromCity || !toCity) {
+        alert('Please select valid cities.');
+        return;
+      }
+
+      // Update search params with new values
+      this.searchParams = {
+        ...this.searchParams,
+        from: this.modifyFormValues.from,
+        to: this.modifyFormValues.to,
+        pickupLocation: this.modifyFormValues.pickupLocation,
+        dropLocation: this.modifyFormValues.dropLocation,
+        date: this.modifyFormValues.date,
+        pickupTime: this.modifyFormValues.pickupTime,
+        passengers: this.modifyFormValues.passengers,
+        phoneNumber: this.modifyFormValues.phoneNumber,
+        fromlocid: fromCity.code,
+        tolocid: toCity.code
+      };
+    } else {
+      // For shared cabs
+      this.searchParams = {
+        ...this.searchParams,
+        from: this.modifyFormValues.from,
+        to: this.modifyFormValues.to,
+        pickupLocation: this.modifyFormValues.pickupLocation,
+        dropLocation: this.modifyFormValues.dropLocation,
+        date: this.modifyFormValues.date,
+        passengers: this.modifyFormValues.passengers,
+        phoneNumber: this.modifyFormValues.phoneNumber
+      };
+    }
+
+    // Store updated params
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('bookingSearchParams', JSON.stringify(this.searchParams));
+    }
+
+    // Hide modify form
+    this.showModifyForm = false;
+
+    // Reload vehicle options
+    this.loadVehicleOptions();
+  }
+
+  cancelModifyForm() {
+    this.showModifyForm = false;
+    this.modifyFormSuggestions = {};
+  }
+
+  private getCityState(cityName: string): string {
+    // Simple state mapping - can be enhanced
+    return '';
   }
 
   requestCarAddition() {
