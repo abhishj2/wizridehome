@@ -1228,6 +1228,14 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return objCopy;
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.passenger-dropdown-wrapper')) {
+      this.showPassengerDropdown = false;
+    }
+  }
+
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
     if (!this.isBrowser) return;

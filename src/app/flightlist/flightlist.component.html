@@ -42,7 +42,7 @@
     </div>
 
     <!-- Modify Search Form (Collapsible) -->
-    <div class="modify-search-section" *ngIf="showModifyForm">
+    <div class="modify-search-section" [class.visible]="showModifyForm">
       <div class="container">
         <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="modify-search-form">
           <div class="form-row">
@@ -85,10 +85,11 @@
             </div>
             <div class="form-group passenger-dropdown-wrapper">
               <label>Passengers:</label>
-              <div class="passenger-display" (click)="togglePassengerDropdown()">
+              <div class="passenger-display" (click)="togglePassengerDropdown(); $event.stopPropagation()">
                 {{ totalPassengers }} Passenger{{ totalPassengers > 1 ? "s" : "" }}
+                <i class="fas fa-chevron-down" [class.rotated]="showPassengerDropdown"></i>
               </div>
-              <div class="passenger-dropdown" *ngIf="showPassengerDropdown">
+              <div class="passenger-dropdown" *ngIf="showPassengerDropdown" (click)="$event.stopPropagation()">
                 <div class="passenger-type-row" *ngFor="let type of passengerTypes">
                   <div class="label">{{ type.label }}</div>
                   <div class="controls">
@@ -107,7 +108,7 @@
               </select>
             </div>
             <div class="form-group">
-              <button type="submit" class="modify-btn">Modify Search</button>
+              <button type="submit" class="modify-search-btn">Modify Search</button>
             </div>
           </div>
         </form>
