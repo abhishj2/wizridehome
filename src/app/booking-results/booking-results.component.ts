@@ -659,7 +659,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
       // Load pickup/drop locations if cities are selected
       if (this.modifyFormValues.from && this.modifyFormValues.to) {
-        this.loadSharedPickupDropLocations();
+        // Load locations without clearing existing values (initial load)
+        this.loadSharedPickupDropLocations(false, false);
       }
     } else if (this.searchParams.type === 'reserved') {
       // Load reserved cities
@@ -684,15 +685,33 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadSharedPickupDropLocations() {
-    if (!this.modifyFormValues.from || !this.modifyFormValues.to) return;
+  loadSharedPickupDropLocations(fromChanged: boolean = false, toChanged: boolean = false) {
+    if (!this.modifyFormValues.from || !this.modifyFormValues.to) {
+      // Clear locations if cities are not both selected
+      this.sharedPickupLocations = [];
+      this.sharedDropoffLocations = [];
+      this.modifyFormLocationDetailsVisible = false;
+      if (!this.modifyFormValues.from) {
+        this.modifyFormValues.pickupLocation = '';
+      }
+      if (!this.modifyFormValues.to) {
+        this.modifyFormValues.dropLocation = '';
+      }
+      return;
+    }
 
+    // Note: Location values are only cleared in onModifyCitySelect when cities change
+    // Here we just reload the location lists without clearing the form values
+    // This preserves existing selections when loading initially or when only one city changes
+
+    // Reload location lists for the current city pair
     this.apiService.getPickupDrop(
       this.modifyFormValues.from,
       this.modifyFormValues.to
     ).subscribe({
       next: (data) => {
         if (Array.isArray(data) && data.length >= 2) {
+          // Update location lists (but don't clear form values)
           this.sharedPickupLocations = Array.isArray(data[0]) ? data[0] : [];
           this.sharedDropoffLocations = Array.isArray(data[1]) ? data[1] : [];
           this.modifyFormLocationDetailsVisible = true;
@@ -702,27 +721,62 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.error('Error fetching pickup/dropoff locations:', error);
         this.sharedPickupLocations = [];
         this.sharedDropoffLocations = [];
+        this.modifyFormLocationDetailsVisible = false;
       }
     });
   }
 
   onModifyCitySelect(cityName: string, field: 'from' | 'to') {
+    // Store old values to check if they changed (before updating)
+    const oldFrom = this.modifyFormValues.from || '';
+    const oldTo = this.modifyFormValues.to || '';
+    const newCityName = cityName || '';
+    
+    // Check if city actually changed (trim and compare)
+    const fromChanged = field === 'from' && oldFrom.trim() !== newCityName.trim();
+    const toChanged = field === 'to' && oldTo.trim() !== newCityName.trim();
+    
+    // Update the selected city
     this.modifyFormValues[field] = cityName;
     
     // Clear suggestions
     delete this.modifyFormSuggestions[`modify-${field}`];
     
-    // For shared cabs, load pickup/drop locations when both cities are selected
+    // For shared cabs, handle location clearing and loading
     if (this.searchParams?.type === 'shared') {
+      // Clear the corresponding location immediately when city changes
+      if (fromChanged) {
+        // From city changed - clear only pickup location
+        this.modifyFormValues.pickupLocation = '';
+        this.sharedPickupLocations = [];
+        // Also clear the suggestion dropdown for pickup location
+        delete this.modifyFormSuggestions['modify-pickupLocation'];
+      }
+      
+      if (toChanged) {
+        // To city changed - clear only drop location
+        this.modifyFormValues.dropLocation = '';
+        this.sharedDropoffLocations = [];
+        // Also clear the suggestion dropdown for drop location
+        delete this.modifyFormSuggestions['modify-dropLocation'];
+      }
+      
+      // Load pickup/drop locations when both cities are selected
       if (this.modifyFormValues.from && this.modifyFormValues.to) {
-        this.loadSharedPickupDropLocations();
+        // Reload locations for the new city pair
+        this.loadSharedPickupDropLocations(fromChanged, toChanged);
       } else {
-        // Clear locations if cities are not both selected
+        // If one city is missing, clear both location lists
         this.sharedPickupLocations = [];
         this.sharedDropoffLocations = [];
         this.modifyFormLocationDetailsVisible = false;
-        this.modifyFormValues.pickupLocation = '';
-        this.modifyFormValues.dropLocation = '';
+        // Only clear the location that corresponds to the missing city
+        if (!this.modifyFormValues.from) {
+          this.modifyFormValues.pickupLocation = '';
+        }
+        if (!this.modifyFormValues.to) {
+          this.modifyFormValues.dropLocation = '';
+        }
       }
     }
   }
