@@ -5,6 +5,7 @@ import { SeoService } from '../services/seo.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { CaptchaService, CaptchaData } from '../services/captcha.service';
 
 interface JapanMoment {
@@ -501,7 +502,8 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private elementRef: ElementRef,
     private http: HttpClient,
-    private captchaService: CaptchaService
+    private captchaService: CaptchaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -743,25 +745,27 @@ export class JapantourComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (response: any) => {
           console.log('Japan tour enquiry submitted successfully:', response);
           this.isSubmitting = false;
-          this.successMessage = 'Thank you! Your Japan tour enquiry has been submitted successfully. We will contact you soon.';
           
-          // Reset form
-          this.enquiryFormData = {
-            fullName: '',
-            contactNo: '',
-            emailId: '',
-            fromCity: '',
-            message: ''
+          // Prepare form data for thank you page (SEO-friendly, no query params)
+          const formData = {
+            title: 'Thank You for Your Japan Tour Enquiry!',
+            message: 'Your enquiry has been submitted successfully.',
+            subtitle: 'We have received your interest in our Japan Tour package and will contact you soon with more details and a personalized quote based on your location.',
+            formType: 'japantour',
+            additionalInfo: 'Our team typically responds within 24-48 hours. We look forward to helping you experience Japan in its most mystical autumn season!',
+            redirectUrl: '/japantour',
+            redirectText: 'Back to Japan Tour'
           };
-          this.userCaptchaAnswer = '';
-          
-          // Generate new captcha
-          this.captchaData = this.captchaService.generateCaptcha();
 
-          // Clear success message after 5 seconds
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 5000);
+          // Store in localStorage as fallback (for page refresh)
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('thankyouFormData', JSON.stringify(formData));
+          }
+
+          // Navigate with router state (clean URL, no query params)
+          this.router.navigate(['/thankyou-form'], {
+            state: { formData: formData }
+          });
         },
         error: (error) => {
           console.error('Error submitting Japan tour enquiry:', error);

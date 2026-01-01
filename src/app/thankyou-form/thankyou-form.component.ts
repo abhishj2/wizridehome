@@ -2,6 +2,16 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
+interface ThankYouFormData {
+  title?: string;
+  message?: string;
+  subtitle?: string;
+  redirectUrl?: string;
+  redirectText?: string;
+  formType?: string;
+  additionalInfo?: string;
+}
+
 @Component({
   selector: 'app-thankyou-form',
   standalone: true,
@@ -14,8 +24,6 @@ export class ThankyouFormComponent implements OnInit {
   title: string = 'Thank You!';
   message: string = 'Your form has been submitted successfully.';
   subtitle: string = 'We have received your information and will get back to you soon.';
-  showCountdown: boolean = true;
-  countdown: number = 10;
   redirectUrl: string = '/';
   redirectText: string = 'Go to Home';
   showAdditionalInfo: boolean = false;
@@ -31,29 +39,46 @@ export class ThankyouFormComponent implements OnInit {
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Get parameters from route query params
-    this.route.queryParams.subscribe(params => {
-      if (params['title']) this.title = params['title'];
-      if (params['message']) this.message = params['message'];
-      if (params['subtitle']) this.subtitle = params['subtitle'];
-      if (params['redirectUrl']) this.redirectUrl = params['redirectUrl'];
-      if (params['redirectText']) this.redirectText = params['redirectText'];
-      if (params['formType']) this.formType = params['formType'];
-      if (params['countdown'] === 'false') this.showCountdown = false;
-      if (params['countdown']) this.countdown = parseInt(params['countdown'], 10);
-      if (params['additionalInfo']) {
-        this.showAdditionalInfo = true;
-        this.additionalInfo = params['additionalInfo'];
+    // Get data from router state (SEO-friendly, no query params)
+    const navigation = this.router.getCurrentNavigation();
+    let formData: any = null;
+
+    if (navigation?.extras?.state) {
+      formData = navigation.extras.state['formData'];
+    }
+
+    // Fallback: try to get from history state
+    if (!formData && (window as any).history?.state) {
+      formData = (window as any).history.state['formData'];
+    }
+
+    // Fallback: try to get from localStorage
+    if (!formData) {
+      const storedData = localStorage.getItem('thankyouFormData');
+      if (storedData) {
+        formData = JSON.parse(storedData);
+        // Clear localStorage after reading
+        localStorage.removeItem('thankyouFormData');
       }
-    });
+    }
+
+    // Apply form data if available
+    if (formData) {
+      if (formData.title) this.title = formData.title;
+      if (formData.message) this.message = formData.message;
+      if (formData.subtitle) this.subtitle = formData.subtitle;
+      if (formData.redirectUrl) this.redirectUrl = formData.redirectUrl;
+      if (formData.redirectText) this.redirectText = formData.redirectText;
+      if (formData.formType) this.formType = formData.formType;
+      if (formData.additionalInfo) {
+        this.showAdditionalInfo = true;
+        this.additionalInfo = formData.additionalInfo;
+      }
+    }
+    // If no formData, use default values (for direct navigation or fallback)
 
     // Set form-specific defaults based on formType
     this.setFormSpecificDefaults();
-
-    // Start countdown if enabled
-    if (this.showCountdown) {
-      this.startCountdown();
-    }
   }
 
   setFormSpecificDefaults() {
@@ -89,17 +114,13 @@ export class ThankyouFormComponent implements OnInit {
           ? 'Your vehicle registration request has been received. Our team will contact you soon.' 
           : this.message;
         break;
+      case 'japantour':
+        this.title = this.title === 'Thank You!' ? 'Thank You for Your Japan Tour Enquiry!' : this.title;
+        this.message = this.message === 'Your form has been submitted successfully.' 
+          ? 'Your Japan Tour enquiry has been received. We will contact you soon with more details and a personalized quote.' 
+          : this.message;
+        break;
     }
-  }
-
-  startCountdown() {
-    const countdownInterval = setInterval(() => {
-      this.countdown--;
-      if (this.countdown <= 0) {
-        clearInterval(countdownInterval);
-        this.router.navigate([this.redirectUrl]);
-      }
-    }, 1000);
   }
 
   navigateNow() {

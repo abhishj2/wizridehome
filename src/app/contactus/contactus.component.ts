@@ -5,6 +5,7 @@ import { SeoService } from '../services/seo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { CaptchaService, CaptchaData } from '../services/captcha.service';
 
 interface ContactFormData {
@@ -55,7 +56,8 @@ export class ContactusComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
-    private captchaService: CaptchaService
+    private captchaService: CaptchaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -225,6 +227,23 @@ export class ContactusComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Handle mobile number input - only allow digits and limit to 10
+   */
+  onMobileNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Remove any non-digit characters
+    let value = input.value.replace(/\D/g, '');
+    // Limit to 10 digits
+    if (value.length > 10) {
+      value = value.substring(0, 10);
+    }
+    // Update the model
+    this.formData.mobileNumber = value;
+    // Update the input value
+    input.value = value;
+  }
+
+  /**
    * Handle form submission
    */
   onSubmit(): void {
@@ -245,6 +264,16 @@ export class ContactusComponent implements OnInit, AfterViewInit, OnDestroy {
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }
+
+    // Validate mobile number - must be exactly 10 digits
+    const mobileNumber = this.formData.mobileNumber.replace(/\D/g, ''); // Remove non-digits
+    if (mobileNumber.length !== 10) {
+      this.errorMessage = 'Mobile number must be exactly 10 digits.';
+      return;
+    }
+    
+    // Update formData with cleaned mobile number
+    this.formData.mobileNumber = mobileNumber;
 
     this.isSubmitting = true;
 
@@ -268,24 +297,27 @@ export class ContactusComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (response) => {
           console.log('Contact form submitted successfully:', response);
           this.isSubmitting = false;
-          this.successMessage = 'Thank you! Your message has been submitted successfully. We will contact you soon.';
           
-          // Reset form
-          this.formData = {
-            fullName: '',
-            mobileNumber: '',
-            emailId: '',
-            message: ''
+          // Prepare form data for thank you page (SEO-friendly, no query params)
+          const formData = {
+            title: 'Thank You for Contacting Us!',
+            message: 'Your message has been submitted successfully.',
+            subtitle: 'We have received your message and will respond within 24-48 hours. Our team will get back to you as soon as possible.',
+            formType: 'contact',
+            additionalInfo: 'For urgent matters, please call our customer support at +91-7478-4938-74 or email us at customersupport@wizzride.com.',
+            redirectUrl: '/contactus',
+            redirectText: 'Back to Contact Us'
           };
-          this.userCaptchaAnswer = '';
-          
-          // Generate new captcha
-          this.captchaData = this.captchaService.generateCaptcha();
 
-          // Clear success message after 5 seconds
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 5000);
+          // Store in localStorage as fallback (for page refresh)
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('thankyouFormData', JSON.stringify(formData));
+          }
+
+          // Navigate with router state (clean URL, no query params)
+          this.router.navigate(['/thankyou-form'], {
+            state: { formData: formData }
+          });
         },
         error: (error) => {
           console.error('Error submitting contact form:', error);

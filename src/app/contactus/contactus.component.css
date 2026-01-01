@@ -161,6 +161,14 @@
     font-size: 0.95rem;
 }
 
+.form-group small.form-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
 .form-group input,
 .form-group textarea {
     width: 100%;

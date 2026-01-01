@@ -27,8 +27,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      // Hide navbar and footer on thank you page
-      this.showNavbarFooter = !event.url.includes('/thankyou');
+      // Show navbar/footer for all pages except booking thank you page
+      // Show navbar/footer for thankyou-form page
+      this.showNavbarFooter = event.url.includes('/thankyou-form') || !event.url.includes('/thankyou');
       
       // Re-initialize FAQ functionality after route change (only in browser)
       if (isPlatformBrowser(this.platformId)) {
