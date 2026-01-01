@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { BookingResultsComponent } from './booking-results/booking-results.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ThankyouComponent } from './thankyou/thankyou.component';
+import { ThankyouFormComponent } from './thankyou-form/thankyou-form.component';
 import { AboutCompanyComponent } from './aboutpages/about-company/about-company.component';
 import { OurvisionComponent } from './aboutpages/ourvision/ourvision.component';
 import { OurcommitmentComponent } from './aboutpages/ourcommitment/ourcommitment.component';
@@ -132,6 +133,7 @@ export const routes: Routes = [
       { path: 'booking-results', component: BookingResultsComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'thankyou', component: ThankyouComponent },
+      { path: 'thankyou-form', component: ThankyouFormComponent },
       {path:'aboutcompany',component:AboutCompanyComponent},
       {path:'aboutcompany/ourvision',component:OurvisionComponent},
       {

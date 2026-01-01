@@ -1,0 +1,61 @@
+<!-- Form Thank You Page -->
+<div class="form-thankyou-container">
+  <div class="form-thankyou-card">
+    
+    <!-- Success Animation -->
+    <div class="success-animation">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="success-ring"></div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="form-thankyou-header">
+      <h1 class="form-thankyou-title">{{ title }}</h1>
+      <p class="form-thankyou-message">{{ message }}</p>
+      <p class="form-thankyou-subtitle">{{ subtitle }}</p>
+    </div>
+
+    <!-- Additional Info Section -->
+    <div class="additional-info" *ngIf="showAdditionalInfo">
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <p>{{ additionalInfo }}</p>
+      </div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown-section" *ngIf="showCountdown">
+      <p class="countdown-message">
+        Redirecting to {{ redirectText }} in <strong>{{ countdown }}</strong> seconds...
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="navigateNow()">
+        <i class="fas fa-home"></i>
+        {{ redirectText }}
+      </button>
+      <button class="btn btn-secondary" (click)="router.navigate(['/'])">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+      </button>
+    </div>
+
+    <!-- Help Section -->
+    <div class="help-section">
+      <div class="help-card">
+        <i class="fas fa-headset"></i>
+        <h3>Need Help?</h3>
+        <p>If you have any questions or concerns, feel free to contact our support team.</p>
+        <a href="/contactus" class="help-link">
+          <i class="fas fa-envelope"></i>
+          Contact Support
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
