@@ -196,10 +196,13 @@
                   name="alternateContactNo"
                   #alternatePhoneCtrl="ngModel"
                   maxlength="10"
-                  pattern="[0-9]{10}">
+                  minlength="10"
+                  pattern="[0-9]{10}"
+                  required>
               </div>
-              <div class="field-error" *ngIf="alternatePhoneCtrl.value && (formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
-                <span *ngIf="alternatePhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
+              <div class="field-error" *ngIf="(formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
+                <span *ngIf="alternatePhoneCtrl.errors?.['required']">Alternate phone is required.</span>
+                <span *ngIf="alternatePhoneCtrl.errors?.['minlength'] || alternatePhoneCtrl.errors?.['maxlength'] || alternatePhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
               </div>
             </div>
           </form>

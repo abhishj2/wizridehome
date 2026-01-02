@@ -96,9 +96,7 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log("Listtttttttttt",this.list);
                       this.showSuccess = true;
                       this.loader = false;
-                      setTimeout(()=>{                           
-                        this.router.navigate(['home',{tab: 1}]);
-                      }, 30000);
+                      // Auto-redirect removed - user can manually return to home
       
                   })
                 }else{
@@ -145,11 +143,7 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log("Listtttttttttt",this.list);
                       this.showSuccess = true;
                       this.loader = false;
-                     
-                      
-                      setTimeout(()=>{                           
-                        this.router.navigate(['home',{tab: 2}]);
-                      }, 30000);
+                      // Auto-redirect removed - user can manually return to home
       
                   })
                 }else{

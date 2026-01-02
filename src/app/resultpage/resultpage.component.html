@@ -7,75 +7,285 @@
 </div>
 
 <!-- Success Content -->
-<div class="result-container" *ngIf="showSuccess && !loader">
-  <div class="result-card">
-    
-    <!-- Success Header -->
-    <div class="success-header">
-      <div class="success-icon">
+<div class="result-wrapper" *ngIf="showSuccess && !loader">
+  
+  <!-- Header Section -->
+  <div class="result-header">
+    <div class="container">
+      <div class="success-badge">
         <i class="fas fa-check-circle"></i>
       </div>
-      <h1 class="success-title">Booking Confirmed!</h1>
-      <p class="success-message">Your ticket has been generated successfully.</p>
+      <h1 class="success-title">Booking Confirmed Successfully!</h1>
+      <p class="success-subtitle">Your ticket has been generated and confirmed</p>
     </div>
-
-    <!-- PNR/Order ID Section -->
-    <div class="pnr-section">
-      <div class="pnr-label">PNR / Order ID</div>
-      <div class="pnr-value">{{ orderId }}</div>
-    </div>
-
-    <!-- QR Code Section -->
-    <div class="qr-section" *ngIf="qr">
-      <div class="qr-label">Scan QR Code</div>
-      <div class="qr-container">
-        <img [src]="qr" alt="QR Code" class="qr-image" />
-      </div>
-      <p class="qr-note">Show this QR code at the time of boarding</p>
-    </div>
-
-    <!-- Booking Details Section -->
-    <div class="booking-details" *ngIf="list && list.STATUS">
-      <h3 class="details-title">Booking Details</h3>
-      <div class="details-grid">
-        <div class="detail-item" *ngIf="list.STATUS">
-          <span class="detail-label">Status:</span>
-          <span class="detail-value">{{ list.STATUS }}</span>
-        </div>
-        <div class="detail-item" *ngIf="list.SOURCE">
-          <span class="detail-label">From:</span>
-          <span class="detail-value">{{ list.SOURCE }}</span>
-        </div>
-        <div class="detail-item" *ngIf="list.DESTINATION">
-          <span class="detail-label">To:</span>
-          <span class="detail-value">{{ list.DESTINATION }}</span>
-        </div>
-        <div class="detail-item" *ngIf="list.TRAVELDATE">
-          <span class="detail-label">Travel Date:</span>
-          <span class="detail-value">{{ list.TRAVELDATE }}</span>
-        </div>
-        <div class="detail-item" *ngIf="orderAmount">
-          <span class="detail-label">Amount Paid:</span>
-          <span class="detail-value">₹{{ orderAmount }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button class="btn btn-primary" (click)="returnToHome()">
-        <i class="fas fa-home"></i>
-        Return to Home
-      </button>
-    </div>
-
-    <!-- Contact Information -->
-    <div class="contact-info">
-      <p>Need help? Contact us:</p>
-      <p>
-        <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>
-      </p>
-    </div>
-
   </div>
+
+  <!-- Main Content Section -->
+  <div class="result-content">
+    <div class="container">
+      <div class="content-grid">
+        
+        <!-- Left Column: Booking Details -->
+        <div class="details-column">
+          
+          <!-- PNR Card -->
+          <div class="info-card pnr-card">
+            <div class="card-header">
+              <i class="fas fa-ticket-alt"></i>
+              <h3>Booking Reference</h3>
+            </div>
+            <div class="pnr-display">
+              <span class="pnr-label">PNR / Order ID</span>
+              <span class="pnr-number">{{ orderId }}</span>
+            </div>
+          </div>
+
+          <!-- Journey Details Card -->
+          <div class="info-card journey-card">
+            <div class="card-header">
+              <i class="fas fa-route"></i>
+              <h3>Journey Details</h3>
+            </div>
+            <div class="journey-info">
+              <div class="journey-row">
+                <div class="journey-point">
+                  <div class="point-icon from-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div class="point-details">
+                    <span class="point-label">From</span>
+                    <span class="point-value">{{ list?.SOURCE || 'N/A' }}</span>
+                  </div>
+                </div>
+                
+                <div class="journey-arrow">
+                  <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <div class="journey-point">
+                  <div class="point-icon to-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div class="point-details">
+                    <span class="point-label">To</span>
+                    <span class="point-value">{{ list?.DESTINATION || 'N/A' }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="journey-meta">
+                <div class="meta-item" *ngIf="list?.TRAVELDATE">
+                  <i class="fas fa-calendar-alt"></i>
+                  <div>
+                    <span class="meta-label">Travel Date</span>
+                    <span class="meta-value">{{ list.TRAVELDATE }}</span>
+                  </div>
+                </div>
+                
+                <div class="meta-item" *ngIf="list?.PICKUPTIME">
+                  <i class="fas fa-clock"></i>
+                  <div>
+                    <span class="meta-label">Pickup Time</span>
+                    <span class="meta-value">{{ list.PICKUPTIME }}</span>
+                  </div>
+                </div>
+
+                <div class="meta-item" *ngIf="list?.DROPTIME">
+                  <i class="fas fa-clock"></i>
+                  <div>
+                    <span class="meta-label">Drop Time</span>
+                    <span class="meta-value">{{ list.DROPTIME }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Passenger Details Card -->
+          <div class="info-card passenger-card" *ngIf="list">
+            <div class="card-header">
+              <i class="fas fa-user"></i>
+              <h3>Passenger Information</h3>
+            </div>
+            <div class="passenger-details">
+              <div class="detail-row" *ngIf="list.NAME">
+                <span class="detail-label">
+                  <i class="fas fa-user-circle"></i>
+                  Name
+                </span>
+                <span class="detail-value">{{ list.NAME }}</span>
+              </div>
+              
+              <div class="detail-row" *ngIf="list.PHONE">
+                <span class="detail-label">
+                  <i class="fas fa-phone"></i>
+                  Phone Number
+                </span>
+                <span class="detail-value">{{ list.PHONE }}</span>
+              </div>
+              
+              <div class="detail-row" *ngIf="list.EMAIL">
+                <span class="detail-label">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </span>
+                <span class="detail-value">{{ list.EMAIL }}</span>
+              </div>
+
+              <div class="detail-row" *ngIf="list.NOOFSEATS || list.SEATS">
+                <span class="detail-label">
+                  <i class="fas fa-chair"></i>
+                  Number of Seats
+                </span>
+                <span class="detail-value">{{ list.NOOFSEATS || list.SEATS }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pickup & Drop Location Details -->
+          <div class="info-card location-card" *ngIf="list?.PICKUPLOCATION || list?.DROPLOCATION">
+            <div class="card-header">
+              <i class="fas fa-location-dot"></i>
+              <h3>Pickup & Drop Locations</h3>
+            </div>
+            <div class="location-details">
+              <div class="location-item" *ngIf="list.PICKUPLOCATION">
+                <div class="location-icon pickup-icon">
+                  <i class="fas fa-map-pin"></i>
+                </div>
+                <div class="location-info">
+                  <span class="location-label">Pickup Location</span>
+                  <span class="location-address">{{ list.PICKUPLOCATION }}</span>
+                </div>
+              </div>
+              
+              <div class="location-item" *ngIf="list.DROPLOCATION">
+                <div class="location-icon drop-icon">
+                  <i class="fas fa-map-pin"></i>
+                </div>
+                <div class="location-info">
+                  <span class="location-label">Drop Location</span>
+                  <span class="location-address">{{ list.DROPLOCATION }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: QR Code & Payment -->
+        <div class="qr-column">
+          
+          <!-- QR Code Card -->
+          <div class="info-card qr-card" *ngIf="qr">
+            <div class="card-header">
+              <i class="fas fa-qrcode"></i>
+              <h3>Boarding QR Code</h3>
+            </div>
+            <div class="qr-content">
+              <div class="qr-box">
+                <img [src]="qr" alt="Booking QR Code" class="qr-image" />
+              </div>
+              <p class="qr-instruction">
+                <i class="fas fa-info-circle"></i>
+                Show this QR code to the driver at the time of boarding
+              </p>
+            </div>
+          </div>
+
+          <!-- Payment Details Card -->
+          <div class="info-card payment-card">
+            <div class="card-header">
+              <i class="fas fa-receipt"></i>
+              <h3>Payment Details</h3>
+            </div>
+            <div class="payment-details">
+              <div class="payment-row">
+                <span class="payment-label">Booking Status</span>
+                <span class="status-badge status-success">
+                  <i class="fas fa-check-circle"></i>
+                  {{ list?.STATUS || 'Confirmed' }}
+                </span>
+              </div>
+              
+              <div class="payment-row total-row" *ngIf="orderAmount">
+                <span class="payment-label">Total Amount Paid</span>
+                <span class="payment-amount">₹{{ orderAmount }}</span>
+              </div>
+
+              <div class="payment-row" *ngIf="list?.PAYMENTMODE">
+                <span class="payment-label">Payment Mode</span>
+                <span class="payment-value">{{ list.PAYMENTMODE }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Important Notes Card -->
+          <div class="info-card notes-card">
+            <div class="card-header">
+              <i class="fas fa-exclamation-circle"></i>
+              <h3>Important Notes</h3>
+            </div>
+            <div class="notes-content">
+              <ul class="notes-list">
+                <li>
+                  <i class="fas fa-clock"></i>
+                  Please arrive at the pickup location 10 minutes before the scheduled time
+                </li>
+                <li>
+                  <i class="fas fa-id-card"></i>
+                  Carry a valid ID proof for verification
+                </li>
+                <li>
+                  <i class="fas fa-mobile-alt"></i>
+                  Keep your phone charged to show the QR code
+                </li>
+                <li>
+                  <i class="fas fa-envelope"></i>
+                  Check your email for booking confirmation details
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-section">
+        <button class="btn btn-primary" (click)="returnToHome()">
+          <i class="fas fa-home"></i>
+          Return to Home
+        </button>
+        <button class="btn btn-secondary" onclick="window.print()">
+          <i class="fas fa-print"></i>
+          Print Ticket
+        </button>
+      </div>
+
+      <!-- Contact Support -->
+      <div class="support-section">
+        <div class="support-card">
+          <i class="fas fa-headset"></i>
+          <div class="support-info">
+            <h4>Need Help?</h4>
+            <p>Our customer support team is here to assist you</p>
+            <div class="support-links">
+              <a [href]="'mailto:' + contactEmail" class="support-link">
+                <i class="fas fa-envelope"></i>
+                {{ contactEmail }}
+              </a>
+              <a [href]="'tel:+919876543210'" class="support-link">
+                <i class="fas fa-phone"></i>
+                +91 98765 43210
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>

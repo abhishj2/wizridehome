@@ -268,7 +268,43 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.formSubmitted = true;
+    
+    // Debug logging
+    console.log('Form validation check:', {
+      formExists: !!form,
+      formValid: form?.valid,
+      formInvalid: form?.invalid,
+      firstName: this.passengerDetails.firstName,
+      lastName: this.passengerDetails.lastName,
+      email: this.passengerDetails.emailId,
+      primaryPhone: this.passengerDetails.primaryContactNo,
+      alternatePhone: this.passengerDetails.alternateContactNo
+    });
+    
     if (form && form.invalid) {
+      console.log('Form is invalid, showing errors');
+      this.scrollToForm();
+      return;
+    }
+    
+    if (!form) {
+      console.error('Form reference is null/undefined!');
+      return;
+    }
+    
+    // Additional manual validation for critical fields
+    if (!this.passengerDetails.firstName || !this.passengerDetails.lastName || 
+        !this.passengerDetails.emailId || !this.passengerDetails.primaryContactNo || 
+        !this.passengerDetails.alternateContactNo) {
+      console.log('Manual validation failed - required field missing');
+      this.scrollToForm();
+      return;
+    }
+    
+    // Validate phone numbers are 10 digits
+    if (this.passengerDetails.primaryContactNo.length !== 10 || 
+        this.passengerDetails.alternateContactNo.length !== 10) {
+      console.log('Manual validation failed - phone number must be 10 digits');
       this.scrollToForm();
       return;
     }
