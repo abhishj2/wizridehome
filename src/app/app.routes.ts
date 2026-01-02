@@ -130,7 +130,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
 
 export const routes: Routes = [
-      { path: '', component: HomeComponent },
+      { path: '', component: HomeComponent,pathMatch: 'full'},
       { path: 'booking-results', component: BookingResultsComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'thankyou', component: ThankyouComponent },
