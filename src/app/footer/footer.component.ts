@@ -105,7 +105,7 @@ export class FooterComponent {
       ]
     },
     airportsCovered: {
-      title: "Airport Covered",
+      title: "Airports Covered",
       routes: [
         { name: "Guwahati Airport", link: "/airports/guwahatiairport/" },
         { name: "Bagdogra Airport", link: "/airports/bagdograairport/" },

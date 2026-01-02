@@ -2,91 +2,91 @@
 <footer>
 <section class="wizzride-routes">
   <div class="routes-container">
-    <!-- Airport Routes - Shared Cabs -->
-    <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-plane-departure route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.airportShared.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.airportShared.routes; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
-        </div>
-      </div>
-    </div>
+    <!-- <header class="routes-header">
+      <h2>Where Wizzride Runs</h2>
+      <p>Clean, reliable connectivity across key city routes and regional airports.</p>
+    </header> -->
 
-    <!-- City Routes - Shared Cabs -->
-    <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-route route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.cityShared.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.cityShared.routes; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
+    <div class="routes-timeline-track">
+      <!-- Airport Routes - Shared Cabs -->
+      <article class="route-timeline-item">
+        <div class="route-timeline-icon">
+          <i class="fas fa-plane-departure"></i>
         </div>
-      </div>
-    </div>
+        <div class="route-timeline-content">
+          <div class="route-timeline-header">
+            <h3 class="route-title">{{ routes.airportShared.title }}</h3>
+            <span class="route-label">Shared Cabs</span>
+          </div>
+          <div class="route-links-wrapper">
+            <a *ngFor="let route of routes.airportShared.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+          </div>
+        </div>
+      </article>
 
-    <!-- Airport Connectivity - Reserved Cabs -->
-    <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-taxi route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.airportReserved.routes; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
+      <!-- City Routes - Shared Cabs -->
+      <article class="route-timeline-item">
+        <div class="route-timeline-icon">
+          <i class="fas fa-route"></i>
         </div>
-      </div>
-    </div>
+        <div class="route-timeline-content">
+          <div class="route-timeline-header">
+            <h3 class="route-title">{{ routes.cityShared.title }}</h3>
+            <span class="route-label">Shared Cabs</span>
+          </div>
+          <div class="route-links-wrapper">
+            <a *ngFor="let route of routes.cityShared.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+          </div>
+        </div>
+      </article>
 
-    <!-- Airport Covered -->
-    <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-plane route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.airportsCovered.routes; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
+      <!-- Airport Connectivity - Reserved Cabs -->
+      <article class="route-timeline-item">
+        <div class="route-timeline-icon">
+          <i class="fas fa-taxi"></i>
         </div>
-      </div>
-    </div>
+        <div class="route-timeline-content">
+          <div class="route-timeline-header">
+            <h3 class="route-title">{{ routes.airportReserved.title }}</h3>
+            <span class="route-label">Reserved Cabs</span>
+          </div>
+          <div class="route-links-wrapper">
+            <a *ngFor="let route of routes.airportReserved.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+          </div>
+        </div>
+      </article>
 
-    <!-- <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-plane route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.aiportroutes.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.aiportroutes.route; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
+      <!-- Airport Covered -->
+      <article class="route-timeline-item">
+        <div class="route-timeline-icon">
+          <i class="fas fa-plane"></i>
         </div>
-      </div>
-    </div> -->
-    <div class="route-card">
-      <div class="route-icon-column">
-        <i class="fas fa-file route-icon"></i>
-      </div>
-      <div class="route-content-column">
-        <h3 class="route-title">{{ routes.innerlinepermits.title }}</h3>
-        <div class="route-content">
-          <span *ngFor="let route of routes.innerlinepermits.route; let last = last">
-            <a [href]="route.link"  class="route-link">{{ route.name }}</a><span *ngIf="!last"> | </span>
-          </span>
+        <div class="route-timeline-content">
+          <div class="route-timeline-header">
+            <h3 class="route-title">{{ routes.airportsCovered.title }}</h3>
+            <span class="route-label">Current Network</span>
+          </div>
+          <div class="route-links-wrapper">
+            <a *ngFor="let route of routes.airportsCovered.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+          </div>
         </div>
-      </div>
+      </article>
+
+      <!-- Inner Line Permits -->
+      <article class="route-timeline-item">
+        <div class="route-timeline-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="route-timeline-content">
+          <div class="route-timeline-header">
+            <h3 class="route-title">{{ routes.innerlinepermits.title }}</h3>
+            <span class="route-label">Travel Documents</span>
+          </div>
+          <div class="route-links-wrapper">
+            <a *ngFor="let route of routes.innerlinepermits.route" [href]="route.link" class="route-pill">{{ route.name }}</a>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
