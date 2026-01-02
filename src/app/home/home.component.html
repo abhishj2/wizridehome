@@ -84,7 +84,10 @@
         <div class="tabs-container">
             <ng-container *ngFor="let tab of tabs">
                 <div [id]="tab" class="tab-content" [class.active]="currentTab === tab"
-                    [class.slide-out-left]="previousTab === tab && isSliding"
+                    [class.slide-out-left]="previousTab === tab && isSliding && slideDirection === 'right'"
+                    [class.slide-out-right]="previousTab === tab && isSliding && slideDirection === 'left'"
+                    [class.slide-in-right]="currentTab === tab && isSliding && slideDirection === 'right'"
+                    [class.slide-in-left]="currentTab === tab && isSliding && slideDirection === 'left'"
                     *ngIf="currentTab === tab || previousTab === tab">
                     <!-- Place the content for each tab here, e.g. use ng-container with ngSwitch or ngIf for each tab -->
                     <ng-container [ngSwitch]="tab">

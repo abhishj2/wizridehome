@@ -1390,6 +1390,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentTab = 'shared-cabs';
   previousTab: string | null = null;
   isSliding = false;
+  slideDirection: 'left' | 'right' = 'right'; // Track slide direction
 
   // Flight-specific
   selectedClass = 'economy';
@@ -2272,12 +2273,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.previousTab = this.currentTab;
       this.isSliding = true;
 
+      // Determine slide direction based on tab indices
+      const currentIndex = this.tabs.indexOf(this.currentTab);
+      const newIndex = this.tabs.indexOf(tabName);
+      this.slideDirection = newIndex > currentIndex ? 'right' : 'left';
+
       // Update nav tabs active state immediately for smooth color transition
       if (isPlatformBrowser(this.platformId)) {
-        const currentIndex = this.tabs.indexOf(tabName);
         const navTabs = this.document.querySelector('.nav-tabs');
         if (navTabs) {
-          navTabs.setAttribute('data-active', currentIndex.toString());
+          navTabs.setAttribute('data-active', newIndex.toString());
         }
       }
 
@@ -2288,8 +2293,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
           this.previousTab = null;
           this.isSliding = false;
-        }, 300);
-      }, 100);
+        }, 2000);
+      }, 0);
     }
   }
   setTripType(type: string) {
