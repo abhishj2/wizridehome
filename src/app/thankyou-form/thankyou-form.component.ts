@@ -39,6 +39,9 @@ export class ThankyouFormComponent implements OnInit {
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
+    // Scroll to top when component loads
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     // Get data from router state (SEO-friendly, no query params)
     const navigation = this.router.getCurrentNavigation();
     let formData: any = null;
