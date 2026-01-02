@@ -79,6 +79,18 @@ interface Offer {
   image: string;
 }
 
+interface HomepagePopup {
+  id: number;
+  title: string;
+  subtitle: string;
+  image: string;
+  button_text: string;
+  button_url: string;
+  is_active: boolean;
+  show_once: boolean;
+  delay_seconds: number;
+}
+
 interface WordPressOffer {
   id: number;
   title: {
@@ -135,6 +147,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   activePhoneInput: HTMLInputElement | null = null;
   phoneInputCursorPosition: number = 0;
   customCursorElement: HTMLElement | null = null;
+
+  // Homepage Auto Popup
+  showHomepagePopup = false;
+  homepagePopupData: HomepagePopup | null = null;
+  isLoadingPopup = false;
 
   // State-wise city data from API
   stateWiseCities: StateWiseCity[] = [];
@@ -2136,6 +2153,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Load home statistics
     this.loadHomeStatistics();
+
+    // Load homepage popup
+    this.loadHomepagePopup();
   }
 
   // Helper method to insert JSON-LD structured data
@@ -5113,6 +5133,70 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isLoadingStats = false;
       }
     });
+  }
+
+  /** -------------------
+   * Load Homepage Popup from WordPress
+   * -------------------- */
+  loadHomepagePopup(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.isLoadingPopup = true;
+
+    this.wordpressService.getHomepagePopup().subscribe({
+      next: (response: any) => {
+        if (response.success && response.image) {
+          this.homepagePopupData = response;
+          
+          // Check if popup should be shown only once
+          if (response.show_once) {
+            const popupShown = localStorage.getItem('homepage_popup_shown');
+            if (popupShown) {
+              this.isLoadingPopup = false;
+              return;
+            }
+          }
+
+          // Show popup after delay
+          const delay = (response.delay_seconds || 2) * 1000;
+          setTimeout(() => {
+            this.showHomepagePopup = true;
+            
+            // Mark as shown if show_once is true
+            if (response.show_once) {
+              localStorage.setItem('homepage_popup_shown', 'true');
+            }
+          }, delay);
+        }
+        this.isLoadingPopup = false;
+      },
+      error: (error) => {
+        // console.error('Error loading homepage popup:', error);
+        this.isLoadingPopup = false;
+      }
+    });
+  }
+
+  /** -------------------
+   * Close Homepage Popup
+   * -------------------- */
+  closeHomepagePopup(): void {
+    this.showHomepagePopup = false;
+  }
+
+  /** -------------------
+   * Handle Homepage Popup Button Click
+   * -------------------- */
+  onHomepagePopupButtonClick(): void {
+    if (this.homepagePopupData?.button_url) {
+      // Check if URL is external or internal
+      if (this.homepagePopupData.button_url.startsWith('http')) {
+        window.open(this.homepagePopupData.button_url, '_blank');
+      } else {
+        this.router.navigate([this.homepagePopupData.button_url]);
+      }
+    }
+    this.closeHomepagePopup();
   }
 
   /**

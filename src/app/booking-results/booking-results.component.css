@@ -4434,3 +4434,16 @@ img.seat-watermark-img {
     gap:0px !important;
 }
 }
+
+.results-column {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 139, 139, .08), transparent 70%);
+ 
+}
+
+.vehicle-cards{
+  gap:0 !important;
+}
+
+.route{
+      padding:20px 20px !important;
+}

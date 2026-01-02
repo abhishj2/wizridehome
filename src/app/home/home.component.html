@@ -1,3 +1,32 @@
+<!-- Homepage Auto Popup -->
+<div class="homepage-popup-overlay" *ngIf="showHomepagePopup" (click)="closeHomepagePopup()">
+    <div class="homepage-popup-modal" (click)="$event.stopPropagation()">
+        <button class="homepage-popup-close" (click)="closeHomepagePopup()" aria-label="Close popup">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="homepage-popup-image" *ngIf="homepagePopupData?.image">
+            <img [src]="homepagePopupData!.image" [alt]="homepagePopupData!.title || 'Popup'" />
+        </div>
+        
+        <div class="homepage-popup-content">
+            <h2 class="homepage-popup-title" *ngIf="homepagePopupData?.title">
+                {{ homepagePopupData!.title }}
+            </h2>
+            
+            <p class="homepage-popup-subtitle" *ngIf="homepagePopupData?.subtitle">
+                {{ homepagePopupData!.subtitle }}
+            </p>
+            
+            <button class="homepage-popup-button" 
+                    *ngIf="homepagePopupData?.button_text"
+                    (click)="onHomepagePopupButtonClick()">
+                {{ homepagePopupData!.button_text }}
+            </button>
+        </div>
+    </div>
+</div>
+
 <div class="phone-modal" *ngIf="showPhonePopup && !isMobileView()" (click)="onModalBackdropClick($event)">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h3>Important !!!</h3>

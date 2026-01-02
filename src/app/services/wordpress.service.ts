@@ -67,6 +67,16 @@ export class WordpressService {
     );
   }
 
+  getHomepagePopup(): Observable<any> {
+    // Use custom REST API endpoint for homepage popup
+    const customBaseUrl = this.baseUrl.replace('/wp/v2', '');
+    const url = `${customBaseUrl}/wizcms/v1/homepage-popup`;
+    
+    return this.http.get(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     // console.error('WordPress API Error:', error);
     return throwError(() => new Error(`WordPress API Error: ${error.message}`));
