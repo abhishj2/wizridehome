@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CaptchaService, CaptchaData } from '../../services/captcha.service';
+import { Router } from '@angular/router';
 
 interface DriverEnquiryFormData {
   fullName: string;
@@ -53,7 +54,8 @@ export class DriverjobComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
-    private captchaService: CaptchaService
+    private captchaService: CaptchaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -244,6 +246,29 @@ export class DriverjobComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Handle phone number input - filter non-digits and limit to 10
+   */
+  onPhoneNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Remove all non-digit characters
+    let value = input.value.replace(/\D/g, '');
+    // Limit to 10 digits
+    if (value.length > 10) {
+      value = value.slice(0, 10);
+    }
+    this.formData.contactNumber = value;
+    input.value = value;
+  }
+
+  /**
+   * Validate email format
+   */
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  /**
    * Handle form submission
    */
   onSubmit(): void {
@@ -251,17 +276,30 @@ export class DriverjobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.successMessage = '';
     this.errorMessage = '';
 
-    // Validate captcha first
+    // Validate required fields
+    if (!this.formData.fullName || !this.formData.email || !this.formData.contactNumber) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return;
+    }
+
+    // Validate email format
+    if (!this.isValidEmail(this.formData.email)) {
+      this.errorMessage = 'Please enter a valid email address.';
+      return;
+    }
+
+    // Validate phone number (exactly 10 digits)
+    const cleanedPhoneNumber = this.formData.contactNumber.replace(/\D/g, '');
+    if (cleanedPhoneNumber.length !== 10) {
+      this.errorMessage = 'Phone number must be exactly 10 digits.';
+      return;
+    }
+
+    // Validate captcha
     if (!this.captchaService.validateCaptcha(this.userCaptchaAnswer, this.captchaData.answer)) {
       this.errorMessage = 'Incorrect answer! Please solve the math problem correctly.';
       this.userCaptchaAnswer = '';
       this.captchaData = this.captchaService.generateCaptcha();
-      return;
-    }
-
-    // Validate form data
-    if (!this.formData.fullName || !this.formData.email || !this.formData.contactNumber) {
-      this.errorMessage = 'Please fill in all required fields.';
       return;
     }
 
@@ -288,25 +326,27 @@ export class DriverjobComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (response) => {
           console.log('Driver application submitted successfully:', response);
           this.isSubmitting = false;
-          this.successMessage = 'Thank you! Your application has been submitted successfully. We will contact you soon.';
           
-          // Reset form
-          this.formData = {
-            fullName: '',
-            email: '',
-            contactNumber: '',
-            subject: '',
-            message: ''
+          // Prepare data for Thank You page
+          const formData = {
+            title: 'Thank You for Your Application!',
+            message: 'Your driver application has been submitted successfully.',
+            subtitle: 'We have received your application and our team will review it shortly.',
+            formType: 'job',
+            additionalInfo: 'You will receive a confirmation email shortly. If you have any questions, please contact our recruitment team.',
+            redirectUrl: '/applyforjob/driverjob',
+            redirectText: 'Back to Driver Jobs'
           };
-          this.userCaptchaAnswer = '';
-          
-          // Generate new captcha
-          this.captchaData = this.captchaService.generateCaptcha();
 
-          // Clear success message after 5 seconds
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 5000);
+          // Store in localStorage as fallback
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('thankyouFormData', JSON.stringify(formData));
+          }
+
+          // Navigate to Thank You page with state
+          this.router.navigate(['/thankyou-form'], {
+            state: { formData: formData }
+          });
         },
         error: (error) => {
           console.error('Error submitting driver application:', error);

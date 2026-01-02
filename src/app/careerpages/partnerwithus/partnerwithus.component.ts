@@ -662,6 +662,15 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Validate email format
+   */
+  private isValidEmail(email: string): boolean {
+    if (!email) return true; // Email is optional in most forms
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  /**
    * Generic form submission handler
    */
   private submitForm(
@@ -698,6 +707,12 @@ export class PartnerwithusComponent implements OnInit, AfterViewInit {
 
     if (!isValid) {
       this.errorMessages[formType] = 'Please fill in all required fields.';
+      return;
+    }
+
+    // Validate email format if email is provided
+    if (formData.emailId && !this.isValidEmail(formData.emailId)) {
+      this.errorMessages[formType] = 'Please enter a valid email address.';
       return;
     }
 
