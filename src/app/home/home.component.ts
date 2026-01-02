@@ -2293,7 +2293,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
           this.previousTab = null;
           this.isSliding = false;
-        }, 2000);
+        }, 1000);
       }, 0);
     }
   }

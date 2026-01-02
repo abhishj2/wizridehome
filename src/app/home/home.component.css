@@ -96,7 +96,6 @@ h2 {
 }
 
 .nav-tab {
-    border-bottom: 2px solid darkcyan !important;
     background: #fff;
     position: relative;
     transition: all 0.3s ease;
@@ -170,24 +169,24 @@ h2 {
     position: absolute;
     opacity: 1;
     z-index: 1;
-    animation: slideOutToLeft 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideOutToLeft 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 .tab-content.slide-out-right {
     position: absolute;
     opacity: 1;
     z-index: 1;
-    animation: slideOutToRight 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideOutToRight 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 .tab-content.active.slide-in-left {
     position: relative;
-    animation: slideInFromLeft 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideInFromLeft 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 .tab-content.active.slide-in-right {
     position: relative;
-    animation: slideInFromRight 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: slideInFromRight 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 .city-suggestions.active {
     overflow-x:hidden;
