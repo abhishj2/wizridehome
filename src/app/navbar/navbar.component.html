@@ -6,7 +6,8 @@
       <button 
         class="mobile-menu-btn"
         (click)="toggleMobileMenu()"
-        [class.active]="isMobileMenuOpen">
+        [class.active]="isMobileMenuOpen"
+        aria-label="Open Mobile Menu">
         <span></span>
         <span></span>
         <span></span>
@@ -120,7 +121,7 @@
 
     <div class="mobile-nav-items">
       <div 
-        *ngFor="let item of navigationItems" 
+        *ngFor="let item of mobileNavigationItems" 
         class="mobile-nav-item">
         
         <div 
@@ -159,7 +160,7 @@
     <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()">×</button>
     <div class="mobile-nav-drawer-items">
       <div 
-        *ngFor="let item of navigationItems" 
+        *ngFor="let item of mobileNavigationItems" 
         class="mobile-nav-drawer-item">
         
         <a 

@@ -23,7 +23,7 @@ export class NavbarComponent {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  // Navigation items with dropdowns
+  // Desktop Navigation items with dropdowns
   navigationItems = [
     {
       name: 'About Us',
@@ -94,6 +94,74 @@ export class NavbarComponent {
       hasDropdown: false,
       link: '/sellyourcar'
     }
+  ];
+
+  // Mobile Navigation items (separate array for mobile-specific menu items)
+  mobileNavigationItems = [
+    {
+      name: 'About Us',
+      hasDropdown: true,
+      link: '/aboutcompany',
+      dropdownItems: [
+        { name: 'About the Company', link: '/aboutcompany' },
+        { name: 'Our Vision', link: '/aboutcompany/ourvision' },
+        { name: 'Our Commitment', link: '/aboutcompany/ourcommittment' },
+        { name: 'Our Philosophy', link: '/aboutcompany/ourworkphilosophy' }
+      ]
+    },
+    {
+      name: 'Contact Us',
+      hasDropdown: false,
+      link: '/contactus'
+    },
+    {
+      name: 'Careers',
+      hasDropdown: true,
+      link:'/applyforjob',
+      dropdownItems: [
+        { name: 'Join our Corporate Team', link: '/applyforjob' },
+        { name: 'Apply for Driver Job', link: '/applyforjob/driverjob' },
+        { name: 'Attach Your Car', link: '/applyforjob/partnerwithus/car-attachment' },
+        { name: 'Become an Agent', link: '/applyforjob/partnerwithus/agent' }
+      ]
+    },
+    {
+      name: 'Cancel Ticket',
+      hasDropdown: false,
+      link: '/cancelticket'
+    },
+    {
+      name: 'Collaborate',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Influencer', link: '/applyforjob/partnerwithus/influencer' },
+        { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
+        { name: 'Private Events', link: '/applyforjob/partnerwithus/corporate-events' },
+        { name: 'Investor Center', link: '/applyforjob/partnerwithus/investor' },
+      ]
+    },
+    {
+      name: 'Blogs',
+      hasDropdown: false,
+      link: '/blogs'
+    },
+    {
+      name: 'Sell Your Car',
+      hasDropdown: false,
+      link: '/sellyourcar'
+    }
+    // Add more mobile-specific menu items here as needed
+    // Example:
+    // {
+    //   name: 'Download App',
+    //   hasDropdown: false,
+    //   link: '/download-app'
+    // },
+    // {
+    //   name: 'Offers',
+    //   hasDropdown: false,
+    //   link: '/offers'
+    // }
   ];
 
   toggleMobileMenu() {

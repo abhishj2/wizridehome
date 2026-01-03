@@ -1737,11 +1737,11 @@
 <div class="mobile-location-popup" [class.active]="showMobileLocationPopup" (click)="closeMobileLocationPopup()">
     <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
         <div class="mobile-location-popup-header">
-            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()">
+            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()" aira-label="Location Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>{{ mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Select Pickup Point' : 'Select Drop Point' }}</h3>
-            <button class="mobile-location-popup-close" (click)="closeMobileLocationPopup()">
+            <button class="mobile-location-popup-close" aria-label="Close Location Popup" (click)="closeMobileLocationPopup()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1844,11 +1844,11 @@
 <div class="mobile-travelers-popup" [class.active]="showMobileTravelersPopup" (click)="closeMobileTravelersPopup()">
     <div class="mobile-travelers-popup-content" (click)="$event.stopPropagation()">
         <div class="mobile-travelers-popup-header">
-            <button class="mobile-travelers-popup-back" (click)="closeMobileTravelersPopup()">
+            <button class="mobile-travelers-popup-back" (click)="closeMobileTravelersPopup()" aria-label="Travelers Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>Travellers & Class</h3>
-            <button class="mobile-travelers-popup-close" (click)="closeMobileTravelersPopup()">
+            <button class="mobile-travelers-popup-close" aria-label="Close Travelers Popup" (click)="closeMobileTravelersPopup()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1935,11 +1935,11 @@
 <div class="mobile-date-picker-overlay" [class.active]="showMobileDatePicker" (click)="closeMobileDatePicker()">
     <div class="mobile-date-picker-modal" (click)="$event.stopPropagation()">
         <div class="mobile-date-picker-header">
-            <button class="mobile-date-picker-back" (click)="closeMobileDatePicker()">
+            <button class="mobile-date-picker-back" (click)="closeMobileDatePicker()" aria-label="Date Picker Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ? 'Select Date' : mobileDatePickerType === 'flights-return' ? 'Select Return Date' : (mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')) ? 'Select Departure Date' : 'Select Departure Date' }}</h3>
-            <button class="mobile-date-picker-close" (click)="closeMobileDatePicker()">
+            <button class="mobile-date-picker-close" aria-label="Close Date Picker" (click)="closeMobileDatePicker()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1999,11 +1999,11 @@
 <div class="mobile-multicity-overlay" [class.active]="showMobileMultiCityModal" (click)="closeMobileMultiCityModal()">
     <div class="mobile-multicity-modal" (click)="$event.stopPropagation()">
         <div class="mobile-multicity-header">
-            <button class="mobile-multicity-back" (click)="closeMobileMultiCityModal()">
+            <button class="mobile-multicity-back" (click)="closeMobileMultiCityModal()" aria-label="Multi-City Routes Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>Multi-City Routes</h3>
-            <button class="mobile-multicity-close" (click)="closeMobileMultiCityModal()">
+            <button class="mobile-multicity-close" aria-label="Close Multi-City Routes" (click)="closeMobileMultiCityModal()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
