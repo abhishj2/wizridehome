@@ -90,8 +90,8 @@ a:hover{
     align-items: flex-start;
     gap: 20px;
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.7s cubic-bezier(.4, 0, .2, 1), transform 0.7s cubic-bezier(.4, 0, .2, 1);
+    transform: translateY(20px);
+    transition: opacity 0.3s cubic-bezier(.4, 0, .2, 1), transform 0.3s cubic-bezier(.4, 0, .2, 1);
 }
 
 .howto-step.visible {
@@ -341,25 +341,25 @@ section.why-choose-section .carfe {
 
 
 .animate-fade-in {
-    animation: fadeIn 1s ease-out;
+    animation: fadeIn 0.4s ease-out;
 }
 
 .animate-slide-up {
-    animation: slideUp 0.8s ease-out;
+    animation: slideUp 0.4s ease-out;
 }
 
 .animate-slide-up-delay {
-    animation: slideUp 0.8s ease-out 0.2s both;
+    animation: slideUp 0.4s ease-out 0.1s both;
 }
 
 .animate-slide-up-delay-2 {
-    animation: slideUp 0.8s ease-out 0.4s both;
+    animation: slideUp 0.4s ease-out 0.15s both;
 }
 
 .animate-on-scroll {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out;
+    transform: translateY(20px);
+    transition: all 0.4s ease-out;
 }
 
 .animate-on-scroll.animate {
@@ -379,7 +379,7 @@ section.why-choose-section .carfe {
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
 
     to {
@@ -404,6 +404,34 @@ section.why-choose-section .carfe {
 }
     .fourcol {
         flex: 1;
+    }
+    
+    /* Faster animations on mobile */
+    .animate-fade-in {
+        animation: fadeIn 0.25s ease-out;
+    }
+    
+    .animate-slide-up {
+        animation: slideUp 0.25s ease-out;
+    }
+    
+    .animate-slide-up-delay {
+        animation: slideUp 0.25s ease-out 0.05s both;
+    }
+    
+    .animate-slide-up-delay-2 {
+        animation: slideUp 0.25s ease-out 0.08s both;
+    }
+    
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.25s ease-out;
+    }
+    
+    .howto-step {
+        transform: translateY(15px);
+        transition: opacity 0.2s cubic-bezier(.4, 0, .2, 1), transform 0.2s cubic-bezier(.4, 0, .2, 1);
     }
 }
 

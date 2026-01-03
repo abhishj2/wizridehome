@@ -994,15 +994,42 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           console.log('Response String:', JSON.stringify(response));
           console.log('=====================================================');
           
-          
-          
+          // Close the modal
           this.closeCarAdditionModal();
+          
+          // Prepare form data for thank you page
+          const thankYouData = {
+            formType: 'caraddition',
+            title: 'Request Submitted Successfully!',
+            message: 'Your car addition request has been received.',
+            subtitle: 'We will try our best to add a car for your preferred timing and contact you soon.',
+            redirectUrl: '/',
+            redirectText: 'Back to Home',
+            additionalInfo: `Route: ${this.searchParams?.from} → ${this.searchParams?.to} | Date: ${this.searchParams?.date} | Preferred Time: ${this.formatTimeDisplay(preferredTime)}`
+          };
+          
+          // Store in localStorage as fallback
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('thankyouFormData', JSON.stringify(thankYouData));
+          }
+          
+          // Navigate to thank you page
+          this.router.navigate(['/thankyou-form'], { 
+            state: { formData: thankYouData }
+          });
         },
         error: (error) => {
           console.error('========== caraddditionrequest API ERROR ==========');
           console.error('Error:', error);
           console.error('===================================================');
-          alert('Error submitting car addition request. Please try again.');
+          
+          Swal.fire({
+            title: 'Error',
+            text: 'Error submitting car addition request. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#8B5CF6'
+          });
         }
       });
     } else {
