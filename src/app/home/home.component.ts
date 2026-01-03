@@ -147,7 +147,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   activePhoneInput: HTMLInputElement | null = null;
   phoneInputCursorPosition: number = 0;
   customCursorElement: HTMLElement | null = null;
-
+  private cachedInputStyles: any = null;
+  private cachedInputElement: HTMLInputElement | null = null;
+  private cachedMeasurementSpan: HTMLSpanElement | null = null;
   // Homepage Auto Popup
   showHomepagePopup = false;
   homepagePopupData: HomepagePopup | null = null;
@@ -2818,6 +2820,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     // Remove custom cursor
     this.removeCustomCursor();
     
+    // Clean up cached elements
+    if (this.cachedMeasurementSpan && this.cachedMeasurementSpan.parentElement) {
+      this.cachedMeasurementSpan.parentElement.removeChild(this.cachedMeasurementSpan);
+    }
+    this.cachedMeasurementSpan = null;
+    this.cachedInputStyles = null;
+    this.cachedInputElement = null;
+    
     if (this.activePhoneInput) {
       // Remove event listeners using stored handlers
       const clickHandler = (this.activePhoneInput as any)._phoneInputClickHandler;
@@ -2958,6 +2968,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   onKeypadNumberClick(number: string): void {
     if (!this.activePhoneInput) return;
     
+    // Haptic feedback - ultra-light vibration (5ms) for instant tactile response
+    this.triggerHapticFeedback(5);
+    
     // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
     const cursorPos = this.phoneInputCursorPosition || currentValue.length;
@@ -2969,16 +2982,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const newValue = currentValue.slice(0, cursorPos) + number + currentValue.slice(cursorPos);
     const newCursorPos = cursorPos + 1;
     
-    // Update everything synchronously - no async operations
+    // Batch DOM updates for better performance
     this.activePhoneInput.value = newValue;
     this.phoneNumber = newValue;
     this.phoneInputCursorPosition = newCursorPos;
     
-    // Update custom cursor position
-    this.updateCustomCursorPosition();
-    
-    // Trigger change detection immediately - use markForCheck for better performance
-    this.cdr.markForCheck();
+    // Defer cursor update to next frame for immediate visual feedback
+    requestAnimationFrame(() => {
+      this.updateCustomCursorPositionFast();
+    });
   }
 
   private lastTouchTime = 0;
@@ -2999,33 +3011,29 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onKeypadTouchEnd(event: TouchEvent): void {
-    // Optimized for speed - minimal processing
+    // Minimal overhead - no complex logic, just basic validation
     const now = Date.now();
     const timeSinceLastTouch = now - this.lastTouchTime;
     const touchDuration = now - this.touchStartTime;
-    const currentTarget = event.target;
     
-    // Only prevent default for actual problematic zoom scenarios
-    // Allow ALL rapid taps for fast typing - only block obvious accidental double-taps
-    const isSameButtonDoubleTap = currentTarget === this.lastTouchTarget && 
-                                   timeSinceLastTouch < 150 && 
-                                   touchDuration < 150;
-    
-    // Only prevent for very obvious accidental taps (< 20ms) - allow everything else
-    const isAccidentalTap = touchDuration < 20;
-    
-    // Minimal blocking - allow fast typing
-    if (isSameButtonDoubleTap || isAccidentalTap) {
+    // Only prevent obvious accidental double-taps (< 100ms between taps on same button)
+    // Allow all rapid typing for fast input
+    if (event.target === this.lastTouchTarget && 
+        timeSinceLastTouch < 100 && 
+        touchDuration < 100) {
       event.preventDefault();
     }
     
-    // Update tracking - minimal overhead
+    // Update tracking
     this.lastTouchTime = now;
-    this.lastTouchTarget = currentTarget;
+    this.lastTouchTarget = event.target;
   }
 
   onKeypadBackspace(): void {
     if (!this.activePhoneInput) return;
+    
+    // Haptic feedback - slightly stronger for backspace (8ms)
+    this.triggerHapticFeedback(8);
     
     // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
@@ -3038,20 +3046,90 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const newValue = currentValue.slice(0, cursorPos - 1) + currentValue.slice(cursorPos);
     const newCursorPos = cursorPos - 1;
     
-    // Update everything synchronously - no async operations
+    // Batch DOM updates for better performance
     this.activePhoneInput.value = newValue;
     this.phoneNumber = newValue;
     this.phoneInputCursorPosition = newCursorPos;
     
-    // Update custom cursor position
-    this.updateCustomCursorPosition();
-    
-    // Trigger change detection immediately - use markForCheck for better performance
-    this.cdr.markForCheck();
+    // Defer cursor update to next frame for immediate visual feedback
+    requestAnimationFrame(() => {
+      this.updateCustomCursorPositionFast();
+    });
   }
-
+  private updateCustomCursorPositionFast(): void {
+    if (!this.customCursorElement || !this.activePhoneInput || !isPlatformBrowser(this.platformId)) return;
+    
+    const input = this.activePhoneInput;
+    const cursor = this.customCursorElement;
+    const value = input.value || '';
+    const cursorPos = this.phoneInputCursorPosition || value.length;
+    
+    // Cache computed styles to avoid repeated getComputedStyle calls
+    if (!this.cachedInputStyles || this.cachedInputElement !== input) {
+      const inputStyles = getComputedStyle(input);
+      this.cachedInputStyles = {
+        fontFamily: inputStyles.fontFamily,
+        fontSize: inputStyles.fontSize,
+        fontWeight: inputStyles.fontWeight,
+        letterSpacing: inputStyles.letterSpacing,
+        paddingLeft: parseFloat(inputStyles.paddingLeft) || 0
+      };
+      this.cachedInputElement = input;
+    }
+    
+    const inputRect = input.getBoundingClientRect();
+    const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
+    
+    if (!wrapper) return;
+    
+    const wrapperRect = wrapper.getBoundingClientRect();
+    
+    // Reuse or create measurement span
+    if (!this.cachedMeasurementSpan) {
+      this.cachedMeasurementSpan = this.document.createElement('span');
+      this.cachedMeasurementSpan.style.cssText = `
+        position: absolute;
+        visibility: hidden;
+        white-space: pre;
+      `;
+      wrapper.appendChild(this.cachedMeasurementSpan);
+    }
+    
+    // Update measurement span style only if input changed
+    const span = this.cachedMeasurementSpan;
+    span.style.fontFamily = this.cachedInputStyles.fontFamily;
+    span.style.fontSize = this.cachedInputStyles.fontSize;
+    span.style.fontWeight = this.cachedInputStyles.fontWeight;
+    span.style.letterSpacing = this.cachedInputStyles.letterSpacing;
+    
+    // Measure text width
+    span.textContent = value.substring(0, cursorPos);
+    const textWidth = span.offsetWidth;
+    
+    // Calculate position
+    const inputLeftInWrapper = inputRect.left - wrapperRect.left;
+    const leftOffset = inputLeftInWrapper + this.cachedInputStyles.paddingLeft + textWidth;
+    
+    // Update cursor position with transform for better performance
+    cursor.style.transform = `translate(${leftOffset}px, ${inputRect.top - wrapperRect.top + (inputRect.height - 20) / 2}px)`;
+    cursor.style.left = '0';
+    cursor.style.top = '0';
+  }
   onKeypadDone(): void {
+    // Haptic feedback - stronger for done button (15ms)
+    this.triggerHapticFeedback(15);
     this.closeCustomKeypad();
+  }
+  
+  // Ultra-fast haptic feedback for keypad
+  private triggerHapticFeedback(duration: number = 5): void {
+    if (isPlatformBrowser(this.platformId) && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(duration);
+      } catch (e) {
+        // Silently fail - haptic feedback is optional
+      }
+    }
   }
 
   confirmPhonePopup() {
