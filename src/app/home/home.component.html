@@ -1445,10 +1445,14 @@
                                 <div class="service-content">
                                     <h3 class="service-title">{{ service.title }}</h3>
                                     <p class="service-description">{{ service.description }}</p>
-                                    <a href="{{service.link}}" class="service-cta-btn">
-                                        <span>Learn More</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                    </a>
+                                    <a
+                                    [href]="service.link"
+                                    [attr.aria-label]="service.title"
+                                    class="service-cta-btn"
+                                  >
+                                    <span>Learn More</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                  </a>
                                 </div>
                             </div>
                         </div>
