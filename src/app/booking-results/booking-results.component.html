@@ -281,7 +281,7 @@
 
               <div class="price-info">
 
-                <div class="price">₹{{ vehicle.price.toFixed(0) }}</div>
+                <div class="price">₹{{ getPriceExcludingGST(vehicle.price) }}</div>
                 <div>
                   <p>{{ vehicle.seatsLeft }} Seat Left</p>
                 </div>
@@ -329,7 +329,7 @@
               </div>
               <div class="mobile-start-price">
                 <span>Starts </span>
-                <span class="mobile-price">₹ {{ vehicle.price.toFixed(2) }}</span>
+                <span class="mobile-price">₹ {{ getPriceExcludingGST(vehicle.price) }}</span>
               </div>
             </div>
 

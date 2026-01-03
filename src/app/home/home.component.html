@@ -120,7 +120,7 @@
                                         
                                     </div>
 
-                                    <button class="swap-btn" (click)="swapCabLocations('shared')">
+                                    <button class="swap-btn" (click)="swapCabLocations('shared')" aria-label="Swap pickup and dropoff locations">
                                         <span>⇄</span>
                                     </button>
 
@@ -171,7 +171,7 @@
                                         </div>
                                     </div>
 
-                                    <button class="search-btn" (click)="searchCabs('shared')">
+                                    <button class="search-btn" (click)="searchCabs('shared')" aria-label="Search shared cabs">
 
 
                                         <span><i class="fas fa-search"></i></span>
@@ -359,7 +359,8 @@
                                     <div class="route-header" *ngIf="tripType === 'multi-city'">
                                         <span class="route-number">Route {{i + 1}}</span>
                                         <button class="remove-route-btn" (click)="removeFlightRoute(i)"
-                                            [disabled]="flightRoutes.length <= 1">
+                                            [disabled]="flightRoutes.length <= 1"
+                                            aria-label="Remove this route">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -390,7 +391,8 @@
                                     </div>
 
                                     <button class="swap-btn" (click)="swapFlightLocations(i)"
-                                        [ngClass]="tripType === 'multi-city' ? 'nesap swap-btn' : ''">
+                                        [ngClass]="tripType === 'multi-city' ? 'nesap swap-btn' : ''"
+                                        aria-label="Swap departure and arrival cities">
                                         <span>⇄</span>
                                     </button>
 
@@ -518,7 +520,8 @@
                                     </div>
                                     <!-- Add Route Button for Multi City -->
                                     <button class="search-btn" (click)="searchFlights()"
-                                        *ngIf="tripType !== 'multi-city'">
+                                        *ngIf="tripType !== 'multi-city'"
+                                        aria-label="Search flights">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -538,7 +541,8 @@
 
 
                                     <button class="search-btn" (click)="searchFlights()"
-                                        *ngIf="tripType === 'multi-city'">
+                                        *ngIf="tripType === 'multi-city'"
+                                        aria-label="Search multi-city flights">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -586,7 +590,7 @@
                                         </div>
                                     </div>
 
-                                    <button class="swap-btn" (click)="swapCabLocations('reserved')">
+                                    <button class="swap-btn" (click)="swapCabLocations('reserved')" aria-label="Swap pickup and dropoff locations">
                                         <span>⇄</span>
                                     </button>
 
@@ -648,7 +652,7 @@
                                         </div>
                                     </div>
 
-                                    <button class="search-btn" (click)="searchCabs('reserved')">
+                                    <button class="search-btn" (click)="searchCabs('reserved')" aria-label="Search reserved cabs">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -948,7 +952,8 @@
             *ngIf="flightRoutes.length > 1"
             style="position: absolute; top: 0; right: 0; background: transparent; border: none; font-size: 18px; color: #666; padding: 4px 8px; cursor: pointer;"
             (click)="removeFlightRoute(i); $event.stopPropagation()"
-            type="button">
+            type="button"
+            aria-label="Remove this route">
             ✕
           </button>
         </div>
@@ -1101,14 +1106,14 @@
           <span class="wr-app-scan-text">Scan Me</span>
         </div>
         <div class="wr-app-store-buttons">
-          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn">
+          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn" aria-label="Download WizzRide App on Google Play Store">
             <div class="wr-store-icon">▶</div>
             <div class="wr-store-text">
               <small>Get it on</small>
               <strong>Google Play</strong>
             </div>
           </a>
-          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn wr-store-btn--light">
+          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn wr-store-btn--light" aria-label="Download WizzRide App on Apple App Store">
             <div class="wr-store-icon"></div>
             <div class="wr-store-text">
               <small>Download on the</small>
@@ -1447,7 +1452,7 @@
                                     <p class="service-description">{{ service.description }}</p>
                                     <a
                                     [href]="service.link"
-                                    [attr.aria-label]="service.title"
+                                    [attr.aria-label]="'Learn More about ' + service.title"
                                     class="service-cta-btn"
                                   >
                                     <span>Learn More</span>
@@ -1473,15 +1478,19 @@
 
                         <ul class="connectivity-links">
                             <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/">Bagdogra
+                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/"
+                                    aria-label="Book Shared Cab from Bagdogra Airport to Darjeeling">Bagdogra
                                     Airport to Darjeeling</a></li>
                             <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/">Bagdogra
+                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/"
+                                    aria-label="Book Shared Cab from Bagdogra Airport to Gangtok">Bagdogra
                                     Airport to Gangtok</a></li>
                             <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/">Bagdogra
+                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/"
+                                    aria-label="Book Shared Cab from Bagdogra Airport to Kalimpong">Bagdogra
                                     Airport to Kalimpong</a></li>
-                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/">Guwahati
+                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/"
+                                    aria-label="Book Shared Cab from Guwahati Airport to Shillong and Tezpur">Guwahati
                                     Airport to Shillong and Tezpur Transfers</a></li>
                         </ul>
 
@@ -1551,14 +1560,14 @@
                                 </div>
 
                                 <div class="store-buttons">
-                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn">
+                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn" aria-label="Download WizzRide App on Google Play Store">
                                         <i class="fab fa-google-play"></i>
                                         <div class="store-btn-text">
                                             <small>Get it on</small>
                                             <strong>Google Play</strong>
                                         </div>
                                     </a>
-                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn">
+                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn" aria-label="Download WizzRide App on Apple App Store">
                                         <i class="fab fa-apple"></i>
                                         <div class="store-btn-text">
                                             <small>Download on the</small>
@@ -1660,7 +1669,7 @@
         <p class="japan-subtitle">
             Come with Us on a 8 Days Trip of a Lifetime
         </p>
-        <a href="/japantour" class="japan-cta">
+        <a href="/japantour" class="japan-cta" aria-label="See More about Japan Tour - 8 Days Trip">
             See More
         </a>
     </div>
@@ -1671,7 +1680,7 @@
     <div class="time-picker-modal" (click)="$event.stopPropagation()">
         <div class="time-picker-header">
             <h3>Select Pick Up Time</h3>
-            <button class="close-btn" (click)="closeTimePicker()">
+            <button class="close-btn" (click)="closeTimePicker()" aria-label="Close time picker">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1741,7 +1750,7 @@
 <div class="mobile-location-popup" [class.active]="showMobileLocationPopup" (click)="closeMobileLocationPopup()">
     <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
         <div class="mobile-location-popup-header">
-            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()" aira-label="Location Popup Back">
+            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()" aria-label="Location Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>{{ mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Select Pickup Point' : 'Select Drop Point' }}</h3>
@@ -2019,7 +2028,8 @@
                     <button class="mobile-remove-route-btn" 
                             (click)="removeFlightRoute(i)"
                             [disabled]="flightRoutes.length <= 1"
-                            *ngIf="flightRoutes.length > 1">
+                            *ngIf="flightRoutes.length > 1"
+                            aria-label="Remove this route">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
