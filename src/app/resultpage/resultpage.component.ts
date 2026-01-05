@@ -72,6 +72,12 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log("List",val);
             this.list = val[0];
             console.log("Listtttttttttt",this.list);
+            console.log("Available fields:", Object.keys(this.list || {}));
+            console.log("Source field:", this.list?.source || this.list?.SOURCE);
+            console.log("Destination field:", this.list?.destination || this.list?.DESTINATION);
+            console.log("Pickup field:", this.list?.pickup || this.list?.PICKUPLOCATION);
+            console.log("Drop field:", this.list?.drop || this.list?.DROPLOCATION);
+            console.log("Time field:", this.list?.CARSCHEDULETIME || this.list?.PICKUPTIME);
             if(this.list['STATUS']==='ACTIVE' || this.list['STATUS'] =='CANCELLED-VERIFIED'
             || this.list['STATUS'] =='OFFLINE' || this.list['STATUS'] =='CANCELLED-ADMIN'
             || this.list['STATUS'] =='OFFLINE-TICK-NO-GEN' || this.list['STATUS'] =='OFFLINE-RESCHEDULING'
@@ -94,6 +100,12 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log("List",val);
                       this.list = val[0];
                       console.log("Listtttttttttt",this.list);
+                      console.log("Available fields:", Object.keys(this.list || {}));
+                      console.log("Source field:", this.list?.source || this.list?.SOURCE);
+                      console.log("Destination field:", this.list?.destination || this.list?.DESTINATION);
+                      console.log("Pickup field:", this.list?.pickup || this.list?.PICKUPLOCATION);
+                      console.log("Drop field:", this.list?.drop || this.list?.DROPLOCATION);
+                      console.log("Time field:", this.list?.CARSCHEDULETIME || this.list?.PICKUPTIME);
                       this.showSuccess = true;
                       this.loader = false;
                       // Auto-redirect removed - user can manually return to home
@@ -122,6 +134,12 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log("List",val);
             this.list = val[0];
             console.log("Listtttttttttt",this.list);
+            console.log("Available fields:", Object.keys(this.list || {}));
+            console.log("Source field:", this.list?.source || this.list?.SOURCE);
+            console.log("Destination field:", this.list?.destination || this.list?.DESTINATION);
+            console.log("Pickup field:", this.list?.pickup || this.list?.PICKUPLOCATION);
+            console.log("Drop field:", this.list?.drop || this.list?.DROPLOCATION);
+            console.log("Time field:", this.list?.CARSCHEDULETIME || this.list?.PICKUPTIME);
             if(this.list['STATUS']==='ACTIVE' || this.list['STATUS'] =='CANCELLED-VERIFIED'
             || this.list['STATUS'] =='CANCEL-ADMIN' || this.list['STATUS'] =='OFFLINE'
             ){
@@ -141,6 +159,12 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
                     console.log("List",val);
                       this.list = val[0];
                       console.log("Listtttttttttt",this.list);
+                      console.log("Available fields:", Object.keys(this.list || {}));
+                      console.log("Source field:", this.list?.source || this.list?.SOURCE);
+                      console.log("Destination field:", this.list?.destination || this.list?.DESTINATION);
+                      console.log("Pickup field:", this.list?.pickup || this.list?.PICKUPLOCATION);
+                      console.log("Drop field:", this.list?.drop || this.list?.DROPLOCATION);
+                      console.log("Time field:", this.list?.CARSCHEDULETIME || this.list?.PICKUPTIME);
                       this.showSuccess = true;
                       this.loader = false;
                       // Auto-redirect removed - user can manually return to home
@@ -200,6 +224,47 @@ export class ResultpageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   returnToHome(){
     this.router.navigate(['/']); 
+  }
+
+  navigateToContact() {
+    this.router.navigate(['/contactus']);
+  }
+
+  formatDepartureTime(timeString: string | undefined): string {
+    if (!timeString) return 'N/A';
+    
+    // If it's already formatted with AM/PM, return as is
+    if (timeString.includes('AM') || timeString.includes('PM') || timeString.includes('am') || timeString.includes('pm')) {
+      return timeString;
+    }
+    
+    // Parse time string (format: HH:MM:SS or HH:MM)
+    const parts = timeString.split(':');
+    if (parts.length < 2) return timeString;
+    
+    const hour = parseInt(parts[0]);
+    const minute = parts[1];
+    
+    if (isNaN(hour)) return timeString;
+    
+    let displayHour = hour;
+    let period = 'AM';
+    
+    if (hour === 0) {
+      displayHour = 12;
+      period = 'AM';
+    } else if (hour < 12) {
+      displayHour = hour;
+      period = 'AM';
+    } else if (hour === 12) {
+      displayHour = 12;
+      period = 'PM';
+    } else {
+      displayHour = hour - 12;
+      period = 'PM';
+    }
+    
+    return `${displayHour}:${minute} ${period}`;
   }
 
   ngAfterViewInit(): void {

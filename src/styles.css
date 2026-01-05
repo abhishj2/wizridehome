@@ -2,6 +2,25 @@
 /* styles.scss */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
+/* Hide navbar on mobile when dialer is open or scrolling */
+@media (max-width: 768px) {
+  body.hide-navbar-mobile app-navbar {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  body:not(.hide-navbar-mobile) app-navbar {
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Adjust booking summary position when navbar is hidden */
+  body.hide-navbar-mobile app-checkout .booking-summary.sticky {
+    top: 0 !important;
+    transition: top 0.3s ease-in-out;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;

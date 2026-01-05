@@ -7,6 +7,21 @@
   overflow: visible;
 }
 
+/* Hide navbar on mobile when scrolling or dialer is open */
+:host.hide-navbar-mobile::ng-deep app-navbar,
+:host.hide-navbar-mobile ~ app-navbar,
+body.hide-navbar-mobile app-navbar {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  :host.hide-navbar-mobile::ng-deep app-navbar,
+  :host.hide-navbar-mobile ~ app-navbar {
+    transform: translateY(-100%);
+  }
+}
+
 /* Global Styles */
 * {
   box-sizing: border-box;
@@ -35,11 +50,18 @@ html, body {
   position: sticky;
   top: 75px;
   z-index: 99;
-  transition: all 0.2s ease;
+  transition: top 0.3s ease-in-out, all 0.2s ease;
   width: 100%;
   max-width: 100%;
   margin: 10px auto 14px auto;
   will-change: transform;
+}
+
+/* On mobile when navbar is hidden, move booking summary to top */
+@media (max-width: 768px) {
+  :host-context(body.hide-navbar-mobile) .booking-summary {
+    top: 0 !important;
+  }
 }
 
 /* Desktop Booking Summary - Ribbon Style */
@@ -1152,6 +1174,22 @@ html, body {
   .phone-input {
     flex: 1;
     min-width: 0;
+  }
+  
+  /* Readonly phone inputs on mobile (for custom dialer) */
+  .phone-input[readonly] {
+    background-color: #ffffff;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    caret-color: transparent;
+  }
+  
+  .phone-input[readonly]:focus {
+    outline: none;
+    border-color: darkcyan;
+    box-shadow: 0 0 0 3px rgba(0, 139, 139, 0.1);
   }
   
   .options-card, .fare-card {

@@ -1,9 +1,10 @@
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
 import Swal from 'sweetalert2';
+import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
 
 interface BookingData {
   searchParams: any;
@@ -30,7 +31,7 @@ interface PassengerDetails {
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PhoneDialerComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
@@ -213,11 +214,21 @@ export class CheckoutComponent implements OnInit {
   gstNumber: string = '';
   formSubmitted = false;
 
+  // Phone dialer properties
+  showPhoneDialer = false;
+  activePhoneField: 'primary' | 'alternate' | null = null;
+  
+  // Navbar hide on scroll (mobile)
+  hideNavbarOnMobile = false;
+  private lastScrollTop = 0;
+
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
     private apiService: ApiserviceService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit() {
@@ -253,11 +264,36 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll() {
     if (!isPlatformBrowser(this.platformId)) return;
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.isHeaderSticky = scrollPosition > 50;
+    
+    // Hide navbar on scroll down for mobile only
+    if (this.isMobileView()) {
+      const scrollingDown = scrollPosition > this.lastScrollTop;
+      const shouldHide = scrollingDown && scrollPosition > 50; // Hide when scrolling down past 50px
+      
+      if (shouldHide !== this.hideNavbarOnMobile) {
+        this.hideNavbarOnMobile = shouldHide;
+        
+        // Add or remove class from body
+        if (shouldHide) {
+          this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
+        } else {
+          this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+        }
+      }
+      
+      this.lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition;
+    } else {
+      // Desktop: always show navbar
+      if (this.hideNavbarOnMobile) {
+        this.hideNavbarOnMobile = false;
+        this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+      }
+    }
   }
 
   onSubmit(form?: NgForm, event?: Event) {
@@ -779,6 +815,117 @@ export class CheckoutComponent implements OnInit {
   onTravelInsuranceChange() {
     // Recalculate fare when travel insurance option changes
     this.calculateFare();
+  }
+
+  // Check if mobile view (for dialer)
+  isMobileView(): boolean {
+    if (!isPlatformBrowser(this.platformId)) return false;
+    return window.innerWidth <= 768;
+  }
+
+  // Open phone dialer for specific field
+  openPhoneDialer(field: 'primary' | 'alternate', event?: Event): void {
+    if (!this.isMobileView()) return;
+    
+    // Prevent default behavior
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    this.activePhoneField = field;
+    this.showPhoneDialer = true;
+    
+    // Hide navbar when dialer opens (add class to body)
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
+    }
+    
+    // Scroll the input into view after a delay to ensure dialer is rendered
+    setTimeout(() => {
+      const inputElement = field === 'primary' 
+        ? document.querySelector('input[name="primaryContactNo"]') as HTMLInputElement
+        : document.querySelector('input[name="alternateContactNo"]') as HTMLInputElement;
+      
+      if (inputElement) {
+        this.scrollToInput(inputElement);
+      }
+    }, 200);
+  }
+  
+  // Helper method to scroll input into view
+  private scrollToInput(inputElement: HTMLInputElement): void {
+    if (!inputElement || !isPlatformBrowser(this.platformId)) return;
+    
+    // Get the input's current position relative to the document
+    const rect = inputElement.getBoundingClientRect();
+    const currentScrollY = window.scrollY || window.pageYOffset;
+    const inputTopPosition = rect.top + currentScrollY;
+    
+    // Define offset: this is the space from top of viewport where input should appear
+    // Since navbar is hidden, we need less offset (just booking summary + small spacing)
+    const offsetFromTop = 180; // Booking summary height + spacing
+    
+    // Calculate the target scroll position
+    const targetScrollPosition = inputTopPosition - offsetFromTop;
+    
+    // Scroll to position
+    window.scrollTo({
+      top: Math.max(0, targetScrollPosition),
+      behavior: 'smooth'
+    });
+  }
+
+  // Handle number click from dialer
+  onDialerNumberClick(number: string): void {
+    if (!this.activePhoneField) return;
+    
+    const field = this.activePhoneField === 'primary' 
+      ? 'primaryContactNo' 
+      : 'alternateContactNo';
+    
+    const currentValue = this.passengerDetails[field];
+    if (currentValue.length < 10) {
+      this.passengerDetails[field] = currentValue + number;
+    }
+  }
+
+  // Handle backspace from dialer
+  onDialerBackspace(): void {
+    if (!this.activePhoneField) return;
+    
+    const field = this.activePhoneField === 'primary' 
+      ? 'primaryContactNo' 
+      : 'alternateContactNo';
+    
+    const currentValue = this.passengerDetails[field];
+    if (currentValue.length > 0) {
+      this.passengerDetails[field] = currentValue.slice(0, -1);
+    }
+  }
+
+  // Handle done from dialer
+  onDialerDone(): void {
+    this.showPhoneDialer = false;
+    this.activePhoneField = null;
+  }
+
+  // Close dialer
+  closePhoneDialer(): void {
+    this.showPhoneDialer = false;
+    this.activePhoneField = null;
+    // Show navbar when dialer closes (remove class from body)
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+    }
+  }
+
+  // Get current value for dialer
+  getCurrentDialerValue(): string {
+    if (!this.activePhoneField) return '';
+    return this.activePhoneField === 'primary' 
+      ? this.passengerDetails.primaryContactNo 
+      : this.passengerDetails.alternateContactNo;
   }
 
   processReservedCabPayment() {

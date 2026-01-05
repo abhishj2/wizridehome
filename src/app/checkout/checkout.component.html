@@ -172,6 +172,9 @@
                   maxlength="10"
                   minlength="10"
                   pattern="[0-9]{10}"
+                  [readonly]="isMobileView()"
+                  (click)="openPhoneDialer('primary', $event)"
+                  (focus)="openPhoneDialer('primary', $event)"
                   required>
               </div>
               <div class="field-error" *ngIf="(formSubmitted || primaryPhoneCtrl.touched) && primaryPhoneCtrl.invalid">
@@ -198,6 +201,9 @@
                   maxlength="10"
                   minlength="10"
                   pattern="[0-9]{10}"
+                  [readonly]="isMobileView()"
+                  (click)="openPhoneDialer('alternate', $event)"
+                  (focus)="openPhoneDialer('alternate', $event)"
                   required>
               </div>
               <div class="field-error" *ngIf="(formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
@@ -332,3 +338,14 @@
     </div>
   </div>
 </div>
+
+<!-- Phone Dialer Component -->
+<app-phone-dialer
+  [isVisible]="showPhoneDialer"
+  [currentValue]="getCurrentDialerValue()"
+  [maxLength]="10"
+  (numberClick)="onDialerNumberClick($event)"
+  (backspaceClick)="onDialerBackspace()"
+  (doneClick)="onDialerDone()"
+  (closeDialer)="closePhoneDialer()">
+</app-phone-dialer>
