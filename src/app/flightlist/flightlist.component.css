@@ -4299,3 +4299,314 @@ img {
     margin-bottom: 50px;
   }
 }
+
+/* Desktop: Use new clean flight card design */
+@media (min-width: 769px) {
+  /* Hide old desktop layout elements */
+  .card .date-hanger,
+  .card .route,
+  .card .options {
+    display: none !important;
+  }
+
+  .card .mobile-amenities,
+  .card .mobile-price-row,
+  .card .mobile-booking-row {
+    display: none !important;
+  }
+
+  /* Show new flight card component on desktop */
+  .card .flight-card-component__flight-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Desktop card wrapper */
+  .card {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  /* Desktop flight card styling */
+  .flight-card-component__flight-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+  }
+
+  .flight-card-component__flight-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* Desktop flight leg styling */
+  .flight-card-component__flight-leg {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .flight-card-component__flight-leg:last-child {
+    border-bottom: none;
+  }
+
+  /* Desktop header row */
+  .flight-card-component__leg-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: nowrap;
+  }
+
+  .flight-card-component__airline-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .flight-card-component__airline-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .flight-card-component__flight-code {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .flight-card-component__pill {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Desktop flight row */
+  .flight-card-component__flight-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .flight-card-component__flight-left,
+  .flight-card-component__flight-right {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .flight-card-component__flight-left {
+    align-items: flex-start;
+  }
+
+  .flight-card-component__flight-right {
+    align-items: flex-end;
+  }
+
+  .flight-card-component__time {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+  }
+
+  .flight-card-component__date {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .flight-card-component__location {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .flight-card-component_country-name {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .flight-card-component__flight-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+
+  .flight-card-component__flight-icon i {
+    font-size: 20px;
+    color: #000;
+    z-index: 1;
+    background: #ffffff;
+    padding: 6px;
+  }
+
+  .flight-card-component__duration {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .flight-card-component__day-diff {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  /* Desktop layover row */
+  .flight-card-component__layover-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: #fafafa;
+  }
+
+  .flight-card-component__dotted-line {
+    flex: 1;
+    height: 1px;
+    background-image: linear-gradient(to right, #d1d5db 50%, transparent 50%);
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+  }
+
+  .flight-card-component__layover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+
+  .flight-card-component__layover-day {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .flight-card-component__layover-time {
+    font-size: 13px;
+    color: #374151;
+    font-weight: 600;
+  }
+
+  /* Desktop badges and footer */
+  .flight-card-component__badges__intreturn {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flight-card-component__badges__intreturn .flight-card-component__pill {
+    background: #e5e7eb;
+    color: #374151;
+    font-weight: 500;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .flight-card-component__group-separator {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  .flight-card-component__group-separator .flight-card-component__dotted-line {
+    background-image: linear-gradient(to right, #008b8b 50%, transparent 50%);
+    height: 2px;
+  }
+
+  .flight-card-component__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    background: #f9fafb !important;
+  }
+
+  .flight-card-component__footer:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .flight-card-component__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .flight-card-component__amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+  }
+
+  .flight-card-component__per {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+
+  /* Desktop refundability tag */
+  .refundability-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+
+  .refundability-tag.refundable {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .refundability-tag.non-refundable {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
