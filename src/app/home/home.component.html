@@ -1455,7 +1455,9 @@
                                     [attr.aria-label]="'Learn More about ' + service.title"
                                     class="service-cta-btn"
                                   >
-                                    <span>Learn More</span>
+                                  <span class="visually-hidden">{{ service.title }}</span>
+  <span aria-hidden="true">Learn More</span>
+                                 
                                     <i class="fas fa-arrow-right"></i>
                                   </a>
                                 </div>
@@ -1669,9 +1671,11 @@
         <p class="japan-subtitle">
             Come with Us on a 8 Days Trip of a Lifetime
         </p>
+        <span class="visually-hidden">"See More about Japan Tour - 8 Days Trip</span>
         <a href="/japantour" class="japan-cta" aria-label="See More about Japan Tour - 8 Days Trip">
             See More
         </a>
+       
     </div>
 </section>
 

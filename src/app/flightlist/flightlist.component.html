@@ -668,8 +668,12 @@
                       </div>
                     </div>
 
-                    <!-- Column 4: View Prices Button -->
+                    <!-- Column 4: Price & View Prices Button -->
                     <div class="select-btn-card">
+                      <div class="desktop-price-display">
+                        <span class="price-label">Starts from</span>
+                        <span class="price-value">₹ {{ flight.price | number : "1.0-0" }}</span>
+                      </div>
                       <button class="btn" (click)="openFareOptionsModal(flight); $event.stopPropagation()">View Prices</button>
                     </div>
                   </div>
@@ -948,8 +952,12 @@
                           </div>
                         </div>
 
-                        <!-- Column 4: View Prices Button -->
+                        <!-- Column 4: Price & View Prices Button -->
                         <div class="select-btn-card">
+                          <div class="desktop-price-display">
+                            <span class="price-label">Starts from</span>
+                            <span class="price-value">₹ {{ flight.price | number : "1.0-0" }}</span>
+                          </div>
                           <button class="btn" (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">View Prices</button>
                         </div>
                       </div>
@@ -1115,8 +1123,12 @@
                           </div>
                         </div>
 
-                        <!-- Column 4: View Prices Button -->
+                        <!-- Column 4: Price & View Prices Button -->
                         <div class="select-btn-card">
+                          <div class="desktop-price-display">
+                            <span class="price-label">Starts from</span>
+                            <span class="price-value">₹ {{ flight.price | number : "1.0-0" }}</span>
+                          </div>
                           <button class="btn" (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">View Prices</button>
                         </div>
                       </div>
@@ -1581,6 +1593,10 @@
                         </div>
 
                         <div class="select-btn-card">
+                          <div class="desktop-price-display">
+                            <span class="price-label">Starts from</span>
+                            <span class="price-value">₹ {{ flight.price | number : "1.0-0" }}</span>
+                          </div>
                           <button class="btn" (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
                             View Prices
                           </button>

@@ -1190,6 +1190,11 @@ img {
   display: none;
 }
 
+/* Desktop price display - visible on desktop only */
+.desktop-price-display {
+  display: flex;
+}
+
 /* Options Row */
 .options {
   display: grid;
@@ -1300,8 +1305,30 @@ img {
 
 .select-btn-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 20px;
+}
+
+/* Desktop Price Display */
+.desktop-price-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.desktop-price-display .price-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.desktop-price-display .price-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
 }
 
 .btn {
@@ -2873,6 +2900,11 @@ img {
   }
 
   /* Mobile Price Row */
+  /* Hide desktop price display on mobile */
+  .desktop-price-display {
+    display: none !important;
+  }
+
   .mobile-price-row {
     display: flex;
     justify-content: space-between;
@@ -3692,6 +3724,11 @@ img {
     display: none !important;
   }
   
+  /* Show desktop price display on tablets and larger */
+  .desktop-price-display {
+    display: flex !important;
+  }
+  
   /* Show desktop sections */
   .vehicle {
     display: flex !important;
@@ -3925,4 +3962,7 @@ img {
     text-align: left;
     width: 100%;
   }
+}
+.flight-list-container .flight-cards:first-child {
+  margin-top: 30px !important;
 }
