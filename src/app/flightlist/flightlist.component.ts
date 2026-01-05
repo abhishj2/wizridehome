@@ -3195,5 +3195,58 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.farePanelExpanded = this.farePanelExpanded.map((_, i) => i === index ? !this.farePanelExpanded[i] : false);
     this.flightDetailsExpanded[index] = false;
   }
+
+  // Mobile Flight Card Helper Methods
+  formatMinutesToHrMin(minutes: number): string {
+    if (!minutes) return '0h 0m';
+    const hrs = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hrs}h ${mins}m`;
+  }
+
+  getDayDiff(depTime: string, arrTime: string): number {
+    const dep = new Date(depTime);
+    const arr = new Date(arrTime);
+    const diffMs = arr.getTime() - dep.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
+  getLayoverDuration(segment1: any, segment2: any): string {
+    const arrTime = new Date(segment1.Destination.ArrTime);
+    const depTime = new Date(segment2.Origin.DepTime);
+    const diffMs = depTime.getTime() - arrTime.getTime();
+    const totalMinutes = Math.floor(diffMs / (1000 * 60));
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    return `${hrs}h ${mins}m layover`;
+  }
+
+  getLayoverDayText(segment1: any, segment2: any): string {
+    const arrTime = new Date(segment1.Destination.ArrTime);
+    const depTime = new Date(segment2.Origin.DepTime);
+    const diffDays = Math.floor((depTime.getTime() - arrTime.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return 'Same day';
+    } else if (diffDays === 1) {
+      return 'Next day';
+    } else {
+      return `+${diffDays} days`;
+    }
+  }
+
+  getGroupDuration(segments: any[]): string {
+    if (!segments || segments.length === 0) return '0h 0m';
+    const firstSeg = segments[0];
+    const lastSeg = segments[segments.length - 1];
+    const dep = new Date(firstSeg.Origin.DepTime);
+    const arr = new Date(lastSeg.Destination.ArrTime);
+    const diffMs = arr.getTime() - dep.getTime();
+    const totalMinutes = Math.floor(diffMs / (1000 * 60));
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    return `${hrs}h ${mins}m`;
+  }
 }
 
