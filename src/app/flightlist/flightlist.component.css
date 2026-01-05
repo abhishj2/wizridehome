@@ -4220,7 +4220,7 @@ img {
   }
 
 
- 
+/*  
   .flight-card-component__footer-label {
     font-size: 11px;
     color: #6b7280;
@@ -4231,7 +4231,7 @@ img {
     display: flex;
     flex-direction: column;
     gap: 4px;
-  }
+  } */
 
   .flight-card-component__price {
     display: flex;
@@ -4562,10 +4562,10 @@ img {
     justify-content: space-between;
     align-items: center;
   }
-
+/* 
   .flight-card-component__badges__intreturn .flight-card-component__pill:first-child {
     margin-right: auto;
-  }
+  } */
 
   .flight-card-component__badges__intreturn .flight-card-component__pill {
     background: #e5e7eb;
@@ -4673,3 +4673,35 @@ img {
     color: #991b1b;
   }
 }
+
+@media (min-width: 769px) {
+
+
+
+ 
+  .flight-card-component__flight-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      flex: 1;
+      padding: 0 20px;
+    }
+  
+    .flight-card-component__flight-icon::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, #e5e7eb 50%, transparent 50%);
+      background-size: 8px 2px;
+      background-repeat: repeat-x;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+  
+    
+  }
