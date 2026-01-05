@@ -842,7 +842,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  padding-top: 20px;
+  /* padding-top: 20px; */
   overflow: visible;
   width: 100%;
   max-width: 100%;
@@ -3633,7 +3633,7 @@ img {
 @media (min-width: 1024px) {
   .results-layout {
     display: grid !important;
-    grid-template-columns: 260px 1fr !important;
+    grid-template-columns: 400px 1fr !important;
     gap: 24px !important;
   }
   
@@ -3641,7 +3641,7 @@ img {
     display: block !important;
     visibility: visible !important;
     width: 100% !important;
-    max-width: 260px !important;
+    max-width: 400px !important;
     position: sticky !important;
     top: 0 !important;
     order: 0 !important;
@@ -3964,11 +3964,273 @@ img {
   }
 }
 
-@media(min-width:767px){
-.flight-list-container .flight-cards:first-child {
-  margin-top: 30px !important;
+
+/* ================= DESKTOP SINGLE ROW LAYOUT ================= */
+@media (min-width: 769px) {
+  .desktop-flight-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+  }
+
+  .desktop-flight-row:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Ensure proper card spacing */
+  .flight-cards .card {
+    margin-bottom: 0;
+  }
+
+  .desktop-airline-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+    flex-shrink: 0;
+  }
+
+  .desktop-airline-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .desktop-airline-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .desktop-airline-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.2;
+  }
+
+  .desktop-flight-number {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .desktop-aircraft-type {
+    font-size: 11px;
+    color: #9ca3af;
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    width: fit-content;
+    margin-top: 2px;
+  }
+
+  .desktop-departure-section,
+  .desktop-arrival-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 110px;
+    flex: 0 0 auto;
+  }
+
+  .desktop-departure-section {
+    align-items: flex-start;
+  }
+
+  .desktop-arrival-section {
+    align-items: flex-end;
+    position: relative;
+  }
+
+  .desktop-time {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.3;
+  }
+
+  .desktop-date {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .desktop-airport {
+    font-size: 12px;
+    color: #374151;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .desktop-day-diff {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  .desktop-duration-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    flex: 1;
+    min-width: 180px;
+    padding: 0 20px;
+    position: relative;
+    justify-content: center;
+  }
+
+  .desktop-duration-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1.5px;
+    background: #d1d5db;
+    z-index: 0;
+    transform: translateY(-50%);
+  }
+
+  .desktop-duration-section::after {
+    content: '✈';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 0 10px;
+    z-index: 1;
+    font-size: 16px;
+    color: #111827;
+    line-height: 1;
+  }
+
+  .desktop-duration-text {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 600;
+    background: #ffffff;
+    padding: 0 12px;
+    z-index: 1;
+    position: relative;
+    margin-bottom: 2px;
+  }
+
+  .desktop-stops-text {
+    font-size: 12px;
+    color: #374151;
+    font-weight: 500;
+    background: #ffffff;
+    padding: 0 12px;
+    z-index: 1;
+    position: relative;
+    margin-top: 2px;
+  }
+
+  .desktop-price-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    min-width: 150px;
+    flex-shrink: 0;
+  }
+
+  .desktop-price-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+  }
+
+  .desktop-price-label {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+
+  .desktop-view-prices-btn {
+    background: #008b8b;
+    color: #ffffff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+
+  .desktop-view-prices-btn:hover {
+    background: #006b6b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 139, 139, 0.3);
+  }
+
+  .desktop-view-prices-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Ensure desktop row works with label wrapper for round trip */
+  .flight-radio-wrapper .desktop-flight-row {
+    cursor: pointer;
+  }
+
+  .flight-radio-wrapper .desktop-view-prices-btn {
+    pointer-events: auto;
+  }
+
+  /* Hide mobile flight card on desktop */
+  .flight-card-component__flight-card {
+    display: none !important;
+  }
+
+  /* Hide mobile badges and footer sections on desktop (in case they're outside the card) */
+  .card .flight-card-component__badges__intreturn,
+  .card .flight-card-component__footer,
+  .card .flight-card-component__flight-leg,
+  .card .flight-card-component__layover-row,
+  .card .flight-card-component__group-separator,
+  .card section.flight-card-component__flight-card {
+    display: none !important;
+  }
+
+  .card .date-hanger,
+  .card .route,
+  .card .options,
+  .card .mobile-amenities,
+  .card .mobile-price-row,
+  .card .mobile-booking-row {
+    display: none !important;
+  }
 }
+
+/* Hide desktop row on mobile */
+@media (max-width: 768px) {
+  .desktop-flight-row {
+    display: none !important;
+  }
 }
+
 /* ================= MOBILE FLIGHT CARD (Reference Design) ================= */
 @media (max-width: 768px) {
   /* Flight Card Component Styles for Mobile */
