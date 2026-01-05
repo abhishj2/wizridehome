@@ -495,7 +495,8 @@
 
                   <!-- NEW MOBILE FLIGHT CARD DESIGN -->
                   <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlock">
-                    <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                      (click)="openFareOptionsModal(flight); $event.stopPropagation()">
                       <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                         <ng-container *ngFor="let segment of group; let i = index">
                           <!-- Flight Segment -->
@@ -588,14 +589,17 @@
                             class="flight-card-component__group-separator">
                             <div class="flight-card-component__dotted-line"></div>
                           </div>
-                          <div class="flight-card-component__footer"
-                            (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                          <div class="flight-card-component__footer">
                             <div class="flight-card-component__price">
                               <div class="flight-card-component__amount">
                                 ₹ {{ flight.price | number : "1.0-0" }}
                               </div>
                               <div class="flight-card-component__per">per Adult</div>
                             </div>
+                            <button class="flight-card-component__view-prices-btn desktop-only"
+                              (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                              View Prices
+                            </button>
                           </div>
                         </div>
 
@@ -610,7 +614,8 @@
 
                   <!-- Single Segment Block -->
                   <ng-template #singleSegmentBlock>
-                    <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                      (click)="openFareOptionsModal(flight); $event.stopPropagation()">
                       <ng-container *ngFor="let segment of flight.Segments[0]; let i = index">
                         <div class="flight-card-component__flight-leg">
                           <div class="flight-card-component__leg-header">
@@ -690,15 +695,18 @@
                         <span class="flight-card-component__pill">
                           {{ getTotalDuration(flight.Segments[0]) }}
                         </span>
-                        <div class="flight-card-component__footer"
-                        (click)="openFareOptionsModal(flight); $event.stopPropagation()">
-                        <div class="flight-card-component__price">
-                          <div class="flight-card-component__amount">
-                            ₹ {{ flight.price | number : "1.0-0" }}
+                        <div class="flight-card-component__footer">
+                          <div class="flight-card-component__price">
+                            <div class="flight-card-component__amount">
+                              ₹ {{ flight.price | number : "1.0-0" }}
+                            </div>
+                            <div class="flight-card-component__per">per Adult</div>
                           </div>
-                          <div class="flight-card-component__per">per Adult</div>
+                          <button class="flight-card-component__view-prices-btn desktop-only"
+                            (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                            View Prices
+                          </button>
                         </div>
-                      </div>
                       </div>
 
                     
@@ -1059,6 +1067,10 @@
                                       </div>
                                       <div class="flight-card-component__per">per Adult</div>
                                     </div>
+                                    <button class="flight-card-component__view-prices-btn desktop-only"
+                                      (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                                      View Prices
+                                    </button>
                                   </div>
                                   <div *ngIf="groupIndex < flight.Segments.length - 1"
                                   class="flight-card-component__group-separator">
@@ -1071,7 +1083,8 @@
                             </section>
                           </ng-container>
                           <ng-template #singleSegmentBlockOnward>
-                            <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                              (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
                               <ng-container *ngFor="let segment of flight.Segments[0]; let j = index">
                                 <div class="flight-card-component__flight-leg">
                                   <div class="flight-card-component__leg-header">
@@ -1130,12 +1143,16 @@
                                 <span class="flight-card-component__pill">{{ getTotalDuration(flight.Segments[0])
                                   }}</span>
                                   <div class="flight-card-component__footer">
-                                <div class="flight-card-component__price">
-                                  <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
+                                    <div class="flight-card-component__price">
+                                      <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
+                                      </div>
+                                      <div class="flight-card-component__per">per Adult</div>
+                                    </div>
+                                    <button class="flight-card-component__view-prices-btn desktop-only"
+                                      (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                                      View Prices
+                                    </button>
                                   </div>
-                                  <div class="flight-card-component__per">per Adult</div>
-                                </div>
-                              </div>
                               </div>
                               
                             </section>
@@ -1329,7 +1346,8 @@
 
                           <!-- NEW MOBILE FLIGHT CARD DESIGN -->
                           <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlockReturn">
-                            <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                              (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
                               <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                                 <ng-container *ngFor="let segment of group; let j = index">
                                   <div class="flight-card-component__flight-leg">
@@ -1404,11 +1422,16 @@
                                   </div>
                                   <div class="flight-card-component__per">per Adult</div>
                                 </div>
+                                <button class="flight-card-component__view-prices-btn desktop-only"
+                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
+                                  View Prices
+                                </button>
                               </div>
                             </section>
                           </ng-container>
                           <ng-template #singleSegmentBlockReturn>
-                            <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                              (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
                               <ng-container *ngFor="let segment of flight.Segments[0]; let j = index">
                                 <div class="flight-card-component__flight-leg">
                                   <div class="flight-card-component__leg-header">
