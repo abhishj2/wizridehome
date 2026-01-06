@@ -2798,3 +2798,233 @@ select.traveller-input {
   padding: 0 24px;
 }
 
+/* Seat Selection Styles */
+.seat-map-wrapper {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  flex-grow: 1;
+  overflow-x: hidden;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  margin: 12px 0;
+  padding: 0 12px;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.legend.sticky-legend {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  min-width: fit-content;
+  font-size: 12px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 2px;
+}
+
+.legend-color.free {
+  background-color: #d1fae5;
+}
+
+.legend-color.low-price {
+  background-color: #fef3c7;
+}
+
+.legend-color.medium-price {
+  background-color: #fde68a;
+}
+
+.legend-color.high-price {
+  background-color: #fcd34d;
+}
+
+.legend-color.not-available {
+  background-color: #e5e7eb;
+}
+
+.seat-map-scrollable {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  --total-units: calc(var(--seat-count, 9) + (var(--seat-count, 9) - var(--block-count, 3)) + var(--aisle-count, 2) + 1);
+  --available-width: calc(100vw - 24px);
+  --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 20px), 32px);
+}
+
+.header-row.sticky-header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+  border-bottom: 1px solid #e5e7eb;
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  flex-shrink: 0;
+}
+
+.seat-rows-container {
+  overflow-y: auto;
+  width: fit-content;
+  margin: 0 auto;
+  touch-action: pan-y;
+  flex-grow: 1;
+  max-height: 500px;
+  min-height: 200px;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--seat-size) / 12);
+  width: fit-content;
+  max-width: 100%;
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.row-label-header,
+.row-label {
+  width: var(--seat-size);
+  text-align: center;
+  font-weight: 600;
+  font-size: calc(var(--seat-size) / 3);
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.seat-block-header,
+.seat-block {
+  display: flex;
+  gap: calc(var(--seat-size) / 12);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.cell-header,
+.seat-cell {
+  width: var(--seat-size);
+  height: var(--seat-size);
+  font-size: calc(var(--seat-size) / 3.5);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.aisle-divider,
+.aisle-divider-header {
+  width: calc(var(--seat-size) / 3);
+  flex-shrink: 0;
+}
+
+.seat-cell.free {
+  background-color: #f3fdf7;
+  color: #000;
+}
+
+.seat-cell.low-price {
+  background-color: #fef3c7;
+}
+
+.seat-cell.medium-price {
+  background-color: #fde68a;
+}
+
+.seat-cell.high-price {
+  background-color: #fcd34d;
+}
+
+.seat-cell.not-available,
+.seat-cell.disabled {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  font-weight: 400;
+  cursor: not-allowed;
+}
+
+.seat-cell.selected {
+  background-color: #6d28d9;
+  color: #fff;
+  border: 2px solid #5b21b6;
+  font-weight: 600;
+}
+
+.seat-cell:not(.disabled):not(.not-available):hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.centered-message {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  background: #f3f4f6;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.segment-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.segment-route {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.segment-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  width: 100%;
+}
+

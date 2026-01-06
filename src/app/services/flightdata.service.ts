@@ -42,5 +42,10 @@ export class FlightdataService {
       localStorage.removeItem('flightSearchData');
     }
   }
+
+  updateMessage(data: FlightData | any): void {
+    // Alias for setStringValue for compatibility
+    this.setStringValue(data);
+  }
 }
 

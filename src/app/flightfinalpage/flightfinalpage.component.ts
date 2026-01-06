@@ -340,7 +340,80 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
     this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
     
+    // Check if seat data is available in mobFinalPageData (like in reference component)
+    if (val['mobFinalPageData']?.ssr) {
+      console.log('Found SSR data in mobFinalPageData:', val['mobFinalPageData'].ssr);
+      this.processSSRDataFromFlightData(val['mobFinalPageData'].ssr);
+    }
+    
     this.loadFareRules();
+  }
+  
+  processSSRDataFromFlightData(ssrData: any) {
+    // Process onward SSR data
+    if (ssrData.onward) {
+      console.log('Processing onward SSR data:', ssrData.onward);
+      this.parseSeatDataFromSSR(ssrData.onward, false);
+    }
+    
+    // Process return SSR data
+    if (ssrData.return && this.tripType === 'roundtrip') {
+      console.log('Processing return SSR data:', ssrData.return);
+      this.parseSeatDataFromSSR(ssrData.return, true);
+    }
+  }
+  
+  parseSeatDataFromSSR(ssrData: any, isReturn: boolean) {
+    if (!ssrData) return;
+    
+    // SSR data might be an array of arrays (one per segment)
+    const seatMaps: any[] = [];
+    
+    if (Array.isArray(ssrData)) {
+      ssrData.forEach((segmentSSR: any, segmentIndex: number) => {
+        if (Array.isArray(segmentSSR)) {
+          segmentSSR.forEach((seatItem: any) => {
+            if (seatItem && (seatItem.SeatMap || seatItem.Rows)) {
+              const seatMap = this.processSeatMap(seatItem.SeatMap || seatItem, seatItem);
+              if (seatMap) {
+                seatMaps.push(seatMap);
+              }
+            }
+          });
+        } else if (segmentSSR && (segmentSSR.SeatMap || segmentSSR.Rows)) {
+          const seatMap = this.processSeatMap(segmentSSR.SeatMap || segmentSSR, segmentSSR);
+          if (seatMap) {
+            seatMaps.push(seatMap);
+          }
+        }
+      });
+    } else if (ssrData.SeatMap || ssrData.Rows) {
+      // Single seat map
+      const seatMap = this.processSeatMap(ssrData.SeatMap || ssrData, ssrData);
+      if (seatMap) {
+        seatMaps.push(seatMap);
+      }
+    }
+    
+    if (isReturn) {
+      this.seatMapReturn = seatMaps;
+      seatMaps.forEach((_, index) => {
+        if (!this.selectedSeatsReturn[index]) {
+          this.selectedSeatsReturn[index] = [];
+        }
+      });
+    } else {
+      this.seatMap = seatMaps;
+      seatMaps.forEach((_, index) => {
+        if (!this.selectedSeats[index]) {
+          this.selectedSeats[index] = [];
+        }
+      });
+    }
+    
+    console.log(`Processed ${seatMaps.length} seat maps for ${isReturn ? 'return' : 'onward'}`);
+    this.updateSeatTotal();
+    this.cdr.detectChanges();
   }
 
   processSegments(flightData: any, isReturn: boolean) {
@@ -491,12 +564,34 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
           this.ssrValues = val;
           if(val?.Response?.Baggage) this.processBaggage(val.Response.Baggage, false);
+          
+          // Try multiple possible paths for seat data
+          const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
+          console.log('SSR Response for onward:', val);
+          console.log('Seat data found:', seatData);
+          
+          if(seatData) {
+              this.parseSeatData(seatData, false);
+          } else {
+              console.warn('No seat data found in SSR response for onward journey');
+          }
       });
       
       if(this.resultIndexReturn) {
           this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
               this.ssrValuesReturn = val;
               if(val?.Response?.Baggage) this.processBaggage(val.Response.Baggage, true);
+              
+              // Try multiple possible paths for seat data
+              const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
+              console.log('SSR Response for return:', val);
+              console.log('Seat data found:', seatData);
+              
+              if(seatData) {
+                  this.parseSeatData(seatData, true);
+              } else {
+                  console.warn('No seat data found in SSR response for return journey');
+              }
           });
       }
   }
@@ -627,7 +722,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   updateFinalFare() {
     this.finalAmount = this.totalBaseFare + this.totalTaxes + 
                        this.baggageTotal + this.baggageTotalReturn + 
-                       this.totalMealCharges + this.totalSpecialServiceCharges;
+                       this.totalMealCharges + this.totalSpecialServiceCharges +
+                       this.totalSeats;
   }
 
   proceedToPayment(): void {
@@ -1114,10 +1210,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   savePassengerDetails(details: any) {
     const arr = this.currentPassengerType === 'adult' ? this.travellers : this.currentPassengerType === 'child' ? this.children : this.infants;
     if (arr[this.currentPassengerIndex]) {
-      Object.assign(arr[this.currentPassengerIndex], details);
-      // Trigger change detection to update the proceed button state
-      this.cdr.detectChanges();
+      // Create a new object to ensure change detection works properly
+      arr[this.currentPassengerIndex] = { ...arr[this.currentPassengerIndex], ...details };
+    } else {
+      // If passenger doesn't exist, add it
+      arr[this.currentPassengerIndex] = { ...details };
     }
+    
+    // Create a new array reference to trigger change detection
+    if (this.currentPassengerType === 'adult') {
+      this.travellers = [...this.travellers];
+    } else if (this.currentPassengerType === 'child') {
+      this.children = [...this.children];
+    } else {
+      this.infants = [...this.infants];
+    }
+    
+    // Trigger change detection to update the proceed button state
+    this.cdr.detectChanges();
     this.closePassengerModal();
   }
   
@@ -1360,6 +1470,338 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   
   // Empty placeholders to satisfy template bindings if not fully implemented
   processMeals(isReturn: boolean) {} 
-  parseSeatData(isReturn: boolean) {} 
+  
+  // Seat Selection Methods
+  parseSeatData(seatData: any, isReturn: boolean) {
+    console.log('parseSeatData called with:', seatData, 'isReturn:', isReturn);
+    
+    if (!seatData) {
+      console.warn('No seat data provided');
+      return;
+    }
+
+    const segments = isReturn ? this.flightSegmentsReturn : this.flightSegments;
+    const seatMaps: any[] = [];
+
+    // Handle different data structures
+    let dataArray: any[] = [];
+    
+    if (Array.isArray(seatData)) {
+      dataArray = seatData;
+    } else if (seatData.SeatMap) {
+      // Single seat map object
+      const seatMap = this.processSeatMap(seatData.SeatMap, seatData);
+      if (seatMap) {
+        seatMaps.push(seatMap);
+      }
+    } else if (seatData.Rows) {
+      // Direct seat map structure
+      const seatMap = this.processSeatMap(seatData, seatData);
+      if (seatMap) {
+        seatMaps.push(seatMap);
+      }
+    } else {
+      console.warn('Unknown seat data structure:', seatData);
+      return;
+    }
+
+    // Process array of seat groups
+    if (dataArray.length > 0) {
+      dataArray.forEach((seatGroup: any, groupIndex: number) => {
+        if (!seatGroup) {
+          return;
+        }
+
+        // If seatGroup is an array, iterate through it
+        if (Array.isArray(seatGroup)) {
+          seatGroup.forEach((seat: any, seatIndex: number) => {
+            if (!seat) return;
+            
+            // Try different possible structures
+            const seatMapData = seat.SeatMap || seat;
+            const seatMap = this.processSeatMap(seatMapData, seat);
+            if (seatMap) {
+              seatMaps.push(seatMap);
+            }
+          });
+        } else if (seatGroup.SeatMap || seatGroup.Rows) {
+          // Direct seat map in group
+          const seatMapData = seatGroup.SeatMap || seatGroup;
+          const seatMap = this.processSeatMap(seatMapData, seatGroup);
+          if (seatMap) {
+            seatMaps.push(seatMap);
+          }
+        }
+      });
+    }
+
+    if (isReturn) {
+      this.seatMapReturn = seatMaps;
+      // Initialize selected seats for return
+      seatMaps.forEach((_, index) => {
+        if (!this.selectedSeatsReturn[index]) {
+          this.selectedSeatsReturn[index] = [];
+        }
+      });
+    } else {
+      this.seatMap = seatMaps;
+      // Initialize selected seats for onward
+      seatMaps.forEach((_, index) => {
+        if (!this.selectedSeats[index]) {
+          this.selectedSeats[index] = [];
+        }
+      });
+    }
+
+    this.updateSeatTotal();
+  }
+
+  processSeatMap(seatMapData: any, seatInfo: any): any {
+    if (!seatMapData || !seatMapData.Rows || !Array.isArray(seatMapData.Rows)) {
+      return null;
+    }
+
+    const seatBlocks: string[][] = [];
+    const rows: any[] = [];
+    const priceCategories: any[] = [];
+    const priceMap = new Map<string, number>();
+
+    // Process seat blocks (columns)
+    if (seatMapData.SeatBlocks && Array.isArray(seatMapData.SeatBlocks)) {
+      seatMapData.SeatBlocks.forEach((block: any) => {
+        if (block && Array.isArray(block)) {
+          seatBlocks.push(block);
+        }
+      });
+    }
+
+    // Process rows
+    seatMapData.Rows.forEach((rowData: any) => {
+      if (!rowData || !rowData.RowNo) return;
+
+      const row: any = {
+        rowNo: rowData.RowNo,
+        seatBlocks: []
+      };
+
+      // Process seat blocks for this row
+      seatBlocks.forEach((block, blockIndex) => {
+        const seatBlock: any = {};
+        block.forEach((letter: string) => {
+          const seatCode = `${rowData.RowNo}${letter}`;
+          const seat = this.findSeatInRow(rowData, seatCode, seatInfo);
+          
+          if (seat) {
+            seatBlock[letter] = {
+              Code: seatCode,
+              isAvailable: seat.IsAvailable || false,
+              Price: seat.Price || 0,
+              priceCategory: this.getPriceCategory(seat.Price || 0),
+              SeatType: seat.SeatType || '',
+              Description: seat.Description || ''
+            };
+
+            // Track price categories
+            const price = seat.Price || 0;
+            if (price > 0 && !priceMap.has(seatCode)) {
+              priceMap.set(seatCode, price);
+            }
+          } else {
+            seatBlock[letter] = null;
+          }
+        });
+        row.seatBlocks.push(seatBlock);
+      });
+
+      rows.push(row);
+    });
+
+    // Create price categories
+    const prices = Array.from(priceMap.values()).filter(p => p > 0).sort((a, b) => a - b);
+    if (prices.length > 0) {
+      const minPrice = prices[0];
+      const maxPrice = prices[prices.length - 1];
+      const midPrice = (minPrice + maxPrice) / 2;
+
+      if (minPrice === maxPrice) {
+        priceCategories.push({
+          category: 'low-price',
+          min: minPrice,
+          max: maxPrice
+        });
+      } else {
+        priceCategories.push({
+          category: 'low-price',
+          min: minPrice,
+          max: Math.floor(midPrice)
+        });
+        priceCategories.push({
+          category: 'medium-price',
+          min: Math.ceil(midPrice),
+          max: Math.floor((midPrice + maxPrice) / 2)
+        });
+        priceCategories.push({
+          category: 'high-price',
+          min: Math.ceil((midPrice + maxPrice) / 2),
+          max: maxPrice
+        });
+      }
+    }
+
+    return {
+      seatBlocks,
+      rows,
+      priceCategories
+    };
+  }
+
+  findSeatInRow(rowData: any, seatCode: string, seatInfo: any): any {
+    if (!rowData.Seats || !Array.isArray(rowData.Seats)) {
+      return null;
+    }
+
+    return rowData.Seats.find((s: any) => s.SeatCode === seatCode || s.Code === seatCode);
+  }
+
+  getPriceCategory(price: number): string {
+    if (price === 0) return 'free';
+    if (price < 500) return 'low-price';
+    if (price < 1500) return 'medium-price';
+    return 'high-price';
+  }
+
+  isSeatSelected(segmentIndex: number, seatCode: string): boolean {
+    if (!this.selectedSeats[segmentIndex]) {
+      return false;
+    }
+    return this.selectedSeats[segmentIndex].some(seat => seat.Code === seatCode);
+  }
+
+  isSeatSelectedReturn(segmentIndex: number, seatCode: string): boolean {
+    if (!this.selectedSeatsReturn[segmentIndex]) {
+      return false;
+    }
+    return this.selectedSeatsReturn[segmentIndex].some(seat => seat.Code === seatCode);
+  }
+
+  toggleSeatSelection(segmentIndex: number, seat: any): void {
+    if (!seat || !seat.isAvailable) return;
+
+    if (!this.selectedSeats[segmentIndex]) {
+      this.selectedSeats[segmentIndex] = [];
+    }
+
+    const seatIndex = this.selectedSeats[segmentIndex].findIndex(s => s.Code === seat.Code);
+    
+    if (seatIndex >= 0) {
+      // Deselect seat
+      this.selectedSeats[segmentIndex].splice(seatIndex, 1);
+    } else {
+      // Check if we can select more seats (limit to total passengers)
+      const totalSelected = this.getTotalSelectedSeats(false);
+      const maxSeats = this.totalAdults + this.totalChildren;
+      
+      if (totalSelected >= maxSeats) {
+        Swal.fire('Limit Reached', `You can only select up to ${maxSeats} seat(s) for ${maxSeats} passenger(s).`, 'info');
+        return;
+      }
+
+      // Select seat
+      this.selectedSeats[segmentIndex].push({ ...seat });
+    }
+
+    this.updateSeatTotal();
+  }
+
+  toggleSeatSelectionReturn(segmentIndex: number, seat: any): void {
+    if (!seat || !seat.isAvailable) return;
+
+    if (!this.selectedSeatsReturn[segmentIndex]) {
+      this.selectedSeatsReturn[segmentIndex] = [];
+    }
+
+    const seatIndex = this.selectedSeatsReturn[segmentIndex].findIndex(s => s.Code === seat.Code);
+    
+    if (seatIndex >= 0) {
+      // Deselect seat
+      this.selectedSeatsReturn[segmentIndex].splice(seatIndex, 1);
+    } else {
+      // Check if we can select more seats (limit to total passengers)
+      const totalSelected = this.getTotalSelectedSeats(true);
+      const maxSeats = this.totalAdults + this.totalChildren;
+      
+      if (totalSelected >= maxSeats) {
+        Swal.fire('Limit Reached', `You can only select up to ${maxSeats} seat(s) for ${maxSeats} passenger(s).`, 'info');
+        return;
+      }
+
+      // Select seat
+      this.selectedSeatsReturn[segmentIndex].push({ ...seat });
+    }
+
+    this.updateSeatTotal();
+  }
+
+  getTotalSelectedSeats(isReturn: boolean): number {
+    const selected = isReturn ? this.selectedSeatsReturn : this.selectedSeats;
+    return Object.values(selected).reduce((total, seats) => total + (seats?.length || 0), 0);
+  }
+
+  updateSeatTotal(): void {
+    let total = 0;
+
+    // Calculate onward seat prices
+    Object.keys(this.selectedSeats).forEach(index => {
+      const seats = this.selectedSeats[parseInt(index)];
+      if (seats && Array.isArray(seats)) {
+        seats.forEach(seat => {
+          total += seat.Price || 0;
+        });
+      }
+    });
+
+    // Calculate return seat prices
+    Object.keys(this.selectedSeatsReturn).forEach(index => {
+      const seats = this.selectedSeatsReturn[parseInt(index)];
+      if (seats && Array.isArray(seats)) {
+        seats.forEach(seat => {
+          total += seat.Price || 0;
+        });
+      }
+    });
+
+    this.totalSeats = total;
+    this.updateFinalFare();
+  }
+
+  getSeatCount(seatBlocks: string[][]): number {
+    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
+    return seatBlocks.reduce((count, block) => count + (block?.length || 0), 0);
+  }
+
+  getAisleCount(seatBlocks: string[][]): number {
+    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
+    return Math.max(0, seatBlocks.length - 1);
+  }
+
+  getBlockCount(seatBlocks: string[][]): number {
+    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
+    return seatBlocks.length;
+  }
+
+  getSeatTooltip(seat: any): string {
+    if (!seat) return '';
+    let tooltip = `Seat: ${seat.Code}`;
+    if (seat.Price > 0) {
+      tooltip += ` - ₹${seat.Price}`;
+    } else {
+      tooltip += ' - Free';
+    }
+    if (seat.Description) {
+      tooltip += ` - ${seat.Description}`;
+    }
+    return tooltip;
+  }
+
   processSpecialServices(rawSSR: any[], type: 'onward' | 'return') {}
 }

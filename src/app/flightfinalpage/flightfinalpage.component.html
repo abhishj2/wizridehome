@@ -313,6 +313,10 @@
           <span>Baggage</span>
           <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
         </div>
+        <div class="fare-summary-line" *ngIf="totalSeats > 0">
+          <span>Seats</span>
+          <span>{{ formatCurrency(totalSeats) }}</span>
+        </div>
         <hr class="fare-summary-divider" />
       </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
@@ -707,6 +711,10 @@
         <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
           <span>Baggage</span>
           <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+        </div>
+        <div class="fare-summary-line" *ngIf="totalSeats > 0">
+          <span>Seats</span>
+          <span>{{ formatCurrency(totalSeats) }}</span>
         </div>
         <hr class="fare-summary-divider" />
       </div>
