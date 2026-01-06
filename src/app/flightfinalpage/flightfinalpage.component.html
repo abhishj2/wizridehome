@@ -92,21 +92,28 @@
           </div>
 
           <!-- Route Info -->
-          <div class="flight-route">
-            <div class="city">{{ segment.from }}</div>
-            <div class="route-divider">
-              <span class="line"></span>
-              <i class="fas fa-plane-departure"></i>
-              <span class="line"></span>
+          <div class="flight-route-container">
+            <!-- Travel Date Above -->
+            <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
+            
+            <!-- Route Line -->
+            <div class="flight-route">
+              <div class="route-point">
+                <div class="city">{{ segment.from }}</div>
+                <div class="time">{{ segment.departureTime }}</div>
+              </div>
+              <div class="route-divider">
+                <span class="line"></span>
+                <div class="plane-wrapper">
+                  <i class="fas fa-plane-departure"></i>
+                  <div class="duration">{{ segment.duration }}</div>
+                </div>
+              </div>
+              <div class="route-point">
+                <div class="city">{{ segment.to }}</div>
+                <div class="time">{{ segment.arrivalTime }}</div>
+              </div>
             </div>
-            <div class="city">{{ segment.to }}</div>
-          </div>
-
-          <!-- Timing & Duration -->
-          <div class="flight-meta">
-            {{ segment.date | date : "EEE, dd MMM" }} |
-            {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-            {{ segment.duration }}
           </div>
 
           <!-- Layover if applicable -->
@@ -158,13 +165,16 @@
         <hr class="baggage-divider" *ngIf="i < flightSegments.length - 1" />
       </ng-container>
 
-      <div class="add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="add-baggage">
         <div class="add-left">
-          <div class="prompt">Have Excess Baggage ?</div>
-          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
+          <i class="fas fa-plus-circle add-icon"></i>
+          <div class="add-content">
+            <div class="prompt">Need Extra Baggage?</div>
+            <div class="subtext">Add additional check-in baggage allowance</div>
+          </div>
         </div>
         <button class="add-btn" (click)="showAddBaggageModal = true">
-          + ADD
+          <i class="fas fa-plus"></i> Add Baggage
         </button>
       </div>
     </div>
@@ -349,21 +359,28 @@
                 </div>
 
                 <!-- Route Info -->
-                <div class="flight-route">
-                  <div class="city">{{ segment.from }}</div>
-                  <div class="route-divider">
-                    <span class="line"></span>
-                    <i class="fas fa-plane-departure"></i>
-                    <span class="line"></span>
+                <div class="flight-route-container">
+                  <!-- Travel Date Above -->
+                  <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
+                  
+                  <!-- Route Line -->
+                  <div class="flight-route">
+                    <div class="route-point">
+                      <div class="city">{{ segment.from }}</div>
+                      <div class="time">{{ segment.departureTime }}</div>
+                    </div>
+                    <div class="route-divider">
+                      <span class="line"></span>
+                      <div class="plane-wrapper">
+                        <i class="fas fa-plane-departure"></i>
+                        <div class="duration">{{ segment.duration }}</div>
+                      </div>
+                    </div>
+                    <div class="route-point">
+                      <div class="city">{{ segment.to }}</div>
+                      <div class="time">{{ segment.arrivalTime }}</div>
+                    </div>
                   </div>
-                  <div class="city">{{ segment.to }}</div>
-                </div>
-
-                <!-- Timing & Duration -->
-                <div class="flight-meta">
-                  {{ segment.date | date : "EEE, dd MMM" }} |
-                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-                  {{ segment.duration }}
                 </div>
 
                 <!-- Layover if applicable -->
@@ -396,21 +413,28 @@
                 </div>
 
                 <!-- Route Info -->
-                <div class="flight-route">
-                  <div class="city">{{ segment.from }}</div>
-                  <div class="route-divider">
-                    <span class="line"></span>
-                    <i class="fas fa-plane-departure"></i>
-                    <span class="line"></span>
+                <div class="flight-route-container">
+                  <!-- Travel Date Above -->
+                  <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
+                  
+                  <!-- Route Line -->
+                  <div class="flight-route">
+                    <div class="route-point">
+                      <div class="city">{{ segment.from }}</div>
+                      <div class="time">{{ segment.departureTime }}</div>
+                    </div>
+                    <div class="route-divider">
+                      <span class="line"></span>
+                      <div class="plane-wrapper">
+                        <i class="fas fa-plane-departure"></i>
+                        <div class="duration">{{ segment.duration }}</div>
+                      </div>
+                    </div>
+                    <div class="route-point">
+                      <div class="city">{{ segment.to }}</div>
+                      <div class="time">{{ segment.arrivalTime }}</div>
+                    </div>
                   </div>
-                  <div class="city">{{ segment.to }}</div>
-                </div>
-
-                <!-- Timing & Duration -->
-                <div class="flight-meta">
-                  {{ segment.date | date : "EEE, dd MMM" }} |
-                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-                  {{ segment.duration }}
                 </div>
 
                 <!-- Layover if applicable -->
@@ -515,11 +539,14 @@
       <!-- Add Baggage Prompt -->
       <div class="add-baggage">
         <div class="add-left">
-          <div class="prompt">Have Excess Baggage ?</div>
-          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
+          <i class="fas fa-plus-circle add-icon"></i>
+          <div class="add-content">
+            <div class="prompt">Need Extra Baggage?</div>
+            <div class="subtext">Add additional check-in baggage allowance</div>
+          </div>
         </div>
         <button class="add-btn" (click)="showAddBaggageModal = true">
-          + ADD
+          <i class="fas fa-plus"></i> Add Baggage
         </button>
       </div>
     </div>
@@ -959,6 +986,13 @@
         NOTE: Airlines might charge you extra for carrying more than 1 Bag per Adult.
       </div>
     </div>
+    
+    <!-- Show message if no baggage options available -->
+    <div *ngIf="!baggageOptions || baggageOptions.length === 0" class="no-baggage-message">
+      <i class="fas fa-info-circle"></i>
+      <p>No additional baggage options are available for this flight at the moment.</p>
+    </div>
+    
     <ng-container *ngFor="let baggage of baggageOptions">
       <div class="baggage-option">
         <div class="option-left">

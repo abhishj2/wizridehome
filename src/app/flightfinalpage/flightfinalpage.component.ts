@@ -1027,11 +1027,17 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   fetchSSRAfterFareQuotes() {
       this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
           this.ssrValues = val;
-          if(val?.Response?.Baggage) this.processBaggage(val.Response.Baggage, false);
+          console.log('SSR Response for onward:', val);
+          console.log('Baggage data:', val?.Response?.Baggage);
+          
+          if(val?.Response?.Baggage) {
+            this.processBaggage(val.Response.Baggage, false);
+          } else {
+            console.warn('No baggage data found in SSR response for onward journey');
+          }
           
           // Try multiple possible paths for seat data
           const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
-          console.log('SSR Response for onward:', val);
           console.log('Seat data found:', seatData);
           
           if(seatData) {
@@ -1065,21 +1071,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // =================================================================
 
   processBaggage(baggageArray: any[][], isReturn: boolean) {
+      console.log('Processing baggage data:', { baggageArray, isReturn });
+      
       // Flatten the nested array from TBO (usually structured by sector)
       // TBO returns baggage as array of arrays per sector
       const flatBaggage = baggageArray.flat();
+      
+      console.log('Flattened baggage:', flatBaggage);
       
       if(isReturn) {
           this.baggageOptionsReturn = flatBaggage;
           this.extraBaggageAvailableReturn = flatBaggage.length > 0;
           // Initialize counts
           flatBaggage.forEach(b => this.selectedBaggageCountsReturn[b.Code] = 0);
+          console.log('Set return baggage options:', this.baggageOptionsReturn);
       } else {
           this.baggageOptions = flatBaggage;
           this.extraBaggageAvailable = flatBaggage.length > 0;
           // Initialize counts
           flatBaggage.forEach(b => this.selectedBaggageCounts[b.Code] = 0);
+          console.log('Set onward baggage options:', this.baggageOptions);
       }
+      
+      // Trigger change detection
+      this.cdr.detectChanges();
   }
 
   addBaggage(option: any, isReturn: boolean = false): void {
