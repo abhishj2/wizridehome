@@ -305,7 +305,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
               const currentData = this.flightDataService.getCurrentValue();
               if (!currentData && !this.fullFlightData) {
                 console.log('No flight data available, redirecting to home');
-                this.router.navigate(['/']);
+          this.router.navigate(['/']);
               }
             }, 1000);
           }
@@ -351,7 +351,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           // Call if we don't have fare breakdown data
           if (isFromFlightList || (!val['adultBaseFare'] && !val['totalBaseFare'])) {
             console.log('Calling fare quote API...');
-            this.callFareQuote();
+        this.callFareQuote();
           } else {
             console.log('Skipping fare quote - already have fare data');
           }
@@ -372,20 +372,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     
     // Only update if new value is provided and not null/undefined
     if (val['ipAddress']) {
-      this.ipAddress = val['ipAddress'];
+    this.ipAddress = val['ipAddress'];
     }
     if (val['tboToken']) {
-      this.tboToken = val['tboToken'];
+    this.tboToken = val['tboToken'];
     }
     if (val['traceid']) {
-      this.traceid = val['traceid'];
+    this.traceid = val['traceid'];
     }
     
     // Handle different data structures from flight list vs addon page
     // Flight list passes fare objects, addon page passes processed data
     // Only update if new data is provided
     if (val['departureFlightData']) {
-      this.flightDataDeparture = val['departureFlightData'];
+    this.flightDataDeparture = val['departureFlightData'];
       console.log('Processing departureFlightData:', this.flightDataDeparture);
       
       // Extract ResultIndex from different possible structures
@@ -434,7 +434,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     
     if (val['returnFlightData']) {
-      this.flightDataReturn = val['returnFlightData'];
+    this.flightDataReturn = val['returnFlightData'];
       // Extract ResultIndex from different possible structures
       // ResultIndex is directly on returnFlightData (same as departure)
       const newResultIndexReturn = val['returnFlightData']?.['ResultIndex']  // Direct property
@@ -1193,24 +1193,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Only update passenger counts if we got valid values from fare breakdown
       // Otherwise preserve existing counts from flight list
       if (totalAdults > 0) {
-        this.totalAdults = totalAdults;
+      this.totalAdults = totalAdults;
         // Only initialize travellers if not already set or if count changed
         if (!this.travellers || this.travellers.length !== totalAdults) {
-          this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+      this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
         }
       }
       if (totalChildren > 0) {
         this.totalChildren = totalChildren;
         // Only initialize children if not already set or if count changed
         if (!this.children || this.children.length !== totalChildren) {
-          this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+      this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
         }
       }
       if (totalInfants > 0) {
         this.totalInfants = totalInfants;
         // Only initialize infants if not already set or if count changed
         if (!this.infants || this.infants.length !== totalInfants) {
-          this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+      this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
         }
       }
       
@@ -1790,8 +1790,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.infants = [...this.infants];
     }
     
-    // Trigger change detection to update the proceed button state
-    this.cdr.detectChanges();
+      // Trigger change detection to update the proceed button state
+      this.cdr.detectChanges();
     this.closePassengerModal();
   }
   
@@ -1810,7 +1810,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
       return;
     }
-
+    
     // Build payload for addon page (seats/meals/others)
     const addonPageData = {
       ...this.fullFlightData,

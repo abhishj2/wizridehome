@@ -1156,12 +1156,41 @@ select.traveller-input {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+  gap: 12px;
 }
 
 .flight-route .city {
   font-size: 18px;
   font-weight: 600;
   color: #212529;
+  flex-shrink: 0;
+}
+
+.route-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+  min-width: 100px;
+  margin: 0 8px;
+}
+
+.route-divider .line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #008b8b 20%, #008b8b 80%, transparent);
+  border-top: 2px dashed #008b8b;
+  opacity: 0.6;
+}
+
+.route-divider i {
+  color: #008b8b;
+  font-size: 20px;
+  margin: 0 8px;
+  z-index: 2;
+  background: #ffffff;
+  padding: 0 4px;
 }
 
 .flight-route .plane-icon {
@@ -1616,12 +1645,23 @@ select.traveller-input {
 /* Trip Popup/Modal */
 .trip-overlay {
   position: fixed;
-    top: 0;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000; /* Same as navbar, but overlay should be below popup */
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .trip-popup {
@@ -1630,19 +1670,22 @@ select.traveller-input {
   left: 0;
   right: 0;
   background: #ffffff;
-  border-radius: 20px 20px 0 0;
+  border-radius: 24px 24px 0 0;
   max-height: 90vh;
   overflow-y: auto;
-  z-index: 1001; /* Just above navbar (1000) */
-  animation: slideUp 0.3s ease;
+  z-index: 1001;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes slideUp {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -1659,30 +1702,42 @@ select.traveller-input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 24px;
   border-bottom: 1px solid #e9ecef;
   position: sticky;
   top: 0;
   background: #ffffff;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .trip-header > div:first-child {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #212529;
+  letter-spacing: -0.02em;
 }
 
 .close-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: #f8f9fa;
   border-radius: 50%;
-  font-size: 24px;
+  font-size: 20px;
   color: #6c757d;
   cursor: pointer;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  background: #e9ecef;
+  color: #212529;
+  transform: scale(1.05);
   align-items: center;
   justify-content: center;
   line-height: 1;
@@ -1690,6 +1745,7 @@ select.traveller-input {
 
 .trip-body {
   padding: 24px;
+  padding-bottom: 32px;
 }
 
 .trip-footer {
@@ -1698,18 +1754,22 @@ select.traveller-input {
   position: sticky;
   bottom: 0;
   background: #ffffff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .trip-flight {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
   border-bottom: 1px solid #e9ecef;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
 }
 
 .trip-flight:last-child {
   border-bottom: none;
   margin-bottom: 0;
-  padding-bottom: 0;
 }
 
 .trip-airline {
