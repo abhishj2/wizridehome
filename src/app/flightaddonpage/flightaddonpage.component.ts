@@ -515,18 +515,58 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
     
     // Update flight data with addon selections and preserve ALL existing data
     if (this.fullFlightData) {
-      // Preserve all existing data
+      // Preserve all existing data including all fields from final page
       const updatedData = {
         ...this.fullFlightData,
+        // Add addon selections
         addonData: addonData,
         totalSeats: totalSeatPrice,
         // Ensure passenger data is preserved
         travellers: this.fullFlightData.travellers || [],
         children: this.fullFlightData.children || [],
         infants: this.fullFlightData.infants || [],
+        // Preserve contact and GST details
         contact: this.fullFlightData.contact || {},
         gstDetails: this.fullFlightData.gstDetails || {},
         termsAgreed: this.fullFlightData.termsAgreed || false,
+        // Preserve all flight data (in case they're not in fullFlightData)
+        tripType: this.fullFlightData.tripType || this.tripType,
+        flightSegments: this.fullFlightData.flightSegments || this.flightSegments,
+        flightSegmentsReturn: this.fullFlightData.flightSegmentsReturn || this.flightSegmentsReturn,
+        totalAdults: this.fullFlightData.totalAdults || this.totalAdults,
+        totalChildren: this.fullFlightData.totalChildren || this.totalChildren,
+        totalInfants: this.fullFlightData.totalInfants || this.totalInfants,
+        seatMap: this.fullFlightData.seatMap || this.seatMap,
+        seatMapReturn: this.fullFlightData.seatMapReturn || this.seatMapReturn,
+        ssrValues: this.fullFlightData.ssrValues || this.ssrValues,
+        ssrValuesReturn: this.fullFlightData.ssrValuesReturn || this.ssrValuesReturn,
+        baggageOptions: this.fullFlightData.baggageOptions,
+        baggageOptionsReturn: this.fullFlightData.baggageOptionsReturn,
+        baggageTotal: this.fullFlightData.baggageTotal,
+        baggageTotalReturn: this.fullFlightData.baggageTotalReturn,
+        selectedBaggageCounts: this.fullFlightData.selectedBaggageCounts,
+        selectedBaggageCountsReturn: this.fullFlightData.selectedBaggageCountsReturn,
+        // Preserve individual fare values
+        adultBaseFare: this.fullFlightData.adultBaseFare,
+        childrenBaseFare: this.fullFlightData.childrenBaseFare,
+        infantBaseFare: this.fullFlightData.infantBaseFare,
+        adultTaxes: this.fullFlightData.adultTaxes,
+        childrenTaxes: this.fullFlightData.childrenTaxes,
+        infantTaxes: this.fullFlightData.infantTaxes,
+        adultBaseFareReturn: this.fullFlightData.adultBaseFareReturn,
+        childrenBaseFareReturn: this.fullFlightData.childrenBaseFareReturn,
+        infantBaseFareReturn: this.fullFlightData.infantBaseFareReturn,
+        adultTaxesReturn: this.fullFlightData.adultTaxesReturn,
+        childrenTaxesReturn: this.fullFlightData.childrenTaxesReturn,
+        infantTaxesReturn: this.fullFlightData.infantTaxesReturn,
+        tboToken: this.fullFlightData.tboToken,
+        traceid: this.fullFlightData.traceid,
+        resultIndex: this.fullFlightData.resultIndex,
+        resultIndexReturn: this.fullFlightData.resultIndexReturn,
+        ipAddress: this.fullFlightData.ipAddress,
+        departureFlightData: this.fullFlightData.departureFlightData,
+        returnFlightData: this.fullFlightData.returnFlightData,
+        mobFinalPageData: this.fullFlightData.mobFinalPageData,
         // Flag to proceed to payment
         proceedToPayment: true
       };
@@ -539,17 +579,67 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
   }
   
   onSkipToPayment(): void {
-    // Skip addons but preserve ALL existing data
+    // Skip addons but preserve ALL existing data from final page
     if (this.fullFlightData) {
       const updatedData = {
         ...this.fullFlightData,
-        // Preserve all existing data
+        // Preserve all passenger data
         travellers: this.fullFlightData.travellers || [],
         children: this.fullFlightData.children || [],
         infants: this.fullFlightData.infants || [],
+        // Preserve contact and GST details
         contact: this.fullFlightData.contact || {},
         gstDetails: this.fullFlightData.gstDetails || {},
         termsAgreed: this.fullFlightData.termsAgreed || false,
+        // Preserve all flight data
+        tripType: this.fullFlightData.tripType || this.tripType,
+        flightSegments: this.fullFlightData.flightSegments || this.flightSegments,
+        flightSegmentsReturn: this.fullFlightData.flightSegmentsReturn || this.flightSegmentsReturn,
+        totalAdults: this.fullFlightData.totalAdults || this.totalAdults,
+        totalChildren: this.fullFlightData.totalChildren || this.totalChildren,
+        totalInfants: this.fullFlightData.totalInfants || this.totalInfants,
+        // Preserve seat maps and SSR data
+        seatMap: this.fullFlightData.seatMap || this.seatMap,
+        seatMapReturn: this.fullFlightData.seatMapReturn || this.seatMapReturn,
+        ssrValues: this.fullFlightData.ssrValues || this.ssrValues,
+        ssrValuesReturn: this.fullFlightData.ssrValuesReturn || this.ssrValuesReturn,
+        // Preserve fare data
+        totalBaseFare: this.fullFlightData.totalBaseFare,
+        totalTaxes: this.fullFlightData.totalTaxes,
+        // Preserve baggage data
+        baggageOptions: this.fullFlightData.baggageOptions,
+        baggageOptionsReturn: this.fullFlightData.baggageOptionsReturn,
+        baggageTotal: this.fullFlightData.baggageTotal,
+        baggageTotalReturn: this.fullFlightData.baggageTotalReturn,
+        selectedBaggageCounts: this.fullFlightData.selectedBaggageCounts,
+        selectedBaggageCountsReturn: this.fullFlightData.selectedBaggageCountsReturn,
+        // Preserve other totals
+        totalSeats: this.fullFlightData.totalSeats || 0,
+        totalMealCharges: this.fullFlightData.totalMealCharges || 0,
+        totalSpecialServiceCharges: this.fullFlightData.totalSpecialServiceCharges || 0,
+        // Preserve individual fare values
+        adultBaseFare: this.fullFlightData.adultBaseFare,
+        childrenBaseFare: this.fullFlightData.childrenBaseFare,
+        infantBaseFare: this.fullFlightData.infantBaseFare,
+        adultTaxes: this.fullFlightData.adultTaxes,
+        childrenTaxes: this.fullFlightData.childrenTaxes,
+        infantTaxes: this.fullFlightData.infantTaxes,
+        adultBaseFareReturn: this.fullFlightData.adultBaseFareReturn,
+        childrenBaseFareReturn: this.fullFlightData.childrenBaseFareReturn,
+        infantBaseFareReturn: this.fullFlightData.infantBaseFareReturn,
+        adultTaxesReturn: this.fullFlightData.adultTaxesReturn,
+        childrenTaxesReturn: this.fullFlightData.childrenTaxesReturn,
+        infantTaxesReturn: this.fullFlightData.infantTaxesReturn,
+        // Preserve booking identifiers
+        tboToken: this.fullFlightData.tboToken,
+        traceid: this.fullFlightData.traceid,
+        resultIndex: this.fullFlightData.resultIndex,
+        resultIndexReturn: this.fullFlightData.resultIndexReturn,
+        ipAddress: this.fullFlightData.ipAddress,
+        // Preserve flight data objects
+        departureFlightData: this.fullFlightData.departureFlightData,
+        returnFlightData: this.fullFlightData.returnFlightData,
+        mobFinalPageData: this.fullFlightData.mobFinalPageData,
         // No addon data, but flag to proceed to payment
         proceedToPayment: true,
         addonData: null

@@ -284,31 +284,189 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit(): void {
     this.initializePassportExpiryYears();
     
+    // Check if we have existing data from service first
+    const existingData = this.flightDataService.getCurrentValue();
+    let hasProcessedData = false;
+    let lastProcessedTraceId = '';
+    
+    if (existingData) {
+      this.processFlightDataInput(existingData);
+      hasProcessedData = true;
+      lastProcessedTraceId = existingData['traceid'] || '';
+    }
+    
     this.subscriptions.add(
-      this.flightDataService.currentMessage.subscribe((val) => {
+      this.flightDataService.currentMessage.subscribe((val: any) => {
         if (!val) {
-          this.router.navigate(['/']);
+          // Only redirect if we haven't processed any data yet
+          if (!hasProcessedData && !this.fullFlightData) {
+            // Give a small delay to allow data to be set during navigation
+            setTimeout(() => {
+              const currentData = this.flightDataService.getCurrentValue();
+              if (!currentData && !this.fullFlightData) {
+                console.log('No flight data available, redirecting to home');
+                this.router.navigate(['/']);
+              }
+            }, 1000);
+          }
           return;
         }
         
+        // Prevent processing the same data twice
+        const currentTraceId = val['traceid'] || '';
+        if (hasProcessedData && currentTraceId === lastProcessedTraceId && !val['proceedToPayment']) {
+          // Same data, skip processing unless it's a payment proceed request
+          return;
+        }
+        
+        hasProcessedData = true;
+        lastProcessedTraceId = currentTraceId;
+        const shouldProceedToPayment = val['proceedToPayment'];
         this.processFlightDataInput(val);
+        
+        // Call fare quote if we need fare data (unless proceeding to payment)
+        // Check if we already processed FareBreakdown from departureFlightData
+        const hasProcessedFareBreakdown = val['departureFlightData']?.['FareBreakdown'] && Array.isArray(val['departureFlightData']['FareBreakdown']) && val['departureFlightData']['FareBreakdown'].length > 0;
+        const isFromFlightList = val['departureFlightData'] && !val['adultBaseFare'] && !val['totalBaseFare'];
+        
+        console.log('Checking if fare quote should be called:', {
+          traceid: this.traceid,
+          resultIndex: this.resultIndex,
+          shouldProceedToPayment,
+          fareQuote: this.fareQuote,
+          isFromFlightList,
+          hasProcessedFareBreakdown,
+          hasAdultBaseFare: !!val['adultBaseFare'],
+          hasTotalBaseFare: !!val['totalBaseFare'],
+          hasFareBreakdown: hasProcessedFareBreakdown
+        });
+        
+        // Only call fare quote if:
+        // 1. We have traceid and resultIndex
+        // 2. Not proceeding to payment
+        // 3. Don't already have fareQuote
+        // 4. Haven't already processed FareBreakdown from the data
+        // 5. Don't have fare values already
+        if(this.traceid && this.resultIndex && !shouldProceedToPayment && !this.fareQuote && !hasProcessedFareBreakdown) {
+          // Call if we don't have fare breakdown data
+          if (isFromFlightList || (!val['adultBaseFare'] && !val['totalBaseFare'])) {
+            console.log('Calling fare quote API...');
+            this.callFareQuote();
+          } else {
+            console.log('Skipping fare quote - already have fare data');
+          }
+        } else {
+          if (!this.traceid) console.warn('Cannot call fare quote: traceid missing');
+          if (!this.resultIndex) console.warn('Cannot call fare quote: resultIndex missing');
+          if (shouldProceedToPayment) console.log('Skipping fare quote: proceeding to payment');
+          if (this.fareQuote) console.log('Skipping fare quote: already have fareQuote');
+          if (hasProcessedFareBreakdown) console.log('Skipping fare quote: already processed FareBreakdown from data');
+        }
       })
     );
-    
-    if(this.traceid && this.resultIndex) {
-        this.callFareQuote();
-    }
   }
 
   processFlightDataInput(val: any) {
-    this.fullFlightData = val;
-    this.ipAddress = val['ipAddress'];
-    this.tboToken = val['tboToken'];
-    this.traceid = val['traceid'];
-    this.resultIndex = val['departureFlightData']?.['ResultIndex'] || '';
-    this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
-    this.flightDataDeparture = val['departureFlightData'];
-    this.flightDataReturn = val['returnFlightData'];
+    // Merge with existing data instead of completely replacing
+    this.fullFlightData = { ...this.fullFlightData, ...val };
+    
+    // Only update if new value is provided and not null/undefined
+    if (val['ipAddress']) {
+      this.ipAddress = val['ipAddress'];
+    }
+    if (val['tboToken']) {
+      this.tboToken = val['tboToken'];
+    }
+    if (val['traceid']) {
+      this.traceid = val['traceid'];
+    }
+    
+    // Handle different data structures from flight list vs addon page
+    // Flight list passes fare objects, addon page passes processed data
+    // Only update if new data is provided
+    if (val['departureFlightData']) {
+      this.flightDataDeparture = val['departureFlightData'];
+      console.log('Processing departureFlightData:', this.flightDataDeparture);
+      
+      // Extract ResultIndex from different possible structures
+      // Based on console log, ResultIndex is directly on departureFlightData (at index 10 in keys array)
+      let newResultIndex = val['departureFlightData']?.['ResultIndex']  // Direct property (most common from flight list)
+                      || val['departureFlightData']?.['Response']?.['Results']?.['ResultIndex'] 
+                      || val['departureFlightData']?.['Fare']?.['ResultIndex']
+                      || val['departureFlightData']?.['selectedFare']?.['Response']?.['Results']?.['ResultIndex']
+                      || val['departureFlightData']?.['selectedFare']?.['ResultIndex']
+                      || val['departureFlightData']?.['selectedFare']?.['Fare']?.['ResultIndex']
+                      || val['resultIndex'];
+      
+      console.log('Extracted ResultIndex:', newResultIndex, 'from departureFlightData');
+      
+      // Check if we already have FareBreakdown in departureFlightData (from flight list)
+      // If so, we can process it directly without calling fare quote API
+      if (val['departureFlightData']?.['FareBreakdown'] && Array.isArray(val['departureFlightData']['FareBreakdown']) && val['departureFlightData']['FareBreakdown'].length > 0) {
+        console.log('Found FareBreakdown directly in departureFlightData, processing it immediately...');
+        // Process fare breakdown directly from the data
+        const fareData = {
+          Response: {
+            Results: {
+              FareBreakdown: val['departureFlightData']['FareBreakdown'],
+              IsLCC: val['departureFlightData']['IsLCC']
+            }
+          }
+        };
+        this.processFareBreakdown(fareData, false);
+        // Aggregate fare summary immediately after processing
+        this.aggregateFareSummary();
+        this.loader = false;
+        this.cdr.detectChanges();
+      } else {
+        console.log('No FareBreakdown found in departureFlightData, will call fare quote API');
+      }
+      
+      if (newResultIndex) {
+        this.resultIndex = newResultIndex;
+        console.log('Set resultIndex to:', this.resultIndex);
+      } else {
+        console.warn('Could not extract ResultIndex from departureFlightData. Structure:', Object.keys(this.flightDataDeparture || {}));
+      }
+    } else if (val['resultIndex'] && !this.resultIndex) {
+      this.resultIndex = val['resultIndex'];
+      console.log('Set resultIndex from val.resultIndex:', this.resultIndex);
+    }
+    
+    if (val['returnFlightData']) {
+      this.flightDataReturn = val['returnFlightData'];
+      // Extract ResultIndex from different possible structures
+      // ResultIndex is directly on returnFlightData (same as departure)
+      const newResultIndexReturn = val['returnFlightData']?.['ResultIndex']  // Direct property
+                            || val['returnFlightData']?.['Response']?.['Results']?.['ResultIndex']
+                            || val['returnFlightData']?.['selectedFare']?.['Response']?.['Results']?.['ResultIndex']
+                            || val['resultIndexReturn'];
+      if (newResultIndexReturn) {
+        this.resultIndexReturn = newResultIndexReturn;
+        console.log('Set resultIndexReturn to:', this.resultIndexReturn);
+      }
+      
+      // Check if we already have FareBreakdown in returnFlightData
+      if (val['returnFlightData']?.['FareBreakdown'] && Array.isArray(val['returnFlightData']['FareBreakdown']) && val['returnFlightData']['FareBreakdown'].length > 0) {
+        console.log('Found FareBreakdown directly in returnFlightData, processing it immediately...');
+        const fareData = {
+          Response: {
+            Results: {
+              FareBreakdown: val['returnFlightData']['FareBreakdown'],
+              IsLCC: val['returnFlightData']['IsLCC']
+            }
+          }
+        };
+        this.processFareBreakdown(fareData, true);
+        // Aggregate fare summary immediately after processing
+        this.aggregateFareSummary();
+        this.loader = false;
+        this.cdr.detectChanges();
+      }
+    } else if (val['resultIndexReturn'] && !this.resultIndexReturn) {
+      this.resultIndexReturn = val['resultIndexReturn'];
+      console.log('Set resultIndexReturn from val.resultIndexReturn:', this.resultIndexReturn);
+    }
     
     // Set trip type
     const tripTypeVal = val['tripType'] || '';
@@ -320,6 +478,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.tripType = 'oneway';
     }
     
+    // Set passenger counts from data if available
+    // Handle both formats: 'adults' (from flight list) and 'totalAdults' (from addon page)
+    // Priority: totalAdults > adults > existing value
+    if (val['totalAdults'] !== undefined && val['totalAdults'] !== null && val['totalAdults'] > 0) {
+      this.totalAdults = val['totalAdults'];
+    } else if (val['adults'] !== undefined && val['adults'] !== null && val['adults'] > 0) {
+      this.totalAdults = val['adults'];
+    }
+    // If still 0, keep existing value (don't reset to 0)
+    
+    if (val['totalChildren'] !== undefined && val['totalChildren'] !== null && val['totalChildren'] > 0) {
+      this.totalChildren = val['totalChildren'];
+    } else if (val['children'] !== undefined && val['children'] !== null && val['children'] > 0) {
+      this.totalChildren = val['children'];
+    }
+    
+    if (val['totalInfants'] !== undefined && val['totalInfants'] !== null && val['totalInfants'] > 0) {
+      this.totalInfants = val['totalInfants'];
+    } else if (val['infants'] !== undefined && val['infants'] !== null && val['infants'] > 0) {
+      this.totalInfants = val['infants'];
+    }
+    
+    console.log(`Passenger counts set - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
+    
     // Set dates
     if (val['departureDate']) {
       this.departureDate = new Date(val['departureDate']);
@@ -328,12 +510,252 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.returnDate = new Date(val['returnDate']);
     }
 
+    // Process segments from flight data
+    // Handle different data structures: from flight list vs from addon page
     if (this.flightDataDeparture) {
-      this.processSegments(this.flightDataDeparture, false);
+      // Check different possible structures
+      let segmentData = null;
+      
+      // Structure 1: Response.Results.Segments (from API response)
+      if (this.flightDataDeparture.Response?.Results?.Segments) {
+        segmentData = { Segments: [this.flightDataDeparture.Response.Results.Segments] };
+      }
+      // Structure 2: Direct Segments array
+      else if (this.flightDataDeparture.Segments) {
+        segmentData = this.flightDataDeparture;
+      }
+      // Structure 3: selectedFare.Response.Results.Segments
+      else if (this.flightDataDeparture.selectedFare?.Response?.Results?.Segments) {
+        segmentData = { Segments: [this.flightDataDeparture.selectedFare.Response.Results.Segments] };
+      }
+      // Structure 4: selectedFare.Segments
+      else if (this.flightDataDeparture.selectedFare?.Segments) {
+        segmentData = this.flightDataDeparture.selectedFare;
+      }
+      
+      if (segmentData && segmentData.Segments && segmentData.Segments[0]) {
+        this.processSegments(segmentData, false);
+      }
     }
 
     if (this.flightDataReturn) {
-      this.processSegments(this.flightDataReturn, true);
+      // Check different possible structures
+      let segmentData = null;
+      
+      // Structure 1: Response.Results.Segments (from API response)
+      if (this.flightDataReturn.Response?.Results?.Segments) {
+        segmentData = { Segments: [this.flightDataReturn.Response.Results.Segments] };
+      }
+      // Structure 2: Direct Segments array
+      else if (this.flightDataReturn.Segments) {
+        segmentData = this.flightDataReturn;
+      }
+      // Structure 3: selectedFare.Response.Results.Segments
+      else if (this.flightDataReturn.selectedFare?.Response?.Results?.Segments) {
+        segmentData = { Segments: [this.flightDataReturn.selectedFare.Response.Results.Segments] };
+      }
+      // Structure 4: selectedFare.Segments
+      else if (this.flightDataReturn.selectedFare?.Segments) {
+        segmentData = this.flightDataReturn.selectedFare;
+      }
+      
+      if (segmentData && segmentData.Segments && segmentData.Segments[0]) {
+        this.processSegments(segmentData, true);
+      }
+    }
+    
+    // Restore passenger data if available (from addon page)
+    // Always ensure passengers are initialized if we have counts
+    if (val['travellers'] && Array.isArray(val['travellers']) && val['travellers'].length > 0) {
+      // Restore existing passenger data
+      this.travellers = val['travellers'].map((t: any) => ({ ...t })); // Create new array with new objects
+      // Ensure we have the right number of passengers
+      while (this.travellers.length < this.totalAdults) {
+        this.travellers.push(this.getBlankAdult());
+      }
+      // Trim if we have too many
+      if (this.travellers.length > this.totalAdults) {
+        this.travellers = this.travellers.slice(0, this.totalAdults);
+      }
+    } else if (this.totalAdults > 0) {
+      // Initialize blank passengers if we have a count
+      try {
+        this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+      } catch (e) {
+        console.error('Error initializing travellers:', e);
+        this.travellers = [];
+      }
+    } else if (!this.travellers) {
+      this.travellers = [];
+    }
+    
+    if (val['children'] && Array.isArray(val['children']) && val['children'].length > 0) {
+      // Restore existing passenger data
+      this.children = val['children'].map((c: any) => ({ ...c })); // Create new array with new objects
+      // Ensure we have the right number of passengers
+      while (this.children.length < this.totalChildren) {
+        this.children.push(this.getBlankChild());
+      }
+      // Trim if we have too many
+      if (this.children.length > this.totalChildren) {
+        this.children = this.children.slice(0, this.totalChildren);
+      }
+    } else if (this.totalChildren > 0) {
+      // Initialize blank passengers if we have a count
+      try {
+        this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+      } catch (e) {
+        console.error('Error initializing children:', e);
+        this.children = [];
+      }
+    } else if (!this.children) {
+      this.children = [];
+    }
+    
+    if (val['infants'] && Array.isArray(val['infants']) && val['infants'].length > 0) {
+      // Restore existing passenger data
+      this.infants = val['infants'].map((i: any) => ({ ...i })); // Create new array with new objects
+      // Ensure we have the right number of passengers
+      while (this.infants.length < this.totalInfants) {
+        this.infants.push(this.getBlankInfant());
+      }
+      // Trim if we have too many
+      if (this.infants.length > this.totalInfants) {
+        this.infants = this.infants.slice(0, this.totalInfants);
+      }
+    } else if (this.totalInfants > 0) {
+      // Initialize blank passengers if we have a count
+      try {
+        this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+      } catch (e) {
+        console.error('Error initializing infants:', e);
+        this.infants = [];
+      }
+    } else if (!this.infants) {
+      this.infants = [];
+    }
+    
+    // Restore contact and GST details
+    if (val['contact']) {
+      this.contact = { ...this.contact, ...val['contact'] };
+    }
+    if (val['gstDetails']) {
+      this.gstDetails = { ...this.gstDetails, ...val['gstDetails'] };
+    }
+    if (val['termsAgreed'] !== undefined) {
+      this.termsAgreed = val['termsAgreed'];
+    }
+    
+    // Restore baggage data
+    if (val['baggageOptions']) {
+      this.baggageOptions = val['baggageOptions'];
+    }
+    if (val['baggageOptionsReturn']) {
+      this.baggageOptionsReturn = val['baggageOptionsReturn'];
+    }
+    if (val['baggageTotal'] !== undefined) {
+      this.baggageTotal = val['baggageTotal'];
+    }
+    if (val['baggageTotalReturn'] !== undefined) {
+      this.baggageTotalReturn = val['baggageTotalReturn'];
+    }
+    if (val['selectedBaggageCounts']) {
+      this.selectedBaggageCounts = { ...val['selectedBaggageCounts'] };
+    }
+    if (val['selectedBaggageCountsReturn']) {
+      this.selectedBaggageCountsReturn = { ...val['selectedBaggageCountsReturn'] };
+    }
+    
+    // Restore addon data (seats, meals, services)
+    if (val['addonData']) {
+      const addonData = val['addonData'];
+      if (addonData.seats) {
+        // Deep copy to avoid reference issues
+        this.selectedSeats = JSON.parse(JSON.stringify(addonData.seats.onward || {}));
+        this.selectedSeatsReturn = JSON.parse(JSON.stringify(addonData.seats.return || {}));
+      }
+      // Update total seats price
+      if (val['totalSeats'] !== undefined) {
+        this.totalSeats = val['totalSeats'];
+      } else {
+        // Recalculate if not provided
+        this.updateSeatTotal();
+      }
+    }
+    
+    // Restore seat maps if available
+    if (val['seatMap']) {
+      this.seatMap = val['seatMap'];
+    }
+    if (val['seatMapReturn']) {
+      this.seatMapReturn = val['seatMapReturn'];
+    }
+    
+    // Restore SSR values
+    if (val['ssrValues']) {
+      this.ssrValues = val['ssrValues'];
+    }
+    if (val['ssrValuesReturn']) {
+      this.ssrValuesReturn = val['ssrValuesReturn'];
+    }
+    
+    // Restore fare totals and individual fare values
+    // Only update if value is provided and not null/undefined
+    if (val['adultBaseFare'] !== undefined && val['adultBaseFare'] !== null) {
+      this.adultBaseFare = val['adultBaseFare'];
+    }
+    if (val['childrenBaseFare'] !== undefined && val['childrenBaseFare'] !== null) {
+      this.childrenBaseFare = val['childrenBaseFare'];
+    }
+    if (val['infantBaseFare'] !== undefined && val['infantBaseFare'] !== null) {
+      this.infantBaseFare = val['infantBaseFare'];
+    }
+    if (val['adultTaxes'] !== undefined && val['adultTaxes'] !== null) {
+      this.adultTaxes = val['adultTaxes'];
+    }
+    if (val['childrenTaxes'] !== undefined && val['childrenTaxes'] !== null) {
+      this.childrenTaxes = val['childrenTaxes'];
+    }
+    if (val['infantTaxes'] !== undefined && val['infantTaxes'] !== null) {
+      this.infantTaxes = val['infantTaxes'];
+    }
+    
+    // Restore return fare values if roundtrip
+    if (val['adultBaseFareReturn'] !== undefined && val['adultBaseFareReturn'] !== null) {
+      this.adultBaseFareReturn = val['adultBaseFareReturn'];
+    }
+    if (val['childrenBaseFareReturn'] !== undefined && val['childrenBaseFareReturn'] !== null) {
+      this.childrenBaseFareReturn = val['childrenBaseFareReturn'];
+    }
+    if (val['infantBaseFareReturn'] !== undefined && val['infantBaseFareReturn'] !== null) {
+      this.infantBaseFareReturn = val['infantBaseFareReturn'];
+    }
+    if (val['adultTaxesReturn'] !== undefined && val['adultTaxesReturn'] !== null) {
+      this.adultTaxesReturn = val['adultTaxesReturn'];
+    }
+    if (val['childrenTaxesReturn'] !== undefined && val['childrenTaxesReturn'] !== null) {
+      this.childrenTaxesReturn = val['childrenTaxesReturn'];
+    }
+    if (val['infantTaxesReturn'] !== undefined && val['infantTaxesReturn'] !== null) {
+      this.infantTaxesReturn = val['infantTaxesReturn'];
+    }
+    
+    // Restore fare totals - only update if value is provided and valid
+    if (val['totalBaseFare'] !== undefined && val['totalBaseFare'] !== null && val['totalBaseFare'] > 0) {
+      this.totalBaseFare = val['totalBaseFare'];
+    } else if ((!this.totalBaseFare || this.totalBaseFare === 0) && (this.totalAdults > 0 || this.totalChildren > 0 || this.totalInfants > 0)) {
+      // Recalculate if we have passenger counts but no totals
+      if (this.adultBaseFare || this.childrenBaseFare || this.infantBaseFare) {
+        this.aggregateFareSummary();
+      }
+    }
+    if (val['totalTaxes'] !== undefined && val['totalTaxes'] !== null && val['totalTaxes'] > 0) {
+      this.totalTaxes = val['totalTaxes'];
+    } else if ((!this.totalTaxes || this.totalTaxes === 0) && (this.totalAdults > 0 || this.totalChildren > 0 || this.totalInfants > 0)) {
+      // Recalculate if we have passenger counts but no totals
+      if (this.adultTaxes || this.childrenTaxes || this.infantTaxes) {
+        this.aggregateFareSummary();
+      }
     }
     
     // Initialize baggage counts
@@ -346,7 +768,25 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.processSSRDataFromFlightData(val['mobFinalPageData'].ssr);
     }
     
+    // Update final fare with restored data
+    this.updateFinalFare();
+    
+    // Set loader to false after processing data (unless proceeding to payment)
+    if (!val['proceedToPayment']) {
+      this.loader = false;
+    }
+    
+    // Check if we should proceed directly to payment (from addon page)
+    if (val['proceedToPayment']) {
+      // Use setTimeout to ensure UI is updated first
+      setTimeout(() => {
+        this.loader = true;
+        this.proceedToPayment();
+      }, 100);
+    }
+    
     this.loadFareRules();
+    this.cdr.detectChanges();
   }
   
   processSSRDataFromFlightData(ssrData: any) {
@@ -511,9 +951,26 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   callFareQuote() {
+    console.log('Calling fare quote with:', {
+      ipAddress: this.ipAddress,
+      tboToken: this.tboToken,
+      traceid: this.traceid,
+      resultIndex: this.resultIndex,
+      totalAdults: this.totalAdults,
+      totalChildren: this.totalChildren,
+      totalInfants: this.totalInfants
+    });
+    
+    if (!this.resultIndex) {
+      console.error('Cannot call fare quote: resultIndex is missing');
+      this.loader = false;
+      return;
+    }
+    
     this.subscriptions.add(
       this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
         .subscribe((val: any) => {
+          console.log('Fare quote response received:', val);
           this.fareQuote = val;
           this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
           
@@ -528,6 +985,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             this.subscriptions.add(
               this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
                 .subscribe((returnVal: any) => {
+                  console.log('Return fare quote response received:', returnVal);
                   this.fareQuoteReturn = returnVal;
                   this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
                   
@@ -539,13 +997,19 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
                   this.processFareBreakdown(returnVal, true);
                   this.aggregateFareSummary();
                   this.fetchSSRAfterFareQuotes();
-                }, err => { this.loader = false; })
+                }, err => { 
+                  console.error('Error fetching return fare quote:', err);
+                  this.loader = false; 
+                })
             );
           } else {
             this.aggregateFareSummary();
             this.fetchSSRAfterFareQuotes();
           }
-        }, err => { this.loader = false; })
+        }, err => { 
+          console.error('Error fetching fare quote:', err);
+          this.loader = false; 
+        })
     );
   }
 
@@ -667,10 +1131,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   processFareBreakdown(val: any, isReturn: boolean): void {
+    console.log('processFareBreakdown called with:', { isReturn, val });
     const results = val?.Response?.Results;
-    if (!results) return;
+    if (!results) {
+      console.error('No results in fare breakdown response. Full response:', val);
+      return;
+    }
 
     const fareBreakdown = results.FareBreakdown || [];
+    console.log('Fare breakdown array:', fareBreakdown);
     this.isLCC = results.IsLCC;
 
     let totalAdults = 0, totalChildren = 0, totalInfants = 0;
@@ -678,45 +1147,140 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     fareBreakdown.forEach(( breakdown: any ) => {
       const type = breakdown.PassengerType;
       const count = breakdown.PassengerCount;
+      
+      if (!count || count === 0) {
+        console.warn('Invalid passenger count in fare breakdown:', breakdown);
+        return;
+      }
+      
       const baseFare = breakdown.BaseFare / count;
       const tax = breakdown.Tax / count; 
 
       if (type === 1) { // Adult
         totalAdults = count;
-        if(isReturn) { this.adultBaseFareReturn = baseFare; this.adultTaxesReturn = tax; }
-        else { this.adultBaseFare = baseFare; this.adultTaxes = tax; }
+        if(isReturn) { 
+          this.adultBaseFareReturn = baseFare; 
+          this.adultTaxesReturn = tax; 
+        } else { 
+          this.adultBaseFare = baseFare; 
+          this.adultTaxes = tax; 
+        }
+        console.log(`Processed Adult fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
       } else if (type === 2) { // Child
         totalChildren = count;
-        if(isReturn) { this.childrenBaseFareReturn = baseFare; this.childrenTaxesReturn = tax; }
-        else { this.childrenBaseFare = baseFare; this.childrenTaxes = tax; }
+        if(isReturn) { 
+          this.childrenBaseFareReturn = baseFare; 
+          this.childrenTaxesReturn = tax; 
+        } else { 
+          this.childrenBaseFare = baseFare; 
+          this.childrenTaxes = tax; 
+        }
+        console.log(`Processed Child fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
       } else if (type === 3) { // Infant
         totalInfants = count;
-        if(isReturn) { this.infantBaseFareReturn = baseFare; this.infantTaxesReturn = tax; }
-        else { this.infantBaseFare = baseFare; this.infantTaxes = tax; }
+        if(isReturn) { 
+          this.infantBaseFareReturn = baseFare; 
+          this.infantTaxesReturn = tax; 
+        } else { 
+          this.infantBaseFare = baseFare; 
+          this.infantTaxes = tax; 
+        }
+        console.log(`Processed Infant fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
       }
     });
 
     if (!isReturn) {
-      this.totalAdults = totalAdults;
-      this.totalChildren = totalChildren;
-      this.totalInfants = totalInfants;
-      this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
-      this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
-      this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+      // Only update passenger counts if we got valid values from fare breakdown
+      // Otherwise preserve existing counts from flight list
+      if (totalAdults > 0) {
+        this.totalAdults = totalAdults;
+        // Only initialize travellers if not already set or if count changed
+        if (!this.travellers || this.travellers.length !== totalAdults) {
+          this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+        }
+      }
+      if (totalChildren > 0) {
+        this.totalChildren = totalChildren;
+        // Only initialize children if not already set or if count changed
+        if (!this.children || this.children.length !== totalChildren) {
+          this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+        }
+      }
+      if (totalInfants > 0) {
+        this.totalInfants = totalInfants;
+        // Only initialize infants if not already set or if count changed
+        if (!this.infants || this.infants.length !== totalInfants) {
+          this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+        }
+      }
+      
+      console.log(`Fare breakdown processed - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
+      console.log(`Fare values set - Adult Base: ${this.adultBaseFare}, Adult Tax: ${this.adultTaxes}, Child Base: ${this.childrenBaseFare}, Child Tax: ${this.childrenTaxes}`);
+      
+      // Force update fare summary immediately
+      this.aggregateFareSummary();
+      this.cdr.detectChanges();
     }
   }
 
   aggregateFareSummary(): void {
-    this.totalBaseFare = (this.adultBaseFare * this.totalAdults) + (this.childrenBaseFare * this.totalChildren) + (this.infantBaseFare * this.totalInfants);
-    this.totalTaxes = (this.adultTaxes * this.totalAdults) + (this.childrenTaxes * this.totalChildren) + (this.infantTaxes * this.totalInfants);
+    // Calculate base fare and taxes
+    let baseFare = 0;
+    let taxes = 0;
     
-    if(this.resultIndexReturn) {
-        this.totalBaseFare += (this.adultBaseFareReturn * this.totalAdults) + (this.childrenBaseFareReturn * this.totalChildren) + (this.infantBaseFareReturn * this.totalInfants);
-        this.totalTaxes += (this.adultTaxesReturn * this.totalAdults) + (this.childrenTaxesReturn * this.totalChildren) + (this.infantTaxesReturn * this.totalInfants);
+    // Onward journey
+    if (this.adultBaseFare && this.totalAdults > 0) {
+      baseFare += this.adultBaseFare * this.totalAdults;
     }
+    if (this.childrenBaseFare && this.totalChildren > 0) {
+      baseFare += this.childrenBaseFare * this.totalChildren;
+    }
+    if (this.infantBaseFare && this.totalInfants > 0) {
+      baseFare += this.infantBaseFare * this.totalInfants;
+    }
+    
+    if (this.adultTaxes && this.totalAdults > 0) {
+      taxes += this.adultTaxes * this.totalAdults;
+    }
+    if (this.childrenTaxes && this.totalChildren > 0) {
+      taxes += this.childrenTaxes * this.totalChildren;
+    }
+    if (this.infantTaxes && this.totalInfants > 0) {
+      taxes += this.infantTaxes * this.totalInfants;
+    }
+    
+    // Return journey (if roundtrip)
+    if(this.resultIndexReturn) {
+      if (this.adultBaseFareReturn && this.totalAdults > 0) {
+        baseFare += this.adultBaseFareReturn * this.totalAdults;
+      }
+      if (this.childrenBaseFareReturn && this.totalChildren > 0) {
+        baseFare += this.childrenBaseFareReturn * this.totalChildren;
+      }
+      if (this.infantBaseFareReturn && this.totalInfants > 0) {
+        baseFare += this.infantBaseFareReturn * this.totalInfants;
+      }
+      
+      if (this.adultTaxesReturn && this.totalAdults > 0) {
+        taxes += this.adultTaxesReturn * this.totalAdults;
+      }
+      if (this.childrenTaxesReturn && this.totalChildren > 0) {
+        taxes += this.childrenTaxesReturn * this.totalChildren;
+      }
+      if (this.infantTaxesReturn && this.totalInfants > 0) {
+        taxes += this.infantTaxesReturn * this.totalInfants;
+      }
+    }
+    
+    this.totalBaseFare = baseFare;
+    this.totalTaxes = taxes;
+    
+    console.log(`Aggregated fare - Base: ${this.totalBaseFare}, Taxes: ${this.totalTaxes}`);
+    console.log(`Passenger counts - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
 
     this.updateFinalFare();
     this.loader = false;
+    this.cdr.detectChanges();
   }
 
   updateFinalFare() {
@@ -1246,9 +1810,61 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
       return;
     }
-    
-    this.loader = true;
-    this.proceedToPayment();
+
+    // Build payload for addon page (seats/meals/others)
+    const addonPageData = {
+      ...this.fullFlightData,
+      tripType: this.tripType,
+      flightSegments: this.flightSegments,
+      flightSegmentsReturn: this.flightSegmentsReturn,
+      totalAdults: this.totalAdults,
+      totalChildren: this.totalChildren,
+      totalInfants: this.totalInfants,
+      seatMap: this.seatMap,
+      seatMapReturn: this.seatMapReturn,
+      ssrValues: this.ssrValues,
+      ssrValuesReturn: this.ssrValuesReturn,
+      // Include individual fare values for proper restoration
+      adultBaseFare: this.adultBaseFare,
+      childrenBaseFare: this.childrenBaseFare,
+      infantBaseFare: this.infantBaseFare,
+      adultTaxes: this.adultTaxes,
+      childrenTaxes: this.childrenTaxes,
+      infantTaxes: this.infantTaxes,
+      adultBaseFareReturn: this.adultBaseFareReturn,
+      childrenBaseFareReturn: this.childrenBaseFareReturn,
+      infantBaseFareReturn: this.infantBaseFareReturn,
+      adultTaxesReturn: this.adultTaxesReturn,
+      childrenTaxesReturn: this.childrenTaxesReturn,
+      infantTaxesReturn: this.infantTaxesReturn,
+      totalBaseFare: this.totalBaseFare,
+      totalTaxes: this.totalTaxes,
+      travellers: this.travellers,
+      children: this.children,
+      infants: this.infants,
+      contact: this.contact,
+      gstDetails: this.gstDetails,
+      termsAgreed: this.termsAgreed, // Include terms agreement status
+      tboToken: this.tboToken,
+      traceid: this.traceid,
+      resultIndex: this.resultIndex,
+      resultIndexReturn: this.resultIndexReturn,
+      baggageOptions: this.baggageOptions,
+      baggageOptionsReturn: this.baggageOptionsReturn,
+      baggageTotal: this.baggageTotal,
+      baggageTotalReturn: this.baggageTotalReturn,
+      selectedBaggageCounts: this.selectedBaggageCounts,
+      selectedBaggageCountsReturn: this.selectedBaggageCountsReturn,
+      totalSeats: this.totalSeats,
+      totalMealCharges: this.totalMealCharges,
+      totalSpecialServiceCharges: this.totalSpecialServiceCharges,
+      mobFinalPageData: this.fullFlightData?.mobFinalPageData || null
+    };
+
+    // Pass data to addon page and navigate
+    this.flightDataService.updateMessage(addonPageData);
+    this.loader = false;
+    this.router.navigate(['/flightaddons']);
   }
   
   // Baggage methods for mobile
