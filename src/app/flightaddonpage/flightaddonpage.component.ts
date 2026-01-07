@@ -571,7 +571,7 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         proceedToPayment: true
       };
       
-      this.flightDataService.updateMessage(updatedData);
+      this.flightDataService.setStringValue(updatedData as any);
     }
     
     // Navigate back to final page - it will check for proceedToPayment flag
@@ -645,7 +645,7 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         addonData: null
       };
       
-      this.flightDataService.updateMessage(updatedData);
+      this.flightDataService.setStringValue(updatedData as any);
     }
     
     // Navigate back to final page - it will check for proceedToPayment flag

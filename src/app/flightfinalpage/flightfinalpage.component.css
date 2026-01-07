@@ -3204,3 +3204,12 @@ select.traveller-input {
   width: 100%;
 }
 
+i.fas.fa-plane-departure {
+    margin-top:-33px;
+    background:#fff  !important;
+    padding:10px;
+}
+
+.flight-route{
+    padding:0 !important
+}
