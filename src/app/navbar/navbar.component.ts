@@ -2,6 +2,13 @@ import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+interface NavigationItem {
+  name: string;
+  hasDropdown: boolean;
+  link?: string;
+  dropdownItems?: { name: string; link: string }[];
+}
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -14,90 +21,16 @@ export class NavbarComponent {
   isMobileMenuOpen = false;
   isSearchOpen = false;
   activeDropdown: string | null = null;
-  mobileClickCount: { [key: string]: number } = {};
+  activeMobileAccordion: string | null = null; // Separate accordion state for mobile
   
   // Mobile navbar scroll behavior
   lastScrollTop = 0;
   isNavbarVisible = true;
-  hasReachedBookingSection = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  // Desktop Navigation items with dropdowns
-  navigationItems = [
-    {
-      name: 'About Us',
-      hasDropdown: true,
-      link: '/aboutcompany',
-      dropdownItems: [
-        { name: 'About the Company ', link: '/aboutcompany' },
-        { name: 'Our Vision ', link: '/aboutcompany/ourvision' },
-        { name: 'Our Commitment ', link: '/aboutcompany/ourcommittment' },
-        { name: 'Our Philosophy ', link: '/aboutcompany/ourworkphilosophy' }
-      ]
-    },
-    // {
-    //   name: 'Services',
-    //   hasDropdown: true,
-    //   dropdownItems: [
-    //     { name: 'Shared Cabs', link: '/services/shared-cabs' },
-    //     { name: 'Reserved Cabs', link: '/services/reserved-cabs' },
-    //     { name: 'Flight Booking', link: '/services/flights' },
-    //     { name: 'Airport Transfers', link: '/services/airport' }
-    //   ]
-    // },
-    {
-      name: 'Contact Us',
-      hasDropdown: false,
-      link: '/contactus'
-    },
-    {
-      name: 'Careers',
-      hasDropdown: true,
-      link:'/applyforjob',
-      dropdownItems: [
-        { name: 'Join our Corporate Team ', link: '/applyforjob' },
-        { name: 'Apply for Driver Job ', link: '/applyforjob/driverjob' },
-        { name: 'Attach Your Car ', link: '/applyforjob/partnerwithus/car-attachment' },
-        { name: 'Become an Agent', link: '/applyforjob/partnerwithus/agent' }
-      ]
-    },
-    {
-      name: 'Cancel Ticket',
-      hasDropdown: false,
-      link: '/cancelticket'
-    },
-    
-    {
-      name: 'Collaborate',
-      hasDropdown: true,
-      dropdownItems: [
-        { name: 'Influencer', link: '/applyforjob/partnerwithus/influencer' },
-        { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
-        { name: 'Private Events', link: '/applyforjob/partnerwithus/corporate-events' },
-        { name: 'Investor Center ', link: '/applyforjob/partnerwithus/investor' },
-      ]
-    },
-    {
-      name: 'Blogs',
-      hasDropdown: false,
-      link: '/blogs'
-    },
-    // {
-    //   name: 'Social',
-    //   hasDropdown: false,
-    //   link: '/newsandannouncements'
-   
-    // },
-    {
-      name: 'Sell Your Car',
-      hasDropdown: false,
-      link: '/sellyourcar'
-    }
-  ];
-
-  // Mobile Navigation items (separate array for mobile-specific menu items)
-  mobileNavigationItems = [
+  // Desktop Navigation items
+  desktopNavigationItems: NavigationItem[] = [
     {
       name: 'About Us',
       hasDropdown: true,
@@ -117,7 +50,7 @@ export class NavbarComponent {
     {
       name: 'Careers',
       hasDropdown: true,
-      link:'/applyforjob',
+      link: '/applyforjob',
       dropdownItems: [
         { name: 'Join our Corporate Team', link: '/applyforjob' },
         { name: 'Apply for Driver Job', link: '/applyforjob/driverjob' },
@@ -137,7 +70,7 @@ export class NavbarComponent {
         { name: 'Influencer', link: '/applyforjob/partnerwithus/influencer' },
         { name: 'M.I.C.E. Events', link: '/ourservices/corporatepackages' },
         { name: 'Private Events', link: '/applyforjob/partnerwithus/corporate-events' },
-        { name: 'Investor Center', link: '/applyforjob/partnerwithus/investor' },
+        { name: 'Investor Center', link: '/applyforjob/partnerwithus/investor' }
       ]
     },
     {
@@ -150,39 +83,86 @@ export class NavbarComponent {
       hasDropdown: false,
       link: '/sellyourcar'
     }
-    // Add more mobile-specific menu items here as needed
-    // Example:
-    // {
-    //   name: 'Download App',
-    //   hasDropdown: false,
-    //   link: '/download-app'
-    // },
-    // {
-    //   name: 'Offers',
-    //   hasDropdown: false,
-    //   link: '/offers'
-    // }
   ];
 
-  toggleMobileMenu() {
+  // Mobile Navigation items - can have different items from desktop
+  mobileNavigationItems: NavigationItem[] = [
+    {
+      name: 'Booking',
+      hasDropdown: true,
+     dropdownItems: [
+        { name: 'Shared', link: '/shared' },
+        { name: 'Reserved', link: '/reserved' },
+        { name: 'Flight', link: '/flight' }
+     ]
+    },
+    {
+      name: 'Explore ',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Top Destinations', link: '/destinations' },
+        { name: 'Blogs', link: '/blogs' },
+       
+      ]
+    },
+        {
+      name: 'Our Services',
+      hasDropdown: false,
+      link: '/ourservices'
+    },
+    
+    {
+      name: 'Passes & Permits',
+      hasDropdown: false,
+      link: '/passesandpermits'
+    },
+    {
+      name: 'Company',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'About Us', link: '/aboutcompany' },
+        { name: 'Careers', link: '/applyforjob' },
+        { name: 'Collaborate', link: '/applyforjob/partnerwithus/influencer' },
+        { name: 'Sell Your Car', link: '/sellyourcar' }
+      ]
+    },
+    {
+      name: 'Support',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Cancel Ticket', link: '/cancelticket' },
+        { name: 'Contact Us', link: '/contactus' }
+      ]
+    },
+     {
+      name: 'Sell Your Car',
+      hasDropdown: false,
+      link: '/sellyourcar'
+    },
+  
+  ];
+
+  // Toggle mobile menu
+  toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    this.activeDropdown = null;
-    this.mobileClickCount = {};
+    if (!this.isMobileMenuOpen) {
+      this.activeMobileAccordion = null;
+    }
   }
 
-  toggleDropdown(itemName: string) {
+  // Desktop dropdown handlers
+  toggleDropdown(itemName: string): void {
     this.activeDropdown = this.activeDropdown === itemName ? null : itemName;
   }
 
-  closeDropdown() {
+  closeDropdown(): void {
     this.activeDropdown = null;
   }
 
-  handleDesktopClick(item: any, event: Event) {
+  handleDesktopClick(item: NavigationItem, event: Event): void {
     if (item.hasDropdown) {
-      // If there's a parent link, navigate to it
       if (item.link) {
-        // Don't prevent default, let the link work
+        // Has parent link, allow navigation
         return;
       } else {
         // No parent link, just toggle dropdown
@@ -192,51 +172,47 @@ export class NavbarComponent {
     }
   }
 
-  handleMobileClick(item: any, event: Event) {
-    if (item.hasDropdown) {
-      event.preventDefault();
-      const clickCount = this.mobileClickCount[item.name] || 0;
-      this.mobileClickCount[item.name] = clickCount + 1;
+  // Mobile accordion handlers
+  toggleMobileAccordion(itemName: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.activeMobileAccordion = this.activeMobileAccordion === itemName ? null : itemName;
+  }
 
-      if (clickCount === 0) {
-        // First click - open dropdown
-        this.activeDropdown = item.name;
-      } else {
-        // Second click - navigate to main link
-        this.activeDropdown = null;
-        this.mobileClickCount[item.name] = 0;
-        if (item.link && isPlatformBrowser(this.platformId)) {
-          window.location.href = item.link;
-        }
-      }
+  isMobileAccordionOpen(itemName: string): boolean {
+    return this.activeMobileAccordion === itemName;
+  }
+
+  handleMobileItemClick(item: NavigationItem, event: Event): void {
+    if (item.hasDropdown) {
+      // Toggle accordion
+      this.toggleMobileAccordion(item.name, event);
+    } else {
+      // Navigate and close menu
+      this.closeMobileMenu();
     }
   }
 
-  handleMobileDrawerClick(item: any, event: Event) {
-    if (item.hasDropdown) {
-      event.preventDefault();
-      this.toggleDropdown(item.name);
-    }
+  handleMobileDropdownItemClick(): void {
+    this.closeMobileMenu();
   }
 
-  closeMobileDrawer(event: Event) {
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+    this.activeMobileAccordion = null;
+  }
+
+  closeMobileDrawer(event: Event): void {
     const target = event.target as HTMLElement;
     if (target.classList.contains('mobile-nav-drawer')) {
-      this.isMobileMenuOpen = false;
-      this.activeDropdown = null;
+      this.closeMobileMenu();
     }
   }
 
-  closeMobileMenuOnClick() {
-    this.isMobileMenuOpen = false;
-    this.activeDropdown = null;
-    this.mobileClickCount = {};
-  }
-
-  toggleSearch() {
+  // Search handlers
+  toggleSearch(): void {
     this.isSearchOpen = !this.isSearchOpen;
     if (this.isSearchOpen && isPlatformBrowser(this.platformId)) {
-      // Focus the input after a short delay to allow the animation
       setTimeout(() => {
         const input = document.querySelector('.sliding-search-input') as HTMLInputElement;
         if (input) {
@@ -246,12 +222,11 @@ export class NavbarComponent {
     }
   }
 
-  closeSearch() {
+  closeSearch(): void {
     this.isSearchOpen = false;
   }
 
-  onSearchBlur() {
-    // Close search after a short delay to allow for clicking the close button
+  onSearchBlur(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     setTimeout(() => {
       if (!document.querySelector('.sliding-search:hover') && !document.querySelector('.search-btn:hover')) {
@@ -260,75 +235,65 @@ export class NavbarComponent {
     }, 200);
   }
 
-  onSearch() {
+  onSearch(): void {
     if (this.searchQuery.trim()) {
-    
-      console.log('Ready for API implementation - search term:', this.searchQuery.trim());
-      
-      
-    } else {
-      console.log('⚠️ Empty search query - no action taken');
+      console.log('Search term:', this.searchQuery.trim());
+      // Implement your search logic here
     }
   }
 
+  // Host listeners
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event) {
+  onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.navbar') && !target.closest('.mobile-nav-drawer')) {
       this.activeDropdown = null;
       this.isMobileMenuOpen = false;
+      this.activeMobileAccordion = null;
     }
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  onResize(): void {
     if (isPlatformBrowser(this.platformId) && window.innerWidth > 768) {
       this.isMobileMenuOpen = false;
       this.activeDropdown = null;
+      this.activeMobileAccordion = null;
     }
   }
 
   @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
+  onWindowScroll(): void {
     if (!isPlatformBrowser(this.platformId) || window.innerWidth > 768) {
-      return; // Only for mobile
+      return;
     }
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const bookingSection = document.getElementById('wr-mobile-booking');
     
-    // Always show navbar at the top of the page
     if (scrollTop <= 50) {
       this.isNavbarVisible = true;
       this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
       return;
     }
     
-    // Check if we're currently in the booking section area (within viewport or slightly above)
     let isInBookingSection = false;
     if (bookingSection) {
       const rect = bookingSection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      // Consider booking section if it's visible in viewport or within 200px above/below
       isInBookingSection = rect.top < windowHeight + 200 && rect.bottom > -200;
     }
 
-    // Determine scroll direction
     const scrollDifference = scrollTop - this.lastScrollTop;
     
-    // If we're currently in booking section area, always show navbar
     if (isInBookingSection) {
       this.isNavbarVisible = true;
     } else {
-      // Hide navbar when scrolling up, show when scrolling down
       if (scrollDifference > 5) {
-        // Scrolling down
         this.isNavbarVisible = true;
       } else if (scrollDifference < -5) {
-        // Scrolling up
         this.isNavbarVisible = false;
       }
-      // If scroll difference is small, keep current state
     }
 
     this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;

@@ -28,10 +28,10 @@
       <a href="/"><img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide" class="logo-image"></a>
     </div>
 
-    <!-- Navigation Links (Desktop) -->
+    <!-- Desktop Navigation Links -->
     <div class="nav-links desktop-nav">
       <div 
-        *ngFor="let item of navigationItems" 
+        *ngFor="let item of desktopNavigationItems" 
         class="nav-item"
         [class.has-dropdown]="item.hasDropdown"
         (mouseenter)="item.hasDropdown ? toggleDropdown(item.name) : null"
@@ -45,7 +45,7 @@
           <i *ngIf="item.hasDropdown" class="fas fa-chevron-down dropdown-icon"></i>
         </a>
 
-        <!-- Dropdown Menu -->
+        <!-- Desktop Dropdown Menu -->
         <div 
           *ngIf="item.hasDropdown && activeDropdown === item.name" 
           class="dropdown-menu">
@@ -58,13 +58,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Search Icon -->
-    <!-- <div class="search-section">
-      <button class="search-btn" (click)="toggleSearch()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
-    </div> -->
 
     <!-- Information Icon -->
     <div class="info-section">
@@ -86,110 +79,58 @@
     </div>
   </div>
 
-  <!-- Sliding Search Input -->
-  <!-- <div class="sliding-search" [class.active]="isSearchOpen">
-    <div class="sliding-search-container">
-      <div class="search-input-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input 
-          type="text" 
-          class="sliding-search-input" 
-          placeholder="Enter Search"
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()"
-          (blur)="onSearchBlur()">
-        <button class="search-close-btn" (click)="closeSearch()" title="Close Search">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-  </div> -->
-
-  <!-- Mobile Navigation Menu -->
-  <div class="mobile-nav" [class.active]="isMobileMenuOpen">
-    <!-- <div class="mobile-search">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Enter Search"
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()">
-      </div>
-    </div> -->
-
-    <div class="mobile-nav-items">
-      <div 
-        *ngFor="let item of mobileNavigationItems" 
-        class="mobile-nav-item">
-        
-        <div 
-          class="mobile-nav-link"
-          (click)="handleMobileClick(item, $event)">
-          <a [href]="item.link || '#'" class="nav-link-text">{{ item.name }}</a>
-          <i *ngIf="item.hasDropdown" 
-             class="fas fa-chevron-down mobile-dropdown-icon"
-             [class.rotated]="activeDropdown === item.name"></i>
-        </div>
-
-        <!-- Mobile Dropdown -->
-        <div 
-          *ngIf="item.hasDropdown && activeDropdown === item.name" 
-          class="mobile-dropdown">
-          <a 
-            *ngFor="let dropdownItem of item.dropdownItems" 
-            [href]="dropdownItem.link" 
-            class="mobile-dropdown-item">
-            {{ dropdownItem.name }}
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-info">
-      <button class="info-btn" title="Information">
-        <i class="fas fa-info"></i>
-        <span>Information</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Mobile Nav Drawer (trial.html style) -->
+  <!-- Mobile Nav Drawer with Accordion -->
   <div class="mobile-nav-drawer" [class.open]="isMobileMenuOpen" (click)="closeMobileDrawer($event)">
-    <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()">×</button>
-    <div class="mobile-nav-drawer-items">
-      <div 
-        *ngFor="let item of mobileNavigationItems" 
-        class="mobile-nav-drawer-item">
-        
-        <a 
-          *ngIf="!item.hasDropdown"
-          [href]="item.link || '#'" 
-          class="mobile-nav-drawer-link"
-          (click)="closeMobileMenuOnClick()">
-          {{ item.name }}
-        </a>
-
+    <div class="mobile-nav-drawer-content" (click)="$event.stopPropagation()">
+      <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()">×</button>
+      
+      <div class="mobile-nav-drawer-items">
         <div 
-          *ngIf="item.hasDropdown"
-          class="mobile-nav-drawer-link"
-          (click)="handleMobileDrawerClick(item, $event)">
-          {{ item.name }}
-        </div>
-
-        <!-- Mobile Drawer Dropdown -->
-        <div 
-          *ngIf="item.hasDropdown && activeDropdown === item.name" 
-          class="mobile-nav-drawer-dropdown">
+          *ngFor="let item of mobileNavigationItems" 
+          class="mobile-nav-drawer-item">
+          
+          <!-- Item without dropdown -->
           <a 
-            *ngFor="let dropdownItem of item.dropdownItems" 
-            [href]="dropdownItem.link" 
-            class="mobile-nav-drawer-dropdown-item"
-            (click)="closeMobileMenuOnClick()">
-            {{ dropdownItem.name }}
+            *ngIf="!item.hasDropdown"
+            [href]="item.link || '#'" 
+            class="mobile-nav-drawer-link"
+            (click)="handleMobileItemClick(item, $event)">
+            {{ item.name }}
           </a>
+
+          <!-- Item with dropdown (accordion) -->
+          <div *ngIf="item.hasDropdown" class="mobile-nav-drawer-accordion">
+            <div 
+              class="mobile-nav-drawer-link mobile-nav-drawer-accordion-header"
+              [class.active]="isMobileAccordionOpen(item.name)"
+              (click)="toggleMobileAccordion(item.name, $event)">
+              <span>{{ item.name }}</span>
+              <i class="fas fa-chevron-down mobile-accordion-icon" 
+                 [class.rotated]="isMobileAccordionOpen(item.name)"></i>
+            </div>
+
+            <!-- Accordion Dropdown -->
+            <div 
+              class="mobile-nav-drawer-accordion-content"
+              [class.open]="isMobileAccordionOpen(item.name)">
+              <a 
+                *ngFor="let dropdownItem of item.dropdownItems" 
+                [href]="dropdownItem.link" 
+                class="mobile-nav-drawer-dropdown-item"
+                (click)="handleMobileDropdownItemClick()">
+                {{ dropdownItem.name }}
+              </a>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Mobile Info Section -->
+      <div class="mobile-drawer-footer">
+        <a href="/newsandannouncements" class="mobile-info-link" (click)="closeMobileMenu()">
+          <i class="fas fa-info-circle"></i>
+          <span>News & Announcements</span>
+        </a>
       </div>
     </div>
   </div>

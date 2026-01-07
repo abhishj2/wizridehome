@@ -14,7 +14,10 @@ import {
   Renderer2
 } from '@angular/core';
 import { firstValueFrom, Subscription } from 'rxjs'; 
-import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
+
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -372,12 +375,7 @@ isMobileView(): boolean {
           hasFareBreakdown: hasProcessedFareBreakdown
         });
         
-        // Only call fare quote if:
-        // 1. We have traceid and resultIndex
-        // 2. Not proceeding to payment
-        // 3. Don't already have fareQuote
-        // 4. Haven't already processed FareBreakdown from the data
-        // 5. Don't have fare values already
+
         if(this.traceid && this.resultIndex && !shouldProceedToPayment && !this.fareQuote && !hasProcessedFareBreakdown) {
           // Call if we don't have fare breakdown data
           if (isFromFlightList || (!val['adultBaseFare'] && !val['totalBaseFare'])) {
@@ -493,6 +491,13 @@ getCurrentDialerValue(): string {
   return this.currentPassengerDetails.mobileNumber || '';
 }
   processFlightDataInput(val: any) {
+     if (val['traceid'] && val['traceid'] !== this.traceid) {
+  this.ssrFetched = false;
+}              
+  this.baggageOptions = [];                
+  this.baggageOptionsReturn = [];         
+  this.selectedBaggageCounts = {};         
+  this.selectedBaggageCountsReturn = {};
     // Merge with existing data instead of completely replacing
     this.fullFlightData = { ...this.fullFlightData, ...val };
     
@@ -928,7 +933,7 @@ getCurrentDialerValue(): string {
       this.parseSeatDataFromSSR(ssrData.return, true);
     }
 
-    this.attemptSSRFetch();
+    // this.attemptSSRFetch();
   }
   
   parseSeatDataFromSSR(ssrData: any, isReturn: boolean) {
@@ -1079,6 +1084,10 @@ getCurrentDialerValue(): string {
   }
 
   callFareQuote() {
+    if (this.fareQuote) {
+    console.log('FareQuote already exists, skipping API call');
+    return;
+  }
     console.log('Calling fare quote with:', {
       ipAddress: this.ipAddress,
       tboToken: this.tboToken,
@@ -1152,13 +1161,25 @@ getCurrentDialerValue(): string {
       }
   }
 
-  fetchSSRAfterFareQuotes() {
-      if (this.ssrFetched) { return; }
-      if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
-        console.warn('SSR prerequisites missing', { ip: !!this.ipAddress, token: !!this.tboToken, traceid: !!this.traceid, resultIndex: !!this.resultIndex });
+ fetchSSRAfterFareQuotes() {
+    if (this.ssrFetched && this.baggageOptions.length > 0) {
+          console.log('SSR already fetched, skipping');
+
         return;
-      }
-      console.log('Calling SSR for onward', { ip: this.ipAddress, token: !!this.tboToken, traceid: this.traceid, resultIndex: this.resultIndex });
+    }
+
+  if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
+    console.warn('SSR prerequisites missing');
+    return;
+  }
+  this.ssrFetched = true;
+  console.log('Calling SSR for onward', {
+    ip: this.ipAddress,
+    token: !!this.tboToken,
+    traceid: this.traceid,
+    resultIndex: this.resultIndex
+  });
+
       this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
           this.ssrValues = val;
           const response = val?.Response || {};
@@ -1166,9 +1187,12 @@ getCurrentDialerValue(): string {
           console.log('SSR onward baggage raw', baggage);
           
           // Handle unified SSR format where Baggage may contain two legs in one response
-          const isSplitableArray = Array.isArray(baggage) && baggage.length === 2 && Array.isArray(baggage[0]) && Array.isArray(baggage[1]);
-          console.log('SSR onward baggage splitable:', isSplitableArray);
-          if (isSplitableArray) {
+       this.isUnifiedSegmentFormat = Array.isArray(baggage) 
+  && baggage.length === 2 
+  && Array.isArray(baggage[0]) 
+  && Array.isArray(baggage[1]);
+          console.log('SSR onward baggage splitable:', this.isUnifiedSegmentFormat);
+          if (this.isUnifiedSegmentFormat) {
               this.processBaggage([baggage[0]], false);
               if (this.tripType === 'roundtrip') {
                   this.processBaggage([baggage[1]], true);
@@ -1185,10 +1209,9 @@ getCurrentDialerValue(): string {
           if(seatData) {
               this.parseSeatData(seatData, false);
           }
-          this.ssrFetched = true;
       });
       
-      if(this.resultIndexReturn) {
+      if(this.resultIndexReturn && !this.isUnifiedSegmentFormat) {
           this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
               this.ssrValuesReturn = val;
               const baggageRet = val?.Response?.Baggage || this.findDeepArray(val, 'Baggage');
@@ -1205,15 +1228,16 @@ getCurrentDialerValue(): string {
               } else {
                   console.warn('No seat data found in SSR response for return journey');
               }
+
           });
+          
       }
   }
-
-  private attemptSSRFetch() {
-    if (!this.ssrFetched && this.resultIndex && this.tboToken && this.traceid) {
-      this.fetchSSRAfterFareQuotes();
-    }
+private attemptSSRFetch() {
+  if (this.ipAddress && this.tboToken && this.traceid && this.resultIndex) {
+    this.fetchSSRAfterFareQuotes();   // 🔥 do not block on ssrFetched
   }
+}
 
   private findDeepArray(obj: any, key: string): any {
     if (!obj || typeof obj !== 'object') return null;
@@ -1230,7 +1254,7 @@ getCurrentDialerValue(): string {
   // LOGIC IMPLEMENTATION FOR CRITICAL METHODS
   // =================================================================
 
-  processBaggage(baggageArray: any[][], isReturn: boolean) {
+  processBaggage(baggageArray: any, isReturn: boolean) {
       console.log('Processing baggage data:', { baggageArray, isReturn });
 
       if (!baggageArray) {
@@ -1251,12 +1275,32 @@ getCurrentDialerValue(): string {
       }
 
       // Flatten nested arrays (TBO returns per-sector arrays)
-      const flatBaggage = Array.isArray(baggageArray) ? baggageArray.flat() : [];
-      console.log('Flattened baggage:', flatBaggage);
+let flatBaggage: any[] = [];
+
+if (Array.isArray(baggageArray)) {
+  if (Array.isArray(baggageArray[0])) {
+    flatBaggage = baggageArray.flat();
+  } else {
+    flatBaggage = baggageArray;
+  }
+}    console.log('Flattened baggage:', flatBaggage);
 
       // Filter out NoBaggage and zero-weight items
       console.log("Pre-filter baggage length:", flatBaggage.length);
-      const validOptions = flatBaggage.filter((item: any) => !!item && item.Code !== 'NoBaggage' && (item.Weight || item.Weight === 0 ? item.Weight > 0 : true));
+const validOptions = flatBaggage.filter((item: any) => {
+  if (!item) return false;
+  if (item.Code === 'NoBaggage') return false;
+
+  if (item.Weight !== undefined && item.Weight !== null) {
+    return item.Weight > 0;
+  }
+
+  if (item.Description && item.Description.toLowerCase().includes('kg')) {
+    return true;
+  }
+
+  return true;
+});
 
       if (!validOptions.length) {
           if (isReturn) {
@@ -1900,18 +1944,14 @@ getCurrentDialerValue(): string {
   }
 
   // Baggage Modal Handlers
-  openBaggageModal(isReturn: boolean = false) {
-    if(isReturn) {
-        this.baggageModalOpenReturn = true;
-    } else {
-        this.baggageModalOpenOutbound = true;
-    }
-  }
+openBaggageModal(isReturn: boolean = false) {
+  this.activeRoundBaggageTab = isReturn ? 'return' : 'onward';
+  this.showAddBaggageModal = true;   // 🔥 THIS triggers SSR
+}
 
-  closeBaggageModal() {
-    this.baggageModalOpenOutbound = false;
-    this.baggageModalOpenReturn = false;
-  }
+closeBaggageModal() {
+  this.showAddBaggageModal = false;   // 🔥 THIS is what actually controls modal
+}
 
   // General Close Modal (handles all)
   closeModal() {
@@ -2026,16 +2066,9 @@ getCurrentDialerValue(): string {
   openFareSummary() { this.showFareSummaryModal = true; }
   closeFareSummary() { this.showFareSummaryModal = false; }
   get showAddBaggageModal(): boolean { return this._showAddBaggageModal; }
-  set showAddBaggageModal(val: boolean) {
-    this._showAddBaggageModal = val;
-    if (val) {
-      this.attemptSSRFetch();
-      if ((!this.baggageOptions || this.baggageOptions.length === 0) && (!this.baggageOptionsReturn || this.baggageOptionsReturn.length === 0)) {
-        console.log('Baggage modal opened, fetching SSR baggage because options are empty');
-        this.attemptSSRFetch();
-      }
-    }
-  }
+set showAddBaggageModal(val: boolean) {
+  this._showAddBaggageModal = val;
+}
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
   closeGSTModal() { this.showGSTModal = false; }
   saveGSTDetails() { this.gstInfo.companyName = this.gstDetails.companyName; this.gstInfo.registrationNo = this.gstDetails.gstNumber; this.contact.hasGST = !!this.gstDetails.companyName; this.closeGSTModal(); }
