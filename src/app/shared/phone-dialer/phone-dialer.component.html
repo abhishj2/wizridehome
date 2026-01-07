@@ -2,24 +2,68 @@
 <div class="custom-keypad-overlay" *ngIf="isVisible" (click)="onOverlayClick()">
   <div class="custom-keypad" (click)="onKeypadClick($event)">
     <div class="keypad-row">
-      <button class="keypad-btn" (click)="onNumberClick('1')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">1</button>
-      <button class="keypad-btn" (click)="onNumberClick('2')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">2</button>
-      <button class="keypad-btn" (click)="onNumberClick('3')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">3</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('1', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">1</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('2', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">2</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('3', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">3</button>
     </div>
     <div class="keypad-row">
-      <button class="keypad-btn" (click)="onNumberClick('4')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">4</button>
-      <button class="keypad-btn" (click)="onNumberClick('5')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">5</button>
-      <button class="keypad-btn" (click)="onNumberClick('6')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">6</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('4', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">4</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('5', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">5</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('6', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">6</button>
     </div>
     <div class="keypad-row">
-      <button class="keypad-btn" (click)="onNumberClick('7')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">7</button>
-      <button class="keypad-btn" (click)="onNumberClick('8')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">8</button>
-      <button class="keypad-btn" (click)="onNumberClick('9')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">9</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('7', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">7</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('8', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">8</button>
+      <button class="keypad-btn" 
+              (click)="onNumberClick('9', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">9</button>
     </div>
     <div class="keypad-row">
       <button class="keypad-btn keypad-btn-space"></button>
-      <button class="keypad-btn" (click)="onNumberClick('0')" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">0</button>
-      <button class="keypad-btn keypad-btn-backspace" (click)="onBackspace()" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+      <button class="keypad-btn" 
+              (click)="onNumberClick('0', $event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">0</button>
+      <button class="keypad-btn keypad-btn-backspace" 
+              (click)="onBackspace($event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
           <line x1="18" y1="9" x2="12" y2="15"></line>
@@ -28,8 +72,11 @@
       </button>
     </div>
     <div class="keypad-row keypad-row-done">
-      <button class="keypad-btn-done" (click)="onDone()" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">Done</button>
+      <button class="keypad-btn-done" 
+              (click)="onDone($event)"
+              (pointerdown)="onPointerDown($event)"
+              (pointerup)="onPointerUp($event)"
+              (pointerleave)="onPointerUp($event)">Done</button>
     </div>
   </div>
 </div>
-

@@ -1486,6 +1486,16 @@
     <button class="proceed-btn" (click)="showFareRules = false">DONE</button>
   </div>
 </div>
+<!-- Add this debug button somewhere in your template -->
+<button *ngIf="!loader" style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px;" 
+        (click)="testSSRFetch()">
+  DEBUG SSR
+</button>
+
+<button *ngIf="!loader" style="position: fixed; bottom: 150px; right: 20px; z-index: 9999; background: blue; color: white; padding: 10px; border-radius: 5px;" 
+        (click)="checkBaggageState()">
+  CHECK BAGGAGE
+</button>
 <app-phone-dialer
   [isVisible]="showPhoneDialer"
   [currentValue]="getCurrentDialerValue()"

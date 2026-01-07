@@ -1083,72 +1083,76 @@ getCurrentDialerValue(): string {
     }
   }
 
-  callFareQuote() {
-    if (this.fareQuote) {
+ callFareQuote() {
+  console.log('=== CALL FARE QUOTE START ===');
+  console.log('FareQuote exists?', !!this.fareQuote);
+  console.log('ResultIndex:', this.resultIndex);
+  console.log('TraceID:', this.traceid);
+  
+  if (this.fareQuote) {
     console.log('FareQuote already exists, skipping API call');
     return;
   }
-    console.log('Calling fare quote with:', {
-      ipAddress: this.ipAddress,
-      tboToken: this.tboToken,
-      traceid: this.traceid,
-      resultIndex: this.resultIndex,
-      totalAdults: this.totalAdults,
-      totalChildren: this.totalChildren,
-      totalInfants: this.totalInfants
-    });
-    
-    if (!this.resultIndex) {
-      console.error('Cannot call fare quote: resultIndex is missing');
-      this.loader = false;
-      return;
-    }
-    
-    this.subscriptions.add(
-      this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
-        .subscribe((val: any) => {
-          console.log('Fare quote response received:', val);
-          this.fareQuote = val;
-          this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
-          
-          if(this.fareQuote?.Response?.IsPriceChanged){
-             Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });  
-          }
-
-          this.processPassportReqs(this.fareQuote?.Response?.Results);
-          this.processFareBreakdown(val, false);
-
-          if (this.resultIndexReturn) {
-            this.subscriptions.add(
-              this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
-                .subscribe((returnVal: any) => {
-                  console.log('Return fare quote response received:', returnVal);
-                  this.fareQuoteReturn = returnVal;
-                  this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
-                  
-                  if(this.fareQuoteReturn?.Response?.IsPriceChanged) {
-                    Swal.fire({ title: 'Return Price Changed', icon: 'warning' });
-                  }
-                  
-                  this.processPassportReqs(this.fareQuoteReturn?.Response?.Results);
-                  this.processFareBreakdown(returnVal, true);
-                  this.aggregateFareSummary();
-                  this.fetchSSRAfterFareQuotes();
-                }, err => { 
-                  console.error('Error fetching return fare quote:', err);
-                  this.loader = false; 
-                })
-            );
-          } else {
-            this.aggregateFareSummary();
-            this.fetchSSRAfterFareQuotes();
-          }
-        }, err => { 
-          console.error('Error fetching fare quote:', err);
-          this.loader = false; 
-        })
-    );
+  
+  if (!this.resultIndex) {
+    console.error('Cannot call fare quote: resultIndex is missing');
+    this.loader = false;
+    return;
   }
+  
+  console.log('Actually calling fare quote API...');
+  
+  this.subscriptions.add(
+    this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
+      .subscribe((val: any) => {
+        console.log('Fare quote response received:', val);
+        console.log('Fare quote response keys:', Object.keys(val || {}));
+        
+        this.fareQuote = val;
+        this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
+        
+        if(this.fareQuote?.Response?.IsPriceChanged){
+          Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });  
+        }
+
+        this.processPassportReqs(this.fareQuote?.Response?.Results);
+        this.processFareBreakdown(val, false);
+
+        // Call SSR immediately after processing fare breakdown
+        console.log('Calling fetchSSRAfterFareQuotes...');
+        this.fetchSSRAfterFareQuotes();
+
+        if (this.resultIndexReturn) {
+          this.subscriptions.add(
+            this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
+              .subscribe((returnVal: any) => {
+                console.log('Return fare quote response received:', returnVal);
+                this.fareQuoteReturn = returnVal;
+                this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
+                
+                if(this.fareQuoteReturn?.Response?.IsPriceChanged) {
+                  Swal.fire({ title: 'Return Price Changed', icon: 'warning' });
+                }
+                
+                this.processPassportReqs(this.fareQuoteReturn?.Response?.Results);
+                this.processFareBreakdown(returnVal, true);
+                this.aggregateFareSummary();
+                
+                // SSR for return will be fetched in fetchSSRAfterFareQuotes if not unified format
+              }, err => { 
+                console.error('Error fetching return fare quote:', err);
+                this.loader = false; 
+              })
+          );
+        } else {
+          this.aggregateFareSummary();
+        }
+      }, err => { 
+        console.error('Error fetching fare quote:', err);
+        this.loader = false; 
+      })
+  );
+}
 
   processPassportReqs(results: any) {
       if(!results) return;
@@ -1161,78 +1165,97 @@ getCurrentDialerValue(): string {
       }
   }
 
- fetchSSRAfterFareQuotes() {
-    if (this.ssrFetched && this.baggageOptions.length > 0) {
-          console.log('SSR already fetched, skipping');
-
-        return;
-    }
-
+fetchSSRAfterFareQuotes() {
+  // Don't skip if baggageOptions is empty - we need to fetch
   if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
     console.warn('SSR prerequisites missing');
     return;
   }
-  this.ssrFetched = true;
+  
   console.log('Calling SSR for onward', {
     ip: this.ipAddress,
     token: !!this.tboToken,
     traceid: this.traceid,
-    resultIndex: this.resultIndex
+    resultIndex: this.resultIndex,
+    baggageOptionsCount: this.baggageOptions.length
   });
 
-      this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
-          this.ssrValues = val;
-          const response = val?.Response || {};
-          const baggage = response?.Baggage || this.findDeepArray(val, 'Baggage');
-          console.log('SSR onward baggage raw', baggage);
-          
-          // Handle unified SSR format where Baggage may contain two legs in one response
-       this.isUnifiedSegmentFormat = Array.isArray(baggage) 
-  && baggage.length === 2 
-  && Array.isArray(baggage[0]) 
-  && Array.isArray(baggage[1]);
-          console.log('SSR onward baggage splitable:', this.isUnifiedSegmentFormat);
-          if (this.isUnifiedSegmentFormat) {
-              this.processBaggage([baggage[0]], false);
-              if (this.tripType === 'roundtrip') {
-                  this.processBaggage([baggage[1]], true);
-              }
-          } else if (baggage) {
-              this.processBaggage(baggage, false);
-          } else {
-              console.warn('No baggage data found in SSR response for onward journey');
-          }
-          this.logBaggageState('after-onward-ssr', false);
-          
-          // Seats
-          const seatData = response?.Seat || response?.Seats || response?.SeatMap || (val as any)?.Seat;
-          if(seatData) {
-              this.parseSeatData(seatData, false);
-          }
-      });
+  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
+    console.log('SSR onward response:', val);
+    this.ssrValues = val;
+    const response = val?.Response || {};
+    const baggage = response?.Baggage || this.findDeepArray(val, 'Baggage');
+    
+    console.log('SSR onward baggage raw', baggage);
+    
+    if (baggage && Array.isArray(baggage)) {
+      // Always process baggage, even if we fetched before
+      this.isUnifiedSegmentFormat = Array.isArray(baggage) 
+        && baggage.length === 2 
+        && Array.isArray(baggage[0]) 
+        && Array.isArray(baggage[1]);
       
-      if(this.resultIndexReturn && !this.isUnifiedSegmentFormat) {
-          this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
-              this.ssrValuesReturn = val;
-              const baggageRet = val?.Response?.Baggage || this.findDeepArray(val, 'Baggage');
-              if(baggageRet) this.processBaggage(baggageRet, true);
-              this.logBaggageState('after-return-ssr', true);
-              
-              // Try multiple possible paths for seat data
-              const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
-              console.log('SSR Response for return:', val);
-              console.log('Seat data found:', seatData);
-              
-              if(seatData) {
-                  this.parseSeatData(seatData, true);
-              } else {
-                  console.warn('No seat data found in SSR response for return journey');
-              }
-
-          });
-          
+      console.log('SSR onward baggage splitable:', this.isUnifiedSegmentFormat);
+      
+      if (this.isUnifiedSegmentFormat) {
+        this.processBaggage([baggage[0]], false);
+        if (this.tripType === 'roundtrip') {
+          this.processBaggage([baggage[1]], true);
+        }
+      } else {
+        this.processBaggage(baggage, false);
       }
+    } else {
+      console.warn('No baggage data found in SSR response for onward journey');
+      // Set empty arrays to show "No extra baggage available"
+      this.baggageOptions = [];
+      this.extraBaggageAvailable = false;
+    }
+    
+    // Seats
+    const seatData = response?.Seat || response?.Seats || response?.SeatMap || (val as any)?.Seat;
+    if(seatData) {
+      this.parseSeatData(seatData, false);
+    }
+    
+    this.cdr.detectChanges();
+  }, error => {
+    console.error('Error fetching SSR:', error);
+    this.baggageOptions = [];
+    this.extraBaggageAvailable = false;
+    this.cdr.detectChanges();
+  });
+  
+  // Fetch return SSR if needed
+  if(this.resultIndexReturn && !this.isUnifiedSegmentFormat) {
+    this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
+      console.log('SSR return response:', val);
+      this.ssrValuesReturn = val;
+      const baggageRet = val?.Response?.Baggage || this.findDeepArray(val, 'Baggage');
+      
+      if(baggageRet && Array.isArray(baggageRet)) {
+        this.processBaggage(baggageRet, true);
+      } else {
+        console.warn('No baggage data found in SSR response for return journey');
+        this.baggageOptionsReturn = [];
+        this.extraBaggageAvailableReturn = false;
+      }
+      
+      // Seats for return
+      const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
+      if(seatData) {
+        this.parseSeatData(seatData, true);
+      }
+      
+      this.cdr.detectChanges();
+    }, error => {
+      console.error('Error fetching return SSR:', error);
+      this.baggageOptionsReturn = [];
+      this.extraBaggageAvailableReturn = false;
+      this.cdr.detectChanges();
+    });
   }
+}
 private attemptSSRFetch() {
   if (this.ipAddress && this.tboToken && this.traceid && this.resultIndex) {
     this.fetchSSRAfterFareQuotes();   // 🔥 do not block on ssrFetched
@@ -1254,134 +1277,256 @@ private attemptSSRFetch() {
   // LOGIC IMPLEMENTATION FOR CRITICAL METHODS
   // =================================================================
 
-  processBaggage(baggageArray: any, isReturn: boolean) {
-      console.log('Processing baggage data:', { baggageArray, isReturn });
+processBaggage(baggageArray: any, isReturn: boolean) {
+  console.log('Processing baggage data:', { baggageArray, isReturn });
 
-      if (!baggageArray) {
-          if (isReturn) {
-              this.baggageOptionsReturn = [];
-              this.selectedBaggageCountsReturn = {};
-              this.baggageTotalReturn = 0;
-              this.extraBaggageAvailableReturn = false;
-          } else {
-              this.baggageOptions = [];
-              this.selectedBaggageCounts = {};
-              this.baggageTotal = 0;
-              this.extraBaggageAvailable = false;
-          }
-          console.warn('processBaggage: no baggageArray provided', { isReturn });
-          this.cdr.detectChanges();
-          return;
-      }
+  if (!baggageArray || (Array.isArray(baggageArray) && baggageArray.length === 0)) {
+    console.log('No baggage array or empty array provided');
+    if (isReturn) {
+      this.baggageOptionsReturn = [];
+      this.selectedBaggageCountsReturn = {};
+      this.baggageTotalReturn = 0;
+      this.extraBaggageAvailableReturn = false;
+    } else {
+      this.baggageOptions = [];
+      this.selectedBaggageCounts = {};
+      this.baggageTotal = 0;
+      this.extraBaggageAvailable = false;
+    }
+    this.cdr.detectChanges();
+    return;
+  }
 
-      // Flatten nested arrays (TBO returns per-sector arrays)
-let flatBaggage: any[] = [];
-
-if (Array.isArray(baggageArray)) {
-  if (Array.isArray(baggageArray[0])) {
-    flatBaggage = baggageArray.flat();
+  // Flatten nested arrays
+  let flatBaggage: any[] = [];
+  
+  if (Array.isArray(baggageArray)) {
+    if (Array.isArray(baggageArray[0])) {
+      // Nested array (per segment)
+      flatBaggage = baggageArray.flat();
+    } else {
+      flatBaggage = baggageArray;
+    }
   } else {
-    flatBaggage = baggageArray;
+    // Single object
+    flatBaggage = [baggageArray];
   }
-}    console.log('Flattened baggage:', flatBaggage);
+  
+  console.log('Flattened baggage items:', flatBaggage.length);
 
-      // Filter out NoBaggage and zero-weight items
-      console.log("Pre-filter baggage length:", flatBaggage.length);
-const validOptions = flatBaggage.filter((item: any) => {
-  if (!item) return false;
-  if (item.Code === 'NoBaggage') return false;
+  // Filter valid baggage options
+  const validOptions = flatBaggage.filter((item: any) => {
+    if (!item || !item.Code) return false;
+    
+    // Skip "NoBaggage" items
+    if (item.Code === 'NoBaggage' || item.Code === 'NOBAGGAGE') return false;
+    
+    // Check if it has weight and price
+    const hasWeight = item.Weight !== undefined && item.Weight !== null;
+    const hasPrice = item.Price !== undefined && item.Price !== null;
+    
+    return hasWeight && hasPrice && item.Price > 0;
+  });
 
-  if (item.Weight !== undefined && item.Weight !== null) {
-    return item.Weight > 0;
+  console.log('Valid baggage options after filtering:', validOptions.length);
+
+  if (validOptions.length === 0) {
+    console.log('No valid baggage options available');
+    if (isReturn) {
+      this.baggageOptionsReturn = [];
+      this.extraBaggageAvailableReturn = false;
+    } else {
+      this.baggageOptions = [];
+      this.extraBaggageAvailable = false;
+    }
+    this.cdr.detectChanges();
+    return;
   }
 
-  if (item.Description && item.Description.toLowerCase().includes('kg')) {
-    return true;
+  // Sort by weight (kgs) ascending
+  validOptions.sort((a, b) => (a.Weight || 0) - (b.Weight || 0));
+
+  if (isReturn) {
+    this.extraBaggageAvailableReturn = true;
+    this.baggageOptionsReturn = validOptions.map((item: any) => ({
+      code: item.Code,
+      Code: item.Code,
+      kgs: item.Weight,
+      Weight: item.Weight,
+      price: item.Price,
+      Price: item.Price,
+      Description: item.Description || `${item.Weight} kg`,
+      WayType: item.WayType,
+      AirlineCode: item.AirlineCode,
+      FlightNumber: item.FlightNumber,
+      Origin: item.Origin,
+      Destination: item.Destination,
+      count: 0
+    }));
+
+    // Initialize counts
+    this.selectedBaggageCountsReturn = {};
+    this.baggageOptionsReturn.forEach(opt => this.selectedBaggageCountsReturn[opt.Code] = 0);
+    this.baggageTotalReturn = 0;
+    
+    console.log('Set return baggage options:', this.baggageOptionsReturn);
+  } else {
+    this.extraBaggageAvailable = true;
+    this.baggageOptions = validOptions.map((item: any) => ({
+      code: item.Code,
+      Code: item.Code,
+      kgs: item.Weight,
+      Weight: item.Weight,
+      price: item.Price,
+      Price: item.Price,
+      Description: item.Description || `${item.Weight} kg`,
+      WayType: item.WayType,
+      AirlineCode: item.AirlineCode,
+      FlightNumber: item.FlightNumber,
+      Origin: item.Origin,
+      Destination: item.Destination,
+      count: 0
+    }));
+
+    // Initialize counts
+    this.selectedBaggageCounts = {};
+    this.baggageOptions.forEach(opt => this.selectedBaggageCounts[opt.Code] = 0);
+    this.baggageTotal = 0;
+    
+    console.log('Set onward baggage options:', this.baggageOptions);
   }
 
-  return true;
-});
+  this.cdr.detectChanges();
+}
+checkBaggageState() {
+  console.log('=== BAGGAGE STATE CHECK ===');
+  console.log('Onward baggage options count:', this.baggageOptions.length);
+  if (this.baggageOptions.length > 0) {
+    console.log('First baggage option:', this.baggageOptions[0]);
+    console.log('First baggage kgs property:', this.baggageOptions[0].kgs);
+    console.log('First baggage Weight property:', this.baggageOptions[0].Weight);
+  }
+  console.log('===========================');
+}
 
-      if (!validOptions.length) {
-          if (isReturn) {
-              this.baggageOptionsReturn = [];
-              this.selectedBaggageCountsReturn = {};
-              this.baggageTotalReturn = 0;
-              this.extraBaggageAvailableReturn = false;
-          } else {
-              this.baggageOptions = [];
-              this.selectedBaggageCounts = {};
-              this.baggageTotal = 0;
-              this.extraBaggageAvailable = false;
-          }
-          console.log('No valid baggage options found', { flatBaggage });
-          this.cdr.detectChanges();
-          return;
+forceFetchBaggageData(isReturn: boolean = false): void {
+  console.log('forceFetchBaggageData called with isReturn:', isReturn);
+  
+  if (!this.ipAddress || !this.tboToken || !this.traceid) {
+    console.error('Missing required data for SSR fetch:', {
+      ip: this.ipAddress,
+      token: !!this.tboToken,
+      traceid: this.traceid
+    });
+    return;
+  }
+  
+  const resultIndexToUse = isReturn && this.resultIndexReturn ? this.resultIndexReturn : this.resultIndex;
+  
+  console.log('Fetching SSR with resultIndex:', resultIndexToUse);
+  
+  this.loader = true;
+  
+  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, resultIndexToUse).subscribe(
+    (val: any) => {
+      console.log('SSR API Response received:', val);
+      
+      if (!val) {
+        console.warn('SSR API returned null/empty response');
+        this.showNoBaggageMessage();
+        this.loader = false;
+        this.cdr.detectChanges();
+        return;
       }
-
-      if (isReturn) {
-          this.extraBaggageAvailableReturn = true;
-          this.baggageOptionsReturn = validOptions.map((item: any) => {
-              this.baggagePrices[item.Weight] = item.Price;
-              return {
-                  code: item.Code,
-                  Code: item.Code,
-                  kgs: item.Weight,
-                  Weight: item.Weight,
-                  price: item.Price,
-                  Price: item.Price,
-                  Description: item.Description,
-                  WayType: item.WayType,
-                  AirlineCode: item.AirlineCode,
-                  FlightNumber: item.FlightNumber,
-                  Origin: item.Origin,
-                  Destination: item.Destination,
-                  count: 0
-              };
-          });
-
-          // init counts keyed by Code
-          this.selectedBaggageCountsReturn = {};
-          this.baggageOptionsReturn.forEach(opt => this.selectedBaggageCountsReturn[opt.Code] = 0);
-          this.baggageTotalReturn = 0;
-          console.log('Set return baggage options:', this.baggageOptionsReturn);
+      
+      const response = val?.Response || {};
+      const baggage = response?.Baggage || this.findDeepArray(val, 'Baggage');
+      
+      console.log('Extracted baggage data:', baggage);
+      console.log('Baggage type:', typeof baggage);
+      console.log('Is baggage array?', Array.isArray(baggage));
+      
+      if (baggage && Array.isArray(baggage)) {
+        console.log('Processing baggage array...');
+        this.processBaggage(baggage, isReturn);
+        console.log('Baggage processed successfully');
+        this.checkBaggageState();
       } else {
-          this.extraBaggageAvailable = true;
-          this.baggageOptions = validOptions.map((item: any) => {
-              this.baggagePrices[item.Weight] = item.Price;
-              return {
-                  code: item.Code,
-                  Code: item.Code,
-                  kgs: item.Weight,
-                  Weight: item.Weight,
-                  price: item.Price,
-                  Price: item.Price,
-                  Description: item.Description,
-                  WayType: item.WayType,
-                  AirlineCode: item.AirlineCode,
-                  FlightNumber: item.FlightNumber,
-                  Origin: item.Origin,
-                  Destination: item.Destination,
-                  count: 0
-              };
-          });
-
-          // init counts keyed by Code
-          this.selectedBaggageCounts = {};
-          this.baggageOptions.forEach(opt => this.selectedBaggageCounts[opt.Code] = 0);
-          this.baggageOptions.forEach(opt => {
-            const w = opt.Weight || opt.kgs;
-            if (w !== undefined && this.baggageCounts[w] === undefined) this.baggageCounts[w] = 0;
-          });
-          this.baggageTotal = 0;
-          console.log('Set onward baggage options:', this.baggageOptions);
+        console.warn('No baggage data found in SSR response');
+        console.log('Full response for debugging:', JSON.stringify(val, null, 2));
+        this.showNoBaggageMessage();
+        
+        // Set empty arrays
+        if (isReturn) {
+          this.baggageOptionsReturn = [];
+          this.extraBaggageAvailableReturn = false;
+        } else {
+          this.baggageOptions = [];
+          this.extraBaggageAvailable = false;
+        }
       }
-
-      // Trigger change detection
+      
+      this.loader = false;
       this.cdr.detectChanges();
-      this.logBaggageState('after-process-baggage', isReturn);
-  }
+    },
+    error => {
+      console.error('Error fetching SSR:', error);
+      console.error('Error details:', error.message, error.status);
+      
+      this.loader = false;
+      this.showNoBaggageMessage();
+      this.cdr.detectChanges();
+    }
+  );
+}
 
+testSSRFetch(): void {
+  console.log('=== MANUAL SSR TEST ===');
+  this.debugSSRFlow('manualTest');
+  
+  if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
+    console.error('Cannot test: Missing required data');
+    return;
+  }
+  
+  console.log('Calling SSR API directly...');
+  
+  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe(
+    (val: any) => {
+      console.log('TEST - SSR API Response:', val);
+      console.log('TEST - Response structure:', Object.keys(val || {}));
+      console.log('TEST - Has Response property?', !!val?.Response);
+      console.log('TEST - Response keys:', Object.keys(val?.Response || {}));
+      console.log('TEST - Baggage property:', val?.Response?.Baggage);
+      console.log('TEST - Full Response JSON:', JSON.stringify(val, null, 2));
+      
+      // Try to find baggage in different locations
+      const baggage1 = val?.Response?.Baggage;
+      const baggage2 = this.findDeepArray(val, 'Baggage');
+      const baggage3 = val?.Baggage;
+      
+      console.log('TEST - Baggage search results:', {
+        baggage1,
+        baggage2,
+        baggage3
+      });
+    },
+    error => {
+      console.error('TEST - SSR API Error:', error);
+      console.error('TEST - Error status:', error.status);
+      console.error('TEST - Error message:', error.message);
+    }
+  );
+}
+
+private showNoBaggageMessage(): void {
+  Swal.fire({
+    title: 'No Baggage Options',
+    text: 'No additional baggage options are available for this flight.',
+    icon: 'info',
+    confirmButtonText: 'OK'
+  });
+}
   addBaggage(option: any, isReturn: boolean = false): void {
     const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
     const currentTotal = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -1945,14 +2090,50 @@ const validOptions = flatBaggage.filter((item: any) => {
 
   // Baggage Modal Handlers
 openBaggageModal(isReturn: boolean = false) {
+  console.log('openBaggageModal called with isReturn:', isReturn);
+  
   this.activeRoundBaggageTab = isReturn ? 'return' : 'onward';
-  this.showAddBaggageModal = true;   // 🔥 THIS triggers SSR
+  
+  // Debug the current state
+  this.debugSSRFlow('openBaggageModal', isReturn);
+  
+  const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+  const hasBaggageData = options && Array.isArray(options) && options.length > 0;
+  
+  console.log('Has baggage data?', hasBaggageData);
+  console.log('Options array:', options);
+  
+  if (!hasBaggageData) {
+    console.log('No baggage data available, forcing fetch...');
+    this.forceFetchBaggageData(isReturn);
+  } else {
+    console.log('Baggage data already exists, showing modal...');
+  }
+  
+  // Show modal immediately (data will load asynchronously)
+  this.showAddBaggageModal = true;
+  console.log('Setting showAddBaggageModal to true');
+  
+  this.cdr.detectChanges();
 }
 
 closeBaggageModal() {
   this.showAddBaggageModal = false;   // 🔥 THIS is what actually controls modal
 }
-
+debugSSRFlow(methodName: string, isReturn: boolean = false) {
+  console.log(`=== SSR FLOW DEBUG: ${methodName} ===`);
+  console.log('IP Address:', this.ipAddress);
+  console.log('TBO Token:', !!this.tboToken);
+  console.log('Trace ID:', this.traceid);
+  console.log('Result Index:', this.resultIndex);
+  console.log('Result Index Return:', this.resultIndexReturn);
+  console.log('Baggage Options count:', this.baggageOptions.length);
+  console.log('Baggage Options Return count:', this.baggageOptionsReturn.length);
+  console.log('Show Add Baggage Modal:', this.showAddBaggageModal);
+  console.log('Active Round Baggage Tab:', this.activeRoundBaggageTab);
+  console.log('Trip Type:', this.tripType);
+  console.log('====================================');
+}
   // General Close Modal (handles all)
   closeModal() {
     this.showModal = false;
