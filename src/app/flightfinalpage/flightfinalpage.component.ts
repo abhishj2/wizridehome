@@ -32,6 +32,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./flightfinalpage.component.css']
 })
 export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('contactMobileInput') contactMobileInput!: ElementRef<HTMLInputElement>;
+
   // [Variable Declarations]
   fareQuote: any = [];
   ssrValues: any = [];
@@ -393,13 +395,13 @@ isMobileView(): boolean {
         }
       })
     );
-  }openPhoneDialer(field: 'primary', event?: Event): void {
+  }
+openPhoneDialer(field: 'primary', event?: Event): void {
   if (!this.isMobileView()) return;
 
-if (event) {
-  event.preventDefault();
-  event.stopPropagation();
-}
+  if (event) {
+    event.stopPropagation();
+  }
 
   this.activePhoneField = field;
   this.showPhoneDialer = true;
@@ -408,16 +410,25 @@ if (event) {
     this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
   }
 
-  // Scroll contact mobile input into view
+  // Wait for dialer + modal to render, then scroll
   setTimeout(() => {
-    const inputElement = document.querySelector(
-      'input[name="contactMobile"]'
-    ) as HTMLInputElement;
+    this.scrollToContactInput();
+  }, 300);
+}
+private scrollToContactInput(): void {
+  if (!isPlatformBrowser(this.platformId) || !this.contactMobileInput) return;
 
-    if (inputElement) {
-      this.scrollToInput(inputElement);
-    }
-  }, 200);
+  const el = this.contactMobileInput.nativeElement;
+
+  el.focus({ preventScroll: true });
+
+  const yOffset = -120; // header offset
+  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  });
 }
 
 private scrollToInput(inputElement: HTMLInputElement): void {
