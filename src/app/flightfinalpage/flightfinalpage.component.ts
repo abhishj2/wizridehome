@@ -1,17 +1,33 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, Inject, PLATFORM_ID } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  Inject,
+  PLATFORM_ID,
+  Renderer2
+} from '@angular/core';
+import { firstValueFrom, Subscription } from 'rxjs'; 
+import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
 import Swal from 'sweetalert2';
+import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-flightfinalpage',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,PhoneDialerComponent],
   templateUrl: './flightfinalpage.component.html',
   styleUrls: ['./flightfinalpage.component.css']
 })
@@ -57,6 +73,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   seatMapReturn: any[] = [];
   selectedSeats: { [segmentIndex: number]: any[] } = {};
   selectedSeatsReturn: { [segmentIndex: number]: any[] } = {};
+
+  showPhoneDialer = false;
+  activePhoneField: 'primary' | null = null;
   
   private subscriptions: Subscription = new Subscription();
   
@@ -265,9 +284,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     public flightDataService: FlightdataService,
     public router: Router,
     private sanitizer: DomSanitizer,
+    private renderer: Renderer2,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
+
   ) {}
+isMobileView(): boolean {
+  if (!isPlatformBrowser(this.platformId)) return false;
+  return window.innerWidth <= 768;
+}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -280,6 +306,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         }
       }
     }
+
+
   }
 
   ngOnInit(): void {
@@ -365,8 +393,94 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         }
       })
     );
+  }openPhoneDialer(field: 'primary', event?: Event): void {
+  if (!this.isMobileView()) return;
+
+if (event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+  this.activePhoneField = field;
+  this.showPhoneDialer = true;
+
+  if (isPlatformBrowser(this.platformId)) {
+    this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
   }
 
+  // Scroll contact mobile input into view
+  setTimeout(() => {
+    const inputElement = document.querySelector(
+      'input[name="contactMobile"]'
+    ) as HTMLInputElement;
+
+    if (inputElement) {
+      this.scrollToInput(inputElement);
+    }
+  }, 200);
+}
+
+private scrollToInput(inputElement: HTMLInputElement): void {
+  if (!inputElement || !isPlatformBrowser(this.platformId)) return;
+
+  const rect = inputElement.getBoundingClientRect();
+  const currentScrollY = window.scrollY || window.pageYOffset;
+  const inputTopPosition = rect.top + currentScrollY;
+
+  const offsetFromTop = 180; // adjust as per your header height
+  const targetScrollPosition = inputTopPosition - offsetFromTop;
+
+  window.scrollTo({
+    top: Math.max(0, targetScrollPosition),
+    behavior: 'smooth'
+  });
+}
+onDialerNumberClick(number: string): void {
+  if (!this.activePhoneField || !this.currentPassengerDetails) return;
+
+  const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
+
+  if (currentValue.length < 10) {
+    this.currentPassengerDetails = {
+      ...this.currentPassengerDetails,
+      mobileNumber: currentValue + number
+    };
+    this.cdr.detectChanges();
+  }
+}
+
+onDialerBackspace(): void {
+  if (!this.activePhoneField || !this.currentPassengerDetails) return;
+
+  const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
+
+  if (currentValue.length > 0) {
+    this.currentPassengerDetails = {
+      ...this.currentPassengerDetails,
+      mobileNumber: currentValue.slice(0, -1)
+    };
+    this.cdr.detectChanges();
+  }
+}
+
+onDialerDone(): void {
+  this.showPhoneDialer = false;
+  this.activePhoneField = null;
+}
+
+closePhoneDialer(): void {
+  this.showPhoneDialer = false;
+  this.activePhoneField = null;
+
+  if (isPlatformBrowser(this.platformId)) {
+    this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+  }
+}
+
+getCurrentDialerValue(): string {
+  if (!this.activePhoneField || !this.currentPassengerDetails) return '';
+  return this.currentPassengerDetails.mobileNumber || '';
+}
   processFlightDataInput(val: any) {
     // Merge with existing data instead of completely replacing
     this.fullFlightData = { ...this.fullFlightData, ...val };
