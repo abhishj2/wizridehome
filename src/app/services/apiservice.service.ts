@@ -535,7 +535,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
     const data = {
       page: 'authenticatetbo',
       // env : 'test'
-      env : 'test'
+      env : 'prod'
       
     }    
   
@@ -561,7 +561,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         departureDate : departureDate,
         resultFareType : fareType,
         // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
-        env : 'test'
+        env : 'prod'
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -589,7 +589,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         returnDate : returnDate,
         resultFareType : fareType,
         // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
-        // env : 'test'
+         env : 'prod'
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -606,7 +606,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         traceid : traceid,
         resultindex : resultindex,
         // env : 'test'
-        env : 'test'
+        env : 'prod'
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -623,7 +623,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         traceid : traceid,
         resultindex : resultindex,
           // env : 'test'
-          env : 'test'
+          env : 'prod'
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -640,7 +640,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         traceid : traceid,
         resultindex : resultindex,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -663,7 +663,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       departureDate : departureDate,
       extendedDate : extendedDate,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
     }    
   
     // console.log("Data for Sell Your Car",data)
@@ -681,7 +681,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       resultindex : resultindex,    
       payload : payload,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
     }    
     // console.log("Data for Sell Your Car",data)
     // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
@@ -699,7 +699,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       resultindex : resultindex,    
       payload : payload,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
     }    
   
     // console.log("Data for Sell Your Car",data)
@@ -719,7 +719,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
       bookingid : bookingid,
       passport : passport,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
     }    
   
     // console.log("Data for Sell Your Car",data)
@@ -774,7 +774,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         PNR : pnr,
         firstName : firstName,
         // env : 'test'
-            env : 'test'    
+            env : 'prod'    
       }    
   
       // console.log("Data for Sell Your Car",data)
@@ -814,7 +814,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         ISLCC : ISLCC, 
         ISLCCRETURN : ISLCCRETURN,
         //  dev : 'test',
-        dev : 'test',
+        dev : 'prod',
         type : 'FLIGHT'   
   
       }    
@@ -830,7 +830,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         ORDERID : orderId,      
         TOTALAMOUNT : orderAmount,      
         //  dev : 'test',
-        dev : 'test',
+        dev : 'prod',
       }    
   
       // console.log("Payment Data",data)
@@ -903,7 +903,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
             segments : segments,
             resultFareType : fareType,
             // env : 'test'
-            env : 'test'
+            env : 'prod'
           }    
     
           // console.log("Data for Sell Your Car",data)

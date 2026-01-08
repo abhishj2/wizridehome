@@ -1,42 +1,25 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  Inject,
-  PLATFORM_ID,
-  Renderer2
-} from '@angular/core';
-import { firstValueFrom, Subscription } from 'rxjs'; 
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DOCUMENT } from '@angular/common';
-
-
-import { FormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-
+import { firstValueFrom, Subscription } from 'rxjs';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
 import Swal from 'sweetalert2';
 import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
 @Component({
   selector: 'app-flightfinalpage',
   standalone: true,
-  imports: [CommonModule, FormsModule,PhoneDialerComponent],
+  imports: [CommonModule, FormsModule, PhoneDialerComponent],
   templateUrl: './flightfinalpage.component.html',
   styleUrls: ['./flightfinalpage.component.css']
 })
 export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactMobileInput') contactMobileInput!: ElementRef<HTMLInputElement>;
 
+  showPhoneDialer = false;
+  activePhoneField: 'primary' | 'passenger' | null = null;
   // [Variable Declarations]
   fareQuote: any = [];
   ssrValues: any = [];
@@ -78,9 +61,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   seatMapReturn: any[] = [];
   selectedSeats: { [segmentIndex: number]: any[] } = {};
   selectedSeatsReturn: { [segmentIndex: number]: any[] } = {};
-
-  showPhoneDialer = false;
-  activePhoneField: 'primary' | null = null;
   
   private subscriptions: Subscription = new Subscription();
   
@@ -184,7 +164,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   fareRuleText: SafeHtml = '';
   fareRuleTextReturn: SafeHtml = '';
   bookingSubmitted: boolean = false;
-  private ssrFetched: boolean = false;
   
   // --- MISSING PROPERTIES ADDED HERE ---
   termsAccepted: boolean = false;
@@ -197,7 +176,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Modal States
   showTripSummary: boolean = false;
   showFareSummaryModal: boolean = false;
-  private _showAddBaggageModal: boolean = false;
+  showAddBaggageModal: boolean = false;
   showPolicyModal: boolean = false;
   showGSTModal: boolean = false;
   showPassengerModal: boolean = false;
@@ -295,10 +274,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     @Inject(DOCUMENT) private document: Document
 
   ) {}
-isMobileView(): boolean {
-  if (!isPlatformBrowser(this.platformId)) return false;
-  return window.innerWidth <= 768;
-}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -311,293 +286,121 @@ isMobileView(): boolean {
         }
       }
     }
-
-
   }
 
   ngOnInit(): void {
     this.initializePassportExpiryYears();
     
-    // Check if we have existing data from service first
-    const existingData = this.flightDataService.getCurrentValue();
-    let hasProcessedData = false;
-    let lastProcessedTraceId = '';
-    
-    if (existingData) {
-      this.processFlightDataInput(existingData);
-      hasProcessedData = true;
-      lastProcessedTraceId = existingData['traceid'] || '';
-    }
-    
     this.subscriptions.add(
-      this.flightDataService.currentMessage.subscribe((val: any) => {
+      this.flightDataService.currentMessage.subscribe((val) => {
         if (!val) {
-          // Only redirect if we haven't processed any data yet
-          if (!hasProcessedData && !this.fullFlightData) {
-            // Give a small delay to allow data to be set during navigation
-            setTimeout(() => {
-              const currentData = this.flightDataService.getCurrentValue();
-              if (!currentData && !this.fullFlightData) {
-                console.log('No flight data available, redirecting to home');
           this.router.navigate(['/']);
-              }
-            }, 1000);
-          }
           return;
         }
         
-        // Prevent processing the same data twice
-        const currentTraceId = val['traceid'] || '';
-        if (hasProcessedData && currentTraceId === lastProcessedTraceId && !val['proceedToPayment']) {
-          // Same data, skip processing unless it's a payment proceed request
-          return;
-        }
-        
-        hasProcessedData = true;
-        lastProcessedTraceId = currentTraceId;
-        const shouldProceedToPayment = val['proceedToPayment'];
         this.processFlightDataInput(val);
-        
-        // Call fare quote if we need fare data (unless proceeding to payment)
-        // Check if we already processed FareBreakdown from departureFlightData
-        const hasProcessedFareBreakdown = val['departureFlightData']?.['FareBreakdown'] && Array.isArray(val['departureFlightData']['FareBreakdown']) && val['departureFlightData']['FareBreakdown'].length > 0;
-        const isFromFlightList = val['departureFlightData'] && !val['adultBaseFare'] && !val['totalBaseFare'];
-        
-        console.log('Checking if fare quote should be called:', {
-          traceid: this.traceid,
-          resultIndex: this.resultIndex,
-          shouldProceedToPayment,
-          fareQuote: this.fareQuote,
-          isFromFlightList,
-          hasProcessedFareBreakdown,
-          hasAdultBaseFare: !!val['adultBaseFare'],
-          hasTotalBaseFare: !!val['totalBaseFare'],
-          hasFareBreakdown: hasProcessedFareBreakdown
-        });
-        
-
-        if(this.traceid && this.resultIndex && !shouldProceedToPayment && !this.fareQuote && !hasProcessedFareBreakdown) {
-          // Call if we don't have fare breakdown data
-          if (isFromFlightList || (!val['adultBaseFare'] && !val['totalBaseFare'])) {
-            console.log('Calling fare quote API...');
-        this.callFareQuote();
-          } else {
-            console.log('Skipping fare quote - already have fare data');
-          }
-        } else {
-          if (!this.traceid) console.warn('Cannot call fare quote: traceid missing');
-          if (!this.resultIndex) console.warn('Cannot call fare quote: resultIndex missing');
-          if (shouldProceedToPayment) console.log('Skipping fare quote: proceeding to payment');
-          if (this.fareQuote) console.log('Skipping fare quote: already have fareQuote');
-          if (hasProcessedFareBreakdown) console.log('Skipping fare quote: already processed FareBreakdown from data');
-        }
       })
     );
+    
+    if(this.traceid && this.resultIndex) {
+        this.callFareQuote();
+    }
   }
-openPhoneDialer(field: 'primary', event?: Event): void {
-  if (!this.isMobileView()) return;
-
-  if (event) {
-    event.stopPropagation();
+  isMobileView(): boolean {
+    if (!isPlatformBrowser(this.platformId)) return false;
+    return window.innerWidth <= 768;
+  }
+  openPhoneDialer(field: 'primary', event?: Event): void {
+    if (!this.isMobileView()) return;
+  
+    if (event) {
+      event.stopPropagation();
+    }
+  
+    this.activePhoneField = field;
+    this.showPhoneDialer = true;
+  
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
+    }
+  
+    // Wait for dialer + modal to render, then scroll
+    setTimeout(() => {
+      this.scrollToContactInput();
+    }, 300);
+  }
+  private scrollToContactInput(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.contactMobileInput) return;
+  
+    const el = this.contactMobileInput.nativeElement;
+  
+    el.focus({ preventScroll: true });
+  
+    const yOffset = -120; // header offset
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+  
+    window.scrollTo({
+      top: y,
+      behavior: 'smooth'
+    });
   }
 
-  this.activePhoneField = field;
-  this.showPhoneDialer = true;
-
-  if (isPlatformBrowser(this.platformId)) {
-    this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
+  closePhoneDialer(): void {
+    this.showPhoneDialer = false;
+    this.activePhoneField = null;
+  
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+    }
   }
 
-  // Wait for dialer + modal to render, then scroll
-  setTimeout(() => {
-    this.scrollToContactInput();
-  }, 300);
-}
-private scrollToContactInput(): void {
-  if (!isPlatformBrowser(this.platformId) || !this.contactMobileInput) return;
-
-  const el = this.contactMobileInput.nativeElement;
-
-  el.focus({ preventScroll: true });
-
-  const yOffset = -120; // header offset
-  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-  window.scrollTo({
-    top: y,
-    behavior: 'smooth'
-  });
-}
-
-private scrollToInput(inputElement: HTMLInputElement): void {
-  if (!inputElement || !isPlatformBrowser(this.platformId)) return;
-
-  const rect = inputElement.getBoundingClientRect();
-  const currentScrollY = window.scrollY || window.pageYOffset;
-  const inputTopPosition = rect.top + currentScrollY;
-
-  const offsetFromTop = 180; // adjust as per your header height
-  const targetScrollPosition = inputTopPosition - offsetFromTop;
-
-  window.scrollTo({
-    top: Math.max(0, targetScrollPosition),
-    behavior: 'smooth'
-  });
-}
-onDialerNumberClick(number: string): void {
-  if (!this.activePhoneField || !this.currentPassengerDetails) return;
-
-  const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
-
-  if (currentValue.length < 10) {
-    this.currentPassengerDetails = {
-      ...this.currentPassengerDetails,
-      mobileNumber: currentValue + number
-    };
-    this.cdr.detectChanges();
+  onDialerNumberClick(number: string): void {
+    if (!this.activePhoneField || !this.currentPassengerDetails) return;
+  
+    const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
+  
+    if (currentValue.length < 10) {
+      this.currentPassengerDetails = {
+        ...this.currentPassengerDetails,
+        mobileNumber: currentValue + number
+      };
+      this.cdr.detectChanges();
+    }
   }
-}
 
-onDialerBackspace(): void {
-  if (!this.activePhoneField || !this.currentPassengerDetails) return;
-
-  const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
-
-  if (currentValue.length > 0) {
-    this.currentPassengerDetails = {
-      ...this.currentPassengerDetails,
-      mobileNumber: currentValue.slice(0, -1)
-    };
-    this.cdr.detectChanges();
+  onDialerBackspace(): void {
+    if (!this.activePhoneField || !this.currentPassengerDetails) return;
+  
+    const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
+  
+    if (currentValue.length > 0) {
+      this.currentPassengerDetails = {
+        ...this.currentPassengerDetails,
+        mobileNumber: currentValue.slice(0, -1)
+      };
+      this.cdr.detectChanges();
+    }
   }
-}
 
-onDialerDone(): void {
-  this.showPhoneDialer = false;
-  this.activePhoneField = null;
-}
-
-closePhoneDialer(): void {
-  this.showPhoneDialer = false;
-  this.activePhoneField = null;
-
-  if (isPlatformBrowser(this.platformId)) {
-    this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+  onDialerDone(): void {
+    this.showPhoneDialer = false;
+    this.activePhoneField = null;
   }
-}
 
-getCurrentDialerValue(): string {
-  if (!this.activePhoneField || !this.currentPassengerDetails) return '';
-  return this.currentPassengerDetails.mobileNumber || '';
-}
+  getCurrentDialerValue(): string {
+    if (!this.activePhoneField || !this.currentPassengerDetails) return '';
+    return this.currentPassengerDetails.mobileNumber || '';
+  }
+
   processFlightDataInput(val: any) {
-     if (val['traceid'] && val['traceid'] !== this.traceid) {
-  this.ssrFetched = false;
-}              
-  this.baggageOptions = [];                
-  this.baggageOptionsReturn = [];         
-  this.selectedBaggageCounts = {};         
-  this.selectedBaggageCountsReturn = {};
-    // Merge with existing data instead of completely replacing
-    this.fullFlightData = { ...this.fullFlightData, ...val };
-    
-    // Only update if new value is provided and not null/undefined
-    if (val['ipAddress']) {
+    this.fullFlightData = val;
     this.ipAddress = val['ipAddress'];
-    }
-    if (val['tboToken']) {
     this.tboToken = val['tboToken'];
-    }
-    if (val['traceid']) {
     this.traceid = val['traceid'];
-    }
-    
-    // Handle different data structures from flight list vs addon page
-    // Flight list passes fare objects, addon page passes processed data
-    // Only update if new data is provided
-    if (val['departureFlightData']) {
+    this.resultIndex = val['departureFlightData']?.['ResultIndex'] || '';
+    this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
     this.flightDataDeparture = val['departureFlightData'];
-      console.log('Processing departureFlightData:', this.flightDataDeparture);
-      
-      // Extract ResultIndex from different possible structures
-      // Based on console log, ResultIndex is directly on departureFlightData (at index 10 in keys array)
-      let newResultIndex = val['departureFlightData']?.['ResultIndex']  // Direct property (most common from flight list)
-                      || val['departureFlightData']?.['Response']?.['Results']?.['ResultIndex'] 
-                      || val['departureFlightData']?.['Fare']?.['ResultIndex']
-                      || val['departureFlightData']?.['selectedFare']?.['Response']?.['Results']?.['ResultIndex']
-                      || val['departureFlightData']?.['selectedFare']?.['ResultIndex']
-                      || val['departureFlightData']?.['selectedFare']?.['Fare']?.['ResultIndex']
-                      || val['resultIndex'];
-      
-      console.log('Extracted ResultIndex:', newResultIndex, 'from departureFlightData');
-      
-      // Check if we already have FareBreakdown in departureFlightData (from flight list)
-      // If so, we can process it directly without calling fare quote API
-      if (val['departureFlightData']?.['FareBreakdown'] && Array.isArray(val['departureFlightData']['FareBreakdown']) && val['departureFlightData']['FareBreakdown'].length > 0) {
-        console.log('Found FareBreakdown directly in departureFlightData, processing it immediately...');
-        // Process fare breakdown directly from the data
-        const fareData = {
-          Response: {
-            Results: {
-              FareBreakdown: val['departureFlightData']['FareBreakdown'],
-              IsLCC: val['departureFlightData']['IsLCC']
-            }
-          }
-        };
-        this.processFareBreakdown(fareData, false);
-        // Aggregate fare summary immediately after processing
-        this.aggregateFareSummary();
-        this.loader = false;
-        this.cdr.detectChanges();
-      } else {
-        console.log('No FareBreakdown found in departureFlightData, will call fare quote API');
-      }
-      
-      if (newResultIndex) {
-        this.resultIndex = newResultIndex;
-        console.log('Set resultIndex to:', this.resultIndex);
-      } else {
-        console.warn('Could not extract ResultIndex from departureFlightData. Structure:', Object.keys(this.flightDataDeparture || {}));
-      }
-    } else if (val['resultIndex'] && !this.resultIndex) {
-      this.resultIndex = val['resultIndex'];
-      console.log('Set resultIndex from val.resultIndex:', this.resultIndex);
-    }
-    
-    if (val['returnFlightData']) {
     this.flightDataReturn = val['returnFlightData'];
-      // Extract ResultIndex from different possible structures
-      // ResultIndex is directly on returnFlightData (same as departure)
-      const newResultIndexReturn = val['returnFlightData']?.['ResultIndex']  // Direct property
-                            || val['returnFlightData']?.['Response']?.['Results']?.['ResultIndex']
-                            || val['returnFlightData']?.['selectedFare']?.['Response']?.['Results']?.['ResultIndex']
-                            || val['resultIndexReturn'];
-      if (newResultIndexReturn) {
-        this.resultIndexReturn = newResultIndexReturn;
-        console.log('Set resultIndexReturn to:', this.resultIndexReturn);
-      }
-      
-      // Check if we already have FareBreakdown in returnFlightData
-      if (val['returnFlightData']?.['FareBreakdown'] && Array.isArray(val['returnFlightData']['FareBreakdown']) && val['returnFlightData']['FareBreakdown'].length > 0) {
-        console.log('Found FareBreakdown directly in returnFlightData, processing it immediately...');
-        const fareData = {
-          Response: {
-            Results: {
-              FareBreakdown: val['returnFlightData']['FareBreakdown'],
-              IsLCC: val['returnFlightData']['IsLCC']
-            }
-          }
-        };
-        this.processFareBreakdown(fareData, true);
-        // Aggregate fare summary immediately after processing
-        this.aggregateFareSummary();
-        this.loader = false;
-        this.cdr.detectChanges();
-      }
-    } else if (val['resultIndexReturn'] && !this.resultIndexReturn) {
-      this.resultIndexReturn = val['resultIndexReturn'];
-      console.log('Set resultIndexReturn from val.resultIndexReturn:', this.resultIndexReturn);
-    }
     
     // Set trip type
     const tripTypeVal = val['tripType'] || '';
@@ -609,30 +412,6 @@ getCurrentDialerValue(): string {
       this.tripType = 'oneway';
     }
     
-    // Set passenger counts from data if available
-    // Handle both formats: 'adults' (from flight list) and 'totalAdults' (from addon page)
-    // Priority: totalAdults > adults > existing value
-    if (val['totalAdults'] !== undefined && val['totalAdults'] !== null && val['totalAdults'] > 0) {
-      this.totalAdults = val['totalAdults'];
-    } else if (val['adults'] !== undefined && val['adults'] !== null && val['adults'] > 0) {
-      this.totalAdults = val['adults'];
-    }
-    // If still 0, keep existing value (don't reset to 0)
-    
-    if (val['totalChildren'] !== undefined && val['totalChildren'] !== null && val['totalChildren'] > 0) {
-      this.totalChildren = val['totalChildren'];
-    } else if (val['children'] !== undefined && val['children'] !== null && val['children'] > 0) {
-      this.totalChildren = val['children'];
-    }
-    
-    if (val['totalInfants'] !== undefined && val['totalInfants'] !== null && val['totalInfants'] > 0) {
-      this.totalInfants = val['totalInfants'];
-    } else if (val['infants'] !== undefined && val['infants'] !== null && val['infants'] > 0) {
-      this.totalInfants = val['infants'];
-    }
-    
-    console.log(`Passenger counts set - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
-    
     // Set dates
     if (val['departureDate']) {
       this.departureDate = new Date(val['departureDate']);
@@ -641,352 +420,19 @@ getCurrentDialerValue(): string {
       this.returnDate = new Date(val['returnDate']);
     }
 
-    // Process segments from flight data
-    // Handle different data structures: from flight list vs from addon page
     if (this.flightDataDeparture) {
-      // Check different possible structures
-      let segmentData = null;
-      
-      // Structure 1: Response.Results.Segments (from API response)
-      if (this.flightDataDeparture.Response?.Results?.Segments) {
-        segmentData = { Segments: [this.flightDataDeparture.Response.Results.Segments] };
-      }
-      // Structure 2: Direct Segments array
-      else if (this.flightDataDeparture.Segments) {
-        segmentData = this.flightDataDeparture;
-      }
-      // Structure 3: selectedFare.Response.Results.Segments
-      else if (this.flightDataDeparture.selectedFare?.Response?.Results?.Segments) {
-        segmentData = { Segments: [this.flightDataDeparture.selectedFare.Response.Results.Segments] };
-      }
-      // Structure 4: selectedFare.Segments
-      else if (this.flightDataDeparture.selectedFare?.Segments) {
-        segmentData = this.flightDataDeparture.selectedFare;
-      }
-      
-      if (segmentData && segmentData.Segments && segmentData.Segments[0]) {
-        this.processSegments(segmentData, false);
-      }
+      this.processSegments(this.flightDataDeparture, false);
     }
 
     if (this.flightDataReturn) {
-      // Check different possible structures
-      let segmentData = null;
-      
-      // Structure 1: Response.Results.Segments (from API response)
-      if (this.flightDataReturn.Response?.Results?.Segments) {
-        segmentData = { Segments: [this.flightDataReturn.Response.Results.Segments] };
-      }
-      // Structure 2: Direct Segments array
-      else if (this.flightDataReturn.Segments) {
-        segmentData = this.flightDataReturn;
-      }
-      // Structure 3: selectedFare.Response.Results.Segments
-      else if (this.flightDataReturn.selectedFare?.Response?.Results?.Segments) {
-        segmentData = { Segments: [this.flightDataReturn.selectedFare.Response.Results.Segments] };
-      }
-      // Structure 4: selectedFare.Segments
-      else if (this.flightDataReturn.selectedFare?.Segments) {
-        segmentData = this.flightDataReturn.selectedFare;
-      }
-      
-      if (segmentData && segmentData.Segments && segmentData.Segments[0]) {
-        this.processSegments(segmentData, true);
-      }
-    }
-    
-    // Restore passenger data if available (from addon page)
-    // Always ensure passengers are initialized if we have counts
-    if (val['travellers'] && Array.isArray(val['travellers']) && val['travellers'].length > 0) {
-      // Restore existing passenger data
-      this.travellers = val['travellers'].map((t: any) => ({ ...t })); // Create new array with new objects
-      // Ensure we have the right number of passengers
-      while (this.travellers.length < this.totalAdults) {
-        this.travellers.push(this.getBlankAdult());
-      }
-      // Trim if we have too many
-      if (this.travellers.length > this.totalAdults) {
-        this.travellers = this.travellers.slice(0, this.totalAdults);
-      }
-    } else if (this.totalAdults > 0) {
-      // Initialize blank passengers if we have a count
-      try {
-        this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
-      } catch (e) {
-        console.error('Error initializing travellers:', e);
-        this.travellers = [];
-      }
-    } else if (!this.travellers) {
-      this.travellers = [];
-    }
-    
-    if (val['children'] && Array.isArray(val['children']) && val['children'].length > 0) {
-      // Restore existing passenger data
-      this.children = val['children'].map((c: any) => ({ ...c })); // Create new array with new objects
-      // Ensure we have the right number of passengers
-      while (this.children.length < this.totalChildren) {
-        this.children.push(this.getBlankChild());
-      }
-      // Trim if we have too many
-      if (this.children.length > this.totalChildren) {
-        this.children = this.children.slice(0, this.totalChildren);
-      }
-    } else if (this.totalChildren > 0) {
-      // Initialize blank passengers if we have a count
-      try {
-        this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
-      } catch (e) {
-        console.error('Error initializing children:', e);
-        this.children = [];
-      }
-    } else if (!this.children) {
-      this.children = [];
-    }
-    
-    if (val['infants'] && Array.isArray(val['infants']) && val['infants'].length > 0) {
-      // Restore existing passenger data
-      this.infants = val['infants'].map((i: any) => ({ ...i })); // Create new array with new objects
-      // Ensure we have the right number of passengers
-      while (this.infants.length < this.totalInfants) {
-        this.infants.push(this.getBlankInfant());
-      }
-      // Trim if we have too many
-      if (this.infants.length > this.totalInfants) {
-        this.infants = this.infants.slice(0, this.totalInfants);
-      }
-    } else if (this.totalInfants > 0) {
-      // Initialize blank passengers if we have a count
-      try {
-        this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
-      } catch (e) {
-        console.error('Error initializing infants:', e);
-        this.infants = [];
-      }
-    } else if (!this.infants) {
-      this.infants = [];
-    }
-    
-    // Restore contact and GST details
-    if (val['contact']) {
-      this.contact = { ...this.contact, ...val['contact'] };
-    }
-    if (val['gstDetails']) {
-      this.gstDetails = { ...this.gstDetails, ...val['gstDetails'] };
-    }
-    if (val['termsAgreed'] !== undefined) {
-      this.termsAgreed = val['termsAgreed'];
-    }
-    
-    // Restore baggage data
-    if (val['baggageOptions']) {
-      this.baggageOptions = val['baggageOptions'];
-    }
-    if (val['baggageOptionsReturn']) {
-      this.baggageOptionsReturn = val['baggageOptionsReturn'];
-    }
-    if (val['baggageTotal'] !== undefined) {
-      this.baggageTotal = val['baggageTotal'];
-    }
-    if (val['baggageTotalReturn'] !== undefined) {
-      this.baggageTotalReturn = val['baggageTotalReturn'];
-    }
-    if (val['selectedBaggageCounts']) {
-      this.selectedBaggageCounts = { ...val['selectedBaggageCounts'] };
-    }
-    if (val['selectedBaggageCountsReturn']) {
-      this.selectedBaggageCountsReturn = { ...val['selectedBaggageCountsReturn'] };
-    }
-    
-    // Restore addon data (seats, meals, services)
-    if (val['addonData']) {
-      const addonData = val['addonData'];
-      if (addonData.seats) {
-        // Deep copy to avoid reference issues
-        this.selectedSeats = JSON.parse(JSON.stringify(addonData.seats.onward || {}));
-        this.selectedSeatsReturn = JSON.parse(JSON.stringify(addonData.seats.return || {}));
-      }
-      // Update total seats price
-      if (val['totalSeats'] !== undefined) {
-        this.totalSeats = val['totalSeats'];
-      } else {
-        // Recalculate if not provided
-        this.updateSeatTotal();
-      }
-    }
-    
-    // Restore seat maps if available
-    if (val['seatMap']) {
-      this.seatMap = val['seatMap'];
-    }
-    if (val['seatMapReturn']) {
-      this.seatMapReturn = val['seatMapReturn'];
-    }
-    
-    // Restore SSR values
-    if (val['ssrValues']) {
-      this.ssrValues = val['ssrValues'];
-    }
-    if (val['ssrValuesReturn']) {
-      this.ssrValuesReturn = val['ssrValuesReturn'];
-    }
-    
-    // Restore fare totals and individual fare values
-    // Only update if value is provided and not null/undefined
-    if (val['adultBaseFare'] !== undefined && val['adultBaseFare'] !== null) {
-      this.adultBaseFare = val['adultBaseFare'];
-    }
-    if (val['childrenBaseFare'] !== undefined && val['childrenBaseFare'] !== null) {
-      this.childrenBaseFare = val['childrenBaseFare'];
-    }
-    if (val['infantBaseFare'] !== undefined && val['infantBaseFare'] !== null) {
-      this.infantBaseFare = val['infantBaseFare'];
-    }
-    if (val['adultTaxes'] !== undefined && val['adultTaxes'] !== null) {
-      this.adultTaxes = val['adultTaxes'];
-    }
-    if (val['childrenTaxes'] !== undefined && val['childrenTaxes'] !== null) {
-      this.childrenTaxes = val['childrenTaxes'];
-    }
-    if (val['infantTaxes'] !== undefined && val['infantTaxes'] !== null) {
-      this.infantTaxes = val['infantTaxes'];
-    }
-    
-    // Restore return fare values if roundtrip
-    if (val['adultBaseFareReturn'] !== undefined && val['adultBaseFareReturn'] !== null) {
-      this.adultBaseFareReturn = val['adultBaseFareReturn'];
-    }
-    if (val['childrenBaseFareReturn'] !== undefined && val['childrenBaseFareReturn'] !== null) {
-      this.childrenBaseFareReturn = val['childrenBaseFareReturn'];
-    }
-    if (val['infantBaseFareReturn'] !== undefined && val['infantBaseFareReturn'] !== null) {
-      this.infantBaseFareReturn = val['infantBaseFareReturn'];
-    }
-    if (val['adultTaxesReturn'] !== undefined && val['adultTaxesReturn'] !== null) {
-      this.adultTaxesReturn = val['adultTaxesReturn'];
-    }
-    if (val['childrenTaxesReturn'] !== undefined && val['childrenTaxesReturn'] !== null) {
-      this.childrenTaxesReturn = val['childrenTaxesReturn'];
-    }
-    if (val['infantTaxesReturn'] !== undefined && val['infantTaxesReturn'] !== null) {
-      this.infantTaxesReturn = val['infantTaxesReturn'];
-    }
-    
-    // Restore fare totals - only update if value is provided and valid
-    if (val['totalBaseFare'] !== undefined && val['totalBaseFare'] !== null && val['totalBaseFare'] > 0) {
-      this.totalBaseFare = val['totalBaseFare'];
-    } else if ((!this.totalBaseFare || this.totalBaseFare === 0) && (this.totalAdults > 0 || this.totalChildren > 0 || this.totalInfants > 0)) {
-      // Recalculate if we have passenger counts but no totals
-      if (this.adultBaseFare || this.childrenBaseFare || this.infantBaseFare) {
-        this.aggregateFareSummary();
-      }
-    }
-    if (val['totalTaxes'] !== undefined && val['totalTaxes'] !== null && val['totalTaxes'] > 0) {
-      this.totalTaxes = val['totalTaxes'];
-    } else if ((!this.totalTaxes || this.totalTaxes === 0) && (this.totalAdults > 0 || this.totalChildren > 0 || this.totalInfants > 0)) {
-      // Recalculate if we have passenger counts but no totals
-      if (this.adultTaxes || this.childrenTaxes || this.infantTaxes) {
-        this.aggregateFareSummary();
-      }
+      this.processSegments(this.flightDataReturn, true);
     }
     
     // Initialize baggage counts
     this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
     this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
     
-    // Check if seat data is available in mobFinalPageData (like in reference component)
-    if (val['mobFinalPageData']?.ssr) {
-      console.log('Found SSR data in mobFinalPageData:', val['mobFinalPageData'].ssr);
-      this.processSSRDataFromFlightData(val['mobFinalPageData'].ssr);
-    }
-    
-    // Update final fare with restored data
-    this.updateFinalFare();
-    
-    // Set loader to false after processing data (unless proceeding to payment)
-    if (!val['proceedToPayment']) {
-      this.loader = false;
-    }
-    
-    // Check if we should proceed directly to payment (from addon page)
-    if (val['proceedToPayment']) {
-      // Use setTimeout to ensure UI is updated first
-      setTimeout(() => {
-        this.loader = true;
-        this.proceedToPayment();
-      }, 100);
-    }
-    
     this.loadFareRules();
-    this.cdr.detectChanges();
-  }
-  
-  processSSRDataFromFlightData(ssrData: any) {
-    // Process onward SSR data
-    if (ssrData.onward) {
-      console.log('Processing onward SSR data:', ssrData.onward);
-      this.parseSeatDataFromSSR(ssrData.onward, false);
-    }
-    
-    // Process return SSR data
-    if (ssrData.return && this.tripType === 'roundtrip') {
-      console.log('Processing return SSR data:', ssrData.return);
-      this.parseSeatDataFromSSR(ssrData.return, true);
-    }
-
-    // this.attemptSSRFetch();
-  }
-  
-  parseSeatDataFromSSR(ssrData: any, isReturn: boolean) {
-    if (!ssrData) return;
-    
-    // SSR data might be an array of arrays (one per segment)
-    const seatMaps: any[] = [];
-    
-    if (Array.isArray(ssrData)) {
-      ssrData.forEach((segmentSSR: any, segmentIndex: number) => {
-        if (Array.isArray(segmentSSR)) {
-          segmentSSR.forEach((seatItem: any) => {
-            if (seatItem && (seatItem.SeatMap || seatItem.Rows)) {
-              const seatMap = this.processSeatMap(seatItem.SeatMap || seatItem, seatItem);
-              if (seatMap) {
-                seatMaps.push(seatMap);
-              }
-            }
-          });
-        } else if (segmentSSR && (segmentSSR.SeatMap || segmentSSR.Rows)) {
-          const seatMap = this.processSeatMap(segmentSSR.SeatMap || segmentSSR, segmentSSR);
-          if (seatMap) {
-            seatMaps.push(seatMap);
-          }
-        }
-      });
-    } else if (ssrData.SeatMap || ssrData.Rows) {
-      // Single seat map
-      const seatMap = this.processSeatMap(ssrData.SeatMap || ssrData, ssrData);
-      if (seatMap) {
-        seatMaps.push(seatMap);
-      }
-    }
-    
-    if (isReturn) {
-      this.seatMapReturn = seatMaps;
-      seatMaps.forEach((_, index) => {
-        if (!this.selectedSeatsReturn[index]) {
-          this.selectedSeatsReturn[index] = [];
-        }
-      });
-    } else {
-      this.seatMap = seatMaps;
-      seatMaps.forEach((_, index) => {
-        if (!this.selectedSeats[index]) {
-          this.selectedSeats[index] = [];
-        }
-      });
-    }
-    
-    console.log(`Processed ${seatMaps.length} seat maps for ${isReturn ? 'return' : 'onward'}`);
-    this.updateSeatTotal();
-    this.cdr.detectChanges();
   }
 
   processSegments(flightData: any, isReturn: boolean) {
@@ -1083,76 +529,44 @@ getCurrentDialerValue(): string {
     }
   }
 
- callFareQuote() {
-  console.log('=== CALL FARE QUOTE START ===');
-  console.log('FareQuote exists?', !!this.fareQuote);
-  console.log('ResultIndex:', this.resultIndex);
-  console.log('TraceID:', this.traceid);
-  
-  if (this.fareQuote) {
-    console.log('FareQuote already exists, skipping API call');
-    return;
+  callFareQuote() {
+    this.subscriptions.add(
+      this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
+        .subscribe((val: any) => {
+          this.fareQuote = val;
+          this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
+          
+          if(this.fareQuote?.Response?.IsPriceChanged){
+             Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });  
+          }
+
+          this.processPassportReqs(this.fareQuote?.Response?.Results);
+          this.processFareBreakdown(val, false);
+
+          if (this.resultIndexReturn) {
+            this.subscriptions.add(
+              this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
+                .subscribe((returnVal: any) => {
+                  this.fareQuoteReturn = returnVal;
+                  this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
+                  
+                  if(this.fareQuoteReturn?.Response?.IsPriceChanged) {
+                    Swal.fire({ title: 'Return Price Changed', icon: 'warning' });
+                  }
+                  
+                  this.processPassportReqs(this.fareQuoteReturn?.Response?.Results);
+                  this.processFareBreakdown(returnVal, true);
+                  this.aggregateFareSummary();
+                  this.fetchSSRAfterFareQuotes();
+                }, err => { this.loader = false; })
+            );
+          } else {
+            this.aggregateFareSummary();
+            this.fetchSSRAfterFareQuotes();
+          }
+        }, err => { this.loader = false; })
+    );
   }
-  
-  if (!this.resultIndex) {
-    console.error('Cannot call fare quote: resultIndex is missing');
-    this.loader = false;
-    return;
-  }
-  
-  console.log('Actually calling fare quote API...');
-  
-  this.subscriptions.add(
-    this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
-      .subscribe((val: any) => {
-        console.log('Fare quote response received:', val);
-        console.log('Fare quote response keys:', Object.keys(val || {}));
-        
-        this.fareQuote = val;
-        this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
-        
-        if(this.fareQuote?.Response?.IsPriceChanged){
-          Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });  
-        }
-
-        this.processPassportReqs(this.fareQuote?.Response?.Results);
-        this.processFareBreakdown(val, false);
-
-        // Call SSR immediately after processing fare breakdown
-        console.log('Calling fetchSSRAfterFareQuotes...');
-        this.fetchSSRAfterFareQuotes();
-
-        if (this.resultIndexReturn) {
-          this.subscriptions.add(
-            this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
-              .subscribe((returnVal: any) => {
-                console.log('Return fare quote response received:', returnVal);
-                this.fareQuoteReturn = returnVal;
-                this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
-                
-                if(this.fareQuoteReturn?.Response?.IsPriceChanged) {
-                  Swal.fire({ title: 'Return Price Changed', icon: 'warning' });
-                }
-                
-                this.processPassportReqs(this.fareQuoteReturn?.Response?.Results);
-                this.processFareBreakdown(returnVal, true);
-                this.aggregateFareSummary();
-                
-                // SSR for return will be fetched in fetchSSRAfterFareQuotes if not unified format
-              }, err => { 
-                console.error('Error fetching return fare quote:', err);
-                this.loader = false; 
-              })
-          );
-        } else {
-          this.aggregateFareSummary();
-        }
-      }, err => { 
-        console.error('Error fetching fare quote:', err);
-        this.loader = false; 
-      })
-  );
-}
 
   processPassportReqs(results: any) {
       if(!results) return;
@@ -1165,368 +579,42 @@ getCurrentDialerValue(): string {
       }
   }
 
-fetchSSRAfterFareQuotes() {
-  // Don't skip if baggageOptions is empty - we need to fetch
-  if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
-    console.warn('SSR prerequisites missing');
-    return;
-  }
-  
-  console.log('Calling SSR for onward', {
-    ip: this.ipAddress,
-    token: !!this.tboToken,
-    traceid: this.traceid,
-    resultIndex: this.resultIndex,
-    baggageOptionsCount: this.baggageOptions.length
-  });
-
-  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
-    console.log('SSR onward response:', val);
-    this.ssrValues = val;
-    const response = val?.Response || {};
-    const baggage = response?.Baggage || this.findDeepArray(val, 'Baggage');
-    
-    console.log('SSR onward baggage raw', baggage);
-    
-    if (baggage && Array.isArray(baggage)) {
-      // Always process baggage, even if we fetched before
-      this.isUnifiedSegmentFormat = Array.isArray(baggage) 
-        && baggage.length === 2 
-        && Array.isArray(baggage[0]) 
-        && Array.isArray(baggage[1]);
+  fetchSSRAfterFareQuotes() {
+      this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe((val: any) => {
+          this.ssrValues = val;
+          if(val?.Response?.Baggage) this.processBaggage(val.Response.Baggage, false);
+      });
       
-      console.log('SSR onward baggage splitable:', this.isUnifiedSegmentFormat);
-      
-      if (this.isUnifiedSegmentFormat) {
-        this.processBaggage([baggage[0]], false);
-        if (this.tripType === 'roundtrip') {
-          this.processBaggage([baggage[1]], true);
-        }
-      } else {
-        this.processBaggage(baggage, false);
+      if(this.resultIndexReturn) {
+          this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
+              this.ssrValuesReturn = val;
+              if(val?.Response?.Baggage) this.processBaggage(val.Response.Baggage, true);
+          });
       }
-    } else {
-      console.warn('No baggage data found in SSR response for onward journey');
-      // Set empty arrays to show "No extra baggage available"
-      this.baggageOptions = [];
-      this.extraBaggageAvailable = false;
-    }
-    
-    // Seats
-    const seatData = response?.Seat || response?.Seats || response?.SeatMap || (val as any)?.Seat;
-    if(seatData) {
-      this.parseSeatData(seatData, false);
-    }
-    
-    this.cdr.detectChanges();
-  }, error => {
-    console.error('Error fetching SSR:', error);
-    this.baggageOptions = [];
-    this.extraBaggageAvailable = false;
-    this.cdr.detectChanges();
-  });
-  
-  // Fetch return SSR if needed
-  if(this.resultIndexReturn && !this.isUnifiedSegmentFormat) {
-    this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe((val: any) => {
-      console.log('SSR return response:', val);
-      this.ssrValuesReturn = val;
-      const baggageRet = val?.Response?.Baggage || this.findDeepArray(val, 'Baggage');
-      
-      if(baggageRet && Array.isArray(baggageRet)) {
-        this.processBaggage(baggageRet, true);
-      } else {
-        console.warn('No baggage data found in SSR response for return journey');
-        this.baggageOptionsReturn = [];
-        this.extraBaggageAvailableReturn = false;
-      }
-      
-      // Seats for return
-      const seatData = val?.Response?.Seat || val?.Response?.Seats || val?.Response?.SeatMap || val?.Seat;
-      if(seatData) {
-        this.parseSeatData(seatData, true);
-      }
-      
-      this.cdr.detectChanges();
-    }, error => {
-      console.error('Error fetching return SSR:', error);
-      this.baggageOptionsReturn = [];
-      this.extraBaggageAvailableReturn = false;
-      this.cdr.detectChanges();
-    });
-  }
-}
-private attemptSSRFetch() {
-  if (this.ipAddress && this.tboToken && this.traceid && this.resultIndex) {
-    this.fetchSSRAfterFareQuotes();   // 🔥 do not block on ssrFetched
-  }
-}
-
-  private findDeepArray(obj: any, key: string): any {
-    if (!obj || typeof obj !== 'object') return null;
-    if (Object.prototype.hasOwnProperty.call(obj, key)) return obj[key];
-    for (const k of Object.keys(obj)) {
-      const v = (obj as any)[k];
-      const res = this.findDeepArray(v, key);
-      if (res) return res;
-    }
-    return null;
   }
 
   // =================================================================
   // LOGIC IMPLEMENTATION FOR CRITICAL METHODS
   // =================================================================
 
-processBaggage(baggageArray: any, isReturn: boolean) {
-  console.log('Processing baggage data:', { baggageArray, isReturn });
-
-  if (!baggageArray || (Array.isArray(baggageArray) && baggageArray.length === 0)) {
-    console.log('No baggage array or empty array provided');
-    if (isReturn) {
-      this.baggageOptionsReturn = [];
-      this.selectedBaggageCountsReturn = {};
-      this.baggageTotalReturn = 0;
-      this.extraBaggageAvailableReturn = false;
-    } else {
-      this.baggageOptions = [];
-      this.selectedBaggageCounts = {};
-      this.baggageTotal = 0;
-      this.extraBaggageAvailable = false;
-    }
-    this.cdr.detectChanges();
-    return;
-  }
-
-  // Flatten nested arrays
-  let flatBaggage: any[] = [];
-  
-  if (Array.isArray(baggageArray)) {
-    if (Array.isArray(baggageArray[0])) {
-      // Nested array (per segment)
-      flatBaggage = baggageArray.flat();
-    } else {
-      flatBaggage = baggageArray;
-    }
-  } else {
-    // Single object
-    flatBaggage = [baggageArray];
-  }
-  
-  console.log('Flattened baggage items:', flatBaggage.length);
-
-  // Filter valid baggage options
-  const validOptions = flatBaggage.filter((item: any) => {
-    if (!item || !item.Code) return false;
-    
-    // Skip "NoBaggage" items
-    if (item.Code === 'NoBaggage' || item.Code === 'NOBAGGAGE') return false;
-    
-    // Check if it has weight and price
-    const hasWeight = item.Weight !== undefined && item.Weight !== null;
-    const hasPrice = item.Price !== undefined && item.Price !== null;
-    
-    return hasWeight && hasPrice && item.Price > 0;
-  });
-
-  console.log('Valid baggage options after filtering:', validOptions.length);
-
-  if (validOptions.length === 0) {
-    console.log('No valid baggage options available');
-    if (isReturn) {
-      this.baggageOptionsReturn = [];
-      this.extraBaggageAvailableReturn = false;
-    } else {
-      this.baggageOptions = [];
-      this.extraBaggageAvailable = false;
-    }
-    this.cdr.detectChanges();
-    return;
-  }
-
-  // Sort by weight (kgs) ascending
-  validOptions.sort((a, b) => (a.Weight || 0) - (b.Weight || 0));
-
-  if (isReturn) {
-    this.extraBaggageAvailableReturn = true;
-    this.baggageOptionsReturn = validOptions.map((item: any) => ({
-      code: item.Code,
-      Code: item.Code,
-      kgs: item.Weight,
-      Weight: item.Weight,
-      price: item.Price,
-      Price: item.Price,
-      Description: item.Description || `${item.Weight} kg`,
-      WayType: item.WayType,
-      AirlineCode: item.AirlineCode,
-      FlightNumber: item.FlightNumber,
-      Origin: item.Origin,
-      Destination: item.Destination,
-      count: 0
-    }));
-
-    // Initialize counts
-    this.selectedBaggageCountsReturn = {};
-    this.baggageOptionsReturn.forEach(opt => this.selectedBaggageCountsReturn[opt.Code] = 0);
-    this.baggageTotalReturn = 0;
-    
-    console.log('Set return baggage options:', this.baggageOptionsReturn);
-  } else {
-    this.extraBaggageAvailable = true;
-    this.baggageOptions = validOptions.map((item: any) => ({
-      code: item.Code,
-      Code: item.Code,
-      kgs: item.Weight,
-      Weight: item.Weight,
-      price: item.Price,
-      Price: item.Price,
-      Description: item.Description || `${item.Weight} kg`,
-      WayType: item.WayType,
-      AirlineCode: item.AirlineCode,
-      FlightNumber: item.FlightNumber,
-      Origin: item.Origin,
-      Destination: item.Destination,
-      count: 0
-    }));
-
-    // Initialize counts
-    this.selectedBaggageCounts = {};
-    this.baggageOptions.forEach(opt => this.selectedBaggageCounts[opt.Code] = 0);
-    this.baggageTotal = 0;
-    
-    console.log('Set onward baggage options:', this.baggageOptions);
-  }
-
-  this.cdr.detectChanges();
-}
-checkBaggageState() {
-  console.log('=== BAGGAGE STATE CHECK ===');
-  console.log('Onward baggage options count:', this.baggageOptions.length);
-  if (this.baggageOptions.length > 0) {
-    console.log('First baggage option:', this.baggageOptions[0]);
-    console.log('First baggage kgs property:', this.baggageOptions[0].kgs);
-    console.log('First baggage Weight property:', this.baggageOptions[0].Weight);
-  }
-  console.log('===========================');
-}
-
-forceFetchBaggageData(isReturn: boolean = false): void {
-  console.log('forceFetchBaggageData called with isReturn:', isReturn);
-  
-  if (!this.ipAddress || !this.tboToken || !this.traceid) {
-    console.error('Missing required data for SSR fetch:', {
-      ip: this.ipAddress,
-      token: !!this.tboToken,
-      traceid: this.traceid
-    });
-    return;
-  }
-  
-  const resultIndexToUse = isReturn && this.resultIndexReturn ? this.resultIndexReturn : this.resultIndex;
-  
-  console.log('Fetching SSR with resultIndex:', resultIndexToUse);
-  
-  this.loader = true;
-  
-  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, resultIndexToUse).subscribe(
-    (val: any) => {
-      console.log('SSR API Response received:', val);
+  processBaggage(baggageArray: any[][], isReturn: boolean) {
+      // Flatten the nested array from TBO (usually structured by sector)
+      // TBO returns baggage as array of arrays per sector
+      const flatBaggage = baggageArray.flat();
       
-      if (!val) {
-        console.warn('SSR API returned null/empty response');
-        this.showNoBaggageMessage();
-        this.loader = false;
-        this.cdr.detectChanges();
-        return;
-      }
-      
-      const response = val?.Response || {};
-      const baggage = response?.Baggage || this.findDeepArray(val, 'Baggage');
-      
-      console.log('Extracted baggage data:', baggage);
-      console.log('Baggage type:', typeof baggage);
-      console.log('Is baggage array?', Array.isArray(baggage));
-      
-      if (baggage && Array.isArray(baggage)) {
-        console.log('Processing baggage array...');
-        this.processBaggage(baggage, isReturn);
-        console.log('Baggage processed successfully');
-        this.checkBaggageState();
+      if(isReturn) {
+          this.baggageOptionsReturn = flatBaggage;
+          this.extraBaggageAvailableReturn = flatBaggage.length > 0;
+          // Initialize counts
+          flatBaggage.forEach(b => this.selectedBaggageCountsReturn[b.Code] = 0);
       } else {
-        console.warn('No baggage data found in SSR response');
-        console.log('Full response for debugging:', JSON.stringify(val, null, 2));
-        this.showNoBaggageMessage();
-        
-        // Set empty arrays
-        if (isReturn) {
-          this.baggageOptionsReturn = [];
-          this.extraBaggageAvailableReturn = false;
-        } else {
-          this.baggageOptions = [];
-          this.extraBaggageAvailable = false;
-        }
+          this.baggageOptions = flatBaggage;
+          this.extraBaggageAvailable = flatBaggage.length > 0;
+          // Initialize counts
+          flatBaggage.forEach(b => this.selectedBaggageCounts[b.Code] = 0);
       }
-      
-      this.loader = false;
-      this.cdr.detectChanges();
-    },
-    error => {
-      console.error('Error fetching SSR:', error);
-      console.error('Error details:', error.message, error.status);
-      
-      this.loader = false;
-      this.showNoBaggageMessage();
-      this.cdr.detectChanges();
-    }
-  );
-}
-
-testSSRFetch(): void {
-  console.log('=== MANUAL SSR TEST ===');
-  this.debugSSRFlow('manualTest');
-  
-  if (!this.ipAddress || !this.tboToken || !this.traceid || !this.resultIndex) {
-    console.error('Cannot test: Missing required data');
-    return;
   }
-  
-  console.log('Calling SSR API directly...');
-  
-  this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe(
-    (val: any) => {
-      console.log('TEST - SSR API Response:', val);
-      console.log('TEST - Response structure:', Object.keys(val || {}));
-      console.log('TEST - Has Response property?', !!val?.Response);
-      console.log('TEST - Response keys:', Object.keys(val?.Response || {}));
-      console.log('TEST - Baggage property:', val?.Response?.Baggage);
-      console.log('TEST - Full Response JSON:', JSON.stringify(val, null, 2));
-      
-      // Try to find baggage in different locations
-      const baggage1 = val?.Response?.Baggage;
-      const baggage2 = this.findDeepArray(val, 'Baggage');
-      const baggage3 = val?.Baggage;
-      
-      console.log('TEST - Baggage search results:', {
-        baggage1,
-        baggage2,
-        baggage3
-      });
-    },
-    error => {
-      console.error('TEST - SSR API Error:', error);
-      console.error('TEST - Error status:', error.status);
-      console.error('TEST - Error message:', error.message);
-    }
-  );
-}
 
-private showNoBaggageMessage(): void {
-  Swal.fire({
-    title: 'No Baggage Options',
-    text: 'No additional baggage options are available for this flight.',
-    icon: 'info',
-    confirmButtonText: 'OK'
-  });
-}
   addBaggage(option: any, isReturn: boolean = false): void {
     const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
     const currentTotal = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -1573,35 +661,13 @@ private showNoBaggageMessage(): void {
     else this.baggageTotal = total;
     
     this.updateFinalFare();
-    this.logBaggageState('after-update-baggage-total', isReturn);
-  }
-
-  private logBaggageState(tag: string, isReturn: boolean) {
-    const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
-    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
-    const total = isReturn ? this.baggageTotalReturn : this.baggageTotal;
-    const modal = this.showAddBaggageModal;
-    console.log('BAGGAGE DEBUG', tag, {
-      isReturn,
-      optionsCount: Array.isArray(options) ? options.length : 0,
-      optionsSample: Array.isArray(options) && options.length ? options.slice(0, 3) : [],
-      countsKeys: Object.keys(counts || {}),
-      countsValues: counts,
-      baggageTotal: total,
-      showAddBaggageModal: modal
-    });
   }
 
   processFareBreakdown(val: any, isReturn: boolean): void {
-    console.log('processFareBreakdown called with:', { isReturn, val });
     const results = val?.Response?.Results;
-    if (!results) {
-      console.error('No results in fare breakdown response. Full response:', val);
-      return;
-    }
+    if (!results) return;
 
     const fareBreakdown = results.FareBreakdown || [];
-    console.log('Fare breakdown array:', fareBreakdown);
     this.isLCC = results.IsLCC;
 
     let totalAdults = 0, totalChildren = 0, totalInfants = 0;
@@ -1609,147 +675,51 @@ private showNoBaggageMessage(): void {
     fareBreakdown.forEach(( breakdown: any ) => {
       const type = breakdown.PassengerType;
       const count = breakdown.PassengerCount;
-      
-      if (!count || count === 0) {
-        console.warn('Invalid passenger count in fare breakdown:', breakdown);
-        return;
-      }
-      
       const baseFare = breakdown.BaseFare / count;
       const tax = breakdown.Tax / count; 
 
       if (type === 1) { // Adult
         totalAdults = count;
-        if(isReturn) { 
-          this.adultBaseFareReturn = baseFare; 
-          this.adultTaxesReturn = tax; 
-        } else { 
-          this.adultBaseFare = baseFare; 
-          this.adultTaxes = tax; 
-        }
-        console.log(`Processed Adult fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
+        if(isReturn) { this.adultBaseFareReturn = baseFare; this.adultTaxesReturn = tax; }
+        else { this.adultBaseFare = baseFare; this.adultTaxes = tax; }
       } else if (type === 2) { // Child
         totalChildren = count;
-        if(isReturn) { 
-          this.childrenBaseFareReturn = baseFare; 
-          this.childrenTaxesReturn = tax; 
-        } else { 
-          this.childrenBaseFare = baseFare; 
-          this.childrenTaxes = tax; 
-        }
-        console.log(`Processed Child fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
+        if(isReturn) { this.childrenBaseFareReturn = baseFare; this.childrenTaxesReturn = tax; }
+        else { this.childrenBaseFare = baseFare; this.childrenTaxes = tax; }
       } else if (type === 3) { // Infant
         totalInfants = count;
-        if(isReturn) { 
-          this.infantBaseFareReturn = baseFare; 
-          this.infantTaxesReturn = tax; 
-        } else { 
-          this.infantBaseFare = baseFare; 
-          this.infantTaxes = tax; 
-        }
-        console.log(`Processed Infant fare: Base=${baseFare}, Tax=${tax}, Count=${count}`);
+        if(isReturn) { this.infantBaseFareReturn = baseFare; this.infantTaxesReturn = tax; }
+        else { this.infantBaseFare = baseFare; this.infantTaxes = tax; }
       }
     });
 
     if (!isReturn) {
-      // Only update passenger counts if we got valid values from fare breakdown
-      // Otherwise preserve existing counts from flight list
-      if (totalAdults > 0) {
       this.totalAdults = totalAdults;
-        // Only initialize travellers if not already set or if count changed
-        if (!this.travellers || this.travellers.length !== totalAdults) {
+      this.totalChildren = totalChildren;
+      this.totalInfants = totalInfants;
       this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
-        }
-      }
-      if (totalChildren > 0) {
-        this.totalChildren = totalChildren;
-        // Only initialize children if not already set or if count changed
-        if (!this.children || this.children.length !== totalChildren) {
       this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
-        }
-      }
-      if (totalInfants > 0) {
-        this.totalInfants = totalInfants;
-        // Only initialize infants if not already set or if count changed
-        if (!this.infants || this.infants.length !== totalInfants) {
       this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
-        }
-      }
-      
-      console.log(`Fare breakdown processed - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
-      console.log(`Fare values set - Adult Base: ${this.adultBaseFare}, Adult Tax: ${this.adultTaxes}, Child Base: ${this.childrenBaseFare}, Child Tax: ${this.childrenTaxes}`);
-      
-      // Force update fare summary immediately
-      this.aggregateFareSummary();
-      this.cdr.detectChanges();
     }
   }
 
   aggregateFareSummary(): void {
-    // Calculate base fare and taxes
-    let baseFare = 0;
-    let taxes = 0;
+    this.totalBaseFare = (this.adultBaseFare * this.totalAdults) + (this.childrenBaseFare * this.totalChildren) + (this.infantBaseFare * this.totalInfants);
+    this.totalTaxes = (this.adultTaxes * this.totalAdults) + (this.childrenTaxes * this.totalChildren) + (this.infantTaxes * this.totalInfants);
     
-    // Onward journey
-    if (this.adultBaseFare && this.totalAdults > 0) {
-      baseFare += this.adultBaseFare * this.totalAdults;
-    }
-    if (this.childrenBaseFare && this.totalChildren > 0) {
-      baseFare += this.childrenBaseFare * this.totalChildren;
-    }
-    if (this.infantBaseFare && this.totalInfants > 0) {
-      baseFare += this.infantBaseFare * this.totalInfants;
-    }
-    
-    if (this.adultTaxes && this.totalAdults > 0) {
-      taxes += this.adultTaxes * this.totalAdults;
-    }
-    if (this.childrenTaxes && this.totalChildren > 0) {
-      taxes += this.childrenTaxes * this.totalChildren;
-    }
-    if (this.infantTaxes && this.totalInfants > 0) {
-      taxes += this.infantTaxes * this.totalInfants;
-    }
-    
-    // Return journey (if roundtrip)
     if(this.resultIndexReturn) {
-      if (this.adultBaseFareReturn && this.totalAdults > 0) {
-        baseFare += this.adultBaseFareReturn * this.totalAdults;
-      }
-      if (this.childrenBaseFareReturn && this.totalChildren > 0) {
-        baseFare += this.childrenBaseFareReturn * this.totalChildren;
-      }
-      if (this.infantBaseFareReturn && this.totalInfants > 0) {
-        baseFare += this.infantBaseFareReturn * this.totalInfants;
-      }
-      
-      if (this.adultTaxesReturn && this.totalAdults > 0) {
-        taxes += this.adultTaxesReturn * this.totalAdults;
-      }
-      if (this.childrenTaxesReturn && this.totalChildren > 0) {
-        taxes += this.childrenTaxesReturn * this.totalChildren;
-      }
-      if (this.infantTaxesReturn && this.totalInfants > 0) {
-        taxes += this.infantTaxesReturn * this.totalInfants;
-      }
+        this.totalBaseFare += (this.adultBaseFareReturn * this.totalAdults) + (this.childrenBaseFareReturn * this.totalChildren) + (this.infantBaseFareReturn * this.totalInfants);
+        this.totalTaxes += (this.adultTaxesReturn * this.totalAdults) + (this.childrenTaxesReturn * this.totalChildren) + (this.infantTaxesReturn * this.totalInfants);
     }
-    
-    this.totalBaseFare = baseFare;
-    this.totalTaxes = taxes;
-    
-    console.log(`Aggregated fare - Base: ${this.totalBaseFare}, Taxes: ${this.totalTaxes}`);
-    console.log(`Passenger counts - Adults: ${this.totalAdults}, Children: ${this.totalChildren}, Infants: ${this.totalInfants}`);
 
     this.updateFinalFare();
     this.loader = false;
-    this.cdr.detectChanges();
   }
 
   updateFinalFare() {
     this.finalAmount = this.totalBaseFare + this.totalTaxes + 
                        this.baggageTotal + this.baggageTotalReturn + 
-                       this.totalMealCharges + this.totalSpecialServiceCharges +
-                       this.totalSeats;
+                       this.totalMealCharges + this.totalSpecialServiceCharges;
   }
 
   proceedToPayment(): void {
@@ -2089,51 +1059,19 @@ private showNoBaggageMessage(): void {
   }
 
   // Baggage Modal Handlers
-openBaggageModal(isReturn: boolean = false) {
-  console.log('openBaggageModal called with isReturn:', isReturn);
-  
-  this.activeRoundBaggageTab = isReturn ? 'return' : 'onward';
-  
-  // Debug the current state
-  this.debugSSRFlow('openBaggageModal', isReturn);
-  
-  const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
-  const hasBaggageData = options && Array.isArray(options) && options.length > 0;
-  
-  console.log('Has baggage data?', hasBaggageData);
-  console.log('Options array:', options);
-  
-  if (!hasBaggageData) {
-    console.log('No baggage data available, forcing fetch...');
-    this.forceFetchBaggageData(isReturn);
-  } else {
-    console.log('Baggage data already exists, showing modal...');
+  openBaggageModal(isReturn: boolean = false) {
+    if(isReturn) {
+        this.baggageModalOpenReturn = true;
+    } else {
+        this.baggageModalOpenOutbound = true;
+    }
   }
-  
-  // Show modal immediately (data will load asynchronously)
-  this.showAddBaggageModal = true;
-  console.log('Setting showAddBaggageModal to true');
-  
-  this.cdr.detectChanges();
-}
 
-closeBaggageModal() {
-  this.showAddBaggageModal = false;   // 🔥 THIS is what actually controls modal
-}
-debugSSRFlow(methodName: string, isReturn: boolean = false) {
-  console.log(`=== SSR FLOW DEBUG: ${methodName} ===`);
-  console.log('IP Address:', this.ipAddress);
-  console.log('TBO Token:', !!this.tboToken);
-  console.log('Trace ID:', this.traceid);
-  console.log('Result Index:', this.resultIndex);
-  console.log('Result Index Return:', this.resultIndexReturn);
-  console.log('Baggage Options count:', this.baggageOptions.length);
-  console.log('Baggage Options Return count:', this.baggageOptionsReturn.length);
-  console.log('Show Add Baggage Modal:', this.showAddBaggageModal);
-  console.log('Active Round Baggage Tab:', this.activeRoundBaggageTab);
-  console.log('Trip Type:', this.tripType);
-  console.log('====================================');
-}
+  closeBaggageModal() {
+    this.baggageModalOpenOutbound = false;
+    this.baggageModalOpenReturn = false;
+  }
+
   // General Close Modal (handles all)
   closeModal() {
     this.showModal = false;
@@ -2246,10 +1184,6 @@ debugSSRFlow(methodName: string, isReturn: boolean = false) {
   closeTripSummary() { this.showTripSummary = false; }
   openFareSummary() { this.showFareSummaryModal = true; }
   closeFareSummary() { this.showFareSummaryModal = false; }
-  get showAddBaggageModal(): boolean { return this._showAddBaggageModal; }
-set showAddBaggageModal(val: boolean) {
-  this._showAddBaggageModal = val;
-}
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
   closeGSTModal() { this.showGSTModal = false; }
   saveGSTDetails() { this.gstInfo.companyName = this.gstDetails.companyName; this.gstInfo.registrationNo = this.gstDetails.gstNumber; this.contact.hasGST = !!this.gstDetails.companyName; this.closeGSTModal(); }
@@ -2272,24 +1206,10 @@ set showAddBaggageModal(val: boolean) {
   savePassengerDetails(details: any) {
     const arr = this.currentPassengerType === 'adult' ? this.travellers : this.currentPassengerType === 'child' ? this.children : this.infants;
     if (arr[this.currentPassengerIndex]) {
-      // Create a new object to ensure change detection works properly
-      arr[this.currentPassengerIndex] = { ...arr[this.currentPassengerIndex], ...details };
-    } else {
-      // If passenger doesn't exist, add it
-      arr[this.currentPassengerIndex] = { ...details };
-    }
-    
-    // Create a new array reference to trigger change detection
-    if (this.currentPassengerType === 'adult') {
-      this.travellers = [...this.travellers];
-    } else if (this.currentPassengerType === 'child') {
-      this.children = [...this.children];
-    } else {
-      this.infants = [...this.infants];
-    }
-    
+      Object.assign(arr[this.currentPassengerIndex], details);
       // Trigger change detection to update the proceed button state
       this.cdr.detectChanges();
+    }
     this.closePassengerModal();
   }
   
@@ -2309,83 +1229,23 @@ set showAddBaggageModal(val: boolean) {
       return;
     }
     
-    // Build payload for addon page (seats/meals/others)
-    const addonPageData = {
-      ...this.fullFlightData,
-      tripType: this.tripType,
-      flightSegments: this.flightSegments,
-      flightSegmentsReturn: this.flightSegmentsReturn,
-      totalAdults: this.totalAdults,
-      totalChildren: this.totalChildren,
-      totalInfants: this.totalInfants,
-      seatMap: this.seatMap,
-      seatMapReturn: this.seatMapReturn,
-      ssrValues: this.ssrValues,
-      ssrValuesReturn: this.ssrValuesReturn,
-      // Include individual fare values for proper restoration
-      adultBaseFare: this.adultBaseFare,
-      childrenBaseFare: this.childrenBaseFare,
-      infantBaseFare: this.infantBaseFare,
-      adultTaxes: this.adultTaxes,
-      childrenTaxes: this.childrenTaxes,
-      infantTaxes: this.infantTaxes,
-      adultBaseFareReturn: this.adultBaseFareReturn,
-      childrenBaseFareReturn: this.childrenBaseFareReturn,
-      infantBaseFareReturn: this.infantBaseFareReturn,
-      adultTaxesReturn: this.adultTaxesReturn,
-      childrenTaxesReturn: this.childrenTaxesReturn,
-      infantTaxesReturn: this.infantTaxesReturn,
-      totalBaseFare: this.totalBaseFare,
-      totalTaxes: this.totalTaxes,
-      travellers: this.travellers,
-      children: this.children,
-      infants: this.infants,
-      contact: this.contact,
-      gstDetails: this.gstDetails,
-      termsAgreed: this.termsAgreed, // Include terms agreement status
-      tboToken: this.tboToken,
-      traceid: this.traceid,
-      resultIndex: this.resultIndex,
-      resultIndexReturn: this.resultIndexReturn,
-      baggageOptions: this.baggageOptions,
-      baggageOptionsReturn: this.baggageOptionsReturn,
-      baggageTotal: this.baggageTotal,
-      baggageTotalReturn: this.baggageTotalReturn,
-      selectedBaggageCounts: this.selectedBaggageCounts,
-      selectedBaggageCountsReturn: this.selectedBaggageCountsReturn,
-      totalSeats: this.totalSeats,
-      totalMealCharges: this.totalMealCharges,
-      totalSpecialServiceCharges: this.totalSpecialServiceCharges,
-      mobFinalPageData: this.fullFlightData?.mobFinalPageData || null
-    };
-
-    // Pass data to addon page and navigate
-    this.flightDataService.setStringValue(addonPageData);
-    this.loader = false;
-    this.router.navigate(['/flightaddons']);
+    this.loader = true;
+    this.proceedToPayment();
   }
   
   // Baggage methods for mobile
   incrementBaggage(baggage: any) {
-    const weightKey = baggage.kgs || baggage.Weight || baggage.Code;
-    const codeKey = baggage.Code || baggage.code;
-    if (!this.baggageCounts[weightKey]) this.baggageCounts[weightKey] = 0;
-    this.baggageCounts[weightKey]++;
-    if (codeKey) {
-      this.selectedBaggageCounts[codeKey] = (this.selectedBaggageCounts[codeKey] || 0) + 1;
-    }
+    const key = baggage.kgs || baggage.Code;
+    if (!this.baggageCounts[key]) this.baggageCounts[key] = 0;
+    this.baggageCounts[key]++;
     this.updateBaggageTotal(false);
     this.updateFinalFare();
   }
   
   decrementBaggage(baggage: any) {
-    const weightKey = baggage.kgs || baggage.Weight || baggage.Code;
-    const codeKey = baggage.Code || baggage.code;
-    if (this.baggageCounts[weightKey] > 0) {
-      this.baggageCounts[weightKey]--;
-      if (codeKey && (this.selectedBaggageCounts[codeKey] || 0) > 0) {
-        this.selectedBaggageCounts[codeKey]--;
-      }
+    const key = baggage.kgs || baggage.Code;
+    if (this.baggageCounts[key] > 0) {
+      this.baggageCounts[key]--;
       this.updateBaggageTotal(false);
       this.updateFinalFare();
     }
@@ -2592,338 +1452,6 @@ set showAddBaggageModal(val: boolean) {
   
   // Empty placeholders to satisfy template bindings if not fully implemented
   processMeals(isReturn: boolean) {} 
-  
-  // Seat Selection Methods
-  parseSeatData(seatData: any, isReturn: boolean) {
-    console.log('parseSeatData called with:', seatData, 'isReturn:', isReturn);
-    
-    if (!seatData) {
-      console.warn('No seat data provided');
-      return;
-    }
-
-    const segments = isReturn ? this.flightSegmentsReturn : this.flightSegments;
-    const seatMaps: any[] = [];
-
-    // Handle different data structures
-    let dataArray: any[] = [];
-    
-    if (Array.isArray(seatData)) {
-      dataArray = seatData;
-    } else if (seatData.SeatMap) {
-      // Single seat map object
-      const seatMap = this.processSeatMap(seatData.SeatMap, seatData);
-      if (seatMap) {
-        seatMaps.push(seatMap);
-      }
-    } else if (seatData.Rows) {
-      // Direct seat map structure
-      const seatMap = this.processSeatMap(seatData, seatData);
-      if (seatMap) {
-        seatMaps.push(seatMap);
-      }
-    } else {
-      console.warn('Unknown seat data structure:', seatData);
-      return;
-    }
-
-    // Process array of seat groups
-    if (dataArray.length > 0) {
-      dataArray.forEach((seatGroup: any, groupIndex: number) => {
-        if (!seatGroup) {
-          return;
-        }
-
-        // If seatGroup is an array, iterate through it
-        if (Array.isArray(seatGroup)) {
-          seatGroup.forEach((seat: any, seatIndex: number) => {
-            if (!seat) return;
-            
-            // Try different possible structures
-            const seatMapData = seat.SeatMap || seat;
-            const seatMap = this.processSeatMap(seatMapData, seat);
-            if (seatMap) {
-              seatMaps.push(seatMap);
-            }
-          });
-        } else if (seatGroup.SeatMap || seatGroup.Rows) {
-          // Direct seat map in group
-          const seatMapData = seatGroup.SeatMap || seatGroup;
-          const seatMap = this.processSeatMap(seatMapData, seatGroup);
-          if (seatMap) {
-            seatMaps.push(seatMap);
-          }
-        }
-      });
-    }
-
-    if (isReturn) {
-      this.seatMapReturn = seatMaps;
-      // Initialize selected seats for return
-      seatMaps.forEach((_, index) => {
-        if (!this.selectedSeatsReturn[index]) {
-          this.selectedSeatsReturn[index] = [];
-        }
-      });
-    } else {
-      this.seatMap = seatMaps;
-      // Initialize selected seats for onward
-      seatMaps.forEach((_, index) => {
-        if (!this.selectedSeats[index]) {
-          this.selectedSeats[index] = [];
-        }
-      });
-    }
-
-    this.updateSeatTotal();
-  }
-
-  processSeatMap(seatMapData: any, seatInfo: any): any {
-    if (!seatMapData || !seatMapData.Rows || !Array.isArray(seatMapData.Rows)) {
-      return null;
-    }
-
-    const seatBlocks: string[][] = [];
-    const rows: any[] = [];
-    const priceCategories: any[] = [];
-    const priceMap = new Map<string, number>();
-
-    // Process seat blocks (columns)
-    if (seatMapData.SeatBlocks && Array.isArray(seatMapData.SeatBlocks)) {
-      seatMapData.SeatBlocks.forEach((block: any) => {
-        if (block && Array.isArray(block)) {
-          seatBlocks.push(block);
-        }
-      });
-    }
-
-    // Process rows
-    seatMapData.Rows.forEach((rowData: any) => {
-      if (!rowData || !rowData.RowNo) return;
-
-      const row: any = {
-        rowNo: rowData.RowNo,
-        seatBlocks: []
-      };
-
-      // Process seat blocks for this row
-      seatBlocks.forEach((block, blockIndex) => {
-        const seatBlock: any = {};
-        block.forEach((letter: string) => {
-          const seatCode = `${rowData.RowNo}${letter}`;
-          const seat = this.findSeatInRow(rowData, seatCode, seatInfo);
-          
-          if (seat) {
-            seatBlock[letter] = {
-              Code: seatCode,
-              isAvailable: seat.IsAvailable || false,
-              Price: seat.Price || 0,
-              priceCategory: this.getPriceCategory(seat.Price || 0),
-              SeatType: seat.SeatType || '',
-              Description: seat.Description || ''
-            };
-
-            // Track price categories
-            const price = seat.Price || 0;
-            if (price > 0 && !priceMap.has(seatCode)) {
-              priceMap.set(seatCode, price);
-            }
-          } else {
-            seatBlock[letter] = null;
-          }
-        });
-        row.seatBlocks.push(seatBlock);
-      });
-
-      rows.push(row);
-    });
-
-    // Create price categories
-    const prices = Array.from(priceMap.values()).filter(p => p > 0).sort((a, b) => a - b);
-    if (prices.length > 0) {
-      const minPrice = prices[0];
-      const maxPrice = prices[prices.length - 1];
-      const midPrice = (minPrice + maxPrice) / 2;
-
-      if (minPrice === maxPrice) {
-        priceCategories.push({
-          category: 'low-price',
-          min: minPrice,
-          max: maxPrice
-        });
-      } else {
-        priceCategories.push({
-          category: 'low-price',
-          min: minPrice,
-          max: Math.floor(midPrice)
-        });
-        priceCategories.push({
-          category: 'medium-price',
-          min: Math.ceil(midPrice),
-          max: Math.floor((midPrice + maxPrice) / 2)
-        });
-        priceCategories.push({
-          category: 'high-price',
-          min: Math.ceil((midPrice + maxPrice) / 2),
-          max: maxPrice
-        });
-      }
-    }
-
-    return {
-      seatBlocks,
-      rows,
-      priceCategories
-    };
-  }
-
-  findSeatInRow(rowData: any, seatCode: string, seatInfo: any): any {
-    if (!rowData.Seats || !Array.isArray(rowData.Seats)) {
-      return null;
-    }
-
-    return rowData.Seats.find((s: any) => s.SeatCode === seatCode || s.Code === seatCode);
-  }
-
-  getPriceCategory(price: number): string {
-    if (price === 0) return 'free';
-    if (price < 500) return 'low-price';
-    if (price < 1500) return 'medium-price';
-    return 'high-price';
-  }
-
-  isSeatSelected(segmentIndex: number, seatCode: string): boolean {
-    if (!this.selectedSeats[segmentIndex]) {
-      return false;
-    }
-    return this.selectedSeats[segmentIndex].some(seat => seat.Code === seatCode);
-  }
-
-  isSeatSelectedReturn(segmentIndex: number, seatCode: string): boolean {
-    if (!this.selectedSeatsReturn[segmentIndex]) {
-      return false;
-    }
-    return this.selectedSeatsReturn[segmentIndex].some(seat => seat.Code === seatCode);
-  }
-
-  toggleSeatSelection(segmentIndex: number, seat: any): void {
-    if (!seat || !seat.isAvailable) return;
-
-    if (!this.selectedSeats[segmentIndex]) {
-      this.selectedSeats[segmentIndex] = [];
-    }
-
-    const seatIndex = this.selectedSeats[segmentIndex].findIndex(s => s.Code === seat.Code);
-    
-    if (seatIndex >= 0) {
-      // Deselect seat
-      this.selectedSeats[segmentIndex].splice(seatIndex, 1);
-    } else {
-      // Check if we can select more seats (limit to total passengers)
-      const totalSelected = this.getTotalSelectedSeats(false);
-      const maxSeats = this.totalAdults + this.totalChildren;
-      
-      if (totalSelected >= maxSeats) {
-        Swal.fire('Limit Reached', `You can only select up to ${maxSeats} seat(s) for ${maxSeats} passenger(s).`, 'info');
-        return;
-      }
-
-      // Select seat
-      this.selectedSeats[segmentIndex].push({ ...seat });
-    }
-
-    this.updateSeatTotal();
-  }
-
-  toggleSeatSelectionReturn(segmentIndex: number, seat: any): void {
-    if (!seat || !seat.isAvailable) return;
-
-    if (!this.selectedSeatsReturn[segmentIndex]) {
-      this.selectedSeatsReturn[segmentIndex] = [];
-    }
-
-    const seatIndex = this.selectedSeatsReturn[segmentIndex].findIndex(s => s.Code === seat.Code);
-    
-    if (seatIndex >= 0) {
-      // Deselect seat
-      this.selectedSeatsReturn[segmentIndex].splice(seatIndex, 1);
-    } else {
-      // Check if we can select more seats (limit to total passengers)
-      const totalSelected = this.getTotalSelectedSeats(true);
-      const maxSeats = this.totalAdults + this.totalChildren;
-      
-      if (totalSelected >= maxSeats) {
-        Swal.fire('Limit Reached', `You can only select up to ${maxSeats} seat(s) for ${maxSeats} passenger(s).`, 'info');
-        return;
-      }
-
-      // Select seat
-      this.selectedSeatsReturn[segmentIndex].push({ ...seat });
-    }
-
-    this.updateSeatTotal();
-  }
-
-  getTotalSelectedSeats(isReturn: boolean): number {
-    const selected = isReturn ? this.selectedSeatsReturn : this.selectedSeats;
-    return Object.values(selected).reduce((total, seats) => total + (seats?.length || 0), 0);
-  }
-
-  updateSeatTotal(): void {
-    let total = 0;
-
-    // Calculate onward seat prices
-    Object.keys(this.selectedSeats).forEach(index => {
-      const seats = this.selectedSeats[parseInt(index)];
-      if (seats && Array.isArray(seats)) {
-        seats.forEach(seat => {
-          total += seat.Price || 0;
-        });
-      }
-    });
-
-    // Calculate return seat prices
-    Object.keys(this.selectedSeatsReturn).forEach(index => {
-      const seats = this.selectedSeatsReturn[parseInt(index)];
-      if (seats && Array.isArray(seats)) {
-        seats.forEach(seat => {
-          total += seat.Price || 0;
-        });
-      }
-    });
-
-    this.totalSeats = total;
-    this.updateFinalFare();
-  }
-
-  getSeatCount(seatBlocks: string[][]): number {
-    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
-    return seatBlocks.reduce((count, block) => count + (block?.length || 0), 0);
-  }
-
-  getAisleCount(seatBlocks: string[][]): number {
-    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
-    return Math.max(0, seatBlocks.length - 1);
-  }
-
-  getBlockCount(seatBlocks: string[][]): number {
-    if (!seatBlocks || !Array.isArray(seatBlocks)) return 0;
-    return seatBlocks.length;
-  }
-
-  getSeatTooltip(seat: any): string {
-    if (!seat) return '';
-    let tooltip = `Seat: ${seat.Code}`;
-    if (seat.Price > 0) {
-      tooltip += ` - ₹${seat.Price}`;
-    } else {
-      tooltip += ' - Free';
-    }
-    if (seat.Description) {
-      tooltip += ` - ${seat.Description}`;
-    }
-    return tooltip;
-  }
-
+  parseSeatData(isReturn: boolean) {} 
   processSpecialServices(rawSSR: any[], type: 'onward' | 'return') {}
 }

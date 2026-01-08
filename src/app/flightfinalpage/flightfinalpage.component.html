@@ -92,28 +92,19 @@
           </div>
 
           <!-- Route Info -->
-          <div class="flight-route-container">
-            <!-- Travel Date Above -->
-            <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
-            
-            <!-- Route Line -->
-            <div class="flight-route">
-              <div class="route-point">
-                <div class="city">{{ segment.from }}</div>
-                <div class="time">{{ segment.departureTime }}</div>
-              </div>
-              <div class="route-divider">
-                <span class="line"></span>
-                <div class="plane-wrapper">
-                  <i class="fas fa-plane-departure"></i>
-                  <div class="duration">{{ segment.duration }}</div>
-                </div>
-              </div>
-              <div class="route-point">
-                <div class="city">{{ segment.to }}</div>
-                <div class="time">{{ segment.arrivalTime }}</div>
-              </div>
+          <div class="flight-route">
+            <div class="city">{{ segment.from }}</div>
+            <div class="plane-icon">
+              <i class="fas fa-plane-departure"></i>
             </div>
+            <div class="city">{{ segment.to }}</div>
+          </div>
+
+          <!-- Timing & Duration -->
+          <div class="flight-meta">
+            {{ segment.date | date : "EEE, dd MMM" }} |
+            {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+            {{ segment.duration }}
           </div>
 
           <!-- Layover if applicable -->
@@ -165,16 +156,13 @@
         <hr class="baggage-divider" *ngIf="i < flightSegments.length - 1" />
       </ng-container>
 
-      <div class="add-baggage">
+      <div class="add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="add-left">
-          <i class="fas fa-plus-circle add-icon"></i>
-          <div class="add-content">
-            <div class="prompt">Need Extra Baggage?</div>
-            <div class="subtext">Add additional check-in baggage allowance</div>
-          </div>
+          <div class="prompt">Have Excess Baggage ?</div>
+          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
         </div>
         <button class="add-btn" (click)="showAddBaggageModal = true">
-          <i class="fas fa-plus"></i> Add Baggage
+          + ADD
         </button>
       </div>
     </div>
@@ -325,10 +313,6 @@
           <span>Baggage</span>
           <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
         </div>
-        <div class="fare-summary-line" *ngIf="totalSeats > 0">
-          <span>Seats</span>
-          <span>{{ formatCurrency(totalSeats) }}</span>
-        </div>
         <hr class="fare-summary-divider" />
       </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
@@ -359,28 +343,19 @@
                 </div>
 
                 <!-- Route Info -->
-                <div class="flight-route-container">
-                  <!-- Travel Date Above -->
-                  <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
-                  
-                  <!-- Route Line -->
-                  <div class="flight-route">
-                    <div class="route-point">
-                      <div class="city">{{ segment.from }}</div>
-                      <div class="time">{{ segment.departureTime }}</div>
-                    </div>
-                    <div class="route-divider">
-                      <span class="line"></span>
-                      <div class="plane-wrapper">
-                        <i class="fas fa-plane-departure"></i>
-                        <div class="duration">{{ segment.duration }}</div>
-                      </div>
-                    </div>
-                    <div class="route-point">
-                      <div class="city">{{ segment.to }}</div>
-                      <div class="time">{{ segment.arrivalTime }}</div>
-                    </div>
+                <div class="flight-route">
+                  <div class="city">{{ segment.from }}</div>
+                  <div class="plane-icon">
+                    <i class="fas fa-plane-departure"></i>
                   </div>
+                  <div class="city">{{ segment.to }}</div>
+                </div>
+
+                <!-- Timing & Duration -->
+                <div class="flight-meta">
+                  {{ segment.date | date : "EEE, dd MMM" }} |
+                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+                  {{ segment.duration }}
                 </div>
 
                 <!-- Layover if applicable -->
@@ -413,28 +388,19 @@
                 </div>
 
                 <!-- Route Info -->
-                <div class="flight-route-container">
-                  <!-- Travel Date Above -->
-                  <div class="travel-date">{{ segment.date | date : "EEE, dd MMM" }}</div>
-                  
-                  <!-- Route Line -->
-                  <div class="flight-route">
-                    <div class="route-point">
-                      <div class="city">{{ segment.from }}</div>
-                      <div class="time">{{ segment.departureTime }}</div>
-                    </div>
-                    <div class="route-divider">
-                      <span class="line"></span>
-                      <div class="plane-wrapper">
-                        <i class="fas fa-plane-departure"></i>
-                        <div class="duration">{{ segment.duration }}</div>
-                      </div>
-                    </div>
-                    <div class="route-point">
-                      <div class="city">{{ segment.to }}</div>
-                      <div class="time">{{ segment.arrivalTime }}</div>
-                    </div>
+                <div class="flight-route">
+                  <div class="city">{{ segment.from }}</div>
+                  <div class="plane-icon">
+                    <i class="fas fa-plane-departure"></i>
                   </div>
+                  <div class="city">{{ segment.to }}</div>
+                </div>
+
+                <!-- Timing & Duration -->
+                <div class="flight-meta">
+                  {{ segment.date | date : "EEE, dd MMM" }} |
+                  {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+                  {{ segment.duration }}
                 </div>
 
                 <!-- Layover if applicable -->
@@ -539,14 +505,11 @@
       <!-- Add Baggage Prompt -->
       <div class="add-baggage">
         <div class="add-left">
-          <i class="fas fa-plus-circle add-icon"></i>
-          <div class="add-content">
-            <div class="prompt">Need Extra Baggage?</div>
-            <div class="subtext">Add additional check-in baggage allowance</div>
-          </div>
+          <div class="prompt">Have Excess Baggage ?</div>
+          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
         </div>
         <button class="add-btn" (click)="showAddBaggageModal = true">
-          <i class="fas fa-plus"></i> Add Baggage
+          + ADD
         </button>
       </div>
     </div>
@@ -744,10 +707,6 @@
         <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
           <span>Baggage</span>
           <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
-        </div>
-        <div class="fare-summary-line" *ngIf="totalSeats > 0">
-          <span>Seats</span>
-          <span>{{ formatCurrency(totalSeats) }}</span>
         </div>
         <hr class="fare-summary-divider" />
       </div>
@@ -986,13 +945,6 @@
         NOTE: Airlines might charge you extra for carrying more than 1 Bag per Adult.
       </div>
     </div>
-    
-    <!-- Show message if no baggage options available -->
-    <div *ngIf="!baggageOptions || baggageOptions.length === 0" class="no-baggage-message">
-      <i class="fas fa-info-circle"></i>
-      <p>No additional baggage options are available for this flight at the moment.</p>
-    </div>
-    
     <ng-container *ngFor="let baggage of baggageOptions">
       <div class="baggage-option">
         <div class="option-left">
@@ -1418,17 +1370,17 @@
           <option value="+51">PE +51</option>
           <option value="+64">NZ +64</option>
         </select>
-       <input
-  type="tel"
-   name="contactMobile"
-   #contactMobileInput
-  [(ngModel)]="currentPassengerDetails.mobileNumber"
-  placeholder="10-digit mobile starts 6-9"
-  maxlength="10"
-  inputmode="numeric"
-  (click)="openPhoneDialer('primary', $event)"
-  (focus)="isMobileView() && openPhoneDialer('primary', $event)"
-/>
+        <input
+        type="tel"
+         name="contactMobile"
+         #contactMobileInput
+        [(ngModel)]="currentPassengerDetails.mobileNumber"
+        placeholder="10-digit mobile starts 6-9"
+        maxlength="10"
+        inputmode="numeric"
+        (click)="openPhoneDialer('primary', $event)"
+        (focus)="isMobileView() && openPhoneDialer('primary', $event)"
+      />
       </div>
     </div>
     <div class="form-group checkbox-group" *ngIf="currentPassengerType !== 'infant'">
@@ -1486,22 +1438,14 @@
     <button class="proceed-btn" (click)="showFareRules = false">DONE</button>
   </div>
 </div>
-<!-- Add this debug button somewhere in your template -->
-<button *ngIf="!loader" style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px;" 
-        (click)="testSSRFetch()">
-  DEBUG SSR
-</button>
 
-<button *ngIf="!loader" style="position: fixed; bottom: 150px; right: 20px; z-index: 9999; background: blue; color: white; padding: 10px; border-radius: 5px;" 
-        (click)="checkBaggageState()">
-  CHECK BAGGAGE
-</button>
+
 <app-phone-dialer
-  [isVisible]="showPhoneDialer"
-  [currentValue]="getCurrentDialerValue()"
-  [maxLength]="10"
-  (numberClick)="onDialerNumberClick($event)"
-  (backspaceClick)="onDialerBackspace()"
-  (doneClick)="onDialerDone()"
-  (closeDialer)="closePhoneDialer()"
+[isVisible]="showPhoneDialer"
+[currentValue]="getCurrentDialerValue()"
+[maxLength]="10"
+(numberClick)="onDialerNumberClick($event)"
+(backspaceClick)="onDialerBackspace()"
+(doneClick)="onDialerDone()"
+(closeDialer)="closePhoneDialer()"
 ></app-phone-dialer>
