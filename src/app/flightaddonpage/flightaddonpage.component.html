@@ -1,11 +1,92 @@
-<div class="flightmobaddon-container">
+<div *ngIf="loader">
+  <main class="shimmer-main">
+    <div class="shimmer-box-long"></div>
+    <p></p>
+    <div class="shimmer-box-long1"></div>
+    <br />
+    <div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-circle"></div>
+            <div class="shimmer-box1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-circle"></div>
+            <div class="shimmer-box1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long2"></div>
+      <br />
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long1"></div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
+          </div>
+        </div>
+      </div>
+      <div class="shimmer-box-long2"></div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long"></div>
+    </div>
+  </main>
+</div>
+
+<div class="flightmobaddon-container" *ngIf="!loader">
   <!-- Header Card -->
   <div class="flightmobaddon-headercard">
     <span class="flightmobaddon-title">Add Ons</span>
-    <button class="flightmobaddon-skip" (click)="onSkipToPayment()">
+    <button class="flightmobaddon-skip" (click)="onContinue()">
       Skip to Payment
     </button>
   </div>
+
+  <!-- Content Card -->
 
   <!-- Content Card -->
   <div class="flightmobaddon-contentcard">
@@ -40,17 +121,60 @@
           Return
         </button>
       </div>
-      <div
+      <!-- <div
         class="journey-tab-indicator"
         [ngStyle]="{
           transform:
             'translateX(' + (selectedJourneyTab === 'onward' ? 0 : 100) + '%)'
         }"
-      ></div>
+      ></div> -->
+      <!-- <div
+        class="tab-indicator"
+        [ngStyle]="{
+          transform:
+            'translateX(' +
+            selectedSubTabIndex *
+              (100 /
+                (!passengers.infants.length ||
+                flightData?.mobFinalPageData?.extraMandatoryFields
+                  .seatMandatoryOnward ||
+                (tripType === 'roundtrip' &&
+                  flightData?.mobFinalPageData?.extraMandatoryFields
+                    .seatMandatoryReturn)
+                  ? 4
+                  : 3)) +
+            '%)',
+          width:
+            100 /
+              (!passengers.infants.length ||
+              flightData?.mobFinalPageData?.extraMandatoryFields
+                .seatMandatoryOnward ||
+              (tripType === 'roundtrip' &&
+                flightData?.mobFinalPageData?.extraMandatoryFields
+                  .seatMandatoryReturn)
+                ? 4
+                : 3) +
+            '%'
+        }"
+      ></div> -->
     </div>
 
     <!-- Journey Content Container -->
     <div class="journey-content-container">
+      <!-- <div
+        class="journey-content-wrapper"
+        [ngStyle]="{
+          transform:
+            'translateX(' +
+            (tripType === 'roundtrip'
+              ? selectedJourneyTab === 'onward'
+                ? 0
+                : -50
+              : 0) +
+            '%)',
+          '--journey-length': tripType === 'roundtrip' ? 2 : 1
+        }"
+      > -->
       <div
         class="journey-content-wrapper"
         [ngStyle]="{
@@ -73,6 +197,871 @@
             <!-- Sub-Tabs (Seats, Meals, Cabs, Others) -->
             <div class="flightmobaddon-tabs-wrapper">
               <div class="flightmobaddon-tabs">
+                <!-- <button
+                  class="flightmobaddon-tab"
+                  [class.active]="selectedSubTabIndex === 0"
+                  (click)="
+                    selectedSubTabIndex = 0;
+                    selectedSegmentIndex = 0;
+                    selectFlight(
+                      (selectedJourneyTab === 'return'
+                        ? onwardFlights.length
+                        : 0
+                      ).toString()
+                    )
+                  "
+                >
+                  Seats
+                </button> -->
+                <button
+                  class="flightmobaddon-tab"
+                  *ngIf="
+                    !passengers.infants.length ||
+                    this.flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      this.flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                  "
+                  [class.active]="selectedSubTabIndex === 0"
+                  (click)="
+                    selectedSubTabIndex = 0;
+                    selectedSegmentIndex = 0;
+                    selectFlight(
+                      (selectedJourneyTab === 'return'
+                        ? onwardFlights.length
+                        : 0
+                      ).toString()
+                    )
+                  "
+                >
+                  Seats
+                </button>
+                <!-- <button
+                  class="flightmobaddon-tab"
+                  [class.active]="selectedSubTabIndex === 1"
+                  (click)="selectedSubTabIndex = 1; activeMealIndex = 0"
+                >
+                  Meals
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="selectedSubTabIndex === 2"
+                  (click)="selectedSubTabIndex = 2"
+                >
+                  Cabs
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="selectedSubTabIndex === 3"
+                  (click)="selectedSubTabIndex = 3"
+                >
+                  Others
+                </button> -->
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                      ? 1
+                      : 0)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      (tripType === 'roundtrip' &&
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn)
+                        ? 1
+                        : 0;
+                    activeMealIndex = 0
+                  "
+                >
+                  Meals
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                      ? 2
+                      : 1)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      (tripType === 'roundtrip' &&
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn)
+                        ? 2
+                        : 1
+                  "
+                >
+                  Cabs
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                      ? 3
+                      : 2)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      (tripType === 'roundtrip' &&
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn)
+                        ? 3
+                        : 2
+                  "
+                >
+                  Others
+                </button>
+              </div>
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
+                }"
+              ></div> -->
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform:
+                    'translateX(' +
+                    selectedSubTabIndex *
+                      (100 /
+                        (!passengers.infants.length ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryOnward ||
+                        (tripType === 'roundtrip' &&
+                          flightData?.mobFinalPageData?.extraMandatoryFields
+                            .seatMandatoryReturn)
+                          ? 4
+                          : 3)) +
+                    '%)',
+                  width:
+                    100 /
+                      (!passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      (tripType === 'roundtrip' &&
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn)
+                        ? 4
+                        : 3) +
+                    '%'
+                }"
+              ></div> -->
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
+                }"
+              ></div> -->
+            </div>
+
+            <!-- Main Tab Panels Container -->
+            <div class="tab-content-container">
+              <!-- <div
+                class="tab-content-wrapper"
+                [ngStyle]="{
+                  transform:
+                    'translateX(-' + selectedSubTabIndex * (100 / 4) + '%)',
+                  '--seat-map-length': 4
+                }"
+              > -->
+              <div
+                class="tab-content-wrapper"
+                [ngStyle]="{
+                  transform:
+                    'translateX(-' +
+                    selectedSubTabIndex *
+                      (100 /
+                        (!passengers.infants.length ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryOnward ||
+                        (tripType === 'roundtrip' &&
+                          flightData?.mobFinalPageData?.extraMandatoryFields
+                            .seatMandatoryReturn)
+                          ? 4
+                          : 3)) +
+                    '%)',
+                  '--seat-map-length':
+                    !passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                      ? 4
+                      : 3
+                }"
+              >
+                <!-- Seats Tab Panel -->
+                <!-- <div class="tab-panel"> -->
+                <div
+                  class="tab-panel"
+                  *ngIf="
+                    !passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    (tripType === 'roundtrip' &&
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn)
+                  "
+                >
+                  <div class="policy-tabs">
+                    <div
+                      *ngFor="
+                        let flight of selectedJourneyTab === 'return'
+                          ? returnFlights
+                          : onwardFlights;
+                        let i = index
+                      "
+                      [class.active]="selectedSegmentIndex === i"
+                      (click)="
+                        selectedSegmentIndex = i; selectFlight(flight.id)
+                      "
+                    >
+                      <img
+                        [src]="flight.logo"
+                        alt="{{ flight.airlineCode }} logo"
+                        width="15"
+                        height="15"
+                      />
+                      <strong>{{ flight.code }}</strong>
+                      {{ flight.route }}
+                    </div>
+                  </div>
+
+                  <!-- Seat Map Panels -->
+                  <div class="tab-content-container" *ngIf="seatMap?.length">
+                    <div
+                      class="tab-content-wrapper"
+                      [style.transform]="
+                        'translateX(-' +
+                        selectedSegmentIndex *
+                          (100 /
+                            (selectedJourneyTab === 'return'
+                              ? returnFlights.length
+                              : onwardFlights.length)) +
+                        '%)'
+                      "
+                      [style.--seat-map-length]="
+                        selectedJourneyTab === 'return'
+                          ? returnFlights.length
+                          : onwardFlights.length
+                      "
+                    >
+                      <div
+                        class="tab-panel"
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? seatMap.slice(onwardFlights.length)
+                            : seatMap.slice(0, onwardFlights.length);
+                          let i = index
+                        "
+                      >
+                        <ng-container
+                          *ngIf="segment?.rows?.length > 0; else noSeatsMessage"
+                        >
+                          <div class="segment-header-wrapper">
+                            <div class="segment-meta">
+                              <div class="segment-route">
+                                Tap To Select Seats Below
+                              </div>
+                              <!-- <div class="meal-selection-count">
+                                Aircraft:
+                                {{
+                                  (selectedJourneyTab === "return"
+                                    ? returnFlights
+                                    : onwardFlights)[i]?.aircraft
+                                }}
+                              </div> -->
+                            </div>
+                          </div>
+                          <div class="seat-map-wrapper">
+                            <div class="legend sticky-legend">
+                              <div class="legend-item">
+                                <div class="legend-color free"></div>
+                                Free
+                              </div>
+                              <div
+                                class="legend-item"
+                                *ngFor="let category of segment.priceCategories"
+                              >
+                                <div
+                                  class="legend-color"
+                                  [ngClass]="category.category"
+                                ></div>
+                                {{
+                                  category.category === "low-price"
+                                    ? "Low"
+                                    : category.category === "medium-price"
+                                    ? "Medium"
+                                    : "High"
+                                }}
+                                <div
+                                  *ngIf="
+                                    category.min !== 0 || category.max !== 0
+                                  "
+                                >
+                                  ({{ category.min | number : "1.0-0" }} -
+                                  {{ category.max | number : "1.0-0" }} INR)
+                                </div>
+                              </div>
+                              <div class="legend-item">
+                                <div class="legend-color not-available"></div>
+                                Not Available
+                              </div>
+                            </div>
+                            <div
+                              class="seat-map-scrollable"
+                              [style.--seat-count]="
+                                getSeatCount(segment.seatBlocks)
+                              "
+                              [style.--aisle-count]="
+                                getAisleCount(segment.seatBlocks)
+                              "
+                              [style.--block-count]="
+                                getBlockCount(segment.seatBlocks)
+                              "
+                            >
+                              <div class="seat-row header-row sticky-header">
+                                <div class="row-label-header">Row</div>
+                                <ng-container
+                                  *ngFor="
+                                    let block of segment.seatBlocks;
+                                    let blockIndex = index
+                                  "
+                                >
+                                  <div class="seat-block-header">
+                                    <div
+                                      class="cell-header"
+                                      *ngFor="let letter of block"
+                                    >
+                                      {{ letter }}
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="aisle-divider-header"
+                                    *ngIf="
+                                      blockIndex < segment.seatBlocks.length - 1
+                                    "
+                                  ></div>
+                                </ng-container>
+                              </div>
+                              <div class="seat-rows-container">
+                                <div
+                                  class="seat-row"
+                                  *ngFor="let row of segment.rows"
+                                >
+                                  <div class="row-label">{{ row.rowNo }}</div>
+                                  <ng-container
+                                    *ngFor="
+                                      let block of row.seatBlocks;
+                                      let blockIndex = index
+                                    "
+                                  >
+                                    <div class="seat-block">
+                                      <div
+                                        class="seat-cell"
+                                        *ngFor="
+                                          let letter of segment.seatBlocks[
+                                            blockIndex
+                                          ]
+                                        "
+                                        [ngClass]="{
+                                          disabled: !block[letter],
+                                          'not-available':
+                                            block[letter] &&
+                                            !block[letter].isAvailable,
+                                          free:
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'free',
+                                          'low-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'low-price',
+                                          'medium-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'medium-price',
+                                          'high-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'high-price',
+                                          selected:
+                                            block[letter] &&
+                                            isSeatSelected(
+                                              i,
+                                              block[letter]?.Code
+                                            )
+                                        }"
+                                        (click)="
+                                          block[letter]?.isAvailable &&
+                                            toggleSeatSelection(
+                                              i,
+                                              block[letter]
+                                            )
+                                        "
+                                        [title]="
+                                          block[letter]
+                                            ? getSeatTooltip(block[letter])
+                                            : ''
+                                        "
+                                      >
+                                        <ng-container
+                                          *ngIf="block[letter]; else noSeat"
+                                        >
+                                          <ng-container
+                                            *ngIf="
+                                              block[letter].priceCategory ===
+                                                'free';
+                                              else showPrice
+                                            "
+                                          >
+                                            Free
+                                          </ng-container>
+                                          <ng-template #showPrice>
+                                            {{
+                                              block[letter].Price
+                                                | number : "1.0-0"
+                                            }}
+                                          </ng-template>
+                                        </ng-container>
+                                        <ng-template #noSeat>-</ng-template>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="aisle-divider"
+                                      *ngIf="
+                                        blockIndex < row.seatBlocks.length - 1
+                                      "
+                                    ></div>
+                                  </ng-container>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-template #noSeatsMessage>
+                          <div class="centered-message">
+                            <p>No seats available for this segment.</p>
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Meals Tab Panel -->
+                <!-- <div class="tab-panel">
+                  <div
+                    class="tab-content-container"
+                    *ngIf="
+                      (selectedJourneyTab === 'return'
+                        ? flightSegmentsReturn
+                        : flightSegments
+                      )?.length
+                    "
+                  >
+                    <div class="policy-tabs meal-tabs">
+                      <div
+                        *ngFor="
+                          let flight of selectedJourneyTab === 'return'
+                            ? returnFlights
+                            : onwardFlights;
+                          let i = index
+                        "
+                        [class.active]="activeMealIndex === i"
+                        (click)="activeMealIndex = i"
+                      >
+                        <img
+                          [src]="flight.logo"
+                          alt="{{ flight.airlineCode }} logo"
+                          width="15"
+                          height="15"
+                        />
+                        <strong>{{ flight.airlineCode }}</strong>
+                        {{ flight.route }}
+                      </div>
+                    </div>
+                    <div
+                      class="tab-content-wrapper"
+                      [style.transform]="
+                        'translateX(-' +
+                        activeMealIndex *
+                          (100 /
+                            (selectedJourneyTab === 'return'
+                              ? returnFlights.length
+                              : onwardFlights.length)) +
+                        '%)'
+                      "
+                      [style.--seat-map-length]="
+                        selectedJourneyTab === 'return'
+                          ? returnFlights.length
+                          : onwardFlights.length
+                      "
+                    >
+                      <div
+                        class="tab-panel meal-panel"
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? flightSegmentsReturn
+                            : flightSegments;
+                          let i = index
+                        "
+                      >
+                        <div class="meal-selection">
+                          <div
+                            *ngIf="segment?.mealOptions?.length; else noMeals"
+                            class="meal-scroll-container"
+                          >
+                            <div class="meal-list">
+                              <div
+                                class="meal-card"
+                                *ngFor="let meal of segment.mealOptions"
+                              >
+                                <div class="meal-visual">
+                                  <img
+                                    class="meal-image"
+                                    src="../../../../../assets/meals/chicken.png"
+                                    alt="Meal"
+                                  />
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price > 0"
+                                  >
+                                    ₹{{ meal.Price | number : "1.2-2" }}
+                                  </div>
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price == 0"
+                                  >
+                                    Free
+                                  </div>
+                                </div>
+                                <div class="meal-details">
+                                  <div class="meal-name">
+                                    {{
+                                      meal.AirlineDescription ||
+                                        meal.Description
+                                    }}
+                                  </div>
+                                </div>
+                                <div class="meal-quantity">
+                                  <button
+                                    [disabled]="
+                                      getMealCount(i, meal.Code) === 0
+                                    "
+                                    (click)="decrementMeal(i, meal)"
+                                  >
+                                    -
+                                  </button>
+                                  <span>{{ getMealCount(i, meal.Code) }}</span>
+                                  <button
+                                    [disabled]="
+                                      totalSelectedMeals(i) >=
+                                      totalAdults + totalChildren
+                                    "
+                                    (click)="incrementMeal(i, meal)"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noMeals>
+                            <div class="centered-message">
+                              <p>No meals available for this segment.</p>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- Meals Tab Panel -->
+                <div class="tab-panel">
+                  <div
+                    class="tab-content-container"
+                    *ngIf="
+                      (selectedJourneyTab === 'return'
+                        ? flightSegmentsReturn
+                        : flightSegments
+                      )?.length
+                    "
+                  >
+                    <div class="policy-tabs meal-tabs">
+                      <div
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? flightSegmentsReturn
+                            : flightSegments;
+                          let i = index
+                        "
+                        [class.active]="activeMealIndex === i"
+                        (click)="activeMealIndex = i"
+                      >
+                        <img
+                          [src]="
+                            segment.logo ||
+                            getFlightLogo(i, selectedJourneyTab === 'return')
+                          "
+                          [alt]="
+                            (segment.Airline?.AirlineCode ||
+                              getFlightAirlineCode(
+                                i,
+                                selectedJourneyTab === 'return'
+                              )) + ' logo'
+                          "
+                          width="15"
+                          height="15"
+                        />
+                        <strong>{{
+                          segment.code ||
+                            getFlightCode(i, selectedJourneyTab === "return")
+                        }}</strong>
+                        {{ segment.originCode }} - {{ segment.destinationCode }}
+                      </div>
+                    </div>
+                    <div
+                      class="tab-content-wrapper"
+                      [style.transform]="
+                        'translateX(-' +
+                        activeMealIndex *
+                          (100 /
+                            (selectedJourneyTab === 'return'
+                              ? flightSegmentsReturn.length
+                              : flightSegments.length)) +
+                        '%)'
+                      "
+                      [style.--seat-map-length]="
+                        selectedJourneyTab === 'return'
+                          ? flightSegmentsReturn.length
+                          : flightSegments.length
+                      "
+                    >
+                      <div
+                        class="tab-panel meal-panel"
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? flightSegmentsReturn
+                            : flightSegments;
+                          let i = index
+                        "
+                      >
+                        <div class="meal-selection">
+                          <div
+                            *ngIf="segment?.mealOptions?.length; else noMeals"
+                            class="meal-scroll-container"
+                          >
+                            <div class="meal-list">
+                              <div
+                                class="meal-card"
+                                *ngFor="let meal of segment.mealOptions"
+                              >
+                                <div class="meal-visual">
+                                  <img
+                                    class="meal-image"
+                                    src="../../../../../assets/meals/chicken.png"
+                                    alt="Meal"
+                                  />
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price > 0"
+                                  >
+                                    ₹{{ meal.Price | number : "1.2-2" }}
+                                  </div>
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price == 0"
+                                  >
+                                    Free
+                                  </div>
+                                </div>
+                                <div class="meal-details">
+                                  <div class="meal-name">
+                                    {{
+                                      meal.AirlineDescription ||
+                                        meal.Description
+                                    }}
+                                  </div>
+                                </div>
+                                <div class="meal-quantity">
+                                  <button
+                                    [disabled]="
+                                      getMealCount(i, meal.Code) === 0
+                                    "
+                                    (click)="decrementMeal(i, meal)"
+                                  >
+                                    -
+                                  </button>
+                                  <span>{{ getMealCount(i, meal.Code) }}</span>
+                                  <button
+                                    [disabled]="
+                                      totalSelectedMeals(i) >=
+                                      totalAdults + totalChildren
+                                    "
+                                    (click)="incrementMeal(i, meal)"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noMeals>
+                            <div class="centered-message">
+                              <p>No meals available for this segment.</p>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Cabs Tab Panel -->
+                <div class="tab-panel">
+                  <div style="padding: 16px">
+                    <!-- <h3>Book a Cab</h3> -->
+                    <p>
+                      No Services Available for the
+                      {{
+                        selectedJourneyTab === "return" ? "Return" : "Onward"
+                      }}
+                      journey.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Others Tab Panel -->
+                <div class="tab-panel">
+                  <div class="meal-selection">
+                    <div
+                      *ngIf="services?.length; else noServices"
+                      class="meal-scroll-container"
+                    >
+                      <ng-container *ngFor="let service of services">
+                        <div
+                          class="meal-card"
+                          *ngIf="
+                            selectedJourneyTab === 'return'
+                              ? service.Origin ===
+                                  flightSegmentsReturn[0]?.originCode &&
+                                service.Destination ===
+                                  flightSegmentsReturn[
+                                    flightSegmentsReturn.length - 1
+                                  ]?.destinationCode
+                              : service.Origin ===
+                                  flightSegments[0]?.originCode &&
+                                service.Destination ===
+                                  flightSegments[flightSegments.length - 1]
+                                    ?.destinationCode
+                          "
+                        >
+                          <div class="meal-visual">
+                            <img
+                              class="meal-image"
+                              src="../../../../../assets/meals/special.jpg"
+                              alt="Service"
+                            />
+                            <div class="meal-price">
+                              ₹{{ service.Price | number : "1.2-2" }}
+                            </div>
+                          </div>
+                          <div class="meal-details">
+                            <div class="meal-name">
+                              {{ service.Description }}
+                            </div>
+                            <div class="meal-route">
+                              {{ service.Origin }} - {{ service.Destination }}
+                            </div>
+                          </div>
+
+                          <!-- Replace the meal-quantity div in the Others Tab Panel -->
+                          <div class="meal-quantity">
+                            <button
+                              *ngIf="getServiceCount(service.Code, service) > 0"
+                              (click)="removeService(service)"
+                            >
+                              −
+                            </button>
+                            <!-- <span>{{
+                              getServiceCount(service.Code, service)
+                            }}</span> -->
+                            <button
+                              [disabled]="
+                                getServiceCount(service.Code, service) >= 1
+                              "
+                              (click)="addService(service)"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      </ng-container>
+                      <!-- <div class="meal-total">
+                        Total Service Price: ₹{{
+                          getServiceTotalPrice() | number : "1.2-2"
+                        }}
+                      </div> -->
+                    </div>
+                    <ng-template #noServices>
+                      <div class="centered-message">
+                        <p>
+                          No services available for this
+                          {{
+                            selectedJourneyTab === "return"
+                              ? "return"
+                              : "onward"
+                          }}
+                          journey.
+                        </p>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="journey-panel">
+          <ng-container
+            *ngIf="tripType === 'roundtrip' && selectedJourneyTab === 'return'"
+          >
+            <!-- Sub-Tabs (Seats, Meals, Cabs, Others) -->
+            <div class="flightmobaddon-tabs-wrapper">
+              <!-- <div class="flightmobaddon-tabs">
                 <button
                   class="flightmobaddon-tab"
                   [class.active]="selectedSubTabIndex === 0"
@@ -116,7 +1105,168 @@
                 [ngStyle]="{
                   transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
                 }"
-              ></div>
+              ></div> -->
+              <div class="flightmobaddon-tabs">
+                <button
+                  class="flightmobaddon-tab"
+                  *ngIf="
+                    !passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                  "
+                  [class.active]="selectedSubTabIndex === 0"
+                  (click)="
+                    selectedSubTabIndex = 0;
+                    selectedSegmentIndex = 0;
+                    selectFlight(
+                      (selectedJourneyTab === 'return'
+                        ? onwardFlights.length
+                        : 0
+                      ).toString()
+                    )
+                  "
+                >
+                  Seats
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                      ? 1
+                      : 0)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn
+                        ? 1
+                        : 0;
+                    activeMealIndex = 0
+                  "
+                >
+                  Meals
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                      ? 2
+                      : 1)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn
+                        ? 2
+                        : 1
+                  "
+                >
+                  Cabs
+                </button>
+                <button
+                  class="flightmobaddon-tab"
+                  [class.active]="
+                    selectedSubTabIndex ===
+                    (!passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                      ? 3
+                      : 2)
+                  "
+                  (click)="
+                    selectedSubTabIndex =
+                      !passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn
+                        ? 3
+                        : 2
+                  "
+                >
+                  Others
+                </button>
+              </div>
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform:
+                    'translateX(' +
+                    selectedSubTabIndex *
+                      (100 /
+                        (!passengers.infants.length ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryOnward ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn
+                          ? 4
+                          : 3)) +
+                    '%)',
+                  width:
+                    100 /
+                      (!passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn
+                        ? 4
+                        : 3) +
+                    '%'
+                }"
+              ></div> -->
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform:
+                    'translateX(' +
+                    selectedSubTabIndex *
+                      (100 /
+                        (!passengers.infants.length ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryOnward ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn
+                          ? 4
+                          : 3)) +
+                    '%)',
+                  width:
+                    100 /
+                      (!passengers.infants.length ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryOnward ||
+                      flightData?.mobFinalPageData?.extraMandatoryFields
+                        .seatMandatoryReturn
+                        ? 4
+                        : 3) +
+                    '%'
+                }"
+              ></div> -->
+              <!-- <div
+                class="tab-indicator"
+                [ngStyle]="{
+                  transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
+                }"
+              ></div> -->
             </div>
 
             <!-- Main Tab Panels Container -->
@@ -125,12 +1275,38 @@
                 class="tab-content-wrapper"
                 [ngStyle]="{
                   transform:
-                    'translateX(-' + selectedSubTabIndex * (100 / 4) + '%)',
-                  '--seat-map-length': 4
+                    'translateX(-' +
+                    selectedSubTabIndex *
+                      (100 /
+                        (!passengers.infants.length ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryOnward ||
+                        flightData?.mobFinalPageData?.extraMandatoryFields
+                          .seatMandatoryReturn
+                          ? 4
+                          : 3)) +
+                    '%)',
+                  '--seat-map-length':
+                    !passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                      ? 4
+                      : 3
                 }"
               >
                 <!-- Seats Tab Panel -->
-                <div class="tab-panel">
+                <div
+                  class="tab-panel"
+                  *ngIf="
+                    !passengers.infants.length ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryOnward ||
+                    flightData?.mobFinalPageData?.extraMandatoryFields
+                      .seatMandatoryReturn
+                  "
+                >
                   <div class="policy-tabs">
                     <div
                       *ngFor="
@@ -156,7 +1332,7 @@
                   </div>
 
                   <!-- Seat Map Panels -->
-                  <div class="tab-content-container" *ngIf="(selectedJourneyTab === 'return' ? seatMapReturn : seatMap)?.length">
+                  <div class="tab-content-container" *ngIf="seatMap?.length">
                     <div
                       class="tab-content-wrapper"
                       [style.transform]="
@@ -178,184 +1354,206 @@
                         class="tab-panel"
                         *ngFor="
                           let segment of selectedJourneyTab === 'return'
-                            ? seatMapReturn
-                            : seatMap;
+                            ? seatMap.slice(onwardFlights.length)
+                            : seatMap.slice(0, onwardFlights.length);
                           let i = index
                         "
                       >
-                        <div class="segment-header-wrapper">
-                          <div class="segment-meta">
-                            <div class="segment-route">
-                              Tap To Select Seats Below
+                        <ng-container
+                          *ngIf="segment?.rows?.length > 0; else noSeatsMessage"
+                        >
+                          <div class="segment-header-wrapper">
+                            <div class="segment-meta">
+                              <div class="segment-route">
+                                Tap To Select Seats Below
+                              </div>
+                              <!-- <div class="meal-selection-count">
+                                Aircraft:
+                                {{
+                                  (selectedJourneyTab === "return"
+                                    ? returnFlights
+                                    : onwardFlights)[i]?.aircraft
+                                }}
+                              </div> -->
                             </div>
                           </div>
-                        </div>
-                        <div class="seat-map-wrapper">
-                          <div class="legend sticky-legend">
-                            <div class="legend-item">
-                              <div class="legend-color free"></div>
-                              Free
-                            </div>
-                            <div
-                              class="legend-item"
-                              *ngFor="let category of segment.priceCategories"
-                            >
+                          <div class="seat-map-wrapper">
+                            <div class="legend sticky-legend">
+                              <div class="legend-item">
+                                <div class="legend-color free"></div>
+                                Free
+                              </div>
                               <div
-                                class="legend-color"
-                                [ngClass]="category.category"
-                              ></div>
-                              {{
-                                category.category === "low-price"
-                                  ? "Low"
-                                  : category.category === "medium-price"
-                                  ? "Medium"
-                                  : "High"
-                              }}
-                              <div
-                                *ngIf="category.min !== 0 || category.max !== 0"
+                                class="legend-item"
+                                *ngFor="let category of segment.priceCategories"
                               >
-                                ({{ category.min | number : "1.0-0" }} -
-                                {{ category.max | number : "1.0-0" }} INR)
+                                <div
+                                  class="legend-color"
+                                  [ngClass]="category.category"
+                                ></div>
+                                {{
+                                  category.category === "low-price"
+                                    ? "Low"
+                                    : category.category === "medium-price"
+                                    ? "Medium"
+                                    : "High"
+                                }}
+                                <div
+                                  *ngIf="
+                                    category.min !== 0 || category.max !== 0
+                                  "
+                                >
+                                  ({{ category.min | number : "1.0-0" }} -
+                                  {{ category.max | number : "1.0-0" }} INR)
+                                </div>
+                              </div>
+                              <div class="legend-item">
+                                <div class="legend-color not-available"></div>
+                                Not Available
                               </div>
                             </div>
-                            <div class="legend-item">
-                              <div class="legend-color not-available"></div>
-                              Not Available
-                            </div>
-                          </div>
-                          <div
-                            class="seat-map-scrollable"
-                            [style.--seat-count]="
-                              getSeatCount(segment.seatBlocks)
-                            "
-                            [style.--aisle-count]="
-                              getAisleCount(segment.seatBlocks)
-                            "
-                            [style.--block-count]="
-                              getBlockCount(segment.seatBlocks)
-                            "
-                          >
-                            <div class="seat-row header-row sticky-header">
-                              <div class="row-label-header">Row</div>
-                              <ng-container
-                                *ngFor="
-                                  let block of segment.seatBlocks;
-                                  let blockIndex = index
-                                "
-                              >
-                                <div class="seat-block-header">
-                                  <div
-                                    class="cell-header"
-                                    *ngFor="let letter of block"
-                                  >
-                                    {{ letter }}
-                                  </div>
-                                </div>
-                                <div
-                                  class="aisle-divider-header"
-                                  *ngIf="
-                                    blockIndex < segment.seatBlocks.length - 1
-                                  "
-                                ></div>
-                              </ng-container>
-                            </div>
-                            <div class="seat-rows-container">
-                              <div
-                                class="seat-row"
-                                *ngFor="let row of segment.rows"
-                              >
-                                <div class="row-label">{{ row.rowNo }}</div>
+                            <div
+                              class="seat-map-scrollable"
+                              [style.--seat-count]="
+                                getSeatCount(segment.seatBlocks)
+                              "
+                              [style.--aisle-count]="
+                                getAisleCount(segment.seatBlocks)
+                              "
+                              [style.--block-count]="
+                                getBlockCount(segment.seatBlocks)
+                              "
+                            >
+                              <div class="seat-row header-row sticky-header">
+                                <div class="row-label-header">Row</div>
                                 <ng-container
                                   *ngFor="
-                                    let block of row.seatBlocks;
+                                    let block of segment.seatBlocks;
                                     let blockIndex = index
                                   "
                                 >
-                                  <div class="seat-block">
+                                  <div class="seat-block-header">
                                     <div
-                                      class="seat-cell"
-                                      *ngFor="
-                                        let letter of segment.seatBlocks[
-                                          blockIndex
-                                        ]
-                                      "
-                                      [ngClass]="{
-                                        disabled: !block[letter],
-                                        'not-available':
-                                          block[letter] &&
-                                          !block[letter].isAvailable,
-                                        free:
-                                          block[letter]?.isAvailable &&
-                                          block[letter].priceCategory ===
-                                            'free',
-                                        'low-price':
-                                          block[letter]?.isAvailable &&
-                                          block[letter].priceCategory ===
-                                            'low-price',
-                                        'medium-price':
-                                          block[letter]?.isAvailable &&
-                                          block[letter].priceCategory ===
-                                            'medium-price',
-                                        'high-price':
-                                          block[letter]?.isAvailable &&
-                                          block[letter].priceCategory ===
-                                            'high-price',
-                                        selected:
-                                          block[letter] &&
-                                          isSeatSelected(i, block[letter]?.Code)
-                                      }"
-                                      (click)="
-                                        block[letter]?.isAvailable &&
-                                          toggleSeatSelection(i, block[letter])
-                                      "
-                                      [title]="
-                                        block[letter]
-                                          ? getSeatTooltip(block[letter])
-                                          : ''
-                                      "
+                                      class="cell-header"
+                                      *ngFor="let letter of block"
                                     >
-                                      <ng-container
-                                        *ngIf="block[letter]; else noSeat"
-                                      >
-                                        <ng-container
-                                          *ngIf="
-                                            block[letter].priceCategory ===
-                                              'free';
-                                            else showPrice
-                                          "
-                                        >
-                                          Free
-                                        </ng-container>
-                                        <ng-template #showPrice>
-                                          ₹{{
-                                            block[letter].Price
-                                              | number : "1.0-0"
-                                          }}
-                                        </ng-template>
-                                      </ng-container>
-                                      <ng-template #noSeat>-</ng-template>
+                                      {{ letter }}
                                     </div>
                                   </div>
                                   <div
-                                    class="aisle-divider"
+                                    class="aisle-divider-header"
                                     *ngIf="
-                                      blockIndex < row.seatBlocks.length - 1
+                                      blockIndex < segment.seatBlocks.length - 1
                                     "
                                   ></div>
                                 </ng-container>
                               </div>
+                              <div class="seat-rows-container">
+                                <div
+                                  class="seat-row"
+                                  *ngFor="let row of segment.rows"
+                                >
+                                  <div class="row-label">{{ row.rowNo }}</div>
+                                  <ng-container
+                                    *ngFor="
+                                      let block of row.seatBlocks;
+                                      let blockIndex = index
+                                    "
+                                  >
+                                    <div class="seat-block">
+                                      <div
+                                        class="seat-cell"
+                                        *ngFor="
+                                          let letter of segment.seatBlocks[
+                                            blockIndex
+                                          ]
+                                        "
+                                        [ngClass]="{
+                                          disabled: !block[letter],
+                                          'not-available':
+                                            block[letter] &&
+                                            !block[letter].isAvailable,
+                                          free:
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'free',
+                                          'low-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'low-price',
+                                          'medium-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'medium-price',
+                                          'high-price':
+                                            block[letter]?.isAvailable &&
+                                            block[letter].priceCategory ===
+                                              'high-price',
+                                          selected:
+                                            block[letter] &&
+                                            isSeatSelected(
+                                              i,
+                                              block[letter]?.Code
+                                            )
+                                        }"
+                                        (click)="
+                                          block[letter]?.isAvailable &&
+                                            toggleSeatSelection(
+                                              i,
+                                              block[letter]
+                                            )
+                                        "
+                                        [title]="
+                                          block[letter]
+                                            ? getSeatTooltip(block[letter])
+                                            : ''
+                                        "
+                                      >
+                                        <ng-container
+                                          *ngIf="block[letter]; else noSeat"
+                                        >
+                                          <ng-container
+                                            *ngIf="
+                                              block[letter].priceCategory ===
+                                                'free';
+                                              else showPrice
+                                            "
+                                          >
+                                            Free
+                                          </ng-container>
+                                          <ng-template #showPrice>
+                                            {{
+                                              block[letter].Price
+                                                | number : "1.0-0"
+                                            }}
+                                          </ng-template>
+                                        </ng-container>
+                                        <ng-template #noSeat>-</ng-template>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="aisle-divider"
+                                      *ngIf="
+                                        blockIndex < row.seatBlocks.length - 1
+                                      "
+                                    ></div>
+                                  </ng-container>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </ng-container>
+                        <ng-template #noSeatsMessage>
+                          <div class="centered-message">
+                            <p>No seats available for this segment.</p>
+                          </div>
+                        </ng-template>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!(selectedJourneyTab === 'return' ? seatMapReturn : seatMap)?.length" class="centered-message">
-                    <p>Seat selection is not available for this flight. Seats will be assigned at check-in.</p>
-                  </div>
                 </div>
 
-                <!-- Meals Tab Panel -->
+                <!-- Meals Tab Panel
                 <div class="tab-panel">
                   <div
                     class="tab-content-container"
@@ -415,18 +1613,18 @@
                       >
                         <div class="meal-selection">
                           <div
-                            *ngIf="(selectedJourneyTab === 'return' ? mealOptionsReturn[i] : mealOptions[i])?.length; else noMeals"
+                            *ngIf="segment?.mealOptions?.length; else noMeals"
                             class="meal-scroll-container"
                           >
                             <div class="meal-list">
                               <div
                                 class="meal-card"
-                                *ngFor="let meal of (selectedJourneyTab === 'return' ? mealOptionsReturn[i] : mealOptions[i])"
+                                *ngFor="let meal of segment.mealOptions"
                               >
                                 <div class="meal-visual">
                                   <img
                                     class="meal-image"
-                                    src="assets/meals/chicken.png"
+                                    src="../../../../../assets/meals/chicken.png"
                                     alt="Meal"
                                   />
                                   <div class="meal-price">
@@ -462,15 +1660,153 @@
                                   </button>
                                 </div>
                               </div>
+                            </div>                           
+                          </div>
+                          <ng-template #noMeals>
+                            <div class="centered-message">
+                              <p>No meals available for this segment.</p>
                             </div>
-                            <div class="meal-total">
-                              Total Meal Price: ₹{{
-                                getSegmentMealTotalPrice(i) | number : "1.2-2"
-                              }}
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- Meals Tab Panel -->
+                <div class="tab-panel">
+                  <div
+                    class="tab-content-container"
+                    *ngIf="
+                      (selectedJourneyTab === 'return'
+                        ? flightSegmentsReturn
+                        : flightSegments
+                      )?.length
+                    "
+                  >
+                    <div class="policy-tabs meal-tabs">
+                      <div
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? flightSegmentsReturn
+                            : flightSegments;
+                          let i = index
+                        "
+                        [class.active]="activeMealIndex === i"
+                        (click)="activeMealIndex = i"
+                      >
+                        <img
+                          [src]="
+                            segment.logo ||
+                            getFlightLogo(i, selectedJourneyTab === 'return')
+                          "
+                          [alt]="
+                            (segment.Airline?.AirlineCode ||
+                              getFlightAirlineCode(
+                                i,
+                                selectedJourneyTab === 'return'
+                              )) + ' logo'
+                          "
+                          width="15"
+                          height="15"
+                        />
+                        <strong>{{
+                          segment.code ||
+                            getFlightCode(i, selectedJourneyTab === "return")
+                        }}</strong>
+                        {{ segment.originCode }} - {{ segment.destinationCode }}
+                      </div>
+                    </div>
+                    <div
+                      class="tab-content-wrapper"
+                      [style.transform]="
+                        'translateX(-' +
+                        activeMealIndex *
+                          (100 /
+                            (selectedJourneyTab === 'return'
+                              ? flightSegmentsReturn.length
+                              : flightSegments.length)) +
+                        '%)'
+                      "
+                      [style.--seat-map-length]="
+                        selectedJourneyTab === 'return'
+                          ? flightSegmentsReturn.length
+                          : flightSegments.length
+                      "
+                    >
+                      <div
+                        class="tab-panel meal-panel"
+                        *ngFor="
+                          let segment of selectedJourneyTab === 'return'
+                            ? flightSegmentsReturn
+                            : flightSegments;
+                          let i = index
+                        "
+                      >
+                        <div class="meal-selection">
+                          <div
+                            *ngIf="segment?.mealOptions?.length; else noMeals"
+                            class="meal-scroll-container"
+                          >
+                            <div class="meal-list">
+                              <div
+                                class="meal-card"
+                                *ngFor="let meal of segment.mealOptions"
+                              >
+                                <div class="meal-visual">
+                                  <img
+                                    class="meal-image"
+                                    src="../../../../../assets/meals/chicken.png"
+                                    alt="Meal"
+                                  />
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price > 0"
+                                  >
+                                    ₹{{ meal.Price | number : "1.2-2" }}
+                                  </div>
+                                  <div
+                                    class="meal-price"
+                                    *ngIf="meal.Price == 0"
+                                  >
+                                    Free
+                                  </div>
+                                </div>
+                                <div class="meal-details">
+                                  <div class="meal-name">
+                                    {{
+                                      meal.AirlineDescription ||
+                                        meal.Description
+                                    }}
+                                  </div>
+                                </div>
+                                <div class="meal-quantity">
+                                  <button
+                                    [disabled]="
+                                      getMealCount(i, meal.Code) === 0
+                                    "
+                                    (click)="decrementMeal(i, meal)"
+                                  >
+                                    -
+                                  </button>
+                                  <span>{{ getMealCount(i, meal.Code) }}</span>
+                                  <button
+                                    [disabled]="
+                                      totalSelectedMeals(i) >=
+                                      totalAdults + totalChildren
+                                    "
+                                    (click)="incrementMeal(i, meal)"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <ng-template #noMeals>
-                            <p>No meals available for this segment.</p>
+                            <div class="centered-message">
+                              <p>No meals available for this segment.</p>
+                            </div>
                           </ng-template>
                         </div>
                       </div>
@@ -481,9 +1817,9 @@
                 <!-- Cabs Tab Panel -->
                 <div class="tab-panel">
                   <div style="padding: 16px">
-                    <h3>Book a Cab</h3>
+                    <!-- <h3>Book a Cab</h3> -->
                     <p>
-                      Cab selection UI will go here for
+                      Cab Services not available for the
                       {{
                         selectedJourneyTab === "return" ? "Return" : "Onward"
                       }}
@@ -520,7 +1856,7 @@
                           <div class="meal-visual">
                             <img
                               class="meal-image"
-                              src="assets/meals/special.jpg"
+                              src="../../../../../assets/meals/special.jpg"
                               alt="Service"
                             />
                             <div class="meal-price">
@@ -535,7 +1871,27 @@
                               {{ service.Origin }} - {{ service.Destination }}
                             </div>
                           </div>
+                          <!-- Inside the ng-container *ngFor="let service of services" -->
+                          <!-- Replace the meal-quantity div in the Others Tab Panel -->
                           <div class="meal-quantity">
+                            <button
+                              *ngIf="getServiceCount(service.Code, service) > 0"
+                              (click)="removeService(service)"
+                            >
+                              −
+                            </button>
+                            <!-- <span>{{
+                              getServiceCount(service.Code, service)
+                            }}</span> -->
+                            <button
+                              [disabled]="
+                                getServiceCount(service.Code, service) >= 1
+                              "
+                              (click)="addService(service)"
+                            >
+                              +
+                            </button>
+                            <!-- <div class="meal-quantity">
                             <button
                               *ngIf="getServiceCount(service.Code, service) > 0"
                               (click)="removeService(service)"
@@ -547,129 +1903,38 @@
                             }}</span>
                             <button
                               [disabled]="
-                                getServiceCount(service.Code, service) > 0 ||
+                                getServiceCount(service.Code, service) >= 1 ||
                                 totalSelectedServices() >=
                                   totalAdults + totalChildren
                               "
                               (click)="addService(service)"
                             >
                               +
-                            </button>
+                            </button> -->
                           </div>
                         </div>
                       </ng-container>
-                      <div class="meal-total">
+                      <!-- <div class="meal-total">
                         Total Service Price: ₹{{
                           getServiceTotalPrice() | number : "1.2-2"
                         }}
-                      </div>
+                      </div> -->
                     </div>
                     <ng-template #noServices>
-                      <p>
-                        No services available for this
-                        {{
-                          selectedJourneyTab === "return" ? "return" : "onward"
-                        }}
-                        journey.
-                      </p>
+                      <div class="centered-message">
+                        <p>
+                          No services available for this
+                          {{
+                            selectedJourneyTab === "return"
+                              ? "return"
+                              : "onward"
+                          }}
+                          journey.
+                        </p>
+                      </div>
                     </ng-template>
                   </div>
                 </div>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-
-        <!-- Return Journey Panel (for roundtrip) -->
-        <div class="journey-panel" *ngIf="tripType === 'roundtrip'">
-          <ng-container
-            *ngIf="selectedJourneyTab === 'return'"
-          >
-            <!-- Same structure as onward, but for return journey -->
-            <!-- Sub-Tabs (Seats, Meals, Cabs, Others) -->
-            <div class="flightmobaddon-tabs-wrapper">
-              <div class="flightmobaddon-tabs">
-                <button
-                  class="flightmobaddon-tab"
-                  [class.active]="selectedSubTabIndex === 0"
-                  (click)="
-                    selectedSubTabIndex = 0;
-                    selectedSegmentIndex = 0;
-                    selectFlight(onwardFlights.length.toString())
-                  "
-                >
-                  Seats
-                </button>
-                <button
-                  class="flightmobaddon-tab"
-                  [class.active]="selectedSubTabIndex === 1"
-                  (click)="selectedSubTabIndex = 1; activeMealIndex = 0"
-                >
-                  Meals
-                </button>
-                <button
-                  class="flightmobaddon-tab"
-                  [class.active]="selectedSubTabIndex === 2"
-                  (click)="selectedSubTabIndex = 2"
-                >
-                  Cabs
-                </button>
-                <button
-                  class="flightmobaddon-tab"
-                  [class.active]="selectedSubTabIndex === 3"
-                  (click)="selectedSubTabIndex = 3"
-                >
-                  Others
-                </button>
-              </div>
-              <div
-                class="tab-indicator"
-                [ngStyle]="{
-                  transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
-                }"
-              ></div>
-            </div>
-
-            <!-- Main Tab Panels Container (same as onward) -->
-            <div class="tab-content-container">
-              <div
-                class="tab-content-wrapper"
-                [ngStyle]="{
-                  transform:
-                    'translateX(-' + selectedSubTabIndex * (100 / 4) + '%)',
-                  '--seat-map-length': 4
-                }"
-              >
-                <!-- Seats, Meals, Cabs, Others panels - same structure as onward -->
-                <!-- For brevity, using the same structure but with return data -->
-                <div class="tab-panel">
-                  <div class="policy-tabs">
-                    <div
-                      *ngFor="
-                        let flight of returnFlights;
-                        let i = index
-                      "
-                      [class.active]="selectedSegmentIndex === i"
-                      (click)="
-                        selectedSegmentIndex = i; selectFlight(flight.id)
-                      "
-                    >
-                      <img
-                        [src]="flight.logo"
-                        alt="{{ flight.airlineCode }} logo"
-                        width="15"
-                        height="15"
-                      />
-                      <strong>{{ flight.code }}</strong>
-                      {{ flight.route }}
-                    </div>
-                  </div>
-                  <div class="tab-content-container" *ngIf="seatMapReturn?.length">
-                    <!-- Return seat map - same structure as onward -->
-                    <p>Return seat selection (same structure as onward)</p>
-                  </div>
-                </div>
-                <!-- Meals, Cabs, Others tabs for return - same structure -->
               </div>
             </div>
           </ng-container>
@@ -679,7 +1944,7 @@
   </div>
 
   <!-- Footer -->
-  <div class="flightmobaddon-footer">
+  <div class="flightmobaddon-footer" *ngIf="!loader">
     <span
       class="flightmobaddon-total"
       (click)="openFareSummary()"
@@ -691,5 +1956,27 @@
       Continue
     </button>
   </div>
-</div>
 
+  <!-- Fare Summary Overlay -->
+  <div
+    class="trip-overlay"
+    *ngIf="showFareSummaryModal"
+    (click)="closeFareSummary()"
+  ></div>
+
+  <!-- Fare Summary Popup -->
+  <div class="trip-popup fare-summary-modal" *ngIf="showFareSummaryModal">
+    <div class="trip-header">
+      <div>Fare Summary</div>
+      <button class="close-btn" (click)="closeFareSummary()">×</button>
+    </div>
+    <div class="trip-body">
+      <app-flightmobfaresummary
+        [tripType]="tripType"
+        [isInternationalRound]="isUnifiedSegmentFormat"
+        [onwardFare]="onwardFareSummary.summary"
+        [returnFare]="returnFareSummary.summary"
+      ></app-flightmobfaresummary>
+    </div>
+  </div>
+</div>
