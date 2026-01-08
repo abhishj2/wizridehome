@@ -44,6 +44,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   baggageOptionsReturn: any[] = [];
   selectedBaggageCounts: { [key: string]: number } = {};
   selectedBaggageCountsReturn: { [key: string]: number } = {};
+  baggagePrices: { [key: string]: number } = {};
   baggageTotal: number = 0;
   baggageTotalReturn: number = 0;
 
@@ -220,7 +221,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   onwardFareSummary: any = {};
   returnFareSummary: any = {};
   travelerCount: number = 0;
-  baggagePrices: any = {};
   
   // Date properties
   departureDate: Date | null = null;
@@ -597,22 +597,40 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // LOGIC IMPLEMENTATION FOR CRITICAL METHODS
   // =================================================================
 
-  processBaggage(baggageArray: any[][], isReturn: boolean) {
-      // Flatten the nested array from TBO (usually structured by sector)
-      // TBO returns baggage as array of arrays per sector
-      const flatBaggage = baggageArray.flat();
-      
-      if(isReturn) {
-          this.baggageOptionsReturn = flatBaggage;
-          this.extraBaggageAvailableReturn = flatBaggage.length > 0;
-          // Initialize counts
-          flatBaggage.forEach(b => this.selectedBaggageCountsReturn[b.Code] = 0);
-      } else {
-          this.baggageOptions = flatBaggage;
-          this.extraBaggageAvailable = flatBaggage.length > 0;
-          // Initialize counts
-          flatBaggage.forEach(b => this.selectedBaggageCounts[b.Code] = 0);
-      }
+  processBaggage(baggageArray: any, isReturn: boolean) {
+    if (!baggageArray || !Array.isArray(baggageArray) || baggageArray.length === 0) {
+      isReturn ? (this.baggageOptionsReturn = []) : (this.baggageOptions = []);
+      return;
+    }
+
+    // Flatten TBO nested arrays if necessary
+    const flatBaggage = Array.isArray(baggageArray[0]) ? baggageArray.flat() : baggageArray;
+
+    const mapped = flatBaggage
+      .filter((item: any) => item && item.Price !== undefined)
+      .map((item: any) => {
+        const weightKey = item.Weight || item.kgs || '0';
+        const codeKey = item.Code || weightKey;
+        
+        // Map price to both Code and Weight to prevent look-up failures
+        this.baggagePrices[codeKey] = item.Price;
+        this.baggagePrices[weightKey] = item.Price;
+
+        return {
+          kgs: weightKey,
+          price: item.Price,
+          Code: codeKey,
+          Description: item.Description || `${weightKey} kg`
+        };
+      });
+
+    if (isReturn) {
+      this.baggageOptionsReturn = mapped;
+      this.extraBaggageAvailableReturn = true;
+    } else {
+      this.baggageOptions = mapped;
+      this.extraBaggageAvailable = true;
+    }
   }
 
   addBaggage(option: any, isReturn: boolean = false): void {
@@ -638,31 +656,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   updateBaggageTotal(isReturn: boolean = false) {
     let total = 0;
-    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
+    // Ensure we use the correct counts based on the journey type
+    const counts = isReturn ? this.returnBaggageCounts : this.baggageCounts;
     const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
 
-    // --- FIX 3: Explicit type definition ---
-    const currentSelectedList: any[] = [];
-
     options.forEach(opt => {
-      const count = counts[opt.Code] || 0;
-      total += count * opt.Price;
-      if(count > 0) {
-        currentSelectedList.push({ ...opt, Count: count });
-      }
+      const key = opt.kgs || opt.Code;
+      const count = counts[key] || 0;
+      // Get price from option object (opt.price or opt.Price)
+      const price = opt.price || opt.Price || 0;
+      total += count * price;
     });
-
-    // Update the array property so it is ready for payment
-    if(!isReturn) { 
-        this.selectedBaggage = currentSelectedList; 
-    }
 
     if (isReturn) this.baggageTotalReturn = total;
     else this.baggageTotal = total;
-    
-    this.updateFinalFare();
-  }
 
+    this.updateFinalFare();
+    this.cdr.detectChanges(); // Refresh UI to show the updated "Total Price"
+  }
   processFareBreakdown(val: any, isReturn: boolean): void {
     const results = val?.Response?.Results;
     if (!results) return;
@@ -717,9 +728,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   updateFinalFare() {
-    this.finalAmount = this.totalBaseFare + this.totalTaxes + 
-                       this.baggageTotal + this.baggageTotalReturn + 
-                       this.totalMealCharges + this.totalSpecialServiceCharges;
+    this.finalAmount = 
+      this.totalBaseFare + 
+      this.totalTaxes + 
+      (this.baggageTotal || 0) + 
+      (this.baggageTotalReturn || 0) + 
+      (this.totalMealCharges || 0) + 
+      (this.totalSpecialServiceCharges || 0) +
+      (this.totalSeats || 0);
   }
 
   proceedToPayment(): void {
@@ -1236,37 +1252,50 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Baggage methods for mobile
   incrementBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
-    if (!this.baggageCounts[key]) this.baggageCounts[key] = 0;
-    this.baggageCounts[key]++;
-    this.updateBaggageTotal(false);
-    this.updateFinalFare();
+    if (!this.baggageCounts[key]) {
+      this.baggageCounts[key] = 0;
+    }
+
+    // Check if adding more exceeds passenger count
+    const totalSelected = Object.values(this.baggageCounts).reduce((a, b) => a + b, 0);
+    if (totalSelected < (this.totalAdults + this.totalChildren)) {
+      this.baggageCounts[key]++;
+      this.updateBaggageTotal(false);
+    } else {
+      Swal.fire('Limit Reached', 'You cannot add more baggage than passengers', 'warning');
+    }
   }
-  
+
   decrementBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
-    if (this.baggageCounts[key] > 0) {
+    if (this.baggageCounts[key] && this.baggageCounts[key] > 0) {
       this.baggageCounts[key]--;
       this.updateBaggageTotal(false);
-      this.updateFinalFare();
     }
   }
   
   incrementRoundBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
     const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
+    
     if (!counts[key]) counts[key] = 0;
-    counts[key]++;
-    this.updateRoundTripBaggageTotal();
-    this.updateFinalFare();
+
+    const totalInThisLeg = Object.values(counts).reduce((a: number, b: number) => a + b, 0);
+    if (totalInThisLeg < (this.totalAdults + this.totalChildren)) {
+      counts[key]++;
+      this.updateRoundTripBaggageTotal();
+    } else {
+      Swal.fire('Limit Reached', 'You cannot add more baggage than passengers', 'warning');
+    }
   }
-  
+
   decrementRoundBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
     const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
-    if (counts[key] > 0) {
+    
+    if (counts[key] && counts[key] > 0) {
       counts[key]--;
       this.updateRoundTripBaggageTotal();
-      this.updateFinalFare();
     }
   }
   
