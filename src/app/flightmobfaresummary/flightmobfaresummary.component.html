@@ -1,0 +1,312 @@
+<!-- Tabs if roundtrip -->
+<div *ngIf="tripType === 'roundtrip' && !isInternationalRoundtrip()">
+  <div class="policy-tabs">
+    <div
+      [class.active]="selectedTab === 'onward'"
+      (click)="switchTab('onward')"
+    >
+      Onward
+    </div>
+    <div
+      [class.active]="selectedTab === 'return'"
+      (click)="switchTab('return')"
+    >
+      Return
+    </div>
+  </div>
+
+  <div class="tab-content-container">
+    <div
+      class="tab-content-wrapper"
+      [class.return-active]="selectedTab === 'return'"
+    >
+      <div class="tab-panel">
+        <div class="fare-summary-content">
+          <ng-container
+            *ngTemplateOutlet="fareSummary; context: { fare: onwardFare }"
+          ></ng-container>
+        </div>
+      </div>
+      <div class="tab-panel">
+        <div class="fare-summary-content">
+          <ng-container
+            *ngTemplateOutlet="fareSummary; context: { fare: returnFare }"
+          ></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Oneway case -->
+<div *ngIf="tripType === 'oneway'" class="fare-summary-content">
+  <ng-container
+    *ngTemplateOutlet="fareSummary; context: { fare: onwardFare }"
+  ></ng-container>
+</div>
+
+<!-- Modified Fare Summary for International Round Trip -->
+<div
+  *ngIf="tripType === 'roundtrip' && isInternationalRoundtrip()"
+  class="fare-summary-content"
+>
+  <ng-container
+    *ngTemplateOutlet="
+      fareSummaryCombined;
+      context: { onwardFare: onwardFare, returnFare: returnFare }
+    "
+  ></ng-container>
+</div>
+
+<!-- Modified Fare Summary for International Round Trip -->
+<div
+  *ngIf="tripType === 'multicity' && !isInternationalRoundtrip()"
+  class="fare-summary-content"
+>
+  <ng-container
+    *ngTemplateOutlet="fareSummary; context: { fare: onwardFare }"
+  ></ng-container>
+</div>
+
+<!-- Template Reuse for Fare Summary -->
+<ng-template #fareSummary let-fare="fare">
+  <div class="fare-section">
+    <div class="fare-section-title">
+      <span>Base Fare</span>
+      <span class="fare-total-inline"
+        >₹ {{ calculateSubtotal(fare.baseFare) }}</span
+      >
+    </div>
+    <div class="fare-item" *ngFor="let item of fare.baseFare">
+      <div class="fare-label">{{ item.label }} × ₹{{ item.amount }}</div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div>
+  </div>
+
+  <div class="fare-section">
+    <div class="fare-section-title">
+      <span>Taxes & Surcharges</span>
+      <span class="fare-total-inline"
+        >₹ {{ calculateSubtotal(fare.taxes) }}</span
+      >
+    </div>
+    <div class="fare-item" *ngFor="let item of fare.taxes">
+      <div class="fare-label">{{ item.label }} × ₹{{ item.amount }}</div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div>
+  </div>
+
+  <div class="fare-section" *ngIf="fare.baggageCharges.length">
+    <div class="fare-section-title">
+      <span>Extra Baggage Charges</span>
+      <span class="fare-total-inline">₹ {{ getBaggageTotal(fare) }}</span>
+    </div>
+    <div class="fare-item" *ngFor="let bag of fare.baggageCharges">
+      <div class="fare-label">{{ bag.label }}</div>
+      <div class="fare-value">₹ {{ bag.amount }}</div>
+    </div>
+  </div>
+
+  <div class="fare-section" *ngIf="fare.mealCharges">
+    <div class="fare-section-title">
+      <span>Meal Charges</span>
+      <span class="fare-total-inline">₹ {{ fare.mealCharges }}</span>
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Meals</div>
+      <div class="fare-value">₹ {{ fare.mealCharges }}</div>
+    </div>
+  </div>
+
+  <div class="fare-section" *ngIf="fare.seatCharges">
+    <div class="fare-section-title">
+      <span>Seat Charges</span>
+      <span class="fare-total-inline">₹ {{ fare.seatCharges }}</span>
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Seats</div>
+      <div class="fare-value">₹ {{ fare.seatCharges }}</div>
+    </div>
+  </div>
+
+  <div class="fare-section" *ngIf="fare.specialServiceCharges">
+    <div class="fare-section-title">
+      <span>Special Charges</span>
+      <span class="fare-total-inline">₹ {{ fare.specialServiceCharges }}</span>
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Special Service</div>
+      <div class="fare-value">₹ {{ fare.specialServiceCharges }}</div>
+    </div>
+  </div>
+
+  <div class="fare-total">
+    <div class="fare-label">Total Amount</div>
+    <div class="fare-value">₹ {{ fare.totalAmount }}</div>
+  </div>
+</ng-template>
+
+<!-- ✅ NEW TEMPLATE for Combined International Round Trip -->
+<!-- ✅ NEW TEMPLATE for Combined International Round Trip -->
+<ng-template
+  #fareSummaryCombined
+  let-onwardFare="onwardFare"
+  let-returnFare="returnFare"
+>
+  <!-- Base Fare -->
+  <div class="fare-section">
+    <div class="fare-section-title">
+      <span>Base Fare</span>
+      <span class="fare-total-inline"
+        >₹
+        {{
+          calculateSubtotal(onwardFare.baseFare) +
+            calculateSubtotal(returnFare.baseFare)
+        }}</span
+      >
+    </div>
+
+    <!-- Onward base fare items -->
+    <div class="fare-item" *ngFor="let item of onwardFare.baseFare">
+      <div class="fare-label">{{ item.label }} × ₹{{ item.amount }}</div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div>
+
+    <!-- Return base fare items -->
+    <!-- <div class="fare-item" *ngFor="let item of returnFare.baseFare">
+      <div class="fare-label">
+        [Return] {{ item.label }} × ₹{{ item.amount }}
+      </div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div> -->
+  </div>
+
+  <!-- Taxes -->
+  <div class="fare-section">
+    <div class="fare-section-title">
+      <span>Taxes & Surcharges</span>
+      <span class="fare-total-inline"
+        >₹
+        {{
+          calculateSubtotal(onwardFare.taxes) +
+            calculateSubtotal(returnFare.taxes)
+        }}</span
+      >
+    </div>
+
+    <!-- Onward tax items -->
+    <div class="fare-item" *ngFor="let item of onwardFare.taxes">
+      <div class="fare-label">{{ item.label }} × ₹{{ item.amount }}</div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div>
+
+    <!-- Return tax items -->
+    <!-- <div class="fare-item" *ngFor="let item of returnFare.taxes">
+      <div class="fare-label">
+        [Return] {{ item.label }} × ₹{{ item.amount }}
+      </div>
+      <div class="fare-value">₹ {{ item.count * item.amount }}</div>
+    </div> -->
+  </div>
+
+  <!-- Baggage Charges with Onward & Return -->
+  <div
+    class="fare-section"
+    *ngIf="onwardFare.baggageCharges.length || returnFare.baggageCharges.length"
+  >
+    <div class="fare-section-title">
+      <span>Extra Baggage Charges</span>
+      <span class="fare-total-inline"
+        >₹ {{ getBaggageTotal(onwardFare) + getBaggageTotal(returnFare) }}</span
+      >
+    </div>
+
+    <div *ngIf="onwardFare.baggageCharges.length">
+      <div class="fare-item">[ Onward ]</div>
+      <div class="fare-item" *ngFor="let bag of onwardFare.baggageCharges">
+        <div class="fare-label">{{ bag.label }}</div>
+        <div class="fare-value">₹ {{ bag.amount }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="returnFare.baggageCharges.length">
+      <div class="fare-item">[ Return ]</div>
+      <div class="fare-item" *ngFor="let bag of returnFare.baggageCharges">
+        <div class="fare-label">{{ bag.label }}</div>
+        <div class="fare-value">₹ {{ bag.amount }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meal Charges -->
+  <div
+    class="fare-section"
+    *ngIf="onwardFare.mealCharges || returnFare.mealCharges"
+  >
+    <div class="fare-section-title">
+      <span>Meal Charges</span>
+      <span class="fare-total-inline"
+        >₹ {{ onwardFare.mealCharges + returnFare.mealCharges }}</span
+      >
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Meals</div>
+      <div class="fare-value">
+        ₹ {{ onwardFare.mealCharges + returnFare.mealCharges }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Seat Charges -->
+  <div
+    class="fare-section"
+    *ngIf="onwardFare.seatCharges || returnFare.seatCharges"
+  >
+    <div class="fare-section-title">
+      <span>Seat Charges</span>
+      <span class="fare-total-inline"
+        >₹ {{ onwardFare.seatCharges + returnFare.seatCharges }}</span
+      >
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Seats</div>
+      <div class="fare-value">
+        ₹ {{ onwardFare.seatCharges + returnFare.seatCharges }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Special Charges -->
+  <div
+    class="fare-section"
+    *ngIf="onwardFare.specialServiceCharges || returnFare.specialServiceCharges"
+  >
+    <div class="fare-section-title">
+      <span>Special Charges</span>
+      <span class="fare-total-inline"
+        >₹
+        {{
+          onwardFare.specialServiceCharges + returnFare.specialServiceCharges
+        }}</span
+      >
+    </div>
+    <div class="fare-item">
+      <div class="fare-label">Special Service</div>
+      <div class="fare-value">
+        ₹
+        {{
+          onwardFare.specialServiceCharges + returnFare.specialServiceCharges
+        }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Grand Total -->
+  <div class="fare-total">
+    <div class="fare-label">Total Amount</div>
+    <div class="fare-value">
+      ₹ {{ onwardFare.totalAmount + returnFare.totalAmount }}
+    </div>
+  </div>
+</ng-template>
+

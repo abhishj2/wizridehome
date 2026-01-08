@@ -373,7 +373,7 @@
                           .seatMandatoryReturn)
                         ? 4
                         : 3) +
-                    '%'
+                      '%'
                 }"
               ></div> -->
               <!-- <div
@@ -1231,7 +1231,7 @@
                         .seatMandatoryReturn
                         ? 4
                         : 3) +
-                    '%'
+                      '%'
                 }"
               ></div> -->
               <!-- <div
@@ -1258,7 +1258,7 @@
                         .seatMandatoryReturn
                         ? 4
                         : 3) +
-                    '%'
+                      '%'
                 }"
               ></div> -->
               <!-- <div
@@ -1974,8 +1974,8 @@
       <app-flightmobfaresummary
         [tripType]="tripType"
         [isInternationalRound]="isUnifiedSegmentFormat"
-        [onwardFare]="onwardFareSummary.summary"
-        [returnFare]="returnFareSummary.summary"
+        [onwardFare]="onwardFareSummary?.summary"
+        [returnFare]="returnFareSummary?.summary"
       ></app-flightmobfaresummary>
     </div>
   </div>
