@@ -1,17 +1,23 @@
 /* Base styles */
 .flightmobaddon-container {
-  font-family: Arial, sans-serif;
-  padding-bottom: 70px;
-  background: #fff;
+  font-family: 'Inter', sans-serif;
+  background: #f4f7fe;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  min-height: 100vh;
+  height: 100vh; /* Fixed height for modal behavior */
   width: 100%;
+  overflow: hidden;
 }
-
+.flightmobaddon-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  /* Extra space at bottom ensures content isn't behind the footer */
+  padding-bottom: 120px; 
+}
 /* Header card */
 .flightmobaddon-headercard {
   display: flex;
@@ -42,22 +48,11 @@
 
 /* Content card */
 .flightmobaddon-contentcard {
-  padding: 8px 16px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow-x: hidden;
-  overflow-y: visible;
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  min-height: 0;
+  min-height: fit-content;
 }
-
 /* Tabs */
 .flightmobaddon-tabs {
   display: flex;
@@ -147,38 +142,37 @@
 
 /* Journey Content Container */
 .journey-content-container {
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   flex-grow: 1;
-  min-height: 0;
 }
 
 .journey-content-wrapper {
   display: flex;
-  transition: transform 0.4s ease-in-out;
-  width: calc(100% * var(--journey-length, 1));
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Uses journey-length (1 or 2) to determine width */
+  width: calc(100% * var(--journey-length, 1)); 
+  height: 100%;
 }
-
 .journey-panel {
   flex: 0 0 calc(100% / var(--journey-length, 1));
   width: calc(100% / var(--journey-length, 1));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  /* Prevent height from collapsing to 0 */
+  min-height: 100%; 
 }
 
 /* Tab content container */
 .tab-content-container {
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   flex-grow: 1;
-  min-height: 0;
 }
 
 .tab-content-wrapper {
@@ -243,21 +237,15 @@
   overflow-x: hidden;
 }
 
+/* Improved Legend for Mobile */
 .legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 12px;
-  margin: 12px 0;
-  padding: 10px 12px;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 600px;
-  box-sizing: border-box;
-  background: #f9fafb;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e5e7eb;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 11px;
 }
 
 .legend-item {
@@ -313,24 +301,18 @@
   position: sticky;
   top: 0;
   background: #fff;
-  z-index: 10;
-  border-bottom: 1px solid #e5e7eb;
-  width: fit-content;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  flex-shrink: 0;
+  z-index: 20;
+  padding: 8px 0;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .seat-rows-container {
   overflow-y: auto;
-  width: fit-content;
-  margin: 0 auto;
-  touch-action: pan-y;
-  flex-grow: 1;
-  max-height: calc(100vh - 500px);
-  min-height: 200px;
+  /* Using vh (viewport height) prevents the seat map from going off-screen */
+  max-height: 55vh; 
+  border: 1px solid #edf2f7;
+  border-radius: 8px;
+  background: #fff;
 }
 
 .seat-row {
@@ -613,15 +595,15 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  background: #fff;
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.08);
-  padding: 12px 16px;
+  right: 0;
+  height: 75px;
+  background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
-  z-index: 1100;
+  padding: 0 20px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  z-index: 100;
 }
 
 .flightmobaddon-total {
