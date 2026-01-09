@@ -19,7 +19,8 @@
             <span class="route-label">Shared Cabs</span>
           </div>
           <div class="route-links-wrapper">
-            <a *ngFor="let route of routes.airportShared.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+            <a *ngFor="let route of routes.airportShared.routes" [href]="route.link" class="route-pill" [attr.aria-label]="route.arial"
+            [title]="route.arial">{{ route.name }}</a>
           </div>
         </div>
       </article>
@@ -35,7 +36,8 @@
             <span class="route-label">Shared Cabs</span>
           </div>
           <div class="route-links-wrapper">
-            <a *ngFor="let route of routes.cityShared.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+            <a *ngFor="let route of routes.cityShared.routes" [href]="route.link" class="route-pill" [attr.aria-label]="route.arial"
+            [title]="route.arial" >{{ route.name }}</a>
           </div>
         </div>
       </article>
@@ -51,7 +53,8 @@
             <span class="route-label">Reserved Cabs</span>
           </div>
           <div class="route-links-wrapper">
-            <a *ngFor="let route of routes.airportReserved.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+            <a *ngFor="let route of routes.airportReserved.routes" [href]="route.link" class="route-pill" [attr.aria-label]="route.arial"
+            [title]="route.arial">{{ route.name }}</a>
           </div>
         </div>
       </article>
@@ -67,7 +70,8 @@
             <span class="route-label">Current Network</span>
           </div>
           <div class="route-links-wrapper">
-            <a *ngFor="let route of routes.airportsCovered.routes" [href]="route.link" class="route-pill">{{ route.name }}</a>
+            <a *ngFor="let route of routes.airportsCovered.routes" [href]="route.link" class="route-pill" [attr.aria-label]="route.arial"
+            [title]="route.arial">{{ route.name }}</a>
           </div>
         </div>
       </article>
@@ -83,7 +87,8 @@
             <span class="route-label">Travel Documents</span>
           </div>
           <div class="route-links-wrapper">
-            <a *ngFor="let route of routes.innerlinepermits.route" [href]="route.link" class="route-pill">{{ route.name }}</a>
+            <a *ngFor="let route of routes.innerlinepermits.route" [href]="route.link" class="route-pill" [attr.aria-label]="route.arial"
+            [title]="route.arial">{{ route.name }}</a>
           </div>
         </div>
       </article>
@@ -115,7 +120,8 @@
         <ul class="destination-list">
           <li *ngFor="let destination of destinations.sikkim">
             <i class="fas fa-angle-double-right destination-icon"></i>
-            <a [href]="destination.link" class="destination-link">{{ destination.name }}</a>
+            <a [href]="destination.link" class="destination-link" [attr.aria-label]="destination.arial"
+            [title]="destination.arial">{{ destination.name }}</a>
           </li>
         </ul>
       </div>

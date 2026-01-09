@@ -6,11 +6,38 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Quicksand Google Font (NON-BLOCKING) -->
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <!-- FontAwesome (NON-BLOCKING) -->
+  <link
+    rel="preload"
+    as="style"
+    href="https://use.fontawesome.com/releases/v6.5.0/css/all.css"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.0/css/all.css">
-    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  </noscript>
+
+  <!-- Cashfree SDK (DEFERRED) -->
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js" defer></script>
+
 </head>
 <body>
   <app-root></app-root>
-
 </body>
 </html>
