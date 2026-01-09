@@ -738,7 +738,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       (this.totalSeats || 0);
   }
 
-  proceedToPayment(): void {
+  proceedToAddons(): void {
     // Check agreement
     if(!this.termsAgreed) {
         Swal.fire('Terms & Conditions', 'Please accept the terms and conditions to proceed', 'warning');
@@ -754,6 +754,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         return;
     }
 
+    // Prepare mobile final page data for addons
+    this.prepareMobFinalPageData();
+    
+    // Navigate to addons page
+    this.router.navigate(['/flightaddons']);
+  }
+
+  proceedToPayment(): void {
+    // This method is now called from addons page or directly if no addons needed
     this.bookingSubmitted = true;
 
     // Get passenger details
@@ -1246,7 +1255,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     
     this.loader = true;
-    this.proceedToPayment();
+    this.proceedToAddons();
   }
   
   // Baggage methods for mobile
@@ -1483,4 +1492,162 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   processMeals(isReturn: boolean) {} 
   parseSeatData(isReturn: boolean) {} 
   processSpecialServices(rawSSR: any[], type: 'onward' | 'return') {}
+
+  // Prepare mobile final page data structure for addon page
+  prepareMobFinalPageData(): void {
+    const onwardFareSummary = this.buildFareSummaryForAddons(false);
+    const returnFareSummary = this.tripType === 'roundtrip' ? this.buildFareSummaryForAddons(true) : null;
+
+    const mobFinalPageData = {
+      flightSegments: this.flightSegments,
+      flightSegmentsReturn: this.flightSegmentsReturn,
+      passengers: {
+        adults: this.travellers,
+        children: this.children,
+        infants: this.infants
+      },
+      gstDetails: this.gstDetails,
+      ssr: {
+        onward: this.ssrValues,
+        return: this.ssrValuesReturn
+      },
+      fareSummary: {
+        onward: onwardFareSummary,
+        return: returnFareSummary,
+        finalAmount: this.finalAmount
+      },
+      baggage: {
+        onward: this.buildBaggageArray(false),
+        return: this.tripType === 'roundtrip' ? this.buildBaggageArray(true) : []
+      },
+      other: {
+        resultIndex: this.resultIndex,
+        resultIndexReturn: this.resultIndexReturn
+      },
+      extraMandatoryFields: {
+        mealMandatoryOnward: false,
+        seatMandatoryOnward: false,
+        mealMandatoryReturn: false,
+        seatMandatoryReturn: false
+      },
+      passportRequired: this.passportInfoRequired
+    };
+
+    // Prepare complete data structure
+    const dataToPass = {
+      ...this.fullFlightData,
+      mobFinalPageData: mobFinalPageData,
+      adults: this.totalAdults,
+      children: this.totalChildren,
+      infants: this.totalInfants,
+      tripType: this.tripType,
+      fromCity: this.fullFlightData.fromCity || this.flightSegments[0]?.from,
+      toCity: this.fullFlightData.toCity || this.flightSegments[this.flightSegments.length - 1]?.to,
+      departureDate: this.departureDate?.toISOString().split('T')[0],
+      returnDate: this.returnDate?.toISOString().split('T')[0],
+      tboToken: this.tboToken,
+      traceid: this.traceid,
+      ipAddress: this.ipAddress
+    };
+
+    console.log('📦 Navigating to addons with data:', dataToPass);
+    this.flightDataService.updateMessage(dataToPass);
+  }
+
+  private buildFareSummaryForAddons(isReturn: boolean) {
+    const baseFareArray = [];
+    const taxesArray = [];
+
+    if (!isReturn) {
+      if (this.totalAdults > 0) {
+        baseFareArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultBaseFare });
+        taxesArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultTaxes });
+      }
+      if (this.totalChildren > 0) {
+        baseFareArray.push({ label: 'Children', count: this.totalChildren, amount: this.childrenBaseFare });
+        taxesArray.push({ label: 'Children', count: this.totalChildren, amount: this.childrenTaxes });
+      }
+      if (this.totalInfants > 0) {
+        baseFareArray.push({ label: 'Infants', count: this.totalInfants, amount: this.infantBaseFare });
+        taxesArray.push({ label: 'Infants', count: this.totalInfants, amount: this.infantTaxes });
+      }
+    } else {
+      if (this.totalAdults > 0) {
+        baseFareArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultBaseFareReturn });
+        taxesArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultTaxesReturn });
+      }
+      if (this.totalChildren > 0) {
+        baseFareArray.push({ label: 'Children', count: this.totalChildren, amount: this.childrenBaseFareReturn });
+        taxesArray.push({ label: 'Children', count: this.totalChildren, amount: this.childrenTaxesReturn });
+      }
+      if (this.totalInfants > 0) {
+        baseFareArray.push({ label: 'Infants', count: this.totalInfants, amount: this.infantBaseFareReturn });
+        taxesArray.push({ label: 'Infants', count: this.totalInfants, amount: this.infantTaxesReturn });
+      }
+    }
+
+    const summary = {
+      baseFare: baseFareArray,
+      taxes: taxesArray,
+      baggageCharges: this.buildBaggageChargesForSummary(isReturn),
+      mealCharges: 0,
+      seatCharges: 0,
+      specialServiceCharges: 0,
+      totalAmount: isReturn ? this.getReturnTotal() : this.getOnwardTotal()
+    };
+
+    return {
+      summary: summary,
+      adultFareDetails: isReturn ? 
+        { BaseFare: this.adultBaseFareReturn, Tax: this.adultTaxesReturn } : 
+        { BaseFare: this.adultBaseFare, Tax: this.adultTaxes },
+      childFareDetail: isReturn ?
+        { BaseFare: this.childrenBaseFareReturn, Tax: this.childrenTaxesReturn } :
+        { BaseFare: this.childrenBaseFare, Tax: this.childrenTaxes },
+      infantFareDetails: isReturn ?
+        { BaseFare: this.infantBaseFareReturn, Tax: this.infantTaxesReturn } :
+        { BaseFare: this.infantBaseFare, Tax: this.infantTaxes },
+      fareDetails: isReturn ? this.fareQuoteReturn : this.fareQuote
+    };
+  }
+
+  private buildBaggageChargesForSummary(isReturn: boolean): any[] {
+    const baggageCharges: any[] = [];
+    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
+    const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+
+    options.forEach((opt: any) => {
+      const count = counts[opt.Code] || 0;
+      if (count > 0) {
+        baggageCharges.push({
+          label: opt.Description || `${opt.kgs} kg`,
+          amount: opt.price * count
+        });
+      }
+    });
+
+    return baggageCharges;
+  }
+
+  private buildBaggageArray(isReturn: boolean): any[] {
+    const baggageArray: any[] = [];
+    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
+    const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+
+    options.forEach((opt: any) => {
+      const count = counts[opt.Code] || 0;
+      for (let i = 0; i < count; i++) {
+        baggageArray.push({
+          Code: opt.Code,
+          Description: opt.Description,
+          Weight: opt.kgs,
+          Price: opt.price,
+          Origin: this.flightSegments[0]?.originCode,
+          Destination: this.flightSegments[this.flightSegments.length - 1]?.destinationCode
+        });
+      }
+    });
+
+    return baggageArray;
+  }
 }

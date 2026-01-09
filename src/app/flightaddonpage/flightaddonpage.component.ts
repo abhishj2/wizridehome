@@ -8,6 +8,7 @@ import { FlightaddonsService } from '../services/flightaddons.service';
 import { FlightbookingpayloadService } from '../services/flightbookingpayload.service';
 import { FlightdataService } from '../services/flightdata.service';
 import Swal from 'sweetalert2';
+import { FlightmobfaresummaryComponent } from '../flightmobfaresummary/flightmobfaresummary.component';
 
 declare function cashfree(sessionid : any) : any;
 
@@ -54,7 +55,7 @@ interface FareSummaryWrapper {
 @Component({
   selector: 'app-flightaddonpage',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FlightmobfaresummaryComponent],
   templateUrl: './flightaddonpage.component.html',
   styleUrls: ['./flightaddonpage.component.css']
 })
