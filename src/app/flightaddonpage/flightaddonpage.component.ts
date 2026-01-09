@@ -160,72 +160,73 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
       console.log("🔍 Value of Total:", JSON.stringify(val, null, 2));
         
         this.flightData = val;
-        const { 
-          flightSegments,
-          flightSegmentsReturn,
-          ssr,
-          fareSummary
-        } = val.mobFinalPageData;
-
-        this.totalAdults = val.adults;
-        this.totalChildren = val.children;
-        this.totalInfants = val.infants;
-
-        // Map baggage to baggageCharges format for onward journey (use baggage as source of truth)
-        const onwardBaggageCharges = val.mobFinalPageData?.baggage?.onward?.length > 0
-          ? val.mobFinalPageData.baggage.onward.map((baggage: any, index: number) => ({
-              label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
-              amount: baggage.Price || 0
-            }))
-          : (fareSummary.onward?.summary?.baggageCharges || []);
         
-        const onwardSummary = fareSummary.onward?.summary || {};
-        onwardSummary.baggageCharges = onwardBaggageCharges;
+        // Safely destructure mobFinalPageData with fallbacks
+        if (!val.mobFinalPageData) {
+          console.error('❌ mobFinalPageData is missing!', val);
+          this.loader = false;
+          Swal.fire({
+            title: 'Error',
+            html: 'Flight data is incomplete. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.router.navigate(['/home']);
+          });
+          return;
+        }
+        
+        const { 
+          flightSegments = [],
+          flightSegmentsReturn = [],
+          ssr = { onward: null, return: null },
+          fareSummary = { onward: null, return: null, finalAmount: 0 }
+        } = val.mobFinalPageData || {};
+
+        this.totalAdults = val.adults || 0;
+        this.totalChildren = val.children || 0;
+        this.totalInfants = val.infants || 0;
+
+        // Use baggageCharges from fareSummary (comes from flightfinalpage) - match mobile version exactly
+        if (!fareSummary || !fareSummary.onward) {
+          console.error('❌ fareSummary.onward is missing!', fareSummary);
+        }
         
         this.onwardFareSummary = {
-          summary: onwardSummary,
-          adultFareDetails: fareSummary.onward?.adultFareDetails || {},
-          childFareDetail: fareSummary.onward?.childFareDetail || {},
-          infantFareDetails: fareSummary.onward?.infantFareDetails || {},
-          FareCommonDetail: fareSummary.onward?.FareCommonDetail || {},
-          fareDetails: fareSummary.onward?.fareDetails || {}
+          summary: fareSummary?.onward?.summary || null,
+          adultFareDetails: fareSummary?.onward?.adultFareDetails || {},
+          childFareDetail: fareSummary?.onward?.childFareDetail || {},
+          infantFareDetails: fareSummary?.onward?.infantFareDetails || {},
+          FareCommonDetail: fareSummary?.onward?.FareCommonDetail || {},
+          fareDetails: fareSummary?.onward?.fareDetails || {}
         };
 
-        // Map baggage to baggageCharges format for return journey if roundtrip (use baggage as source of truth)
-        if (fareSummary.return) {
-          const returnBaggageCharges = val.mobFinalPageData?.baggage?.return?.length > 0
-            ? val.mobFinalPageData.baggage.return.map((baggage: any, index: number) => ({
-                label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
-                amount: baggage.Price || 0
-              }))
-            : (fareSummary.return?.summary?.baggageCharges || []);
-          
-          const returnSummary = fareSummary.return?.summary || {};
-          returnSummary.baggageCharges = returnBaggageCharges;
-          
-          this.returnFareSummary = {
-            summary: returnSummary,
-            adultFareDetails: fareSummary.return?.adultFareDetails || {},
-            childFareDetail: fareSummary.return?.childFareDetail || {},
-            infantFareDetails: fareSummary.return?.infantFareDetails || {},
-            FareCommonDetail: fareSummary.return?.FareCommonDetail || {},
-            fareDetails: fareSummary.return?.fareDetails || {}
-          };
-        } else {
-          this.returnFareSummary = null;
-        }
-        this.tripType = val.tripType;
+        this.returnFareSummary = fareSummary?.return ? {
+          summary: fareSummary.return?.summary || null,
+          adultFareDetails: fareSummary.return?.adultFareDetails || {},
+          childFareDetail: fareSummary.return?.childFareDetail || {},
+          infantFareDetails: fareSummary.return?.infantFareDetails || {},
+          FareCommonDetail: fareSummary.return?.FareCommonDetail || {},
+          fareDetails: fareSummary.return?.fareDetails || {}
+        } : null;
+        this.tripType = val.tripType || 'oneway';
         this.totalPrice = fareSummary?.finalAmount || 0;
+        
+        console.log('✅ Initialized fare summaries:', {
+          onwardFareSummary: this.onwardFareSummary,
+          returnFareSummary: this.returnFareSummary,
+          totalPrice: this.totalPrice
+        });
 
          this.passengers = {
-          adults: val.mobFinalPageData.passengers?.adults || [],
-          children: val.mobFinalPageData.passengers?.children || [],
-          infants: val.mobFinalPageData.passengers?.infants || []
+          adults: val.mobFinalPageData?.passengers?.adults || [],
+          children: val.mobFinalPageData?.passengers?.children || [],
+          infants: val.mobFinalPageData?.passengers?.infants || []
         };
         this.contact = {
-          countryCode: val.mobFinalPageData.passengers?.adults[0]?.mobileDialCode || '',
-          mobile: val.mobFinalPageData.passengers?.adults[0]?.mobileNumber || '',
-          email: val.mobFinalPageData.passengers?.adults[0]?.email || ''
+          countryCode: val.mobFinalPageData?.passengers?.adults?.[0]?.mobileDialCode || '',
+          mobile: val.mobFinalPageData?.passengers?.adults?.[0]?.mobileNumber || '',
+          email: val.mobFinalPageData?.passengers?.adults?.[0]?.email || ''
         };
         this.gstInfo = {
           companyName: val.mobFinalPageData?.gstDetails?.companyName || '',
@@ -238,6 +239,13 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.ipAddress = val.ipAddress || '';
         this.flightSegments = flightSegments || [];
         this.flightSegmentsReturn = flightSegmentsReturn || [];
+        
+        console.log('✅ Initialized basic data:', {
+          flightSegments: this.flightSegments.length,
+          flightSegmentsReturn: this.flightSegmentsReturn.length,
+          passengers: this.passengers,
+          ssr: !!ssr
+        });
 
         
         this.flightDataAddOnService.setPassengerCounts(this.totalAdults, this.totalChildren, this.totalInfants);
@@ -247,53 +255,79 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         }
 
         // Process SSR data for onward journey
-        const { seatData, mealSegments, services } = this.flightDataAddOnService.processSSRData(ssr.onward, flightSegments, false);
-        this.flightSegments = mealSegments;
-        this.services = services;
+        if (!ssr || !ssr.onward) {
+          console.warn('⚠️ SSR onward data is missing!', ssr);
+        }
+        const { seatData, mealSegments, services } = this.flightDataAddOnService.processSSRData(ssr?.onward || null, flightSegments || [], false);
+        this.flightSegments = mealSegments || flightSegments || [];
+        this.services = services || [];
 
-        // Initialize onward flights
-        this.onwardFlights = seatData.seatMaps.slice(0, flightSegments.length).map((segment: any, i: number) => ({
-          id: `${i}`,
-          logo: flightSegments[i]?.logo || '',
-          airlineCode: flightSegments[i]?.Airline?.AirlineCode || '',
-          route: `${flightSegments[i]?.originCode} - ${flightSegments[i]?.destinationCode}`,
-          aircraft: flightSegments[i]?.FlightNumber || 'Unknown',
-          layout: this.flightDataAddOnService['aircraftSeatMapConfig'][flightSegments[i]?.aircraftCode?.split('-')[0]]?.layout || '',
-          code: flightSegments[i]?.code || ''
-        }));
+        // Initialize onward flights - safely handle missing data
+        const seatMaps = seatData?.seatMaps || [];
+        const segmentsLength = Math.max(flightSegments?.length || 0, seatMaps.length);
+        this.onwardFlights = seatMaps.slice(0, segmentsLength).map((segment: any, i: number) => {
+          const flightSeg = flightSegments?.[i] || {};
+          return {
+            id: `${i}`,
+            logo: flightSeg.logo || '',
+            airlineCode: flightSeg.Airline?.AirlineCode || flightSeg.airlineCode || '',
+            route: flightSeg.originCode && flightSeg.destinationCode 
+              ? `${flightSeg.originCode} - ${flightSeg.destinationCode}`
+              : flightSeg.route || '',
+            aircraft: flightSeg.FlightNumber || flightSeg.aircraft || 'Unknown',
+            layout: this.flightDataAddOnService['aircraftSeatMapConfig']?.[flightSeg.aircraftCode?.split('-')[0]]?.layout || '',
+            code: flightSeg.code || ''
+          };
+        });
 
         let returnSeatData: any = { seatMaps: [], hasSeatsAvailable: [], selectedSeats: [] };
-        if (this.tripType === 'roundtrip' && ssr.return) {
-          const { seatData: returnData, mealSegments: returnMealSegments, services: returnServices } = this.flightDataAddOnService.processSSRData(ssr.return, flightSegmentsReturn, true);
+        if (this.tripType === 'roundtrip' && ssr?.return) {
+          const { seatData: returnData, mealSegments: returnMealSegments, services: returnServices } = this.flightDataAddOnService.processSSRData(ssr.return, flightSegmentsReturn || [], true);
           returnSeatData = returnData;
-          this.flightSegmentsReturn = returnMealSegments;
-          this.services = [...this.services, ...returnServices];
-          seatData.seatMaps.push(...returnData.seatMaps);
-          seatData.hasSeatsAvailable.push(...returnData.hasSeatsAvailable);
-          seatData.selectedSeats.push(...returnData.selectedSeats);
+          this.flightSegmentsReturn = returnMealSegments || flightSegmentsReturn || [];
+          this.services = [...this.services, ...(returnServices || [])];
+          if (returnData?.seatMaps) seatData.seatMaps.push(...returnData.seatMaps);
+          if (returnData?.hasSeatsAvailable) seatData.hasSeatsAvailable.push(...returnData.hasSeatsAvailable);
+          if (returnData?.selectedSeats) seatData.selectedSeats.push(...returnData.selectedSeats);
 
-          // Initialize return flights
-          this.returnFlights = returnData.seatMaps.map((segment: any, i: number) => ({
-            id: `${i + flightSegments.length}`,
-            logo: flightSegmentsReturn[i]?.logo || '',
-            airlineCode: flightSegmentsReturn[i]?.Airline?.AirlineCode || '',
-            route: `${flightSegmentsReturn[i]?.originCode} - ${flightSegmentsReturn[i]?.destinationCode}`,
-            aircraft: flightSegmentsReturn[i]?.FlightNumber || 'Unknown',
-            layout: this.flightDataAddOnService['aircraftSeatMapConfig'][flightSegmentsReturn[i]?.aircraftCode?.split('-')[0]]?.layout || '',
-            code: flightSegmentsReturn[i]?.code || ''
-          }));
+          // Initialize return flights - safely handle missing data
+          const returnSeatMaps = returnData?.seatMaps || [];
+          this.returnFlights = returnSeatMaps.map((segment: any, i: number) => {
+            const flightSeg = flightSegmentsReturn?.[i] || {};
+            return {
+              id: `${i + (flightSegments?.length || 0)}`,
+              logo: flightSeg.logo || '',
+              airlineCode: flightSeg.Airline?.AirlineCode || flightSeg.airlineCode || '',
+              route: flightSeg.originCode && flightSeg.destinationCode
+                ? `${flightSeg.originCode} - ${flightSeg.destinationCode}`
+                : flightSeg.route || '',
+              aircraft: flightSeg.FlightNumber || flightSeg.aircraft || 'Unknown',
+              layout: this.flightDataAddOnService['aircraftSeatMapConfig']?.[flightSeg.aircraftCode?.split('-')[0]]?.layout || '',
+              code: flightSeg.code || ''
+            };
+          });
         }
 
-        console.log("Processed Seats",seatData)
-        this.seatMap = seatData.seatMaps;
-        this.hasSeatsAvailable = seatData.hasSeatsAvailable;
-        this.selectedSeats = seatData.selectedSeats;
+        console.log("Processed Seats", seatData);
+        this.seatMap = seatData?.seatMaps || [];
+        this.hasSeatsAvailable = seatData?.hasSeatsAvailable || [];
+        this.selectedSeats = seatData?.selectedSeats || [];
 
-        // Initialize selected flight
-        this.selectFlight('0');
+        // Initialize selected flight only if we have flights
+        if (this.onwardFlights.length > 0 || this.returnFlights.length > 0) {
+          this.selectFlight('0');
+        }
 
         this.updateTotalPrice();
         this.prepareFareSummaryData();
+        
+        console.log('✅ Addon page initialization complete:', {
+          onwardFlights: this.onwardFlights.length,
+          returnFlights: this.returnFlights.length,
+          seatMap: this.seatMap.length,
+          totalPrice: this.totalPrice
+        });
+        
         this.loader = false;
       })
     );
@@ -489,19 +523,10 @@ getServiceTotalPrice(): number {
 
 prepareFareSummaryData(): void {
   const totalPax = this.totalAdults + this.totalChildren; // Changed to exclude infants
-  
-  // Map baggage from mobFinalPageData.baggage to baggageCharges format (use baggage as source of truth)
-  const onwardBaggageCharges = this.flightData?.mobFinalPageData?.baggage?.onward?.length > 0
-    ? this.flightData.mobFinalPageData.baggage.onward.map((baggage: any, index: number) => ({
-        label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
-        amount: baggage.Price || 0
-      }))
-    : (this.onwardFareSummary?.summary?.baggageCharges || []);
-  
   const onwardFare: FareSummary = {
     baseFare: this.onwardFareSummary?.summary?.baseFare || [],
     taxes: this.onwardFareSummary?.summary?.taxes || [],
-    baggageCharges: onwardBaggageCharges,
+    baggageCharges: this.onwardFareSummary?.summary?.baggageCharges || [],
     mealCharges: this.flightDataAddOnService.selectedMeals.reduce(
       (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0),
       0
@@ -529,18 +554,10 @@ prepareFareSummaryData(): void {
   }
 
   if (this.tripType === 'roundtrip' && this.returnFareSummary) {
-    // Map return baggage from mobFinalPageData.baggage to baggageCharges format (use baggage as source of truth)
-    const returnBaggageCharges = this.flightData?.mobFinalPageData?.baggage?.return?.length > 0
-      ? this.flightData.mobFinalPageData.baggage.return.map((baggage: any, index: number) => ({
-          label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
-          amount: baggage.Price || 0
-        }))
-      : (this.returnFareSummary.summary?.baggageCharges || []);
-    
     const returnFare: FareSummary = {
       baseFare: this.returnFareSummary.summary?.baseFare || [],
       taxes: this.returnFareSummary.summary?.taxes || [],
-      baggageCharges: returnBaggageCharges,
+      baggageCharges: this.returnFareSummary.summary?.baggageCharges || [],
       mealCharges: this.flightDataAddOnService.selectedMealsReturn.reduce(
         (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0),
         0

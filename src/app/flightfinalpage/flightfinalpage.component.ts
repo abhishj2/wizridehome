@@ -1612,38 +1612,61 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private buildBaggageChargesForSummary(isReturn: boolean): any[] {
-    const baggageCharges: any[] = [];
-    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
-    const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
-
-    options.forEach((opt: any) => {
-      const count = counts[opt.Code] || 0;
-      if (count > 0) {
-        baggageCharges.push({
-          label: opt.Description || `${opt.kgs} kg`,
-          amount: opt.price * count
+    // Match mobile version: use baggageCounts (keyed by weight/kgs) for oneway, or onwardBaggageCounts/returnBaggageCounts for roundtrip
+    const getBaggageCharges = (baggageCounts: { [key: number]: number }) =>
+      Object.entries(baggageCounts)
+        .filter(([_, count]) => count > 0)
+        .map(([kgs, count]) => {
+          // Try both string and number keys for baggagePrices (weightKey is stored as string)
+          const price = this.baggagePrices[kgs] || this.baggagePrices[+kgs] || 0;
+          return {
+            label: `Excess ${kgs}kg : ${count} × ₹${price.toLocaleString()}`,
+            amount: price * count
+          };
         });
-      }
-    });
 
-    return baggageCharges;
+    if (this.tripType === 'oneway') {
+      return getBaggageCharges(this.baggageCounts);
+    } else {
+      // Round trip: use onwardBaggageCounts or returnBaggageCounts based on isReturn
+      return getBaggageCharges(isReturn ? this.returnBaggageCounts : this.onwardBaggageCounts);
+    }
   }
 
   private buildBaggageArray(isReturn: boolean): any[] {
     const baggageArray: any[] = [];
-    const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
+    
+    // Match mobile version: use baggageCounts for oneway, or onwardBaggageCounts/returnBaggageCounts for roundtrip
+    let counts: { [key: number]: number } = {};
     const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+    
+    if (this.tripType === 'oneway') {
+      counts = this.baggageCounts;
+    } else {
+      counts = isReturn ? this.returnBaggageCounts : this.onwardBaggageCounts;
+    }
 
     options.forEach((opt: any) => {
-      const count = counts[opt.Code] || 0;
+      // Match mobile version: use weight/kgs as key, fallback to Code
+      const key = opt.kgs || opt.Code;
+      const count = counts[key] || 0;
       for (let i = 0; i < count; i++) {
         baggageArray.push({
           Code: opt.Code,
           Description: opt.Description,
           Weight: opt.kgs,
+          WeightKG: opt.kgs, // Add both for compatibility
           Price: opt.price,
-          Origin: this.flightSegments[0]?.originCode,
-          Destination: this.flightSegments[this.flightSegments.length - 1]?.destinationCode
+          Origin: isReturn 
+            ? (this.flightSegmentsReturn[0]?.originCode || this.flightSegments[this.flightSegments.length - 1]?.destinationCode)
+            : (this.flightSegments[0]?.originCode || ''),
+          Destination: isReturn
+            ? (this.flightSegmentsReturn[this.flightSegmentsReturn.length - 1]?.destinationCode || '')
+            : (this.flightSegments[this.flightSegments.length - 1]?.destinationCode || ''),
+          AirlineCode: opt.AirlineCode || '',
+          FlightNumber: opt.FlightNumber || '',
+          WayType: opt.WayType || 0,
+          Currency: opt.Currency || 'INR'
         });
       }
     });
