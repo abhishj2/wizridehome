@@ -12,6 +12,18 @@ interface GSTInfo {
   registrationNo: string;
 }
 
+interface SSRSegment {
+  originCode: string;
+  destinationCode: string;
+  code: string;
+  aircraft: string;
+}
+
+interface BaggageItem {
+  Code: string;
+  [key: string]: any;
+}
+
 // Assumed SSR data structure (passed to the method or accessed via flightAddonsService)
 // interface SSRData {
 //   passengerIndex: number;
@@ -3308,7 +3320,7 @@ export class FlightbookingpayloadService
     console.log("buildPassengerNonLCC - PaxType:", paxType, "GlobalIndex:", globalIndex, "IsReturnJourney:", isReturnJourney);
 
     // Extract unique segments from ssrData.Response.SeatDynamic (only if SeatDynamic exists)
-  const ssrSegments = [];
+  const ssrSegments: SSRSegment[] = [];
   const segmentSet = new Set<string>();
   if (ssrData?.Response?.SeatDynamic) {
     (ssrData.Response.SeatDynamic || []).forEach((seatDynamic: any, segmentIndex: number) => {
@@ -3602,7 +3614,7 @@ export class FlightbookingpayloadService
                  s.seat.Code !== 'NoSeat'
           );
           const ssrSeat = ssrSeatSelections.find(
-            s => s.segmentIndex === segmentIndex &&
+            (s: any) => s.segmentIndex === segmentIndex &&
                  s.isReturn === isReturnJourney &&
                  s.seat.Origin === segment.originCode &&
                  s.seat.Destination === segment.destinationCode
@@ -5576,7 +5588,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-//         } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -5591,7 +5603,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-//         } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -5802,7 +5814,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-//         } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -5817,7 +5829,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-//         } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -6298,7 +6310,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-//         } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -6313,7 +6325,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-//         } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -6537,7 +6549,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-//         } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -6552,7 +6564,7 @@ export class FlightbookingpayloadService
 //         };
 //         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
 //           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-//         } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+//         } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
 //           selectedBaggage.push(getBaggagePayload(null, segment));
 //         }
 //       }
@@ -7032,7 +7044,7 @@ generateBookingPayloadInternationReturn(
         };
         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-        } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+        } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
           selectedBaggage.push(getBaggagePayload(null, segment));
         }
       }
@@ -7047,7 +7059,7 @@ generateBookingPayloadInternationReturn(
         };
         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-        } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+        } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
           selectedBaggage.push(getBaggagePayload(null, segment));
         }
       }
@@ -7271,7 +7283,7 @@ generateBookingPayloadInternationReturn(
         };
         if (onwardBaggageItems.length > globalIndex && onwardBaggageItems[globalIndex]?.Code) {
           selectedBaggage.push(getBaggagePayload(onwardBaggageItems[globalIndex], segment));
-        } else if (ssrData.onward.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+        } else if (ssrData.onward.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
           selectedBaggage.push(getBaggagePayload(null, segment));
         }
       }
@@ -7286,7 +7298,7 @@ generateBookingPayloadInternationReturn(
         };
         if (returnBaggageItems.length > globalIndex && returnBaggageItems[globalIndex]?.Code) {
           selectedBaggage.push(getBaggagePayload(returnBaggageItems[globalIndex], segment));
-        } else if (ssrData.return.Response.Baggage[0]?.some(b => b.Code === 'NoBaggage')) {
+        } else if (ssrData.return.Response.Baggage[0]?.some((b: BaggageItem) => b.Code === 'NoBaggage')) {
           selectedBaggage.push(getBaggagePayload(null, segment));
         }
       }

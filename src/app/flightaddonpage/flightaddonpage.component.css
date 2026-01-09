@@ -6,8 +6,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   min-height: 100vh;
+  width: 100%;
 }
 
 /* Header card */
@@ -47,11 +49,13 @@
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  min-height: 0;
 }
 
 /* Tabs */
@@ -143,11 +147,13 @@
 
 /* Journey Content Container */
 .journey-content-container {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   flex-grow: 1;
+  min-height: 0;
 }
 
 .journey-content-wrapper {
@@ -166,11 +172,13 @@
 
 /* Tab content container */
 .tab-content-container {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   flex-grow: 1;
+  min-height: 0;
 }
 
 .tab-content-wrapper {
@@ -639,3 +647,1113 @@
   background: #f9fafb;
 }
 
+/* Responsive Design - Tablet and Desktop */
+@media (min-width: 768px) {
+  .flightmobaddon-container {
+    padding-bottom: 80px;
+  }
+
+  .flightmobaddon-headercard {
+    max-width: 800px;
+    padding: 20px 24px;
+    margin: 24px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 18px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 800px;
+    padding: 16px 24px;
+    margin: 16px auto;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 800px;
+    padding: 0 16px;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 800px;
+  }
+
+  .journey-content-container {
+    max-width: 800px;
+  }
+
+  .tab-content-container {
+    max-width: 800px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 800px;
+  }
+
+  .legend {
+    max-width: 800px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 800px;
+    --available-width: min(calc(100vw - 48px), 800px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 24px), 40px);
+  }
+
+  .policy-tabs {
+    max-width: 800px;
+    gap: 20px;
+  }
+
+  .policy-tabs div {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 800px;
+    padding: 12px 16px;
+  }
+
+  .meal-card {
+    padding: 16px 20px;
+  }
+
+  .meal-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .meal-name {
+    font-size: 17px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 16px 24px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 18px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 12px 32px;
+    font-size: 16px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 400px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .flightmobaddon-container {
+    padding-bottom: 90px;
+  }
+
+  .flightmobaddon-headercard {
+    max-width: 1000px;
+    padding: 24px 32px;
+    margin: 32px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 20px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 1000px;
+    padding: 20px 32px;
+    margin: 20px auto;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 1000px;
+    padding: 0 24px;
+  }
+
+  .flightmobaddon-journey-tab {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 1000px;
+  }
+
+  .flightmobaddon-tab {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+
+  .journey-content-container {
+    max-width: 1000px;
+  }
+
+  .tab-content-container {
+    max-width: 1000px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 1000px;
+  }
+
+  .legend {
+    max-width: 1000px;
+    padding: 14px 20px;
+    font-size: 14px;
+    gap: 16px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 1000px;
+    --available-width: min(calc(100vw - 64px), 1000px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 28px), 48px);
+  }
+
+  .policy-tabs {
+    max-width: 1000px;
+    gap: 24px;
+    margin: 20px 0;
+  }
+
+  .policy-tabs div {
+    padding: 12px 22px;
+    font-size: 15px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 1000px;
+    padding: 16px 20px;
+  }
+
+  .segment-route {
+    font-size: 16px;
+  }
+
+  .meal-scroll-container {
+    max-height: calc(100vh - 320px);
+  }
+
+  .meal-card {
+    padding: 18px 24px;
+  }
+
+  .meal-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .meal-name {
+    font-size: 18px;
+  }
+
+  .meal-price {
+    font-size: 15px;
+  }
+
+  .meal-quantity button {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 18px 32px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 20px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 14px 40px;
+    font-size: 17px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 350px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .flightmobaddon-headercard {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 1200px;
+  }
+
+  .journey-content-container {
+    max-width: 1200px;
+  }
+
+  .tab-content-container {
+    max-width: 1200px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 1200px;
+  }
+
+  .legend {
+    max-width: 1200px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 1200px;
+    --available-width: min(calc(100vw - 80px), 1200px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 32px), 56px);
+  }
+
+  .policy-tabs {
+    max-width: 1200px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 1200px;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  .flightmobaddon-container {
+    padding-bottom: 80px;
+  }
+
+  .seat-map-scrollable {
+    --available-width: calc(100vw - 32px);
+  }
+
+  .policy-tabs {
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .policy-tabs div {
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .meal-card {
+    padding: 10px 12px;
+  }
+
+  .meal-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .meal-name {
+    font-size: 14px;
+  }
+
+  .meal-route {
+    font-size: 12px;
+  }
+
+  .meal-quantity {
+    margin-top: 20px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 450px);
+    min-height: 150px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .flightmobaddon-headercard {
+    padding: 12px;
+    margin: 12px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 14px;
+  }
+
+  .flightmobaddon-skip {
+    font-size: 13px;
+  }
+
+  .flightmobaddon-contentcard {
+    padding: 8px 12px;
+    margin: 8px auto;
+  }
+
+  .flightmobaddon-tab {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .flightmobaddon-journey-tab {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .seat-map-scrollable {
+    --available-width: calc(100vw - 24px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 18px), 28px);
+  }
+
+  .legend {
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .legend-color {
+    width: 10px;
+    height: 10px;
+    margin-right: 4px;
+  }
+
+  .policy-tabs {
+    gap: 6px;
+    margin: 12px 0;
+  }
+
+  .policy-tabs div {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .meal-card {
+    padding: 8px 10px;
+  }
+
+  .meal-image {
+    width: 45px;
+    height: 45px;
+  }
+
+  .meal-name {
+    font-size: 13px;
+  }
+
+  .meal-price {
+    font-size: 12px;
+  }
+
+  .meal-quantity button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 10px 12px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 14px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 500px);
+    min-height: 120px;
+  }
+}
+
+/* Fix for horizontal overflow on mobile */
+@media (max-width: 767px) {
+  .flightmobaddon-container {
+    overflow-x: hidden;
+  }
+
+  .journey-content-container,
+  .tab-content-container {
+    overflow-x: hidden;
+  }
+
+  .seat-map-scrollable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .policy-tabs {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .policy-tabs::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .policy-tabs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .policy-tabs::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+}
+
+/* Fare Summary Modal Styles */
+.trip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1099;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trip-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 1100;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.trip-popup.fare-summary-modal {
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+  border-radius: 16px 16px 0 0;
+}
+
+.trip-header div {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.trip-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments for modal */
+@media (min-width: 768px) {
+  .trip-popup.fare-summary-modal {
+    max-width: 600px;
+  }
+
+  .trip-header {
+    padding: 24px 28px;
+  }
+
+  .trip-header div {
+    font-size: 22px;
+  }
+
+  .trip-body {
+    padding: 24px 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .trip-popup.fare-summary-modal {
+    max-width: 700px;
+  }
+
+  .trip-header {
+    padding: 28px 32px;
+  }
+
+  .trip-header div {
+    font-size: 24px;
+  }
+
+  .trip-body {
+    padding: 28px 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .trip-popup {
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .trip-header {
+    padding: 16px 20px;
+  }
+
+  .trip-header div {
+    font-size: 18px;
+  }
+
+  .trip-body {
+    padding: 16px 20px;
+  }
+
+  .close-btn {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-popup {
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .trip-header {
+    padding: 14px 16px;
+  }
+
+  .trip-header div {
+    font-size: 16px;
+  }
+
+  .trip-body {
+    padding: 14px 16px;
+  }
+}
+
+/* Responsive Design - Tablet and Desktop */
+@media (min-width: 768px) {
+  .flightmobaddon-container {
+    padding-bottom: 80px;
+  }
+
+  .flightmobaddon-headercard {
+    max-width: 800px;
+    padding: 20px 24px;
+    margin: 24px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 18px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 800px;
+    padding: 16px 24px;
+    margin: 16px auto;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 800px;
+    padding: 0 16px;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 800px;
+  }
+
+  .journey-content-container {
+    max-width: 800px;
+  }
+
+  .tab-content-container {
+    max-width: 800px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 800px;
+  }
+
+  .legend {
+    max-width: 800px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 800px;
+    --available-width: min(calc(100vw - 48px), 800px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 24px), 40px);
+  }
+
+  .policy-tabs {
+    max-width: 800px;
+    gap: 20px;
+  }
+
+  .policy-tabs div {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 800px;
+    padding: 12px 16px;
+  }
+
+  .meal-card {
+    padding: 16px 20px;
+  }
+
+  .meal-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .meal-name {
+    font-size: 17px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 16px 24px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 18px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 12px 32px;
+    font-size: 16px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 400px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .flightmobaddon-container {
+    padding-bottom: 90px;
+  }
+
+  .flightmobaddon-headercard {
+    max-width: 1000px;
+    padding: 24px 32px;
+    margin: 32px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 20px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 1000px;
+    padding: 20px 32px;
+    margin: 20px auto;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 1000px;
+    padding: 0 24px;
+  }
+
+  .flightmobaddon-journey-tab {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 1000px;
+  }
+
+  .flightmobaddon-tab {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+
+  .journey-content-container {
+    max-width: 1000px;
+  }
+
+  .tab-content-container {
+    max-width: 1000px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 1000px;
+  }
+
+  .legend {
+    max-width: 1000px;
+    padding: 14px 20px;
+    font-size: 14px;
+    gap: 16px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 1000px;
+    --available-width: min(calc(100vw - 64px), 1000px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 28px), 48px);
+  }
+
+  .policy-tabs {
+    max-width: 1000px;
+    gap: 24px;
+    margin: 20px 0;
+  }
+
+  .policy-tabs div {
+    padding: 12px 22px;
+    font-size: 15px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 1000px;
+    padding: 16px 20px;
+  }
+
+  .segment-route {
+    font-size: 16px;
+  }
+
+  .meal-scroll-container {
+    max-height: calc(100vh - 320px);
+  }
+
+  .meal-card {
+    padding: 18px 24px;
+  }
+
+  .meal-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .meal-name {
+    font-size: 18px;
+  }
+
+  .meal-price {
+    font-size: 15px;
+  }
+
+  .meal-quantity button {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 18px 32px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 20px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 14px 40px;
+    font-size: 17px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 350px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .flightmobaddon-headercard {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-contentcard {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-journey-tabs-wrapper {
+    max-width: 1200px;
+  }
+
+  .flightmobaddon-tabs-wrapper {
+    max-width: 1200px;
+  }
+
+  .journey-content-container {
+    max-width: 1200px;
+  }
+
+  .tab-content-container {
+    max-width: 1200px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 1200px;
+  }
+
+  .legend {
+    max-width: 1200px;
+  }
+
+  .seat-map-scrollable {
+    max-width: 1200px;
+    --available-width: min(calc(100vw - 80px), 1200px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 32px), 56px);
+  }
+
+  .policy-tabs {
+    max-width: 1200px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 1200px;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  .flightmobaddon-container {
+    padding-bottom: 80px;
+  }
+
+  .seat-map-scrollable {
+    --available-width: calc(100vw - 32px);
+  }
+
+  .policy-tabs {
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .policy-tabs div {
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .meal-card {
+    padding: 10px 12px;
+  }
+
+  .meal-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .meal-name {
+    font-size: 14px;
+  }
+
+  .meal-route {
+    font-size: 12px;
+  }
+
+  .meal-quantity {
+    margin-top: 20px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 450px);
+    min-height: 150px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .flightmobaddon-headercard {
+    padding: 12px;
+    margin: 12px auto 0 auto;
+  }
+
+  .flightmobaddon-title {
+    font-size: 14px;
+  }
+
+  .flightmobaddon-skip {
+    font-size: 13px;
+  }
+
+  .flightmobaddon-contentcard {
+    padding: 8px 12px;
+    margin: 8px auto;
+  }
+
+  .flightmobaddon-tab {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .flightmobaddon-journey-tab {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .seat-map-scrollable {
+    --available-width: calc(100vw - 24px);
+    --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 18px), 28px);
+  }
+
+  .legend {
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .legend-color {
+    width: 10px;
+    height: 10px;
+    margin-right: 4px;
+  }
+
+  .policy-tabs {
+    gap: 6px;
+    margin: 12px 0;
+  }
+
+  .policy-tabs div {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .meal-card {
+    padding: 8px 10px;
+  }
+
+  .meal-image {
+    width: 45px;
+    height: 45px;
+  }
+
+  .meal-name {
+    font-size: 13px;
+  }
+
+  .meal-price {
+    font-size: 12px;
+  }
+
+  .meal-quantity button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+  }
+
+  .flightmobaddon-footer {
+    padding: 10px 12px;
+  }
+
+  .flightmobaddon-total {
+    font-size: 14px;
+  }
+
+  .flightmobaddon-continue {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .seat-rows-container {
+    max-height: calc(100vh - 500px);
+    min-height: 120px;
+  }
+}
+
+/* Fix for horizontal overflow on mobile */
+@media (max-width: 767px) {
+  .flightmobaddon-container {
+    overflow-x: hidden;
+  }
+
+  .journey-content-container,
+  .tab-content-container {
+    overflow-x: hidden;
+  }
+
+  .seat-map-scrollable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .policy-tabs {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .policy-tabs::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .policy-tabs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .policy-tabs::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+}
+
+/* Fix for fare summary modal responsiveness */
+.trip-popup.fare-summary-modal {
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .trip-popup.fare-summary-modal {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .trip-popup.fare-summary-modal {
+    max-width: 700px;
+  }
+}

@@ -18,6 +18,20 @@ interface Seat {
   [key: string]: any; // For additional properties
 }
 
+interface SeatData {
+  Code: string;
+  SeatNo: string;
+  RowNo?: string;
+  Price?: number | string;
+  AvailablityType?: number | string;
+  [key: string]: any;
+}
+
+interface RowSeat {
+  Seats?: SeatData[];
+  [key: string]: any;
+}
+
 interface SelectedSeatFinal {
   passengerIndex: number;
   segmentIndex: number;
@@ -2318,8 +2332,8 @@ updateSelectedServicesFinal(isReturn: boolean): void {
     console.log(`Processing segment ${i}: Flight ${flightNumber}, Origin ${origin}, Destination ${destination}`);
 
     const rowSeats = seatGroup?.RowSeats || [];
-    const hasValidSeats = rowSeats.some(row =>
-      (row.Seats || []).some(seat => seat.Code !== 'NoSeat')
+    const hasValidSeats = rowSeats.some((row: RowSeat) =>
+      (row.Seats || []).some((seat: SeatData) => seat.Code !== 'NoSeat')
     );
 
     hasSeatsAvailable[i] = hasValidSeats;
@@ -2333,8 +2347,8 @@ updateSelectedServicesFinal(isReturn: boolean): void {
 
     const allSeatLetters: string[] = Array.from(
       new Set<string>(
-        rowSeats.flatMap(row =>
-          (row.Seats ?? []).map(seat => seat.SeatNo?.toUpperCase() || '')
+        rowSeats.flatMap((row: RowSeat) =>
+          (row.Seats ?? []).map((seat: SeatData) => seat.SeatNo?.toUpperCase() || '')
         )
       )
     ).filter(Boolean).sort();
@@ -2347,9 +2361,9 @@ updateSelectedServicesFinal(isReturn: boolean): void {
     //   .filter(seat => [1, 3].includes(Number(seat?.AvailablityType ?? 0)) && Number(seat?.Price) > 0)
     //   .map(seat => Number(seat.Price));
      const prices = rowSeats
-        .flatMap(row => row.Seats || [])
-        .filter(seat => Number(seat?.AvailablityType ?? 0) === 1 && Number(seat?.Price) > 0)
-        .map(seat => Number(seat.Price));
+        .flatMap((row: RowSeat) => row.Seats || [])
+        .filter((seat: SeatData) => Number(seat?.AvailablityType ?? 0) === 1 && Number(seat?.Price) > 0)
+        .map((seat: SeatData) => Number(seat.Price));
 
     let priceCategories = [{ min: 0, max: 0, category: 'free' }];
     if (prices.length > 0) {
@@ -2400,14 +2414,14 @@ updateSelectedServicesFinal(isReturn: boolean): void {
 
     console.log(`Seat blocks: ${JSON.stringify(seatBlocks)}`);
 
-    const structured = rowSeats.map(row => {
+    const structured = rowSeats.map((row: RowSeat) => {
       const rowNo = row.Seats?.[0]?.RowNo || '';
       return {
         rowNo,
-        seatBlocks: seatBlocks.map(block => {
+        seatBlocks: seatBlocks.map((block: string[]) => {
           const blockSeats: any = {};
-          block.forEach(letter => {
-            const seat = row.Seats?.find(s => s.SeatNo?.toUpperCase() === letter) || null;
+          block.forEach((letter: string) => {
+            const seat = row.Seats?.find((s: SeatData) => s.SeatNo?.toUpperCase() === letter) || null;
             if (seat && seat.Code !== 'NoSeat') {
               // const isAvailable = [1, 3].includes(Number(seat?.AvailablityType ?? 0));
               const isAvailable = Number(seat?.AvailablityType ?? 0) === 1;
@@ -2432,7 +2446,7 @@ updateSelectedServicesFinal(isReturn: boolean): void {
           return blockSeats;
         }),
       };
-    }).filter(row => row.seatBlocks.some(block => Object.values(block).some(seat => seat !== null)));
+    }).filter((row: any) => row.seatBlocks.some((block: any) => Object.values(block).some((seat: any) => seat !== null)));
 
     console.log(`Structured rows for segment ${i}:`, JSON.stringify(structured, null, 2));
 
@@ -2639,12 +2653,12 @@ getSegmentSeatTotalPrice(segmentIndex: number, isReturn: boolean = false): numbe
   const selectedCodes = selectedSeatsTarget[segmentIndex] || [];
   const seatRows = seatMapTarget[segmentIndex]?.rows || [];
 
-  const allSeats = seatRows.flatMap(row =>
-    row.seatBlocks.flatMap(block => Object.values(block))
+  const allSeats = seatRows.flatMap((row: any) =>
+    row.seatBlocks.flatMap((block: any) => Object.values(block))
   );
 
   const segmentTotal = selectedCodes.reduce((total, code) => {
-    const seat = allSeats.find(s => s?.Code === code);
+    const seat = allSeats.find((s: any) => s?.Code === code);
     const price = seat?.Price || 0;
     console.log(`Segment ${segmentIndex} (${isReturn ? 'Return' : 'Onward'}): Seat ${code} Price = ${price}`);
     return total + price;

@@ -106,8 +106,8 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
   private ipAddress: string = '';
   private passportInfoRequired: boolean = false;
   private gstMandatory: boolean = false;
-  private onwardPNR: string | null = '';
-  private returnPNR: string | null = '';
+  private onwardPNR: string = '';
+  private returnPNR: string = '';
   private onwardBookingDone = false;
   private returnBookingDone = false;
 
@@ -129,7 +129,7 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(      
       this.flightDataService.currentMessage.subscribe((val: any) => {
         if (!val){
-            this.router.navigate(['/']);
+            this.router.navigate(['/home']);
             
         }
         console.log('value of input', val);
@@ -171,8 +171,19 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.totalChildren = val.children;
         this.totalInfants = val.infants;
 
+        // Map baggage to baggageCharges format for onward journey (use baggage as source of truth)
+        const onwardBaggageCharges = val.mobFinalPageData?.baggage?.onward?.length > 0
+          ? val.mobFinalPageData.baggage.onward.map((baggage: any, index: number) => ({
+              label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
+              amount: baggage.Price || 0
+            }))
+          : (fareSummary.onward?.summary?.baggageCharges || []);
+        
+        const onwardSummary = fareSummary.onward?.summary || {};
+        onwardSummary.baggageCharges = onwardBaggageCharges;
+        
         this.onwardFareSummary = {
-          summary: fareSummary.onward?.summary || null,
+          summary: onwardSummary,
           adultFareDetails: fareSummary.onward?.adultFareDetails || {},
           childFareDetail: fareSummary.onward?.childFareDetail || {},
           infantFareDetails: fareSummary.onward?.infantFareDetails || {},
@@ -180,14 +191,29 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
           fareDetails: fareSummary.onward?.fareDetails || {}
         };
 
-        this.returnFareSummary = fareSummary.return ? {
-          summary: fareSummary.return?.summary || null,
-          adultFareDetails: fareSummary.return?.adultFareDetails || {},
-          childFareDetail: fareSummary.return?.childFareDetail || {},
-          infantFareDetails: fareSummary.return?.infantFareDetails || {},
-          FareCommonDetail: fareSummary.return?.FareCommonDetail || {},
-          fareDetails: fareSummary.return?.fareDetails || {}
-        } : null;
+        // Map baggage to baggageCharges format for return journey if roundtrip (use baggage as source of truth)
+        if (fareSummary.return) {
+          const returnBaggageCharges = val.mobFinalPageData?.baggage?.return?.length > 0
+            ? val.mobFinalPageData.baggage.return.map((baggage: any, index: number) => ({
+                label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
+                amount: baggage.Price || 0
+              }))
+            : (fareSummary.return?.summary?.baggageCharges || []);
+          
+          const returnSummary = fareSummary.return?.summary || {};
+          returnSummary.baggageCharges = returnBaggageCharges;
+          
+          this.returnFareSummary = {
+            summary: returnSummary,
+            adultFareDetails: fareSummary.return?.adultFareDetails || {},
+            childFareDetail: fareSummary.return?.childFareDetail || {},
+            infantFareDetails: fareSummary.return?.infantFareDetails || {},
+            FareCommonDetail: fareSummary.return?.FareCommonDetail || {},
+            fareDetails: fareSummary.return?.fareDetails || {}
+          };
+        } else {
+          this.returnFareSummary = null;
+        }
         this.tripType = val.tripType;
         this.totalPrice = fareSummary?.finalAmount || 0;
 
@@ -269,7 +295,6 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.updateTotalPrice();
         this.prepareFareSummaryData();
         this.loader = false;
-        this.cdr.detectChanges();
       })
     );
   }
@@ -356,6 +381,9 @@ updateTotalPrice(): void {
   incrementMeal(segmentIndex: number, meal: any): void {
     console.log(`incrementMeal in component: segmentIndex=${segmentIndex}, meal=`, meal);
     const isReturn = this.selectedJourneyTab === 'return';
+    // this.flightDataAddOnService.incrementMeal(segmentIndex, meal, isReturn);
+    // this.updateTotalPrice();
+    // this.prepareFareSummaryData();
     // Restrict BBML (Baby Meal) to infants only
     if (meal.Code === 'BBML') {
       const infantCount = this.passengers.infants?.length || 0;
@@ -461,10 +489,19 @@ getServiceTotalPrice(): number {
 
 prepareFareSummaryData(): void {
   const totalPax = this.totalAdults + this.totalChildren; // Changed to exclude infants
+  
+  // Map baggage from mobFinalPageData.baggage to baggageCharges format (use baggage as source of truth)
+  const onwardBaggageCharges = this.flightData?.mobFinalPageData?.baggage?.onward?.length > 0
+    ? this.flightData.mobFinalPageData.baggage.onward.map((baggage: any, index: number) => ({
+        label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
+        amount: baggage.Price || 0
+      }))
+    : (this.onwardFareSummary?.summary?.baggageCharges || []);
+  
   const onwardFare: FareSummary = {
     baseFare: this.onwardFareSummary?.summary?.baseFare || [],
     taxes: this.onwardFareSummary?.summary?.taxes || [],
-    baggageCharges: this.onwardFareSummary?.summary?.baggageCharges || [],
+    baggageCharges: onwardBaggageCharges,
     mealCharges: this.flightDataAddOnService.selectedMeals.reduce(
       (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0),
       0
@@ -492,10 +529,18 @@ prepareFareSummaryData(): void {
   }
 
   if (this.tripType === 'roundtrip' && this.returnFareSummary) {
+    // Map return baggage from mobFinalPageData.baggage to baggageCharges format (use baggage as source of truth)
+    const returnBaggageCharges = this.flightData?.mobFinalPageData?.baggage?.return?.length > 0
+      ? this.flightData.mobFinalPageData.baggage.return.map((baggage: any, index: number) => ({
+          label: `Baggage ${index + 1}: ${baggage.Weight || baggage.WeightKG || 0}kg`,
+          amount: baggage.Price || 0
+        }))
+      : (this.returnFareSummary.summary?.baggageCharges || []);
+    
     const returnFare: FareSummary = {
       baseFare: this.returnFareSummary.summary?.baseFare || [],
       taxes: this.returnFareSummary.summary?.taxes || [],
-      baggageCharges: this.returnFareSummary.summary?.baggageCharges || [],
+      baggageCharges: returnBaggageCharges,
       mealCharges: this.flightDataAddOnService.selectedMealsReturn.reduce(
         (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0),
         0
@@ -663,7 +708,6 @@ prepareFareSummaryData(): void {
   console.log('Selected Add-on Payload:', JSON.stringify(payload, null, 2));
   if (!this.passengers.adults.every(p => p.firstName?.trim() && p.lastName?.trim())) {
         Swal.fire('Error', 'Please complete all passenger details.', 'error');
-        this.loader = false;
         return;
   }
 
@@ -790,6 +834,9 @@ prepareFareSummaryData(): void {
       baggage: this.isUnifiedSegmentFormat
         ? [...(this.flightData?.mobFinalPageData?.baggage?.onward || []), ...(this.flightData?.mobFinalPageData?.baggage?.return || [])]
         : this.flightData?.mobFinalPageData?.baggage?.onward || []
+      // baggage: this.flightData?.mobFinalPageData?.baggage?.onward || [],
+      // ssrDataOnward : this.flightData.mobFinalPageData.ssr.onward,
+      // ssrDataReturn : this.flightData.mobFinalPageData.ssr.return
     };
 
     const bookingParams = {
@@ -820,7 +867,11 @@ prepareFareSummaryData(): void {
         this.gstInfo,
         this.gstMandatory,
         this.passportInfoRequired,      
+        // this.isUnifiedSegmentFormat
+        //   ? { onward: this.flightData.mobFinalPageData.ssr.onward, return: this.flightData.mobFinalPageData.ssr.return }
+        //   : this.flightData.mobFinalPageData.ssr.onward,
         this.flightData.mobFinalPageData.ssr.onward, 
+        // this.isUnifiedSegmentFormat
       );
     }
 
@@ -846,6 +897,9 @@ prepareFareSummaryData(): void {
         adultFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.adultFareDetails || {},
         childrenFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.childFareDetail || {},
         infantFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.infantFareDetails || {},
+        // adultFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.adultFareDetail || {},
+        // childrenFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.childrenFareDetail || {},
+        // infantFareDetail: this.flightData.mobFinalPageData.fareSummary?.return?.infantFareDetail || {},
         fareCommonDetail: this.flightData.mobFinalPageData.fareSummary?.return?.fareCommonDetail || {},
         adultBaseFare: this.returnFareSummary?.summary?.baseFare.find(f => f.label.includes('Adults'))?.amount || 0,
         adultTaxes: this.returnFareSummary?.summary?.taxes.find(t => t.label.includes('Adults'))?.amount || 0,
@@ -861,6 +915,8 @@ prepareFareSummaryData(): void {
         infantTaxesReturn: this.returnFareSummary?.summary?.taxes.find(t => t.label.includes('Infants'))?.amount || 0,
         isReturn: true,
         baggage: this.flightData?.mobFinalPageData?.baggage?.return || [],
+        // ssrDataOnward : this.flightData.mobFinalPageData.ssr.onward,
+        // ssrDataReturn : this.flightData.mobFinalPageData.ssr.return
       };
 
       const returnBookingParams = { ...bookingParams, resultIndex: this.resultIndexReturn };
@@ -874,6 +930,7 @@ prepareFareSummaryData(): void {
           this.gstMandatory,
           this.passportInfoRequired,  
           this.flightData.mobFinalPageData.ssr.return,
+          // this.isUnifiedSegmentFormat
       );
     }
 
@@ -902,7 +959,7 @@ prepareFareSummaryData(): void {
 
     const appid = this.passengers.adults[0].mobileNumber;
     this.orderId = 'FL'+Math.random().toString(36).substr(2, 6).toUpperCase();
-    const customerName = this.passengers.adults[0].firstName + ' ' + this.passengers.adults[0].lastName;
+    const customerName = this.passengers.adults[0].firstName + ' ' + this.passengers.adults[0].lastName; // Fixed typo: lastName instead of firstName
     const customerEmail = this.passengers.adults[0].email;
     const customerDialCountryCode = this.passengers.adults[0].mobileDialCode;
     const customerPhone = this.passengers.adults[0].mobileNumber;
@@ -940,8 +997,16 @@ prepareFareSummaryData(): void {
           cashfree(val['payment_session_id']);       
           console.log("jee end loader", val['payment_session_id']);
 
+          // ✅ Navigate to result page with parameters
+          // this.router.navigate([
+          //   '/result',
+          //   this.orderId,
+          //   totalAmount,
+          //   'FLIGHT'
+          // ]);
+
         } else {
-          if (val["message"]?.toString().toUpperCase().trim().includes('INVALID EMAIL')) {
+          if (val["message"].toString().toUpperCase().trim().includes('INVALID EMAIL')) {
             Swal.fire({
               title: 'Sorry!',
               html: 'Please Enter Email ID in Correct Format.',
@@ -952,7 +1017,7 @@ prepareFareSummaryData(): void {
           } else {
             Swal.fire({
               title: 'Sorry!',
-              html: val["message"] || 'An error occurred',
+              html: val["message"],
               icon: 'error',
               confirmButtonText: 'OK'
             });
@@ -972,16 +1037,18 @@ prepareFareSummaryData(): void {
       const handleResult = (pnr: string | null) => {
         console.log(`✔️ ${leg} booking result handled. PNR:`, pnr);
 
+        // this.maybeNavigateToSuccessPage();
         if (this.isUnifiedSegmentFormat) {
-          this.onwardPNR = pnr;
+          // For unified segment, only store one PNR
+          this.onwardPNR = pnr || '';
           this.onwardBookingDone = true;
-          this.returnBookingDone = true;
+          this.returnBookingDone = true; // Treat return as done to satisfy navigation logic
         } else {
           if (isReturn) {
-            this.returnPNR = pnr;
+            this.returnPNR = pnr || '';
             this.returnBookingDone = true;
           } else {
-            this.onwardPNR = pnr;
+            this.onwardPNR = pnr || '';
             this.onwardBookingDone = true;
           }
         }
@@ -1048,19 +1115,25 @@ prepareFareSummaryData(): void {
                       bookFlight(payload, index, isLccBook, isReturn);
                     }, 4000);
                   } else {
+                    // console.error(`❌ ${leg} final ticketing failed.`, ticketRes.Response?.Error?.ErrorMessage);
+                    // Swal.fire('Error', ticketRes.Response?.Error?.ErrorMessage || 'Final ticketing failed.', 'error');
+                    // handleResult(null);
+
                       console.error(`❌ ${leg} final ticketing failed.`, ticketRes.Response?.Error?.ErrorMessage);
                       Swal.fire('Error', ticketRes.Response?.Error?.ErrorMessage || 'Final ticketing failed.', 'error');
 
+                      // Prepare payload for logging
                       const failurePayload = {
                         enduserip: this.ipAddress,
                         tokenid: this.tboToken,
                         traceid: this.traceId,
                         PNR: PNR,
                         bookingid: bookingId,
-                        errormessage: ticketRes.Response || ticketRes,
+                        errormessage: ticketRes.Response || ticketRes,  // If full response is needed
                         wizzpnr : this.orderId
                       };
 
+                      // Call backend to log non-LCC failure
                       this.apiService.insertNonLCCBookingDetails(failurePayload).subscribe({
                         next: (res: any) => {
                           console.log('📝 Logged non-LCC ticket failure:', res);
@@ -1101,8 +1174,10 @@ prepareFareSummaryData(): void {
       console.log('Initiating ONWARD booking...');
 
       if (!this.isUnifiedSegmentFormat && onwardPayload && this.resultIndex) {
+        // ONEWAY or ROUNDTRIP onward
         bookFlight(onwardPayload, this.resultIndex, isLCC, false);
       } else if (this.isUnifiedSegmentFormat) {
+        // Unified format (usually multicity or international return)
         bookFlight(internationalReturnPayload, this.resultIndex, isLCC, false);
       }
 
@@ -1230,7 +1305,7 @@ getFlightCode(index: number, isReturn: boolean): string {
   return flights[index]?.code || '';
 }
   ngOnDestroy(): void {
-    document.body.style.overflow = ''; // enable scroll
+    document.body.style.overflow = ''; // disable scroll
     this.subscriptions.unsubscribe();
   }
 }
