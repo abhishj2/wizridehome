@@ -1,8 +1,82 @@
 <div class="flight-list-wrapper" *ngIf="isBrowser">
-  <!-- Loading Spinner -->
-  <div *ngIf="loader" class="loader-container">
-    <div class="spinner"></div>
-    <p>Loading flights...</p>
+  <!-- Shimmer Loading -->
+  <div *ngIf="loader">
+    <main class="shimmer-main">
+      <div class="shimmer-box-long"></div>
+      <p></p>
+      <div class="shimmer-box-long1"></div>
+      <br />
+      <div>
+        <div class="shimmer-grid">
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-circle"></div>
+              <div class="shimmer-box1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-circle"></div>
+              <div class="shimmer-box1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+        </div>
+        <br />
+        <div class="shimmer-box-long2"></div>
+        <br />
+        <div class="shimmer-grid">
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+        </div>
+        <br />
+        <div class="shimmer-box-long1"></div>
+        <div class="shimmer-grid">
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long"></div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long"></div>
+            </div>
+          </div>
+        </div>
+        <div class="shimmer-box-long2"></div>
+        <div class="shimmer-grid">
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+
+          <div class="container">
+            <div class="flex-container-space-between">
+              <div class="shimmer-box-long1"></div>
+            </div>
+            <div class="shimmer-box"></div>
+          </div>
+        </div>
+        <br />
+        <div class="shimmer-box-long"></div>
+      </div>
+    </main>
   </div>
 
   <!-- Main Content -->
