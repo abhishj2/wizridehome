@@ -2836,4 +2836,84 @@ i.fas.fa-plane-departure {
   background: transparent !important;
   min-width: 100px; /* Prevents text from being crushed */
 }
+@media (max-width: 768px) {
+  /* ... existing mobile styles ... */
+.flight-route {
+    display: grid !important;
+    /* Sets Source and Destination to equal width, icon takes what it needs */
+    grid-template-columns: 1fr auto 1fr !important; 
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 32px 0 !important;
+    position: relative !important;
+  }
+
+  /* The City text styling for mobile */
+  .flight-route .city {
+    position: relative !important;
+    z-index: 2 !important;
+    background: #ffffff !important;
+    padding: 0 8px !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Container for the plane icon and the line */
+  .flight-route .plane-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; /* Adjust width based on spacing needs */
+    height: 40px;
+    z-index: 2;
+    background: #ffffff; /* Masks the line behind the icon */
+  }
+.flight-route .plane-icon i {
+    font-size: 20px !important;
+    color: #008b8b !important;
+    margin: 0 !important; /* Reset existing margins */
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  /* The Dashed Route Line */
+  .flight-route::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    /* Adjust these % values to change where the line starts/ends relative to city names */
+    left: 10% !important; 
+    right: 10% !important;
+    height: 2px !important;
+    background-image: linear-gradient(to right, #008b8b 50%, transparent 50%) !important;
+    background-size: 10px 2px !important;
+    background-repeat: repeat-x !important;
+    transform: translateY(-50%) !important;
+    z-index: 1 !important;
+  }
+  /* Customizing the Icon appearance to match your reference image */
+ .flight-route .plane-icon {
+    position: relative !important;
+    z-index: 2 !important;
+    background: #ffffff !important; /* White background hides line behind icon */
+    padding: 0 12px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .flight-route .city:last-child {
+    text-align: right !important;
+  }
+  button.details-btn {
+    margin:auto !important;
+    font-size:12px !important;
+}
+.flight-route{
+  padding: 0 !important;
+}
+.flight-meta {
+
+  text-align:center;
+  margin-top:10px;
+}
 }
