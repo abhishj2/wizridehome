@@ -265,7 +265,6 @@ body {
 
 .details-btn {
   display: block;
-  margin: 16px auto 0 auto;
   padding: 14px 32px;
   background: #000000;
   color: #ffffff;
@@ -594,11 +593,7 @@ body {
   color: #212529;
 }
 
-.passenger-divider {
-  border: none;
-  border-top: 1px solid #e9ecef;
-  margin: 16px 0;
-}
+
 
 /* GST Box */
 .gst-box {
@@ -2344,7 +2339,7 @@ body {
     font-size: 16px;
     font-weight: 600;
     border-radius: 12px;
-    margin: 32px auto 0 auto;
+    margin: 0px auto 0 auto;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
