@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { FlightbookingpayloadService } from '../services/flightbookingpayload.se
 import { FlightdataService } from '../services/flightdata.service';
 import Swal from 'sweetalert2';
 import { FlightmobfaresummaryComponent } from '../flightmobfaresummary/flightmobfaresummary.component';
+import { isPlatformBrowser } from '@angular/common';
 
 declare function cashfree(sessionid : any) : any;
 
@@ -121,11 +122,14 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
     public flightDataAddOnService: FlightaddonsService,
     public bookingPayloadService : FlightbookingpayloadService,
     public router : Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private renderer: Renderer2, // Added for clean DOM manipulation
+    @Inject(PLATFORM_ID) private platformId: Object // Added to check for browser
   ) {}
-
   ngOnInit(): void {
-    document.body.style.overflow = 'hidden'; // disable scroll
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    }
     this.subscriptions.add(      
       this.flightDataService.currentMessage.subscribe((val: any) => {
         if (!val){
@@ -1323,6 +1327,9 @@ getFlightCode(index: number, isReturn: boolean): string {
 }
   ngOnDestroy(): void {
     document.body.style.overflow = ''; // disable scroll
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.removeStyle(document.body, 'overflow');
+    }
     this.subscriptions.unsubscribe();
   }
 }
