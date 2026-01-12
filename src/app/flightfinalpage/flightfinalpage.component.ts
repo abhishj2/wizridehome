@@ -314,6 +314,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!this.isMobileView()) return;
   
     if (event) {
+      event.preventDefault();
       event.stopPropagation();
     }
   

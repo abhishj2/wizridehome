@@ -202,7 +202,7 @@
       <div class="section-title">Add Passenger Details</div>
       <div class="passenger-section">
         <div class="passenger-title">Adults (12+ yrs)</div>
-        <div class="passenger-box" *ngFor="let adult of adults; let i = index">
+        <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -221,7 +221,7 @@
         <div class="passenger-title" *ngIf="children.length > 0">
           Children (2-12 yrs old)
         </div>
-        <div class="passenger-box" *ngFor="let child of children; let i = index">
+        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -240,7 +240,7 @@
         <div class="passenger-title" *ngIf="infants.length > 0">
           Infant (0-2 yrs old)
         </div>
-        <div class="passenger-box" *ngFor="let infant of infants; let i = index">
+        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -315,7 +315,7 @@
         </div>
         <hr class="fare-summary-divider" />
       </div>
-      <div class="total" (click)="openFareSummary()" style="cursor: pointer">
+      <div class="total"  style="cursor: pointer">
         ₹ Total Price<br />
         <strong>{{ finalAmount | number : "1.2-2" }}</strong>
       </div>
@@ -602,7 +602,7 @@
       <div class="section-title">Add Passenger Details</div>
       <div class="passenger-section">
         <div class="passenger-title">Adults (12+ yrs)</div>
-        <div class="passenger-box" *ngFor="let adult of adults; let i = index">
+        <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -621,7 +621,7 @@
         <div class="passenger-title" *ngIf="children.length > 0">
           Children (2-12 yrs old)
         </div>
-        <div class="passenger-box" *ngFor="let child of children; let i = index">
+        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -640,7 +640,7 @@
         <div class="passenger-title" *ngIf="infants.length > 0">
           Infant (0-2 yrs old)
         </div>
-        <div class="passenger-box" *ngFor="let infant of infants; let i = index">
+        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
           <div class="icon"><i class="fas fa-user"></i></div>
           <div class="label">
             {{
@@ -710,7 +710,7 @@
         </div>
         <hr class="fare-summary-divider" />
       </div>
-      <div class="total" (click)="openFareSummary()" style="cursor: pointer">
+      <div class="total" style="cursor: pointer">
         ₹ Total Price<br />
         <strong>{{ finalAmount | number : "1.2-2" }}</strong>
       </div>
