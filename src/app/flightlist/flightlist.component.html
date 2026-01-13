@@ -120,8 +120,8 @@
       </div>
     </div>
 
-    <!-- Modify Search Form (Collapsible) -->
-    <div class="modify-search-section" [class.visible]="showModifyForm">
+    <!-- Modify Search Form (Desktop - Collapsible) -->
+    <div class="modify-search-section desktop-modify-form" [class.visible]="showModifyForm">
       <div class="container">
         <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="modify-search-form">
           <div class="form-row">
@@ -178,6 +178,69 @@
             <div class="form-group">
               <button type="submit" class="modify-search-btn">Modify Search</button>
             </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mobile Modify Search Drawer (Slides from left) -->
+    <div class="mobile-modify-drawer" [class.open]="showModifyForm" (click)="showModifyForm = false">
+      <div class="mobile-modify-drawer-content" (click)="$event.stopPropagation()">
+        <button class="mobile-modify-drawer-close" (click)="showModifyForm = false">×</button>
+        <div class="mobile-modify-drawer-header">
+          <h2>Modify Search</h2>
+        </div>
+        <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="mobile-modify-search-form">
+          <div class="mobile-form-group">
+            <label>From:</label>
+            <input type="text" formControlName="from" list="airportListMobile"
+              placeholder="Type city or airport (e.g. Delhi, DEL)" />
+          </div>
+          <div class="mobile-form-group">
+            <label>To:</label>
+            <input type="text" formControlName="to" list="airportListMobile"
+              placeholder="Type city or airport (e.g. Mumbai, BOM)" />
+          </div>
+          <!-- Shared datalist for airport suggestions -->
+          <datalist id="airportListMobile">
+            <option *ngFor="let city of flightAirports" [value]="city.code">
+              {{ city.name }} ({{ city.code }})
+            </option>
+          </datalist>
+          <div class="mobile-form-group">
+            <label>Departure Date:</label>
+            <input type="date" formControlName="departureDate" />
+          </div>
+          <div class="mobile-form-group" *ngIf="flightType === 'round'">
+            <label>Return Date:</label>
+            <input type="date" formControlName="returnDate" />
+          </div>
+          <div class="mobile-form-group mobile-passenger-dropdown-wrapper">
+            <label>Passengers:</label>
+            <div class="mobile-passenger-display" (click)="togglePassengerDropdown(); $event.stopPropagation()">
+              {{ totalPassengers }} Passenger{{ totalPassengers > 1 ? "s" : "" }}
+              <i class="fas fa-chevron-down" [class.rotated]="showPassengerDropdown"></i>
+            </div>
+            <div class="mobile-passenger-dropdown" *ngIf="showPassengerDropdown" (click)="$event.stopPropagation()">
+              <div class="mobile-passenger-type-row" *ngFor="let type of passengerTypes">
+                <div class="label">{{ type.label }}</div>
+                <div class="controls">
+                  <button type="button" (click)="decrement(type.key)">−</button>
+                  <span>{{ modifySearchForm.get(type.key)?.value }}</span>
+                  <button type="button" (click)="increment(type.key)">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-form-group">
+            <label>Class:</label>
+            <select formControlName="travelClass">
+              <option value="">Select class</option>
+              <option *ngFor="let cls of travelClasses" [value]="cls">{{ cls }}</option>
+            </select>
+          </div>
+          <div class="mobile-form-group">
+            <button type="submit" class="mobile-modify-search-btn">Modify Search</button>
           </div>
         </form>
       </div>
