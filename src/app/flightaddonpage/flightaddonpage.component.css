@@ -15,6 +15,7 @@
   bottom: 0;
   z-index: 1000;
   box-sizing: border-box;
+  align-items: center;
 }
 
 .flightmobaddon-scroll-area {
@@ -39,8 +40,8 @@
   background: #ffffff;
   font-weight: 600;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
   border-radius: 0;
   box-shadow: none;
   border-bottom: 1px solid #eee;
@@ -75,6 +76,7 @@
   background: #ffffff;
   box-sizing: border-box;
   padding: 8px 0;
+  align-items: center;
 }
 
 /* Tabs */
@@ -117,8 +119,8 @@
 .flightmobaddon-journey-tabs-wrapper {
   position: relative;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
   background: #ffffff;
@@ -165,8 +167,8 @@
 .flightmobaddon-tabs-wrapper {
   position: relative;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
   background: #ffffff;
@@ -186,8 +188,8 @@
 .journey-content-container {
   overflow: hidden;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
   flex-grow: 1;
   box-sizing: border-box;
 }
@@ -213,8 +215,8 @@
 .tab-content-container {
   overflow: hidden;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
   flex-grow: 1;
   box-sizing: border-box;
 }
@@ -243,17 +245,18 @@
 /* Policy tabs */
 .policy-tabs {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   gap: 12px;
-  margin: 16px 12px;
+  margin: 16px auto;
   overflow-x: auto;
   overflow-y: hidden;
-  width: calc(100% - 24px);
-  max-width: 100%;
+  width: 100%;
+  max-width: 600px;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  padding: 0 16px;
 }
 
 .policy-tabs::-webkit-scrollbar {
@@ -294,8 +297,8 @@
 
 /* Seat map */
 .seat-map-wrapper {
-  width: calc(100% - 24px);
-  max-width: 100%;
+  width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -304,7 +307,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
-  padding: 0 12px;
+  padding: 0 16px;
 }
 
 /* Improved Legend */
@@ -317,10 +320,11 @@
   border-radius: 12px;
   font-size: 11px;
   width: 100%;
-  max-width: 100%;
+  max-width: 600px;
   box-sizing: border-box;
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin: 0 auto;
 }
 
 .legend-item {
@@ -360,7 +364,7 @@
 
 .seat-map-scrollable {
   width: 100%;
-  max-width: 100%;
+  max-width: 600px;
   margin: 0 auto;
   position: relative;
   overflow-x: auto;
@@ -371,7 +375,7 @@
   align-items: center;
   -webkit-overflow-scrolling: touch;
   --total-units: calc(var(--seat-count, 9) + (var(--seat-count, 9) - var(--block-count, 3)) + var(--aisle-count, 2) + 1);
-  --available-width: calc(100vw - 48px);
+  --available-width: min(calc(100vw - 64px), 600px);
   --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 20px), 40px);
 }
 
@@ -503,9 +507,9 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  padding: 8px 12px;
-  width: calc(100% - 24px);
-  max-width: 100%;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
@@ -530,13 +534,14 @@
 .meal-selection {
   margin-top: 0;
   width: 100%;
-  max-width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   height: 100%;
   box-sizing: border-box;
-  padding: 0 12px;
+  padding: 0 16px;
+  margin: 0 auto;
 }
 
 .meal-scroll-container {
@@ -717,8 +722,10 @@
 .flightmobaddon-footer {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
   height: auto;
   min-height: 75px;
   background: #ffffff;
@@ -959,8 +966,13 @@
     margin: 0 auto;
   }
 
+  .seat-map-wrapper {
+    max-width: 600px;
+  }
+
   .seat-map-scrollable {
-    --available-width: min(calc(600px - 48px), 600px);
+    max-width: 600px;
+    --available-width: min(calc(600px - 64px), 600px);
     --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 24px), 40px);
   }
 
@@ -971,20 +983,43 @@
   .meal-scroll-container {
     max-height: calc(100vh - 320px);
   }
+
+  .policy-tabs {
+    max-width: 600px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 600px;
+  }
+
+  .meal-selection {
+    max-width: 600px;
+  }
 }
 
 /* Desktop devices (1024px and above) */
 @media (min-width: 1024px) {
   .flightmobaddon-container {
-    max-width: 800px;
+    max-width: 600px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .flightmobaddon-scroll-area {
     padding-bottom: 100px;
   }
 
+  .flightmobaddon-headercard {
+    max-width: 600px;
+  }
+
+  .seat-map-wrapper {
+    max-width: 600px;
+  }
+
   .seat-map-scrollable {
-    --available-width: min(calc(800px - 64px), 800px);
+    max-width: 600px;
+    --available-width: min(calc(600px - 64px), 600px);
     --seat-size: min(max(calc(var(--available-width) / var(--total-units)), 28px), 48px);
   }
 
@@ -994,6 +1029,18 @@
 
   .meal-scroll-container {
     max-height: calc(100vh - 340px);
+  }
+
+  .policy-tabs {
+    max-width: 600px;
+  }
+
+  .segment-header-wrapper {
+    max-width: 600px;
+  }
+
+  .meal-selection {
+    max-width: 600px;
   }
 }
 
