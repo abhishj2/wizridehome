@@ -302,6 +302,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin: 0 auto;
   flex-grow: 1;
   overflow-x: hidden;
@@ -373,6 +374,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   -webkit-overflow-scrolling: touch;
   --total-units: calc(var(--seat-count, 9) + (var(--seat-count, 9) - var(--block-count, 3)) + var(--aisle-count, 2) + 1);
   --available-width: min(calc(100vw - 64px), 600px);
@@ -386,7 +388,10 @@
   z-index: 20;
   padding: 8px 0;
   border-bottom: 2px solid #e2e8f0;
-  width: 100%;
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .seat-rows-container {
@@ -396,8 +401,12 @@
   border: 1px solid #edf2f7;
   border-radius: 8px;
   background: #fff;
-  width: 100%;
+  width: fit-content;
+  margin: 0 auto;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .seat-row {
@@ -405,10 +414,9 @@
   align-items: center;
   gap: calc(var(--seat-size) / 12);
   width: fit-content;
-  min-width: 100%;
   flex-shrink: 0;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   margin-bottom: 10px !important;
   box-sizing: border-box;
 }
