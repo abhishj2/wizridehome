@@ -1373,7 +1373,8 @@
         [(ngModel)]="currentPassengerDetails.mobileNumber"
         placeholder="10-digit mobile starts 6-9"
         maxlength="10"
-        inputmode="numeric"
+        [readonly]="isMobileView()"
+        [attr.inputmode]="isMobileView() ? 'none' : 'numeric'"
         (click)="openPhoneDialer('primary', $event)"
         (focus)="isMobileView() && openPhoneDialer('primary', $event)"
       />

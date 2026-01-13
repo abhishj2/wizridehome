@@ -318,6 +318,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       event.stopPropagation();
     }
   
+    // Prevent native keyboard from opening
+    if (this.contactMobileInput && this.contactMobileInput.nativeElement) {
+      const inputElement = this.contactMobileInput.nativeElement;
+      inputElement.readOnly = true;
+      inputElement.setAttribute('readonly', 'readonly');
+      inputElement.setAttribute('inputmode', 'none');
+    }
+  
     this.activePhoneField = field;
     this.showPhoneDialer = true;
   
@@ -349,6 +357,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   closePhoneDialer(): void {
     this.showPhoneDialer = false;
     this.activePhoneField = null;
+  
+    // Restore input behavior - remove readonly and inputmode on desktop
+    if (this.contactMobileInput && this.contactMobileInput.nativeElement) {
+      const inputElement = this.contactMobileInput.nativeElement;
+      if (!this.isMobileView()) {
+        inputElement.readOnly = false;
+        inputElement.removeAttribute('readonly');
+        inputElement.setAttribute('inputmode', 'numeric');
+      }
+    }
   
     if (isPlatformBrowser(this.platformId)) {
       this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
