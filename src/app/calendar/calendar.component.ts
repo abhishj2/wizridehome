@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CustomCalendarComponent implements OnInit {
+export class CustomCalendarComponent implements OnInit, OnChanges {
   @Input() selectedDate: string = '';
   @Input() minDate: string = '';
   @Input() placeholder: string = 'Select Date';
@@ -41,21 +41,16 @@ export class CustomCalendarComponent implements OnInit {
     if (this.alwaysOpen) {
       this.isOpen = true;
     }
-    if (this.selectedDate) {
-      this.selectedDateObj = new Date(this.selectedDate);
-      this.displayMonth = new Date(this.selectedDate);
-      this.displayYear = this.displayMonth.getFullYear();
-    } else {
-      this.displayMonth = new Date();
-      this.displayYear = this.displayMonth.getFullYear();
-    }
+    this.updateSelectedDate();
     
     if (this.minDate) {
       const minDateObj = new Date(this.minDate);
       if (this.currentDate < minDateObj) {
         this.currentDate = minDateObj;
-        this.displayMonth = minDateObj;
-        this.displayYear = this.displayMonth.getFullYear();
+        if (!this.selectedDate) {
+          this.displayMonth = minDateObj;
+          this.displayYear = this.displayMonth.getFullYear();
+        }
       }
     }
     
@@ -63,6 +58,33 @@ export class CustomCalendarComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     for (let year = currentYear; year <= currentYear + 10; year++) {
       this.availableYears.push(year);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedDate'] && !changes['selectedDate'].firstChange) {
+      this.updateSelectedDate();
+    }
+  }
+
+  updateSelectedDate() {
+    if (this.selectedDate) {
+      try {
+        const date = new Date(this.selectedDate);
+        if (!isNaN(date.getTime())) {
+          this.selectedDateObj = date;
+          this.displayMonth = new Date(date);
+          this.displayYear = this.displayMonth.getFullYear();
+        }
+      } catch (e) {
+        console.error('Invalid date format:', this.selectedDate);
+      }
+    } else {
+      this.selectedDateObj = null;
+      if (!this.displayMonth) {
+        this.displayMonth = new Date();
+        this.displayYear = this.displayMonth.getFullYear();
+      }
     }
   }
 
@@ -133,8 +155,28 @@ export class CustomCalendarComponent implements OnInit {
   }
 
   isDateSelected(date: Date): boolean {
-    if (!this.selectedDateObj) return false;
-    return date.toDateString() === this.selectedDateObj.toDateString();
+    // Check both selectedDateObj and selectedDate input for reliability
+    if (this.selectedDateObj) {
+      const dateStr = date.toDateString();
+      const selectedStr = this.selectedDateObj.toDateString();
+      if (dateStr === selectedStr) return true;
+    }
+    
+    // Fallback: check selectedDate input directly
+    if (this.selectedDate) {
+      try {
+        const selectedDateParsed = new Date(this.selectedDate);
+        if (!isNaN(selectedDateParsed.getTime())) {
+          date.setHours(0, 0, 0, 0);
+          selectedDateParsed.setHours(0, 0, 0, 0);
+          return date.getTime() === selectedDateParsed.getTime();
+        }
+      } catch (e) {
+        // Invalid date format, ignore
+      }
+    }
+    
+    return false;
   }
 
   isDateDisabled(date: Date): boolean {
