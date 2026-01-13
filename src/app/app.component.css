@@ -249,3 +249,14 @@ body {
       }
     }
   }
+
+  input,
+textarea,
+select {
+  font-size: 16px !important;
+}
+
+/* Optional: prevent text scaling */
+html {
+  -webkit-text-size-adjust: 100%;
+}

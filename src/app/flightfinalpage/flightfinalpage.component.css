@@ -1239,6 +1239,23 @@ body {
   min-height: 80px;
 }
 
+/* Error Styles */
+.form-group input.error,
+.form-group textarea.error,
+.form-group select.error,
+.input-group-row select.error {
+  border-color: #dc3545 !important;
+  background-color: #fff5f5;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+}
+
 /* Phone Row - Country Code + Mobile Number */
 .phone-row {
   display: flex;

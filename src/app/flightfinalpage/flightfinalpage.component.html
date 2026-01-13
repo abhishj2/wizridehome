@@ -1283,40 +1283,47 @@
   <div class="trip-body">
     <div class="form-group">
       <label>First Name</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.firstName" placeholder="Enter first name" />
+      <input type="text" [(ngModel)]="currentPassengerDetails.firstName" placeholder="Enter first name" [class.error]="passengerValidationErrors.firstName" />
+      <div class="error-message" *ngIf="passengerValidationErrors.firstName">{{ passengerValidationErrors.firstName }}</div>
     </div>
     <div class="form-group">
       <label>Last Name</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.lastName" placeholder="Enter last name" />
+      <input type="text" [(ngModel)]="currentPassengerDetails.lastName" placeholder="Enter last name" [class.error]="passengerValidationErrors.lastName" />
+      <div class="error-message" *ngIf="passengerValidationErrors.lastName">{{ passengerValidationErrors.lastName }}</div>
     </div>
     <div class="form-group">
       <label>Gender</label>
-      <select [(ngModel)]="currentPassengerDetails.gender" required>
+      <select [(ngModel)]="currentPassengerDetails.gender" required [class.error]="passengerValidationErrors.gender">
         <option value="" disabled selected>Select gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
       </select>
+      <div class="error-message" *ngIf="passengerValidationErrors.gender">{{ passengerValidationErrors.gender }}</div>
     </div>
     <div class="form-group">
       <label>Date of Birth</label>
       <div class="input-group-row">
-        <select [(ngModel)]="currentPassengerDetails.dobDay">
+        <select [(ngModel)]="currentPassengerDetails.dobDay" [class.error]="passengerValidationErrors.dobDay">
           <option value="">DD</option>
           <option *ngFor="let day of days" [value]="day">{{ day }}</option>
         </select>
-        <select [(ngModel)]="currentPassengerDetails.dobMonth">
+        <select [(ngModel)]="currentPassengerDetails.dobMonth" [class.error]="passengerValidationErrors.dobMonth">
           <option value="">MM</option>
           <option *ngFor="let month of months" [value]="month">{{ month }}</option>
         </select>
-        <select [(ngModel)]="currentPassengerDetails.dobYear">
+        <select [(ngModel)]="currentPassengerDetails.dobYear" [class.error]="passengerValidationErrors.dobYear">
           <option value="">YYYY</option>
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
       </div>
+      <div class="error-message" *ngIf="passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear">
+        {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+      </div>
     </div>
     <div class="form-group" *ngIf="currentPassengerType === 'adult'">
       <label>Email</label>
-      <input type="email" [(ngModel)]="currentPassengerDetails.email" placeholder="Enter email" />
+      <input type="email" [(ngModel)]="currentPassengerDetails.email" placeholder="Enter email" [class.error]="passengerValidationErrors.email" />
+      <div class="error-message" *ngIf="passengerValidationErrors.email">{{ passengerValidationErrors.email }}</div>
     </div>
     <div class="form-group" *ngIf="currentPassengerType === 'adult'">
       <label>Mobile Number</label>
@@ -1377,8 +1384,10 @@
         [attr.inputmode]="isMobileView() ? 'none' : 'numeric'"
         (click)="openPhoneDialer('primary', $event)"
         (focus)="isMobileView() && openPhoneDialer('primary', $event)"
+        [class.error]="passengerValidationErrors.mobileNumber"
       />
       </div>
+      <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber">{{ passengerValidationErrors.mobileNumber }}</div>
     </div>
     <div class="form-group checkbox-group" *ngIf="currentPassengerType !== 'infant'">
       <label class="checkbox-label">
@@ -1388,11 +1397,13 @@
     </div>
     <div class="form-group" *ngIf="passportInfoRequired">
       <label>Passport Number</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.passportNumber" placeholder="Enter passport number" />
+      <input type="text" [(ngModel)]="currentPassengerDetails.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber" />
+      <div class="error-message" *ngIf="passengerValidationErrors.passportNumber">{{ passengerValidationErrors.passportNumber }}</div>
     </div>
     <div class="form-group" *ngIf="panInfoRequired">
       <label>PAN Number</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.panNumber" placeholder="Enter PAN number" />
+      <input type="text" [(ngModel)]="currentPassengerDetails.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber" />
+      <div class="error-message" *ngIf="passengerValidationErrors.panNumber">{{ passengerValidationErrors.panNumber }}</div>
     </div>
   </div>
   <div class="trip-footer">

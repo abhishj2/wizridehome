@@ -209,6 +209,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   currentPassengerType: 'adult' | 'child' | 'infant' = 'adult';
   currentPassengerIndex: number = 0;
   currentPassengerDetails: any = null;
+  passengerValidationErrors: any = {};
   get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
   
   // Baggage Counts (for mobile template)
@@ -1246,8 +1247,95 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return this.getBlankInfant();
   }
   
-  closePassengerModal() { this.showPassengerModal = false; }
+  closePassengerModal() { 
+    this.showPassengerModal = false;
+    this.passengerValidationErrors = {};
+  }
+  
+  validatePassengerDetails(details: any): boolean {
+    this.passengerValidationErrors = {};
+    let isValid = true;
+
+    // Validate First Name
+    if (!details.firstName || !details.firstName.trim()) {
+      this.passengerValidationErrors.firstName = 'First name is required';
+      isValid = false;
+    }
+
+    // Validate Last Name
+    if (!details.lastName || !details.lastName.trim()) {
+      this.passengerValidationErrors.lastName = 'Last name is required';
+      isValid = false;
+    }
+
+    // Validate Gender
+    if (!details.gender || !details.gender.trim()) {
+      this.passengerValidationErrors.gender = 'Gender is required';
+      isValid = false;
+    }
+
+    // Validate Date of Birth
+    if (!details.dobDay || !details.dobDay.trim()) {
+      this.passengerValidationErrors.dobDay = 'Date of birth is required';
+      isValid = false;
+    }
+    if (!details.dobMonth || !details.dobMonth.trim()) {
+      this.passengerValidationErrors.dobMonth = 'Date of birth is required';
+      isValid = false;
+    }
+    if (!details.dobYear || !details.dobYear.trim()) {
+      this.passengerValidationErrors.dobYear = 'Date of birth is required';
+      isValid = false;
+    }
+
+    // Validate Email (for adults only)
+    if (this.currentPassengerType === 'adult') {
+      if (!details.email || !details.email.trim()) {
+        this.passengerValidationErrors.email = 'Email is required';
+        isValid = false;
+      } else {
+        // Email format validation
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(details.email.trim())) {
+          this.passengerValidationErrors.email = 'Please enter a valid email address';
+          isValid = false;
+        }
+      }
+    }
+
+    // Validate Mobile Number (for adults only)
+    if (this.currentPassengerType === 'adult') {
+      if (!details.mobileNumber || !details.mobileNumber.trim()) {
+        this.passengerValidationErrors.mobileNumber = 'Mobile number is required';
+        isValid = false;
+      } else if (details.mobileNumber.length < 10) {
+        this.passengerValidationErrors.mobileNumber = 'Mobile number must be at least 10 digits';
+        isValid = false;
+      }
+    }
+
+    // Validate Passport Number (if required)
+    if (this.passportInfoRequired && (!details.passportNumber || !details.passportNumber.trim())) {
+      this.passengerValidationErrors.passportNumber = 'Passport number is required';
+      isValid = false;
+    }
+
+    // Validate PAN Number (if required)
+    if (this.panInfoRequired && (!details.panNumber || !details.panNumber.trim())) {
+      this.passengerValidationErrors.panNumber = 'PAN number is required';
+      isValid = false;
+    }
+
+    this.cdr.detectChanges();
+    return isValid;
+  }
+
   savePassengerDetails(details: any) {
+    // Validate before saving
+    if (!this.validatePassengerDetails(details)) {
+      return; // Don't save if validation fails
+    }
+
     const arr = this.currentPassengerType === 'adult' ? this.travellers : this.currentPassengerType === 'child' ? this.children : this.infants;
     if (arr[this.currentPassengerIndex]) {
       Object.assign(arr[this.currentPassengerIndex], details);
