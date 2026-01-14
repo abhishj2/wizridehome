@@ -1809,6 +1809,49 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return flight.Segments?.[0]?.length > 0 ? flight.Segments[0].length - 1 : 0;
   }
 
+  // Helper methods for multi-city desktop layout
+  getLastSegmentArrivalTime(flight: any, tabIndex: number): Date {
+    const segments = flight.Segments?.[tabIndex] || flight.Segments?.[0] || [];
+    if (!Array.isArray(segments) || segments.length === 0) {
+      return new Date();
+    }
+    const lastSegment = Array.isArray(segments[segments.length - 1]) 
+      ? segments[segments.length - 1] 
+      : segments[segments.length - 1];
+    return lastSegment?.Destination?.ArrTime ? new Date(lastSegment.Destination.ArrTime) : new Date();
+  }
+
+  getLastSegmentDestination(flight: any, tabIndex: number): any {
+    const segments = flight.Segments?.[tabIndex] || flight.Segments?.[0] || [];
+    if (!Array.isArray(segments) || segments.length === 0) {
+      return { ArrTime: new Date(), Airport: { CityName: '' } };
+    }
+    const lastSegment = Array.isArray(segments[segments.length - 1]) 
+      ? segments[segments.length - 1] 
+      : segments[segments.length - 1];
+    return lastSegment?.Destination || { ArrTime: new Date(), Airport: { CityName: '' } };
+  }
+
+  // Helper method to check if value is array (for template use)
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  // Helper method to normalize group to array
+  normalizeGroupToArray(group: any): any[] {
+    return Array.isArray(group) ? group : [group];
+  }
+
+  // Helper method to get day difference for multi-city
+  getDayDiffForMultiCity(flight: any, tabIndex: number): number {
+    const depTime = flight.Segments?.[tabIndex]?.[0]?.[0]?.Origin?.DepTime || flight.Segments?.[0]?.[0]?.Origin?.DepTime;
+    const arrTime = this.getLastSegmentArrivalTime(flight, tabIndex);
+    if (!depTime || !arrTime) return 0;
+    const depTimeStr = depTime instanceof Date ? depTime.toISOString() : (typeof depTime === 'string' ? depTime : new Date(depTime).toISOString());
+    const arrTimeStr = arrTime instanceof Date ? arrTime.toISOString() : (typeof arrTime === 'string' ? arrTime : new Date(arrTime).toISOString());
+    return this.getDayDiff(depTimeStr, arrTimeStr);
+  }
+
   applyAllFilters(): void {
     // Ensure we have original data backed up
     if (!this.originalGroupedFlights || this.originalGroupedFlights.length === 0) {

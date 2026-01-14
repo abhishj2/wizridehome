@@ -4057,7 +4057,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.onAirportSelected('from', displayValue);
       }
     } else {
+      // When selecting 'to' for a route, auto-populate the next route's 'from'
+      const oldDestination = this.flightRoutes[routeIndex].to;
       this.flightRoutes[routeIndex].to = displayValue;
+      
+      // Auto-populate next route's 'from' if it exists and is empty or matches old destination
+      if (routeIndex < this.flightRoutes.length - 1) {
+        const nextRoute = this.flightRoutes[routeIndex + 1];
+        if (!nextRoute.from || nextRoute.from === oldDestination) {
+          nextRoute.from = displayValue;
+        }
+      }
+      
       // Trigger calendar fare fetching for first route
       if (routeIndex === 0) {
         this.onAirportSelected('to', displayValue);
@@ -4069,8 +4080,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addFlightRoute() {
     if (this.flightRoutes.length < 5) {
+      // Auto-populate 'from' with the previous route's 'to' value
+      const previousRoute = this.flightRoutes[this.flightRoutes.length - 1];
+      const autoFrom = previousRoute?.to || '';
+      
       this.flightRoutes.push({
-        from: '',
+        from: autoFrom,
         to: '',
         date: ''
       });
