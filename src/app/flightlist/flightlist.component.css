@@ -2227,13 +2227,17 @@ img {
 
 
 @media (max-width: 768px) {
+  .date-slider-container{
+    min-height: auto !important;
+  }
   .date-slider-bar {
-    padding: 8px 16px;
+    padding: 0px !important;
     margin-bottom: 12px;
     border-radius: 0;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    min-height: auto !important;  
   }
 
   .date-slider-wrapper {
