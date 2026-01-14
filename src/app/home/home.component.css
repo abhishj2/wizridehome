@@ -434,6 +434,52 @@ h2 {
     color: darkcyan;
 }
 
+/* Special Fares Section */
+.special-fares-section {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.special-fares-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #474747;
+    margin-bottom: 12px;
+}
+
+.special-fares-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.special-fare-btn {
+    padding: 10px 20px;
+    border: 1px solid #e9ecef;
+    background: #ffffff;
+    color: #474747;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.special-fare-btn.active {
+    background: darkcyan;
+    color: #ffffff;
+    border-color: darkcyan;
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+}
+
+.special-fare-btn:not(.active):hover {
+    background: rgba(0, 139, 139, 0.1);
+    color: darkcyan;
+    border-color: rgba(0, 139, 139, 0.3);
+}
+
 /* Form Layout */
 .cab-form-row,
 .form-row {
@@ -4495,6 +4541,53 @@ button.nav-tab.active img {
     /* Extra spacing between form blocks on mobile */
     .wr-panel .wr-field-block {
         margin-bottom: 20px;
+    }
+
+    /* Mobile Special Fares Section */
+    .wr-special-fares-mobile {
+        margin-top: 16px;
+    }
+
+    .wr-special-fares-buttons {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+    .wr-special-fare-btn {
+        flex: 1 1 calc(33.333% - 4px);
+        min-width: 0;
+        padding: 10px 8px;
+        border: 1px solid #e9ecef;
+        background: #ffffff;
+        color: #474747;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 12px;
+        white-space: normal;
+        word-wrap: break-word;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .wr-special-fare-btn.active {
+        background: darkcyan;
+        color: #ffffff;
+        border-color: darkcyan;
+        box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+    }
+
+    .wr-special-fare-btn:not(.active):hover {
+        background: rgba(0, 139, 139, 0.1);
+        color: darkcyan;
+        border-color: rgba(0, 139, 139, 0.3);
+    }
+
+    .wr-special-fare-btn:not(.active):active {
+        background: rgba(0, 139, 139, 0.15);
     }
 }
 

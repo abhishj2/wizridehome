@@ -1397,6 +1397,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Flight-specific
   selectedClass = 'economy';
   tripType = 'one-way'; // 'one-way', 'round-trip', 'multi-city'
+  fareType: 'regular' | 'student' | 'senior' | 'armed' | 'doctor' = 'regular';
   counts: TravelerCounts = { adults: 1, children: 0, infants: 0 };
   flightRoutes: {
     from: string;
@@ -2329,6 +2330,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     setTimeout(() => {
       // Trip type changed - no need to re-initialize datepickers
     }, 0);
+  }
+
+  setFareType(type: 'regular' | 'student' | 'senior' | 'armed' | 'doctor') {
+    this.fareType = type;
   }
 
   /** -------------------
@@ -4492,7 +4497,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       toAirportCode: this.selectedTo?.code || '',
       departureDate: departureDate,
       returnDate: returnDate,
-      fareType: 'regular',
+      fareType: this.fareType,
       adults: this.counts.adults,
       children: this.counts.children,
       infants: this.counts.infants,
@@ -4725,7 +4730,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       toAirportCode: this.selectedTo?.code || '',
       departureDate: departureDate,
       returnDate: returnDate,
-      fareType: 'regular',
+      fareType: this.fareType,
       adults: this.counts.adults,
       children: this.counts.children,
       infants: this.counts.infants,
@@ -5525,7 +5530,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         ? this.flightRoutes[0]?.date
         : (this.flightRoutes[0]?.date || this.formValues.flightDeparture),
       returnDate: this.tripType === 'round-trip' ? this.formValues.flightReturn : null,
-      fareType: 'regular', // Default fare type
+      fareType: this.fareType,
       adults: this.counts.adults,
       children: this.counts.children,
       infants: this.counts.infants,

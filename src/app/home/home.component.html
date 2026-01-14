@@ -546,6 +546,35 @@
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
+
+                                <!-- Special Fares Section -->
+                                <div class="special-fares-section">
+                                    <label class="special-fares-label">Special Fares* (Optional)</label>
+                                    <div class="special-fares-buttons">
+                                        <button
+                                            class="special-fare-btn"
+                                            [class.active]="fareType === 'student'"
+                                            (click)="setFareType('student')"
+                                            type="button">
+                                            Student Fare
+                                        </button>
+                                        <button
+                                            class="special-fare-btn"
+                                            [class.active]="fareType === 'senior'"
+                                            (click)="setFareType('senior')"
+                                            type="button">
+                                            Senior Citizen
+                                        </button>
+                                        <button
+                                            class="special-fare-btn"
+                                            [class.active]="fareType === 'armed'"
+                                            (click)="setFareType('armed')"
+                                            type="button">
+                                            Armed Forces
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div class="features">
                                     <div class="feature">
                                         
@@ -1017,6 +1046,34 @@
             </select>
           </div>
           <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputFlights, $event)" (click)="openCustomKeypad(phoneInputFlights, $event)" [readonly]="isMobileView()">
+        </div>
+      </div>
+
+      <!-- Special Fares Section (Mobile) -->
+      <div class="wr-field-block wr-special-fares-mobile">
+        <div class="wr-field-label">Special Fares* (Optional)</div>
+        <div class="wr-special-fares-buttons">
+          <button
+            class="wr-special-fare-btn"
+            [class.active]="fareType === 'student'"
+            (click)="setFareType('student')"
+            type="button">
+            Student Fare
+          </button>
+          <button
+            class="wr-special-fare-btn"
+            [class.active]="fareType === 'senior'"
+            (click)="setFareType('senior')"
+            type="button">
+            Senior Citizen
+          </button>
+          <button
+            class="wr-special-fare-btn"
+            [class.active]="fareType === 'armed'"
+            (click)="setFareType('armed')"
+            type="button">
+            Armed Forces
+          </button>
         </div>
       </div>
     </div>
