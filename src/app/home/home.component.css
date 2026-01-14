@@ -435,10 +435,7 @@ h2 {
 }
 
 /* Special Fares Section */
-.special-fares-section {
-    margin-top: 24px;
-    margin-bottom: 24px;
-}
+
 
 .special-fares-label {
     display: block;
@@ -3565,6 +3562,9 @@ button.nav-tab img {
 
 .features {
     padding: 50px 0 0px !important;
+}
+.tab-2 .features{
+    padding: 30px 0 0px !important;
 }
 
 button.nav-tab img {

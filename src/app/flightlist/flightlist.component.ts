@@ -588,7 +588,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.flightInputData['toAirportCode'],
       this.flightInputData['travelClass'] || 'Economy',
       this.flightInputData['departureDate'],
-      2
+      this.getFareTypeNumber(this.flightInputData['fareType'])
     ).subscribe({
       next: (val: any) => {
         console.log('=== ONE-WAY FLIGHT API RESPONSE ===');
@@ -759,7 +759,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.flightInputData['travelClass'],
       this.flightInputData['departureDate'],
       this.flightInputData['returnDate'],
-      2
+      this.getFareTypeNumber(this.flightInputData['fareType'])
     ).subscribe({
       next: (val: any) => {
         console.log('Round-trip Flight API Response:', val);
@@ -945,7 +945,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.flightInputData['children'] || 0,
       this.flightInputData['infants'] || 0,
       formattedSegments,
-      this.flightInputData['fareType'] || 2
+      this.getFareTypeNumber(this.flightInputData['fareType'])
     ).subscribe({
       next: (val: any) => {
         console.log('Multi-city Flight API Response:', val);
@@ -1336,7 +1336,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.flightInputData['toAirportCode'],
         this.flightInputData['travelClass'],
         this.highlightedDate,
-        2
+        this.getFareTypeNumber(this.flightInputData['fareType'])
       ).subscribe({
         next: (val: any) => {
           console.log('Flight Data', val);
@@ -3065,6 +3065,24 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
   }
 
+  /**
+   * Convert fareType string to API number format
+   * Based on reference: 2 = Regular, 3 = Student, 4 = Armed Forces, 5 = Senior Citizen
+   */
+  getFareTypeNumber(fareType: string | undefined): number {
+    if (!fareType || fareType === 'regular') {
+      return 2; // Regular fare (default)
+    }
+    const fareTypeMap: { [key: string]: number } = {
+      'regular': 2,
+      'student': 3,
+      'armed': 4,
+      'senior': 5,
+      'doctor': 6
+    };
+    return fareTypeMap[fareType] || 2; // Default to regular if unknown
+  }
+
   scrollMulticityTabs(direction: 'left' | 'right'): void {
     if (!this.isBrowser || !this.multicityScrollContainer) return;
     const container = this.multicityScrollContainer?.nativeElement;
@@ -3205,7 +3223,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       tripType: 'multi',
       multiCitySegment: this.flightInputData['multiCitySegment'],
       multiCitySelectedFares: this.multicitySelectedFares,
-      fareType: this.flightInputData['fareType'] || 2,
+      fareType: this.getFareTypeNumber(this.flightInputData['fareType']),
       adults: this.flightInputData['adults'] || 1,
       children: this.flightInputData['children'] || 0,
       infants: this.flightInputData['infants'] || 0,
