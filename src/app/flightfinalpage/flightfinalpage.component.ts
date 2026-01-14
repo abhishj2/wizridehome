@@ -334,25 +334,52 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
     }
   
-    // Wait for dialer + modal to render, then scroll
+    // Wait for dialer animation to complete (300ms) + extra buffer, then scroll
     setTimeout(() => {
       this.scrollToContactInput();
-    }, 300);
+    }, 600);
   }
   private scrollToContactInput(): void {
     if (!isPlatformBrowser(this.platformId) || !this.contactMobileInput) return;
   
     const el = this.contactMobileInput.nativeElement;
-  
-    el.focus({ preventScroll: true });
-  
-    const yOffset = -120; // header offset
-    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-  
-    window.scrollTo({
-      top: y,
-      behavior: 'smooth'
-    });
+    
+    // Find the modal popup which is the scrollable container
+    const modal: HTMLElement | null = el.closest('.trip-popup') as HTMLElement;
+    
+    if (modal) {
+      // Get dialer height (approximately 280px with reduced size)
+      const dialerHeight = 280;
+      const modalRect = modal.getBoundingClientRect();
+      const elementRect = el.getBoundingClientRect();
+      
+      // Calculate the visible area of the modal (above the dialer)
+      const visibleHeight = modalRect.height - dialerHeight;
+      
+      // Calculate element position relative to modal's scroll position
+      const elementTopRelative = elementRect.top - modalRect.top + modal.scrollTop;
+      
+      // We want the input to be visible with padding above the dialer
+      // Calculate target scroll position to show input in the visible area
+      const inputHeight = elementRect.height;
+      const padding = 20; // Padding above input
+      const targetScrollTop = elementTopRelative - (visibleHeight - inputHeight - padding);
+      
+      // Only scroll if the element is not already visible
+      if (targetScrollTop > modal.scrollTop || elementRect.bottom > (modalRect.top + visibleHeight)) {
+        modal.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Fallback: try to scroll the input into view
+      el.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
   }
 
   closePhoneDialer(): void {

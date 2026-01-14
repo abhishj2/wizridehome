@@ -30,6 +30,26 @@ img {
   box-sizing: border-box;
 }
 
+/* Mobile container padding reduction */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  .results-main {
+    padding: 16px 0 40px 0;
+  }
+
+  .search-summary {
+    margin: 8px 0 12px 0;
+    padding: 10px 12px !important;
+  }
+
+  .search-summary.sticky {
+    padding: 10px 12px !important;
+  }
+}
+
 /* Desktop container fixes */
 @media (min-width: 1201px) {
   .container {
@@ -4040,7 +4060,7 @@ img {
   }
 
   .flight-card-component__flight-leg {
-    padding: 16px;
+    padding: 16px 12px;
     border-bottom: 1px solid #f0f0f0;
   }
 
@@ -4184,7 +4204,7 @@ img {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 12px;
     background: #fafafa;
   }
 
@@ -4221,7 +4241,7 @@ img {
   .flight-card-component__badges__intreturn {
     display: flex;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 10px 12px;
     background: #f1f4f9;
     border-top: 1px solid #f0f0f0;
     justify-content: space-between;
@@ -4237,7 +4257,7 @@ img {
   }
 
   .flight-card-component__group-separator {
-    padding: 12px 16px;
+    padding: 12px;
     display: flex;
     align-items: center;
   }
@@ -4251,7 +4271,7 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
+    padding: 14px 12px;
     cursor: pointer;
     transition: background 0.2s ease;
     background: #f1f4f9 !important;
@@ -4311,7 +4331,7 @@ img {
     border-radius: 0;
     box-shadow: none;
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
   .card .flight-card-component__flight-card {

@@ -20,7 +20,7 @@
     background: #f8f9fa;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    padding: 16px 12px 24px;
+    padding: 12px 10px 16px;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     max-width: 100%;
     margin: 0 auto;
@@ -31,8 +31,8 @@
 .keypad-row {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
 .keypad-row:last-of-type {
@@ -41,11 +41,11 @@
 
 .keypad-btn {
     flex: 1;
-    height: 48px;
+    height: 40px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 20px;
+    border-radius: 8px;
+    font-size: 18px;
     font-weight: 600;
     color: #111827;
     cursor: pointer;
@@ -99,24 +99,24 @@
 }
 
 .keypad-btn-backspace svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     pointer-events: none;
 }
 
 .keypad-row-done {
-    margin-top: 8px;
+    margin-top: 6px;
     margin-bottom: 0;
 }
 
 .keypad-btn-done {
     width: 100%;
-    height: 50px;
+    height: 44px;
     background: #0f9d92;
     color: #ffffff;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     display: flex;

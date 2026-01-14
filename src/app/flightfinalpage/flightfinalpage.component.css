@@ -2668,6 +2668,25 @@ body {
     transform: none;
     border-radius: 20px 20px 0 0;
   }
+
+  /* Stack add-baggage section vertically on mobile */
+  .add-baggage {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .add-left {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .add-baggage .add-btn {
+    width: 100%;
+    margin-top: 0;
+  }
 }
 
 /* Shimmer Loading Styles */
