@@ -692,6 +692,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         }
         this.loader = false;
         console.log('Flight fetch complete. Loader set to false.');
+        // Scroll to top on mobile after data loads
+        this.scrollToTopOnMobile();
       },
       error: (error) => {
         console.error('Error fetching one-way flights:', error);
@@ -810,6 +812,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.generateRoundtripDynamicFilters();
         this.loader = false;
         console.log('Round-trip flight fetch complete. Loader set to false.');
+        // Scroll to top on mobile after data loads
+        this.scrollToTopOnMobile();
       },
       error: (error) => {
         console.error('Error fetching round-trip flights:', error);
@@ -1051,6 +1055,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         console.log('Processed multi-city tab data:', this.multicityTabData);
         console.log('Grouped flights count:', this.groupedFlights.length);
         this.loader = false;
+        // Scroll to top on mobile after data loads
+        this.scrollToTopOnMobile();
       },
       error: (error) => {
         console.error('Error fetching multi-city flights:', error);
@@ -1254,7 +1260,38 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.activeTab = 'onward';
           this.updateUnderlineStyle();
         }
+        // Scroll to top on mobile when page loads
+        this.scrollToTopOnMobile();
       });
+    }
+  }
+
+  /**
+   * Scrolls to top of the page on mobile devices
+   */
+  scrollToTopOnMobile(): void {
+    if (!this.isBrowser) return;
+    
+    // Check if mobile (width <= 768px)
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Use smooth scroll to top
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+      
+      // Also try document.documentElement and document.body for better compatibility
+      setTimeout(() => {
+        if (document.documentElement) {
+          document.documentElement.scrollTop = 0;
+        }
+        if (document.body) {
+          document.body.scrollTop = 0;
+        }
+      }, 100);
     }
   }
 
