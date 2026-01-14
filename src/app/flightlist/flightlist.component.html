@@ -764,37 +764,37 @@
                           </div>
                         </ng-container>
 
-                        <div class="flight-card-component__badges__intreturn aa" *ngIf="group?.length">
+                        <div class="flight-card-component__badges__intreturn" *ngIf="group?.length">
                           <span class="flight-card-component__pill">
                             {{ group.length - 1 === 0 ? "Non Stop" : group.length - 1 + " Stop" }}
                           </span>
                           <span class="flight-card-component__pill">
                             {{ getGroupDuration(group) }}
                           </span>
-                          <div *ngIf="groupIndex < flight.Segments.length - 1"
-                            class="flight-card-component__group-separator">
-                            <div class="flight-card-component__dotted-line"></div>
-                          </div>
-                          <div class="flight-card-component__footer">
-                            <div class="flight-card-component__price">
-                              <div class="flight-card-component__amount">
-                                ₹ {{ flight.price | number : "1.0-0" }}
-                              </div>
-                              <div class="flight-card-component__per">per Adult</div>
-                            </div>
-                            <button class="flight-card-component__view-prices-btn desktop-only"
-                              (click)="openFareOptionsModal(flight); $event.stopPropagation()">
-                              View Prices
-                            </button>
-                          </div>
                         </div>
 
                         <!-- Separator Between Segment Groups -->
-
+                        <div *ngIf="groupIndex < flight.Segments.length - 1"
+                          class="flight-card-component__group-separator">
+                          <div class="flight-card-component__dotted-line"></div>
+                        </div>
                       </ng-container>
 
                       <!-- Footer -->
-
+                      <div class="flight-card-component__footer">
+                        <div class="flight-card-component__badges">
+                        </div>
+                        <div class="flight-card-component__price">
+                          <div class="flight-card-component__amount">
+                            ₹ {{ flight.price | number : "1.0-0" }}
+                          </div>
+                          <div class="flight-card-component__per">per Adult</div>
+                        </div>
+                        <button class="flight-card-component__view-prices-btn desktop-only"
+                          (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                          View Prices
+                        </button>
+                      </div>
                     </section>
                   </ng-container>
 
@@ -873,29 +873,27 @@
                         </div>
                       </ng-container>
 
-                      <div class="flight-card-component__badges__intreturn">
-                        <span class="flight-card-component__pill">
-                          {{ flight.Segments[0].length - 1 === 0 ? "Non Stop" : flight.Segments[0].length - 1 + " Stop"
-                          }}
-                        </span>
-                        <span class="flight-card-component__pill">
-                          {{ getTotalDuration(flight.Segments[0]) }}
-                        </span>
-                        <div class="flight-card-component__footer">
-                          <div class="flight-card-component__price">
-                            <div class="flight-card-component__amount">
-                              ₹ {{ flight.price | number : "1.0-0" }}
-                            </div>
-                            <div class="flight-card-component__per">per Adult</div>
-                          </div>
-                          <button class="flight-card-component__view-prices-btn desktop-only"
-                            (click)="openFareOptionsModal(flight); $event.stopPropagation()">
-                            View Prices
-                          </button>
+                      <div class="flight-card-component__footer">
+                        <div class="flight-card-component__badges">
+                          <span class="flight-card-component__pill">
+                            {{ flight.Segments[0].length - 1 === 0 ? "Non Stop" : flight.Segments[0].length - 1 + " Stop"
+                            }}
+                          </span>
+                          <span class="flight-card-component__pill">
+                            {{ getTotalDuration(flight.Segments[0]) }}
+                          </span>
                         </div>
+                        <div class="flight-card-component__price">
+                          <div class="flight-card-component__amount">
+                            ₹ {{ flight.price | number : "1.0-0" }}
+                          </div>
+                          <div class="flight-card-component__per">per Adult</div>
+                        </div>
+                        <button class="flight-card-component__view-prices-btn desktop-only"
+                          (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                          View Prices
+                        </button>
                       </div>
-
-                    
                     </section>
                   </ng-template>
                   <!-- END NEW MOBILE FLIGHT CARD DESIGN -->
@@ -1296,25 +1294,25 @@
                                   <span class="flight-card-component__pill">{{ group.length - 1 === 0 ? "Non Stop" :
                                     group.length - 1 + " Stop" }}</span>
                                   <span class="flight-card-component__pill">{{ getGroupDuration(group) }}</span>
-                                  <div class="flight-card-component__footer">
-                                    <div class="flight-card-component__price">
-                                      <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
-                                      </div>
-                                      <div class="flight-card-component__per">per Adult</div>
-                                    </div>
-                                    <button class="flight-card-component__view-prices-btn desktop-only"
-                                      (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
-                                      View Prices
-                                    </button>
-                                  </div>
-                                  <div *ngIf="groupIndex < flight.Segments.length - 1"
+                                </div>
+                                <div *ngIf="groupIndex < flight.Segments.length - 1"
                                   class="flight-card-component__group-separator">
                                   <div class="flight-card-component__dotted-line"></div>
                                 </div>
-                                </div>
-                               
                               </ng-container>
-                             
+                              <div class="flight-card-component__footer">
+                                <div class="flight-card-component__badges">
+                                </div>
+                                <div class="flight-card-component__price">
+                                  <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
+                                  </div>
+                                  <div class="flight-card-component__per">per Adult</div>
+                                </div>
+                                <button class="flight-card-component__view-prices-btn desktop-only"
+                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                                  View Prices
+                                </button>
+                              </div>
                             </section>
                           </ng-container>
                           <ng-template #singleSegmentBlockOnward>
@@ -1372,24 +1370,23 @@
                                   <div class="flight-card-component__dotted-line"></div>
                                 </div>
                               </ng-container>
-                              <div class="flight-card-component__badges__intreturn">
-                                <span class="flight-card-component__pill">{{ flight.Segments[0].length - 1 === 0 ? "Non
-                                  Stop" : flight.Segments[0].length - 1 + " Stop" }}</span>
-                                <span class="flight-card-component__pill">{{ getTotalDuration(flight.Segments[0])
-                                  }}</span>
-                                  <div class="flight-card-component__footer">
-                                    <div class="flight-card-component__price">
-                                      <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
-                                      </div>
-                                      <div class="flight-card-component__per">per Adult</div>
-                                    </div>
-                                    <button class="flight-card-component__view-prices-btn desktop-only"
-                                      (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
-                                      View Prices
-                                    </button>
+                              <div class="flight-card-component__footer">
+                                <div class="flight-card-component__badges">
+                                  <span class="flight-card-component__pill">{{ flight.Segments[0].length - 1 === 0 ? "Non
+                                    Stop" : flight.Segments[0].length - 1 + " Stop" }}</span>
+                                  <span class="flight-card-component__pill">{{ getTotalDuration(flight.Segments[0])
+                                    }}</span>
+                                </div>
+                                <div class="flight-card-component__price">
+                                  <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
                                   </div>
+                                  <div class="flight-card-component__per">per Adult</div>
+                                </div>
+                                <button class="flight-card-component__view-prices-btn desktop-only"
+                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                                  View Prices
+                                </button>
                               </div>
-                              
                             </section>
                           </ng-template>
                           <!-- END NEW MOBILE FLIGHT CARD DESIGN -->
@@ -1701,6 +1698,8 @@
                                 </div>
                               </ng-container>
                               <div class="flight-card-component__footer">
+                                <div class="flight-card-component__badges">
+                                </div>
                                 <div class="flight-card-component__price">
                                   <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
                                   </div>
@@ -1768,18 +1767,22 @@
                                   <div class="flight-card-component__dotted-line"></div>
                                 </div>
                               </ng-container>
-                              <div class="flight-card-component__badges__intreturn">
-                                <span class="flight-card-component__pill">{{ flight.Segments[0].length - 1 === 0 ? "Non
-                                  Stop" : flight.Segments[0].length - 1 + " Stop" }}</span>
-                                <span class="flight-card-component__pill">{{ getTotalDuration(flight.Segments[0])
-                                  }}</span>
-                              </div>
                               <div class="flight-card-component__footer">
+                                <div class="flight-card-component__badges">
+                                  <span class="flight-card-component__pill">{{ flight.Segments[0].length - 1 === 0 ? "Non
+                                    Stop" : flight.Segments[0].length - 1 + " Stop" }}</span>
+                                  <span class="flight-card-component__pill">{{ getTotalDuration(flight.Segments[0])
+                                    }}</span>
+                                </div>
                                 <div class="flight-card-component__price">
                                   <div class="flight-card-component__amount">₹ {{ flight.price | number : "1.0-0" }}
                                   </div>
                                   <div class="flight-card-component__per">per Adult</div>
                                 </div>
+                                <button class="flight-card-component__view-prices-btn desktop-only"
+                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
+                                  View Prices
+                                </button>
                               </div>
                             </section>
                           </ng-template>

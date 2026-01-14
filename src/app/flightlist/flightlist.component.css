@@ -4245,28 +4245,30 @@ img {
 
   .flight-card-component__footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 14px 16px;
     cursor: pointer;
     transition: background 0.2s ease;
     background: #f1f4f9 !important;
-    padding: 0 !important;
   }
 
 
-  /*  
-  .flight-card-component__footer-label {
-    font-size: 11px;
-    color: #6b7280;
-    font-weight: 500;
-  }
 
   .flight-card-component__badges {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-  } */
+    gap: 8px;
+    align-items: center;
+  }
+
+  .flight-card-component__badges .flight-card-component__pill {
+    background: #eee;
+    color: #374151;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
 
   .flight-card-component__price {
     display: flex;
@@ -4637,6 +4639,21 @@ img {
 
   .flight-card-component__footer:hover {
     background: transparent !important;
+  }
+
+  .flight-card-component__badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .flight-card-component__badges .flight-card-component__pill {
+    background: #eee;
+    color: #374151;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
   }
 
   .flight-card-component__price {
