@@ -87,7 +87,24 @@
         <div class="summary-content">
           <div class="summary-info">
             <div class="route-summary">
-              <div class="route-locations">
+              <!-- Multi-City Route Display -->
+              <div class="route-locations multicity-route-display" *ngIf="flightType === 'multi' && multicityTabData && multicityTabData.length > 0">
+                <div class="multicity-segment-item" *ngFor="let segment of multicityTabData; let i = index">
+                  <div class="location-group">
+                    <span class="from">{{ getMultiCityRouteOrigin(i) }}</span>
+                  </div>
+                  <i class="fas fa-plane"></i>
+                  <div class="location-group">
+                    <span class="to">{{ getMultiCityRouteDestination(i) }}</span>
+                  </div>
+                  <span class="segment-date" *ngIf="getMultiCityRouteDate(i)">{{ getMultiCityRouteDate(i) | date : "d MMM" }}</span>
+                  <span class="segment-separator" *ngIf="i < multicityTabData.length - 1">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </span>
+                </div>
+              </div>
+              <!-- One-Way / Round-Trip Route Display -->
+              <div class="route-locations" *ngIf="flightType !== 'multi'">
                 <div class="location-group">
                   <span class="from">{{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}</span>
                   <span class="location-detail" *ngIf="flightInputData['fromAirportCode']">({{
@@ -101,7 +118,7 @@
                 </div>
               </div>
               <div class="journey-details">
-                <span class="date">{{ flightInputData['departureDate'] | date : "d MMM, yyyy" }}</span>
+                <span class="date" *ngIf="flightType !== 'multi'">{{ flightInputData['departureDate'] | date : "d MMM, yyyy" }}</span>
                 <span class="date" *ngIf="flightType === 'round' && flightInputData['returnDate']">{{
                   flightInputData['returnDate'] | date : "d MMM, yyyy" }}</span>
                 <span class="passengers">{{ totalPassengers }} {{ totalPassengers > 1 ? 'Passengers' : 'Passenger'
@@ -2313,32 +2330,14 @@
 
         <!-- Multi-City Flights -->
         <div *ngIf="flightType === 'multi'">
-            <!-- Multi-City Tab Navigation -->
-            <div class="multicity-tabs-wrapper" *ngIf="multicityTabData && multicityTabData.length > 0">
-              <button class="tab-scroll-btn left" (click)="scrollMulticityTabs('left')"
-                *ngIf="multicityTabData.length > 1">
-                ‹
-              </button>
-              <div class="multicity-tabs-container" #multicityScrollContainer>
-                <div class="multicity-tab" *ngFor="let segment of multicityTabData; let i = index"
+            <!-- Multi-City Segment Selector (Simplified - for selecting which segment to view) -->
+            <div class="multicity-segment-selector" *ngIf="multicityTabData && multicityTabData.length > 1">
+              <div class="segment-selector-tabs">
+                <button class="segment-tab" *ngFor="let segment of multicityTabData; let i = index"
                   [class.active]="selectedMulticityTab === i" (click)="selectMulticityTab(i)">
-                  <div class="multicity-tab-route">
-                    <span>{{ getMultiCityRouteOrigin(i) }}</span>
-                    <i class="fas fa-plane"></i>
-                    <span>{{ getMultiCityRouteDestination(i) }}</span>
-                  </div>
-                  <div class="multicity-tab-date">
-                    {{ getMultiCityRouteDate(i) | date : "d MMM" }}
-                  </div>
-                  <div class="multicity-tab-status" *ngIf="multicitySelectedFares[i]">
-                    <i class="fas fa-check-circle"></i> Selected
-                  </div>
-                </div>
+                  Route {{ i + 1 }}
+                </button>
               </div>
-              <button class="tab-scroll-btn right" (click)="scrollMulticityTabs('right')"
-                *ngIf="multicityTabData.length > 1">
-                ›
-              </button>
             </div>
 
             <div class="results-layout" *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
