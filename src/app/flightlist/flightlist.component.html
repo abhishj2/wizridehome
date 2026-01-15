@@ -2573,7 +2573,7 @@
                           </div>
                           <div class="flight-card-component__per">per Adult</div>
                         </div>
-                        <button class="flight-card-component__view-prices-btn"
+                        <button class="flight-card-component__view-prices-btn desktop-only"
                           (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
                           View Prices
                         </button>
@@ -2671,7 +2671,7 @@
                           </div>
                           <div class="flight-card-component__per">per Adult</div>
                         </div>
-                        <button class="flight-card-component__view-prices-btn"
+                        <button class="flight-card-component__view-prices-btn desktop-only"
                           (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
                           View Prices
                         </button>
@@ -2944,8 +2944,8 @@
       </div>
     </div>
 
-    <!-- Fare Options Modal - Multi-City -->
-    <div class="custom-modal-overlay" *ngIf="showFareModalMultiCity" (click)="closeFareOptionsModalMultiCity()">
+    <!-- Fare Options Modal - Multi-City (Desktop) -->
+    <div class="custom-modal-overlay desktop-only" *ngIf="showFareModalMultiCity" (click)="closeFareOptionsModalMultiCity()">
       <div class="custom-modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModalMultiCity()">×</button>
         <div class="fare-options-box">
@@ -3013,10 +3013,96 @@
             <span>TOTAL FOR ALL SEGMENTS (1 ADULT)</span>
           </div>
           <div class="fare-action-buttons">
-            <button class="continue-book-btn" (click)="closeFareOptionsModalMultiCity()">
-              CONTINUE SELECTING
+            <button class="continue-book-btn" [class.disabled]="!multicityHasSelectedFares"
+              [disabled]="!multicityHasSelectedFares" (click)="proceedWithMultiCityBooking()">
+              BOOK NOW
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fare Options Modal - Multi-City (Mobile - Bottom Sliding) -->
+    <div class="fare-popup-overlay-mobile" *ngIf="showFareModalMultiCity" (click)="closeFareOptionsModalMultiCity()"></div>
+    <div class="fare-popup animated" *ngIf="showFareModalMultiCity && selectedMultiCityFlight"
+      (click)="$event.stopPropagation()">
+      <div class="fare-header">
+        <span><strong>MORE FARE OPTIONS</strong> available for segment {{ selectedMultiCitySegmentIndex + 1 }}.</span>
+        <button (click)="closeFareOptionsModalMultiCity()">×</button>
+      </div>
+      <div class="fare-body">
+        <div class="fare-trip-info" *ngIf="selectedMultiCityFlight" style="padding: 12px 0; border-bottom: 1px solid #eee; margin-bottom: 16px; font-size: 13px; color: #666;">
+          {{ selectedMultiCityFlight.Origin.Airport.CityName }} → {{ selectedMultiCityFlight.Destination.Airport.CityName }} · {{ selectedMultiCityFlight.airline }} · {{ selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y" }} · {{ selectedMultiCityFlight.Origin.DepTime | date : "HH:mm" }} - {{ selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm" }}
+        </div>
+        <div class="fare-card" *ngFor="let fare of selectedMultiCityFlight?.FareOptions; let i = index">
+          <div class="fare-top">
+            <div>
+              <div class="fare-title">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+              <div class="fare-sub">Fare Offered By Airline</div>
+            </div>
+            <div class="fare-price">
+              ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
+              <div class="per">per Adult</div>
+            </div>
+          </div>
+          <div class="fare-detail">
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-suitcase"></i> Cabin Bag
+              </div>
+              <div class="fare-right">{{ fare.Segments[0][0].CabinBaggage }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-suitcase-rolling"></i> Check-in Bag
+              </div>
+              <div class="fare-right">{{ fare.Segments[0][0].Baggage }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-times-circle"></i> Cancellation
+              </div>
+              <div class="fare-right">{{ getCancellationRule(fare) }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-exchange-alt"></i> Date Change
+              </div>
+              <div class="fare-right">{{ getDateChangeRule(fare) }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-utensils"></i> Meal
+              </div>
+              <div class="fare-right">{{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</div>
+            </div>
+            <div class="fare-row">
+              <div class="fare-left">
+                <i class="fas fa-chair"></i> Seat Selection
+              </div>
+              <div class="fare-right">{{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard seats free" : "Chargeable seats" }}</div>
+            </div>
+          </div>
+          <button class="book-btn" (click)="selectMulticityFare(fare)">
+            SELECT
+          </button>
+        </div>
+        <!-- Footer Summary -->
+        <div style="padding: 16px; background: #f9f9f9; border-top: 1px solid #eee; margin-top: 16px;">
+          <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 18px; font-weight: bold; color: #333;">
+              ₹ {{ multicityTotalFare | number : "1.0-0" }}
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px;">
+              TOTAL FOR ALL SEGMENTS (1 ADULT)
+            </div>
+          </div>
+          <button class="book-btn" style="background: #28a745; width: 100%;" 
+            [class.disabled]="!multicityHasSelectedFares"
+            [disabled]="!multicityHasSelectedFares" 
+            (click)="proceedWithMultiCityBooking()">
+            BOOK NOW
+          </button>
         </div>
       </div>
     </div>
