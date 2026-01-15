@@ -99,7 +99,7 @@
                   </div>
                   <span class="segment-date" *ngIf="getMultiCityRouteDate(i)">{{ getMultiCityRouteDate(i) | date : "d MMM" }}</span>
                   <span class="segment-separator" *ngIf="i < multicityTabData.length - 1">
-                    <i class="fas fa-ellipsis-v"></i>
+                    <i class="fas fa-arrow-right"></i>
                   </span>
                 </div>
               </div>
@@ -2330,17 +2330,7 @@
 
         <!-- Multi-City Flights -->
         <div *ngIf="flightType === 'multi'">
-            <!-- Multi-City Segment Selector (Simplified - for selecting which segment to view) -->
-            <div class="multicity-segment-selector" *ngIf="multicityTabData && multicityTabData.length > 1">
-              <div class="segment-selector-tabs">
-                <button class="segment-tab" *ngFor="let segment of multicityTabData; let i = index"
-                  [class.active]="selectedMulticityTab === i" (click)="selectMulticityTab(i)">
-                  Route {{ i + 1 }}
-                </button>
-              </div>
-            </div>
-
-            <div class="results-layout" *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
+            <div class="results-layout" *ngIf="multicityTabData && multicityTabData.length > 0">
               <!-- Filter Sidebar for Multi-City (Desktop) -->
               <div class="filter-sidebar-column" *ngIf="flightType === 'multi'">
                 <div class="filter-card">
@@ -2403,74 +2393,78 @@
 
               <!-- Results Column for Multi-City -->
               <div class="results-column">
-                <div class="flight-list-container" *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
-                  <div class="segment-header">
-                    <h3 class="section-title">
-                      Route {{ selectedMulticityTab + 1 }}:
-                      {{ getMultiCityRouteOrigin(selectedMulticityTab) }} →
-                      {{ getMultiCityRouteDestination(selectedMulticityTab) }}
-                    </h3>
-                    <div class="segment-date">
-                      {{ getMultiCityRouteDate(selectedMulticityTab) | date : "d MMM, yyyy" }}
-                    </div>
-                  </div>
+                <div class="flight-list-container" *ngIf="multicityTabData && multicityTabData.length > 0">
+                  <!-- Flight Cards - Show all segments in one card (like mobile but desktop design) -->
+                  <div class="flight-cards" *ngIf="multicityTabData && multicityTabData[0] && multicityTabData[0].groupedFlights && multicityTabData[0].groupedFlights.length > 0">
+                    <div class="card mobile-flight-card-new multicity-combined-card" 
+                      [class.selected]="multicitySelectedFares[0]?.groupedFlight === flight"
+                      *ngFor="let flight of multicityTabData[0].groupedFlights; let i = index">
 
-                  <!-- Flight Cards (matching one-way layout) -->
-                  <div class="flight-cards" *ngIf="multicityTabData[selectedMulticityTab].groupedFlights && multicityTabData[selectedMulticityTab].groupedFlights.length > 0">
-                <div class="card mobile-flight-card-new" 
-                  [class.selected]="multicitySelectedFares[selectedMulticityTab]?.groupedFlight === flight"
-                  *ngFor="let flight of multicityTabData[selectedMulticityTab].groupedFlights; let i = index">
+                      <!-- DESKTOP MULTI-CITY CARD - All Segments in One Card -->
+                      <div class="desktop-multicity-card" *ngIf="flight && flight.Segments" (click)="selectMulticityFlight(0, i, flight); $event.stopPropagation()">
+                        <!-- Show all segments one below another -->
+                        <ng-container *ngFor="let segmentGroup of flight.Segments; let segIndex = index">
+                          <div class="desktop-multicity-segment" *ngIf="segmentGroup && segmentGroup[0] && segmentGroup[0].Origin" [class.last-segment]="segIndex === flight.Segments.length - 1">
+                            <!-- Route Header -->
+                            <div class="multicity-segment-header">
+                              <span class="route-label">Route {{ segIndex + 1 }}: {{ segmentGroup[0].Origin.Airport.CityName }} ({{ segmentGroup[0].Origin.Airport.AirportCode }}) → {{ segmentGroup[segmentGroup.length - 1].Destination.Airport.CityName }} ({{ segmentGroup[segmentGroup.length - 1].Destination.Airport.AirportCode }})</span>
+                              <span class="route-date">{{ segmentGroup[0].Origin.DepTime | date : "d MMM, yyyy" }}</span>
+                            </div>
+                            
+                            <!-- Desktop Flight Row for this segment -->
+                            <div class="desktop-flight-row">
+                              <!-- Airline Section -->
+                              <div class="desktop-airline-section">
+                                <img class="desktop-airline-logo"
+                                  [src]="'assets/images/flightimages/' + segmentGroup[0].Airline.AirlineCode + '.png'"
+                                  [alt]="segmentGroup[0].Airline.AirlineName"
+                                  onerror="this.src='assets/images/default-airline.png'" />
+                                <div class="desktop-airline-info">
+                                  <div class="desktop-airline-name">{{ segmentGroup[0].Airline.AirlineName }}</div>
+                                  <div class="desktop-flight-number">{{ segmentGroup[0].Airline.AirlineCode }} {{ segmentGroup[0].Airline.FlightNumber }}</div>
+                                  <div class="desktop-aircraft-type">{{ segmentGroup[0].Craft || 'Aircraft' }}</div>
+                                </div>
+                              </div>
 
-                  <!-- DESKTOP SINGLE ROW LAYOUT -->
-                  <div class="desktop-flight-row" (click)="selectMulticityFlight(selectedMulticityTab, i, flight); $event.stopPropagation()">
-                    <!-- Airline Section -->
-                    <div class="desktop-airline-section">
-                      <img class="desktop-airline-logo"
-                        [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'"
-                        [alt]="flight.Segments[0][0].Airline.AirlineName"
-                        onerror="this.src='assets/images/default-airline.png'" />
-                      <div class="desktop-airline-info">
-                        <div class="desktop-airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
-                        <div class="desktop-flight-number">{{ flight.Segments[0][0].Airline.AirlineCode }} {{ flight.Segments[0][0].Airline.FlightNumber }}</div>
-                        <div class="desktop-aircraft-type">{{ flight.Segments[0][0].Craft || 'Aircraft' }}</div>
+                              <!-- Departure Section -->
+                              <div class="desktop-departure-section">
+                                <div class="desktop-time">{{ segmentGroup[0].Origin.DepTime | date : "HH:mm" }}</div>
+                                <div class="desktop-date">{{ segmentGroup[0].Origin.DepTime | date : "EEE, dd MMM" }}</div>
+                                <div class="desktop-airport">{{ segmentGroup[0].Origin.Airport.CityName }}</div>
+                              </div>
+
+                              <!-- Duration & Stops Section -->
+                              <div class="desktop-duration-section">
+                                <div class="desktop-duration-text">{{ getTotalDuration(segmentGroup) }}</div>
+                                <div class="desktop-stops-text">{{ (segmentGroup.length - 1) === 0 ? 'Non Stop' : (segmentGroup.length - 1) + ' Stop' + ((segmentGroup.length - 1) > 1 ? 's' : '') }}</div>
+                              </div>
+
+                              <!-- Arrival Section -->
+                              <div class="desktop-arrival-section">
+                                <div class="desktop-time">{{ segmentGroup[segmentGroup.length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
+                                <div class="desktop-date">{{ segmentGroup[segmentGroup.length - 1].Destination.ArrTime | date : "EEE, dd MMM" }}</div>
+                                <div class="desktop-airport">{{ segmentGroup[segmentGroup.length - 1].Destination.Airport.CityName }}</div>
+                                <div class="desktop-day-diff" *ngIf="getDayDiff(segmentGroup[0].Origin.DepTime, segmentGroup[segmentGroup.length - 1].Destination.ArrTime) > 0">
+                                  +{{ getDayDiff(segmentGroup[0].Origin.DepTime, segmentGroup[segmentGroup.length - 1].Destination.ArrTime) }} day
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                        <!-- Price & Button Section (at bottom of card) -->
+                        <div class="desktop-price-section multicity-total-price">
+                          <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
+                          <div class="desktop-price-label">Total per Adult</div>
+                          <button class="desktop-view-prices-btn" (click)="openFareOptionsModalMultiCity(0, flight, i); $event.stopPropagation()">
+                            View Prices
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                      <!-- END DESKTOP MULTI-CITY CARD -->
 
-                    <!-- Departure Section -->
-                    <div class="desktop-departure-section">
-                      <div class="desktop-time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
-                      <div class="desktop-date">{{ flight.Segments[0][0].Origin.DepTime | date : "EEE, dd MMM" }}</div>
-                      <div class="desktop-airport">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
-                    </div>
-
-                    <!-- Duration & Stops Section -->
-                    <div class="desktop-duration-section">
-                      <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                      <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' : getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
-                    </div>
-
-                    <!-- Arrival Section -->
-                    <div class="desktop-arrival-section">
-                      <div class="desktop-time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "HH:mm" }}</div>
-                      <div class="desktop-date">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime | date : "EEE, dd MMM" }}</div>
-                      <div class="desktop-airport">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.Airport.CityName }}</div>
-                      <div class="desktop-day-diff" *ngIf="getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) > 0">
-                        +{{ getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) }} day
-                      </div>
-                    </div>
-
-                    <!-- Price & Button Section -->
-                    <div class="desktop-price-section">
-                      <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
-                      <div class="desktop-price-label">per Adult</div>
-                      <button class="desktop-view-prices-btn" (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
-                        View Prices
-                      </button>
-                    </div>
-                  </div>
-                  <!-- END DESKTOP SINGLE ROW LAYOUT -->
-
-                  <!-- MOBILE FLIGHT CARD DESIGN (matching reference) -->
+                  <!-- MOBILE FLIGHT CARD DESIGN (matching reference) - Hidden on Desktop -->
+                  <div class="mobile-only">
                   <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlockMultiCity">
                     <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
                       (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
@@ -2684,13 +2678,14 @@
                       </div>
                     </section>
                   </ng-template>
+                  </div>
                 </div>
               </div>
 
                   <!-- No Flights Message -->
                   <div class="no-flights"
-                    *ngIf="(!multicityTabData[selectedMulticityTab].groupedFlights || multicityTabData[selectedMulticityTab].groupedFlights.length === 0) && !loader">
-                    <p>No flights found for this segment. Please try modifying your search.</p>
+                    *ngIf="(!multicityTabData || !multicityTabData[0] || !multicityTabData[0].groupedFlights || multicityTabData[0].groupedFlights.length === 0) && !loader">
+                    <p>No flights found for your multi-city search. Please try modifying your search.</p>
                   </div>
                 </div>
               </div>

@@ -1924,6 +1924,21 @@ img {
   .fare-popup.animated {
     display: none !important;
   }
+
+  /* Hide mobile-only elements on desktop */
+  .mobile-only {
+    display: none !important;
+  }
+
+  /* Show desktop-only elements on desktop */
+  .desktop-only {
+    display: block !important;
+  }
+
+  /* Show desktop multi-city card on desktop */
+  .desktop-multicity-card {
+    display: block !important;
+  }
 }
 
 .fare-scroll-wrapper {
@@ -2498,6 +2513,11 @@ img {
   /* Hide "per adult" on mobile */
   .desktop-only {
     display: none;
+  }
+
+  /* Show mobile-only elements on mobile */
+  .mobile-only {
+    display: block;
   }
 
   /* Mobile Amenities Section */
@@ -4862,4 +4882,138 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* ================= MULTI-CITY ROUTE DISPLAY IN SEARCH SUMMARY ================= */
+/* Multi-City Route Display in Search Summary - Same Line */
+.multicity-route-display {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.multicity-segment-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.multicity-segment-item .location-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.multicity-segment-item .segment-date {
+  font-size: 13px;
+  color: #666;
+  margin-left: 4px;
+}
+
+.multicity-segment-item .segment-separator {
+  margin: 0 8px;
+  color: #999;
+  font-size: 14px;
+}
+
+.multicity-segment-item .segment-separator i {
+  font-size: 12px;
+}
+
+/* ================= DESKTOP MULTI-CITY CARD - ALL SEGMENTS IN ONE CARD ================= */
+.desktop-multicity-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: none; /* Hidden by default, shown on desktop */
+}
+
+.desktop-multicity-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #008b8b;
+}
+
+.desktop-multicity-segment {
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.desktop-multicity-segment.last-segment {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.multicity-segment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.multicity-segment-header .route-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.multicity-segment-header .route-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.desktop-multicity-card .desktop-flight-row {
+  margin-top: 0;
+}
+
+.desktop-multicity-card .multicity-total-price {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.multicity-combined-card {
+  position: relative;
+}
+
+/* Mobile Responsive for Multi-City */
+@media (max-width: 768px) {
+  .multicity-route-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .multicity-segment-item {
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  /* Hide desktop multi-city card on mobile */
+  .desktop-multicity-card {
+    display: none !important;
+  }
+
+  /* Show mobile-only elements on mobile */
+  .mobile-only {
+    display: block !important;
+  }
+
+  .multicity-segment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
