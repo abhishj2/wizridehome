@@ -158,6 +158,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   selectedFlight: any = null;
   originalGroupedFlights: any[] = [];
   originalGroupedFlightsOutbound: any[] = [];
+  originalMulticityTabData: any[] = [];
 
   selectedFareOptions: { [key: number]: any } = {};
 
@@ -1054,6 +1055,9 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           };
         });
 
+        // Backup original multi-city data for filtering
+        this.originalMulticityTabData = JSON.parse(JSON.stringify(this.multicityTabData));
+
         console.log('Processed multi-city tab data:', this.multicityTabData);
         console.log('Grouped flights count:', this.groupedFlights.length);
         this.loader = false;
@@ -1709,7 +1713,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     const prices: number[] = [];
 
     for (const flight of flights) {
-      if (flight.airline) airlineSet.add(flight.airline);
+      // Extract airline - check both flight.airline and Segments structure
+      if (flight.airline) {
+        airlineSet.add(flight.airline);
+      } else if (flight.Segments?.[0]?.[0]?.Airline?.AirlineName) {
+        airlineSet.add(flight.Segments[0][0].Airline.AirlineName);
+      }
+      
       if (flight.Segments?.[0]) {
         const stops = flight.Segments[0].length - 1;
         stopSet.add(stops);
@@ -1855,6 +1865,65 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   applyAllFilters(): void {
+    // Handle multi-city filtering
+    if (this.flightType === 'multi' && this.multicityTabData && this.multicityTabData.length > 0) {
+      // Ensure we have original data backed up
+      if (!this.originalMulticityTabData || this.originalMulticityTabData.length === 0) {
+        if (this.multicityTabData && this.multicityTabData.length > 0) {
+          this.originalMulticityTabData = JSON.parse(JSON.stringify(this.multicityTabData));
+        } else {
+          console.warn('No multi-city flights to filter');
+          return;
+        }
+      }
+
+      console.log('Applying filters to multi-city flights. Original flights count:', 
+        this.originalMulticityTabData[0]?.groupedFlights?.length || 0);
+
+      // Apply filters to each segment's groupedFlights
+      this.multicityTabData.forEach((tab, tabIndex) => {
+        const originalFlights = this.originalMulticityTabData[tabIndex]?.groupedFlights || [];
+        
+        tab.groupedFlights = originalFlights.filter((flight: any) => {
+          // Get airline from first segment of first segment group
+          const airlineName = flight.Segments?.[0]?.[0]?.Airline?.AirlineName || flight.airline || '';
+          const airlineMatch = this.selectedAirlines.length === 0 ||
+            this.selectedAirlines.includes(airlineName);
+
+          // Get stops count
+          const stopsMatch = this.selectedStops.length === 0 ||
+            this.selectedStops.includes(this.getStopsCount(flight));
+
+          // Price match
+          const priceMatch = flight.price >= this.dynamicFilters.min_price &&
+            flight.price <= this.priceRange;
+
+          // Get departure time from first segment of first segment group
+          const depTime = flight.Segments?.[0]?.[0]?.Origin?.DepTime || flight.Origin?.DepTime;
+          const depHour = depTime ? new Date(depTime).getHours() : -1;
+          const timeSlotMatch = this.selectedDepartureSlots.size === 0 ||
+            depHour === -1 ||
+            this.departureTimeSlots.some(slot =>
+              this.selectedDepartureSlots.has(slot.label) &&
+              depHour >= slot.range[0] &&
+              depHour < slot.range[1]
+            );
+
+          // Refundability match
+          const refundabilityMatch =
+            this.selectedRefundability.size === 0 ||
+            (flight.isRefundable && this.selectedRefundability.has('refundable')) ||
+            (!flight.isRefundable && this.selectedRefundability.has('non-refundable'));
+
+          return airlineMatch && stopsMatch && priceMatch && timeSlotMatch && refundabilityMatch;
+        });
+      });
+
+      console.log('After filtering multi-city:', this.multicityTabData[0]?.groupedFlights?.length || 0, 'flights remain');
+      return;
+    }
+
+    // Handle one-way and round-trip filtering
     // Ensure we have original data backed up
     if (!this.originalGroupedFlights || this.originalGroupedFlights.length === 0) {
       if (this.groupedFlights && this.groupedFlights.length > 0) {
