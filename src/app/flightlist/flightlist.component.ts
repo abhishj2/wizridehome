@@ -1867,10 +1867,18 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   applyAllFilters(): void {
     // Handle multi-city filtering
     if (this.flightType === 'multi' && this.multicityTabData && this.multicityTabData.length > 0) {
-      // Ensure we have original data backed up
-      if (!this.originalMulticityTabData || this.originalMulticityTabData.length === 0) {
-        if (this.multicityTabData && this.multicityTabData.length > 0) {
-          this.originalMulticityTabData = JSON.parse(JSON.stringify(this.multicityTabData));
+      // Ensure we have original data backed up - check if backup exists and has data
+      if (!this.originalMulticityTabData || this.originalMulticityTabData.length === 0 || 
+          !this.originalMulticityTabData[0]?.groupedFlights || 
+          this.originalMulticityTabData[0].groupedFlights.length === 0) {
+        if (this.multicityTabData && this.multicityTabData.length > 0 && 
+            this.multicityTabData[0]?.groupedFlights && 
+            this.multicityTabData[0].groupedFlights.length > 0) {
+          // Create a deep copy of the original data
+          this.originalMulticityTabData = this.multicityTabData.map(tab => ({
+            ...tab,
+            groupedFlights: [...(tab.groupedFlights || [])]
+          }));
         } else {
           console.warn('No multi-city flights to filter');
           return;
@@ -1879,6 +1887,9 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
       console.log('Applying filters to multi-city flights. Original flights count:', 
         this.originalMulticityTabData[0]?.groupedFlights?.length || 0);
+      console.log('Selected airlines:', this.selectedAirlines);
+      console.log('Selected stops:', this.selectedStops);
+      console.log('Price range:', this.dynamicFilters.min_price, '-', this.priceRange);
 
       // Apply filters to each segment's groupedFlights
       this.multicityTabData.forEach((tab, tabIndex) => {
@@ -1886,13 +1897,14 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         
         tab.groupedFlights = originalFlights.filter((flight: any) => {
           // Get airline from first segment of first segment group
-          const airlineName = flight.Segments?.[0]?.[0]?.Airline?.AirlineName || flight.airline || '';
+          const airlineName = (flight.Segments?.[0]?.[0]?.Airline?.AirlineName || flight.airline || '').trim();
           const airlineMatch = this.selectedAirlines.length === 0 ||
-            this.selectedAirlines.includes(airlineName);
+            this.selectedAirlines.some(selected => selected.trim() === airlineName);
 
-          // Get stops count
+          // Get stops count - for multi-city, check stops in the first segment group
+          const stopsCount = this.getStopsCount(flight);
           const stopsMatch = this.selectedStops.length === 0 ||
-            this.selectedStops.includes(this.getStopsCount(flight));
+            this.selectedStops.includes(stopsCount);
 
           // Price match
           const priceMatch = flight.price >= this.dynamicFilters.min_price &&
@@ -1915,7 +1927,22 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             (flight.isRefundable && this.selectedRefundability.has('refundable')) ||
             (!flight.isRefundable && this.selectedRefundability.has('non-refundable'));
 
-          return airlineMatch && stopsMatch && priceMatch && timeSlotMatch && refundabilityMatch;
+          const matches = airlineMatch && stopsMatch && priceMatch && timeSlotMatch && refundabilityMatch;
+          if (!matches) {
+            console.log('Flight filtered out:', {
+              airline: airlineName,
+              airlineMatch,
+              stopsCount,
+              stopsMatch,
+              price: flight.price,
+              priceMatch,
+              depHour,
+              timeSlotMatch,
+              isRefundable: flight.isRefundable,
+              refundabilityMatch
+            });
+          }
+          return matches;
         });
       });
 
@@ -1971,7 +1998,15 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.selectedStops = [];
     this.selectedDepartureSlots.clear();
     this.showRefundableOnly = false;
-    this.priceRange = this.dynamicFilters.max_price;
+    this.selectedRefundability.clear();
+    
+    // Reset price range based on flight type
+    if (this.flightType === 'multi' && this.multicityTabData && this.multicityTabData.length > 0) {
+      this.priceRange = this.dynamicFilters.max_price;
+    } else {
+      this.priceRange = this.dynamicFilters.max_price;
+    }
+    
     this.applyAllFilters();
   }
 
@@ -1988,6 +2023,52 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   applySort(): void {
+    // Handle multi-city sorting
+    if (this.flightType === 'multi' && this.multicityTabData && this.multicityTabData.length > 0) {
+      const flightsToSort = this.multicityTabData[0]?.groupedFlights;
+      if (!flightsToSort || flightsToSort.length === 0) return;
+
+      switch (this.selectedSort) {
+        case 'Price: Low to High':
+          flightsToSort.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
+          break;
+        case 'Price: High to Low':
+          flightsToSort.sort((a: any, b: any) => (b.price || 0) - (a.price || 0));
+          break;
+        case 'Duration: Shortest':
+          flightsToSort.sort((a: any, b: any) => {
+            const durA = this.getTotalDurationMinutes(a.Segments?.[0] || []);
+            const durB = this.getTotalDurationMinutes(b.Segments?.[0] || []);
+            return durA - durB;
+          });
+          break;
+        case 'Departure: Early':
+          flightsToSort.sort((a: any, b: any) => {
+            const timeA = a.Segments?.[0]?.[0]?.Origin?.DepTime 
+              ? new Date(a.Segments[0][0].Origin.DepTime).getTime() 
+              : 0;
+            const timeB = b.Segments?.[0]?.[0]?.Origin?.DepTime 
+              ? new Date(b.Segments[0][0].Origin.DepTime).getTime() 
+              : 0;
+            return timeA - timeB;
+          });
+          break;
+        case 'Departure: Late':
+          flightsToSort.sort((a: any, b: any) => {
+            const timeA = a.Segments?.[0]?.[0]?.Origin?.DepTime 
+              ? new Date(a.Segments[0][0].Origin.DepTime).getTime() 
+              : 0;
+            const timeB = b.Segments?.[0]?.[0]?.Origin?.DepTime 
+              ? new Date(b.Segments[0][0].Origin.DepTime).getTime() 
+              : 0;
+            return timeB - timeA;
+          });
+          break;
+      }
+      return;
+    }
+
+    // Handle one-way and round-trip sorting
     if (!this.groupedFlights || this.groupedFlights.length === 0) return;
 
     switch (this.selectedSort) {
