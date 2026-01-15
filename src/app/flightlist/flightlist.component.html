@@ -162,11 +162,28 @@
             </datalist>
             <div class="form-group">
               <label>Departure Date:</label>
-              <input type="date" formControlName="departureDate" />
+              <app-custom-calendar
+                [selectedDate]="modifySearchForm.get('departureDate')?.value"
+                [minDate]="getTodayDate()"
+                placeholder="Select Departure Date"
+                (dateSelected)="onModifyDepartureDateSelected($event)"
+                (calendarOpened)="onCalendarOpened()"
+                (calendarClosed)="onCalendarClosed()">
+              </app-custom-calendar>
             </div>
             <div class="form-group" *ngIf="flightType === 'round'">
               <label>Return Date:</label>
-              <input type="date" formControlName="returnDate" />
+              <app-custom-calendar
+                [selectedDate]="modifySearchForm.get('returnDate')?.value"
+                [minDate]="getReturnMinDate()"
+                placeholder="Select Return Date"
+                (dateSelected)="onModifyReturnDateSelected($event)"
+                (calendarOpened)="onCalendarOpened()"
+                (calendarClosed)="onCalendarClosed()">
+              </app-custom-calendar>
+              <div class="validation-error" *ngIf="returnDateError">
+                {{ returnDateError }}
+              </div>
             </div>
             <div class="form-group passenger-dropdown-wrapper">
               <label>Passengers:</label>
@@ -226,11 +243,28 @@
           </datalist>
           <div class="mobile-form-group">
             <label>Departure Date:</label>
-            <input type="date" formControlName="departureDate" />
+            <app-custom-calendar
+              [selectedDate]="modifySearchForm.get('departureDate')?.value"
+              [minDate]="getTodayDate()"
+              placeholder="Select Departure Date"
+              (dateSelected)="onModifyDepartureDateSelected($event)"
+              (calendarOpened)="onCalendarOpened()"
+              (calendarClosed)="onCalendarClosed()">
+            </app-custom-calendar>
           </div>
           <div class="mobile-form-group" *ngIf="flightType === 'round'">
             <label>Return Date:</label>
-            <input type="date" formControlName="returnDate" />
+            <app-custom-calendar
+              [selectedDate]="modifySearchForm.get('returnDate')?.value"
+              [minDate]="getReturnMinDate()"
+              placeholder="Select Return Date"
+              (dateSelected)="onModifyReturnDateSelected($event)"
+              (calendarOpened)="onCalendarOpened()"
+              (calendarClosed)="onCalendarClosed()">
+            </app-custom-calendar>
+            <div class="validation-error" *ngIf="returnDateError" style="margin-top: 8px; color: #ef4444; font-size: 12px;">
+              {{ returnDateError }}
+            </div>
           </div>
           <div class="mobile-form-group mobile-passenger-dropdown-wrapper">
             <label>Passengers:</label>

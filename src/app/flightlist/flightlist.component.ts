@@ -6,6 +6,7 @@ import { Subscription, take } from 'rxjs';
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
 import { FlightData } from '../interface/flight-data';
+import { CustomCalendarComponent } from '../calendar/calendar.component';
 import Swal from 'sweetalert2';
 
 type FooterTab = 'flight' | 'fare' | 'cancellation' | 'dateChange';
@@ -13,7 +14,7 @@ type FooterTab = 'flight' | 'fare' | 'cancellation' | 'dateChange';
 @Component({
   selector: 'app-flightlist',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, CustomCalendarComponent],
   templateUrl: './flightlist.component.html',
   styleUrls: ['./flightlist.component.css']
 })
@@ -48,6 +49,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   modifySearchForm: FormGroup;
   tripType: 'oneway' | 'round' | 'multi' = 'oneway';
   selectedRefundability: Set<string> = new Set();
+  returnDateError: string = '';
 
   cities: any[] = [];
   flightAirports: any[] = [];
@@ -3059,6 +3061,55 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   closePassengerDropdown(): void {
     this.showPassengerDropdown = false;
+  }
+
+  // Date handling methods for custom calendar
+  onModifyDepartureDateSelected(date: string): void {
+    this.modifySearchForm.patchValue({ departureDate: date });
+    
+    // If round trip and return date is before new departure date, clear it
+    if (this.flightType === 'round') {
+      const returnDate = this.modifySearchForm.get('returnDate')?.value;
+      if (returnDate && returnDate < date) {
+        this.modifySearchForm.patchValue({ returnDate: '' });
+        this.returnDateError = '';
+      }
+      // Clear any existing error when departure date changes
+      this.returnDateError = '';
+    }
+  }
+
+  onModifyReturnDateSelected(date: string): void {
+    const departureDate = this.modifySearchForm.get('departureDate')?.value;
+    
+    // Validate that return date is not before departure date
+    if (departureDate && date && date < departureDate) {
+      this.returnDateError = 'Return date cannot be before departure date.';
+      this.modifySearchForm.patchValue({ returnDate: '' });
+      return;
+    }
+    
+    // Clear error if validation passes
+    this.returnDateError = '';
+    this.modifySearchForm.patchValue({ returnDate: date });
+  }
+
+  getTodayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
+  getReturnMinDate(): string {
+    const departureDate = this.modifySearchForm.get('departureDate')?.value;
+    return departureDate || this.getTodayDate();
+  }
+
+  onCalendarOpened(): void {
+    // Optional: Add any logic needed when calendar opens
+  }
+
+  onCalendarClosed(): void {
+    // Optional: Add any logic needed when calendar closes
   }
 
   // Finalize selection

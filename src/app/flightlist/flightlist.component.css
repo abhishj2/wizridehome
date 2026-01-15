@@ -5017,3 +5017,14 @@ img {
     gap: 8px;
   }
 }
+
+/* Custom calendar input padding for flightlist page only */
+:host ::ng-deep .calendar-input {
+  padding: 12px 20px 12px 44px !important;
+}
+
+/* Alternative: More specific selector for modify search form */
+:host ::ng-deep .modify-search-form .calendar-input,
+:host ::ng-deep .mobile-modify-search-form .calendar-input {
+  padding: 12px 20px 12px 44px !important;
+}
