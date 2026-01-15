@@ -441,6 +441,9 @@
                                             (calendarOpened)="onCalendarOpened()"
                                             (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
+                                        <div class="validation-error" *ngIf="returnDateError">
+                                            {{ returnDateError }}
+                                        </div>
                                     </div>
 
                                     <div class="travelers-dropdown form-group" *ngIf="tripType !== 'multi-city'">
@@ -1018,6 +1021,9 @@
             <polyline points="12 8 12 12 15 13.5"></polyline>
           </svg>
           <span>{{ getMobileDateDisplay(formValues.flightReturn) || 'Select return date' }}</span>
+        </div>
+        <div class="validation-error" *ngIf="returnDateError" style="margin-top: 8px; color: #ef4444; font-size: 12px;">
+          {{ returnDateError }}
         </div>
       </div>
 

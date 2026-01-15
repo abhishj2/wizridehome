@@ -1785,6 +1785,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Suggestions & UI state
   activeSuggestions: { [key: string]: City[] | string[] } = {};
   locationDetailsVisible: { [key: string]: boolean } = {};
+  returnDateError: string = '';
 
   // Form values
   formValues = {
@@ -2246,20 +2247,40 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       // Single/round-trip flight
       this.formValues.flightDeparture = date;
-      if (this.tripType === 'round-trip' && this.formValues.flightReturn < date) {
-        this.formValues.flightReturn = '';
+      if (this.tripType === 'round-trip') {
+        // Clear return date if it's before the new departure date
+        if (this.formValues.flightReturn && this.formValues.flightReturn < date) {
+          this.formValues.flightReturn = '';
+          this.returnDateError = '';
+        }
+        // Clear any existing error when departure date changes
+        this.returnDateError = '';
       }
     }
   }
 
   // Flight return date selection
   onFlightReturnDateSelected(date: string) {
+    // Get the departure date (check both flightRoutes and formValues)
+    const departureDate = this.flightRoutes[0]?.date || this.formValues.flightDeparture;
+    
+    // Validate that return date is not before departure date
+    if (departureDate && date && date < departureDate) {
+      this.returnDateError = 'Return date cannot be before departure date.';
+      this.formValues.flightReturn = '';
+      return;
+    }
+    
+    // Clear error if validation passes
+    this.returnDateError = '';
     this.formValues.flightReturn = date;
   }
 
   // Get minimum date for return flight picker
   getReturnMinDate(): string {
-    return this.formValues.flightDeparture || this.getTodayDate();
+    // Check both flightRoutes[0].date and formValues.flightDeparture
+    const departureDate = this.flightRoutes[0]?.date || this.formValues.flightDeparture;
+    return departureDate || this.getTodayDate();
   }
 
   // Get today's date in YYYY-MM-DD format
@@ -2302,6 +2323,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   setTripType(type: string) {
     this.tripType = type;
+    
+    // Clear return date error when trip type changes
+    this.returnDateError = '';
 
     // Reset routes based on trip type
     if (type === 'multi-city') {
