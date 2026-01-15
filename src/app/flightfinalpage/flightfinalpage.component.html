@@ -718,11 +718,26 @@
 
   <!-- Multi-City -->
   <div class="flight-final-page" *ngIf="tripType == 'multicity'">
+    <!-- Debug info (remove in production) -->
+    <div style="background: #f0f0f0; padding: 10px; margin: 10px; font-size: 12px;" *ngIf="tripType === 'multicity'">
+      Debug: flightSegmentGroups.length = {{ flightSegmentGroups?.length }}, 
+      flightSegments.length = {{ flightSegments?.length }},
+      groupedFlightSegments.length = {{ groupedFlightSegments?.length }}
+    </div>
+    
     <!-- Flight Summary Cards: One per segment group -->
-    <ng-container *ngIf="tripType === 'multicity' && flightSegmentGroups?.length">
-      <div class="card" *ngFor="let group of flightSegmentGroups; let groupIndex = index">
-        <div class="flight-leg">
-          <ng-container *ngFor="let segment of group; let i = index">
+    <ng-container *ngIf="tripType === 'multicity' && ((flightSegmentGroups && flightSegmentGroups.length > 0) || (flightSegments && flightSegments.length > 0))">
+      <!-- Show grouped segments if available -->
+      <ng-container *ngIf="flightSegmentGroups && flightSegmentGroups.length > 0">
+        <div class="card" *ngFor="let group of flightSegmentGroups; let groupIndex = index; trackBy: trackByGroupIndex">
+          <!-- Only show if group has segments -->
+          <ng-container *ngIf="group && group.length > 0">
+            <!-- Route Header for Multi-City -->
+            <div class="section-title" style="margin-bottom: 16px; font-weight: 600; color: #333;">
+              Route {{ groupIndex + 1 }}: {{ group[0]?.from }} → {{ group[group.length - 1]?.to }}
+            </div>
+            <div class="flight-leg">
+              <ng-container *ngFor="let segment of group; let i = index">
             <!-- Airline Info -->
             <div class="flight-airline">
               <img [src]="segment.logo" class="logo" />
@@ -758,9 +773,57 @@
               </div>
               <div class="line"></div>
             </div>
+              </ng-container>
+            </div>
           </ng-container>
         </div>
-      </div>
+      </ng-container>
+      
+      <!-- Fallback: Show all segments if grouping failed -->
+      <ng-container *ngIf="!flightSegmentGroups?.length && flightSegments?.length">
+        <div class="card" *ngFor="let segment of flightSegments; let i = index">
+          <div class="section-title" style="margin-bottom: 16px; font-weight: 600; color: #333;">
+            Segment {{ i + 1 }}: {{ segment.from }} → {{ segment.to }}
+          </div>
+          <div class="flight-leg">
+            <!-- Airline Info -->
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              <div class="city">{{ segment.to }}</div>
+            </div>
+
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover between legs -->
+            <div class="layover-row" *ngIf="segment.layover">
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + {{ Math.floor(segment.layover.hours / 24) }} Day
+                </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
+              </div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
 
       <!-- CTA button -->
       <div class="card no-padding">
@@ -769,6 +832,12 @@
         </button>
       </div>
     </ng-container>
+    
+    <!-- No data message -->
+    <div class="card" *ngIf="tripType === 'multicity' && !flightSegmentGroups?.length && !flightSegments?.length">
+      <div class="section-title">No flight data available</div>
+      <p>Please go back and select your flights again.</p>
+    </div>
 
     <!-- Add Passenger Card -->
     <div class="card">

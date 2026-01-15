@@ -3340,7 +3340,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       multiCityRoutes: this.flightInputData['multiCitySegment']
     };
 
-    console.log('Navigating with multi-city flight data:', flightData);
+    console.log('=== Navigating with multi-city flight data ===');
+    console.log('multicitySelectedFares object:', this.multicitySelectedFares);
+    console.log('multicitySelectedFares keys:', Object.keys(this.multicitySelectedFares));
+    console.log('multicitySelectedFares count:', Object.keys(this.multicitySelectedFares).length);
+    console.log('Full flightData:', flightData);
+    console.log('flightData.multiCitySelectedFares:', flightData.multiCitySelectedFares);
+    console.log('flightData.multiCitySelectedFares keys:', flightData.multiCitySelectedFares ? Object.keys(flightData.multiCitySelectedFares) : 'null/undefined');
     this.flightDataService.setStringValue(flightData);
     console.log('About to navigate to flightfinalsection...');
     this.router.navigate(['flightfinalsection']).then(

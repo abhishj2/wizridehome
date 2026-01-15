@@ -457,8 +457,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     
     // Handle multi-city data
-    if (this.tripType === 'multicity' && val['multiCitySelectedFares']) {
-      this.processMultiCityData(val);
+    if (this.tripType === 'multicity') {
+      console.log('=== Multi-city trip detected ===');
+      console.log('Has multiCitySelectedFares?', !!val['multiCitySelectedFares']);
+      console.log('multiCitySelectedFares value:', val['multiCitySelectedFares']);
+      console.log('multiCitySegment:', val['multiCitySegment']);
+      console.log('multiCityRoutes:', val['multiCityRoutes']);
+      
+      if (val['multiCitySelectedFares']) {
+        this.processMultiCityData(val);
+      } else {
+        console.error('No multiCitySelectedFares found in data!');
+        console.log('Available keys in val:', Object.keys(val));
+        this.loader = false;
+      }
       // Initialize passengers from multi-city data
       this.totalAdults = val['adults'] || 1;
       this.totalChildren = val['children'] || 0;
@@ -580,33 +592,192 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   processMultiCityData(val: any): void {
     const multiCitySelectedFares = val['multiCitySelectedFares'] || {};
+    const multiCitySegment = val['multiCitySegment'] || [];
+    const multiCityRoutes = val['multiCityRoutes'] || [];
+    
     this.flightSegments = [];
     this.flightSegmentGroups = [];
     this.groupedFlightSegments = [];
     
-    // Set dates from multi-city segments
-    if (val['multiCitySegment'] && val['multiCitySegment'].length > 0) {
-      this.departureDate = new Date(val['multiCitySegment'][0].PreferredDepartureTime || val['departureDate']);
+    console.log('=== Processing multi-city data ===');
+    console.log('multiCitySelectedFares:', multiCitySelectedFares);
+    console.log('multiCitySelectedFares keys:', Object.keys(multiCitySelectedFares));
+    console.log('multiCitySelectedFares count:', Object.keys(multiCitySelectedFares).length);
+    console.log('multiCitySegment:', multiCitySegment);
+    console.log('multiCitySegment length:', multiCitySegment.length);
+    console.log('multiCityRoutes:', multiCityRoutes);
+    console.log('multiCityRoutes length:', multiCityRoutes.length);
+    
+    // Log each segment in multiCitySegment to see what we have
+    if (multiCitySegment && multiCitySegment.length > 0) {
+      multiCitySegment.forEach((seg: any, idx: number) => {
+        console.log(`multiCitySegment[${idx}]:`, {
+          Origin: seg.Origin,
+          Destination: seg.Destination,
+          PreferredDepartureTime: seg.PreferredDepartureTime,
+          PreferredArrivalTime: seg.PreferredArrivalTime
+        });
+      });
     }
     
-    // Get segment indices sorted
-    const segmentIndices = Object.keys(multiCitySelectedFares)
-      .map(k => parseInt(k))
-      .sort((a, b) => a - b);
+    // Log each entry in multiCitySelectedFares to see what we have
+    if (multiCitySelectedFares && typeof multiCitySelectedFares === 'object') {
+      Object.entries(multiCitySelectedFares).forEach(([key, value]: [string, any]) => {
+        console.log(`multiCitySelectedFares[${key}]:`, {
+          hasGroupedFlight: !!value?.groupedFlight,
+          hasSelectedFare: !!value?.selectedFare,
+          groupedFlightOrigin: value?.groupedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName || value?.groupedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.AirportCode,
+          groupedFlightDestination: value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1]?.Destination?.Airport?.CityName || value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1]?.Destination?.Airport?.AirportCode
+        });
+      });
+    }
     
+    // Log all entries in multiCitySelectedFares with route information
+    if (typeof multiCitySelectedFares === 'object' && multiCitySelectedFares !== null) {
+      Object.entries(multiCitySelectedFares).forEach(([key, value]: [string, any]) => {
+        const firstSeg = value?.groupedFlight?.Segments?.[0]?.[0];
+        const lastSeg = value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1];
+        console.log(`Entry [${key}]:`, {
+          hasGroupedFlight: !!value?.groupedFlight,
+          hasSelectedFare: !!value?.selectedFare,
+          route: firstSeg && lastSeg 
+            ? `${firstSeg.Origin?.Airport?.CityName || firstSeg.Origin?.Airport?.AirportCode} → ${lastSeg.Destination?.Airport?.CityName || lastSeg.Destination?.Airport?.AirportCode}`
+            : 'Unknown',
+          groupedFlightKeys: value?.groupedFlight ? Object.keys(value.groupedFlight) : [],
+          selectedFareKeys: value?.selectedFare ? Object.keys(value.selectedFare) : []
+        });
+      });
+    }
+    
+    // Log each segment in multiCitySegment to see what we have
+    if (multiCitySegment && multiCitySegment.length > 0) {
+      multiCitySegment.forEach((seg: any, idx: number) => {
+        console.log(`multiCitySegment[${idx}]:`, {
+          Origin: seg.Origin,
+          Destination: seg.Destination,
+          PreferredDepartureTime: seg.PreferredDepartureTime,
+          PreferredArrivalTime: seg.PreferredArrivalTime,
+          hasSelectedFare: !!multiCitySelectedFares[idx]
+        });
+      });
+    }
+    
+    // Check if it's an array instead of object
+    if (Array.isArray(multiCitySelectedFares)) {
+      console.warn('multiCitySelectedFares is an array, not an object!', multiCitySelectedFares);
+      console.log('Array length:', multiCitySelectedFares.length);
+    }
+    
+    // Warn if segment count mismatch
+    const expectedSegments = multiCitySegment.length || multiCityRoutes.length || 0;
+    const selectedFaresCount = Object.keys(multiCitySelectedFares).length;
+    if (expectedSegments > selectedFaresCount) {
+      console.warn(`⚠️ MISMATCH: Expected ${expectedSegments} segments but only ${selectedFaresCount} selected fares found!`);
+      console.warn('This means not all segments were selected before navigation.');
+    }
+    
+    // Set dates from multi-city segments
+    if (multiCitySegment.length > 0) {
+      this.departureDate = new Date(multiCitySegment[0].PreferredDepartureTime || val['departureDate']);
+    }
+    
+    // Get segment indices sorted - handle both object and array formats
+    let segmentIndices: number[] = [];
+    
+    if (Array.isArray(multiCitySelectedFares)) {
+      // If it's an array, use indices
+      segmentIndices = multiCitySelectedFares.map((_, index) => index);
+      console.log('multiCitySelectedFares is an ARRAY, converting to indices');
+    } else if (typeof multiCitySelectedFares === 'object' && multiCitySelectedFares !== null) {
+      // If it's an object, get keys
+      segmentIndices = Object.keys(multiCitySelectedFares)
+        .map(k => parseInt(k))
+        .filter(k => !isNaN(k))
+        .sort((a, b) => a - b);
+    }
+    
+    console.log('Segment indices:', segmentIndices);
+    console.log('Number of segments to process:', segmentIndices.length);
+    console.log('Expected segments from multiCitySegment:', multiCitySegment.length);
+    console.log('Expected segments from multiCityRoutes:', multiCityRoutes.length);
+    
+    // Detailed structure logging
+    console.log('multiCitySelectedFares structure:', {
+      type: typeof multiCitySelectedFares,
+      isArray: Array.isArray(multiCitySelectedFares),
+      keys: Object.keys(multiCitySelectedFares),
+      keyCount: Object.keys(multiCitySelectedFares).length,
+      values: Object.values(multiCitySelectedFares).map((v: any, idx: number) => ({
+        index: idx,
+        hasGroupedFlight: !!v?.groupedFlight,
+        hasSelectedFare: !!v?.selectedFare,
+        groupedFlightSegments: v?.groupedFlight?.Segments ? v.groupedFlight.Segments.length : 0
+      }))
+    });
+    
+    // Check if we're missing segments
+    const expectedCount = Math.max(multiCitySegment.length, multiCityRoutes.length, 0);
+    if (segmentIndices.length < expectedCount) {
+      console.error(`⚠️ CRITICAL: Only ${segmentIndices.length} segment(s) in multiCitySelectedFares but ${expectedCount} expected!`);
+      console.error('This means not all segments were selected before navigation.');
+      console.error('Available segment indices:', segmentIndices);
+      console.error('Expected segment indices:', Array.from({length: expectedCount}, (_, i) => i));
+    }
+    
+    // Determine how many segments we should process
+    // Use multiCitySegment length as the source of truth for how many segments exist
+    const expectedSegmentCount = Math.max(
+      multiCitySegment.length,
+      multiCityRoutes.length,
+      segmentIndices.length,
+      1
+    );
+    
+    console.log(`Expected segment count: ${expectedSegmentCount}`);
+    console.log(`Found ${segmentIndices.length} selected fares`);
+    
+    if (segmentIndices.length === 0 && expectedSegmentCount === 0) {
+      console.error('No segments found in multiCitySelectedFares or multiCitySegment!');
+      this.loader = false;
+      return;
+    }
+    
+    // If we have fewer selected fares than expected segments, we still want to show all segments
+    // We'll process what we have and show placeholders for missing ones
     let allSegments: any[] = [];
     
-    // Process each segment
+    // Process each segment that has a selected fare
+    console.log(`\n=== Starting to process ${segmentIndices.length} segments with selected fares ===`);
     for (const segmentIndex of segmentIndices) {
-      const fareData = multiCitySelectedFares[segmentIndex];
-      if (!fareData || !fareData.groupedFlight) continue;
+      console.log(`\n--- Processing segment index: ${segmentIndex} ---`);
+      const fareData = Array.isArray(multiCitySelectedFares) 
+        ? multiCitySelectedFares[segmentIndex] 
+        : multiCitySelectedFares[segmentIndex];
+      console.log('Fare data for segment', segmentIndex, ':', fareData);
+      console.log('Fare data type:', typeof fareData);
+      console.log('Fare data keys:', fareData ? Object.keys(fareData) : 'null/undefined');
+      
+      if (!fareData) {
+        console.warn(`No fare data for segment ${segmentIndex}`);
+        continue;
+      }
+      
+      if (!fareData.groupedFlight) {
+        console.warn(`No groupedFlight for segment ${segmentIndex}:`, fareData);
+        continue;
+      }
       
       const flight = fareData.groupedFlight;
       const selectedFare = fareData.selectedFare;
       
+      console.log('Flight object:', flight);
+      console.log('Flight.Segments:', flight.Segments);
+      
       // Get segments from the flight
       const segmentGroups = flight.Segments || [];
       const segmentGroup = segmentGroups[0] || [];
+      
+      console.log('Segment group length:', segmentGroup.length);
       
       // Process each segment in this group
       const groupSegments: any[] = [];
@@ -678,12 +849,86 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         }
       }
       
+      // Always push, even if empty, to maintain index alignment
+      // But log warning if empty
+      if (groupSegments.length === 0) {
+        console.warn(`⚠ No segments created for segment index ${segmentIndex} - segmentGroup was empty`);
+        console.warn('Segment group details:', {
+          segmentGroupLength: segmentGroup.length,
+          segmentGroup: segmentGroup,
+          flightSegments: flight.Segments
+        });
+      }
+      
       this.flightSegmentGroups.push(groupSegments);
       this.groupedFlightSegments.push(groupSegments);
+      
+      console.log(`✓ Processed segment ${segmentIndex}:`, {
+        route: groupSegments.length > 0 
+          ? `${groupSegments[0]?.from} → ${groupSegments[groupSegments.length - 1]?.to}`
+          : 'NO ROUTE (empty)',
+        segmentsCount: groupSegments.length,
+        groupSegments: groupSegments.length > 0 
+          ? groupSegments.map(s => ({ from: s.from, to: s.to, code: s.code }))
+          : 'EMPTY'
+      });
+    }
+    
+    // Check if we're missing segments - if expectedSegmentCount > segmentIndices.length
+    // This means some segments weren't selected, but we should still show them if possible
+    if (expectedSegmentCount > segmentIndices.length) {
+      console.warn(`⚠️ Only ${segmentIndices.length} of ${expectedSegmentCount} segments have selected fares.`);
+      const missingIndices = Array.from({length: expectedSegmentCount}, (_, i) => i)
+        .filter(i => !segmentIndices.includes(i));
+      console.warn('Missing segment indices:', missingIndices);
+      
+      // Try to create placeholder segments from multiCitySegment for missing ones
+      for (const missingIndex of missingIndices) {
+        if (multiCitySegment[missingIndex]) {
+          const segmentInfo = multiCitySegment[missingIndex];
+          console.log(`Creating placeholder for missing segment ${missingIndex}:`, segmentInfo);
+          
+          // Create a basic segment structure from the route info
+          const placeholderGroup: any[] = [{
+            from: segmentInfo.Origin || 'Unknown',
+            to: segmentInfo.Destination || 'Unknown',
+            originCode: segmentInfo.Origin || '',
+            destinationCode: segmentInfo.Destination || '',
+            airline: 'Not Selected',
+            logo: 'assets/images/flightimages/default.png',
+            code: 'N/A',
+            departureTime: segmentInfo.PreferredDepartureTime ? this.formatTime(new Date(segmentInfo.PreferredDepartureTime)) : 'N/A',
+            arrivalTime: segmentInfo.PreferredArrivalTime ? this.formatTime(new Date(segmentInfo.PreferredArrivalTime)) : 'N/A',
+            date: segmentInfo.PreferredDepartureTime ? new Date(segmentInfo.PreferredDepartureTime) : new Date(),
+            depDate: segmentInfo.PreferredDepartureTime ? new Date(segmentInfo.PreferredDepartureTime) : new Date(),
+            arrDate: segmentInfo.PreferredArrivalTime ? new Date(segmentInfo.PreferredArrivalTime) : new Date(),
+            duration: 'N/A',
+            fromAirport: segmentInfo.Origin || '',
+            toAirport: segmentInfo.Destination || '',
+            cabinBaggage: 'N/A',
+            checkInBaggage: 'N/A',
+            isPlaceholder: true
+          }];
+          
+          this.flightSegmentGroups.push(placeholderGroup);
+          this.groupedFlightSegments.push(placeholderGroup);
+          allSegments.push(...placeholderGroup);
+          
+          console.log(`✓ Created placeholder for segment ${missingIndex}`);
+        }
+      }
     }
     
     // Set flightSegments to all segments for compatibility
     this.flightSegments = allSegments;
+    
+    console.log('Multi-city processing complete:', {
+      totalGroups: this.flightSegmentGroups.length,
+      totalSegments: allSegments.length,
+      flightSegmentGroups: this.flightSegmentGroups,
+      groupedFlightSegments: this.groupedFlightSegments,
+      flightSegments: this.flightSegments
+    });
     
     // Store first flight data for compatibility (used for cancellation policy)
     if (segmentIndices.length > 0) {
@@ -696,6 +941,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     
     // Process fare breakdown for multi-city
     this.processMultiCityFareBreakdown(multiCitySelectedFares);
+    
+    // Force change detection to ensure UI updates
+    this.cdr.detectChanges();
+    
+    console.log('After change detection - flightSegmentGroups length:', this.flightSegmentGroups.length);
   }
 
   processMultiCityFareBreakdown(multiCitySelectedFares: any): void {
@@ -1435,6 +1685,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   getBlankAdult() { return { firstName: '', lastName: '', gender: '', title: 'Mr', email: '', mobileDialCode: '+91', mobileNumber: '', requiresWheelchair: false, passportNumber: '', passportExpiryYear: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
   getBlankChild() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', requiresWheelchair: false, passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
   getBlankInfant() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
+  
+  trackByGroupIndex(index: number, group: any): any {
+    return index;
+  }
   
   openFareRuleModal() { this.showFareRuleModal = true; }
   closeFareRuleModal() { this.showFareRuleModal = false; }
