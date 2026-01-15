@@ -3195,16 +3195,72 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.closeFareOptionsModalMultiCity();
   }
 
+  finalizeMultiCityBooking(flight: any, fare: any): void {
+    if (this.selectedMultiCitySegmentIndex === -1 || !this.selectedMultiCityFlight) {
+      console.error('Invalid fare selection state');
+      return;
+    }
+
+    const segmentIndex = this.selectedMultiCitySegmentIndex;
+    
+    // Update the selected fare for this segment BEFORE closing modal
+    this.multicitySelectedFares[segmentIndex] = {
+      groupedFlight: this.deepCopy(this.selectedMultiCityFlight),
+      selectedFare: this.deepCopy(fare),
+      price: this.getAdultFarePerPerson(fare.FareBreakdown)
+    };
+
+    console.log('Selected multi-city fare for segment:', segmentIndex, this.multicitySelectedFares[segmentIndex]);
+    
+    // Get total number of segments - use multiple fallbacks
+    const totalSegments = this.multicityTabData?.length || 
+                         this.flightInputData['multiCitySegment']?.length || 
+                         (this.flightInputData['multiCityRoutes']?.length) || 
+                         1;
+    
+    // Check selected count BEFORE closing modal (to avoid reset issues)
+    // Count includes the one we just added
+    const selectedCount = Object.keys(this.multicitySelectedFares).length;
+    
+    console.log('Multi-city booking state:', {
+      segmentIndex,
+      totalSegments,
+      selectedCount,
+      selectedFares: Object.keys(this.multicitySelectedFares),
+      multicityTabDataLength: this.multicityTabData?.length,
+      multiCitySegmentLength: this.flightInputData['multiCitySegment']?.length,
+      multicitySelectedFares: this.multicitySelectedFares
+    });
+    
+    // Always proceed to booking when BOOK is clicked
+    // The final page will handle validation if needed
+    console.log('Proceeding to booking with', selectedCount, 'selected segments out of', totalSegments);
+    
+    // Close the modal first
+    this.closeFareOptionsModalMultiCity();
+    
+    // Proceed to booking immediately (no setTimeout to avoid delays)
+    try {
+      this.proceedWithMultiCityBooking(true);
+    } catch (error) {
+      console.error('Error proceeding with multi-city booking:', error);
+      // Fallback: try to navigate directly
+      this.router.navigate(['flightfinalsection']);
+    }
+  }
+
   get multicityTotalFare(): number {
     return Object.values(this.multicitySelectedFares).reduce((sum, f: any) => sum + (f?.price || 0), 0);
   }
 
   get multicityHasSelectedFares(): boolean {
     // Check if all segments have selected fares
-    if (!this.multicityTabData || this.multicityTabData.length === 0) {
+    const totalSegments = this.multicityTabData?.length || this.flightInputData['multiCitySegment']?.length || 0;
+    if (totalSegments === 0) {
       return false;
     }
-    return Object.keys(this.multicitySelectedFares).length === this.multicityTabData.length;
+    const selectedCount = Object.keys(this.multicitySelectedFares).length;
+    return selectedCount >= totalSegments;
   }
 
   getMultiCityRouteOrigin(index: number): string {
@@ -3248,8 +3304,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return route?.date || '';
   }
 
-  proceedWithMultiCityBooking(): void {
-    if (!this.multicityHasSelectedFares) {
+  proceedWithMultiCityBooking(skipCheck: boolean = false): void {
+    if (!skipCheck && !this.multicityHasSelectedFares) {
       Swal.fire({
         icon: 'warning',
         title: 'Incomplete Selection',
@@ -3286,7 +3342,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
     console.log('Navigating with multi-city flight data:', flightData);
     this.flightDataService.setStringValue(flightData);
-    this.router.navigate(['flightfinalsection']);
+    console.log('About to navigate to flightfinalsection...');
+    this.router.navigate(['flightfinalsection']).then(
+      (success) => console.log('Navigation successful:', success),
+      (error) => console.error('Navigation failed:', error)
+    );
   }
 
   toggleFarePanel(index: number): void {
