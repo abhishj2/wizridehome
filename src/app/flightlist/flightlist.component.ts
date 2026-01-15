@@ -3316,12 +3316,29 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
 
     // Prepare flight data for final page
+    // Ensure we pass both multiCitySegment (API format) and multiCityRoutes (original format if available)
+    const multiCitySegment = this.flightInputData['multiCitySegment'] || [];
+    const multiCityRoutes = this.flightInputData['multiCityRoutes'] || multiCitySegment; // Fallback to multiCitySegment if multiCityRoutes not available
+    
+    // Pass all flight results for each segment (similar to how one-way/round trip passes full flight data)
+    // This allows the final page to access all flight options if needed
+    const multiCityFlightResults: any = {};
+    if (this.multicityTabData && this.multicityTabData.length > 0) {
+      this.multicityTabData.forEach((tab: any, index: number) => {
+        if (tab.groupedFlights && tab.groupedFlights.length > 0) {
+          multiCityFlightResults[index] = tab.groupedFlights;
+        }
+      });
+    }
+    
     const flightData: any = {
       tboToken: this.flightInputData['tboToken'],
       ipAddress: this.flightInputData['ipAddress'],
       tripType: 'multi',
-      multiCitySegment: this.flightInputData['multiCitySegment'],
+      multiCitySegment: multiCitySegment,
       multiCitySelectedFares: this.multicitySelectedFares,
+      multiCityRoutes: multiCityRoutes, // Pass original format if available
+      multiCityFlightResults: multiCityFlightResults, // Pass all flight results for all segments
       fareType: this.getFareTypeNumber(this.flightInputData['fareType']),
       adults: this.flightInputData['adults'] || 1,
       children: this.flightInputData['children'] || 0,
@@ -3329,24 +3346,40 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       travelClass: this.flightInputData['travelClass'] || 'Economy',
       traceid: this.traceid,
       // Multi-city specific fields (may not match FlightData interface exactly)
-      fromCity: this.flightInputData['multiCitySegment']?.[0]?.Origin || '',
-      toCity: this.flightInputData['multiCitySegment']?.[this.flightInputData['multiCitySegment'].length - 1]?.Destination || '',
+      fromCity: multiCitySegment?.[0]?.Origin || '',
+      toCity: multiCitySegment?.[multiCitySegment.length - 1]?.Destination || '',
       fromAirport: '',
       fromAirportCode: '',
       toAirport: '',
       toAirportCode: '',
-      departureDate: this.flightInputData['multiCitySegment']?.[0]?.PreferredDepartureTime || '',
-      returnDate: null,
-      multiCityRoutes: this.flightInputData['multiCitySegment']
+      departureDate: multiCitySegment?.[0]?.PreferredDepartureTime || '',
+      returnDate: null
     };
 
     console.log('=== Navigating with multi-city flight data ===');
     console.log('multicitySelectedFares object:', this.multicitySelectedFares);
     console.log('multicitySelectedFares keys:', Object.keys(this.multicitySelectedFares));
     console.log('multicitySelectedFares count:', Object.keys(this.multicitySelectedFares).length);
+    console.log('multiCitySegment length:', multiCitySegment.length);
+    console.log('multiCityRoutes length:', multiCityRoutes.length);
     console.log('Full flightData:', flightData);
     console.log('flightData.multiCitySelectedFares:', flightData.multiCitySelectedFares);
     console.log('flightData.multiCitySelectedFares keys:', flightData.multiCitySelectedFares ? Object.keys(flightData.multiCitySelectedFares) : 'null/undefined');
+    console.log('flightData.multiCitySegment length:', flightData.multiCitySegment?.length);
+    console.log('flightData.multiCityRoutes length:', flightData.multiCityRoutes?.length);
+    
+    // Log each segment in multiCitySegment to verify all routes are included
+    if (multiCitySegment && multiCitySegment.length > 0) {
+      multiCitySegment.forEach((seg: any, idx: number) => {
+        console.log(`Segment ${idx} in multiCitySegment:`, {
+          Origin: seg.Origin,
+          Destination: seg.Destination,
+          PreferredDepartureTime: seg.PreferredDepartureTime,
+          hasSelectedFare: !!this.multicitySelectedFares[idx]
+        });
+      });
+    }
+    
     this.flightDataService.setStringValue(flightData);
     console.log('About to navigate to flightfinalsection...');
     this.router.navigate(['flightfinalsection']).then(
