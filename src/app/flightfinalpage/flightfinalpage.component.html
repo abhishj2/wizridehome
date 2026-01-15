@@ -716,6 +716,276 @@
     </div>
   </div>
 
+  <!-- Multi-City -->
+  <div class="flight-final-page" *ngIf="tripType == 'multicity'">
+    <!-- Flight Summary Cards: One per segment group -->
+    <ng-container *ngIf="tripType === 'multicity' && flightSegmentGroups?.length">
+      <div class="card" *ngFor="let group of flightSegmentGroups; let groupIndex = index">
+        <div class="flight-leg">
+          <ng-container *ngFor="let segment of group; let i = index">
+            <!-- Airline Info -->
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              <div class="city">{{ segment.to }}</div>
+            </div>
+
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover between legs -->
+            <div class="layover-row" *ngIf="segment.layover">
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + {{ Math.floor(segment.layover.hours / 24) }} Day
+                </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
+              </div>
+              <div class="line"></div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- CTA button -->
+      <div class="card no-padding">
+        <button class="details-btn" (click)="openTripSummary()">
+          View Trip & Fare Details
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Add Passenger Card -->
+    <div class="card">
+      <div class="section-title">Add Passenger Details</div>
+      <div class="passenger-section">
+        <div class="passenger-title">Adults (12+ yrs)</div>
+        <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of travellers; let i = index">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+            adult.firstName
+            ? adult.firstName + " " + adult.lastName
+            : "Adult " + (i + 1) + " (12 yrs+)"
+            }}
+          </div>
+          <button class="add-btn light" (click)="openPassengerModal('adult', i)">
+            {{ adult.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="children.length > 0">
+          Children (2-12 yrs old)
+        </div>
+        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+            child.firstName
+            ? child.firstName + " " + child.lastName
+            : "Child " + (i + 1) + " (2 to 12 yrs)"
+            }}
+          </div>
+          <button class="add-btn light" (click)="openPassengerModal('child', i)">
+            {{ child.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+      <div class="passenger-section">
+        <div class="passenger-title" *ngIf="infants.length > 0">
+          Infant (0-2 yrs old)
+        </div>
+        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <div class="label">
+            {{
+            infant.firstName
+            ? infant.firstName + " " + infant.lastName
+            : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+            }}
+          </div>
+          <button class="add-btn light" (click)="openPassengerModal('infant', i)">
+            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baggage Policy Card -->
+    <div class="card">
+      <div class="section-title">Baggage Policy</div>
+
+      <!-- Tab Headers: Scrollable row -->
+      <div class="tab-header-scroll">
+        <div
+          *ngFor="let group of groupedFlightSegments; let i = index"
+          class="tab-header"
+          [class.active]="i === activeTabIndex"
+          (click)="activeTabIndex = i"
+        >
+          {{ group[0]?.originCode }} -
+          {{ group[group.length - 1]?.destinationCode }}
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeTabIndex]">
+        <ng-container *ngFor="let segment of groupedFlightSegments[activeTabIndex]">
+          <div class="baggage-row" style="margin-top: 13px">
+            <div class="baggage-header">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+            <div class="baggage-info">
+              <div class="baggage-item">
+                <i class="fas fa-suitcase"></i>
+                <div>Cabin Bag :</div>
+                <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
+              </div>
+              <div class="baggage-item">
+                <i class="fas fa-suitcase-rolling"></i>
+                <div>Check-In Bag :</div>
+                <div class="value">{{ segment.checkInBaggage || "N/A" }}</div>
+              </div>
+            </div>
+          </div>
+          <hr class="baggage-divider" />
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Cancellation & Rescheduling Policy Card -->
+    <div class="card">
+      <div class="section-title-row" (click)="showPolicyModal = true; activeTab = 'cancel'">
+        <div class="section-title">Cancellation & Rescheduling Policy</div>
+        <div class="section-arrow">›</div>
+      </div>
+
+      <!-- Tab Headers -->
+      <div class="tab-header-scroll">
+        <div
+          *ngFor="let group of groupedFlightSegments; let i = index"
+          class="tab-header"
+          [class.active]="i === activeCancelTabIndex"
+          (click)="activeCancelTabIndex = i"
+        >
+          {{ group[0]?.originCode }} -
+          {{ group[group.length - 1]?.destinationCode }}
+        </div>
+      </div>
+
+      <!-- Tab Body -->
+      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeCancelTabIndex]">
+        <ng-container *ngFor="let segment of groupedFlightSegments[activeCancelTabIndex]">
+          <div class="cancellation-row">
+            <div class="flight-airline">
+              <img [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
+            </div>
+
+            <div class="criteria">
+              <div class="left">Cancellation Criteria</div>
+              <div class="right">Charges</div>
+            </div>
+
+            <div class="criteria-detail" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+              <div class="left">{{ row.range }}</div>
+              <div class="right">{{ row.price }}</div>
+            </div>
+          </div>
+
+          <hr class="baggage-divider" />
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- GST Details Card -->
+    <div class="card">
+      <div class="section-title">GST - (Optional)</div>
+      <div class="gst-box" (click)="openGSTModal()">
+        <div class="icon"><i class="fas fa-building"></i></div>
+        <div class="label">
+          <span class="gst-label-text">
+            {{
+            gstDetails.companyName
+            ? gstDetails.companyName
+            : "Travelling for Business?"
+            }}
+          </span>
+        </div>
+        <button class="add-btn light small">
+          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Terms and Conditions Card -->
+    <div class="card">
+      <div class="terms-section">
+        <label class="terms-checkbox">
+          <input type="checkbox" [(ngModel)]="termsAgreed" />
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            I understand and agree with the
+            <span class="link-text" (click)="showFareRules = true">Fare Rules</span>, the
+            <a class="link-text" href="https://wizzride.com/cancellationpolicy/privacypolicy" target="_blank"
+              rel="noopener noreferrer">
+              Privacy Policy</a>, the
+            <a class="link-text" href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank"
+              rel="noopener noreferrer">
+              User Agreement</a>
+            & the Terms of Service of Wizzride.
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Price Footer -->
+    <div class="footer-bar">
+      <div class="fare-summary-desktop">
+        <div class="fare-summary-title">Fare Summary</div>
+        <div class="fare-summary-line">
+          <span>Base Fare</span>
+          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        </div>
+        <div class="fare-summary-line">
+          <span>Taxes & Surcharges</span>
+          <span>{{ formatCurrency(totalTaxes) }}</span>
+        </div>
+        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <span>Baggage</span>
+          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+        </div>
+        <hr class="fare-summary-divider" />
+      </div>
+      <div class="total" style="cursor: pointer">
+        ₹ Total Price<br />
+        <strong>{{ finalAmount | number : "1.2-2" }}</strong>
+      </div>
+      <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
+        Proceed
+      </button>
+    </div>
+  </div>
+
   <!-- Modals and Popups -->
   <!-- Trip Summary Overlay -->
   <div class="trip-overlay" *ngIf="showTripSummary" (click)="closeTripSummary()"></div>

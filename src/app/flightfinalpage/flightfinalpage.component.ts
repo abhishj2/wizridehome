@@ -303,7 +303,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       })
     );
     
-    if(this.traceid && this.resultIndex) {
+    // Only call fare quote for one-way and round-trip (not multi-city)
+    if(this.traceid && this.resultIndex && this.tripType !== 'multicity') {
         this.callFareQuote();
     }
   }
@@ -444,10 +445,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.ipAddress = val['ipAddress'];
     this.tboToken = val['tboToken'];
     this.traceid = val['traceid'];
-    this.resultIndex = val['departureFlightData']?.['ResultIndex'] || '';
-    this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
-    this.flightDataDeparture = val['departureFlightData'];
-    this.flightDataReturn = val['returnFlightData'];
     
     // Set trip type
     const tripTypeVal = val['tripType'] || '';
@@ -458,6 +455,31 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     } else {
       this.tripType = 'oneway';
     }
+    
+    // Handle multi-city data
+    if (this.tripType === 'multicity' && val['multiCitySelectedFares']) {
+      this.processMultiCityData(val);
+      // Initialize passengers from multi-city data
+      this.totalAdults = val['adults'] || 1;
+      this.totalChildren = val['children'] || 0;
+      this.totalInfants = val['infants'] || 0;
+      // Initialize passenger arrays
+      this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+      this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+      this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+      // Initialize baggage counts
+      this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
+      this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
+      // Turn off loader for multi-city (data is already selected)
+      this.loader = false;
+      return;
+    }
+    
+    // Handle one-way and round-trip data
+    this.resultIndex = val['departureFlightData']?.['ResultIndex'] || '';
+    this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
+    this.flightDataDeparture = val['departureFlightData'];
+    this.flightDataReturn = val['returnFlightData'];
     
     // Set dates
     if (val['departureDate']) {
@@ -554,6 +576,180 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             this.cancellationPolicy = flightData.cancellationPolicy || [];
         }
     }
+  }
+
+  processMultiCityData(val: any): void {
+    const multiCitySelectedFares = val['multiCitySelectedFares'] || {};
+    this.flightSegments = [];
+    this.flightSegmentGroups = [];
+    this.groupedFlightSegments = [];
+    
+    // Set dates from multi-city segments
+    if (val['multiCitySegment'] && val['multiCitySegment'].length > 0) {
+      this.departureDate = new Date(val['multiCitySegment'][0].PreferredDepartureTime || val['departureDate']);
+    }
+    
+    // Get segment indices sorted
+    const segmentIndices = Object.keys(multiCitySelectedFares)
+      .map(k => parseInt(k))
+      .sort((a, b) => a - b);
+    
+    let allSegments: any[] = [];
+    
+    // Process each segment
+    for (const segmentIndex of segmentIndices) {
+      const fareData = multiCitySelectedFares[segmentIndex];
+      if (!fareData || !fareData.groupedFlight) continue;
+      
+      const flight = fareData.groupedFlight;
+      const selectedFare = fareData.selectedFare;
+      
+      // Get segments from the flight
+      const segmentGroups = flight.Segments || [];
+      const segmentGroup = segmentGroups[0] || [];
+      
+      // Process each segment in this group
+      const groupSegments: any[] = [];
+      for (let i = 0; i < segmentGroup.length; i++) {
+        const seg = segmentGroup[i];
+        const origin = seg.Origin?.Airport || {};
+        const destination = seg.Destination?.Airport || {};
+        const depDate = new Date(seg.Origin?.DepTime || seg.DepTime);
+        const arrDate = new Date(seg.Destination?.ArrTime || seg.ArrTime);
+        const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
+        
+        const segmentObj: any = {
+          airline: seg.Airline?.AirlineName,
+          logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
+          code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
+          aircraft: seg.Craft,
+          departureTime: this.formatTime(depDate),
+          arrivalTime: this.formatTime(arrDate),
+          from: origin.CityName,
+          fromAirport: `${origin.AirportName || ''}, Terminal ${origin.Terminal || 'N/A'}`.trim(),
+          to: destination.CityName,
+          toAirport: `${destination.AirportName || ''}, Terminal ${destination.Terminal || 'N/A'}`.trim(),
+          duration: this.formatDuration(durationMins),
+          cabinBaggage: selectedFare?.Segments?.[0]?.[0]?.CabinBaggage || seg.CabinBaggage,
+          checkInBaggage: selectedFare?.Segments?.[0]?.[0]?.Baggage || seg.Baggage,
+          fareTag: selectedFare?.Segments?.[0]?.[0]?.SupplierFareClass,
+          layover: null,
+          originCode: origin.AirportCode,
+          destinationCode: destination.AirportCode,
+          date: depDate,
+          depDate: depDate,
+          arrDate: arrDate,
+        };
+        
+        // Add layover if not last segment in group
+        if (i < segmentGroup.length - 1) {
+          const nextSeg = segmentGroup[i + 1];
+          const nextDep = new Date(nextSeg.Origin?.DepTime || nextSeg.DepTime);
+          const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
+          const layoverHours = layoverMins / 60;
+          segmentObj.layover = {
+            duration: this.formatDuration(layoverMins),
+            location: destination.CityName,
+            hours: layoverHours
+          };
+        }
+        
+        groupSegments.push(segmentObj);
+        allSegments.push(segmentObj);
+      }
+      
+      // Add layover between segment groups (if not last segment)
+      if (segmentIndex < segmentIndices.length - 1) {
+        const lastSegInGroup = groupSegments[groupSegments.length - 1];
+        const nextFareData = multiCitySelectedFares[segmentIndices[segmentIndices.indexOf(segmentIndex) + 1]];
+        if (nextFareData && nextFareData.groupedFlight) {
+          const nextFlight = nextFareData.groupedFlight;
+          const nextFirstSeg = nextFlight.Segments?.[0]?.[0];
+          if (nextFirstSeg) {
+            const nextDep = new Date(nextFirstSeg.Origin?.DepTime || nextFirstSeg.DepTime);
+            const layoverMins = Math.floor((nextDep.getTime() - lastSegInGroup.arrDate.getTime()) / 60000);
+            const layoverHours = layoverMins / 60;
+            lastSegInGroup.layover = {
+              duration: this.formatDuration(layoverMins),
+              location: lastSegInGroup.to,
+              hours: layoverHours
+            };
+          }
+        }
+      }
+      
+      this.flightSegmentGroups.push(groupSegments);
+      this.groupedFlightSegments.push(groupSegments);
+    }
+    
+    // Set flightSegments to all segments for compatibility
+    this.flightSegments = allSegments;
+    
+    // Store first flight data for compatibility (used for cancellation policy)
+    if (segmentIndices.length > 0) {
+      const firstFareData = multiCitySelectedFares[segmentIndices[0]];
+      if (firstFareData && firstFareData.groupedFlight) {
+        const firstFlight = firstFareData.groupedFlight;
+        this.flightDataDeparture = { Segments: firstFlight.Segments || [] };
+      }
+    }
+    
+    // Process fare breakdown for multi-city
+    this.processMultiCityFareBreakdown(multiCitySelectedFares);
+  }
+
+  processMultiCityFareBreakdown(multiCitySelectedFares: any): void {
+    let totalBaseFare = 0;
+    let totalTaxes = 0;
+    
+    // Sum up fares from all segments
+    Object.values(multiCitySelectedFares).forEach((fareData: any) => {
+      if (fareData.selectedFare) {
+        // Check if fare has FareBreakdown array
+        if (fareData.selectedFare.FareBreakdown && Array.isArray(fareData.selectedFare.FareBreakdown)) {
+          const breakdown = fareData.selectedFare.FareBreakdown;
+          // Process adult fare (PassengerType === 1 for adults)
+          const adultFare = breakdown.find((f: any) => f.PassengerType === 1);
+          if (adultFare) {
+            const basePerAdult = adultFare.PassengerCount > 0 ? adultFare.BaseFare / adultFare.PassengerCount : adultFare.BaseFare;
+            const taxPerAdult = adultFare.PassengerCount > 0 ? adultFare.Tax / adultFare.PassengerCount : adultFare.Tax;
+            totalBaseFare += basePerAdult * (this.totalAdults || 1);
+            totalTaxes += taxPerAdult * (this.totalAdults || 1);
+          }
+          // Process child fare if exists (PassengerType === 2 for children)
+          const childFare = breakdown.find((f: any) => f.PassengerType === 2);
+          if (childFare && this.totalChildren > 0) {
+            const basePerChild = childFare.PassengerCount > 0 ? childFare.BaseFare / childFare.PassengerCount : childFare.BaseFare;
+            const taxPerChild = childFare.PassengerCount > 0 ? childFare.Tax / childFare.PassengerCount : childFare.Tax;
+            totalBaseFare += basePerChild * this.totalChildren;
+            totalTaxes += taxPerChild * this.totalChildren;
+          }
+          // Process infant fare if exists (PassengerType === 3 for infants)
+          const infantFare = breakdown.find((f: any) => f.PassengerType === 3);
+          if (infantFare && this.totalInfants > 0) {
+            const basePerInfant = infantFare.PassengerCount > 0 ? infantFare.BaseFare / infantFare.PassengerCount : infantFare.BaseFare;
+            const taxPerInfant = infantFare.PassengerCount > 0 ? infantFare.Tax / infantFare.PassengerCount : infantFare.Tax;
+            totalBaseFare += basePerInfant * this.totalInfants;
+            totalTaxes += taxPerInfant * this.totalInfants;
+          }
+        } else if (fareData.selectedFare.Fare) {
+          // Alternative structure with Fare object
+          const fare = fareData.selectedFare.Fare;
+          totalBaseFare += (fare.BaseFare || 0) * (this.totalAdults || 1);
+          totalTaxes += (fare.Tax || 0) * (this.totalAdults || 1);
+        } else if (fareData.price) {
+          // Use price directly if available (per adult price)
+          totalBaseFare += fareData.price * (this.totalAdults || 1);
+        }
+      }
+    });
+    
+    this.totalBaseFare = totalBaseFare;
+    this.totalTaxes = totalTaxes;
+    this.adultBaseFare = this.totalAdults > 0 ? totalBaseFare / this.totalAdults : 0;
+    this.adultTaxes = this.totalAdults > 0 ? totalTaxes / this.totalAdults : 0;
+    
+    this.updateFinalFare();
   }
 
   loadFareRules() {
