@@ -270,7 +270,7 @@
         </div>
 
         <!-- Mobile Filter Chips and Button (only visible on mobile) -->
-        <div class="mobile-filter-chips-wrapper" *ngIf="flightType === 'oneway' || flightType === 'round'">
+        <div class="mobile-filter-chips-wrapper" *ngIf="flightType === 'oneway' || flightType === 'round' || flightType === 'multi'">
           <div class="mobile-filter-chips">
             <button class="mobile-filter-chip" [class.active]="selectedStops.includes(0)"
               (click)="toggleNonStopFilter()">
@@ -2309,9 +2309,10 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Multi-City Flights -->
-          <div *ngIf="flightType === 'multi'" class="flight-list-container">
+        <!-- Multi-City Flights -->
+        <div *ngIf="flightType === 'multi'">
             <!-- Multi-City Tab Navigation -->
             <div class="multicity-tabs-wrapper" *ngIf="multicityTabData && multicityTabData.length > 0">
               <button class="tab-scroll-btn left" (click)="scrollMulticityTabs('left')"
@@ -2340,21 +2341,83 @@
               </button>
             </div>
 
-            <!-- Selected Segment Flights -->
-            <div *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
-              <div class="segment-header">
-                <h3 class="section-title">
-                  Route {{ selectedMulticityTab + 1 }}:
-                  {{ getMultiCityRouteOrigin(selectedMulticityTab) }} →
-                  {{ getMultiCityRouteDestination(selectedMulticityTab) }}
-                </h3>
-                <div class="segment-date">
-                  {{ getMultiCityRouteDate(selectedMulticityTab) | date : "d MMM, yyyy" }}
+            <div class="results-layout" *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
+              <!-- Filter Sidebar for Multi-City (Desktop) -->
+              <div class="filter-sidebar-column" *ngIf="flightType === 'multi'">
+                <div class="filter-card">
+                  <h2 class="filter-heading">Filter Flights</h2>
+
+                  <!-- Airlines Filter -->
+                  <div class="filter-section">
+                    <h3 class="filter-subheading">Airlines</h3>
+                    <label class="filter-option" *ngFor="let airline of dynamicFilters.airlines">
+                      <input type="checkbox" [value]="airline" (change)="onAirlineFilterChange($event)" />
+                      {{ airline }}
+                    </label>
+                  </div>
+
+                  <!-- Price Range Filter -->
+                  <div class="filter-section">
+                    <h3 class="filter-subheading">Price Range</h3>
+                    <input type="range" [min]="dynamicFilters.min_price" [max]="dynamicFilters.max_price"
+                      [(ngModel)]="priceRange" class="price-range" (input)="onPriceChange()" />
+                    <div class="price-range-label">
+                      ₹{{ dynamicFilters.min_price | number : "1.0-0" }} - ₹{{ priceRange | number : "1.0-0" }}
+                    </div>
+                  </div>
+
+                  <!-- Number of Stops Filter -->
+                  <div class="filter-section">
+                    <h3 class="filter-subheading">Number of Stops</h3>
+                    <label class="filter-option" *ngFor="let stop of dynamicFilters.stops">
+                      <input type="checkbox" [value]="stop" (change)="onStopFilterChange($event)" />
+                      {{ stop === 0 ? "Non-stop" : stop + " Stop" + (stop > 1 ? "s" : "") }}
+                    </label>
+                  </div>
+
+                  <!-- Departure Time Filter -->
+                  <div class="filter-section">
+                    <h3 class="filter-subheading">Departure From {{ getMultiCityRouteOrigin(selectedMulticityTab) }}</h3>
+                    <div class="departure-time-filter">
+                      <div class="time-slot" *ngFor="let slot of departureTimeSlots"
+                        (click)="toggleDepartureSlot(slot.label)" [class.selected]="selectedDepartureSlots.has(slot.label)">
+                        <i [class]="slot.iconClass"></i>
+                        <div class="label">{{ slot.label }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Refundability Filter -->
+                  <div class="filter-section">
+                    <h3 class="filter-subheading">Refundability</h3>
+                    <label class="filter-option">
+                      <input type="checkbox" value="refundable" (change)="onRefundabilityChange($event)" />
+                      Partially Refundable
+                    </label>
+                    <label class="filter-option">
+                      <input type="checkbox" value="non-refundable" (change)="onRefundabilityChange($event)" />
+                      Non-refundable
+                    </label>
+                  </div>
                 </div>
               </div>
 
-              <!-- Flight Cards (matching one-way layout) -->
-              <div class="flight-cards" *ngIf="multicityTabData[selectedMulticityTab].groupedFlights && multicityTabData[selectedMulticityTab].groupedFlights.length > 0">
+              <!-- Results Column for Multi-City -->
+              <div class="results-column">
+                <div class="flight-list-container" *ngIf="multicityTabData && multicityTabData.length > 0 && multicityTabData[selectedMulticityTab]">
+                  <div class="segment-header">
+                    <h3 class="section-title">
+                      Route {{ selectedMulticityTab + 1 }}:
+                      {{ getMultiCityRouteOrigin(selectedMulticityTab) }} →
+                      {{ getMultiCityRouteDestination(selectedMulticityTab) }}
+                    </h3>
+                    <div class="segment-date">
+                      {{ getMultiCityRouteDate(selectedMulticityTab) | date : "d MMM, yyyy" }}
+                    </div>
+                  </div>
+
+                  <!-- Flight Cards (matching one-way layout) -->
+                  <div class="flight-cards" *ngIf="multicityTabData[selectedMulticityTab].groupedFlights && multicityTabData[selectedMulticityTab].groupedFlights.length > 0">
                 <div class="card mobile-flight-card-new" 
                   [class.selected]="multicitySelectedFares[selectedMulticityTab]?.groupedFlight === flight"
                   *ngFor="let flight of multicityTabData[selectedMulticityTab].groupedFlights; let i = index">
@@ -2625,10 +2688,12 @@
                 </div>
               </div>
 
-              <!-- No Flights Message -->
-              <div class="no-flights"
-                *ngIf="(!multicityTabData[selectedMulticityTab].groupedFlights || multicityTabData[selectedMulticityTab].groupedFlights.length === 0) && !loader">
-                <p>No flights found for this segment. Please try modifying your search.</p>
+                  <!-- No Flights Message -->
+                  <div class="no-flights"
+                    *ngIf="(!multicityTabData[selectedMulticityTab].groupedFlights || multicityTabData[selectedMulticityTab].groupedFlights.length === 0) && !loader">
+                    <p>No flights found for this segment. Please try modifying your search.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -2645,7 +2710,6 @@
             </div>
           </div>
 
-        </div>
       </div>
     </main>
 
