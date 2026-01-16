@@ -212,6 +212,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   passengerValidationErrors: any = {};
   get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
   
+  // Desktop inline form expansion
+  expandedPassengerKey: string | null = null; // Format: "adult-0", "child-1", etc.
+  
   // Baggage Counts (for mobile template)
   baggageCounts: { [key: number]: number } = {};
   onwardBaggageCounts: { [key: number]: number } = {};
@@ -1492,7 +1495,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.currentPassengerIndex = index;
     const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
     this.currentPassengerDetails = arr[index] ? { ...arr[index] } : this.getBlankPassenger(type);
-    this.showPassengerModal = true;
+    
+    // Desktop: expand inline form, Mobile: show modal
+    if (this.isMobileView()) {
+      this.showPassengerModal = true;
+    } else {
+      const key = `${type}-${index}`;
+      // Toggle: if already expanded, collapse it; otherwise expand
+      this.expandedPassengerKey = this.expandedPassengerKey === key ? null : key;
+    }
+  }
+  
+  isPassengerExpanded(type: 'adult' | 'child' | 'infant', index: number): boolean {
+    if (this.isMobileView()) return false;
+    return this.expandedPassengerKey === `${type}-${index}`;
+  }
+  
+  getPassengerKey(type: 'adult' | 'child' | 'infant', index: number): string {
+    return `${type}-${index}`;
   }
   
   getBlankPassenger(type: 'adult' | 'child' | 'infant') {
@@ -1504,6 +1524,48 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   closePassengerModal() { 
     this.showPassengerModal = false;
     this.passengerValidationErrors = {};
+  }
+  
+  collapsePassengerForm() {
+    this.expandedPassengerKey = null;
+    this.passengerValidationErrors = {};
+  }
+  
+  getPassengerDetailsForForm(type: 'adult' | 'child' | 'infant', index: number): any {
+    const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
+    return arr[index] ? { ...arr[index] } : this.getBlankPassenger(type);
+  }
+  
+  setPassengerDetailsForForm(type: 'adult' | 'child' | 'infant', index: number, details: any) {
+    const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
+    if (arr[index]) {
+      Object.assign(arr[index], details);
+    }
+  }
+  
+  savePassengerDetailsInline(type: 'adult' | 'child' | 'infant', index: number, details: any) {
+    // Set current passenger context for validation
+    this.currentPassengerType = type;
+    this.currentPassengerIndex = index;
+    this.currentPassengerDetails = { ...details }; // Create a copy for validation
+    
+    // Clear previous errors
+    this.passengerValidationErrors = {};
+    
+    // Validate before saving
+    if (!this.validatePassengerDetails(this.currentPassengerDetails)) {
+      // Keep the form expanded if validation fails
+      this.cdr.detectChanges();
+      return; // Don't save if validation fails
+    }
+
+    // Save the details
+    this.setPassengerDetailsForForm(type, index, this.currentPassengerDetails);
+    
+    // Collapse the form after successful save
+    this.expandedPassengerKey = null;
+    this.passengerValidationErrors = {};
+    this.cdr.detectChanges();
   }
   
   validatePassengerDetails(details: any): boolean {
@@ -1596,7 +1658,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Trigger change detection to update the proceed button state
       this.cdr.detectChanges();
     }
-    this.closePassengerModal();
+    
+    // Close modal on mobile, collapse form on desktop
+    if (this.isMobileView()) {
+      this.closePassengerModal();
+    } else {
+      // Collapse the expanded form after saving
+      this.expandedPassengerKey = null;
+      this.passengerValidationErrors = {};
+    }
   }
   
   updateProceedButton(): boolean {

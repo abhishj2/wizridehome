@@ -665,6 +665,193 @@ body {
   font-weight: 600;
 }
 
+/* Desktop Inline Passenger Form */
+.passenger-item-wrapper {
+  margin-bottom: 8px;
+}
+
+.passenger-inline-form {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.passenger-inline-form.expanded {
+  max-height: 2000px;
+  transition: max-height 0.4s ease-in;
+}
+
+.passenger-form-content {
+  padding: 20px;
+}
+
+.passenger-form-content .form-group {
+  margin-bottom: 16px;
+}
+
+.passenger-form-content .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.passenger-form-content .form-row .form-group {
+  margin-bottom: 0;
+}
+
+/* Responsive: Stack form rows on smaller desktop screens */
+@media (max-width: 1024px) {
+  .passenger-form-content .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .passenger-form-content .form-row .form-group {
+    margin-bottom: 16px;
+  }
+}
+
+.passenger-form-content .form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.passenger-form-content .form-group input,
+.passenger-form-content .form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background: #ffffff;
+}
+
+.passenger-form-content .input-group-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.passenger-form-content .dial-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.passenger-form-content .form-group input:focus,
+.passenger-form-content .form-group select:focus {
+  outline: none;
+  border-color: #0d9488;
+}
+
+.passenger-form-content .form-group input.error,
+.passenger-form-content .form-group select.error {
+  border-color: #ef4444;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.gender-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.gender-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gender-btn:hover {
+  border-color: #0d9488;
+  color: #0d9488;
+}
+
+.gender-btn.active {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #ffffff;
+}
+
+.passenger-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.passenger-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  background: #000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.passenger-save-btn:hover {
+  background: #006666;
+}
+
+.passenger-cancel-btn {
+  flex: 1;
+  padding: 12px 24px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.passenger-cancel-btn:hover {
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+/* Hide desktop form on mobile */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Ensure modal still works on mobile */
+@media (min-width: 769px) {
+  .trip-popup:has(.passenger-form-content) {
+    display: none !important;
+  }
+}
+
 
 
 /* GST Box - Compact */
