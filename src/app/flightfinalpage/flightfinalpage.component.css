@@ -290,6 +290,13 @@ body {
 }
 
 @media (min-width: 769px) {
+  .footer-bar {
+    top: 100px !important;
+}
+
+.scroll-wrapper {
+    overflow: visible !important
+}
   /* Hide mobile baggage section on desktop */
   .mobile-baggage-section {
     display: none;

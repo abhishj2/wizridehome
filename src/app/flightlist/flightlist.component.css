@@ -2393,9 +2393,9 @@ img {
 
 /* MakeMyTrip Style Fare List */
 .fare-list {
-  list-style: none;
   padding: 0;
   margin: 0;
+  align-items: center !important;
 }
 
 .fare-list li {
@@ -2403,7 +2403,7 @@ img {
   color: #4b5563;
   margin-bottom: 10px;
   display: flex;
-  align-items: flex-start;
+  align-items: center !important;
   gap: 10px;
   line-height: 1.5;
 }

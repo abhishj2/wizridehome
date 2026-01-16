@@ -1252,7 +1252,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll() {
     if (!this.isBrowser) return;
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -3269,41 +3269,49 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   // Finalize selection
   finalizeSelection(fare: any): void {
     console.log("Fare Selected", fare);
+    
+    // Handle multi-city separately
+    if (this.flightType === 'multi') {
+        console.log('Multi-city booking handled by proceedWithMultiCityBooking');
+        return;
+    }
+
+    // Existing one-way and round-trip logic...
     var departureFareData, returnFareData;
 
     this.closeFareOptionsModal();
 
     if (this.flightType === 'oneway') {
-      departureFareData = fare;
+        departureFareData = fare;
     } else {
-      departureFareData = fare['departureFare'];
-      returnFareData = fare['returnFare'];
+        departureFareData = fare['departureFare'];
+        returnFareData = fare['returnFare'];
     }
 
     this.flightDataService.setStringValue({
-      tboToken: this.flightInputData['tboToken'],
-      ipAddress: this.flightInputData['ipAddress'],
-      tripType: this.flightInputData['tripType'],
-      fromCity: this.flightInputData['fromCity'],
-      fromAirport: this.flightInputData['fromAirport'],
-      fromAirportCode: this.flightInputData['fromAirportCode'],
-      toCity: this.flightInputData['toCity'],
-      toAirport: this.flightInputData['toAirport'],
-      toAirportCode: this.flightInputData['toAirportCode'],
-      departureDate: this.flightInputData['departureDate'],
-      returnDate: this.flightInputData['returnDate'],
-      fareType: this.flightInputData['fareType'],
-      adults: this.flightInputData['adults'],
-      children: this.flightInputData['children'],
-      infants: this.flightInputData['infants'],
-      travelClass: this.flightInputData['travelClass'],
-      traceid: this.traceid,
-      departureFlightData: departureFareData,
-      returnFlightData: returnFareData
+        tboToken: this.flightInputData['tboToken'],
+        ipAddress: this.flightInputData['ipAddress'],
+        tripType: this.flightInputData['tripType'],
+        fromCity: this.flightInputData['fromCity'],
+        fromAirport: this.flightInputData['fromAirport'],
+        fromAirportCode: this.flightInputData['fromAirportCode'],
+        toCity: this.flightInputData['toCity'],
+        toAirport: this.flightInputData['toAirport'],
+        toAirportCode: this.flightInputData['toAirportCode'],
+        departureDate: this.flightInputData['departureDate'],
+        returnDate: this.flightInputData['returnDate'],
+        fareType: this.flightInputData['fareType'],
+        adults: this.flightInputData['adults'],
+        children: this.flightInputData['children'],
+        infants: this.flightInputData['infants'],
+        travelClass: this.flightInputData['travelClass'],
+        traceid: this.traceid,
+        departureFlightData: departureFareData,
+        returnFlightData: returnFareData
     } as FlightData);
 
     this.router.navigate(['flightfinalsection']);
-  }
+}
 
   // Multi-city methods
   selectMulticityTab(index: number): void {
@@ -3519,30 +3527,38 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     if (!segment) return '';
 
     if (segment.Origin) {
-      // API format - return the code, try to find city name
-      const city = this.cities.find(c => c.code === segment.Origin);
-      return city ? `${city.name} (${segment.Origin})` : segment.Origin;
+        // API format
+        const city = this.cities.find(c => c.code === segment.Origin);
+        return city ? `${city.name} (${segment.Origin})` : segment.Origin;
+    } else if (segment.from) {
+        // Form input format
+        return segment.from;
     }
 
-    // Fallback to multiCityRoutes format
+    // Fallback
     const route = this.flightInputData['multiCityRoutes']?.[index];
     return route?.from || '';
-  }
+}
 
-  getMultiCityRouteDestination(index: number): string {
-    const segment = this.flightInputData['multiCitySegment']?.[index];
-    if (!segment) return '';
+getMultiCityRouteDestination(index: number): string {
+  const segment = this.flightInputData['multiCitySegment']?.[index];
+  if (!segment) return '';
 
-    if (segment.Destination) {
-      // API format - return the code, try to find city name
+  if (segment.Destination) {
+      // API format
       const city = this.cities.find(c => c.code === segment.Destination);
       return city ? `${city.name} (${segment.Destination})` : segment.Destination;
-    }
-
-    // Fallback to multiCityRoutes format
-    const route = this.flightInputData['multiCityRoutes']?.[index];
-    return route?.to || '';
+  } else if (segment.to) {
+      // Form input format
+      return segment.to;
   }
+
+  // Fallback
+  const route = this.flightInputData['multiCityRoutes']?.[index];
+  return route?.to || '';
+}
+
+
 
   getMultiCityRouteDate(index: number): string {
     const segment = this.flightInputData['multiCitySegment']?.[index];
@@ -3560,180 +3576,185 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.debugMultiCityState();
     
     console.log('proceedWithMultiCityBooking called', {
-      skipCheck,
-      multicitySelectedFaresCount: Object.keys(this.multicitySelectedFares).length
+        skipCheck,
+        multicitySelectedFaresCount: Object.keys(this.multicitySelectedFares).length
     });
-  
-    // Validate we have selections
-    const selectedCount = Object.keys(this.multicitySelectedFares).length;
-    if (selectedCount === 0) {
-      console.error('No flights selected!');
-      Swal.fire({
-        icon: 'warning',
-        title: 'No Selection',
-        text: 'Please select flights for all segments before proceeding.',
-        confirmButtonText: 'Ok'
-      });
-      return;
+
+    // Validate we have selections for all segments
+    // Use the same logic as multicityHasSelectedFares to ensure consistency
+    const totalSegments = this.multicityTabData?.length || 
+                         this.flightInputData['multiCitySegment']?.length || 
+                         this.flightInputData['multiCityRoutes']?.length || 
+                         0;
+    
+    if (totalSegments === 0) {
+        console.error('No multi-city segments found!');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No flight segments found. Please try again.',
+            confirmButtonText: 'Ok'
+        });
+        return;
     }
-  
-    // Get segment indices
+    
+    // Check if all segments (0 to totalSegments-1) have selected fares
+    let missingSegments: number[] = [];
+    for (let i = 0; i < totalSegments; i++) {
+        if (!this.multicitySelectedFares[i] || !this.multicitySelectedFares[i].selectedFare) {
+            missingSegments.push(i);
+        }
+    }
+    
+    if (missingSegments.length > 0 && !skipCheck) {
+        console.error('Not all segments selected!', {
+            selected: Object.keys(this.multicitySelectedFares).length,
+            total: totalSegments,
+            missingSegments: missingSegments
+        });
+        Swal.fire({
+            icon: 'warning',
+            title: 'Incomplete Selection',
+            text: `Please select flights for all ${totalSegments} segments before proceeding.`,
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    // Get all segment indices and sort them
     const segmentIndices = Object.keys(this.multicitySelectedFares)
-      .map(Number)
-      .sort((a, b) => a - b);
+        .map(Number)
+        .sort((a, b) => a - b);
     
     console.log('Segment indices selected:', segmentIndices);
-  
-    const lastIndex = segmentIndices[segmentIndices.length - 1];
-    const lastSegmentData = this.multicitySelectedFares[lastIndex];
-  
-    if (!lastSegmentData || !lastSegmentData.selectedFare) {
-      console.error('Missing final fare selection', { 
-        lastIndex, 
-        lastSegmentData,
-        allSelectedFares: this.multicitySelectedFares 
-      });
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Could not retrieve fare details. Please re-select your flights.',
-        confirmButtonText: 'Ok'
-      });
-      return;
-    }
-  
-    // Validate lastSegmentData structure
-    if (!lastSegmentData.groupedFlight || !lastSegmentData.selectedFare) {
-      console.error('Invalid lastSegmentData structure:', lastSegmentData);
-      Swal.fire({
-        icon: 'error',
-        title: 'Data Error',
-        text: 'Flight data is incomplete. Please select your flights again.',
-        confirmButtonText: 'Ok'
-      });
-      return;
-    }
-  
-    // Get multi-city segment info
-    const multiCitySegment = this.flightInputData['multiCitySegment'] || [];
+
+    // Get multiCitySegments for building booking data
+    const multiCitySegments = this.flightInputData['multiCitySegment'] || this.flightInputData['multiCityRoutes'] || [];
     
-    if (multiCitySegment.length === 0) {
-      console.error('No multiCitySegment data found in flightInputData');
-      Swal.fire({
-        icon: 'error',
-        title: 'Data Error',
-        text: 'Route information is missing. Please search again.',
-        confirmButtonText: 'Ok'
-      });
-      return;
-    }
-  
-    const firstSegment = multiCitySegment[0];
-    const lastSegment = multiCitySegment[multiCitySegment.length - 1];
-  
-    // Prepare flight data
-    const flightData: any = {
-      tboToken: this.flightInputData['tboToken'],
-      ipAddress: this.flightInputData['ipAddress'],
-      tripType: 'multicity',
-      
-      // Route info
-      fromCity: this.getMultiCityRouteOrigin(0),
-      fromAirportCode: firstSegment?.Origin || '',
-      toCity: this.getMultiCityRouteDestination(multiCitySegment.length - 1),
-      toAirportCode: lastSegment?.Destination || '',
-      
-      // Multi-city specific
-      multiCitySegment: this.deepCopy(multiCitySegment),
-      multiCitySelectedFares: this.deepCopy(this.multicitySelectedFares),
-      
-      // Passenger info
-      departureDate: firstSegment?.PreferredDepartureTime?.split('T')[0] || this.flightInputData['departureDate'],
-      returnDate: null,
-      adults: this.flightInputData['adults'] || 1,
-      children: this.flightInputData['children'] || 0,
-      infants: this.flightInputData['infants'] || 0,
-      travelClass: this.flightInputData['travelClass'] || 'Economy',
-      fareType: this.flightInputData['fareType'],
-      
-      // Trace ID
-      traceid: this.traceid,
-      
-      // Flight data - use last segment which contains all journey info
-      departureFlightData: {
-        flight: this.deepCopy(lastSegmentData.groupedFlight),
-        selectedFare: {
-          originalFareOption: this.deepCopy(lastSegmentData.selectedFare)
-        }
-      },
-      
-      returnFlightData: null
+    // Get airport names from codes
+    const fromAirportCode = multiCitySegments[0]?.Origin || multiCitySegments[0]?.fromAirportCode || '';
+    const toAirportCode = multiCitySegments[totalSegments - 1]?.Destination || 
+                          multiCitySegments[totalSegments - 1]?.toAirportCode || '';
+    
+    const fromAirportObj = this.cities.find(c => c.code === fromAirportCode);
+    const toAirportObj = this.cities.find(c => c.code === toAirportCode);
+    
+    const fromAirport = fromAirportObj?.airport || fromAirportObj?.name || fromAirportCode;
+    const toAirport = toAirportObj?.airport || toAirportObj?.name || toAirportCode;
+
+    // Prepare the complete multi-city booking data
+    const multiCityBookingData: FlightData & { multiCitySegment?: any; multiCitySelectedFares?: any; totalPrice?: number } = {
+        tboToken: this.flightInputData['tboToken'],
+        ipAddress: this.flightInputData['ipAddress'],
+        tripType: 'multi',
+        
+        // Route info from first and last segments
+        fromCity: this.getMultiCityRouteOrigin(0),
+        fromAirport: fromAirport,
+        fromAirportCode: fromAirportCode,
+        toCity: this.getMultiCityRouteDestination(totalSegments - 1),
+        toAirport: toAirport,
+        toAirportCode: toAirportCode,
+        
+        // Multi-city specific data (CRITICAL - this was missing/misformatted)
+        multiCitySegment: this.deepCopy(multiCitySegments),
+        multiCitySelectedFares: this.deepCopy(this.multicitySelectedFares),
+        
+        // Passenger info
+        departureDate: multiCitySegments[0]?.PreferredDepartureTime?.split('T')[0] || 
+                      this.flightInputData['departureDate'],
+        returnDate: null,
+        adults: this.flightInputData['adults'] || 1,
+        children: this.flightInputData['children'] || 0,
+        infants: this.flightInputData['infants'] || 0,
+        travelClass: this.flightInputData['travelClass'] || 'Economy',
+        fareType: this.flightInputData['fareType'],
+        
+        // Trace ID
+        traceid: this.traceid,
+        
+        // Flight data - for multi-city, we store ALL selected fares
+        departureFlightData: null, // Not used for multi-city
+        returnFlightData: null,    // Not used for multi-city
+        
+        // NEW: Store the total price
+        totalPrice: this.multicityTotalFare
     };
-  
+
     console.log('=== FINAL MULTI-CITY BOOKING DATA ===');
-    console.log(JSON.stringify(flightData, null, 2));
-  
-    // Validate flightData has all required fields
-    const requiredFields = ['tboToken', 'ipAddress', 'tripType', 'traceid', 'departureFlightData'];
-    const missingFields = requiredFields.filter(field => !flightData[field]);
+    console.log('Complete booking data:', JSON.stringify(multiCityBookingData, null, 2));
+    console.log('Key properties:', {
+        hasMultiCitySegment: !!multiCityBookingData.multiCitySegment,
+        multiCitySegmentLength: multiCityBookingData.multiCitySegment?.length,
+        hasMultiCitySelectedFares: !!multiCityBookingData.multiCitySelectedFares,
+        selectedFaresKeys: Object.keys(multiCityBookingData.multiCitySelectedFares || {}).length,
+        hasTraceId: !!multiCityBookingData.traceid,
+        hasToken: !!multiCityBookingData.tboToken,
+        totalPrice: multiCityBookingData.totalPrice
+    });
+
+    // Validate critical data
+    const requiredFields = ['tboToken', 'ipAddress', 'traceid', 'multiCitySegment', 'multiCitySelectedFares'];
+    const missingFields = requiredFields.filter(field => !(multiCityBookingData as Record<string, any>)[field]);
     
     if (missingFields.length > 0) {
-      console.error('Missing required fields:', missingFields);
-      Swal.fire({
-        icon: 'error',
-        title: 'Data Error',
-        text: `Missing required information: ${missingFields.join(', ')}. Please try again.`,
-        confirmButtonText: 'Ok'
-      });
-      return;
+        console.error('Missing required fields:', missingFields);
+        Swal.fire({
+            icon: 'error',
+            title: 'Data Error',
+            text: `Missing required information: ${missingFields.join(', ')}. Please try again.`,
+            confirmButtonText: 'Ok'
+        });
+        return;
     }
-  
+
     // Save to service
     try {
-      this.flightDataService.setStringValue(flightData);
-      console.log('✓ Flight data saved to service');
-      
-      // Backup to localStorage
-      if (this.isBrowser && typeof localStorage !== 'undefined') {
-        localStorage.setItem('multiCityFlightData', JSON.stringify(flightData));
-        console.log('✓ Flight data backed up to localStorage');
-      }
+        console.log('Saving to flightDataService...');
+        this.flightDataService.setStringValue(multiCityBookingData as FlightData);
+        console.log('✓ Flight data saved to service');
+        
+        // Backup to localStorage
+        if (this.isBrowser && typeof localStorage !== 'undefined') {
+            localStorage.setItem('multiCityFlightData', JSON.stringify(multiCityBookingData));
+            console.log('✓ Flight data backed up to localStorage');
+        }
     } catch (error) {
-      console.error('✗ Error saving flight data:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Save Error',
-        text: 'Failed to save flight data. Please try again.',
-        confirmButtonText: 'Ok'
-      });
-      return;
+        console.error('✗ Error saving flight data:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Save Error',
+            text: 'Failed to save flight data. Please try again.',
+            confirmButtonText: 'Ok'
+        });
+        return;
     }
-  
-    // Navigate
+
+    // Navigate to final section
     console.log('→ Navigating to flightfinalsection...');
     
     this.router.navigate(['flightfinalsection']).then(
-      (success) => {
-        if (success) {
-          console.log('✓ Navigation successful');
-        } else {
-          console.error('✗ Navigation returned false');
-          // Try alternate navigation
-          console.log('Trying alternate navigation method...');
-          window.location.href = '/flightfinalsection';
+        (success) => {
+            if (success) {
+                console.log('✓ Navigation successful');
+            } else {
+                console.error('✗ Navigation returned false');
+                // Try alternate navigation
+                console.log('Trying alternate navigation method...');
+                this.router.navigate(['/flightfinalsection']);
+            }
+        },
+        (error) => {
+            console.error('✗ Router error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Navigation Error',
+                text: 'Unable to navigate to booking page. Please try again.',
+                confirmButtonText: 'Ok'
+            });
         }
-      },
-      (error) => {
-        console.error('✗ Router error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Navigation Error',
-          text: 'Unable to navigate to booking page. Please try again.',
-          confirmButtonText: 'Ok'
-        });
-      }
     );
-  }
+}
 
   toggleFarePanel(index: number): void {
     this.farePanelExpanded = this.farePanelExpanded.map((_, i) => i === index ? !this.farePanelExpanded[i] : false);
