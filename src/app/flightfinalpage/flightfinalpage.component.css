@@ -571,15 +571,28 @@ body {
 
 /* Passenger Section */
 .passenger-section {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-.passenger-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #6c757d;
+.passenger-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
+}
+
+.passenger-category-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.passenger-count {
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .passenger-box {
@@ -587,26 +600,70 @@ body {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: #f8f9fa;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   margin-bottom: 8px;
 }
 
-.passenger-box .icon {
-  width: 40px;
-  height: 40px;
+.passenger-icon-circle {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e9ecef;
+  background: #f3f4f6;
   border-radius: 50%;
-  color: #6c757d;
+  color: #4b5563;
+  font-size: 14px;
 }
 
-.passenger-box .label {
+.passenger-box.completed .passenger-icon-circle {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.passenger-label {
   flex: 1;
-  font-size: 15px;
-  color: #212529;
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 400;
+}
+
+.passenger-add-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #14b8a6;
+  color: #14b8a6;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.passenger-add-btn:hover {
+  background: #f0fdfa;
+  border-color: #0d9488;
+  color: #0d9488;
+}
+
+.passenger-important-note {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.passenger-important-note strong {
+  color: #ea580c;
+  font-weight: 600;
 }
 
 
@@ -1668,7 +1725,7 @@ body {
   .makemytrip-flight-card .flight-route .city {
     font-size: 24px;
     font-weight: 700;
-    color: #1f2937;
+    color: #474747;
     flex: 0 0 auto;
   }
 
@@ -1683,7 +1740,7 @@ body {
   }
 
   /* Dashed line */
-  .makemytrip-flight-card .flight-route .plane-icon::before {
+  /* .makemytrip-flight-card .flight-route .plane-icon::before {
     content: '';
     position: absolute;
     left: 0;
@@ -1693,7 +1750,7 @@ body {
     border-top: 2px dashed #d1d5db;
     transform: translateY(-50%);
     z-index: 1;
-  }
+  } */
 
   /* Circular airplane icon */
   .makemytrip-flight-card .flight-route .plane-icon i {
@@ -1705,10 +1762,10 @@ body {
     align-items: center;
     justify-content: center;
     background: #ffffff;
-    border: 2px solid #14b8a6;
+    border: 2px solid #474747;
     border-radius: 50%;
     font-size: 20px;
-    color: #14b8a6;
+    color: #474747;
     margin: 0;
     padding: 0;
   }
@@ -2501,7 +2558,7 @@ body {
 
   /* Premium Card Design */
   .flight-final-page>.card {
-    padding: 15px;
+    padding: 20px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -2537,7 +2594,7 @@ body {
   .flight-route .city {
     font-size: 28px;
     font-weight: 700;
-    color: #212529;
+    color: #474747;
     position: relative;
     z-index: 2;
   }
@@ -2559,7 +2616,7 @@ body {
     left: 30px;
     right: 0;
     height: 2px;
-    background-image: linear-gradient(to right, #008b8b 50%, transparent 50%);
+    background-image: linear-gradient(to right, #474747 50%, transparent 50%);
     background-size: 10px 2px;
     background-repeat: repeat-x;
     transform: translateY(-50%);
@@ -2576,10 +2633,10 @@ body {
     align-items: center;
     justify-content: center;
     background: #ffffff;
-    border: 2px solid #008b8b;
+    border: 2px solid #474747;
     border-radius: 50%;
     font-size: 24px;
-    color: #008b8b;
+    color: #474747;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -3362,7 +3419,7 @@ i.fas.fa-plane-departure {
 
     .flight-route .plane-icon i {
       font-size: 20px !important;
-      color: #008b8b !important;
+      color: #474747 !important;
       margin: 0 !important;
       /* Reset existing margins */
       padding: 0 !important;
@@ -3378,7 +3435,7 @@ i.fas.fa-plane-departure {
       left: 10% !important;
       right: 10% !important;
       height: 2px !important;
-      background-image: linear-gradient(to right, #008b8b 50%, transparent 50%) !important;
+      background-image: linear-gradient(to right, #474747 50%, transparent 50%) !important;
       background-size: 10px 2px !important;
       background-repeat: repeat-x !important;
       transform: translateY(-50%) !important;

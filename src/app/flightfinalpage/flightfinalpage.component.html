@@ -176,57 +176,82 @@
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
+      
+      <!-- Adults Section -->
       <div class="passenger-section">
-        <div class="passenger-title">Adults (12+ yrs)</div>
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">ADULTS (12+ YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(adults) }}/{{ adults.length }} added</span>
+        </div>
         <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
+            <i class="fas fa-check" *ngIf="adult.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             adult.firstName
             ? adult.firstName + " " + adult.lastName
             : "Adult " + (i + 1) + " (12 yrs+)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('adult', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
             {{ adult.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="children.length > 0">
-          Children (2-12 yrs old)
+
+      <!-- Children Section -->
+      <div class="passenger-section" *ngIf="children.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
         <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+            <i class="fas fa-check" *ngIf="child.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             child.firstName
             ? child.firstName + " " + child.lastName
             : "Child " + (i + 1) + " (2 to 12 yrs)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('child', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
             {{ child.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="infants.length > 0">
-          Infant (0-2 yrs old)
+
+      <!-- Infants Section -->
+      <div class="passenger-section" *ngIf="infants.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
         <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             infant.firstName
             ? infant.firstName + " " + infant.lastName
             : "Infant " + (i + 1) + " (15 days to 2 yrs)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('infant', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
             {{ infant.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
+      </div>
+
+      <!-- Important Note -->
+      <div class="passenger-important-note">
+        <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
       </div>
     </div>
 
@@ -503,60 +528,84 @@
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
+      
+      <!-- Adults Section -->
       <div class="passenger-section">
-        <div class="passenger-title">Adults (12+ yrs)</div>
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">ADULTS (12+ YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(adults) }}/{{ adults.length }} added</span>
+        </div>
         <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
+            <i class="fas fa-check" *ngIf="adult.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             adult.firstName
             ? adult.firstName + " " + adult.lastName
             : "Adult " + (i + 1) + " (12 yrs+)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('adult', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
             {{ adult.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="children.length > 0">
-          Children (2-12 yrs old)
+
+      <!-- Children Section -->
+      <div class="passenger-section" *ngIf="children.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
         <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+            <i class="fas fa-check" *ngIf="child.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             child.firstName
             ? child.firstName + " " + child.lastName
             : "Child " + (i + 1) + " (2 to 12 yrs)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('child', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
             {{ child.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="infants.length > 0">
-          Infant (0-2 yrs old)
+
+      <!-- Infants Section -->
+      <div class="passenger-section" *ngIf="infants.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
         <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
             infant.firstName
             ? infant.firstName + " " + infant.lastName
             : "Infant " + (i + 1) + " (15 days to 2 yrs)"
             }}
           </div>
-          <button class="add-btn light" (click)="openPassengerModal('infant', i)">
+          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
             {{ infant.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-    </div>
 
+      <!-- Important Note -->
+      <div class="passenger-important-note">
+        <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
+      </div>
+    </div>
 
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
     <div class="card cancellation-policy-card-mobile">
@@ -890,74 +939,82 @@
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
+      
+      <!-- Adults Section -->
       <div class="passenger-section">
-        <div class="passenger-title">Adults (12+ yrs)</div>
-        <div class="passenger-box" *ngFor="let adult of adults; let i = index">
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">ADULTS (12+ YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(adults) }}/{{ adults.length }} added</span>
+        </div>
+        <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
+            <i class="fas fa-check" *ngIf="adult.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
               adult.firstName
                 ? adult.firstName + " " + adult.lastName
                 : "Adult " + (i + 1) + " (12 yrs+)"
             }}
           </div>
-          <button
-            class="add-btn light"
-            (click)="openPassengerModal('adult', i)"
-          >
+          <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
             {{ adult.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <hr class="passenger-divider" />
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="children.length > 0">
-          Children (2-12 yrs old)
+
+      <!-- Children Section -->
+      <div class="passenger-section" *ngIf="children.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
-        <div
-          class="passenger-box"
-          *ngFor="let child of children; let i = index"
-        >
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+            <i class="fas fa-check" *ngIf="child.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
               child.firstName
                 ? child.firstName + " " + child.lastName
                 : "Child " + (i + 1) + " (2 to 12 yrs)"
             }}
           </div>
-          <button
-            class="add-btn light"
-            (click)="openPassengerModal('child', i)"
-          >
+          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
             {{ child.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
       </div>
-      <hr class="passenger-divider" />
-      <div class="passenger-section">
-        <div class="passenger-title" *ngIf="infants.length > 0">
-          Infant (0-2 yrs old)
+
+      <!-- Infants Section -->
+      <div class="passenger-section" *ngIf="infants.length > 0">
+        <div class="passenger-category-header">
+          <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
-        <div
-          class="passenger-box"
-          *ngFor="let infant of infants; let i = index"
-        >
-          <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="label">
+        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
+          <div class="passenger-icon-circle">
+            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+          </div>
+          <div class="passenger-label">
             {{
               infant.firstName
                 ? infant.firstName + " " + infant.lastName
                 : "Infant " + (i + 1) + " (15 days to 2 yrs)"
             }}
           </div>
-          <button
-            class="add-btn light"
-            (click)="openPassengerModal('infant', i)"
-          >
+          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
             {{ infant.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
+      </div>
+
+      <!-- Important Note -->
+      <div class="passenger-important-note">
+        <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
       </div>
     </div>
 

@@ -2034,4 +2034,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     return baggageArray;
   }
+
+  getCompletedCount(passengers: any[]): number {
+    if (!passengers || passengers.length === 0) return 0;
+    return passengers.filter(p => p.firstName && p.firstName.trim() !== '').length;
+  }
 }
