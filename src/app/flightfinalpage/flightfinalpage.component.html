@@ -1165,8 +1165,10 @@
               {{ segment.date | date : "EEE, dd MMM" }}
             </div>
           </div>
-          <div>
-            <i class="fas fa-plane-arrival"></i>
+          <div class="trip-duration">
+            <div class="trip-duration-icon">
+              <i class="fas fa-plane"></i>
+            </div>
             <div class="trip-subtext">{{ segment.duration }}</div>
           </div>
           <div class="trip-alignRight">
@@ -1181,33 +1183,16 @@
             <strong>{{ segment.from }}</strong>
             <div class="trip-subtext">{{ segment.fromAirport }}</div>
           </div>
-          <div></div>
+          <div class="trip-route-line"></div>
           <div style="text-align: right">
             <strong>{{ segment.to }}</strong>
             <div class="trip-subtext">{{ segment.toAirport }}</div>
           </div>
         </div>
       </div>
-
-      <!-- Fare Summary for Oneway -->
-      <div class="trip-fare-summary">
-        <div class="fare-summary-title-small">Fare Summary</div>
-        <div class="fare-line">
-          <div>Base Fare</div>
-          <div>{{ formatCurrency(getOnwardBaseFare()) }}</div>
-        </div>
-        <div class="fare-line">
-          <div>Taxes & Surcharges</div>
-          <div>{{ formatCurrency(getOnwardTaxes()) }}</div>
-        </div>
-        <div class="fare-line total-line">
-          <strong>Total</strong>
-          <strong>{{ formatCurrency(getOnwardTotal()) }}</strong>
-        </div>
-      </div>
     </div>
     <div class="trip-footer">
-      <button class="proceed-btn" (click)="closeTripSummary()">DONE</button>
+      <button class="proceed-btn trip-done-btn" (click)="closeTripSummary()">DONE</button>
     </div>
   </div>
 
