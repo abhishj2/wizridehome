@@ -1,0 +1,210 @@
+<!-- Multi-Segment (Multiple Arrays inside Segments) -->
+<ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlock">
+  <section class="flight-card-component__flight-card" aria-label="Flight Option">
+    <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
+      <ng-container *ngFor="let segment of group; let i = index">
+        <!-- Flight Segment -->
+        <div class="flight-card-component__flight-leg">
+          <div class="flight-card-component__leg-header">
+            <img
+              class="flight-card-component__airline-logo"
+              [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'"
+              [alt]="segment.Airline.AirlineName + ' logo'"
+              (error)="onImageError($event)"
+            />
+            <div class="flight-card-component__airline-name">
+              {{ segment.Airline.AirlineName }}
+            </div>
+            <div class="flight-card-component__flight-code">
+              {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+            </div>
+            <div class="flight-card-component__pill">
+              {{ segment.Craft }}
+            </div>
+          </div>
+
+          <div class="flight-card-component__flight-row">
+            <div class="flight-card-component__flight-left">
+              <div class="flight-card-component__time">
+                {{ segment.Origin.DepTime | date : "HH:mm" }}
+              </div>
+              <div class="flight-card-component__date">
+                {{ segment.Origin.DepTime | date : "EEE, dd MMM" }}
+              </div>
+              <div class="flight-card-component__location">
+                {{ segment.Origin.Airport.CityName }}
+                <div class="flight-card-component_country-name" *ngIf="segment.Origin.Airport.CountryName">
+                  {{ segment.Origin.Airport.CountryName }}
+                </div>
+              </div>
+            </div>
+
+            <div class="flight-card-component__flight-icon">
+              <i class="fas fa-plane"></i>
+              <div class="flight-card-component__duration">
+                {{ formatMinutesToHrMin(segment.Duration) }}
+              </div>
+            </div>
+
+            <div class="flight-card-component__flight-right">
+              <div
+                class="flight-card-component__day-diff"
+                *ngIf="getDayDiff(segment.Origin.DepTime, segment.Destination.ArrTime) > 0"
+              >
+                +{{ getDayDiff(segment.Origin.DepTime, segment.Destination.ArrTime) }} day
+              </div>
+              <div class="flight-card-component__time">
+                {{ segment.Destination.ArrTime | date : "HH:mm" }}
+              </div>
+              <div class="flight-card-component__date">
+                {{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}
+              </div>
+              <div class="flight-card-component__location">
+                {{ segment.Destination.Airport.CityName }}
+                <div class="flight-card-component_country-name" *ngIf="segment.Destination.Airport.CountryName">
+                  {{ segment.Destination.Airport.CountryName }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layover Section -->
+        <div *ngIf="i < group.length - 1" class="flight-card-component__layover-row">
+          <div class="flight-card-component__dotted-line"></div>
+          <div class="flight-card-component__layover">
+            <div class="flight-card-component__layover-day">
+              {{ getLayoverDayText(group[i], group[i + 1]) }}
+            </div>
+            <div class="flight-card-component__layover-time">
+              {{ getLayoverDuration(group[i], group[i + 1]) }}
+            </div>
+          </div>
+          <div class="flight-card-component__dotted-line"></div>
+        </div>
+      </ng-container>
+
+      <div class="flight-card-component__badges__intreturn" *ngIf="group?.length">
+        <span class="flight-card-component__pill">
+          {{ group.length - 1 === 0 ? "Non Stop" : group.length - 1 + " Stop" }}
+        </span>
+        <span class="flight-card-component__pill">
+          {{ getGroupDuration(group) }}
+        </span>
+      </div>
+
+      <div *ngIf="groupIndex < flight.Segments.length - 1" class="flight-card-component__group-separator">
+        <div class="flight-card-component__dotted-line"></div>
+      </div>
+    </ng-container>
+
+    <!-- Footer -->
+    <div class="flight-card-component__footer" *ngIf="showPriceFooter">
+      <div class="flight-card-component__badges">
+        <div class="flight-card-component__footer-label">Round Trip Fare</div>
+      </div>
+      <div class="flight-card-component__price">
+        <div class="flight-card-component__amount">
+          ₹ {{ flight.price | number : "1.2-2" }}
+        </div>
+        <div class="flight-card-component__per">per Adult</div>
+      </div>
+    </div>
+  </section>
+</ng-container>
+
+<!-- One-Way / Round Trip Domestic Single Segment Block -->
+<ng-template #singleSegmentBlock>
+  <section class="flight-card-component__flight-card" aria-label="Flight Option">
+    <ng-container *ngFor="let segment of flight.Segments[0]; let i = index">
+      <div class="flight-card-component__flight-leg">
+        <div class="flight-card-component__leg-header">
+          <img
+            class="flight-card-component__airline-logo"
+            [src]="'assets/logos/' + segment.Airline.AirlineCode + '.png'"
+            [alt]="segment.Airline.AirlineName + ' logo'"
+            (error)="onImageError($event)"
+          />
+          <div class="flight-card-component__airline-name">
+            {{ segment.Airline.AirlineName }}
+          </div>
+          <div class="flight-card-component__flight-code">
+            {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+          </div>
+          <div class="flight-card-component__pill">
+            {{ segment.Craft }}
+          </div>
+        </div>
+
+        <div class="flight-card-component__flight-row">
+          <div class="flight-card-component__flight-left">
+            <div class="flight-card-component__time">
+              {{ segment.Origin.DepTime | date : "HH:mm" }}
+            </div>
+            <div class="flight-card-component__date">
+              {{ segment.Origin.DepTime | date : "EEE, dd MMM" }}
+            </div>
+            <div class="flight-card-component__location">
+              {{ segment.Origin.Airport.CityName }}
+            </div>
+          </div>
+
+          <div class="flight-card-component__flight-icon">
+            <i class="fas fa-plane"></i>
+            <div class="flight-card-component__duration">
+              {{ formatMinutesToHrMin(segment.Duration) }}
+            </div>
+          </div>
+
+          <div class="flight-card-component__flight-right">
+            <div
+              class="flight-card-component__day-diff"
+              *ngIf="getDayDiff(segment.Origin.DepTime, segment.Destination.ArrTime) > 0"
+            >
+              +{{ getDayDiff(segment.Origin.DepTime, segment.Destination.ArrTime) }} day
+            </div>
+            <div class="flight-card-component__time">
+              {{ segment.Destination.ArrTime | date : "HH:mm" }}
+            </div>
+            <div class="flight-card-component__date">
+              {{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}
+            </div>
+            <div class="flight-card-component__location">
+              {{ segment.Destination.Airport.CityName }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="i < flight.Segments[0].length - 1" class="flight-card-component__layover-row">
+        <div class="flight-card-component__dotted-line"></div>
+        <div class="flight-card-component__layover">
+          <div class="flight-card-component__layover-day">
+            {{ getLayoverDayText(flight.Segments[0][i], flight.Segments[0][i + 1]) }}
+          </div>
+          <div class="flight-card-component__layover-time">
+            {{ getLayoverDuration(flight.Segments[0][i], flight.Segments[0][i + 1]) }}
+          </div>
+        </div>
+        <div class="flight-card-component__dotted-line"></div>
+      </div>
+    </ng-container>
+
+    <div class="flight-card-component__footer" *ngIf="showPriceFooter">
+      <div class="flight-card-component__badges">
+        <span class="flight-card-component__pill">
+          {{ flight.Segments[0].length - 1 === 0 ? "Non Stop" : flight.Segments[0].length - 1 + " Stop" }}
+        </span>
+        <span class="flight-card-component__pill">
+          {{ getTotalDuration(flight) }}
+        </span>
+      </div>
+      <div class="flight-card-component__price">
+        <div class="flight-card-component__amount">
+          ₹ {{ flight.price | number : "1.2-2" }}
+        </div>
+        <div class="flight-card-component__per">per Adult</div>
+      </div>
+    </div>
+  </section>
+</ng-template>

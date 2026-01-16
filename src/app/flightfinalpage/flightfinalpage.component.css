@@ -1920,7 +1920,7 @@ body {
   }
 
   .flight-final-page>.card {
-    padding: 20px;
+    padding: 30px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -3031,7 +3031,7 @@ body {
     content: '';
     position: absolute;
     top: 50%;
-    left: 30px;
+    left: 0px;
     right: 0;
     height: 2px;
     background-image: linear-gradient(to right, #474747 50%, transparent 50%);

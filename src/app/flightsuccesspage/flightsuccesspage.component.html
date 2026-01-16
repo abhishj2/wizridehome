@@ -1,0 +1,432 @@
+<div *ngIf="loader">
+  <main class="shimmer-main">
+    <div class="shimmer-box-long"></div>
+    <p></p>
+    <div class="shimmer-box-long1"></div>
+    <br />
+    <div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-circle"></div>
+            <div class="shimmer-box1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-circle"></div>
+            <div class="shimmer-box1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long2"></div>
+      <br />
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long1"></div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long"></div>
+          </div>
+        </div>
+      </div>
+      <div class="shimmer-box-long2"></div>
+      <div class="shimmer-grid">
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+        <div class="container">
+          <div class="flex-container-space-between">
+            <div class="shimmer-box-long1"></div>
+          </div>
+          <div class="shimmer-box"></div>
+        </div>
+      </div>
+      <br />
+      <div class="shimmer-box-long"></div>
+    </div>
+  </main>
+</div>
+
+<div *ngIf="!loader" class="results-page">
+  <!-- Tabs (only for roundtrip) -->
+  <div class="tab-container" *ngIf="flightType === 'roundtrip' && !isInternationalReturn">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'onward'"
+      (click)="switchTab('onward')"
+    >
+      Onward
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'return'"
+      (click)="switchTab('return')"
+    >
+      Return
+    </button>
+  </div>
+
+  <!-- Content with Animation -->
+  <div
+    class="content-wrapper"
+    [ngClass]="{
+      'slide-in': animationState === 'in',
+      'slide-out': animationState === 'out'
+    }"
+  >
+    <!-- Booking Confirmation Card -->
+    <div
+      *ngIf="activeTab === 'onward' || flightType === 'oneway'"
+      class="confirmation-card"
+    >
+      <div class="confirmation-header">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2>Booking Confirmed</h2>
+      </div>
+      <p class="confirmation-subtitle">
+        <strong>Congratulations!</strong> Your Booking is Successful
+      </p>
+      <div class="booking-info">
+        Booking ID : <strong>{{ onwardBookingId || "N/A" }}</strong> | PNR :
+        <strong>{{ onwardPnr || "N/A" }}</strong>
+      </div>
+    </div>
+    <div
+      *ngIf="activeTab === 'return' && flightType === 'roundtrip'"
+      class="confirmation-card"
+    >
+      <div class="confirmation-header">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2>Booking Confirmed</h2>
+      </div>
+      <p class="confirmation-subtitle">
+        <strong>Congratulations!</strong> Your Booking is Successful
+      </p>
+      <div class="booking-info">
+        Booking ID : <strong>{{ returnBookingId || "N/A" }}</strong> | PNR :
+        <strong>{{ returnPnr || "N/A" }}</strong>
+      </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content-scroll">
+      <!-- Onward Content -->
+      <div *ngIf="activeTab === 'onward' || flightType === 'oneway'">
+        <!-- Section: Flight Details -->
+        <div class="section-header">
+          {{ flightType === "oneway" ? "Flight Details" : "Onward Flight Details" }}
+        </div>
+        <div
+          class="flight-scroll-container"
+          *ngIf="onwardFlights?.length; else noFlights"
+        >
+          <app-flightcards
+            *ngFor="let flight of onwardFlights"
+            [flight]="flight"
+            [showPriceFooter]="showFlightCardFooter"
+          ></app-flightcards>
+        </div>
+
+        <ng-template #noFlights>
+          <div class="no-data">No flight data available.</div>
+        </ng-template>
+
+        <!-- Section: Passenger Details -->
+        <div class="section-header">
+          {{ flightType === "oneway" ? "Passenger Details" : "Onward Passenger Details" }}
+        </div>
+
+        <ng-container *ngFor="let pax of onwardPassengerList">
+          <div class="passenger-card">
+            <div class="passenger-header">
+              <span><strong>{{ pax.IsLeadPax ? "Primary Passenger" : "Passenger" }}</strong></span>
+              <span class="passenger-type">{{ getPaxType(pax.PaxType) }}</span>
+            </div>
+
+            <div class="passenger-name">
+              <i class="fas fa-user"></i> {{ pax.Title }} {{ pax.FirstName }} {{ pax.LastName }}
+              <span class="passenger-gender">[ {{ getGenderText(pax.Gender) }} ]</span>
+            </div>
+
+            <ng-container *ngFor="let segmentGroup of onwardFlights[0]?.Segments">
+              <ng-container *ngFor="let segment of segmentGroup; let i = index">
+                <div class="flight-detail-row">
+                  <img
+                    src="assets/logos/{{ segment?.Airline?.AirlineCode || 'default' }}.png"
+                    class="airline-logo"
+                    (error)="onImageError($event)"
+                  />
+                  <div class="flight-info">
+                    <div>
+                      <strong>{{ segment?.Airline?.AirlineCode }} {{ segment?.Airline?.FlightNumber }}</strong>
+                    </div>
+                    <div>
+                      {{ segment?.Origin?.Airport?.AirportCode }} - {{ segment?.Destination?.Airport?.AirportCode }}
+                    </div>
+                  </div>
+                  <div class="flight-attributes">
+                    <div>
+                      Cabin : {{ pax.SegmentAdditionalInfo?.[i]?.CabinBaggage || "N/A" }}
+                    </div>
+                    <div>
+                      CheckIn : {{ pax.SegmentAdditionalInfo?.[i]?.Baggage || "N/A" }}
+                    </div>
+                  </div>
+                  <div class="seat-info">
+                    Seat<br />
+                    <strong>{{ pax.SeatDynamic?.[i]?.Code || "N/A" }}</strong>
+                  </div>
+                  <div class="meal-info">
+                    Meal<br />
+                    <strong>{{ getMealCode(pax, i) || "N/A" }}</strong>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+
+            <div *ngIf="isInternationalReturn" class="international-info-wrapper">
+              <!-- Onward -->
+              <div class="info-card" *ngIf="hasValidOnwardData(pax)">
+                <div class="title text-dark">
+                  <i class="fas fa-plane-departure"></i> Onward
+                </div>
+                <div *ngIf="pax?.OnwardBaggage?.[0]?.Weight > 0" class="info-row">
+                  <strong>Baggage:</strong>
+                  <span *ngFor="let bag of pax.OnwardBaggage; let i = index">
+                    {{ bag.Weight }} kg<span *ngIf="i < pax.OnwardBaggage.length - 1">, </span>
+                  </span>
+                </div>
+                <div *ngIf="pax?.OnwardSpecialServices?.length > 0" class="info-row">
+                  <strong>Special Services:</strong>
+                  <span *ngFor="let service of pax.OnwardSpecialServices; let si = index">
+                    {{ service.Text }}<span *ngIf="si < pax.OnwardSpecialServices.length - 1">, </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Return -->
+              <div class="info-card" *ngIf="hasValidReturnData(pax)">
+                <div class="title text-success">
+                  <i class="fas fa-plane-arrival"></i> Return
+                </div>
+                <div *ngIf="pax?.ReturnBaggage?.[0]?.Weight > 0" class="info-row">
+                  <strong>Baggage:</strong>
+                  <span *ngFor="let bag of pax.ReturnBaggage; let i = index">
+                    {{ bag.Weight }} kg<span *ngIf="i < pax.ReturnBaggage.length - 1">, </span>
+                  </span>
+                </div>
+                <div *ngIf="pax?.ReturnSpecialServices?.length > 0" class="info-row">
+                  <strong>Special Services:</strong>
+                  <span *ngFor="let service of pax.ReturnSpecialServices; let si = index">
+                    {{ service.Text }}<span *ngIf="si < pax.ReturnSpecialServices.length - 1">, </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="shouldShowTripInfo(pax)" class="info-card">
+              <div class="title text-dark">
+                <i class="fas fa-suitcase-rolling"></i> Trip Info
+              </div>
+              <div *ngIf="pax?.Baggage?.[0]?.Weight > 0" class="info-row">
+                <strong>Excess Baggage:</strong>
+                {{ pax.Baggage[0]?.Weight || 0 }} kg
+              </div>
+              <div *ngIf="pax?.SpecialServices?.length" class="info-row">
+                <strong>Special Services:</strong>
+                <span *ngFor="let service of pax.SpecialServices; let si = index">
+                  {{ service.Text }}<span *ngIf="si < pax.SpecialServices.length - 1">, </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Section: Fare Details -->
+        <div class="section-header">
+          {{ flightType === "oneway" ? "Fare Details" : "Onward Fare Details" }}
+        </div>
+        <div class="fare-summary-card" *ngIf="onwardFareDetails">
+          <div class="fare-row">
+            <span>Base Fare</span>
+            <span>₹ {{ onwardFareDetails.BaseFare | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="onwardFareDetails.TotalSeatCharges > 0">
+            <span>Total Seat Charges</span>
+            <span>₹ {{ onwardFareDetails.TotalSeatCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="onwardFareDetails.TotalMealCharges > 0">
+            <span>Total Meal Charges</span>
+            <span>₹ {{ onwardFareDetails.TotalMealCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="onwardFareDetails.TotalBaggageCharges > 0">
+            <span>Total Baggage Charges</span>
+            <span>₹ {{ onwardFareDetails.TotalBaggageCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="onwardFareDetails.TotalSpecialServiceCharges > 0">
+            <span>Total Special Charges</span>
+            <span>₹ {{ onwardFareDetails.TotalSpecialServiceCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row">
+            <span>Taxes & Fees</span>
+            <span>₹ {{ (onwardFareDetails.Tax + onwardFareDetails.OtherCharges) | number : "1.2-2" }}</span>
+          </div>
+          <hr />
+          <div class="fare-total">
+            <span>Total Amount Paid</span>
+            <span><strong>₹ {{ onwardFareDetails.PublishedFare | number : "1.2-2" }}</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return Content -->
+      <div *ngIf="activeTab === 'return' && flightType === 'roundtrip'">
+        <div class="section-header">Return Flight Details</div>
+        <div class="flight-scroll-container" *ngIf="returnFlights?.length; else noFlights">
+          <app-flightcards
+            *ngFor="let flight of returnFlights"
+            [flight]="flight"
+            [showPriceFooter]="showFlightCardFooter"
+          ></app-flightcards>
+        </div>
+        <ng-template #noFlights>
+          <div class="no-data">No flight data available.</div>
+        </ng-template>
+
+        <div class="section-header">Return Passenger Details</div>
+        <ng-container *ngFor="let pax of returnPassengerList">
+          <div class="passenger-card">
+            <div class="passenger-header">
+              <span><strong>{{ pax.IsLeadPax ? "Primary Passenger" : "Passenger" }}</strong></span>
+              <span class="passenger-type">{{ getPaxType(pax.PaxType) }}</span>
+            </div>
+
+            <div class="passenger-name">
+              <i class="fas fa-user"></i> {{ pax.Title }} {{ pax.FirstName }} {{ pax.LastName }}
+              <span class="passenger-gender">[ {{ getGenderText(pax.Gender) }} ]</span>
+            </div>
+
+            <div
+              class="flight-detail-row"
+              *ngFor="let segment of returnFlights[0]?.Segments[0]; let i = index"
+            >
+              <img
+                src="assets/logos/{{ segment?.Airline?.AirlineCode || 'default' }}.png"
+                class="airline-logo"
+                (error)="onImageError($event)"
+              />
+              <div class="flight-info">
+                <div>
+                  <strong>{{ segment?.Airline?.AirlineCode }} {{ segment?.Airline?.FlightNumber }}</strong>
+                </div>
+                <div>
+                  {{ segment?.Origin?.Airport?.AirportCode }} - {{ segment?.Destination?.Airport?.AirportCode }}
+                </div>
+              </div>
+              <div class="flight-attributes">
+                <div>
+                  Cabin : {{ pax.SegmentAdditionalInfo?.[i]?.CabinBaggage || "N/A" }}
+                </div>
+                <div>
+                  CheckIn : {{ pax.SegmentAdditionalInfo?.[i]?.Baggage || "N/A" }}
+                </div>
+              </div>
+              <div class="seat-info">
+                Seat<br /><strong>{{ pax.SeatDynamic?.[i]?.Code || "N/A" }}</strong>
+              </div>
+              <div class="meal-info">
+                Meal<br /><strong>{{ getMealCode(pax, i) || "N/A" }}</strong>
+              </div>
+            </div>
+
+            <div *ngIf="shouldShowTripInfo(pax)" class="info-card">
+              <div class="title text-dark">
+                <i class="fas fa-suitcase-rolling"></i> Trip Info
+              </div>
+              <div *ngIf="pax?.Baggage?.[0]?.Weight > 0" class="info-row">
+                <strong>Excess Baggage:</strong>
+                {{ pax.Baggage[0]?.Weight || 0 }} kg
+              </div>
+              <div *ngIf="pax?.SpecialServices?.length" class="info-row">
+                <strong>Special Services:</strong>
+                <span *ngFor="let service of pax.SpecialServices; let si = index">
+                  {{ service.Text }}<span *ngIf="si < pax.SpecialServices.length - 1">, </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="section-header">Return Fare Details</div>
+        <div class="fare-summary-card" *ngIf="returnFareDetails">
+          <div class="fare-row">
+            <span>Base Fare</span>
+            <span>₹ {{ returnFareDetails.BaseFare | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="returnFareDetails.TotalSeatCharges > 0">
+            <span>Total Seat Charges</span>
+            <span>₹ {{ returnFareDetails.TotalSeatCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="returnFareDetails.TotalMealCharges > 0">
+            <span>Total Meal Charges</span>
+            <span>₹ {{ returnFareDetails.TotalMealCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="returnFareDetails.TotalBaggageCharges > 0">
+            <span>Total Baggage Charges</span>
+            <span>₹ {{ returnFareDetails.TotalBaggageCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row" *ngIf="returnFareDetails.TotalSpecialServiceCharges > 0">
+            <span>Total Special Charges</span>
+            <span>₹ {{ returnFareDetails.TotalSpecialServiceCharges | number : "1.2-2" }}</span>
+          </div>
+          <div class="fare-row">
+            <span>Taxes & Fees</span>
+            <span>₹ {{ (returnFareDetails.Tax + returnFareDetails.OtherCharges) | number : "1.2-2" }}</span>
+          </div>
+          <hr />
+          <div class="fare-total">
+            <span>Total Amount Paid</span>
+            <span><strong>₹ {{ returnFareDetails.PublishedFare | number : "1.2-2" }}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="toll-free">
+      <button class="done-button" (click)="goToHome()">DONE</button>
+      📞 Airline Toll Free Number :
+      <span>{{
+        activeTab === "onward" || flightType === "oneway"
+          ? onwardAirlineTollFreeNo || "N/A"
+          : returnAirlineTollFreeNo || "N/A"
+      }}</span>
+    </div>
+  </div>
+</div>

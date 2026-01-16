@@ -732,28 +732,28 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
   
    // CASHFREE PAYMENTS INTEGRATION 
   
-  //  sendFlightPayment(ORDERID:string,
-  //   APPID : any, passengerFname : any, passengerLname : any, passengerEmail : any, passengerContact : any, orderAmount : any,
-  //   payload : any)
-  //   {    
-  //     const data = {
-  //       page: 'wsflightpaymentnew',
-  //       ORDERID: ORDERID,
-  //       APPID : APPID,    
-  //       passengerFname : passengerFname,
-  //       passengerLname : passengerLname,
-  //       passengerEmail : passengerEmail,
-  //       passengerContact : passengerContact,
-  //       orderAmount : orderAmount,
-  //       payload : payload,
-  //       dev : 'test',
-  //       // dev : 'prod',
-  //       type : 'FLIGHTWEB'
-  //     }
-  //     console.log("value to temp details",data)    
-  //     const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
-  //     return this.http.post<any[]>(this.ROOT_URL,data,{headers});
-  //   }
+   sendFlightPayment(ORDERID:string,
+    APPID : any, passengerFname : any, passengerLname : any, passengerEmail : any, passengerContact : any, orderAmount : any,
+    payload : any)
+    {    
+      const data = {
+        page: 'wsflightpaymentnew',
+        ORDERID: ORDERID,
+        APPID : APPID,    
+        passengerFname : passengerFname,
+        passengerLname : passengerLname,
+        passengerEmail : passengerEmail,
+        passengerContact : passengerContact,
+        orderAmount : orderAmount,
+        payload : payload,
+        dev : 'test',
+        // dev : 'prod',
+        type : 'FLIGHTWEB'
+      }
+      console.log("value to temp details",data)    
+      const headers = new HttpHeaders({'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'});
+      return this.http.post<any[]>(this.ROOT_URL,data,{headers});
+    }
   
     getFullAiportList(){
       const data = {

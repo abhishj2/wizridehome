@@ -125,6 +125,7 @@ import { ResultpageComponent } from './resultpage/resultpage.component';
 import { FlightlistComponent } from './flightlist/flightlist.component';
 import { FlightfinalpageComponent } from './flightfinalpage/flightfinalpage.component';
 import { FlightaddonpageComponent } from './flightaddonpage/flightaddonpage.component';
+import { FlightsuccesspageComponent } from './flightsuccesspage/flightsuccesspage.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 
@@ -273,6 +274,7 @@ export const routes: Routes = [
       {path:'flightlist/:type',component: FlightlistComponent},
       {path:'flightfinalsection',component: FlightfinalpageComponent},
       {path:'flightaddons',component: FlightaddonpageComponent},
+      {path:'flightsuccesspage',component: FlightsuccesspageComponent},
       {path:'sellyourcar',component: BuyandsellcarComponent},
       {path:'vehicle-registration-form',component: VehicleRegistrationFormComponent},
       {path:'vehicle-details/:id',component: VehicledetailsComponent},

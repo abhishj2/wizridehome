@@ -193,7 +193,7 @@
               <div class="passenger-label">
                 {{
                 adult.firstName
-                ? adult.firstName + " " + adult.lastName
+                ? getPassengerDisplayName(adult)
                 : "Adult " + (i + 1) + " (12 yrs+)"
                 }}
               </div>
@@ -635,7 +635,7 @@
               <div class="passenger-label">
                 {{
                 adult.firstName
-                ? adult.firstName + " " + adult.lastName
+                ? getPassengerDisplayName(adult)
                 : "Adult " + (i + 1) + " (12 yrs+)"
                 }}
               </div>

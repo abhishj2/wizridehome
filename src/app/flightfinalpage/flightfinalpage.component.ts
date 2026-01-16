@@ -1896,6 +1896,68 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return this.getOnwardBaseFare() + this.getOnwardTaxes();
   }
 
+  // Calculate age from date of birth
+  calculateAge(dobDay: string, dobMonth: string, dobYear: string): number | null {
+    if (!dobDay || !dobMonth || !dobYear) return null;
+    
+    try {
+      // Handle month as string (e.g., "May") or number
+      let monthIndex: number;
+      if (typeof dobMonth === 'string' && isNaN(parseInt(dobMonth))) {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+        monthIndex = monthNames.findIndex(m => m.toLowerCase() === dobMonth.toLowerCase());
+        if (monthIndex === -1) monthIndex = parseInt(dobMonth) - 1;
+      } else {
+        monthIndex = parseInt(dobMonth) - 1;
+      }
+      
+      const dob = new Date(parseInt(dobYear), monthIndex, parseInt(dobDay));
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      
+      return age >= 0 ? age : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // Get gender abbreviation
+  getGenderAbbreviation(gender: string): string {
+    if (!gender) return '';
+    return gender.toLowerCase().startsWith('m') ? 'M' : gender.toLowerCase().startsWith('f') ? 'F' : '';
+  }
+
+  // Format passenger display name with gender and age
+  getPassengerDisplayName(passenger: any): string {
+    if (!passenger.firstName && !passenger.lastName) {
+      return '';
+    }
+    
+    const name = `${passenger.firstName || ''} ${passenger.lastName || ''}`.trim();
+    if (!name) return '';
+    
+    const genderAbbr = this.getGenderAbbreviation(passenger.gender);
+    const age = this.calculateAge(passenger.dobDay, passenger.dobMonth, passenger.dobYear);
+    
+    let suffix = '';
+    if (genderAbbr) {
+      suffix = genderAbbr;
+      if (age !== null && age >= 0) {
+        suffix += ` ${age} years`;
+      }
+    } else if (age !== null && age >= 0) {
+      suffix = `${age} years`;
+    }
+    
+    return suffix ? `${name}, ${suffix}` : name;
+  }
+
   // Calculate return fare breakdown
   getReturnBaseFare(): number {
     if (!this.resultIndexReturn) return 0;

@@ -1,0 +1,596 @@
+/* Shimmer Loading Styles */
+.shimmer-main {
+  padding: 20px;
+  background-color: #f2f2f2;
+  min-height: 100vh;
+}
+
+.shimmer-box-long,
+.shimmer-box-long1,
+.shimmer-box-long2 {
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.shimmer-box-long {
+  width: 100%;
+}
+
+.shimmer-box-long1 {
+  width: 80%;
+}
+
+.shimmer-box-long2 {
+  width: 60%;
+}
+
+.shimmer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.shimmer-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.shimmer-box1 {
+  width: 100px;
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.shimmer-box {
+  width: 100%;
+  height: 15px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.flex-container-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Main Results Page */
+.results-page {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f2f2f2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.confirmation-card {
+  background-color: #e8f7e8;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  margin: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.confirmation-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.success-icon {
+  color: #28a745;
+  font-size: 22px;
+}
+
+.confirmation-card h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #28a745;
+}
+
+.confirmation-subtitle {
+  margin: 4px 0 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.booking-info {
+  font-size: 13px;
+  color: #555;
+}
+
+.tab-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px;
+  flex-shrink: 0;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ddd;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tab-button.active {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.tab-button:hover:not(.active) {
+  background-color: #ccc;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.content-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.section-header {
+  background-color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.flight-scroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.passenger-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 5%;
+}
+
+.passenger-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.passenger-name {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.passenger-name i {
+  margin-right: 6px;
+}
+
+.passenger-gender {
+  color: #777;
+  margin-left: 8px;
+}
+
+.passenger-type {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.flight-detail-row {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  gap: 14px;
+  font-size: 10px;
+  flex-wrap: wrap;
+}
+
+.airline-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.flight-info,
+.flight-attributes,
+.seat-info,
+.meal-info {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-width: 50px;
+  flex: 1;
+}
+
+.baggage-info {
+  font-size: 13px;
+  margin-top: 8px;
+  color: #444;
+}
+
+.fare-summary-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 12px;
+}
+
+.fare-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.fare-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.toll-free {
+  text-align: center;
+  font-size: 13px;
+  color: #444;
+  margin: 16px 0;
+  flex-shrink: 0;
+  padding: 0 16px;
+}
+
+.done-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+  margin-right: 12px;
+  transition: background-color 0.2s;
+}
+
+.done-button:hover {
+  background-color: #0056b3;
+}
+
+/* Slide Animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-in-out forwards;
+}
+
+.slide-out {
+  animation: slideOut 0.3s ease-in-out forwards;
+}
+
+.international-info-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.info-card {
+  flex: 1 1 48%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background-color: #fff;
+  min-width: 140px;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.info-card .title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.text-dark {
+  color: #333;
+}
+
+.text-success {
+  color: #28a745;
+}
+
+.info-row {
+  margin-top: 4px;
+}
+
+.info-row strong {
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  background: #fff;
+  border-radius: 12px;
+}
+
+/* Desktop Styles */
+@media (min-width: 769px) {
+  .results-page {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-scroll {
+    padding: 0 24px 24px;
+  }
+
+  .confirmation-card {
+    margin: 24px;
+    padding: 24px;
+  }
+
+  .confirmation-card h2 {
+    font-size: 24px;
+  }
+
+  .confirmation-subtitle {
+    font-size: 16px;
+  }
+
+  .section-header {
+    font-size: 18px;
+    padding: 16px 24px;
+  }
+
+  .passenger-card {
+    padding: 24px;
+  }
+
+  .flight-detail-row {
+    font-size: 12px;
+    padding: 16px;
+    flex-wrap: nowrap;
+  }
+
+  .airline-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .fare-summary-card {
+    padding: 24px;
+    font-size: 14px;
+  }
+
+  .fare-total {
+    font-size: 18px;
+  }
+
+  .tab-button {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  .done-button {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 481px) and (max-width: 768px) {
+  .results-page {
+    padding: 0;
+  }
+
+  .confirmation-card {
+    margin: 12px;
+    padding: 20px;
+  }
+
+  .content-scroll {
+    padding: 0 12px 12px;
+  }
+
+  .flight-detail-row {
+    gap: 10px;
+    font-size: 11px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  .results-page {
+    padding: 0;
+  }
+
+  .confirmation-card {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .confirmation-card h2 {
+    font-size: 16px;
+  }
+
+  .confirmation-subtitle {
+    font-size: 13px;
+  }
+
+  .booking-info {
+    font-size: 12px;
+  }
+
+  .tab-container {
+    margin: 12px;
+    gap: 6px;
+  }
+
+  .tab-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .content-scroll {
+    padding: 0 12px 12px;
+    gap: 12px;
+  }
+
+  .section-header {
+    font-size: 14px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    margin-top: 12px;
+  }
+
+  .passenger-card {
+    padding: 12px;
+    margin-bottom: 3%;
+  }
+
+  .passenger-name {
+    font-size: 13px;
+  }
+
+  .flight-detail-row {
+    font-size: 9px;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .airline-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .flight-info,
+  .flight-attributes,
+  .seat-info,
+  .meal-info {
+    min-width: 40px;
+    font-size: 9px;
+  }
+
+  .fare-summary-card {
+    padding: 12px;
+    font-size: 11px;
+  }
+
+  .fare-row {
+    margin-bottom: 6px;
+  }
+
+  .fare-total {
+    font-size: 14px;
+  }
+
+  .toll-free {
+    font-size: 12px;
+    margin: 12px 0;
+    padding: 0 12px;
+  }
+
+  .done-button {
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    margin-right: 8px;
+  }
+
+  .info-card {
+    flex: 1 1 100%;
+    min-width: 100%;
+    font-size: 13px;
+  }
+
+  .international-info-wrapper {
+    flex-direction: column;
+  }
+}
