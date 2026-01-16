@@ -346,7 +346,7 @@ img {
   font-weight: 700;
   margin: 0 0 20px 0;
   color: #333;
-  border-bottom: 2px solid #008b8b;
+  border-bottom: 2px solid #000;
   padding-bottom: 10px;
 }
 
@@ -413,7 +413,7 @@ img {
 .price-range {
   width: 100%;
   margin: 12px 0;
-  accent-color: #008b8b;
+  accent-color: #000000;
 }
 
 .price-range-label {
@@ -725,7 +725,7 @@ img {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: #008b8b #f0f0f0;
+  scrollbar-color: #000 #f0f0f0;
 }
 
 .date-slider-scroll-wrapper::-webkit-scrollbar {
@@ -788,10 +788,11 @@ img {
 }
 
 .date-card.selected {
-  border-color: rgba(0, 139, 139, 0.5) !important;
-  background: #ffffff !important;
+  border-color: #000000 !important;
+  background: #000 !important;
   box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
   transform: translateY(-2px);
+
 }
 
 .date-label {
@@ -805,7 +806,7 @@ img {
 }
 
 .date-card.selected .date-label {
-  color: #000 !important;
+  color: #fff !important;
   font-weight: 600 !important;
 }
 
@@ -817,7 +818,7 @@ img {
 }
 
 .date-card.selected .date-price {
-  color: #000 !important;
+  color: #fff !important;
   font-size: 13px !important;
   font-weight: 600 !important;
 }
@@ -1541,7 +1542,7 @@ img {
 .makemytrip-book-btn {
   width: 100%;
   padding: 14px 20px;
-  background: #14b8a6;
+  background: #000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -4280,7 +4281,7 @@ img {
   }
 
   .desktop-view-prices-btn {
-    background: #008b8b;
+    background: #000000;
     color: #ffffff;
     border: none;
     padding: 8px 20px;
