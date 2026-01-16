@@ -189,7 +189,7 @@ body {
 
 /* Flight Leg Styles */
 .flight-leg {
-  margin-bottom: 16px;
+  margin-bottom: 0px;
 }
 
 .flight-airline {
@@ -1585,7 +1585,7 @@ body {
 
   /* Flight Leg - Better spacing on desktop */
   .flight-leg {
-    padding: 8px 0;
+    padding:  0;
   }
 
   .flight-airline {
@@ -1611,6 +1611,227 @@ body {
 
   .flight-meta {
     font-size: 15px;
+  }
+
+  /* MakeMyTrip Style Flight Card - Desktop Only */
+  .makemytrip-flight-card {
+    padding: 24px;
+  }
+
+  .makemytrip-flight-card .flight-airline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .makemytrip-flight-card .flight-airline .logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .makemytrip-flight-card .flight-airline .name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    flex: 1;
+    margin-left: 12px;
+  }
+
+  .makemytrip-flight-card .flight-airline .code {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+
+  .makemytrip-flight-card .flight-route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0;
+    position: relative;
+  }
+
+  .makemytrip-flight-card .flight-route .city {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    flex: 0 0 auto;
+  }
+
+  .makemytrip-flight-card .flight-route .plane-icon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 0 20px;
+    height: 2px;
+  }
+
+  /* Dashed line */
+  /* .makemytrip-flight-card .flight-route .plane-icon::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    border-top: 2px dashed #d1d5db;
+    transform: translateY(-50%);
+    z-index: 1;
+  } */
+
+  /* Circular airplane icon */
+  .makemytrip-flight-card .flight-route .plane-icon i {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 2px solid #14b8a6;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #14b8a6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .makemytrip-flight-card .flight-meta {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 10px;
+    margin-top: 0px;
+  }
+
+  .makemytrip-flight-card .details-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: #1f2937;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .makemytrip-flight-card .details-btn:hover {
+    background: #374151;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Round trip specific styling */
+  .makemytrip-flight-card.flight-summary-wrapper .flight-cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .makemytrip-flight-card.flight-summary-wrapper .flight-card-item .card {
+    margin-bottom: 0;
+  }
+
+  /* MakeMyTrip Baggage Section - Desktop Only */
+  .makemytrip-baggage-section {
+    margin-top: 0px;
+    margin-bottom: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .baggage-allowance-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #4b5563;
+  }
+
+  .baggage-allowance-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .baggage-icon {
+    color: #f59e0b;
+    font-size: 18px;
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .baggage-text {
+    line-height: 1.5;
+  }
+
+  /* MakeMyTrip Add Baggage Section - Desktop Only */
+  .makemytrip-add-baggage {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #e0f2fe;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+
+  .add-baggage-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .add-baggage-icon {
+    color: #dc2626;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .add-baggage-text {
+    font-size: 14px;
+    color: #1f2937;
+    line-height: 1.5;
+  }
+
+  .add-baggage-btn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .add-baggage-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  }
+}
+
+/* Hide MakeMyTrip baggage section on mobile */
+@media (max-width: 768px) {
+  .makemytrip-baggage-section,
+  .makemytrip-add-baggage {
+    display: none;
   }
 
   /* Baggage Row - Better layout */
@@ -1688,7 +1909,7 @@ body {
   /* Footer Bar - Sticky on desktop, move to sidebar position */
   .footer-bar {
     position: sticky;
-    top: 100px;
+   
     /* Position below navbar (navbar is ~70-80px height + some margin) */
     max-width: 100%;
     left: auto;
@@ -2034,9 +2255,8 @@ body {
 
   /* Two-Column Dashboard Layout */
   .scroll-wrapper {
-    background: #f8f9fa;
+    /* background: #f8f9fa; */
     padding: 40px;
-    padding-top: 120px;
     padding-bottom: 40px;
   }
 
@@ -2081,7 +2301,7 @@ body {
 
   /* Premium Card Design */
   .flight-final-page>.card {
-    padding: 28px;
+    padding: 15px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -2177,29 +2397,9 @@ body {
   } */
 
   /* Journey Tags - Pill-shaped header (add class="journey-tag-onward" or "journey-tag-return" to flight-leg) */
-  .card .flight-leg.journey-tag-onward::before,
-  .card .flight-leg.journey-tag-return::before {
-    content: attr(data-journey-tag);
-    display: inline-block;
-    padding: 8px 20px;
-    background: linear-gradient(135deg, #008b8b 0%, #006666 100%);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    border-radius: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 12px rgba(0, 139, 139, 0.2);
-  }
 
-  .card .flight-leg.journey-tag-onward::before {
-    content: 'Onward Journey';
-  }
 
-  .card .flight-leg.journey-tag-return::before {
-    content: 'Return Journey';
-  }
+
 
   /* Dashboard-Style Passenger Cards */
   .passenger-box {
@@ -2504,7 +2704,7 @@ body {
   .flight-meta {
     font-size: 15px;
     color: #6c757d;
-    padding: 12px 0;
+    padding: 0px 0;
   }
 
   /* Enhanced Baggage and Policy Sections */
