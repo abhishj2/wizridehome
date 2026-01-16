@@ -42,11 +42,112 @@ img {
 
   .search-summary {
     margin: 8px 0 12px 0;
-    padding: 10px 12px !important;
+    padding: 12px !important;
   }
 
   .search-summary.sticky {
-    padding: 10px 12px !important;
+    padding: 12px !important;
+  }
+
+  /* Mobile: Stack summary content vertically */
+  .summary-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .summary-info {
+    width: 100%;
+    padding-right: 50px; /* Space for edit button */
+  }
+
+  /* Mobile: Route summary - stack vertically */
+  .route-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .route-locations {
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center; /* Center all items vertically */
+    display: flex;
+  }
+
+  .location-group {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: baseline; /* Align text baseline */
+    line-height: 1.3;
+  }
+
+  .route-summary .from,
+  .route-summary .to {
+    font-size: 15px;
+    line-height: 1.3;
+    display: inline-block;
+  }
+
+  .location-detail {
+    font-size: 11px;
+    line-height: 1.3;
+    display: inline-block;
+  }
+
+  /* Perfect center arrow icon between locations */
+  .route-summary i,
+  .route-locations i {
+    font-size: 14px;
+    margin: 0 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center; /* Center vertically relative to location groups */
+    line-height: 1;
+    vertical-align: middle;
+    flex-shrink: 0;
+    height: auto;
+  }
+
+  /* Mobile: Journey details - wrap tags properly */
+  .journey-details {
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .route-summary .date,
+  .route-summary .passengers,
+  .route-summary .pickup-time {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    border-radius: 12px !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Mobile: Edit button - smaller and positioned */
+  .summary-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    gap: 8px;
+  }
+
+  .modify-btn {
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .modify-btn i {
+    font-size: 14px;
   }
 }
 
@@ -3346,7 +3447,7 @@ img {
 
   .mobile-modify-search-btn {
     width: 100%;
-    background: linear-gradient(135deg, #008b8b 0%, #1daaba 100%);
+    background: #000;
     color: #fff;
     border: none;
     padding: 14px 20px;
