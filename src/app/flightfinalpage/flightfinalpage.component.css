@@ -1673,7 +1673,7 @@ body {
   }
 
   /* Dashed line */
-  /* .makemytrip-flight-card .flight-route .plane-icon::before {
+  .makemytrip-flight-card .flight-route .plane-icon::before {
     content: '';
     position: absolute;
     left: 0;
@@ -1683,7 +1683,7 @@ body {
     border-top: 2px dashed #d1d5db;
     transform: translateY(-50%);
     z-index: 1;
-  } */
+  }
 
   /* Circular airplane icon */
   .makemytrip-flight-card .flight-route .plane-icon i {
@@ -1741,6 +1741,19 @@ body {
 
   .makemytrip-flight-card.flight-summary-wrapper .flight-card-item .card {
     margin-bottom: 0;
+  }
+
+  /* Ensure dashed line works in nested round trip cards */
+  .makemytrip-flight-card.flight-summary-wrapper .flight-card-item .card .flight-route .plane-icon::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    border-top: 2px dashed #d1d5db;
+    transform: translateY(-50%);
+    z-index: 1;
   }
 
   /* MakeMyTrip Baggage Section - Desktop Only */

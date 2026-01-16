@@ -208,45 +208,6 @@
       </div>
     </div>
 
-    <!-- Baggage Policy Card -->
-    <div class="card">
-      <div class="section-title">Baggage Policy</div>
-
-      <ng-container *ngFor="let segment of flightSegments; let i = index">
-        <div class="baggage-row">
-          <div class="baggage-header">
-            <img [src]="segment.logo" class="logo" />
-            <div class="name">{{ segment.airline }}</div>
-            <div class="code">{{ segment.code }}</div>
-          </div>
-          <div class="baggage-info">
-            <div class="baggage-item">
-              <i class="fas fa-suitcase"></i>
-              <div>Cabin Bag :</div>
-              <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
-            </div>
-            <div class="baggage-item">
-              <i class="fas fa-suitcase-rolling"></i>
-              <div>Check-In Bag :</div>
-              <div class="value">
-                {{ segment.checkInBaggage || "N/A" }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="baggage-divider" *ngIf="i < flightSegments.length - 1" />
-      </ng-container>
-
-      <div class="add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="add-left">
-          <div class="prompt">Have Excess Baggage ?</div>
-          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
-        </div>
-        <button class="add-btn" (click)="showAddBaggageModal = true">
-          + ADD
-        </button>
-      </div>
-    </div>
 
     <!-- Cancellation & Rescheduling Policy Card -->
     <div class="card">
@@ -529,92 +490,6 @@
       </div>
     </div>
 
-    <!-- Baggage Policy Card with Tabs for Roundtrip -->
-    <div class="card">
-      <div class="section-title-roundtrip">Baggage Policy</div>
-
-      <!-- Tab Navigation -->
-      <div class="policy-tabs">
-        <div [class.active]="activeBaggageTab === 'onward'" (click)="activeBaggageTab = 'onward'">
-          Onward
-        </div>
-        <div [class.active]="activeBaggageTab === 'return'" (click)="activeBaggageTab = 'return'">
-          Return
-        </div>
-      </div>
-
-      <!-- Scrollable Tab Content -->
-      <div class="tab-content-container">
-        <div class="tab-content-wrapper" [class.return-active]="activeBaggageTab === 'return'">
-          <!-- Onward Tab Panel -->
-          <div class="tab-panel baggage-margin">
-            <ng-container *ngFor="let segment of flightSegments; let i = index">
-              <div class="baggage-row">
-                <div class="baggage-header">
-                  <img [src]="segment.logo" class="logo" />
-                  <div class="name">{{ segment.airline }}</div>
-                  <div class="code">{{ segment.code }}</div>
-                </div>
-                <div class="baggage-info">
-                  <div class="baggage-item">
-                    <i class="fas fa-suitcase"></i>
-                    <div>Cabin Bag :</div>
-                    <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
-                  </div>
-                  <div class="baggage-item">
-                    <i class="fas fa-suitcase-rolling"></i>
-                    <div>Check-In Bag :</div>
-                    <div class="value">
-                      {{ segment.checkInBaggage || "N/A" }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr class="baggage-divider" *ngIf="i < flightSegments.length - 1" />
-            </ng-container>
-          </div>
-
-          <!-- Return Tab Panel -->
-          <div class="tab-panel baggage-margin">
-            <ng-container *ngFor="let segment of flightSegmentsReturn; let i = index">
-              <div class="baggage-row">
-                <div class="baggage-header">
-                  <img [src]="segment.logo" class="logo" />
-                  <div class="name">{{ segment.airline }}</div>
-                  <div class="code">{{ segment.code }}</div>
-                </div>
-                <div class="baggage-info">
-                  <div class="baggage-item">
-                    <i class="fas fa-suitcase"></i>
-                    <div>Cabin Bag :</div>
-                    <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
-                  </div>
-                  <div class="baggage-item">
-                    <i class="fas fa-suitcase-rolling"></i>
-                    <div>Check-In Bag :</div>
-                    <div class="value">
-                      {{ segment.checkInBaggage || "N/A" }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr class="baggage-divider" *ngIf="i < flightSegmentsReturn.length - 1" />
-            </ng-container>
-          </div>
-        </div>
-      </div>
-
-      <!-- Add Baggage Prompt -->
-      <div class="add-baggage">
-        <div class="add-left">
-          <div class="prompt">Have Excess Baggage ?</div>
-          <div class="subtext">Buy Extra Check-In Baggage Allowance</div>
-        </div>
-        <button class="add-btn" (click)="showAddBaggageModal = true">
-          + ADD
-        </button>
-      </div>
-    </div>
 
     <!-- Cancellation & Rescheduling Policy Card -->
     <div class="card">
@@ -847,51 +722,6 @@
       </div>
     </ng-container>
 
-    <!-- Baggage Policy Card -->
-    <div class="card">
-      <div class="section-title">Baggage Policy</div>
-
-      <!-- Tab Headers: Scrollable row -->
-      <div class="tab-header-scroll">
-        <div
-          *ngFor="let group of groupedFlightSegments; let i = index"
-          class="tab-header"
-          [class.active]="i === activeTabIndex"
-          (click)="activeTabIndex = i"
-        >
-          {{ group[0]?.originCode }} -
-          {{ group[group.length - 1]?.destinationCode }}
-        </div>
-      </div>
-
-      <!-- Tab Content -->
-      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeTabIndex]">
-        <ng-container
-          *ngFor="let segment of groupedFlightSegments[activeTabIndex]"
-        >
-          <div class="baggage-row" style="margin-top: 13px">
-            <div class="baggage-header">
-              <img [src]="segment.logo" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-            <div class="baggage-info">
-              <div class="baggage-item">
-                <i class="fas fa-suitcase"></i>
-                <div>Cabin Bag :</div>
-                <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
-              </div>
-              <div class="baggage-item">
-                <i class="fas fa-suitcase-rolling"></i>
-                <div>Check-In Bag :</div>
-                <div class="value">{{ segment.checkInBaggage || "N/A" }}</div>
-              </div>
-            </div>
-          </div>
-          <hr class="baggage-divider" />
-        </ng-container>
-      </div>
-    </div>
 
     <!-- Cancellation & Rescheduling Policy Card -->
     <div class="card">
@@ -1039,50 +869,6 @@
             {{ infant.firstName ? "CHANGE" : "+ ADD" }}
           </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Baggage Policy Card -->
-    <div class="card">
-      <div class="section-title">Baggage Policy</div>
-
-      <!-- Tab Headers: Scrollable row -->
-      <div class="tab-header-scroll">
-        <div
-          *ngFor="let group of groupedFlightSegments; let i = index"
-          class="tab-header"
-          [class.active]="i === activeTabIndex"
-          (click)="activeTabIndex = i"
-        >
-          {{ group[0]?.originCode }} -
-          {{ group[group.length - 1]?.destinationCode }}
-        </div>
-      </div>
-
-      <!-- Tab Content -->
-      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeTabIndex]">
-        <ng-container *ngFor="let segment of groupedFlightSegments[activeTabIndex]">
-          <div class="baggage-row" style="margin-top: 13px">
-            <div class="baggage-header">
-              <img [src]="segment.logo" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-            <div class="baggage-info">
-              <div class="baggage-item">
-                <i class="fas fa-suitcase"></i>
-                <div>Cabin Bag :</div>
-                <div class="value">{{ segment.cabinBaggage || "N/A" }}</div>
-              </div>
-              <div class="baggage-item">
-                <i class="fas fa-suitcase-rolling"></i>
-                <div>Check-In Bag :</div>
-                <div class="value">{{ segment.checkInBaggage || "N/A" }}</div>
-              </div>
-            </div>
-          </div>
-          <hr class="baggage-divider" />
-        </ng-container>
       </div>
     </div>
 
