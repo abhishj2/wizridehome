@@ -1323,14 +1323,22 @@
         <div>{{ formatCurrency(totalBaseFare) }}</div>
       </div>
       <div class="fare-line">
-        <div>Taxes and Surcharges</div>
+        <div>Taxes & Surcharges</div>
         <div>{{ formatCurrency(totalTaxes) }}</div>
       </div>
-      <div class="fare-line total-line">
-        <strong>Total Amount</strong>
-        <strong>{{ formatCurrency(finalAmount) }}</strong>
+      <div class="fare-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
+        <div>Baggage</div>
+        <div>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</div>
+      </div>
+      <div class="fare-summary-divider"></div>
+      <div class="fare-total-box">
+        <div class="fare-total-label">₹ Total Price</div>
+        <div class="fare-total-amount">{{ finalAmount | number : "1.2-2" }}</div>
       </div>
     </div>
+  </div>
+  <div class="trip-footer">
+    <button class="proceed-btn fare-proceed-btn" (click)="closeFareSummary()">PROCEED</button>
   </div>
 </div>
 
