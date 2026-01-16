@@ -291,6 +291,16 @@ body {
 }
 
 @media (min-width: 769px) {
+  /* Hide mobile baggage section on desktop */
+  .mobile-baggage-section {
+    display: none;
+  }
+
+  /* Hide cancellation policy card on desktop (already shown at top) */
+  .cancellation-policy-card-mobile {
+    display: none;
+  }
+
   .section-title {
     margin-bottom: 14px;
   }
@@ -1447,7 +1457,7 @@ body {
     grid-column: 2;
     grid-row: 1 / -1;
     position: sticky;
-    top: 100px;
+  
     /* Position below navbar (navbar is ~70-80px height + some margin) */
     width: 100%;
     left: auto;
@@ -1936,6 +1946,95 @@ body {
     display: none;
   }
 
+  /* Mobile Baggage Section Styling */
+  .mobile-baggage-section {
+    margin-top: 16px;
+  }
+
+  .mobile-baggage-section .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 16px;
+  }
+
+  .mobile-baggage-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .mobile-baggage-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: #4b5563;
+  }
+
+  .mobile-baggage-item .baggage-icon {
+    color: #f59e0b;
+    font-size: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .mobile-baggage-item .baggage-text {
+    line-height: 1.5;
+  }
+
+  .mobile-add-baggage {
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-add-baggage-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .mobile-add-baggage-content .add-baggage-icon {
+    color: #dc2626;
+    font-size: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .mobile-add-baggage-content .add-baggage-text {
+    font-size: 13px;
+    color: #1f2937;
+    line-height: 1.5;
+  }
+
+  .mobile-add-baggage-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .mobile-add-baggage-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .mobile-add-baggage-btn:active {
+    background: #1e40af;
+  }
+
   /* Baggage Row - Better layout */
   .baggage-row {
     padding: 16px;
@@ -2382,7 +2481,6 @@ body {
     grid-column: 2;
     grid-row: 1 / -1;
     position: sticky;
-    top: 100px;
     width: 100%;
     left: auto;
     right: auto;
