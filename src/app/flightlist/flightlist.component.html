@@ -2743,7 +2743,7 @@
 
     <!-- Fare Options Modal - One Way -->
     <div class="custom-modal-overlay" *ngIf="showFareModal" (click)="closeFareOptionsModal()">
-      <div class="custom-modal" (click)="$event.stopPropagation()">
+      <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
         <div class="fare-options-box">
           <div class="fare-options-header">
@@ -2753,46 +2753,57 @@
                 selectedFlight.Destination?.Airport?.CityName }} · {{ selectedFlight.Airline?.AirlineName }} · {{
                 selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} · {{ selectedFlight.Origin?.DepTime | date :
                 "HH:mm" }} - {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}</span>
-              <button class="fare-modify-btn"
-                (click)="showModifyForm = !showModifyForm; closeFareOptionsModal(); $event.stopPropagation()"
-                title="Modify">
-                <i class="fas fa-edit"></i>
-              </button>
             </div>
           </div>
           <div class="fare-scroll-wrapper">
             <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
             <div class="fare-scroll-container" #fareScrollContainer>
-              <div class="fare-card" *ngFor="let fare of selectedFlight?.FareOptions">
+              <div class="fare-card makemytrip-fare-card" *ngFor="let fare of selectedFlight?.FareOptions">
                 <div class="fare-price-oneway">
-                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
-                  <span class="per-adult">per adult</span>
+                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }} <span class="per-adult">per adult</span>
                 </div>
-                <div class="fare-type">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+                <div class="fare-type-badge">{{ fare.Segments[0][0].SupplierFareClass }}</div>
                 <div class="fare-section">
                   <strong>Baggage</strong>
-                  <ul>
-                    <li>✅ Cabin: {{ fare.Segments[0][0].CabinBaggage }}</li>
-                    <li>✅ Check-in: {{ fare.Segments[0][0].Baggage }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Cabin: {{ fare.Segments[0][0].CabinBaggage }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Check-in: {{ fare.Segments[0][0].Baggage }}</span>
+                    </li>
                   </ul>
                 </div>
                 <div class="fare-section">
                   <strong>Flexibility</strong>
-                  <ul>
-                    <li>⚠️ Cancel: {{ getCancellationRule(fare) }}</li>
-                    <li>⚠️ Change: {{ getDateChangeRule(fare) }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Cancel: {{ getCancellationRule(fare) }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Change: {{ getDateChangeRule(fare) }}</span>
+                    </li>
                   </ul>
                 </div>
                 <div class="fare-section">
                   <strong>Seats, Meals & More</strong>
-                  <ul>
-                    <li>🍽️ Meals: {{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</li>
-                    <li>💺 Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard
-                      seats free" : "Chargeable seats" }}</li>
-                    <li>{{ fare.FareRules[0]?.Details || "Check with airline" }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-utensils fare-icon"></i>
+                      <span>Meals: {{ fare.IsFreeMealAvailable ? "Meal included" : "Meal not included" }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-chair fare-icon"></i>
+                      <span>Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard seats free" : "Chargeable seats" }}</span>
+                    </li>
+                    <li class="check-airline">Check with airline</li>
                   </ul>
                 </div>
-                <button class="book-btn" (click)="finalizeSelection(fare)">BOOK NOW</button>
+                <button class="book-btn makemytrip-book-btn" (click)="finalizeSelection(fare)">BOOK NOW</button>
               </div>
             </div>
             <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
@@ -2803,7 +2814,7 @@
 
     <!-- Fare Options Modal - Round Trip (using same structure as one-way) -->
     <div class="custom-modal-overlay" *ngIf="showFareModal && flightType === 'round'" (click)="closeFareOptionsModal()">
-      <div class="custom-modal" (click)="$event.stopPropagation()">
+      <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
         <div class="fare-options-box">
           <div class="fare-options-header">
@@ -2819,44 +2830,57 @@
                 {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
                 date : "HH:mm" }}
               </span>
-              <button class="fare-modify-btn"
-                (click)="showModifyForm = !showModifyForm; closeFareOptionsModal(); $event.stopPropagation()"
-                title="Modify">
-                <i class="fas fa-edit"></i>
-              </button>
             </div>
           </div>
           <div class="fare-scroll-wrapper">
             <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
             <div class="fare-scroll-container" #fareScrollContainer>
-              <div class="fare-card" *ngFor="let fare of defaultFares">
+              <div class="fare-card makemytrip-fare-card" *ngFor="let fare of defaultFares">
                 <div class="fare-price-oneway">
-                  ₹ {{ fare.price | number : "1.0-0" }}
-                  <span class="per-adult">per adult</span>
+                  ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
                 </div>
-                <div class="fare-type">{{ fare.type }}</div>
+                <div class="fare-type-badge">{{ fare.type }}</div>
                 <div class="fare-section">
                   <strong>Baggage</strong>
-                  <ul>
-                    <li>✅ Cabin: {{ fare.cabin }}</li>
-                    <li>✅ Check-in: {{ fare.checkIn }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Cabin: {{ fare.cabin }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Check-in: {{ fare.checkIn }}</span>
+                    </li>
                   </ul>
                 </div>
                 <div class="fare-section">
                   <strong>Flexibility</strong>
-                  <ul>
-                    <li>⚠️ Cancel: {{ fare.cancel }}</li>
-                    <li>⚠️ Change: {{ fare.dateChange }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Cancel: {{ fare.cancel }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Change: {{ fare.dateChange }}</span>
+                    </li>
                   </ul>
                 </div>
                 <div class="fare-section">
                   <strong>Seats, Meals & More</strong>
-                  <ul>
-                    <li>🍽️ Meals: {{ fare.meal === 'Included' ? "Free meal available" : "Meal not included" }}</li>
-                    <li>💺 Seats: {{ fare.seat === 'Free' ? "Standard seats free" : "Chargeable seats" }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-utensils fare-icon"></i>
+                      <span>Meals: {{ fare.meal === 'Included' ? "Meal included" : "Meal not included" }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-chair fare-icon"></i>
+                      <span>Seats: {{ fare.seat === 'Free' ? "Standard seats free" : "Chargeable seats" }}</span>
+                    </li>
+                    <li class="check-airline">Check with airline</li>
                   </ul>
                 </div>
-                <button class="book-btn" (click)="finalizeBookingForRoundTrip(selectedFlight, fare)">
+                <button class="book-btn makemytrip-book-btn" (click)="finalizeBookingForRoundTrip(selectedFlight, fare)">
                   BOOK NOW
                 </button>
               </div>
