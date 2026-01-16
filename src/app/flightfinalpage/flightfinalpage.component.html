@@ -78,49 +78,49 @@
 </div>
 
 <div class="scroll-wrapper" *ngIf="!loader">
-  <!-- Oneway Trip -->
-  <div class="flight-final-page" *ngIf="tripType == 'oneway'">
-    <!-- Flight Summary Card -->
-    <div class="card makemytrip-flight-card" *ngIf="flightSegments?.length">
-      <div class="flight-leg">
-        <div *ngFor="let segment of flightSegments; let i = index">
-          <!-- Airline Info -->
-          <div class="flight-airline">
-            <img [src]="segment.logo" class="logo" />
-            <div class="name">{{ segment.airline }}</div>
-            <div class="code">{{ segment.code }}</div>
-          </div>
-
-          <!-- Route Info -->
-          <div class="flight-route">
-            <div class="city">{{ segment.from }}</div>
-            <div class="plane-icon">
-              <i class="fas fa-plane"></i>
+    <!-- Oneway Trip -->
+    <div class="flight-final-page" *ngIf="tripType == 'oneway'">
+      <!-- Flight Summary Card -->
+      <div class="card makemytrip-flight-card" *ngIf="flightSegments?.length">
+        <div class="flight-leg">
+          <div *ngFor="let segment of flightSegments; let i = index">
+            <!-- Airline Info -->
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
             </div>
-            <div class="city">{{ segment.to }}</div>
-          </div>
 
-          <!-- Timing & Duration -->
-          <div class="flight-meta">
-            {{ segment.date | date : "EEE, dd MMM" }} |
-            {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-            {{ segment.duration }}
-          </div>
-
-          <!-- Layover if applicable -->
-          <div class="layover-row" *ngIf="i < flightSegments.length - 1 && segment.layover">
-            <div class="line"></div>
-            <div class="layover">
-              <div *ngIf="segment.layover.hours >= 24" class="plus-day">
-                + 1 Day
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane"></i>
               </div>
-              {{ segment.layover.duration }} Layover in
-              {{ segment.layover.location }}
+              <div class="city">{{ segment.to }}</div>
             </div>
-            <div class="line"></div>
+
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover if applicable -->
+            <div class="layover-row" *ngIf="i < flightSegments.length - 1 && segment.layover">
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + 1 Day
+                </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
+              </div>
+              <div class="line"></div>
+            </div>
           </div>
         </div>
-      </div>
 
       <!-- Baggage Allowance Section - Desktop Only -->
       <div class="makemytrip-baggage-section">
@@ -143,6 +143,28 @@
         <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
         </button>
+      </div>
+
+      <!-- Cancellation Policy Section - Desktop Only -->
+      <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+        <div class="cancellation-header">
+          <div class="cancellation-title">Cancellation & Date Change Policy</div>
+          <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
+        </div>
+        <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
+          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
+          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+        </div>
+        <div class="cancellation-criteria-header">
+          <div class="criteria-left">Cancellation Criteria</div>
+          <div class="criteria-right">Charges</div>
+        </div>
+        <div class="cancellation-rows">
+          <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+            <div class="criteria-left">{{ row.range }}</div>
+            <div class="criteria-right">{{ row.price }}</div>
+          </div>
+        </div>
       </div>
 
       <!-- Trip Summary CTA -->
@@ -425,6 +447,28 @@
         <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
         </button>
+      </div>
+
+      <!-- Cancellation Policy Section - Desktop Only (Onward) -->
+      <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+        <div class="cancellation-header">
+          <div class="cancellation-title">Cancellation & Date Change Policy</div>
+          <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
+        </div>
+        <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
+          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
+          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+        </div>
+        <div class="cancellation-criteria-header">
+          <div class="criteria-left">Cancellation Criteria</div>
+          <div class="criteria-right">Charges</div>
+        </div>
+        <div class="cancellation-rows">
+          <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+            <div class="criteria-left">{{ row.range }}</div>
+            <div class="criteria-right">{{ row.price }}</div>
+          </div>
+        </div>
       </div>
 
       <!-- Trip Summary CTA -->
@@ -711,6 +755,28 @@
           <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
             ADD BAGGAGE
           </button>
+        </div>
+
+        <!-- Cancellation Policy Section - Desktop Only -->
+        <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+          <div class="cancellation-header">
+            <div class="cancellation-title">Cancellation & Date Change Policy</div>
+            <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
+          </div>
+          <div class="cancellation-airline" *ngIf="group && group.length > 0">
+            <img [src]="'assets/images/flightimages/' + group[0].code?.split(' ')[0] + '.png'" class="logo" />
+            <span class="airline-route">{{ group[0].originCode }}-{{ group[group.length - 1].destinationCode }}</span>
+          </div>
+          <div class="cancellation-criteria-header">
+            <div class="criteria-left">Cancellation Criteria</div>
+            <div class="criteria-right">Charges</div>
+          </div>
+          <div class="cancellation-rows">
+            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+              <div class="criteria-left">{{ row.range }}</div>
+              <div class="criteria-right">{{ row.price }}</div>
+            </div>
+          </div>
         </div>
       </div>
 
