@@ -61,7 +61,7 @@ body {
 .proceed-btn {
   width: 100%;
   padding: 16px;
-  background: #008b8b;
+  background: #000;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -633,8 +633,8 @@ body {
 .passenger-add-btn {
   padding: 8px 16px;
   background: transparent;
-  border: 1px solid #14b8a6;
-  color: #14b8a6;
+  border: 1px solid #000;
+  color: #000;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
@@ -713,8 +713,8 @@ body {
 .gst-box .add-btn {
   padding: 6px 14px;
   font-size: 13px;
-  border: 1px solid #14b8a6;
-  color: #14b8a6;
+  border: 1px solid #000;
+  color: #000;
   background: transparent;
   border-radius: 6px;
   font-weight: 600;
@@ -804,7 +804,7 @@ body {
 
 .proceed-btn {
   padding: 14px 32px;
-  background: #008b8b;
+  background: #000;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -1216,7 +1216,7 @@ body {
 .pprice {
   font-size: 16px;
   font-weight: 700;
-  color: #008b8b;
+  color: #474747;
 }
 
 .option-right {
@@ -1231,7 +1231,7 @@ body {
 
 .add-option-btn {
   padding: 10px 20px;
-  background: #008b8b;
+  background: #000;
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -1937,7 +1937,7 @@ body {
   }
 
   .add-baggage-btn {
-    background: #2563eb;
+    background: #000;
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -2121,7 +2121,7 @@ body {
 
   .mobile-add-baggage-btn {
     width: 100%;
-    background: #2563eb;
+    background: #000;
     color: white;
     border: none;
     border-radius: 6px;
@@ -3363,7 +3363,7 @@ i.fas.fa-plane-departure {
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
-  background: #008b8b;
+  background: #000;
   color: #ffffff;
 }
 

@@ -1367,7 +1367,7 @@
       </div>
     </div>
     <ng-container *ngFor="let baggage of baggageOptions">
-      <div class="baggage-option">
+      <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
         <div class="option-left">
           <i class="fas fa-suitcase-rolling"></i>
           <div class="baggage-text">
@@ -1430,7 +1430,7 @@
             </div>
           </div>
           <ng-container *ngFor="let baggage of baggageOptions">
-            <div class="baggage-option">
+            <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
               <div class="option-left">
                 <i class="fas fa-suitcase-rolling"></i>
                 <div class="baggage-text">
@@ -1467,7 +1467,7 @@
             </div>
           </div>
           <ng-container *ngFor="let baggage of baggageOptionsReturn">
-            <div class="baggage-option">
+            <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
               <div class="option-left">
                 <i class="fas fa-suitcase-rolling"></i>
                 <div class="baggage-text">
