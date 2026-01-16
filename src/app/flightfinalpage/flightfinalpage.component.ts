@@ -305,11 +305,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         this.processFlightDataInput(val);
       })
     );
-    
-    // Only call fare quote for one-way and round-trip (not multi-city)
-    if(this.traceid && this.resultIndex && this.tripType !== 'multicity') {
-        this.callFareQuote();
-    }
   }
   isMobileView(): boolean {
     if (!isPlatformBrowser(this.platformId)) return false;
@@ -467,13 +462,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       console.log('multiCitySegment:', val['multiCitySegment']);
       console.log('multiCityRoutes:', val['multiCityRoutes']);
       
-      if (val['multiCitySelectedFares']) {
+      if (val['multiCitySelectedFares'] || val['departureFlightData']) {
         this.processMultiCityData(val);
       } else {
-        console.error('No multiCitySelectedFares found in data!');
+        console.error('No multiCitySelectedFares or departureFlightData found in data!');
         console.log('Available keys in val:', Object.keys(val));
         this.loader = false;
+        return;
       }
+      
       // Initialize passengers from multi-city data
       this.totalAdults = val['adults'] || 1;
       this.totalChildren = val['children'] || 0;
@@ -485,8 +482,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Initialize baggage counts
       this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
       this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
-      // Turn off loader for multi-city (data is already selected)
-      this.loader = false;
+      
+      // Load fare rules for multi-city
+      this.loadFareRules();
+      
+      // Call fare quote for multi-city (similar to mobile version)
+      if (this.traceid && this.resultIndex) {
+        this.callFareQuote();
+      } else {
+        this.loader = false;
+      }
       return;
     }
     
@@ -594,78 +599,237 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   processMultiCityData(val: any): void {
+    console.log('=== Processing Multi-City Data ===');
+    console.log('Input val keys:', Object.keys(val));
+    console.log('Has departureFlightData?', !!val['departureFlightData']);
+    console.log('Has multiCitySelectedFares?', !!val['multiCitySelectedFares']);
+    
+    // For multi-city, flight data might be in departureFlightData OR constructed from multiCitySelectedFares
     const multiCitySelectedFares = val['multiCitySelectedFares'] || {};
     
-    this.flightSegmentGroups = [];
-    this.groupedFlightSegments = [];
-    let allSegments: any[] = [];
-  
-    // Sort keys to ensure Leg 1 comes before Leg 2
-    const segmentIndices = Object.keys(multiCitySelectedFares)
-      .map(k => parseInt(k))
-      .sort((a, b) => a - b);
-  
-    segmentIndices.forEach(index => {
-      const fareData = multiCitySelectedFares[index];
-      if (!fareData || !fareData.groupedFlight) return;
-  
-      const flight = fareData.groupedFlight;
-      const selectedFare = fareData.selectedFare;
+    // Try to get flight data from departureFlightData first
+    if (val['departureFlightData']?.selectedFare?.originalFareOption) {
+      console.log('Using departureFlightData');
+      this.flightDataDeparture = val['departureFlightData'].selectedFare.originalFareOption;
+      this.resultIndex = this.flightDataDeparture.ResultIndex || '';
+    } else if (Object.keys(multiCitySelectedFares).length > 0) {
+      console.log('Constructing from multiCitySelectedFares, count:', Object.keys(multiCitySelectedFares).length);
+      // Construct flight data from multiCitySelectedFares
+      // Get the first selected fare to extract common data
+      const firstFareKey = Object.keys(multiCitySelectedFares).sort((a, b) => Number(a) - Number(b))[0];
+      const firstFareData = multiCitySelectedFares[firstFareKey];
       
-      // TBO structure: each selection contains segments for that specific leg
-      const segmentGroup = flight.Segments?.[0] || [];
-      const group: any[] = [];
-  
-      segmentGroup.forEach((seg: any, i: number) => {
-        const origin = seg.Origin?.Airport || {};
-        const destination = seg.Destination?.Airport || {};
-        const depDate = new Date(seg.Origin?.DepTime || seg.DepTime);
-        const arrDate = new Date(seg.Destination?.ArrTime || seg.ArrTime);
-  
-        const segmentObj: any = {
-          airline: seg.Airline?.AirlineName,
-          logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
-          code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
-          aircraft: seg.Craft,
-          departureTime: this.formatTime(depDate),
-          arrivalTime: this.formatTime(arrDate),
-          from: origin.CityName,
-          fromAirport: `${origin.AirportName}, Terminal ${origin.Terminal || 'N/A'}`,
-          to: destination.CityName,
-          toAirport: `${destination.AirportName}, Terminal ${destination.Terminal || 'N/A'}`,
-          duration: this.formatDuration(Math.floor((arrDate.getTime() - depDate.getTime()) / 60000)),
-          // Map baggage from the specific fare selected for this leg
-          cabinBaggage: selectedFare?.Segments?.[0]?.[i]?.CabinBaggage || seg.CabinBaggage,
-          checkInBaggage: selectedFare?.Segments?.[0]?.[i]?.Baggage || seg.Baggage,
-          originCode: origin.AirportCode,
-          destinationCode: destination.AirportCode,
-          date: depDate,
-          depDate: depDate,
-          arrDate: arrDate
+      if (firstFareData?.groupedFlight) {
+        // Use groupedFlight as the base structure
+        this.flightDataDeparture = {
+          ...firstFareData.groupedFlight,
+          ResultIndex: firstFareData.selectedFare?.originalFareOption?.ResultIndex || '',
+          cancellationPolicy: firstFareData.selectedFare?.originalFareOption?.cancellationPolicy || [],
+          dateChangePolicy: firstFareData.selectedFare?.originalFareOption?.dateChangePolicy || []
         };
-  
-        // Handle Layovers within a specific Leg (e.g. Stopovers)
-        if (i < segmentGroup.length - 1) {
-          const nextSeg = segmentGroup[i + 1];
-          const nextDep = new Date(nextSeg.Origin?.DepTime || nextSeg.DepTime);
-          segmentObj.layover = {
-            duration: this.formatDuration(Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000)),
-            location: destination.CityName
-          };
+        this.resultIndex = this.flightDataDeparture.ResultIndex;
+      } else if (firstFareData?.selectedFare?.originalFareOption) {
+        // Use selectedFare.originalFareOption directly
+        this.flightDataDeparture = firstFareData.selectedFare.originalFareOption;
+        this.resultIndex = this.flightDataDeparture.ResultIndex || '';
+      }
+    }
+    
+    // Process segments from flightDataDeparture or multiCitySelectedFares
+    let allSegmentsNested: any[] = [];
+    
+    if (this.flightDataDeparture?.Segments) {
+      // Use segments from flightDataDeparture
+      allSegmentsNested = this.flightDataDeparture.Segments;
+    } else if (Object.keys(multiCitySelectedFares).length > 0) {
+      // Construct segments from multiCitySelectedFares
+      // For multi-city, each selected fare contains segments for that leg
+      // We need to collect all segment groups in order
+      const segmentIndices = Object.keys(multiCitySelectedFares)
+        .map(k => Number(k))
+        .sort((a, b) => a - b);
+      
+      segmentIndices.forEach(index => {
+        const fareData = multiCitySelectedFares[index];
+        console.log(`Processing segment index ${index}:`, {
+          hasGroupedFlight: !!fareData?.groupedFlight,
+          hasSelectedFare: !!fareData?.selectedFare,
+          hasOriginalFareOption: !!fareData?.selectedFare?.originalFareOption
+        });
+        
+        // Try groupedFlight first, then selectedFare
+        let segments: any = null;
+        if (fareData?.groupedFlight?.Segments) {
+          segments = fareData.groupedFlight.Segments;
+          console.log(`  Using groupedFlight.Segments, type:`, Array.isArray(segments) ? 'array' : typeof segments);
+        } else if (fareData?.selectedFare?.originalFareOption?.Segments) {
+          segments = fareData.selectedFare.originalFareOption.Segments;
+          console.log(`  Using selectedFare.originalFareOption.Segments, type:`, Array.isArray(segments) ? 'array' : typeof segments);
         }
         
-        group.push(segmentObj);
-        allSegments.push(segmentObj);
+        if (segments) {
+          // Segments is typically an array of segment groups (nested array)
+          // For multi-city, each leg might have one or more segment groups
+          if (Array.isArray(segments)) {
+            segments.forEach((segGroup: any, idx: number) => {
+              if (Array.isArray(segGroup)) {
+                // It's a segment group (array of segments)
+                console.log(`    Adding segment group ${idx} with ${segGroup.length} segments`);
+                allSegmentsNested.push(segGroup);
+              } else if (segGroup && typeof segGroup === 'object') {
+                // It's a single segment, wrap it in an array
+                console.log(`    Wrapping single segment ${idx} in array`);
+                allSegmentsNested.push([segGroup]);
+              }
+            });
+          } else {
+            console.warn(`  Segments is not an array for index ${index}`);
+          }
+        } else {
+          console.warn(`  No segments found for index ${index}`);
+        }
       });
-  
-      // Add to groups for the multi-city UI loop
-      this.flightSegmentGroups.push(group);
-      this.groupedFlightSegments.push(group);
-    });
-  
-    this.flightSegments = allSegments;
-    // Also sum the fares correctly
-    this.processMultiCityFareBreakdown(multiCitySelectedFares);
+      
+      console.log(`Total segment groups collected: ${allSegmentsNested.length}`);
+      
+      // If we constructed segments, also update flightDataDeparture for consistency
+      if (allSegmentsNested.length > 0 && !this.flightDataDeparture) {
+        const firstFareKey = segmentIndices[0].toString();
+        const firstFareData = multiCitySelectedFares[firstFareKey];
+        this.flightDataDeparture = {
+          Segments: allSegmentsNested,
+          ResultIndex: firstFareData?.selectedFare?.originalFareOption?.ResultIndex || '',
+          cancellationPolicy: firstFareData?.selectedFare?.originalFareOption?.cancellationPolicy || [],
+          dateChangePolicy: firstFareData?.selectedFare?.originalFareOption?.dateChangePolicy || []
+        };
+        this.resultIndex = this.flightDataDeparture.ResultIndex;
+      }
+    }
+    
+    console.log(`Final allSegmentsNested length: ${allSegmentsNested.length}`);
+    console.log(`flightDataDeparture set? ${!!this.flightDataDeparture}`);
+    
+    if (allSegmentsNested.length > 0) {
+      this.flightSegments = [];
+      this.flightSegmentGroups = [];
+      console.log('Processing segments...');
+
+      const stopCities: string[] = [];
+      let overallFirstDepTime: Date | null = null;
+      let overallLastArrTime: Date | null = null;
+      let firstLegDepTime: Date | null = null;
+      let lastLegArrTime: Date | null = null;
+
+      for (const segmentGroup of allSegmentsNested) {
+        const group: any[] = [];
+
+        for (let i = 0; i < segmentGroup.length; i++) {
+          const seg = segmentGroup[i];
+          const origin = seg.Origin?.Airport || {};
+          const destination = seg.Destination?.Airport || {};
+
+          const depDate = new Date(seg.DepTime || seg.Origin?.DepTime);
+          const arrDate = new Date(seg.ArrTime || seg.Destination?.ArrTime);
+
+          if (!firstLegDepTime) firstLegDepTime = depDate;
+          lastLegArrTime = arrDate;
+
+          if (!overallFirstDepTime || depDate < overallFirstDepTime) overallFirstDepTime = depDate;
+          if (!overallLastArrTime || arrDate > overallLastArrTime) overallLastArrTime = arrDate;
+
+          const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
+
+          const segmentObj: any = {
+            airline: seg.Airline?.AirlineName,
+            logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
+            code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
+            aircraft: seg.Craft,
+            departureTime: this.formatTime(depDate),
+            arrivalTime: this.formatTime(arrDate),
+            from: origin.CityName,
+            fromAirport: `${origin.AirportName}, Terminal ${origin.Terminal || 'N/A'}`,
+            to: destination.CityName,
+            toAirport: `${destination.AirportName}, Terminal ${destination.Terminal || 'N/A'}`,
+            duration: this.formatDuration(durationMins),
+            cabinBaggage: seg.CabinBaggage,
+            checkInBaggage: seg.Baggage,
+            fareTag: seg.SupplierFareClass,
+            layover: null,
+            originCode: origin.AirportCode,
+            destinationCode: destination.AirportCode,
+            date: depDate,
+            depDate: depDate,
+            arrDate: arrDate
+          };
+
+          if (i < segmentGroup.length - 1) {
+            const nextSeg = segmentGroup[i + 1];
+            const nextDep = new Date(nextSeg.DepTime || nextSeg.Origin?.DepTime);
+            const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
+            const layoverHrs = layoverMins / 60;
+
+            segmentObj.layover = {
+              duration: this.formatDuration(layoverMins),
+              location: destination.CityName,
+              hours: +layoverHrs.toFixed(2)
+            };
+
+            stopCities.push(destination.CityName);
+          }
+
+          this.flightSegments.push(segmentObj);
+          group.push(segmentObj);
+        }
+
+        this.flightSegmentGroups.push(group);
+      }
+      
+      // Total duration across all legs
+      if (overallFirstDepTime && overallLastArrTime) {
+        const totalDurationMins = Math.floor((overallLastArrTime.getTime() - overallFirstDepTime.getTime()) / 60000);
+        this.totalFlightDuration = this.formatDuration(totalDurationMins);
+      }
+
+      // Stop summary
+      const totalStops = this.flightSegments.filter(seg => seg.layover).length;
+      if (totalStops === 0) {
+        this.stopSummary = 'Non-stop';
+      } else {
+        this.stopSummary = `${totalStops} stop${totalStops > 1 ? 's' : ''} via ${stopCities.join(', ')}`;
+      }
+
+      // Cancellation & Date change policies
+      if (this.flightDataDeparture) {
+        this.cancellationPolicy = this.flightDataDeparture.cancellationPolicy || [];
+        this.dateChangePolicy = this.flightDataDeparture.dateChangePolicy || [];
+      } else {
+        // Try to get policies from first selected fare
+        const firstFareKey = Object.keys(multiCitySelectedFares).sort((a, b) => Number(a) - Number(b))[0];
+        const firstFareData = multiCitySelectedFares[firstFareKey];
+        if (firstFareData?.selectedFare?.originalFareOption) {
+          this.cancellationPolicy = firstFareData.selectedFare.originalFareOption.cancellationPolicy || [];
+          this.dateChangePolicy = firstFareData.selectedFare.originalFareOption.dateChangePolicy || [];
+        }
+      }
+      
+      // Set groupedFlightSegments for mobile template compatibility
+      this.groupedFlightSegments = this.flightSegmentGroups;
+    } else {
+      Swal.fire({
+        title: 'Sorry!',
+        html: 'Flight Data could not be loaded properly, kindly start again!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      this.router.navigate(['/']);
+      return;
+    }
+    
+    // Process fare breakdown from multiCitySelectedFares if available
+    if (Object.keys(multiCitySelectedFares).length > 0) {
+      this.processMultiCityFareBreakdown(multiCitySelectedFares);
+    }
+    
     this.cdr.detectChanges();
   }
 
@@ -806,6 +970,41 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.subscriptions.add(
       this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
         .subscribe((val: any) => {
+          if (!val) {
+            Swal.fire({
+              title: 'Sorry!',
+              html: 'Latest Fare could not be loaded!',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+            this.router.navigate(['/']);
+            return;
+          }
+
+          if (val?.Response?.ResponseStatus === 2) {
+            const errorMessage = val?.Response?.Error?.ErrorMessage || 'Fare Quote failed from the Supplier end. Please try again.';
+            Swal.fire({
+              title: 'Sorry!',
+              html: errorMessage,
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+            this.router.navigate(['/']);
+            return;
+          }
+
+          if (!val?.Response?.Results || val?.Response?.Results === 2) {
+            const errorMessage = val?.Response?.Error?.ErrorMessage || 'Fare Quote failed from the Supplier end. Please try again.';
+            Swal.fire({
+              title: 'Sorry!',
+              html: errorMessage,
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+            this.router.navigate(['/']);
+            return;
+          }
+
           this.fareQuote = val;
           this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
           
@@ -820,6 +1019,29 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             this.subscriptions.add(
               this.apiService.getFareQuote(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
                 .subscribe((returnVal: any) => {
+                  if (!returnVal) {
+                    Swal.fire({
+                      title: 'Sorry!',
+                      html: 'Latest Return Fare could not be loaded!',
+                      icon: 'error',
+                      confirmButtonText: 'Ok'
+                    });
+                    this.router.navigate(['/']);
+                    return;
+                  }
+
+                  if (returnVal?.Response?.ResponseStatus === 2) {
+                    const errorMessage = returnVal?.Response?.Error?.ErrorMessage || 'Fare Quote failed from the Supplier end. Please try again.';
+                    Swal.fire({
+                      title: 'Sorry!',
+                      html: errorMessage,
+                      icon: 'error',
+                      confirmButtonText: 'Ok'
+                    });
+                    this.router.navigate(['/']);
+                    return;
+                  }
+                  
                   this.fareQuoteReturn = returnVal;
                   this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
                   
@@ -831,25 +1053,55 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
                   this.processFareBreakdown(returnVal, true);
                   this.aggregateFareSummary();
                   this.fetchSSRAfterFareQuotes();
-                }, err => { this.loader = false; })
+                }, (error) => {
+                  console.error("Error fetching return fare quote:", error);
+                  this.loader = false;
+                  this.fetchSSRAfterFareQuotes();
+                })
             );
           } else {
+            // For one-way and multi-city, aggregate immediately and proceed with SSR
             this.aggregateFareSummary();
+            if (this.tripType !== 'multicity') {
+              this.fetchSSRAfterFareQuotes();
+            }
+          }
+        }, (error) => {
+          console.error("Error fetching outbound fare quote:", error);
+          this.loader = false;
+          if (this.tripType !== 'multicity') {
             this.fetchSSRAfterFareQuotes();
           }
-        }, err => { this.loader = false; })
+        })
     );
   }
 
   processPassportReqs(results: any) {
       if(!results) return;
-      if (
-        results.IsPassportFullDetailRequiredAtBook || 
-        results.IsPassportRequiredAtBook || 
-        results.IsPassportRequiredAtTicket
-      ) {
-          this.passportInfoRequired = true;
-      }
+      
+      // Process passport requirements
+      const passportChecks = {
+        IsPassportFullDetailRequiredAtBook: results.IsPassportFullDetailRequiredAtBook,
+        IsPassportRequiredAtBook: results.IsPassportRequiredAtBook,
+        IsPassportRequiredAtTicket: results.IsPassportRequiredAtTicket
+      };
+      
+      this.passportInfoRequired = this.passportInfoRequired || !!(
+        passportChecks.IsPassportFullDetailRequiredAtBook ||
+        passportChecks.IsPassportRequiredAtBook ||
+        passportChecks.IsPassportRequiredAtTicket
+      );
+      
+      // Process PAN requirements (similar to mobile version)
+      const panChecks = {
+        IsPanRequiredAtTicket: results.IsPanRequiredAtTicket,
+        IsPanRequiredAtBook: results.IsPanRequiredAtBook
+      };
+      
+      this.panInfoRequired = this.panInfoRequired || !!(
+        panChecks.IsPanRequiredAtTicket ||
+        panChecks.IsPanRequiredAtBook
+      );
   }
 
   fetchSSRAfterFareQuotes() {
