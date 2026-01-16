@@ -5961,3 +5961,7 @@ button.nav-tab.active img {
     font-size: 16px !important;
   }
 }
+
+.form-row.multrow{
+    align-items:end;
+}

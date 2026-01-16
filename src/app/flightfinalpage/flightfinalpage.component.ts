@@ -592,207 +592,33 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   processMultiCityData(val: any): void {
     const multiCitySelectedFares = val['multiCitySelectedFares'] || {};
-    const multiCitySegment = val['multiCitySegment'] || [];
-    const multiCityRoutes = val['multiCityRoutes'] || [];
-    const multiCityFlightResults = val['multiCityFlightResults'] || {};
     
-    this.flightSegments = [];
     this.flightSegmentGroups = [];
     this.groupedFlightSegments = [];
-    
-    console.log('multiCityFlightResults:', multiCityFlightResults);
-    console.log('multiCityFlightResults keys:', Object.keys(multiCityFlightResults));
-    
-    console.log('=== Processing multi-city data ===');
-    console.log('multiCitySelectedFares:', multiCitySelectedFares);
-    console.log('multiCitySelectedFares keys:', Object.keys(multiCitySelectedFares));
-    console.log('multiCitySelectedFares count:', Object.keys(multiCitySelectedFares).length);
-    console.log('multiCitySegment:', multiCitySegment);
-    console.log('multiCitySegment length:', multiCitySegment.length);
-    console.log('multiCityRoutes:', multiCityRoutes);
-    console.log('multiCityRoutes length:', multiCityRoutes.length);
-    
-    // Log each segment in multiCitySegment to see what we have
-    if (multiCitySegment && multiCitySegment.length > 0) {
-      multiCitySegment.forEach((seg: any, idx: number) => {
-        console.log(`multiCitySegment[${idx}]:`, {
-          Origin: seg.Origin,
-          Destination: seg.Destination,
-          PreferredDepartureTime: seg.PreferredDepartureTime,
-          PreferredArrivalTime: seg.PreferredArrivalTime
-        });
-      });
-    }
-    
-    // Log each entry in multiCitySelectedFares to see what we have
-    if (multiCitySelectedFares && typeof multiCitySelectedFares === 'object') {
-      Object.entries(multiCitySelectedFares).forEach(([key, value]: [string, any]) => {
-        console.log(`multiCitySelectedFares[${key}]:`, {
-          hasGroupedFlight: !!value?.groupedFlight,
-          hasSelectedFare: !!value?.selectedFare,
-          groupedFlightOrigin: value?.groupedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName || value?.groupedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.AirportCode,
-          groupedFlightDestination: value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1]?.Destination?.Airport?.CityName || value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1]?.Destination?.Airport?.AirportCode
-        });
-      });
-    }
-    
-    // Log all entries in multiCitySelectedFares with route information
-    if (typeof multiCitySelectedFares === 'object' && multiCitySelectedFares !== null) {
-      Object.entries(multiCitySelectedFares).forEach(([key, value]: [string, any]) => {
-        const firstSeg = value?.groupedFlight?.Segments?.[0]?.[0];
-        const lastSeg = value?.groupedFlight?.Segments?.[0]?.[value?.groupedFlight?.Segments?.[0]?.length - 1];
-        console.log(`Entry [${key}]:`, {
-          hasGroupedFlight: !!value?.groupedFlight,
-          hasSelectedFare: !!value?.selectedFare,
-          route: firstSeg && lastSeg 
-            ? `${firstSeg.Origin?.Airport?.CityName || firstSeg.Origin?.Airport?.AirportCode} → ${lastSeg.Destination?.Airport?.CityName || lastSeg.Destination?.Airport?.AirportCode}`
-            : 'Unknown',
-          groupedFlightKeys: value?.groupedFlight ? Object.keys(value.groupedFlight) : [],
-          selectedFareKeys: value?.selectedFare ? Object.keys(value.selectedFare) : []
-        });
-      });
-    }
-    
-    // Log each segment in multiCitySegment to see what we have
-    if (multiCitySegment && multiCitySegment.length > 0) {
-      multiCitySegment.forEach((seg: any, idx: number) => {
-        console.log(`multiCitySegment[${idx}]:`, {
-          Origin: seg.Origin,
-          Destination: seg.Destination,
-          PreferredDepartureTime: seg.PreferredDepartureTime,
-          PreferredArrivalTime: seg.PreferredArrivalTime,
-          hasSelectedFare: !!multiCitySelectedFares[idx]
-        });
-      });
-    }
-    
-    // Check if it's an array instead of object
-    if (Array.isArray(multiCitySelectedFares)) {
-      console.warn('multiCitySelectedFares is an array, not an object!', multiCitySelectedFares);
-      console.log('Array length:', multiCitySelectedFares.length);
-    }
-    
-    // Warn if segment count mismatch
-    const expectedSegments = multiCitySegment.length || multiCityRoutes.length || 0;
-    const selectedFaresCount = Object.keys(multiCitySelectedFares).length;
-    if (expectedSegments > selectedFaresCount) {
-      console.warn(`⚠️ MISMATCH: Expected ${expectedSegments} segments but only ${selectedFaresCount} selected fares found!`);
-      console.warn('This means not all segments were selected before navigation.');
-    }
-    
-    // Set dates from multi-city segments
-    if (multiCitySegment.length > 0) {
-      this.departureDate = new Date(multiCitySegment[0].PreferredDepartureTime || val['departureDate']);
-    }
-    
-    // Get segment indices sorted - handle both object and array formats
-    let segmentIndices: number[] = [];
-    
-    if (Array.isArray(multiCitySelectedFares)) {
-      // If it's an array, use indices
-      segmentIndices = multiCitySelectedFares.map((_, index) => index);
-      console.log('multiCitySelectedFares is an ARRAY, converting to indices');
-    } else if (typeof multiCitySelectedFares === 'object' && multiCitySelectedFares !== null) {
-      // If it's an object, get keys
-      segmentIndices = Object.keys(multiCitySelectedFares)
-        .map(k => parseInt(k))
-        .filter(k => !isNaN(k))
-        .sort((a, b) => a - b);
-    }
-    
-    console.log('Segment indices:', segmentIndices);
-    console.log('Number of segments to process:', segmentIndices.length);
-    console.log('Expected segments from multiCitySegment:', multiCitySegment.length);
-    console.log('Expected segments from multiCityRoutes:', multiCityRoutes.length);
-    
-    // Detailed structure logging
-    console.log('multiCitySelectedFares structure:', {
-      type: typeof multiCitySelectedFares,
-      isArray: Array.isArray(multiCitySelectedFares),
-      keys: Object.keys(multiCitySelectedFares),
-      keyCount: Object.keys(multiCitySelectedFares).length,
-      values: Object.values(multiCitySelectedFares).map((v: any, idx: number) => ({
-        index: idx,
-        hasGroupedFlight: !!v?.groupedFlight,
-        hasSelectedFare: !!v?.selectedFare,
-        groupedFlightSegments: v?.groupedFlight?.Segments ? v.groupedFlight.Segments.length : 0
-      }))
-    });
-    
-    // Check if we're missing segments
-    const expectedCount = Math.max(multiCitySegment.length, multiCityRoutes.length, 0);
-    if (segmentIndices.length < expectedCount) {
-      console.error(`⚠️ CRITICAL: Only ${segmentIndices.length} segment(s) in multiCitySelectedFares but ${expectedCount} expected!`);
-      console.error('This means not all segments were selected before navigation.');
-      console.error('Available segment indices:', segmentIndices);
-      console.error('Expected segment indices:', Array.from({length: expectedCount}, (_, i) => i));
-    }
-    
-    // Determine how many segments we should process
-    // Use multiCitySegment length as the source of truth for how many segments exist
-    const expectedSegmentCount = Math.max(
-      multiCitySegment.length,
-      multiCityRoutes.length,
-      segmentIndices.length,
-      1
-    );
-    
-    console.log(`Expected segment count: ${expectedSegmentCount}`);
-    console.log(`Found ${segmentIndices.length} selected fares`);
-    
-    if (segmentIndices.length === 0 && expectedSegmentCount === 0) {
-      console.error('No segments found in multiCitySelectedFares or multiCitySegment!');
-      this.loader = false;
-      return;
-    }
-    
-    // If we have fewer selected fares than expected segments, we still want to show all segments
-    // We'll process what we have and show placeholders for missing ones
     let allSegments: any[] = [];
-    
-    // Process each segment that has a selected fare
-    console.log(`\n=== Starting to process ${segmentIndices.length} segments with selected fares ===`);
-    for (const segmentIndex of segmentIndices) {
-      console.log(`\n--- Processing segment index: ${segmentIndex} ---`);
-      const fareData = Array.isArray(multiCitySelectedFares) 
-        ? multiCitySelectedFares[segmentIndex] 
-        : multiCitySelectedFares[segmentIndex];
-      console.log('Fare data for segment', segmentIndex, ':', fareData);
-      console.log('Fare data type:', typeof fareData);
-      console.log('Fare data keys:', fareData ? Object.keys(fareData) : 'null/undefined');
-      
-      if (!fareData) {
-        console.warn(`No fare data for segment ${segmentIndex}`);
-        continue;
-      }
-      
-      if (!fareData.groupedFlight) {
-        console.warn(`No groupedFlight for segment ${segmentIndex}:`, fareData);
-        continue;
-      }
-      
+  
+    // Sort keys to ensure Leg 1 comes before Leg 2
+    const segmentIndices = Object.keys(multiCitySelectedFares)
+      .map(k => parseInt(k))
+      .sort((a, b) => a - b);
+  
+    segmentIndices.forEach(index => {
+      const fareData = multiCitySelectedFares[index];
+      if (!fareData || !fareData.groupedFlight) return;
+  
       const flight = fareData.groupedFlight;
       const selectedFare = fareData.selectedFare;
       
-      console.log('Flight object:', flight);
-      console.log('Flight.Segments:', flight.Segments);
-      
-      // Get segments from the flight
-      const segmentGroups = flight.Segments || [];
-      const segmentGroup = segmentGroups[0] || [];
-      
-      console.log('Segment group length:', segmentGroup.length);
-      
-      // Process each segment in this group
-      const groupSegments: any[] = [];
-      for (let i = 0; i < segmentGroup.length; i++) {
-        const seg = segmentGroup[i];
+      // TBO structure: each selection contains segments for that specific leg
+      const segmentGroup = flight.Segments?.[0] || [];
+      const group: any[] = [];
+  
+      segmentGroup.forEach((seg: any, i: number) => {
         const origin = seg.Origin?.Airport || {};
         const destination = seg.Destination?.Airport || {};
         const depDate = new Date(seg.Origin?.DepTime || seg.DepTime);
         const arrDate = new Date(seg.Destination?.ArrTime || seg.ArrTime);
-        const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
-        
+  
         const segmentObj: any = {
           airline: seg.Airline?.AirlineName,
           logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
@@ -801,255 +627,43 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           departureTime: this.formatTime(depDate),
           arrivalTime: this.formatTime(arrDate),
           from: origin.CityName,
-          fromAirport: `${origin.AirportName || ''}, Terminal ${origin.Terminal || 'N/A'}`.trim(),
+          fromAirport: `${origin.AirportName}, Terminal ${origin.Terminal || 'N/A'}`,
           to: destination.CityName,
-          toAirport: `${destination.AirportName || ''}, Terminal ${destination.Terminal || 'N/A'}`.trim(),
-          duration: this.formatDuration(durationMins),
-          cabinBaggage: selectedFare?.Segments?.[0]?.[0]?.CabinBaggage || seg.CabinBaggage,
-          checkInBaggage: selectedFare?.Segments?.[0]?.[0]?.Baggage || seg.Baggage,
-          fareTag: selectedFare?.Segments?.[0]?.[0]?.SupplierFareClass,
-          layover: null,
+          toAirport: `${destination.AirportName}, Terminal ${destination.Terminal || 'N/A'}`,
+          duration: this.formatDuration(Math.floor((arrDate.getTime() - depDate.getTime()) / 60000)),
+          // Map baggage from the specific fare selected for this leg
+          cabinBaggage: selectedFare?.Segments?.[0]?.[i]?.CabinBaggage || seg.CabinBaggage,
+          checkInBaggage: selectedFare?.Segments?.[0]?.[i]?.Baggage || seg.Baggage,
           originCode: origin.AirportCode,
           destinationCode: destination.AirportCode,
           date: depDate,
           depDate: depDate,
-          arrDate: arrDate,
+          arrDate: arrDate
         };
-        
-        // Add layover if not last segment in group
+  
+        // Handle Layovers within a specific Leg (e.g. Stopovers)
         if (i < segmentGroup.length - 1) {
           const nextSeg = segmentGroup[i + 1];
           const nextDep = new Date(nextSeg.Origin?.DepTime || nextSeg.DepTime);
-          const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
-          const layoverHours = layoverMins / 60;
           segmentObj.layover = {
-            duration: this.formatDuration(layoverMins),
-            location: destination.CityName,
-            hours: layoverHours
+            duration: this.formatDuration(Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000)),
+            location: destination.CityName
           };
         }
         
-        groupSegments.push(segmentObj);
+        group.push(segmentObj);
         allSegments.push(segmentObj);
-      }
-      
-      // Add layover between segment groups (if not last segment)
-      if (segmentIndex < segmentIndices.length - 1) {
-        const lastSegInGroup = groupSegments[groupSegments.length - 1];
-        const nextFareData = multiCitySelectedFares[segmentIndices[segmentIndices.indexOf(segmentIndex) + 1]];
-        if (nextFareData && nextFareData.groupedFlight) {
-          const nextFlight = nextFareData.groupedFlight;
-          const nextFirstSeg = nextFlight.Segments?.[0]?.[0];
-          if (nextFirstSeg) {
-            const nextDep = new Date(nextFirstSeg.Origin?.DepTime || nextFirstSeg.DepTime);
-            const layoverMins = Math.floor((nextDep.getTime() - lastSegInGroup.arrDate.getTime()) / 60000);
-            const layoverHours = layoverMins / 60;
-            lastSegInGroup.layover = {
-              duration: this.formatDuration(layoverMins),
-              location: lastSegInGroup.to,
-              hours: layoverHours
-            };
-          }
-        }
-      }
-      
-      // Always push, even if empty, to maintain index alignment
-      // But log warning if empty
-      if (groupSegments.length === 0) {
-        console.warn(`⚠ No segments created for segment index ${segmentIndex} - segmentGroup was empty`);
-        console.warn('Segment group details:', {
-          segmentGroupLength: segmentGroup.length,
-          segmentGroup: segmentGroup,
-          flightSegments: flight.Segments
-        });
-      }
-      
-      this.flightSegmentGroups.push(groupSegments);
-      this.groupedFlightSegments.push(groupSegments);
-      
-      console.log(`✓ Processed segment ${segmentIndex}:`, {
-        route: groupSegments.length > 0 
-          ? `${groupSegments[0]?.from} → ${groupSegments[groupSegments.length - 1]?.to}`
-          : 'NO ROUTE (empty)',
-        segmentsCount: groupSegments.length,
-        groupSegments: groupSegments.length > 0 
-          ? groupSegments.map(s => ({ from: s.from, to: s.to, code: s.code }))
-          : 'EMPTY'
       });
-    }
-    
-    // Check if we're missing segments - if expectedSegmentCount > segmentIndices.length
-    // This means some segments weren't selected, but we should still show them if possible
-    if (expectedSegmentCount > segmentIndices.length) {
-      console.warn(`⚠️ Only ${segmentIndices.length} of ${expectedSegmentCount} segments have selected fares.`);
-      const missingIndices = Array.from({length: expectedSegmentCount}, (_, i) => i)
-        .filter(i => !segmentIndices.includes(i));
-      console.warn('Missing segment indices:', missingIndices);
-      
-      // Try to use multiCityFlightResults to auto-select default flights for missing segments
-      for (const missingIndex of missingIndices) {
-        console.log(`\n--- Processing missing segment index: ${missingIndex} ---`);
-        
-        // First, try to get flight from multiCityFlightResults
-        const availableFlights = multiCityFlightResults[missingIndex];
-        if (availableFlights && Array.isArray(availableFlights) && availableFlights.length > 0) {
-          console.log(`Found ${availableFlights.length} available flights for segment ${missingIndex}`);
-          
-          // Use the first flight (or cheapest - for now use first)
-          const defaultFlight = availableFlights[0];
-          console.log('Using default flight:', defaultFlight);
-          
-          // Get the first fare option as default
-          const defaultFare = defaultFlight?.FareOptions?.[0];
-          if (!defaultFare) {
-            console.warn(`No fare options found for default flight in segment ${missingIndex}`);
-            // Fall back to placeholder
-            this.createPlaceholderForSegment(missingIndex, multiCitySegment, allSegments);
-            continue;
-          }
-          
-          // Process this flight the same way as selected fares
-          const flight = defaultFlight;
-          const selectedFare = defaultFare;
-          
-          console.log('Processing default flight for segment', missingIndex);
-          console.log('Flight.Segments:', flight.Segments);
-          
-          const segmentGroups = flight.Segments || [];
-          const segmentGroup = segmentGroups[0] || [];
-          
-          console.log('Segment group length:', segmentGroup.length);
-          
-          // Process each segment in this group
-          const groupSegments: any[] = [];
-          for (let i = 0; i < segmentGroup.length; i++) {
-            const seg = segmentGroup[i];
-            const origin = seg.Origin?.Airport || {};
-            const destination = seg.Destination?.Airport || {};
-            const depDate = new Date(seg.Origin?.DepTime || seg.DepTime);
-            const arrDate = new Date(seg.Destination?.ArrTime || seg.ArrTime);
-            const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
-            
-            const segmentObj: any = {
-              airline: seg.Airline?.AirlineName,
-              logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
-              code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
-              aircraft: seg.Craft,
-              departureTime: this.formatTime(depDate),
-              arrivalTime: this.formatTime(arrDate),
-              from: origin.CityName,
-              fromAirport: `${origin.AirportName || ''}, Terminal ${origin.Terminal || 'N/A'}`.trim(),
-              to: destination.CityName,
-              toAirport: `${destination.AirportName || ''}, Terminal ${destination.Terminal || 'N/A'}`.trim(),
-              duration: this.formatDuration(durationMins),
-              cabinBaggage: selectedFare?.Segments?.[0]?.[0]?.CabinBaggage || seg.CabinBaggage,
-              checkInBaggage: selectedFare?.Segments?.[0]?.[0]?.Baggage || seg.Baggage,
-              fareTag: selectedFare?.Segments?.[0]?.[0]?.SupplierFareClass,
-              layover: null,
-              originCode: origin.AirportCode,
-              destinationCode: destination.AirportCode,
-              date: depDate,
-              depDate: depDate,
-              arrDate: arrDate,
-            };
-            
-            // Add layover if not last segment in group
-            if (i < segmentGroup.length - 1) {
-              const nextSeg = segmentGroup[i + 1];
-              const nextDep = new Date(nextSeg.Origin?.DepTime || nextSeg.DepTime);
-              const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
-              const layoverHours = layoverMins / 60;
-              segmentObj.layover = {
-                duration: this.formatDuration(layoverMins),
-                location: destination.CityName,
-                hours: layoverHours
-              };
-            }
-            
-            groupSegments.push(segmentObj);
-            allSegments.push(segmentObj);
-          }
-          
-          // Add layover between segment groups (if not last segment)
-          if (missingIndex < expectedSegmentCount - 1) {
-            const lastSegInGroup = groupSegments[groupSegments.length - 1];
-            // Try to get next segment's first flight
-            const nextSegmentIndex = missingIndex + 1;
-            const nextFareData = multiCitySelectedFares[nextSegmentIndex];
-            const nextAvailableFlights = multiCityFlightResults[nextSegmentIndex];
-            
-            let nextFirstSeg = null;
-            if (nextFareData && nextFareData.groupedFlight) {
-              nextFirstSeg = nextFareData.groupedFlight.Segments?.[0]?.[0];
-            } else if (nextAvailableFlights && Array.isArray(nextAvailableFlights) && nextAvailableFlights.length > 0) {
-              nextFirstSeg = nextAvailableFlights[0]?.Segments?.[0]?.[0];
-            }
-            
-            if (nextFirstSeg) {
-              const nextDep = new Date(nextFirstSeg.Origin?.DepTime || nextFirstSeg.DepTime);
-              const layoverMins = Math.floor((nextDep.getTime() - lastSegInGroup.arrDate.getTime()) / 60000);
-              const layoverHours = layoverMins / 60;
-              lastSegInGroup.layover = {
-                duration: this.formatDuration(layoverMins),
-                location: lastSegInGroup.to,
-                hours: layoverHours
-              };
-            }
-          }
-          
-          this.flightSegmentGroups.push(groupSegments);
-          this.groupedFlightSegments.push(groupSegments);
-          
-          console.log(`✓ Processed default flight for segment ${missingIndex}:`, {
-            route: groupSegments.length > 0 
-              ? `${groupSegments[0]?.from} → ${groupSegments[groupSegments.length - 1]?.to}`
-              : 'NO ROUTE (empty)',
-            segmentsCount: groupSegments.length
-          });
-          
-          // Also add to multiCitySelectedFares for fare calculation
-          if (!multiCitySelectedFares[missingIndex]) {
-            multiCitySelectedFares[missingIndex] = {
-              groupedFlight: defaultFlight,
-              selectedFare: defaultFare,
-              price: this.getAdultFarePerPerson(defaultFare.FareBreakdown)
-            };
-          }
-        } else {
-          console.warn(`No available flights found in multiCityFlightResults for segment ${missingIndex}, creating placeholder`);
-          // Fall back to placeholder if no flights available
-          this.createPlaceholderForSegment(missingIndex, multiCitySegment, allSegments);
-        }
-      }
-    }
-    
-    // Set flightSegments to all segments for compatibility
-    this.flightSegments = allSegments;
-    
-    console.log('Multi-city processing complete:', {
-      totalGroups: this.flightSegmentGroups.length,
-      totalSegments: allSegments.length,
-      flightSegmentGroups: this.flightSegmentGroups,
-      groupedFlightSegments: this.groupedFlightSegments,
-      flightSegments: this.flightSegments
+  
+      // Add to groups for the multi-city UI loop
+      this.flightSegmentGroups.push(group);
+      this.groupedFlightSegments.push(group);
     });
-    
-    // Store first flight data for compatibility (used for cancellation policy)
-    if (segmentIndices.length > 0) {
-      const firstFareData = multiCitySelectedFares[segmentIndices[0]];
-      if (firstFareData && firstFareData.groupedFlight) {
-        const firstFlight = firstFareData.groupedFlight;
-        this.flightDataDeparture = { Segments: firstFlight.Segments || [] };
-      }
-    }
-    
-    // Process fare breakdown for multi-city
+  
+    this.flightSegments = allSegments;
+    // Also sum the fares correctly
     this.processMultiCityFareBreakdown(multiCitySelectedFares);
-    
-    // Force change detection to ensure UI updates
     this.cdr.detectChanges();
-    
-    console.log('After change detection - flightSegmentGroups length:', this.flightSegmentGroups.length);
   }
 
   createPlaceholderForSegment(missingIndex: number, multiCitySegment: any[], allSegments: any[]): void {
