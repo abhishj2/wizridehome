@@ -668,26 +668,35 @@ body {
 
 
 
-/* GST Box */
+/* GST Box - Compact */
 .gst-box {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: #f8f9fa;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gst-box:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
 }
 
 .gst-box .icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e9ecef;
+  background: #f3f4f6;
   border-radius: 50%;
-  color: #6c757d;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .gst-box .label {
@@ -695,8 +704,37 @@ body {
 }
 
 .gst-label-text {
-  font-size: 15px;
-  color: #212529;
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 400;
+}
+
+/* Compact GST button */
+.gst-box .add-btn.light.small,
+.gst-box .add-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  border: 1px solid #14b8a6;
+  color: #14b8a6;
+  background: transparent;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  min-height: auto;
+}
+
+.gst-box .add-btn.light.small:hover,
+.gst-box .add-btn:hover {
+  background: #f0fdfa;
+  border-color: #0d9488;
+  color: #0d9488;
+}
+
+/* Compact GST section title */
+.card:has(.gst-box) .section-title {
+  margin-bottom: 12px;
+  font-size: 18px;
 }
 
 /* Terms Section */
@@ -725,9 +763,15 @@ body {
 }
 
 .link-text {
-  color: #008b8b;
-  text-decoration: underline;
+  color: #14b8a6;
+  text-decoration: none;
   cursor: pointer;
+  font-size: 13px !important;
+  font-weight: inherit;
+}
+
+.link-text:hover {
+  color: #0d9488;
 }
 
 /* Footer Bar */
@@ -3477,6 +3521,13 @@ i.fas.fa-plane-departure {
       font-size:13px !important;
     }
   }
-.terms-text a{
-  text-decoration:none !important;
+.terms-text a {
+  text-decoration: none !important;
+  font-size: 13px;
+  color: #14b8a6;
+  font-weight: inherit;
+}
+
+.terms-text a:hover {
+  color: #0d9488;
 }
