@@ -1161,114 +1161,37 @@ prepareFareSummaryData(): void {
         this.flightData.returnDate,
         finalOnwardPayload, returnPayload, onwardAmount, returnAmount,
         totalAmount, isLCC,isLCCReturn
-      ).subscribe({
-        next: (val: any) => {
-          console.log('Payment API Response (full):', JSON.stringify(val, null, 2));
-          console.log('Payment API Response type:', typeof val, 'Is Array:', Array.isArray(val));
-          
-          // Handle response - could be array or object (match mobile version logic)
-          let response = val;
-          if (Array.isArray(val) && val.length > 0) {
-            response = val[0];
-            console.log('Response is array, using first element:', response);
-          }
-          
-          // Match mobile version exactly - check val['payment_session_id'] first
-          let sessionId = val?.['payment_session_id'];
-          
-          // If not found in val, check response object
-          if (!sessionId) {
-            sessionId = response?.['payment_session_id'] || 
-                       response?.['paymentSessionId'] || 
-                       response?.['session_id'];
-          }
-          
-          // Clean and validate session ID
-          if (sessionId) {
-            sessionId = String(sessionId).trim();
-            
-            // Remove any duplicate "payment" suffixes that might have been accidentally appended by backend
-            // Session IDs should start with "session_" and not end with "payment"
-            if (sessionId.endsWith('paymentpayment')) {
-              sessionId = sessionId.replace(/paymentpayment$/, '');
-              console.warn('⚠️ Removed duplicate "paymentpayment" suffix from session ID');
-            } else if (sessionId.endsWith('payment') && sessionId.startsWith('session_')) {
-              // Only remove "payment" suffix if the remaining string still starts with "session_"
-              const testId = sessionId.replace(/payment$/, '');
-              if (testId.startsWith('session_') && testId.length > 20) {
-                sessionId = testId;
-                console.warn('⚠️ Removed duplicate "payment" suffix from session ID');
-              }
-            }
-            
-            console.log('Payment session ID received (cleaned):', sessionId);
-            console.log('Payment session ID length:', sessionId.length);
-            
-            // Validate session ID format (should start with 'session_')
-            if (!sessionId.startsWith('session_')) {
-              console.warn('⚠️ Session ID does not start with "session_", but proceeding anyway');
-            }
-            
-            // Ensure cashfree function is available in browser (match mobile version approach)
-            if (isPlatformBrowser(this.platformId)) {
-              // Check if cashfree function exists (match mobile version)
-              if (typeof cashfree === 'function') {
-                try {
-                  console.log('Calling cashfree with session ID:', sessionId);
-                  // Use the cashfree function directly (matches mobile version)
-                  cashfree(sessionId);
-                  console.log('✅ Cashfree payment gateway opened with session:', sessionId);
-                  // Don't set loader to false here - let the payment gateway handle it
-                } catch (error) {
-                  console.error('❌ Error calling cashfree:', error);
-                  Swal.fire({
-                    title: 'Error',
-                    html: 'Failed to open payment gateway. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                  });
-                  this.loader = false;
-                }
-              } else {
-                console.error('❌ Cashfree function not found. Make sure cashfree.js is loaded.');
-                Swal.fire({
-                  title: 'Error',
-                  html: 'Payment gateway not available. Please refresh the page.',
-                  icon: 'error',
-                  confirmButtonText: 'OK'
-                });
-                this.loader = false;
-              }
-            }
-          } else {
-            // Handle error response - check multiple possible error locations
-            const errorMessage = response?.message || 
-                                val?.message || 
-                                response?.error?.message ||
-                                val?.error?.message ||
-                                'Payment session creation failed';
-            const isEmailError = errorMessage.toString().toUpperCase().trim().includes('INVALID EMAIL');
-            
-            console.error('❌ Payment session creation failed. Response:', response, 'Error:', errorMessage);
+      ).subscribe((val: any) => {
+        if (val['payment_session_id']) {
+          cashfree(val['payment_session_id']);       
+          console.log("jee end loader", val['payment_session_id']);
+
+          // ✅ Navigate to result page with parameters
+          // this.router.navigate([
+          //   '/result',
+          //   this.orderId,
+          //   totalAmount,
+          //   'FLIGHT'
+          // ]);
+
+        } else {
+          if (val["message"] && val["message"].toString().toUpperCase().trim().includes('INVALID EMAIL')) {
             Swal.fire({
               title: 'Sorry!',
-              html: isEmailError ? 'Please Enter Email ID in Correct Format.' : errorMessage,
+              html: 'Please Enter Email ID in Correct Format.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+            this.loader = false;
+          } else {
+            Swal.fire({
+              title: 'Sorry!',
+              html: val["message"] || 'Payment session creation failed',
               icon: 'error',
               confirmButtonText: 'OK'
             });
             this.loader = false;
           }
-        },
-        error: (error: any) => {
-          console.error('Payment API Error:', error);
-          const errorMessage = error?.error?.message || error?.message || 'Failed to create payment session. Please try again.';
-          Swal.fire({
-            title: 'Error',
-            html: errorMessage,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-          this.loader = false;
         }
       })  
     )

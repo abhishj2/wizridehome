@@ -9,6 +9,7 @@ import { FlightdataService } from '../services/flightdata.service';
 import { FlightbookingpayloadService } from '../services/flightbookingpayload.service';
 import Swal from 'sweetalert2';
 import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
+
 @Component({
   selector: 'app-flightfinalpage',
   standalone: true,
@@ -2016,10 +2017,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         console.log('Payment API Response:', val);
         
         if (val && val['payment_session_id']) {
-          // Call cashfree payment gateway
+          // Call cashfree payment gateway with session ID and order ID
           if (typeof (window as any).cashfree === 'function') {
-            (window as any).cashfree(val['payment_session_id']);
-            console.log('Cashfree payment gateway opened with session:', val['payment_session_id']);
+            (window as any).cashfree(val['payment_session_id'], orderId);
+            console.log('Cashfree payment gateway opened with session:', val['payment_session_id'], 'Order ID:', orderId);
           } else {
             console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
             Swal.fire('Error', 'Payment gateway not available. Please refresh the page.', 'error');
