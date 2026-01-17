@@ -1,7 +1,7 @@
 export interface FlightData {
   tboToken: string | null;
   ipAddress: string;
-  tripType: 'oneway' | 'round' | 'multi';
+  tripType: 'oneway' | 'round' | 'multi' | 'multicity';
   fromCity: string;
   fromAirport: string;
   fromAirportCode: string;

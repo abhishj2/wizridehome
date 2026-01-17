@@ -3733,14 +3733,30 @@ getMultiCityRouteDestination(index: number): string {
     const fromAirport = fromAirportObj?.airport || fromAirportObj?.name || fromAirportCode;
     const toAirport = toAirportObj?.airport || toAirportObj?.name || toAirportCode;
 
+    // Get the first selected fare (for multi-city, all segments are in one fare option)
+    // This fare contains ALL segments of the multi-city journey
+    const firstSelectedFareKey = Object.keys(this.multicitySelectedFares)[0];
+    const firstSelectedFareData = firstSelectedFareKey ? this.multicitySelectedFares[Number(firstSelectedFareKey)] : null;
+    const selectedFareOption = firstSelectedFareData?.selectedFare || null;
+
+    if (!selectedFareOption) {
+        console.error('No selected fare option found for multi-city booking');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No flight selection found. Please try again.',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
     // Prepare the complete multi-city booking data
-    // IMPORTANT: multiCitySelectedFares contains selected flights where each selected fare
-    // includes ALL segments (e.g., Bagdogra->Kolkata AND Kolkata->Delhi in one fare option)
-    // Each entry in multicitySelectedFares represents a complete multi-city route selection
+    // Structure matches mobile final page expectations: departureFlightData.selectedFare.originalFareOption
+    // The selectedFareOption contains ALL segments of the multi-city journey in its Segments array
     const multiCityBookingData: FlightData & { multiCitySegment?: any; multiCitySelectedFares?: any; totalPrice?: number } = {
         tboToken: this.flightInputData['tboToken'],
         ipAddress: this.flightInputData['ipAddress'],
-        tripType: 'multi',
+        tripType: 'multicity', // Match mobile format: 'multicity' not 'multi'
         
         // Route info from first and last segments (overall journey endpoints)
         fromCity: this.getMultiCityRouteOrigin(0),
@@ -3750,7 +3766,16 @@ getMultiCityRouteDestination(index: number): string {
         toAirport: toAirport,
         toAirportCode: toAirportCode,
         
-        // Multi-city specific data (CRITICAL)
+        // Flight data structure matching mobile final page expectations
+        // departureFlightData.selectedFare.originalFareOption contains the complete flight with all segments
+        departureFlightData: {
+            selectedFare: {
+                originalFareOption: this.deepCopy(selectedFareOption) // Contains Segments array with all multi-city segments
+            }
+        },
+        returnFlightData: null,
+        
+        // Multi-city specific data (kept for backward compatibility and additional info)
         // multiCitySegment: Array of route definitions with departure/arrival dates and times
         // Each segment represents one leg of the journey (e.g., Bagdogra->Kolkata, Kolkata->Delhi)
         // Enhanced with actual departureDateTime, arrivalDateTime, departureDate, arrivalDate, departureTime, arrivalTime
@@ -3775,11 +3800,6 @@ getMultiCityRouteDestination(index: number): string {
         
         // Trace ID from API response
         traceid: this.traceid,
-        
-        // Flight data - for multi-city, these are not used
-        // All flight data is in multiCitySelectedFares instead
-        departureFlightData: null,
-        returnFlightData: null,
         
         // Total price across all selected segments
         totalPrice: this.multicityTotalFare
@@ -3830,8 +3850,14 @@ getMultiCityRouteDestination(index: number): string {
     });
 
     // Validate critical data
-    const requiredFields = ['tboToken', 'ipAddress', 'traceid', 'multiCitySegment', 'multiCitySelectedFares'];
-    const missingFields = requiredFields.filter(field => !(multiCityBookingData as Record<string, any>)[field]);
+    const requiredFields = ['tboToken', 'ipAddress', 'traceid', 'departureFlightData'];
+    const missingFields = requiredFields.filter(field => {
+        if (field === 'departureFlightData') {
+            return !(multiCityBookingData as Record<string, any>)[field] || 
+                   !(multiCityBookingData as Record<string, any>)[field]?.selectedFare?.originalFareOption;
+        }
+        return !(multiCityBookingData as Record<string, any>)[field];
+    });
     
     if (missingFields.length > 0) {
         console.error('Missing required fields:', missingFields);
