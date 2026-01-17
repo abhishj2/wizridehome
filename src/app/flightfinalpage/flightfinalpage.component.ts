@@ -6,6 +6,7 @@ import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
+import { FlightbookingpayloadService } from '../services/flightbookingpayload.service';
 import Swal from 'sweetalert2';
 import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
 @Component({
@@ -275,8 +276,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     private renderer: Renderer2,
     @Inject(PLATFORM_ID) private platformId: Object,
     private cdr: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document
-
+    @Inject(DOCUMENT) private document: Document,
+    public bookingPayloadService: FlightbookingpayloadService
   ) {}
 
   ngAfterViewInit(): void {
@@ -1882,7 +1883,172 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     
     this.loader = true;
-    this.proceedToAddons();
+    
+    // For multi-city, proceed directly to payment (skip addons page)
+    if (this.tripType === 'multicity') {
+      this.handleMultiCityBooking();
+    } else {
+      this.proceedToAddons();
+    }
+  }
+  
+  handleMultiCityBooking(): void {
+    console.log("Make Final Payload and book the ticket for multi-city");
+    
+    const isLCC = this.fullFlightData.departureFlightData?.selectedFare?.originalFareOption?.IsLCC || false;
+    
+    // Prepare fare summary
+    const onwardFareSummary = this.buildFareSummaryForAddons(false);
+    
+    const onwardFlightData = {
+      adultFareDetail: onwardFareSummary?.adultFareDetails || {},
+      childrenFareDetail: onwardFareSummary?.childFareDetail || {},
+      infantFareDetail: onwardFareSummary?.infantFareDetails || {},
+      fareCommonDetail: onwardFareSummary?.fareDetails || {},
+      adultBaseFare: onwardFareSummary?.summary?.baseFare?.find((f: any) => f.label.includes('Adults'))?.amount || this.adultBaseFare || 0,
+      adultTaxes: onwardFareSummary?.summary?.taxes?.find((t: any) => t.label.includes('Adults'))?.amount || this.adultTaxes || 0,
+      childrenBaseFare: onwardFareSummary?.summary?.baseFare?.find((f: any) => f.label.includes('Children'))?.amount || this.childrenBaseFare || 0,
+      childrenTaxes: onwardFareSummary?.summary?.taxes?.find((t: any) => t.label.includes('Children'))?.amount || this.childrenTaxes || 0,
+      infantBaseFare: onwardFareSummary?.summary?.baseFare?.find((f: any) => f.label.includes('Infants'))?.amount || this.infantBaseFare || 0,
+      infantTaxes: onwardFareSummary?.summary?.taxes?.find((t: any) => t.label.includes('Infants'))?.amount || this.infantTaxes || 0,
+      flightSegments: this.flightSegments,
+      flightSegmentsReturn: this.flightSegmentsReturn,
+      isReturn: false,
+      baggage: this.buildBaggageArray(false)
+    };
+    
+    const bookingParams = {
+      tboToken: this.tboToken,
+      traceId: this.traceid,
+      resultIndex: this.resultIndex,
+      ipAddress: this.ipAddress
+    };
+    
+    const passengersFinal = {
+      adults: this.travellers || [],
+      children: this.children || [],
+      infants: this.infants || []
+    };
+    
+    const primaryAdult = passengersFinal.adults[0];
+    if (!primaryAdult) {
+      Swal.fire('Error', 'Primary passenger details not found', 'error');
+      this.loader = false;
+      return;
+    }
+    
+    const contact = {
+      countryCode: primaryAdult.mobileDialCode || '+91',
+      mobile: primaryAdult.mobileNumber || '',
+      email: primaryAdult.email || ''
+    };
+    
+    const gstInfo = {
+      companyName: this.gstDetails?.companyName || '',
+      registrationNo: this.gstDetails?.gstNumber || ''
+    };
+    
+    const gstMandatory = this.fullFlightData.departureFlightData?.selectedFare?.originalFareOption?.IsGSTMandatory || false;
+    const passportInfoRequired = this.passportInfoRequired || false;
+    
+    console.log('Multi-city booking params:', {
+      isLCC,
+      onwardFlightData,
+      bookingParams,
+      passengersFinal,
+      contact,
+      gstInfo,
+      gstMandatory,
+      passportInfoRequired
+    });
+    
+    const onwardPayload = this.bookingPayloadService.generateBookingPayloadMultiCity(
+      isLCC,
+      onwardFlightData,
+      bookingParams,
+      passengersFinal,
+      contact,
+      gstInfo,
+      gstMandatory,
+      passportInfoRequired,
+      null
+    );
+    
+    const appid = contact.mobile;
+    const orderId = 'FL' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    const customerName = `${primaryAdult.firstName} ${primaryAdult.lastName}`;
+    const customerEmail = contact.email;
+    const customerDialCountryCode = contact.countryCode;
+    const customerPhone = contact.mobile;
+    
+    console.log('Calling flightSuccess for multi-city:', {
+      appid,
+      orderId,
+      customerName,
+      customerEmail,
+      customerDialCountryCode,
+      customerPhone,
+      onwardPayload
+    });
+    
+    this.subscriptions.add(
+      this.apiService.flightSuccess(
+        appid,
+        orderId,
+        this.tripType,
+        false, // isUnifiedSegmentFormat - false for multicity
+        customerName,
+        customerEmail,
+        customerDialCountryCode,
+        customerPhone,
+        this.fullFlightData.fromCity || '',
+        this.fullFlightData.toCity || '',
+        this.fullFlightData.departureDate || '',
+        this.fullFlightData.returnDate || null,
+        onwardPayload,
+        null, // returnPayload - null for multicity
+        this.finalAmount, // onwardAmount
+        null, // returnAmount - null for multicity
+        this.finalAmount, // finalAmount
+        isLCC,
+        null // isLCCReturn - null for multicity
+      ).subscribe((val: any) => {
+        console.log('Payment API Response:', val);
+        
+        if (val && val['payment_session_id']) {
+          // Call cashfree payment gateway
+          if (typeof (window as any).cashfree === 'function') {
+            (window as any).cashfree(val['payment_session_id']);
+            console.log('Cashfree payment gateway opened with session:', val['payment_session_id']);
+          } else {
+            console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
+            Swal.fire('Error', 'Payment gateway not available. Please refresh the page.', 'error');
+            this.loader = false;
+          }
+        } else {
+          // Handle error response
+          const errorMessage = val?.message || 'Payment session creation failed';
+          const isEmailError = errorMessage.toString().toUpperCase().trim().includes('INVALID EMAIL');
+          
+          Swal.fire({
+            title: 'Sorry!',
+            html: isEmailError ? 'Please Enter Email ID in Correct Format.' : errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          this.loader = false;
+        }
+      }, (error: any) => {
+        console.error('Payment API Error:', error);
+        Swal.fire({
+          title: 'Error',
+          html: error?.message || 'Failed to create payment session. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        this.loader = false;
+      })
+    );
   }
   
   // Baggage methods for mobile
