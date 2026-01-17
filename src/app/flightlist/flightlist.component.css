@@ -92,6 +92,38 @@ img {
     display: inline-block;
   }
 
+  /* Multi-city route display - smaller font on mobile */
+  .multicity-route-display {
+    gap: 8px;
+  }
+
+  .multicity-segment-item {
+    gap: 6px;
+  }
+
+  .multicity-segment-item .from,
+  .multicity-segment-item .to {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .multicity-segment-item .location-detail {
+    font-size: 10px;
+  }
+
+  .multicity-segment-item i.fas.fa-plane-departure {
+    font-size: 12px;
+  }
+
+  .multicity-segment-item .segment-separator {
+    margin: 0 8px;
+  }
+
+  .multicity-segment-item .segment-separator-pipe {
+    font-size: 14px;
+  }
+
   .location-detail {
     font-size: 11px;
     line-height: 1.3;
@@ -5451,6 +5483,13 @@ img {
   gap: 4px;
 }
 
+.multicity-segment-item .from,
+.multicity-segment-item .to {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .multicity-segment-item .segment-date {
   font-size: 13px;
   color: #666;
@@ -5619,5 +5658,9 @@ img {
         .date-card.selected  .date-price{
           color:#fff !Important;
         }
+        .multicity-segment-item .to,
+.multicity-segment-item .from{
+    font-size:15px !important;
+}
       
 }
