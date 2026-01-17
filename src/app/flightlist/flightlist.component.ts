@@ -3870,64 +3870,68 @@ getMultiCityRouteDestination(index: number): string {
         return;
     }
 
-    // Prepare summary for user verification
-    const segmentsSummary = enhancedMultiCitySegments.map((seg: any, idx: number) => {
-      const origin = seg.Origin || seg.fromAirportCode || 'Unknown';
-      const dest = seg.Destination || seg.toAirportCode || 'Unknown';
-      const depDate = seg.departureDate || seg.PreferredDepartureTime?.split('T')[0] || seg.date?.split('T')[0] || 'N/A';
-      // Only show time if it's a valid time (not empty, not "00:00" which is default)
-      const depTime = seg.departureTime && seg.departureTime !== '00:00' ? seg.departureTime : 'N/A';
-      const arrDate = seg.arrivalDate || 'N/A';
-      const arrTime = seg.arrivalTime && seg.arrivalTime !== '00:00' ? seg.arrivalTime : 'N/A';
-      const selectedFare = this.multicitySelectedFares[idx];
-      const farePrice = selectedFare?.price || 'N/A';
-      const hasFare = !!selectedFare?.selectedFare;
-      
-      return `Segment ${idx + 1}: ${origin} → ${dest}\n   Departure: ${depDate} ${depTime}\n   Arrival: ${arrDate} ${arrTime}\n   Price: ₹${farePrice}, Has Fare: ${hasFare ? 'Yes' : 'No'}`;
-    }).join('\n\n');
+    // DEBUG: Prepare summary for user verification (commented out, kept for future debugging)
+    // const segmentsSummary = enhancedMultiCitySegments.map((seg: any, idx: number) => {
+    //   const origin = seg.Origin || seg.fromAirportCode || 'Unknown';
+    //   const dest = seg.Destination || seg.toAirportCode || 'Unknown';
+    //   const depDate = seg.departureDate || seg.PreferredDepartureTime?.split('T')[0] || seg.date?.split('T')[0] || 'N/A';
+    //   // Only show time if it's a valid time (not empty, not "00:00" which is default)
+    //   const depTime = seg.departureTime && seg.departureTime !== '00:00' ? seg.departureTime : 'N/A';
+    //   const arrDate = seg.arrivalDate || 'N/A';
+    //   const arrTime = seg.arrivalTime && seg.arrivalTime !== '00:00' ? seg.arrivalTime : 'N/A';
+    //   const selectedFare = this.multicitySelectedFares[idx];
+    //   const farePrice = selectedFare?.price || 'N/A';
+    //   const hasFare = !!selectedFare?.selectedFare;
+    //   
+    //   return `Segment ${idx + 1}: ${origin} → ${dest}\n   Departure: ${depDate} ${depTime}\n   Arrival: ${arrDate} ${arrTime}\n   Price: ₹${farePrice}, Has Fare: ${hasFare ? 'Yes' : 'No'}`;
+    // }).join('\n\n');
 
-    const summaryText = `Multi-City Booking Data:\n\n` +
-      `Total Segments: ${totalSegments}\n` +
-      `Selected Fares: ${Object.keys(this.multicitySelectedFares).length}\n` +
-      `Total Price: ₹${this.multicityTotalFare}\n\n` +
-      `Routes:\n${segmentsSummary}\n\n` +
-      `Trace ID: ${multiCityBookingData.traceid || 'N/A'}\n` +
-      `Passengers: ${multiCityBookingData.adults}A ${multiCityBookingData.children}C ${multiCityBookingData.infants}I`;
+    // DEBUG: Data preview modal (commented out for production, kept for future debugging)
+    // const summaryText = `Multi-City Booking Data:\n\n` +
+    //   `Total Segments: ${totalSegments}\n` +
+    //   `Selected Fares: ${Object.keys(this.multicitySelectedFares).length}\n` +
+    //   `Total Price: ₹${this.multicityTotalFare}\n\n` +
+    //   `Routes:\n${segmentsSummary}\n\n` +
+    //   `Trace ID: ${multiCityBookingData.traceid || 'N/A'}\n` +
+    //   `Passengers: ${multiCityBookingData.adults}A ${multiCityBookingData.children}C ${multiCityBookingData.infants}I`;
 
-    // Show data preview before navigation
-    Swal.fire({
-        title: 'Multi-City Booking Data Preview',
-        html: `<pre style="text-align: left; font-size: 12px; max-height: 60vh; overflow-y: auto; background: #f5f5f5; padding: 10px; border-radius: 5px;">${summaryText.replace(/\n/g, '<br>')}</pre>` +
-              `<p style="margin-top: 15px; font-size: 14px;">Full data logged to console. Click "Proceed" to continue or "View JSON" to see complete structure.</p>`,
-        icon: 'info',
-        width: '700px',
-        showCancelButton: true,
-        confirmButtonText: 'Proceed to Booking',
-        cancelButtonText: 'Cancel',
-        showDenyButton: true,
-        denyButtonText: 'View JSON',
-        customClass: {
-            htmlContainer: 'swal-html-container'
-        }
-    }).then((result) => {
-        if (result.isDenied) {
-            // Show full JSON in a modal
-            Swal.fire({
-                title: 'Complete Booking Data (JSON)',
-                html: `<pre style="text-align: left; font-size: 11px; max-height: 70vh; overflow-y: auto; background: #f5f5f5; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(multiCityBookingData, null, 2)}</pre>`,
-                width: '900px',
-                confirmButtonText: 'Proceed to Booking',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((jsonResult) => {
-                if (jsonResult.isConfirmed) {
-                    this.saveAndNavigateMultiCity(multiCityBookingData);
-                }
-            });
-        } else if (result.isConfirmed) {
-            this.saveAndNavigateMultiCity(multiCityBookingData);
-        }
-    });
+    // // Show data preview before navigation
+    // Swal.fire({
+    //     title: 'Multi-City Booking Data Preview',
+    //     html: `<pre style="text-align: left; font-size: 12px; max-height: 60vh; overflow-y: auto; background: #f5f5f5; padding: 10px; border-radius: 5px;">${summaryText.replace(/\n/g, '<br>')}</pre>` +
+    //           `<p style="margin-top: 15px; font-size: 14px;">Full data logged to console. Click "Proceed" to continue or "View JSON" to see complete structure.</p>`,
+    //     icon: 'info',
+    //     width: '700px',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Proceed to Booking',
+    //     cancelButtonText: 'Cancel',
+    //     showDenyButton: true,
+    //     denyButtonText: 'View JSON',
+    //     customClass: {
+    //         htmlContainer: 'swal-html-container'
+    //     }
+    // }).then((result) => {
+    //     if (result.isDenied) {
+    //         // Show full JSON in a modal
+    //         Swal.fire({
+    //             title: 'Complete Booking Data (JSON)',
+    //             html: `<pre style="text-align: left; font-size: 11px; max-height: 70vh; overflow-y: auto; background: #f5f5f5; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(multiCityBookingData, null, 2)}</pre>`,
+    //             width: '900px',
+    //             confirmButtonText: 'Proceed to Booking',
+    //             showCancelButton: true,
+    //             cancelButtonText: 'Cancel'
+    //         }).then((jsonResult) => {
+    //             if (jsonResult.isConfirmed) {
+    //                 this.saveAndNavigateMultiCity(multiCityBookingData);
+    //             }
+    //         });
+    //     } else if (result.isConfirmed) {
+    //         this.saveAndNavigateMultiCity(multiCityBookingData);
+    //     }
+    // });
+
+    // Proceed directly to booking (skip preview modal)
+    this.saveAndNavigateMultiCity(multiCityBookingData);
 }
 
   // Helper method to save and navigate for multi-city bookings
