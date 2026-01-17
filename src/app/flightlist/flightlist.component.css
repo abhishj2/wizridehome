@@ -443,7 +443,7 @@ img {
 }
 
 .filter-heading {
-  font-size: 18px;
+  font-size: 18px !important;
   font-weight: 700;
   margin: 0 0 20px 0;
   color: #333;
