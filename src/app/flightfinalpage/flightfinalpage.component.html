@@ -1024,17 +1024,6 @@
           </div>
         </div>
 
-        <!-- Add Baggage CTA - Desktop Only -->
-        <div class="makemytrip-add-baggage multicity-add-baggage multicity-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-          <div class="add-baggage-left">
-            <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
-            <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
-          </div>
-          <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
-            ADD BAGGAGE
-          </button>
-        </div>
-
         <!-- Cancellation Policy Section - Desktop Only -->
         <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
           <div class="cancellation-header">
@@ -1066,6 +1055,16 @@
       </div>
     </ng-container>
 
+    <!-- Add Baggage CTA - Desktop Only (Outside loop - appears once) -->
+    <div class="makemytrip-add-baggage multicity-add-baggage multicity-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="add-baggage-left">
+        <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
+        <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+      </div>
+      <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
+        ADD BAGGAGE
+      </button>
+    </div>
 
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
     <div class="card cancellation-policy-card-mobile">
@@ -1127,21 +1126,6 @@
       </div>
     </div>
 
-    <!-- Important Info Card -->
-    <div class="card">
-      <div class="section-title">Important Information</div>
-      <div class="info-content">
-        <div class="info-title">
-          <i class="fas fa-star"></i> Airport Information
-        </div>
-        <div class="info-text">
-          Your flight goes from Ghaziabad, near DIndira Gandhi International
-          Airport. Please note, this is not the airport you originally searched
-          for.
-        </div>
-      </div>
-    </div>
-
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
@@ -1152,22 +1136,112 @@
           <span class="passenger-category-title">ADULTS (12+ YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(adults) }}/{{ adults.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="adult.firstName" *ngFor="let adult of adults; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
-            <i class="fas fa-check" *ngIf="adult.firstName"></i>
+        <ng-container *ngFor="let adult of adults; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="adult.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
+                <i class="fas fa-check" *ngIf="adult.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                  adult.firstName
+                    ? getPassengerDisplayName(adult)
+                    : "Adult " + (i + 1) + " (12 yrs+)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
+                {{ adult.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('adult', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('adult', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'" (click)="adult.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'" (click)="adult.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-group">
+                  <label>Date of Birth</label>
+                  <div class="input-group-row">
+                    <select [(ngModel)]="adult.dobDay" [class.error]="passengerValidationErrors.dobDay && expandedPassengerKey === 'adult-' + i">
+                      <option value="">DD</option>
+                      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                    </select>
+                    <select [(ngModel)]="adult.dobMonth" [class.error]="passengerValidationErrors.dobMonth && expandedPassengerKey === 'adult-' + i">
+                      <option value="">MM</option>
+                      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+                    </select>
+                    <select [(ngModel)]="adult.dobYear" [class.error]="passengerValidationErrors.dobYear && expandedPassengerKey === 'adult-' + i">
+                      <option value="">YYYY</option>
+                      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                    </select>
+                  </div>
+                  <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                    {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Country Code</label>
+                    <select class="dial-select" [(ngModel)]="adult.mobileDialCode">
+                      <option value="+91">IN +91</option>
+                      <option value="+1">US +1</option>
+                      <option value="+44">UK +44</option>
+                      <option value="+971">AE +971</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Mobile No</label>
+                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10" [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.mobileNumber }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" [(ngModel)]="adult.email" placeholder="Email" [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.email }}</div>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="adult.requiresWheelchair" />
+                    <span>I require wheelchair (Optional)</span>
+                  </label>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="form-group" *ngIf="panInfoRequired">
+                  <label>PAN Number</label>
+                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-              adult.firstName
-                ? adult.firstName + " " + adult.lastName
-                : "Adult " + (i + 1) + " (12 yrs+)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
-            {{ adult.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Children Section -->
