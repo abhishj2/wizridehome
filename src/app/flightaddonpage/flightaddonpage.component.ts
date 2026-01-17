@@ -216,6 +216,39 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.tripType = val.tripType || 'oneway';
         this.totalPrice = fareSummary?.finalAmount || 0;
         
+        // For multicity, ensure onwardFareSummary is properly initialized
+        if (this.tripType === 'multicity' && !this.onwardFareSummary?.summary) {
+          console.warn('⚠️ Multicity: onwardFareSummary.summary is missing, initializing with empty summary');
+          if (!this.onwardFareSummary) {
+            this.onwardFareSummary = {
+              summary: {
+                baseFare: [],
+                taxes: [],
+                baggageCharges: [],
+                mealCharges: 0,
+                seatCharges: 0,
+                specialServiceCharges: 0,
+                totalAmount: 0
+              },
+              adultFareDetails: {},
+              childFareDetail: {},
+              infantFareDetails: {},
+              FareCommonDetail: {},
+              fareDetails: {}
+            };
+          } else if (!this.onwardFareSummary.summary) {
+            this.onwardFareSummary.summary = {
+              baseFare: [],
+              taxes: [],
+              baggageCharges: [],
+              mealCharges: 0,
+              seatCharges: 0,
+              specialServiceCharges: 0,
+              totalAmount: 0
+            };
+          }
+        }
+        
         console.log('✅ Trip type detected:', this.tripType);
         console.log('✅ Initialized fare summaries:', {
           onwardFareSummary: this.onwardFareSummary,
@@ -223,6 +256,19 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
           totalPrice: this.totalPrice,
           tripType: this.tripType
         });
+        
+        // Debug multicity fare summary
+        if (this.tripType === 'multicity') {
+          console.log('🔍 Multicity Fare Summary Debug:', {
+            hasOnwardFareSummary: !!this.onwardFareSummary,
+            hasSummary: !!this.onwardFareSummary?.summary,
+            baseFare: this.onwardFareSummary?.summary?.baseFare,
+            taxes: this.onwardFareSummary?.summary?.taxes,
+            baseFareLength: this.onwardFareSummary?.summary?.baseFare?.length || 0,
+            taxesLength: this.onwardFareSummary?.summary?.taxes?.length || 0,
+            finalAmount: fareSummary?.finalAmount
+          });
+        }
 
          this.passengers = {
           adults: val.mobFinalPageData?.passengers?.adults || [],
@@ -267,6 +313,14 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         // Process SSR data for onward journey (or all segments for multicity)
         if (!ssr || !ssr.onward) {
           console.warn('⚠️ SSR onward data is missing!', ssr);
+        } else {
+          console.log('✅ SSR onward data found for', this.tripType, ':', {
+            hasSeatMaps: !!ssr.onward?.SeatMaps,
+            seatMapCount: ssr.onward?.SeatMaps?.length || 0,
+            hasMeals: !!ssr.onward?.Meals,
+            hasServices: !!ssr.onward?.SpecialServices,
+            segmentCount: flightSegments?.length || 0
+          });
         }
         const { seatData, mealSegments, services } = this.flightDataAddOnService.processSSRData(ssr?.onward || null, flightSegments || [], false);
         this.flightSegments = mealSegments || flightSegments || [];
@@ -333,9 +387,13 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         // For multicity, ensure seatMap arrays match the number of segments
         if (this.tripType === 'multicity' && this.seatMap.length < segmentsLength) {
           console.log(`⚠️ Multicity: seatMap length (${this.seatMap.length}) < segments length (${segmentsLength}), padding arrays`);
-          // Pad arrays to match segment count
+          // Pad arrays to match segment count with proper structure (empty objects with rows array)
           while (this.seatMap.length < segmentsLength) {
-            this.seatMap.push(null);
+            this.seatMap.push({
+              rows: [],
+              seatBlocks: [],
+              hasSeatsAvailable: false
+            });
           }
           while (this.hasSeatsAvailable.length < segmentsLength) {
             this.hasSeatsAvailable.push(false);
@@ -343,6 +401,7 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
           while (this.selectedSeats.length < segmentsLength) {
             this.selectedSeats.push([]);
           }
+          console.log(`✅ Multicity: Padded seatMap to ${this.seatMap.length} entries`);
         }
 
         // Initialize selected flight only if we have flights
@@ -369,7 +428,13 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
 updateTotalPrice(): void {
   const onwardBase = this.onwardFareSummary?.summary?.baseFare.reduce((sum, item) => sum + item.amount * item.count, 0) || 0;
   const onwardTaxes = this.onwardFareSummary?.summary?.taxes.reduce((sum, item) => sum + item.amount * item.count, 0) || 0;
-  const onwardBaggage = this.flightData?.mobFinalPageData?.baggage?.onward?.reduce((sum: number, item: any) => sum + (item.Price || 0), 0) || 0;
+  // For multicity and oneway, get baggage from mobFinalPageData, or from summary if available
+  let onwardBaggage = 0;
+  if (this.onwardFareSummary?.summary?.baggageCharges && this.onwardFareSummary.summary.baggageCharges.length > 0) {
+    onwardBaggage = this.onwardFareSummary.summary.baggageCharges.reduce((sum, item) => sum + item.amount, 0);
+  } else {
+    onwardBaggage = this.flightData?.mobFinalPageData?.baggage?.onward?.reduce((sum: number, item: any) => sum + (item.Price || 0), 0) || 0;
+  }
   const onwardMealCharges = this.flightDataAddOnService.selectedMeals.reduce(
     (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0), 0
   );
@@ -398,7 +463,26 @@ updateTotalPrice(): void {
 
   this.totalPrice = onwardBase + onwardTaxes + onwardBaggage + onwardMealCharges + onwardSeatCharges + onwardServiceCharges +
                    returnBase + returnTaxes + returnBaggage + returnMealCharges + returnSeatCharges + returnServiceCharges;
-  console.log(`Updated totalPrice: ${this.totalPrice}`);
+  
+  console.log(`💰 Updated totalPrice for ${this.tripType}:`, {
+    totalPrice: this.totalPrice,
+    breakdown: {
+      onwardBase,
+      onwardTaxes,
+      onwardBaggage,
+      onwardMealCharges,
+      onwardSeatCharges,
+      onwardServiceCharges,
+      returnBase,
+      returnTaxes,
+      returnBaggage,
+      returnMealCharges,
+      returnSeatCharges,
+      returnServiceCharges
+    },
+    segmentCount: this.flightSegments?.length || 0,
+    seatMapLength: this.seatMap?.length || 0
+  });
 }
 
   selectFlight(flightId: string): void {
@@ -555,10 +639,21 @@ getServiceTotalPrice(): number {
 
 prepareFareSummaryData(): void {
   const totalPax = this.totalAdults + this.totalChildren; // Changed to exclude infants
+  
+  // For multicity, ensure we include baggage charges from mobFinalPageData if summary baggageCharges is empty
+  let baggageCharges = this.onwardFareSummary?.summary?.baggageCharges || [];
+  if ((this.tripType === 'multicity' || this.tripType === 'oneway') && baggageCharges.length === 0 && this.flightData?.mobFinalPageData?.baggage?.onward) {
+    // Build baggage charges array from mobFinalPageData for multicity/oneway
+    baggageCharges = this.flightData.mobFinalPageData.baggage.onward.map((item: any) => ({
+      label: `Excess ${item.Weight || item.Kgs || ''}kg`,
+      amount: item.Price || 0
+    }));
+  }
+  
   const onwardFare: FareSummary = {
     baseFare: this.onwardFareSummary?.summary?.baseFare || [],
     taxes: this.onwardFareSummary?.summary?.taxes || [],
-    baggageCharges: this.onwardFareSummary?.summary?.baggageCharges || [],
+    baggageCharges: baggageCharges,
     mealCharges: this.flightDataAddOnService.selectedMeals.reduce(
       (sum, segment) => sum + segment.reduce((s, { meal, count }) => s + (meal.Price || 0) * count, 0),
       0
@@ -624,6 +719,31 @@ prepareFareSummaryData(): void {
 
   closeFareSummary(): void {
     this.showFareSummaryModal = false;
+  }
+
+  // Getter methods to ensure fare summary always has a value (matching mobile version behavior)
+  get onwardFareForSummary(): any {
+    return this.onwardFareSummary?.summary || {
+      baseFare: [],
+      taxes: [],
+      baggageCharges: [],
+      mealCharges: 0,
+      seatCharges: 0,
+      specialServiceCharges: 0,
+      totalAmount: 0
+    };
+  }
+
+  get returnFareForSummary(): any {
+    return this.returnFareSummary?.summary || {
+      baseFare: [],
+      taxes: [],
+      baggageCharges: [],
+      mealCharges: 0,
+      seatCharges: 0,
+      specialServiceCharges: 0,
+      totalAmount: 0
+    };
   }
 
   getSeatTooltip(seat: any): string {

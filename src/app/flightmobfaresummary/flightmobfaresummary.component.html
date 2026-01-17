@@ -70,7 +70,7 @@
 
 <!-- Template Reuse for Fare Summary -->
 <ng-template #fareSummary let-fare="fare">
-  <div *ngIf="fare" class="fare-section">
+  <div class="fare-section">
     <div class="fare-section-title">
       <span>Base Fare</span>
       <span class="fare-total-inline"
@@ -154,7 +154,6 @@
   let-onwardFare="onwardFare"
   let-returnFare="returnFare"
 >
-  <div *ngIf="onwardFare && returnFare">
   <!-- Base Fare -->
   <div class="fare-section">
     <div class="fare-section-title">
@@ -309,7 +308,6 @@
     <div class="fare-value">
       ₹ {{ onwardFare.totalAmount + returnFare.totalAmount }}
     </div>
-  </div>
   </div>
 </ng-template>
 

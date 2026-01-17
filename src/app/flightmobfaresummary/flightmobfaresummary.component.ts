@@ -21,8 +21,8 @@ interface FareDetails {
 export class FlightmobfaresummaryComponent implements OnInit{
   // @Input() tripType: 'oneway' | 'roundtrip' = 'roundtrip';
   @Input() tripType: string = '';
-  @Input() onwardFare?: FareDetails | null;
-  @Input() returnFare?: FareDetails | null;
+  @Input() onwardFare!: FareDetails;
+  @Input() returnFare!: FareDetails;
   @Input() isInternationalRound: boolean = false;
   selectedTab: 'onward' | 'return' = 'onward';
 
@@ -34,12 +34,11 @@ export class FlightmobfaresummaryComponent implements OnInit{
     console.log('🧳 Onward Fare:', JSON.stringify(this.onwardFare, null, 2));
     console.log('🔁 Return Fare:', JSON.stringify(this.returnFare, null, 2));
   }
-  getBaggageTotal(fare: FareDetails | null | undefined): number {
-    if (!fare) return 0;
+  getBaggageTotal(fare: FareDetails): number {
     return fare.baggageCharges.reduce((sum, item) => sum + item.amount, 0);
   }
 
-  get currentFare(): FareDetails | null | undefined {
+  get currentFare(): FareDetails {
     return this.selectedTab === 'onward' ? this.onwardFare : this.returnFare;
   }
 

@@ -1116,16 +1116,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           } else {
             // For one-way and multi-city, aggregate immediately and proceed with SSR
             this.aggregateFareSummary();
-            if (this.tripType !== 'multicity') {
-              this.fetchSSRAfterFareQuotes();
-            }
+            this.fetchSSRAfterFareQuotes();
           }
         }, (error) => {
           console.error("Error fetching outbound fare quote:", error);
           this.loader = false;
-          if (this.tripType !== 'multicity') {
-            this.fetchSSRAfterFareQuotes();
-          }
+          this.fetchSSRAfterFareQuotes();
         })
     );
   }
@@ -1255,10 +1251,22 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
   processFareBreakdown(val: any, isReturn: boolean): void {
     const results = val?.Response?.Results;
-    if (!results) return;
+    if (!results) {
+      console.warn('⚠️ processFareBreakdown: No results in response', val);
+      return;
+    }
 
     const fareBreakdown = results.FareBreakdown || [];
     this.isLCC = results.IsLCC;
+
+    // Debug logging for multicity
+    if (this.tripType === 'multicity' && !isReturn) {
+      console.log('🔍 Multicity processFareBreakdown:', {
+        hasResults: !!results,
+        fareBreakdownLength: fareBreakdown.length,
+        fareBreakdown: fareBreakdown
+      });
+    }
 
     let totalAdults = 0, totalChildren = 0, totalInfants = 0;
 
@@ -1282,6 +1290,19 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         else { this.infantBaseFare = baseFare; this.infantTaxes = tax; }
       }
     });
+
+    // Debug logging for multicity after processing
+    if (this.tripType === 'multicity' && !isReturn) {
+      console.log('✅ Multicity processFareBreakdown completed:', {
+        totalAdults,
+        totalChildren,
+        totalInfants,
+        adultBaseFare: this.adultBaseFare,
+        adultTaxes: this.adultTaxes,
+        childrenBaseFare: this.childrenBaseFare,
+        childrenTaxes: this.childrenTaxes
+      });
+    }
 
     if (!isReturn) {
       this.totalAdults = totalAdults;
@@ -2358,6 +2379,21 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const taxesArray = [];
 
     if (!isReturn) {
+      // Debug logging for multicity
+      if (this.tripType === 'multicity') {
+        console.log('🔍 Multicity buildFareSummaryForAddons (onward):', {
+          totalAdults: this.totalAdults,
+          totalChildren: this.totalChildren,
+          totalInfants: this.totalInfants,
+          adultBaseFare: this.adultBaseFare,
+          adultTaxes: this.adultTaxes,
+          childrenBaseFare: this.childrenBaseFare,
+          childrenTaxes: this.childrenTaxes,
+          infantBaseFare: this.infantBaseFare,
+          infantTaxes: this.infantTaxes
+        });
+      }
+      
       if (this.totalAdults > 0) {
         baseFareArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultBaseFare });
         taxesArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultTaxes });
