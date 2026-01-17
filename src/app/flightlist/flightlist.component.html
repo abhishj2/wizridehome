@@ -732,17 +732,18 @@
 
                   <!-- NEW MOBILE FLIGHT CARD DESIGN -->
                   <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlock">
-                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                    <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                       (click)="openFareOptionsModal(flight); $event.stopPropagation()">
                       <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                         <ng-container *ngFor="let segment of group; let i = index">
                           <!-- Flight Segment -->
-                          <div class="flight-card-component__flight-leg">
-                            <div class="flight-card-component__leg-header">
-                              <img class="flight-card-component__airline-logo"
-                                [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                                [alt]="segment.Airline.AirlineName + ' logo'"
-                                onerror="this.src='assets/images/default-airline.png'" />
+                        <div class="flight-card-component__flight-leg">
+                          <div class="flight-card-component__leg-header">
+                            <img class="flight-card-component__airline-logo"
+                              [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                              [alt]="segment.Airline.AirlineName + ' logo'"
+                              onerror="this.src='assets/images/default-airline.png'" />
+                            <div class="flight-card-component__airline-info">
                               <div class="flight-card-component__airline-name">
                                 {{ segment.Airline.AirlineName }}
                               </div>
@@ -750,10 +751,11 @@
                                 {{ segment.Airline.AirlineCode }}
                                 {{ segment.Airline.FlightNumber }}
                               </div>
-                              <div class="flight-card-component__pill">
-                                {{ segment.Craft || 'Aircraft' }}
-                              </div>
                             </div>
+                            <div class="flight-card-component__pill">
+                              {{ segment.Craft || 'Aircraft' }}
+                            </div>
+                          </div>
 
                             <div class="flight-card-component__flight-row">
                               <div class="flight-card-component__flight-left">
@@ -849,9 +851,9 @@
                     </section>
                   </ng-container>
 
-                  <!-- Single Segment Block -->
+                  <!-- Single Segment Block - Clean Mobile Design -->
                   <ng-template #singleSegmentBlock>
-                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                    <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                       (click)="openFareOptionsModal(flight); $event.stopPropagation()">
                       <ng-container *ngFor="let segment of flight.Segments[0]; let i = index">
                         <div class="flight-card-component__flight-leg">
@@ -860,11 +862,13 @@
                               [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                               [alt]="segment.Airline.AirlineName + ' logo'"
                               onerror="this.src='assets/images/default-airline.png'" />
-                            <div class="flight-card-component__airline-name">
-                              {{ segment.Airline.AirlineName }}
-                            </div>
-                            <div class="flight-card-component__flight-code">
-                              {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                            <div class="flight-card-component__airline-info">
+                              <div class="flight-card-component__airline-name">
+                                {{ segment.Airline.AirlineName }}
+                              </div>
+                              <div class="flight-card-component__flight-code">
+                                {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                              </div>
                             </div>
                             <div class="flight-card-component__pill">
                               {{ segment.Craft || 'Aircraft' }}
@@ -1282,7 +1286,7 @@
 
                           <!-- NEW MOBILE FLIGHT CARD DESIGN -->
                           <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlockOnward">
-                            <section class="flight-card-component__flight-card" aria-label="Flight Option">
+                            <section class="flight-card-component__flight-card mobile-flight-card-clean" aria-label="Flight Option">
                               <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                                 <ng-container *ngFor="let segment of group; let j = index">
                                   <div class="flight-card-component__flight-leg">
@@ -1291,10 +1295,12 @@
                                         [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                                         [alt]="segment.Airline.AirlineName + ' logo'"
                                         onerror="this.src='assets/images/default-airline.png'" />
-                                      <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                      <div class="flight-card-component__airline-info">
+                                        <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                        </div>
+                                        <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }}
+                                          {{ segment.Airline.FlightNumber }}</div>
                                       </div>
-                                      <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }}
-                                        {{ segment.Airline.FlightNumber }}</div>
                                       <div class="flight-card-component__pill">{{ segment.Craft || 'Aircraft' }}</div>
                                     </div>
                                     <div class="flight-card-component__flight-row">
@@ -1367,7 +1373,7 @@
                             </section>
                           </ng-container>
                           <ng-template #singleSegmentBlockOnward>
-                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                            <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                               (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
                               <ng-container *ngFor="let segment of flight.Segments[0]; let j = index">
                                 <div class="flight-card-component__flight-leg">
@@ -1376,10 +1382,12 @@
                                       [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                                       [alt]="segment.Airline.AirlineName + ' logo'"
                                       onerror="this.src='assets/images/default-airline.png'" />
-                                    <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                    <div class="flight-card-component__airline-info">
+                                      <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                      </div>
+                                      <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }} {{
+                                        segment.Airline.FlightNumber }}</div>
                                     </div>
-                                    <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }} {{
-                                      segment.Airline.FlightNumber }}</div>
                                     <div class="flight-card-component__pill">{{ segment.Craft || 'Aircraft' }}</div>
                                   </div>
                                   <div class="flight-card-component__flight-row">
@@ -1678,7 +1686,7 @@
 
                           <!-- NEW MOBILE FLIGHT CARD DESIGN -->
                           <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlockReturn">
-                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                            <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                               (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
                               <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                                 <ng-container *ngFor="let segment of group; let j = index">
@@ -1688,10 +1696,12 @@
                                         [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                                         [alt]="segment.Airline.AirlineName + ' logo'"
                                         onerror="this.src='assets/images/default-airline.png'" />
-                                      <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                      <div class="flight-card-component__airline-info">
+                                        <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                        </div>
+                                        <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }}
+                                          {{ segment.Airline.FlightNumber }}</div>
                                       </div>
-                                      <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }}
-                                        {{ segment.Airline.FlightNumber }}</div>
                                       <div class="flight-card-component__pill">{{ segment.Craft || 'Aircraft' }}</div>
                                     </div>
                                     <div class="flight-card-component__flight-row">
@@ -1764,7 +1774,7 @@
                             </section>
                           </ng-container>
                           <ng-template #singleSegmentBlockReturn>
-                            <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                            <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                               (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
                               <ng-container *ngFor="let segment of flight.Segments[0]; let j = index">
                                 <div class="flight-card-component__flight-leg">
@@ -1773,10 +1783,12 @@
                                       [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                                       [alt]="segment.Airline.AirlineName + ' logo'"
                                       onerror="this.src='assets/images/default-airline.png'" />
-                                    <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                    <div class="flight-card-component__airline-info">
+                                      <div class="flight-card-component__airline-name">{{ segment.Airline.AirlineName }}
+                                      </div>
+                                      <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }} {{
+                                        segment.Airline.FlightNumber }}</div>
                                     </div>
-                                    <div class="flight-card-component__flight-code">{{ segment.Airline.AirlineCode }} {{
-                                      segment.Airline.FlightNumber }}</div>
                                     <div class="flight-card-component__pill">{{ segment.Craft || 'Aircraft' }}</div>
                                   </div>
                                   <div class="flight-card-component__flight-row">
@@ -2500,7 +2512,7 @@
                   <!-- MOBILE FLIGHT CARD DESIGN (matching reference) - Hidden on Desktop -->
                   <div class="mobile-only">
                   <ng-container *ngIf="flight.Segments.length > 1; else singleSegmentBlockMultiCity">
-                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                    <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                       (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
                       <ng-container *ngFor="let group of flight.Segments; let groupIndex = index">
                         <ng-container *ngFor="let segment of normalizeGroupToArray(group); let segIndex = index">
@@ -2510,11 +2522,13 @@
                               [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                               [alt]="segment.Airline.AirlineName + ' logo'"
                               onerror="this.src='assets/images/default-airline.png'" />
-                            <div class="flight-card-component__airline-name">
-                              {{ segment.Airline.AirlineName }}
-                            </div>
-                            <div class="flight-card-component__flight-code">
-                              {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                            <div class="flight-card-component__airline-info">
+                              <div class="flight-card-component__airline-name">
+                                {{ segment.Airline.AirlineName }}
+                              </div>
+                              <div class="flight-card-component__flight-code">
+                                {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                              </div>
                             </div>
                             <div class="flight-card-component__pill">
                               {{ segment.Craft || 'Aircraft' }}
@@ -2617,7 +2631,7 @@
 
                   <!-- Single Segment Block -->
                   <ng-template #singleSegmentBlockMultiCity>
-                    <section class="flight-card-component__flight-card mobile-card-clickable" aria-label="Flight Option"
+                    <section class="flight-card-component__flight-card mobile-card-clickable mobile-flight-card-clean" aria-label="Flight Option"
                       (click)="openFareOptionsModalMultiCity(selectedMulticityTab, flight, i); $event.stopPropagation()">
                       <ng-container *ngFor="let segment of flight.Segments[0]; let segIndex = index">
                         <div class="flight-card-component__flight-leg">
@@ -2626,11 +2640,13 @@
                               [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
                               [alt]="segment.Airline.AirlineName + ' logo'"
                               onerror="this.src='assets/images/default-airline.png'" />
-                            <div class="flight-card-component__airline-name">
-                              {{ segment.Airline.AirlineName }}
-                            </div>
-                            <div class="flight-card-component__flight-code">
-                              {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                            <div class="flight-card-component__airline-info">
+                              <div class="flight-card-component__airline-name">
+                                {{ segment.Airline.AirlineName }}
+                              </div>
+                              <div class="flight-card-component__flight-code">
+                                {{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }}
+                              </div>
                             </div>
                             <div class="flight-card-component__pill">
                               {{ segment.Craft || 'Aircraft' }}
