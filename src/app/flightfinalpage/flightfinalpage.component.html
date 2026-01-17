@@ -1407,6 +1407,22 @@
 
     <!-- Price Footer -->
     <div class="footer-bar">
+      <div class="fare-summary-desktop">
+        <div class="fare-summary-title">Fare Summary</div>
+        <div class="fare-summary-line">
+          <span>Base Fare</span>
+          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        </div>
+        <div class="fare-summary-line">
+          <span>Taxes & Surcharges</span>
+          <span>{{ formatCurrency(totalTaxes) }}</span>
+        </div>
+        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <span>Baggage</span>
+          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+        </div>
+        <hr class="fare-summary-divider" />
+      </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
         ₹ Total Price<br />
         <strong>{{ finalAmount | number : "1.2-2" }}</strong>
