@@ -5458,13 +5458,18 @@ img {
 }
 
 .multicity-segment-item .segment-separator {
-  margin: 0 8px;
+  margin: 0 12px;
   color: #999;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
 }
 
-.multicity-segment-item .segment-separator i {
-  font-size: 12px;
+.multicity-segment-item .segment-separator-pipe {
+  font-size: 18px;
+  color: #9ca3af;
+  font-weight: 300;
 }
 
 /* ================= DESKTOP MULTI-CITY CARD - ALL SEGMENTS IN ONE CARD ================= */

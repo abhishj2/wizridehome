@@ -97,9 +97,8 @@
                   <div class="location-group">
                     <span class="to">{{ getMultiCityRouteDestination(i) }}</span>
                   </div>
-                  <span class="segment-date" *ngIf="getMultiCityRouteDate(i)">{{ getMultiCityRouteDate(i) | date : "d MMM" }}</span>
                   <span class="segment-separator" *ngIf="i < multicityTabData.length - 1">
-                    <i class="fas fa-plane-departure"></i>
+                    <span class="segment-separator-pipe">|</span>
                   </span>
                 </div>
               </div>
@@ -129,7 +128,7 @@
             </div>
           </div>
           <div class="summary-actions">
-            <button class="modify-btn" (click)="showModifyForm = !showModifyForm" title="Modify">
+            <button class="modify-btn" *ngIf="flightType !== 'multi'" (click)="showModifyForm = !showModifyForm" title="Modify">
               <i class="fas fa-edit"></i>
             </button>
           </div>
@@ -138,7 +137,7 @@
     </div>
 
     <!-- Modify Search Form (Desktop - Collapsible) -->
-    <div class="modify-search-section desktop-modify-form" [class.visible]="showModifyForm">
+    <div class="modify-search-section desktop-modify-form" [class.visible]="showModifyForm" *ngIf="flightType !== 'multi'">
       <div class="container">
         <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="modify-search-form">
           <div class="form-row">
@@ -218,7 +217,7 @@
     </div>
 
     <!-- Mobile Modify Search Drawer (Slides from left) -->
-    <div class="mobile-modify-drawer" [class.open]="showModifyForm" (click)="showModifyForm = false">
+    <div class="mobile-modify-drawer" [class.open]="showModifyForm" (click)="showModifyForm = false" *ngIf="flightType !== 'multi'">
       <div class="mobile-modify-drawer-content" (click)="$event.stopPropagation()">
         <button class="mobile-modify-drawer-close" (click)="showModifyForm = false">×</button>
         <div class="mobile-modify-drawer-header">
@@ -2452,12 +2451,6 @@
                         <!-- Show all segments one below another -->
                         <ng-container *ngFor="let segmentGroup of flight.Segments; let segIndex = index">
                           <div class="desktop-multicity-segment" *ngIf="segmentGroup && segmentGroup[0] && segmentGroup[0].Origin" [class.last-segment]="segIndex === flight.Segments.length - 1">
-                            <!-- Route Header -->
-                            <div class="multicity-segment-header">
-                              <span class="route-label">Route {{ segIndex + 1 }}: {{ segmentGroup[0].Origin.Airport.CityName }} ({{ segmentGroup[0].Origin.Airport.AirportCode }}) → {{ segmentGroup[segmentGroup.length - 1].Destination.Airport.CityName }} ({{ segmentGroup[segmentGroup.length - 1].Destination.Airport.AirportCode }})</span>
-                              <span class="route-date">{{ segmentGroup[0].Origin.DepTime | date : "d MMM, yyyy" }}</span>
-                            </div>
-                            
                             <!-- Desktop Flight Row for this segment -->
                             <div class="desktop-flight-row">
                               <!-- Airline Section -->
@@ -3034,11 +3027,6 @@
                 selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y" }} · {{
                 selectedMultiCityFlight.Origin.DepTime | date : "HH:mm" }} - {{
                 selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm" }}</span>
-              <button class="fare-modify-btn"
-                (click)="showModifyForm = !showModifyForm; closeFareOptionsModalMultiCity(); $event.stopPropagation()"
-                title="Modify">
-                <i class="fas fa-edit"></i>
-              </button>
             </div>
           </div>
           <!-- Scrollable Fare Options -->
