@@ -216,10 +216,12 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.tripType = val.tripType || 'oneway';
         this.totalPrice = fareSummary?.finalAmount || 0;
         
+        console.log('✅ Trip type detected:', this.tripType);
         console.log('✅ Initialized fare summaries:', {
           onwardFareSummary: this.onwardFareSummary,
           returnFareSummary: this.returnFareSummary,
-          totalPrice: this.totalPrice
+          totalPrice: this.totalPrice,
+          tripType: this.tripType
         });
 
          this.passengers = {
@@ -256,9 +258,13 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.flightDataAddOnService.setFlightSegments(flightSegments, false);
         if (this.tripType === 'roundtrip') {
           this.flightDataAddOnService.setFlightSegments(flightSegmentsReturn, true);
+        } else if (this.tripType === 'multicity') {
+          // For multicity, all segments are in flightSegments, process them together
+          // The service already has them set, just ensure they're available
+          console.log('Multicity trip detected - processing all segments together');
         }
 
-        // Process SSR data for onward journey
+        // Process SSR data for onward journey (or all segments for multicity)
         if (!ssr || !ssr.onward) {
           console.warn('⚠️ SSR onward data is missing!', ssr);
         }
@@ -266,10 +272,14 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.flightSegments = mealSegments || flightSegments || [];
         this.services = services || [];
 
-        // Initialize onward flights - safely handle missing data
+        // Initialize onward flights (or all flights for multicity) - safely handle missing data
         const seatMaps = seatData?.seatMaps || [];
-        const segmentsLength = Math.max(flightSegments?.length || 0, seatMaps.length);
-        this.onwardFlights = seatMaps.slice(0, segmentsLength).map((segment: any, i: number) => {
+        // For multicity, ensure we initialize flights for all segments even if seat maps are missing
+        const segmentsLength = flightSegments?.length || 0;
+        const maxLength = Math.max(segmentsLength, seatMaps.length);
+        
+        // Initialize flights for all segments (important for multicity)
+        this.onwardFlights = Array.from({ length: maxLength }, (_, i: number) => {
           const flightSeg = flightSegments?.[i] || {};
           return {
             id: `${i}`,
@@ -283,8 +293,11 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
             code: flightSeg.code || ''
           };
         });
+        
+        console.log(`✅ Initialized ${this.onwardFlights.length} onward flights for ${this.tripType} trip`);
 
         let returnSeatData: any = { seatMaps: [], hasSeatsAvailable: [], selectedSeats: [] };
+        // For multicity, we don't have separate return segments - all are in flightSegments
         if (this.tripType === 'roundtrip' && ssr?.return) {
           const { seatData: returnData, mealSegments: returnMealSegments, services: returnServices } = this.flightDataAddOnService.processSSRData(ssr.return, flightSegmentsReturn || [], true);
           returnSeatData = returnData;
@@ -316,6 +329,21 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
         this.seatMap = seatData?.seatMaps || [];
         this.hasSeatsAvailable = seatData?.hasSeatsAvailable || [];
         this.selectedSeats = seatData?.selectedSeats || [];
+        
+        // For multicity, ensure seatMap arrays match the number of segments
+        if (this.tripType === 'multicity' && this.seatMap.length < segmentsLength) {
+          console.log(`⚠️ Multicity: seatMap length (${this.seatMap.length}) < segments length (${segmentsLength}), padding arrays`);
+          // Pad arrays to match segment count
+          while (this.seatMap.length < segmentsLength) {
+            this.seatMap.push(null);
+          }
+          while (this.hasSeatsAvailable.length < segmentsLength) {
+            this.hasSeatsAvailable.push(false);
+          }
+          while (this.selectedSeats.length < segmentsLength) {
+            this.selectedSeats.push([]);
+          }
+        }
 
         // Initialize selected flight only if we have flights
         if (this.onwardFlights.length > 0 || this.returnFlights.length > 0) {
