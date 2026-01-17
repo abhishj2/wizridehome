@@ -496,10 +496,46 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     
     // Handle one-way and round-trip data
-    this.resultIndex = val['departureFlightData']?.['ResultIndex'] || '';
-    this.resultIndexReturn = val['returnFlightData'] ? val['returnFlightData']['ResultIndex'] : '';
-    this.flightDataDeparture = val['departureFlightData'];
-    this.flightDataReturn = val['returnFlightData'];
+    const departureFlightData = val['departureFlightData'];
+    const returnFlightData = val['returnFlightData'];
+    
+    // Extract resultIndex - check both possible locations
+    if (departureFlightData?.selectedFare?.originalFareOption?.ResultIndex) {
+      this.resultIndex = departureFlightData.selectedFare.originalFareOption.ResultIndex;
+      // Use originalFareOption for segments processing, but preserve policies from parent if available
+      this.flightDataDeparture = {
+        ...departureFlightData.selectedFare.originalFareOption,
+        cancellationPolicy: departureFlightData.selectedFare.originalFareOption.cancellationPolicy || departureFlightData.cancellationPolicy || [],
+        dateChangePolicy: departureFlightData.selectedFare.originalFareOption.dateChangePolicy || departureFlightData.dateChangePolicy || []
+      };
+    } else if (departureFlightData?.ResultIndex) {
+      this.resultIndex = departureFlightData.ResultIndex;
+      this.flightDataDeparture = departureFlightData;
+    } else {
+      this.resultIndex = '';
+      this.flightDataDeparture = departureFlightData;
+    }
+    
+    if (returnFlightData) {
+      if (returnFlightData?.selectedFare?.originalFareOption?.ResultIndex) {
+        this.resultIndexReturn = returnFlightData.selectedFare.originalFareOption.ResultIndex;
+        // Use originalFareOption for segments processing, but preserve policies from parent if available
+        this.flightDataReturn = {
+          ...returnFlightData.selectedFare.originalFareOption,
+          cancellationPolicy: returnFlightData.selectedFare.originalFareOption.cancellationPolicy || returnFlightData.cancellationPolicy || [],
+          dateChangePolicy: returnFlightData.selectedFare.originalFareOption.dateChangePolicy || returnFlightData.dateChangePolicy || []
+        };
+      } else if (returnFlightData?.ResultIndex) {
+        this.resultIndexReturn = returnFlightData.ResultIndex;
+        this.flightDataReturn = returnFlightData;
+      } else {
+        this.resultIndexReturn = '';
+        this.flightDataReturn = returnFlightData;
+      }
+    } else {
+      this.resultIndexReturn = '';
+      this.flightDataReturn = null;
+    }
     
     // Set dates
     if (val['departureDate']) {
@@ -508,6 +544,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (val['returnDate']) {
       this.returnDate = new Date(val['returnDate']);
     }
+
+    // Initialize passenger counts from input data
+    this.totalAdults = val['adults'] || 1;
+    this.totalChildren = val['children'] || 0;
+    this.totalInfants = val['infants'] || 0;
+    
+    // Initialize passenger arrays
+    this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+    this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+    this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
 
     if (this.flightDataDeparture) {
       this.processSegments(this.flightDataDeparture, false);
@@ -521,7 +567,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
     this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
     
+    // Load fare rules
     this.loadFareRules();
+    
+    // Call fare quote to get fare breakdown and SSR data
+    if (this.traceid && this.resultIndex) {
+      this.callFareQuote();
+    } else {
+      this.loader = false;
+    }
   }
 
   processSegments(flightData: any, isReturn: boolean) {

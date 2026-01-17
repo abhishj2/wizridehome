@@ -787,6 +787,30 @@
       </div>
     </div>
 
+    <!-- Baggage Section - Mobile Only -->
+    <div class="card mobile-baggage-section">
+      <div class="section-title">Baggage Allowance</div>
+      <div class="mobile-baggage-content">
+        <div class="mobile-baggage-item">
+          <i class="fas fa-suitcase baggage-icon"></i>
+          <span class="baggage-text">Cabin Baggage: {{ flightSegments[0]?.cabinBaggage || '7 Kgs' }} (1 piece only) / Adult</span>
+        </div>
+        <div class="mobile-baggage-item">
+          <i class="fas fa-suitcase-rolling baggage-icon"></i>
+          <span class="baggage-text">Check-In Baggage: {{ flightSegments[0]?.checkInBaggage || '15 Kgs' }} (1 piece only) / Adult</span>
+        </div>
+      </div>
+      <div class="mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+        <div class="mobile-add-baggage-content">
+          <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
+          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+        </div>
+        <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
+          ADD BAGGAGE
+        </button>
+      </div>
+    </div>
+
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
     <div class="card cancellation-policy-card-mobile">
       <div class="section-title-row" (click)="showPolicyModal = true; activeTab = 'cancel'">
