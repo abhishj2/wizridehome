@@ -82,8 +82,8 @@
     <div class="flight-final-page" *ngIf="tripType == 'oneway'" id="oneway-section">
       <!-- Flight Summary Card -->
       <div class="card makemytrip-flight-card" *ngIf="flightSegments?.length">
-        <div class="flight-leg">
-          <div *ngFor="let segment of flightSegments; let i = index">
+        <div class="flight-leg oneway-flight-leg">
+          <div class="flexflight" *ngFor="let segment of flightSegments; let i = index">
             <!-- Airline Info -->
             <div class="flight-airline">
               <img [src]="segment.logo" class="logo" />
@@ -123,7 +123,7 @@
         </div>
 
       <!-- Baggage Allowance Section - Desktop Only -->
-      <div class="makemytrip-baggage-section">
+      <div class="makemytrip-baggage-section oneway-baggage-section oneway-desktop-baggage">
         <div class="baggage-allowance-item">
           <i class="fas fa-suitcase baggage-icon"></i>
           <span class="baggage-text">Cabin Baggage: {{ flightSegments[0]?.cabinBaggage || '7 Kgs' }} (1 piece only) / Adult</span>
@@ -135,7 +135,7 @@
       </div>
 
       <!-- Add Baggage CTA - Desktop Only -->
-      <div class="makemytrip-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="makemytrip-add-baggage oneway-add-baggage oneway-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="add-baggage-left">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
           <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -346,7 +346,7 @@
     </div>
 
     <!-- Baggage Section - Mobile Only -->
-    <div class="card mobile-baggage-section">
+    <div class="card mobile-baggage-section oneway-baggage-section oneway-mobile-baggage">
       <div class="section-title">Baggage Allowance</div>
       <div class="mobile-baggage-content">
         <div class="mobile-baggage-item">
@@ -358,7 +358,7 @@
           <span class="baggage-text">Check-In Baggage: {{ flightSegments[0]?.checkInBaggage || '15 Kgs' }} (1 piece only) / Adult</span>
         </div>
       </div>
-      <div class="mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
           <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -476,8 +476,8 @@
         <!-- Onward Flight Card -->
         <div class="flight-card-item" *ngIf="flightSegments?.length">
           <div class="card">
-            <div class="flight-leg">
-              <div *ngFor="let segment of flightSegments; let i = index">
+            <div class="flight-leg roundtrip-flight-leg roundtrip-onward-flight-leg">
+              <div class="flexflight" *ngFor="let segment of flightSegments; let i = index">
                 <!-- Airline Info -->
                 <div class="flight-airline">
                   <img [src]="segment.logo" class="logo" />
@@ -521,8 +521,8 @@
         <!-- Return Flight Card -->
         <div class="flight-card-item" *ngIf="flightSegmentsReturn?.length">
           <div class="card">
-            <div class="flight-leg">
-              <div *ngFor="let segment of flightSegmentsReturn; let i = index">
+            <div class="flight-leg roundtrip-flight-leg roundtrip-return-flight-leg">
+              <div class="flexflight" *ngFor="let segment of flightSegmentsReturn; let i = index">
                 <!-- Airline Info -->
                 <div class="flight-airline">
                   <img [src]="segment.logo" class="logo" />
@@ -565,7 +565,7 @@
       </div>
 
       <!-- Baggage Allowance Section - Desktop Only (Onward) -->
-      <div class="makemytrip-baggage-section" *ngIf="flightSegments?.length">
+      <div class="makemytrip-baggage-section roundtrip-baggage-section roundtrip-desktop-baggage" *ngIf="flightSegments?.length">
         <div class="baggage-allowance-item">
           <i class="fas fa-suitcase baggage-icon"></i>
           <span class="baggage-text">Cabin Baggage: {{ flightSegments[0]?.cabinBaggage || '7 Kgs' }} (1 piece only) / Adult</span>
@@ -577,7 +577,7 @@
       </div>
 
       <!-- Add Baggage CTA - Desktop Only -->
-      <div class="makemytrip-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="makemytrip-add-baggage roundtrip-add-baggage roundtrip-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="add-baggage-left">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
           <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -788,7 +788,7 @@
     </div>
 
     <!-- Baggage Section - Mobile Only -->
-    <div class="card mobile-baggage-section">
+    <div class="card mobile-baggage-section roundtrip-baggage-section roundtrip-mobile-baggage">
       <div class="section-title">Baggage Allowance</div>
       <div class="mobile-baggage-content">
         <div class="mobile-baggage-item">
@@ -800,7 +800,7 @@
           <span class="baggage-text">Check-In Baggage: {{ flightSegments[0]?.checkInBaggage || '15 Kgs' }} (1 piece only) / Adult</span>
         </div>
       </div>
-      <div class="mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="mobile-add-baggage roundtrip-add-baggage roundtrip-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
           <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -970,8 +970,9 @@
         class="card makemytrip-flight-card"
         *ngFor="let group of flightSegmentGroups; let groupIndex = index"
       >
-        <div class="flight-leg">
-          <ng-container *ngFor="let segment of group; let i = index">
+        <div class="flight-leg multicity-flight-leg">
+          <div class="flexflight">
+            <ng-container *ngFor="let segment of group; let i = index">
             <!-- Airline Info -->
             <div class="flight-airline">
               <img [src]="segment.logo" class="logo" />
@@ -1008,10 +1009,11 @@
               <div class="line"></div>
             </div>
           </ng-container>
+          </div>
         </div>
 
         <!-- Baggage Allowance Section - Desktop Only -->
-        <div class="makemytrip-baggage-section">
+        <div class="makemytrip-baggage-section multicity-baggage-section multicity-desktop-baggage">
           <div class="baggage-allowance-item">
             <i class="fas fa-suitcase baggage-icon"></i>
             <span class="baggage-text">Cabin Baggage: {{ group[0]?.cabinBaggage || '7 Kgs' }} (1 piece only) / Adult</span>
@@ -1023,7 +1025,7 @@
         </div>
 
         <!-- Add Baggage CTA - Desktop Only -->
-        <div class="makemytrip-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+        <div class="makemytrip-add-baggage multicity-add-baggage multicity-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
           <div class="add-baggage-left">
             <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
             <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -1223,7 +1225,7 @@
     </div>
 
     <!-- Baggage Section - Mobile Only -->
-    <div class="card mobile-baggage-section">
+    <div class="card mobile-baggage-section multicity-baggage-section multicity-mobile-baggage">
       <div class="section-title">Baggage Allowance</div>
       <div class="mobile-baggage-content">
         <div class="mobile-baggage-item">
@@ -1235,7 +1237,7 @@
           <span class="baggage-text">Check-In Baggage: {{ flightSegments[0]?.checkInBaggage || '15 Kgs' }} (1 piece only) / Adult</span>
         </div>
       </div>
-      <div class="mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="mobile-add-baggage multicity-add-baggage multicity-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
           <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
