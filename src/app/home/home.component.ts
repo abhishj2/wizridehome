@@ -1942,6 +1942,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             const cityName = item.CITY || item.city || item.NAME || item.name || '';
             const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
             const country = item.COUNTRY || item.country || '';
+            const airportname = item.COUNTRY || item.country || '';
             const countryCode = item.COUNTRYCODE || item.countrycode || '';
             const coords = this.extractAirportCoordinates(item);
 

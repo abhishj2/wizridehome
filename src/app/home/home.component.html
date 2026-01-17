@@ -538,7 +538,7 @@
                                     <div *ngIf="tripType === 'multi-city'" class="add-route-section">
                                         <button class="add-route-btn" (click)="addFlightRoute()"
                                             [disabled]="flightRoutes.length >= 5">
-                                            <i class="fas fa-plus"></i> Add Another Route
+                                            <i class="fas fa-plus"></i> Add Route
                                         </button>
                                     </div>
 
@@ -546,7 +546,7 @@
                                     <button class="search-btn" (click)="searchFlights()"
                                         *ngIf="tripType === 'multi-city'"
                                         aria-label="Search multi-city flights">
-                                        <span><i class="fas fa-search"></i></span>
+                                        <span><i class="fas fa-search"></i> Search</span>
                                     </button>
                                 </div>
 
@@ -2132,7 +2132,7 @@
             <button class="mobile-add-route-btn" 
                     (click)="addFlightRoute()"
                     [disabled]="flightRoutes.length >= 5">
-                <i class="fas fa-plus"></i> Add Another Route
+                <i class="fas fa-plus"></i> Add  Route
             </button>
         </div>
     </div>
