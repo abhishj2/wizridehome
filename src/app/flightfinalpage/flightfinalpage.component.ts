@@ -454,48 +454,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.tripType = 'oneway';
     }
     
-    // Handle multi-city data
-    if (this.tripType === 'multicity') {
-      console.log('=== Multi-city trip detected ===');
-      console.log('Has multiCitySelectedFares?', !!val['multiCitySelectedFares']);
-      console.log('multiCitySelectedFares value:', val['multiCitySelectedFares']);
-      console.log('multiCitySegment:', val['multiCitySegment']);
-      console.log('multiCityRoutes:', val['multiCityRoutes']);
-      
-      if (val['multiCitySelectedFares'] || val['departureFlightData']) {
-        this.processMultiCityData(val);
-      } else {
-        console.error('No multiCitySelectedFares or departureFlightData found in data!');
-        console.log('Available keys in val:', Object.keys(val));
-        this.loader = false;
-        return;
-      }
-      
-      // Initialize passengers from multi-city data
-      this.totalAdults = val['adults'] || 1;
-      this.totalChildren = val['children'] || 0;
-      this.totalInfants = val['infants'] || 0;
-      // Initialize passenger arrays
-      this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
-      this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
-      this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
-      // Initialize baggage counts
-      this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
-      this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
-      
-      // Load fare rules for multi-city
-      this.loadFareRules();
-      
-      // Call fare quote for multi-city (similar to mobile version)
-      if (this.traceid && this.resultIndex) {
-        this.callFareQuote();
-      } else {
-        this.loader = false;
-      }
-      return;
-    }
-    
-    // Handle one-way and round-trip data
+    // Extract resultIndex and flightDataDeparture (matches mobile version - set before checking trip type)
     const departureFlightData = val['departureFlightData'];
     const returnFlightData = val['returnFlightData'];
     
@@ -537,6 +496,43 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.flightDataReturn = null;
     }
     
+    // Handle multi-city (matches mobile version - simple check after extracting flightDataDeparture)
+    if (this.tripType === 'multicity') {
+      if (this.flightDataDeparture && this.flightDataDeparture.Segments) {
+        this.processMultiCitySegments();
+      } else {
+        console.error('Multi-city flight data not found!');
+        this.loader = false;
+        return;
+      }
+      
+      // Initialize passenger counts from input data
+      this.totalAdults = val['adults'] || 1;
+      this.totalChildren = val['children'] || 0;
+      this.totalInfants = val['infants'] || 0;
+      
+      // Initialize passenger arrays
+      this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
+      this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
+      this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
+      
+      // Initialize baggage counts
+      this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
+      this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
+      
+      // Load fare rules
+      this.loadFareRules();
+      
+      // Call fare quote to get fare breakdown and SSR data
+      if (this.traceid && this.resultIndex) {
+        this.callFareQuote();
+      } else {
+        this.loader = false;
+      }
+      return;
+    }
+    
+    // Handle one-way and round-trip (below)
     // Set dates
     if (val['departureDate']) {
       this.departureDate = new Date(val['departureDate']);
@@ -652,121 +648,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  processMultiCityData(val: any): void {
-    console.log('=== Processing Multi-City Data ===');
-    console.log('Input val keys:', Object.keys(val));
-    console.log('Has departureFlightData?', !!val['departureFlightData']);
-    console.log('Has multiCitySelectedFares?', !!val['multiCitySelectedFares']);
-    
-    // For multi-city, flight data might be in departureFlightData OR constructed from multiCitySelectedFares
-    const multiCitySelectedFares = val['multiCitySelectedFares'] || {};
-    
-    // Try to get flight data from departureFlightData first
-    if (val['departureFlightData']?.selectedFare?.originalFareOption) {
-      console.log('Using departureFlightData');
-      this.flightDataDeparture = val['departureFlightData'].selectedFare.originalFareOption;
-      this.resultIndex = this.flightDataDeparture.ResultIndex || '';
-    } else if (Object.keys(multiCitySelectedFares).length > 0) {
-      console.log('Constructing from multiCitySelectedFares, count:', Object.keys(multiCitySelectedFares).length);
-      // Construct flight data from multiCitySelectedFares
-      // Get the first selected fare to extract common data
-      const firstFareKey = Object.keys(multiCitySelectedFares).sort((a, b) => Number(a) - Number(b))[0];
-      const firstFareData = multiCitySelectedFares[firstFareKey];
-      
-      if (firstFareData?.groupedFlight) {
-        // Use groupedFlight as the base structure
-        this.flightDataDeparture = {
-          ...firstFareData.groupedFlight,
-          ResultIndex: firstFareData.selectedFare?.originalFareOption?.ResultIndex || '',
-          cancellationPolicy: firstFareData.selectedFare?.originalFareOption?.cancellationPolicy || [],
-          dateChangePolicy: firstFareData.selectedFare?.originalFareOption?.dateChangePolicy || []
-        };
-        this.resultIndex = this.flightDataDeparture.ResultIndex;
-      } else if (firstFareData?.selectedFare?.originalFareOption) {
-        // Use selectedFare.originalFareOption directly
-        this.flightDataDeparture = firstFareData.selectedFare.originalFareOption;
-        this.resultIndex = this.flightDataDeparture.ResultIndex || '';
-      }
-    }
-    
-    // Process segments from flightDataDeparture or multiCitySelectedFares
-    let allSegmentsNested: any[] = [];
-    
-    if (this.flightDataDeparture?.Segments) {
-      // Use segments from flightDataDeparture
-      allSegmentsNested = this.flightDataDeparture.Segments;
-    } else if (Object.keys(multiCitySelectedFares).length > 0) {
-      // Construct segments from multiCitySelectedFares
-      // For multi-city, each selected fare contains segments for that leg
-      // We need to collect all segment groups in order
-      const segmentIndices = Object.keys(multiCitySelectedFares)
-        .map(k => Number(k))
-        .sort((a, b) => a - b);
-      
-      segmentIndices.forEach(index => {
-        const fareData = multiCitySelectedFares[index];
-        console.log(`Processing segment index ${index}:`, {
-          hasGroupedFlight: !!fareData?.groupedFlight,
-          hasSelectedFare: !!fareData?.selectedFare,
-          hasOriginalFareOption: !!fareData?.selectedFare?.originalFareOption
-        });
-        
-        // Try groupedFlight first, then selectedFare
-        let segments: any = null;
-        if (fareData?.groupedFlight?.Segments) {
-          segments = fareData.groupedFlight.Segments;
-          console.log(`  Using groupedFlight.Segments, type:`, Array.isArray(segments) ? 'array' : typeof segments);
-        } else if (fareData?.selectedFare?.originalFareOption?.Segments) {
-          segments = fareData.selectedFare.originalFareOption.Segments;
-          console.log(`  Using selectedFare.originalFareOption.Segments, type:`, Array.isArray(segments) ? 'array' : typeof segments);
-        }
-        
-        if (segments) {
-          // Segments is typically an array of segment groups (nested array)
-          // For multi-city, each leg might have one or more segment groups
-          if (Array.isArray(segments)) {
-            segments.forEach((segGroup: any, idx: number) => {
-              if (Array.isArray(segGroup)) {
-                // It's a segment group (array of segments)
-                console.log(`    Adding segment group ${idx} with ${segGroup.length} segments`);
-                allSegmentsNested.push(segGroup);
-              } else if (segGroup && typeof segGroup === 'object') {
-                // It's a single segment, wrap it in an array
-                console.log(`    Wrapping single segment ${idx} in array`);
-                allSegmentsNested.push([segGroup]);
-              }
-            });
-          } else {
-            console.warn(`  Segments is not an array for index ${index}`);
-          }
-        } else {
-          console.warn(`  No segments found for index ${index}`);
-        }
-      });
-      
-      console.log(`Total segment groups collected: ${allSegmentsNested.length}`);
-      
-      // If we constructed segments, also update flightDataDeparture for consistency
-      if (allSegmentsNested.length > 0 && !this.flightDataDeparture) {
-        const firstFareKey = segmentIndices[0].toString();
-        const firstFareData = multiCitySelectedFares[firstFareKey];
-        this.flightDataDeparture = {
-          Segments: allSegmentsNested,
-          ResultIndex: firstFareData?.selectedFare?.originalFareOption?.ResultIndex || '',
-          cancellationPolicy: firstFareData?.selectedFare?.originalFareOption?.cancellationPolicy || [],
-          dateChangePolicy: firstFareData?.selectedFare?.originalFareOption?.dateChangePolicy || []
-        };
-        this.resultIndex = this.flightDataDeparture.ResultIndex;
-      }
-    }
-    
-    console.log(`Final allSegmentsNested length: ${allSegmentsNested.length}`);
-    console.log(`flightDataDeparture set? ${!!this.flightDataDeparture}`);
-    
-    if (allSegmentsNested.length > 0) {
+  processMultiCitySegments(): void {
+    // Simplified to match mobile version - directly use flightDataDeparture.Segments
+    if (this.flightDataDeparture && this.flightDataDeparture.Segments) {
+      const allSegmentsNested = this.flightDataDeparture.Segments || [];
       this.flightSegments = [];
       this.flightSegmentGroups = [];
-      console.log('Processing segments...');
 
       const stopCities: string[] = [];
       let overallFirstDepTime: Date | null = null;
@@ -853,18 +740,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       // Cancellation & Date change policies
-      if (this.flightDataDeparture) {
-        this.cancellationPolicy = this.flightDataDeparture.cancellationPolicy || [];
-        this.dateChangePolicy = this.flightDataDeparture.dateChangePolicy || [];
-      } else {
-        // Try to get policies from first selected fare
-        const firstFareKey = Object.keys(multiCitySelectedFares).sort((a, b) => Number(a) - Number(b))[0];
-        const firstFareData = multiCitySelectedFares[firstFareKey];
-        if (firstFareData?.selectedFare?.originalFareOption) {
-          this.cancellationPolicy = firstFareData.selectedFare.originalFareOption.cancellationPolicy || [];
-          this.dateChangePolicy = firstFareData.selectedFare.originalFareOption.dateChangePolicy || [];
-        }
-      }
+      this.cancellationPolicy = this.flightDataDeparture.cancellationPolicy || [];
+      this.dateChangePolicy = this.flightDataDeparture.dateChangePolicy || [];
       
       // Set groupedFlightSegments for mobile template compatibility
       this.groupedFlightSegments = this.flightSegmentGroups;
@@ -876,15 +753,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         confirmButtonText: 'Ok'
       });
       this.router.navigate(['/']);
-      return;
     }
-    
-    // Process fare breakdown from multiCitySelectedFares if available
-    if (Object.keys(multiCitySelectedFares).length > 0) {
-      this.processMultiCityFareBreakdown(multiCitySelectedFares);
-    }
-    
-    this.cdr.detectChanges();
   }
 
   createPlaceholderForSegment(missingIndex: number, multiCitySegment: any[], allSegments: any[]): void {
