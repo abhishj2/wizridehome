@@ -380,9 +380,15 @@
                                             <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
                                                 class="city-suggestion"
                                                 (click)="selectMultiCity(city.name, city.code, 'flight-from-' + i)">
-                                                <span class="city-name">{{city.name}} <span style="font-size: 0.85em; color: #6b7280; font-weight: 500;">({{city.code}})</span></span>
-                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
-                                                    {{city.state}}</div>
+                                                <div class="city-suggestion-icon">
+                                                    <i class="fas fa-plane-departure"></i>
+                                                </div>
+                                                <div class="city-suggestion-content">
+                                                    <div class="city-suggestion-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state ? ', ' + city.state : '') }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="!city.airportName && city.state">{{ city.state }}</div>
+                                                </div>
+                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]</div>
                                             </div>
                                         </div>
                                         <div class="validation-error" *ngIf="isSameCitySelected(route.from, route.to)">
@@ -411,9 +417,15 @@
                                             <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
                                                 class="city-suggestion"
                                                 (click)="selectMultiCity(city.name, city.code, 'flight-to-' + i)">
-                                                <span class="city-name">{{city.name}} <span style="font-size: 0.85em; color: #6b7280; font-weight: 500;">({{city.code}})</span></span>
-                                                <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">
-                                                    {{city.state}}</div>
+                                                <div class="city-suggestion-icon">
+                                                    <i class="fas fa-plane-arrival"></i>
+                                                </div>
+                                                <div class="city-suggestion-content">
+                                                    <div class="city-suggestion-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state ? ', ' + city.state : '') }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="!city.airportName && city.state">{{ city.state }}</div>
+                                                </div>
+                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]</div>
                                             </div>
                                         </div>
                                     </div>
@@ -1892,11 +1904,15 @@
                 <div *ngFor="let city of getMobileCitySuggestionsList()" 
                      class="mobile-location-suggestion"
                      (click)="selectMobileCity(city.name, city.code)">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div class="mobile-location-suggestion-content">
-                        <div class="mobile-location-suggestion-name">{{ city.name }}</div>
-                        <div class="mobile-location-suggestion-state">{{ city.state }}</div>
+                    <div class="mobile-location-icon">
+                        <i class="fas fa-plane-departure"></i>
                     </div>
+                    <div class="mobile-location-suggestion-content">
+                        <div class="mobile-location-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state ? ', ' + city.state : '') }}</div>
+                        <div class="mobile-location-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
+                        <div class="mobile-location-airport-name" *ngIf="!city.airportName && city.state && !isFlightPopup()">{{ city.state }}</div>
+                    </div>
+                    <div class="mobile-location-airport-code" *ngIf="city.code">[ {{ city.code }} ]</div>
                 </div>
             </ng-container>
 

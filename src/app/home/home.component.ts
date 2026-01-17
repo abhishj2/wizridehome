@@ -34,6 +34,8 @@ interface City {
   lat?: number;
   lng?: number;
   popular?: boolean;
+  airportName?: string;
+  country?: string;
 }
 
 interface StateWiseCity {
@@ -1942,7 +1944,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             const cityName = item.CITY || item.city || item.NAME || item.name || '';
             const airportCode = item.AIRPORTCODE || item.airportcode || item.CITYCODE || item.citycode || '';
             const country = item.COUNTRY || item.country || '';
-            const airportname = item.COUNTRY || item.country || '';
+            const airportName = item.NAME || item.name || '';
             const countryCode = item.COUNTRYCODE || item.countrycode || '';
             const coords = this.extractAirportCoordinates(item);
 
@@ -1956,6 +1958,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               code: airportCode || displayName.substring(0, 3).toUpperCase(),
               state: cityState !== 'Other' ? cityState : (country || 'Other'), // Use city state mapping, fallback to country
               countryCode: countryCode, // Store country code for sorting
+              country: country, // Store country name
+              airportName: airportName, // Store airport name (e.g., "Lokpriya Gopinath Bordoloi International")
               lat: coords.lat,
               lng: coords.lng
             };
