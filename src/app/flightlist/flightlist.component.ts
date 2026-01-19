@@ -1319,8 +1319,27 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
+    
+    // Close passenger dropdown if clicking outside
     if (!target.closest('.passenger-dropdown-wrapper')) {
       this.showPassengerDropdown = false;
+    }
+    
+    // Close city dropdowns when clicking outside
+    const isClickInsideCitySelect = target.closest('.summary-section.city-select');
+    const isClickInsideCitySuggestions = target.closest('.city-suggestions');
+    
+    if (!isClickInsideCitySelect && !isClickInsideCitySuggestions) {
+      // Close and preserve previous value (already in flightInputData)
+      if (this.editField === 'from') {
+        this.editField = null;
+        this.activeSuggestions['summary-from'] = [];
+        // Value is already in flightInputData, so it will display correctly
+      } else if (this.editField === 'to') {
+        this.editField = null;
+        this.activeSuggestions['summary-to'] = [];
+        // Value is already in flightInputData, so it will display correctly
+      }
     }
   }
 
@@ -4186,7 +4205,12 @@ getMultiCityRouteDestination(index: number): string {
       // Find airport details
       const airport = this.flightAirports.find(a => a.code === cityCode);
       if (airport) {
-        this.flightInputData['fromAirport'] = airport.airport || cityName;
+        // Only set airport name if it's different from city name to avoid duplication
+        if (airport.airport && airport.airport.toLowerCase() !== cityName.toLowerCase()) {
+          this.flightInputData['fromAirport'] = airport.airport;
+        } else {
+          this.flightInputData['fromAirport'] = '';
+        }
         this.flightInputData['fromCountry'] = airport.country || airport.state || '';
       }
     } else if (target === 'summary-to') {
@@ -4198,7 +4222,12 @@ getMultiCityRouteDestination(index: number): string {
       // Find airport details
       const airport = this.flightAirports.find(a => a.code === cityCode);
       if (airport) {
-        this.flightInputData['toAirport'] = airport.airport || cityName;
+        // Only set airport name if it's different from city name to avoid duplication
+        if (airport.airport && airport.airport.toLowerCase() !== cityName.toLowerCase()) {
+          this.flightInputData['toAirport'] = airport.airport;
+        } else {
+          this.flightInputData['toAirport'] = '';
+        }
         this.flightInputData['toCountry'] = airport.country || airport.state || '';
       }
     }
@@ -4221,7 +4250,10 @@ getMultiCityRouteDestination(index: number): string {
     // Use a delay to allow selectCity to close the field first
     setTimeout(() => {
       if (this.editField === 'from') {
+        // Restore previous value if user didn't select anything
+        // The value is already in flightInputData, so it will display correctly
         this.closeCitySuggestions('summary-from');
+        this.editField = null;
       }
     }, 150);
   }
@@ -4231,7 +4263,10 @@ getMultiCityRouteDestination(index: number): string {
     // Use a delay to allow selectCity to close the field first
     setTimeout(() => {
       if (this.editField === 'to') {
+        // Restore previous value if user didn't select anything
+        // The value is already in flightInputData, so it will display correctly
         this.closeCitySuggestions('summary-to');
+        this.editField = null;
       }
     }, 150);
   }

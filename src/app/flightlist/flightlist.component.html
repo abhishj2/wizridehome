@@ -176,7 +176,7 @@
               </div>
             </div>
             <div class="summary-detail" *ngIf="editField !== 'from'">
-              {{ flightInputData['fromAirportCode'] }}{{ flightInputData['fromAirportCode'] ? ', ' : '' }}{{ flightInputData['fromAirport'] || flightInputData['fromCity'] }}{{ flightInputData['fromCountry'] ? ', ' + flightInputData['fromCountry'] : '' }}
+              {{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}{{ flightInputData['fromAirportCode'] ? ', ' + flightInputData['fromAirportCode'] : '' }}
             </div>
           </div>
           <div class="summary-divider"></div>
@@ -214,7 +214,7 @@
               </ng-container>
             </div>
             <div class="summary-detail" *ngIf="editField !== 'to'">
-              {{ flightInputData['toAirportCode'] }}{{ flightInputData['toAirportCode'] ? ', ' : '' }}{{ flightInputData['toAirport'] || flightInputData['toCity'] }}{{ flightInputData['toCountry'] ? ', ' + flightInputData['toCountry'] : '' }}
+              {{ flightInputData['toCity'] || flightInputData['toAirport'] }}{{ flightInputData['toAirportCode'] ? ', ' + flightInputData['toAirportCode'] : '' }}
             </div>
           </div>
           <div class="summary-divider"></div>
