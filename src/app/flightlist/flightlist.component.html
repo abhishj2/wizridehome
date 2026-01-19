@@ -154,9 +154,9 @@
                 autofocus />
             </div>
             <div class="city-suggestions"
-              [class.active]="editField === 'from' && (activeSuggestions['summary-from'] && activeSuggestions['summary-from'].length > 0)"
+              [class.active]="editField === 'from'"
               *ngIf="editField === 'from'">
-              <ng-container *ngIf="isCityArray(activeSuggestions['summary-from'])">
+              <ng-container *ngIf="isCityArray(activeSuggestions['summary-from']) && activeSuggestions['summary-from'].length > 0">
                 <div *ngFor="let city of activeSuggestions['summary-from']"
                   class="city-suggestion"
                   (click)="selectCity(city.name, city.code, 'summary-from')">
@@ -168,6 +168,11 @@
                   <span class="city-suggestion-code">[ {{city.code}} ]</span>
                 </div>
               </ng-container>
+              <div *ngIf="!isCityArray(activeSuggestions['summary-from']) || activeSuggestions['summary-from']?.length === 0" 
+                class="city-suggestion" style="padding: 20px; text-align: center; color: #9ca3af;">
+                <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>
+                Loading airports...
+              </div>
             </div>
             <div class="summary-detail" *ngIf="editField !== 'from'">
               {{ flightInputData['fromAirportCode'] }}{{ flightInputData['fromAirportCode'] ? ', ' : '' }}{{ flightInputData['fromAirport'] || flightInputData['fromCity'] }}{{ flightInputData['fromCountry'] ? ', ' + flightInputData['fromCountry'] : '' }}
@@ -191,7 +196,7 @@
                 autofocus />
             </div>
             <div class="city-suggestions"
-              [class.active]="editField === 'to' && (activeSuggestions['summary-to'] && activeSuggestions['summary-to'].length > 0)"
+              [class.active]="editField === 'to'"
               *ngIf="editField === 'to'">
               <ng-container *ngIf="isCityArray(activeSuggestions['summary-to'])">
                 <div *ngFor="let city of activeSuggestions['summary-to']"

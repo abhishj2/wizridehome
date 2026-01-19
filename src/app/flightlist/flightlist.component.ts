@@ -74,13 +74,19 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     
     // If opening city fields, show suggestions immediately
     if (this.editField === 'from') {
+      // Show suggestions immediately
+      this.showCitySuggestionsOnFocus('summary-from');
+      // Also trigger after a short delay to ensure input is rendered
       setTimeout(() => {
         this.showCitySuggestionsOnFocus('summary-from');
-      }, 100);
+      }, 50);
     } else if (this.editField === 'to') {
+      // Show suggestions immediately
+      this.showCitySuggestionsOnFocus('summary-to');
+      // Also trigger after a short delay to ensure input is rendered
       setTimeout(() => {
         this.showCitySuggestionsOnFocus('summary-to');
-      }, 100);
+      }, 50);
     }
     
     // If opening travelers, also open the panel
