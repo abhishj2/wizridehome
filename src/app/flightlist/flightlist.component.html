@@ -857,6 +857,17 @@
                 <p>Debug: loader = {{ loader }}</p>
               </div> -->
 
+              <!-- Flight Count Header -->
+              <div class="flight-count-header" *ngIf="groupedFlights && groupedFlights.length > 0">
+                <h2 class="flight-count-text">
+                  {{ groupedFlights.length }} {{ groupedFlights.length === 1 ? 'flight' : 'flights' }}
+                </h2>
+                <div class="flight-announcement">
+                  <i class="fas fa-bullhorn announcement-icon"></i>
+                  <span>No convenience fee. No service charge.</span>
+                </div>
+              </div>
+
               <!-- Flight Cards (matching booking-results card design) -->
               <div class="flight-cards" *ngIf="groupedFlights && groupedFlights.length > 0">
                 <div class="card mobile-flight-card-new" [class.card-expanded]="flightDetailsExpanded[i]"
@@ -1410,6 +1421,16 @@
                 <div class="tab-pane">
                   <!-- Onward Tab Content -->
                   <div class="tab-content" *ngIf="activeTab === 'onward'">
+                    <!-- Flight Count Header -->
+                    <div class="flight-count-header" *ngIf="groupedFlights && groupedFlights.length > 0">
+                      <h2 class="flight-count-text">
+                        {{ groupedFlights.length }} {{ groupedFlights.length === 1 ? 'flight' : 'flights' }}
+                      </h2>
+                      <div class="flight-announcement">
+                        <i class="fas fa-bullhorn announcement-icon"></i>
+                        <span>No convenience fee. No service charge.</span>
+                      </div>
+                    </div>
                     <div class="flight-cards">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedOutboundIndex === i"
                         *ngFor="let flight of groupedFlights; let i = index">
@@ -1810,6 +1831,16 @@
                 <div class="tab-pane">
                   <!-- Return Tab Content -->
                   <div class="tab-content return-tab-content" *ngIf="activeTab === 'return'">
+                    <!-- Flight Count Header -->
+                    <div class="flight-count-header" *ngIf="groupedFlightsOutbound && groupedFlightsOutbound.length > 0">
+                      <h2 class="flight-count-text">
+                        {{ groupedFlightsOutbound.length }} {{ groupedFlightsOutbound.length === 1 ? 'flight' : 'flights' }}
+                      </h2>
+                      <div class="flight-announcement">
+                        <i class="fas fa-bullhorn announcement-icon"></i>
+                        <span>No convenience fee. No service charge.</span>
+                      </div>
+                    </div>
                     <div class="flight-cards">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedReturnIndex === i"
                         *ngFor="let flight of groupedFlightsOutbound; let i = index">
@@ -2623,6 +2654,16 @@
               <div class="results-column">
                 <div class="flight-list-container" *ngIf="multicityTabData && multicityTabData.length > 0">
                   <!-- Flight Cards - Show all segments in one card (like mobile but desktop design) -->
+                  <!-- Flight Count Header -->
+                  <div class="flight-count-header" *ngIf="multicityTabData && multicityTabData[0] && multicityTabData[0].groupedFlights && multicityTabData[0].groupedFlights.length > 0">
+                    <h2 class="flight-count-text">
+                      {{ multicityTabData[0].groupedFlights.length }} {{ multicityTabData[0].groupedFlights.length === 1 ? 'flight' : 'flights' }}
+                    </h2>
+                    <div class="flight-announcement">
+                      <i class="fas fa-bullhorn announcement-icon"></i>
+                      <span>No convenience fee. No service charge.</span>
+                    </div>
+                  </div>
                   <div class="flight-cards" *ngIf="multicityTabData && multicityTabData[0] && multicityTabData[0].groupedFlights && multicityTabData[0].groupedFlights.length > 0">
                     <div class="card mobile-flight-card-new multicity-combined-card" 
                       [class.selected]="multicitySelectedFares[0]?.groupedFlight === flight"

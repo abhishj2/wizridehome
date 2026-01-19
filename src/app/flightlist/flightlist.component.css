@@ -380,7 +380,7 @@ img {
 
 /* Modify Search Submit Button */
 .modify-search-btn {
-  background: linear-gradient(135deg, #008b8b 0%, #1daaba 100%);
+  background: #000;
   color: #fff;
   border: none;
   padding: 12px 30px;
@@ -1348,6 +1348,62 @@ img {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+/* Flight Count Header */
+.flight-count-header {
+  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.flight-count-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.flight-announcement {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e7f8fb;
+  color: #0b5563;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.announcement-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: #008b8b;
+}
+
+@media (max-width: 768px) {
+  .flight-count-header {
+    margin-bottom: 16px;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .flight-count-text {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .flight-announcement {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 .flight-cards {
