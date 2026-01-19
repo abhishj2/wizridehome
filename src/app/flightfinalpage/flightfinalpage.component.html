@@ -81,7 +81,7 @@
     <!-- Oneway Trip -->
     <div class="flight-final-page" *ngIf="tripType == 'oneway'" id="oneway-section">
       <!-- Flight Summary Card -->
-      <div class="card makemytrip-flight-card" *ngIf="flightSegments?.length">
+      <div class="card flight-summary-card" *ngIf="flightSegments?.length">
         <!-- Desktop Flight Summary Design -->
         <div class="desktop-flight-summary" *ngFor="let segment of flightSegments; let i = index">
           <!-- Route and Date Header -->
@@ -91,11 +91,6 @@
               <span class="route-date">{{ segment.date | date : "EEEE, MMM dd" }}</span>
             </div>
             <div class="route-header-right">
-              <div class="route-badges">
-                <span class="flight-type-badge" *ngIf="flightSegments.length === 1">Non Stop</span>
-                <span class="flight-type-badge" *ngIf="flightSegments.length > 1">{{ flightSegments.length - 1 }} Stop{{ flightSegments.length > 2 ? 's' : '' }}</span>
-                <span class="duration-badge">{{ segment.duration }}</span>
-              </div>
               <div class="fare-rules-link-header" (click)="showFareRules = true">View Fare Rules</div>
             </div>
           </div>
@@ -109,14 +104,14 @@
                 <div class="airline-details">
                   <div class="airline-name">{{ segment.airline }}</div>
                   <div class="flight-number">{{ segment.code }}</div>
-                  <div class="aircraft-type" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
+                  <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Middle: Flight Schedule -->
             <div class="desktop-flight-middle">
-              <div class="schedule-row">
+              <div class="schedule-container">
                 <div class="schedule-item departure">
                   <div class="schedule-time">{{ segment.departureTime }}</div>
                   <div class="schedule-location">
@@ -124,9 +119,10 @@
                     <div class="location-airport">{{ segment.fromAirport || segment.from + ', Terminal N/A' }}</div>
                   </div>
                 </div>
-                <div class="schedule-connector">
+                <div class="schedule-connector-vertical">
+                  <div class="connector-line-vertical"></div>
                   <div class="connector-duration">{{ segment.duration }}</div>
-                  <div class="connector-line"></div>
+                  <div class="connector-line-vertical"></div>
                 </div>
                 <div class="schedule-item arrival">
                   <div class="schedule-time">{{ segment.arrivalTime }}</div>
@@ -189,10 +185,10 @@
         </div>
 
       <!-- Baggage Allowance Section - Desktop Only -->
-      <div class="makemytrip-baggage-section oneway-baggage-section oneway-desktop-baggage">
+      <div class="baggage-section-desktop oneway-desktop-baggage">
         <div class="baggage-allowance-item">
           <i class="fas fa-suitcase baggage-icon"></i>
-          <span class="baggage-text">Cabin Baggage: {{ flightSegments[0]?.cabinBaggage || '7 KG' }} (1 piece only) / Adult</span>
+          <span class="baggage-text">Cabin Baggage: {{ flightSegments[0]?.cabinBaggage || '7 KG' }} / Adult</span>
         </div>
         <div class="baggage-allowance-item">
           <i class="fas fa-suitcase-rolling baggage-icon"></i>
@@ -201,10 +197,10 @@
       </div>
 
       <!-- Add Baggage CTA - Desktop Only -->
-      <div class="makemytrip-add-baggage oneway-add-baggage oneway-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="add-baggage-left">
+      <div class="add-baggage-banner oneway-desktop-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+        <div class="add-baggage-content">
           <i class="fas fa-suitcase-rolling add-baggage-icon"></i>
-          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance for {{ flightSegments[0]?.fromAirportCode || 'IXB' }}-{{ flightSegments[0]?.toAirportCode || 'BOM' }} at fab rates!</span>
         </div>
         <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
@@ -212,7 +208,7 @@
       </div>
 
       <!-- Cancellation Policy Section - Desktop Only -->
-      <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+      <div class="cancellation-policy-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
           <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
