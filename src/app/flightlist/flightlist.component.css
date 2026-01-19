@@ -380,7 +380,7 @@ img {
 
 /* Modify Search Submit Button */
 .modify-search-btn {
-  background: #000;
+  background: #000 !important;
   color: #fff;
   border: none;
   padding: 12px 30px;
@@ -505,7 +505,7 @@ img {
   }
 
   .desktop-summary-card .modify-search-btn {
-    background: #008b8b;
+    background: #000;
     color: #ffffff;
     border: none;
     padding: 12px 24px;
@@ -6578,4 +6578,15 @@ img {
     position: relative;
     z-index: 10; /* Below summary but above results */
   }
+}
+
+.search-summary {
+    background:radial-gradient(
+      circle at 50% 0%,
+      rgb(63 79 79 / 8%),
+      #0b0b0b00 70%) !important;
+}
+
+.search-summary{
+  margin-bottom:0 !important
 }
