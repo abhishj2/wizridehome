@@ -4926,9 +4926,7 @@ img {
     margin-bottom: 12px;
   }
 
-  .desktop-flight-row:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  }
+  
 
   /* Ensure proper card spacing */
   .flight-cards .card {

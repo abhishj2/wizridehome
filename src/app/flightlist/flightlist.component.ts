@@ -69,7 +69,20 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     // This ensures clicking summary sections doesn't open the modify form
     this.showModifyForm = false;
     // Toggle the edit field
-    this.editField = this.editField === field ? null : field;
+    const wasOpen = this.editField === field;
+    this.editField = wasOpen ? null : field;
+    
+    // If opening city fields, show suggestions immediately
+    if (this.editField === 'from') {
+      setTimeout(() => {
+        this.showCitySuggestionsOnFocus('summary-from');
+      }, 100);
+    } else if (this.editField === 'to') {
+      setTimeout(() => {
+        this.showCitySuggestionsOnFocus('summary-to');
+      }, 100);
+    }
+    
     // If opening travelers, also open the panel
     if (this.editField === 'travellers' && !this.isTravelersOpen) {
       this.isTravelersOpen = true;

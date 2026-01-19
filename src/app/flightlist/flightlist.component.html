@@ -154,7 +154,7 @@
                 autofocus />
             </div>
             <div class="city-suggestions"
-              [class.active]="activeSuggestions['summary-from'] && activeSuggestions['summary-from'].length > 0"
+              [class.active]="editField === 'from' && (activeSuggestions['summary-from'] && activeSuggestions['summary-from'].length > 0)"
               *ngIf="editField === 'from'">
               <ng-container *ngIf="isCityArray(activeSuggestions['summary-from'])">
                 <div *ngFor="let city of activeSuggestions['summary-from']"
@@ -191,7 +191,7 @@
                 autofocus />
             </div>
             <div class="city-suggestions"
-              [class.active]="activeSuggestions['summary-to'] && activeSuggestions['summary-to'].length > 0"
+              [class.active]="editField === 'to' && (activeSuggestions['summary-to'] && activeSuggestions['summary-to'].length > 0)"
               *ngIf="editField === 'to'">
               <ng-container *ngIf="isCityArray(activeSuggestions['summary-to'])">
                 <div *ngFor="let city of activeSuggestions['summary-to']"
@@ -218,6 +218,7 @@
               <app-custom-calendar
                 [selectedDate]="modifySearchForm.get('departureDate')?.value"
                 [minDate]="getTodayDate()"
+                [alwaysOpen]="editField === 'departure'"
                 placeholder="Select Departure Date"
                 (dateSelected)="onModifyDepartureDateSelected($event); editField = null"
                 (calendarOpened)="onCalendarOpened()"
