@@ -4163,9 +4163,24 @@ getMultiCityRouteDestination(index: number): string {
     this.activeSuggestions[target] = this.flightAirports.slice(0, 10);
   }
 
-  selectCity(cityName: string, cityCode: string, target: string) {
+  selectCity(cityName: string, cityCode: string, target: string, event?: Event) {
+    // Prevent event bubbling and default behavior
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    // Close suggestions immediately to prevent reopening
+    this.activeSuggestions[target] = [];
+    
+    // Close edit field immediately to prevent blur from reopening
+    const fieldName = target === 'summary-from' ? 'from' : 'to';
+    this.editField = null;
+    
     if (target === 'summary-from') {
+      // Update form control with code (for form submission)
       this.modifySearchForm.patchValue({ from: cityCode });
+      // Update display data immediately
       this.flightInputData['fromCity'] = cityName;
       this.flightInputData['fromAirportCode'] = cityCode;
       // Find airport details
@@ -4175,7 +4190,9 @@ getMultiCityRouteDestination(index: number): string {
         this.flightInputData['fromCountry'] = airport.country || airport.state || '';
       }
     } else if (target === 'summary-to') {
+      // Update form control with code (for form submission)
       this.modifySearchForm.patchValue({ to: cityCode });
+      // Update display data immediately
       this.flightInputData['toCity'] = cityName;
       this.flightInputData['toAirportCode'] = cityCode;
       // Find airport details
@@ -4185,9 +4202,38 @@ getMultiCityRouteDestination(index: number): string {
         this.flightInputData['toCountry'] = airport.country || airport.state || '';
       }
     }
-    this.activeSuggestions[target] = [];
-    this.editField = null;
+    
     // Don't auto-search, let user click modify search button
+  }
+
+  onFromInputChange(value: string) {
+    this.flightInputData['fromCity'] = value;
+    this.showCitySuggestions(value, 'summary-from');
+  }
+
+  onToInputChange(value: string) {
+    this.flightInputData['toCity'] = value;
+    this.showCitySuggestions(value, 'summary-to');
+  }
+
+  onFromBlur() {
+    // Only close if editField is still 'from' (not closed by selectCity)
+    // Use a delay to allow selectCity to close the field first
+    setTimeout(() => {
+      if (this.editField === 'from') {
+        this.closeCitySuggestions('summary-from');
+      }
+    }, 150);
+  }
+
+  onToBlur() {
+    // Only close if editField is still 'to' (not closed by selectCity)
+    // Use a delay to allow selectCity to close the field first
+    setTimeout(() => {
+      if (this.editField === 'to') {
+        this.closeCitySuggestions('summary-to');
+      }
+    }, 150);
   }
 
   isCityArray(value: any): boolean {
@@ -4195,9 +4241,14 @@ getMultiCityRouteDestination(index: number): string {
   }
 
   closeCitySuggestions(target: string) {
+    // Only close if not clicking on a suggestion
+    // Use a shorter timeout to prevent conflicts
     setTimeout(() => {
-      this.activeSuggestions[target] = [];
-    }, 200);
+      // Check if editField is still active before closing
+      if (this.editField !== (target === 'summary-from' ? 'from' : 'to')) {
+        this.activeSuggestions[target] = [];
+      }
+    }, 150);
   }
 
   // Travelers Panel Methods (like homepage)

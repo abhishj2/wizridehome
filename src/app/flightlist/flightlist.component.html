@@ -144,13 +144,13 @@
               <i class="fas fa-location-dot input-icon"></i>
               <input type="text" 
                 class="summary-input city-input"
-                formControlName="from"
+                [value]="flightInputData['fromCity'] || modifySearchForm.get('from')?.value || ''"
                 placeholder="Type city or airport"
                 (focus)="showCitySuggestionsOnFocus('summary-from')"
-                (input)="showCitySuggestions($any($event.target).value, 'summary-from'); $event.stopPropagation(); $event.preventDefault()"
+                (input)="onFromInputChange($any($event.target).value); $event.stopPropagation(); $event.preventDefault()"
                 (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
                 (keydown)="$event.stopPropagation()"
-                (blur)="closeCitySuggestions('summary-from')"
+                (blur)="onFromBlur()"
                 autofocus />
             </div>
             <div class="city-suggestions"
@@ -159,7 +159,8 @@
               <ng-container *ngIf="isCityArray(activeSuggestions['summary-from']) && activeSuggestions['summary-from'].length > 0">
                 <div *ngFor="let city of activeSuggestions['summary-from']"
                   class="city-suggestion"
-                  (click)="selectCity(city.name, city.code, 'summary-from')">
+                  (mousedown)="$event.preventDefault()"
+                  (click)="selectCity(city.name, city.code, 'summary-from', $event); $event.stopPropagation()">
                   <i class="fas fa-plane city-suggestion-icon"></i>
                   <div class="city-suggestion-content">
                     <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
@@ -179,29 +180,30 @@
             </div>
           </div>
           <div class="summary-divider"></div>
-          <div class="summary-section city-select" (click)="toggleEditField('to'); $event.stopPropagation()" [class.editing]="editField === 'to'">
+          <div class="summary-section city-select" (click)="toggleEditField('to'); $event.stopPropagation()" [class.editing]="editField === 'to'" [class.field-open]="editField === 'to'">
             <div class="summary-label">To</div>
             <div class="summary-value" *ngIf="editField !== 'to'">{{ flightInputData['toCity'] || flightInputData['toAirport'] }}</div>
             <div class="input-with-icon" *ngIf="editField === 'to'" (click)="$event.stopPropagation()">
               <i class="fas fa-location-dot input-icon"></i>
               <input type="text" 
                 class="summary-input city-input"
-                formControlName="to"
+                [value]="flightInputData['toCity'] || modifySearchForm.get('to')?.value || ''"
                 placeholder="Type city or airport"
                 (focus)="showCitySuggestionsOnFocus('summary-to')"
-                (input)="showCitySuggestions($any($event.target).value, 'summary-to'); $event.stopPropagation(); $event.preventDefault()"
+                (input)="onToInputChange($any($event.target).value); $event.stopPropagation(); $event.preventDefault()"
                 (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
                 (keydown)="$event.stopPropagation()"
-                (blur)="closeCitySuggestions('summary-to')"
+                (blur)="onToBlur()"
                 autofocus />
             </div>
             <div class="city-suggestions"
               [class.active]="editField === 'to'"
               *ngIf="editField === 'to'">
-              <ng-container *ngIf="isCityArray(activeSuggestions['summary-to'])">
+              <ng-container *ngIf="isCityArray(activeSuggestions['summary-to']) && activeSuggestions['summary-to'].length > 0">
                 <div *ngFor="let city of activeSuggestions['summary-to']"
                   class="city-suggestion"
-                  (click)="selectCity(city.name, city.code, 'summary-to')">
+                  (mousedown)="$event.preventDefault()"
+                  (click)="selectCity(city.name, city.code, 'summary-to', $event); $event.stopPropagation()">
                   <i class="fas fa-plane city-suggestion-icon"></i>
                   <div class="city-suggestion-content">
                     <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
