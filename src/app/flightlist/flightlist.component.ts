@@ -87,6 +87,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       setTimeout(() => {
         this.showCitySuggestionsOnFocus('summary-to');
       }, 50);
+    } else if (this.editField === 'departure') {
+      // Trigger calendar to open after a short delay to ensure it's rendered
+      setTimeout(() => {
+        this.openDepartureCalendar();
+      }, 100);
     }
     
     // If opening travelers, also open the panel
@@ -189,6 +194,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   // MULTI CITY
   @ViewChild('multicityScrollContainer') multicityScrollContainer!: ElementRef;
+  @ViewChild('flightlistDepartureCalendar') flightlistDepartureCalendar!: CustomCalendarComponent;
   selectedMulticityTab = 0;
   multicityTabData: any[] = [];
   multicitySelectedFares: { [index: number]: any } = {};
@@ -3349,6 +3355,16 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   onCalendarClosed(): void {
     // Optional: Add any logic needed when calendar closes
+  }
+
+  openDepartureCalendar(): void {
+    // Trigger calendar to open by clicking the input wrapper
+    setTimeout(() => {
+      const calendarInput = document.querySelector('.calendar-wrapper .calendar-input-wrapper') as HTMLElement;
+      if (calendarInput) {
+        calendarInput.click();
+      }
+    }, 100);
   }
 
   // Finalize selection

@@ -219,11 +219,11 @@
           <div class="summary-section date-select" (click)="toggleEditField('departure'); $event.stopPropagation()" [class.editing]="editField === 'departure'">
             <div class="summary-label">Departure</div>
             <div class="summary-value" *ngIf="editField !== 'departure'">{{ flightInputData['departureDate'] | date : "dd MMM'yy" }}</div>
-            <div *ngIf="editField === 'departure'" (click)="$event.stopPropagation()">
+            <div *ngIf="editField === 'departure'" (click)="$event.stopPropagation()" class="calendar-wrapper">
               <app-custom-calendar
+                #flightlistDepartureCalendar
                 [selectedDate]="modifySearchForm.get('departureDate')?.value"
                 [minDate]="getTodayDate()"
-                [alwaysOpen]="editField === 'departure'"
                 placeholder="Select Departure Date"
                 (dateSelected)="onModifyDepartureDateSelected($event); editField = null"
                 (calendarOpened)="onCalendarOpened()"

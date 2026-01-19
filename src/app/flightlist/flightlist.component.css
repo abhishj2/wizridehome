@@ -610,6 +610,12 @@ img {
     z-index: 999999998;
   }
 
+  .calendar-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 999999999;
+  }
+
   .input-with-icon {
     position: relative;
     display: flex;
