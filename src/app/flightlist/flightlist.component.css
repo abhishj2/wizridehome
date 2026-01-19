@@ -6588,10 +6588,15 @@ img {
   margin-bottom:0 !important
 }
 
-h2.flight-count-text {
-  font-size:18px !important;
-  background:#000;
-  color:#fff !important;
-  padding:10px 15px !important;
-  border-radius:18px;
+h2.flight-count-text{
+  font-size: 13px !important;
+  background: #273852b5;
+  color: #fff !important;
+  padding: 5px 10px !important;
+  border-radius: 18px;
+  font-weight:600 !important;
 }
+
+.city-suggestions{
+  width: fit-content;
+  }

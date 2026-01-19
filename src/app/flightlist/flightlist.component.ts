@@ -1341,6 +1341,30 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         // Value is already in flightInputData, so it will display correctly
       }
     }
+    
+    // Close travelers panel when clicking outside
+    const isClickInsideTravelersSection = target.closest('.summary-section.travelers-dropdown');
+    const isClickInsideTravelersPanel = target.closest('.travelers-panel');
+    
+    if (!isClickInsideTravelersSection && !isClickInsideTravelersPanel) {
+      if (this.editField === 'travellers' || this.isTravelersOpen) {
+        this.isTravelersOpen = false;
+        // Only reset editField if we're not in the middle of editing another field
+        if (this.editField === 'travellers') {
+          this.editField = null;
+        }
+      }
+    }
+    
+    // Close calendar when clicking outside
+    const isClickInsideDateSelect = target.closest('.summary-section.date-select');
+    const isClickInsideCalendar = target.closest('app-custom-calendar');
+    
+    if (!isClickInsideDateSelect && !isClickInsideCalendar) {
+      if (this.editField === 'departure') {
+        this.editField = null;
+      }
+    }
   }
 
   @HostListener('window:scroll')
