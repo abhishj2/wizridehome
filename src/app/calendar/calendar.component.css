@@ -87,7 +87,7 @@
   border: 2px solid darkcyan;
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0, 139, 139, 0.2);
-  z-index: 9999;
+  z-index: 999999999 !important;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px) scale(0.95);

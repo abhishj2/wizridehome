@@ -84,7 +84,8 @@
     <!-- Search Summary Bar (matching booking-results design) -->
     <div class="search-summary" [class.sticky]="isHeaderSticky" *ngIf="flightInputData">
       <div class="container">
-        <div class="summary-content">
+        <!-- Mobile Summary (existing design) -->
+        <div class="summary-content mobile-summary">
           <div class="summary-info">
             <div class="route-summary">
               <!-- Multi-City Route Display -->
@@ -130,6 +131,179 @@
           <div class="summary-actions">
             <button class="modify-btn" *ngIf="flightType !== 'multi'" (click)="showModifyForm = !showModifyForm" title="Modify">
               <i class="fas fa-edit"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop Neomorphism Summary (new design) -->
+        <div class="desktop-summary-card" *ngIf="flightType !== 'multi'">
+          <div class="summary-section city-select" (click)="toggleEditField('from'); $event.stopPropagation()" [class.editing]="editField === 'from'">
+            <div class="summary-label">From</div>
+            <div class="summary-value" *ngIf="editField !== 'from'">{{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}</div>
+            <div class="input-with-icon" *ngIf="editField === 'from'" (click)="$event.stopPropagation()">
+              <i class="fas fa-location-dot input-icon"></i>
+              <input type="text" 
+                class="summary-input city-input"
+                formControlName="from"
+                placeholder="Type city or airport"
+                (focus)="showCitySuggestionsOnFocus('summary-from')"
+                (input)="showCitySuggestions($any($event.target).value, 'summary-from'); $event.stopPropagation(); $event.preventDefault()"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+                (blur)="closeCitySuggestions('summary-from')"
+                autofocus />
+            </div>
+            <div class="city-suggestions"
+              [class.active]="activeSuggestions['summary-from'] && activeSuggestions['summary-from'].length > 0"
+              *ngIf="editField === 'from'">
+              <ng-container *ngIf="isCityArray(activeSuggestions['summary-from'])">
+                <div *ngFor="let city of activeSuggestions['summary-from']"
+                  class="city-suggestion"
+                  (click)="selectCity(city.name, city.code, 'summary-from')">
+                  <i class="fas fa-plane city-suggestion-icon"></i>
+                  <div class="city-suggestion-content">
+                    <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
+                    <div class="city-suggestion-airport-name">{{city.airport || city.name}}</div>
+                  </div>
+                  <span class="city-suggestion-code">[ {{city.code}} ]</span>
+                </div>
+              </ng-container>
+            </div>
+            <div class="summary-detail" *ngIf="editField !== 'from'">
+              {{ flightInputData['fromAirportCode'] }}{{ flightInputData['fromAirportCode'] ? ', ' : '' }}{{ flightInputData['fromAirport'] || flightInputData['fromCity'] }}{{ flightInputData['fromCountry'] ? ', ' + flightInputData['fromCountry'] : '' }}
+            </div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-section city-select" (click)="toggleEditField('to'); $event.stopPropagation()" [class.editing]="editField === 'to'">
+            <div class="summary-label">To</div>
+            <div class="summary-value" *ngIf="editField !== 'to'">{{ flightInputData['toCity'] || flightInputData['toAirport'] }}</div>
+            <div class="input-with-icon" *ngIf="editField === 'to'" (click)="$event.stopPropagation()">
+              <i class="fas fa-location-dot input-icon"></i>
+              <input type="text" 
+                class="summary-input city-input"
+                formControlName="to"
+                placeholder="Type city or airport"
+                (focus)="showCitySuggestionsOnFocus('summary-to')"
+                (input)="showCitySuggestions($any($event.target).value, 'summary-to'); $event.stopPropagation(); $event.preventDefault()"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+                (blur)="closeCitySuggestions('summary-to')"
+                autofocus />
+            </div>
+            <div class="city-suggestions"
+              [class.active]="activeSuggestions['summary-to'] && activeSuggestions['summary-to'].length > 0"
+              *ngIf="editField === 'to'">
+              <ng-container *ngIf="isCityArray(activeSuggestions['summary-to'])">
+                <div *ngFor="let city of activeSuggestions['summary-to']"
+                  class="city-suggestion"
+                  (click)="selectCity(city.name, city.code, 'summary-to')">
+                  <i class="fas fa-plane city-suggestion-icon"></i>
+                  <div class="city-suggestion-content">
+                    <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
+                    <div class="city-suggestion-airport-name">{{city.airport || city.name}}</div>
+                  </div>
+                  <span class="city-suggestion-code">[ {{city.code}} ]</span>
+                </div>
+              </ng-container>
+            </div>
+            <div class="summary-detail" *ngIf="editField !== 'to'">
+              {{ flightInputData['toAirportCode'] }}{{ flightInputData['toAirportCode'] ? ', ' : '' }}{{ flightInputData['toAirport'] || flightInputData['toCity'] }}{{ flightInputData['toCountry'] ? ', ' + flightInputData['toCountry'] : '' }}
+            </div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-section date-select" (click)="toggleEditField('departure'); $event.stopPropagation()" [class.editing]="editField === 'departure'">
+            <div class="summary-label">Departure</div>
+            <div class="summary-value" *ngIf="editField !== 'departure'">{{ flightInputData['departureDate'] | date : "dd MMM'yy" }}</div>
+            <div *ngIf="editField === 'departure'" (click)="$event.stopPropagation()">
+              <app-custom-calendar
+                [selectedDate]="modifySearchForm.get('departureDate')?.value"
+                [minDate]="getTodayDate()"
+                placeholder="Select Departure Date"
+                (dateSelected)="onModifyDepartureDateSelected($event); editField = null"
+                (calendarOpened)="onCalendarOpened()"
+                (calendarClosed)="onCalendarClosed(); editField = null">
+              </app-custom-calendar>
+            </div>
+            <div class="summary-detail" *ngIf="editField !== 'departure'">{{ flightInputData['departureDate'] | date : "EEEE" }}</div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-section travelers-dropdown" (click)="toggleEditField('travellers'); $event.stopPropagation()" [class.editing]="editField === 'travellers'">
+            <div class="summary-label">Travellers & Class</div>
+            <div class="summary-value" *ngIf="editField !== 'travellers'">{{ getTravelersText() }}</div>
+            <div class="summary-detail" *ngIf="editField !== 'travellers'">{{ modifySearchForm.get('travelClass')?.value || 'Economy' }}</div>
+            <div *ngIf="editField === 'travellers'" (click)="$event.stopPropagation()">
+              <button class="travelers-btn" (click)="toggleTravelersPanel(); $event.stopPropagation()">
+                <span>{{ getTravelersText() }}</span>
+              </button>
+              <div class="travelers-panel" [class.active]="isTravelersOpen">
+                <h3>Travellers</h3>
+                <div class="traveler-row">
+                  <div class="traveler-info">
+                    <h4>Adults</h4>
+                    <p>12 yrs or above</p>
+                  </div>
+                  <div class="counter">
+                    <button class="counter-btn" [disabled]="!canDecrease('adults')"
+                      [class.active]="counts.adults > 1"
+                      (click)="updateCount('adults', -1)">-</button>
+                    <span class="counter-value">{{counts.adults}}</span>
+                    <button class="counter-btn"
+                      (click)="updateCount('adults', 1)">+</button>
+                  </div>
+                </div>
+                <div class="traveler-row">
+                  <div class="traveler-info">
+                    <h4>Children</h4>
+                    <p>2 - 12 yrs</p>
+                  </div>
+                  <div class="counter">
+                    <button class="counter-btn" [disabled]="!canDecrease('children')"
+                      [class.active]="counts.children > 0"
+                      (click)="updateCount('children', -1)">-</button>
+                    <span class="counter-value">{{counts.children}}</span>
+                    <button class="counter-btn"
+                      (click)="updateCount('children', 1)">+</button>
+                  </div>
+                </div>
+                <div class="traveler-row">
+                  <div class="traveler-info">
+                    <h4>Infants</h4>
+                    <p>0 - 2 yrs</p>
+                  </div>
+                  <div class="counter">
+                    <button class="counter-btn" [disabled]="!canDecrease('infants')"
+                      [class.active]="counts.infants > 0"
+                      (click)="updateCount('infants', -1)">-</button>
+                    <span class="counter-value">{{counts.infants}}</span>
+                    <button class="counter-btn"
+                      (click)="updateCount('infants', 1)">+</button>
+                  </div>
+                </div>
+                <div class="class-selection">
+                  <h3>Class</h3>
+                  <div class="class-options">
+                    <button class="class-option"
+                      [class.active]="selectedClass === 'economy'"
+                      (click)="updateClass('economy')">Economy</button>
+                    <button class="class-option"
+                      [class.active]="selectedClass === 'business'"
+                      (click)="updateClass('business')">Business</button>
+                    <button class="class-option"
+                      [class.active]="selectedClass === 'first'"
+                      (click)="updateClass('first')">First</button>
+                  </div>
+                </div>
+                <div class="panel-actions">
+                  <button class="done-btn" (click)="closeTravelersPanel()">Done</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-section summary-actions">
+            <button class="modify-search-btn" (click)="onModifySearch(); $event.stopPropagation()" title="Modify Search">
+              MODIFY SEARCH
+              <i class="fas fa-search"></i>
             </button>
           </div>
         </div>

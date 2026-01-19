@@ -2545,6 +2545,34 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return baggageArray;
   }
 
+  getTotalTravellers(): number {
+    return this.totalAdults + this.totalChildren + this.totalInfants;
+  }
+
+  getCabinClass(): string {
+    // Try to get cabin class from flight segments
+    if (this.flightSegments && this.flightSegments.length > 0) {
+      const fareTag = this.flightSegments[0]?.fareTag;
+      if (fareTag) {
+        // Map common fare tags to cabin classes
+        const fareTagUpper = fareTag.toUpperCase();
+        if (fareTagUpper.includes('BUSINESS') || fareTagUpper.includes('J') || fareTagUpper.includes('C')) {
+          return 'Business';
+        } else if (fareTagUpper.includes('PREMIUM') || fareTagUpper.includes('W')) {
+          return 'Premium Economy';
+        } else if (fareTagUpper.includes('FIRST') || fareTagUpper.includes('F')) {
+          return 'First';
+        }
+      }
+    }
+    return 'Economy';
+  }
+
+  modifySearch(): void {
+    // Navigate back to flight search page
+    this.router.navigate(['/flight']);
+  }
+
   getCompletedCount(passengers: any[]): number {
     if (!passengers || passengers.length === 0) return 0;
     return passengers.filter(p => p.firstName && p.firstName.trim() !== '').length;

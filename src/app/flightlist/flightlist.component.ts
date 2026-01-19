@@ -58,6 +58,32 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   isHeaderSticky: boolean = false;
   showModifyForm: boolean = false;
+  editField: 'from' | 'to' | 'departure' | 'travellers' | null = null;
+  
+  // City suggestions for dropdown
+  activeSuggestions: { [key: string]: any[] } = {};
+
+  // Toggle edit field - ensures modify form doesn't open
+  toggleEditField(field: 'from' | 'to' | 'departure' | 'travellers') {
+    // Close modify form if it's open (only for desktop inline editing)
+    // This ensures clicking summary sections doesn't open the modify form
+    this.showModifyForm = false;
+    // Toggle the edit field
+    this.editField = this.editField === field ? null : field;
+    // If opening travelers, also open the panel
+    if (this.editField === 'travellers' && !this.isTravelersOpen) {
+      this.isTravelersOpen = true;
+    } else if (this.editField !== 'travellers') {
+      this.isTravelersOpen = false;
+    }
+  }
+  isTravelersOpen: boolean = false;
+  selectedClass: string = 'economy';
+  counts = {
+    adults: 1,
+    children: 0,
+    infants: 0
+  };
 
   flights: any[] = [];
   finalFinalList: any = [];
@@ -508,14 +534,35 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           departureDate: this.flightInputData['departureDate']
         });
 
+        const adults = this.flightInputData['adults'] || 1;
+        const children = this.flightInputData['children'] || 0;
+        const infants = this.flightInputData['infants'] || 0;
+        
+        // Initialize counts object
+        this.counts = {
+          adults: adults,
+          children: children,
+          infants: infants
+        };
+        
+        // Sync with existing variables
+        this.adults = adults;
+        this.children = children;
+        this.infants = infants;
+        
+        // Initialize selected class
+        if (travelClass) {
+          this.selectedClass = travelClass.toLowerCase();
+        }
+
         this.modifySearchForm.patchValue({
           from: this.flightInputData['fromAirportCode'] || '',
           to: this.flightInputData['toAirportCode'] || '',
           departureDate: this.flightInputData['departureDate'] || '',
           returnDate: this.flightInputData['returnDate'] || '',
-          adults: this.flightInputData['adults'] || 1,
-          children: this.flightInputData['children'] || 0,
-          infants: this.flightInputData['infants'] || 0,
+          adults: adults,
+          children: children,
+          infants: infants,
           travelClass: travelClass
         });
 
@@ -3208,9 +3255,28 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   updateTotalPassengers(): void {
-    const form = this.modifySearchForm.value;
-    const total = +form.adults + +form.children + +form.infants;
-    this.totalPassengers = total;
+    // Use counts if available, otherwise use form values
+    if (this.counts && this.counts.adults !== undefined) {
+      const total = this.counts.adults + this.counts.children + this.counts.infants;
+      this.totalPassengers = total;
+      // Sync form values
+      this.modifySearchForm.patchValue({
+        adults: this.counts.adults,
+        children: this.counts.children,
+        infants: this.counts.infants
+      });
+    } else {
+      const form = this.modifySearchForm.value;
+      const total = +form.adults + +form.children + +form.infants;
+      this.totalPassengers = total;
+      // Sync counts
+      if (!this.counts) {
+        this.counts = { adults: 1, children: 0, infants: 0 };
+      }
+      this.counts.adults = form.adults || 1;
+      this.counts.children = form.children || 0;
+      this.counts.infants = form.infants || 0;
+    }
   }
 
   closePassengerDropdown(): void {
@@ -4027,6 +4093,141 @@ getMultiCityRouteDestination(index: number): string {
     } else {
       return `+${diffDays} days`;
     }
+  }
+
+  // City Suggestions Methods (like homepage)
+  showCitySuggestions(query: string, target: string) {
+    if (!query || !query.trim()) {
+      this.activeSuggestions[target] = [];
+      return;
+    }
+
+    const filtered = this.flightAirports.filter(city =>
+      city.name.toLowerCase().includes(query.toLowerCase()) ||
+      city.code.toLowerCase().includes(query.toLowerCase())
+    );
+
+    // Exclude the city selected in the other field
+    if (target === 'summary-from' && this.modifySearchForm.get('to')?.value) {
+      const toValue = this.modifySearchForm.get('to')?.value.toLowerCase();
+      this.activeSuggestions[target] = filtered.filter(city =>
+        city.name.toLowerCase() !== toValue && city.code.toLowerCase() !== toValue
+      );
+    } else if (target === 'summary-to' && this.modifySearchForm.get('from')?.value) {
+      const fromValue = this.modifySearchForm.get('from')?.value.toLowerCase();
+      this.activeSuggestions[target] = filtered.filter(city =>
+        city.name.toLowerCase() !== fromValue && city.code.toLowerCase() !== fromValue
+      );
+    } else {
+      this.activeSuggestions[target] = filtered;
+    }
+  }
+
+  showCitySuggestionsOnFocus(target: string) {
+    // Show all airports on focus
+    this.activeSuggestions[target] = this.flightAirports.slice(0, 10);
+  }
+
+  selectCity(cityName: string, cityCode: string, target: string) {
+    if (target === 'summary-from') {
+      this.modifySearchForm.patchValue({ from: cityCode });
+      this.flightInputData['fromCity'] = cityName;
+      this.flightInputData['fromAirportCode'] = cityCode;
+      // Find airport details
+      const airport = this.flightAirports.find(a => a.code === cityCode);
+      if (airport) {
+        this.flightInputData['fromAirport'] = airport.airport || cityName;
+        this.flightInputData['fromCountry'] = airport.country || airport.state || '';
+      }
+    } else if (target === 'summary-to') {
+      this.modifySearchForm.patchValue({ to: cityCode });
+      this.flightInputData['toCity'] = cityName;
+      this.flightInputData['toAirportCode'] = cityCode;
+      // Find airport details
+      const airport = this.flightAirports.find(a => a.code === cityCode);
+      if (airport) {
+        this.flightInputData['toAirport'] = airport.airport || cityName;
+        this.flightInputData['toCountry'] = airport.country || airport.state || '';
+      }
+    }
+    this.activeSuggestions[target] = [];
+    this.editField = null;
+    // Don't auto-search, let user click modify search button
+  }
+
+  isCityArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  closeCitySuggestions(target: string) {
+    setTimeout(() => {
+      this.activeSuggestions[target] = [];
+    }, 200);
+  }
+
+  // Travelers Panel Methods (like homepage)
+  toggleTravelersPanel() {
+    this.isTravelersOpen = !this.isTravelersOpen;
+  }
+
+  closeTravelersPanel() {
+    this.isTravelersOpen = false;
+    this.editField = null;
+    this.updateTotalPassengers();
+    this.onModifySearch();
+  }
+
+  canDecrease(type: 'adults' | 'children' | 'infants'): boolean {
+    if (!this.counts || this.counts.adults === undefined) {
+      // Fallback to form values
+      const form = this.modifySearchForm.value;
+      if (type === 'adults') {
+        return (form.adults || 1) > 1;
+      }
+      return (form[type] || 0) > 0;
+    }
+    if (type === 'adults') {
+      return this.counts.adults > 1;
+    }
+    return this.counts[type] > 0;
+  }
+
+  updateCount(type: 'adults' | 'children' | 'infants', delta: number) {
+    if (!this.counts || this.counts.adults === undefined) {
+      // Initialize counts from form
+      const form = this.modifySearchForm.value;
+      this.counts = {
+        adults: form.adults || 1,
+        children: form.children || 0,
+        infants: form.infants || 0
+      };
+    }
+    
+    if (delta < 0 && !this.canDecrease(type)) {
+      return;
+    }
+    this.counts[type] = Math.max(0, this.counts[type] + delta);
+    if (type === 'adults' && this.counts.adults < 1) {
+      this.counts.adults = 1;
+    }
+    // Sync with existing variables
+    this.adults = this.counts.adults;
+    this.children = this.counts.children;
+    this.infants = this.counts.infants;
+    this.updateTotalPassengers();
+  }
+
+  getTravelersText(): string {
+    if (this.counts && this.counts.adults !== undefined) {
+      const total = this.counts.adults + this.counts.children + this.counts.infants;
+      return `${total} ${total > 1 ? 'Travellers' : 'Traveller'}`;
+    }
+    return `${this.totalPassengers} ${this.totalPassengers > 1 ? 'Travellers' : 'Traveller'}`;
+  }
+
+  updateClass(classType: string) {
+    this.selectedClass = classType;
+    this.modifySearchForm.patchValue({ travelClass: classType.charAt(0).toUpperCase() + classType.slice(1) });
   }
 
   getGroupDuration(segments: any[]): string {
