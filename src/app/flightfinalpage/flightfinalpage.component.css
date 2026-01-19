@@ -2062,7 +2062,8 @@ body {
     .header,
     .flight-details,
     .airline-info,
-    .flight-timeline {
+    .flight-timeline,
+    .cancellation-policy-section {
       display: none !important;
     }
 
@@ -2070,6 +2071,22 @@ body {
       padding: 16px !important;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Mobile Baggage Section Styling */
+    .mobile-baggage-section {
+      margin-top: 16px;
+    }
+
+    .mobile-baggage-section .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+    }
+
+    .mobile-baggage-item strong {
+      font-weight: 700;
     }
   }
 
@@ -2824,8 +2841,7 @@ body {
   }
 
   .mobile-baggage-item .baggage-icon {
-    color: #f59e0b;
-    font-size: 16px;
+    font-size: 20px;
     margin-top: 2px;
     flex-shrink: 0;
   }
@@ -2835,7 +2851,7 @@ body {
   }
 
   .mobile-add-baggage {
-    background: #eff6ff;
+    background: #e3f2fd;
     border-radius: 8px;
     padding: 12px;
     display: flex;
@@ -2850,8 +2866,7 @@ body {
   }
 
   .mobile-add-baggage-content .add-baggage-icon {
-    color: #dc2626;
-    font-size: 16px;
+    font-size: 20px;
     margin-top: 2px;
     flex-shrink: 0;
   }
@@ -2864,25 +2879,27 @@ body {
 
   .mobile-add-baggage-btn {
     width: 100%;
-    background: #000;
-    color: white;
+    background: white;
+    color: #0066cc;
     border: none;
     border-radius: 6px;
-    padding: 10px 16px;
+    padding: 12px 16px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
   .mobile-add-baggage-btn:hover {
-    background: #1d4ed8;
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .mobile-add-baggage-btn:active {
-    background: #1e40af;
+    transform: translateY(0);
   }
 
   /* Baggage Row - Better layout */

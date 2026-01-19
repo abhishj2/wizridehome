@@ -134,6 +134,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   datePrices: { date: string; price: number; isLowest: boolean }[] = [];
   highlightedDate: any = '';
   initialScrollIndex: number = -1;
+  canScrollLeft: boolean = false;
+  canScrollRight: boolean = true;
 
   @ViewChild('fareScrollContainer') fareScrollContainer!: ElementRef;
   showFareModal = false;
@@ -1387,6 +1389,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         }
         // Scroll to top on mobile when page loads
         this.scrollToTopOnMobile();
+        // Initialize date slider arrows
+        setTimeout(() => this.updateDateSliderArrows(), 300);
       });
     }
   }
@@ -1595,6 +1599,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       if (this.isBrowser) {
         this.ngZone.onStable.pipe(take(1)).subscribe(() => {
           this.centerScrollToIndex(selectedIndex);
+          setTimeout(() => this.updateDateSliderArrows(), 300);
         });
       }
       return;
@@ -1614,6 +1619,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     if (this.isBrowser) {
       this.ngZone.onStable.pipe(take(1)).subscribe(() => {
         this.centerScrollToIndex(nearestIndex);
+        setTimeout(() => this.updateDateSliderArrows(), 300);
       });
     }
   }
@@ -1652,6 +1658,72 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         });
       }
     }, 200);
+  }
+
+  // Date slider arrow navigation methods
+  scrollDateSlider(direction: 'left' | 'right'): void {
+    if (!this.isBrowser || !this.scrollContainer) return;
+    
+    const container = this.scrollContainer.nativeElement as HTMLElement;
+    if (!container) return;
+
+    const scrollAmount = 300; // Scroll by 300px per click
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+
+    if (direction === 'left') {
+      container.scrollTo({
+        left: Math.max(0, currentScroll - scrollAmount),
+        behavior: 'smooth'
+      });
+    } else {
+      container.scrollTo({
+        left: Math.min(maxScroll, currentScroll + scrollAmount),
+        behavior: 'smooth'
+      });
+    }
+
+    // Update arrow visibility after scroll
+    setTimeout(() => this.updateDateSliderArrows(), 100);
+  }
+
+  onDateSliderScroll(): void {
+    this.updateDateSliderArrows();
+  }
+
+  updateDateSliderArrows(): void {
+    if (!this.isBrowser || !this.scrollContainer) {
+      this.canScrollLeft = false;
+      this.canScrollRight = false;
+      return;
+    }
+
+    const container = this.scrollContainer.nativeElement as HTMLElement;
+    if (!container) {
+      this.canScrollLeft = false;
+      this.canScrollRight = false;
+      return;
+    }
+
+    const scrollLeft = container.scrollLeft;
+    const scrollWidth = container.scrollWidth;
+    const clientWidth = container.clientWidth;
+    const maxScroll = scrollWidth - clientWidth;
+
+    // Show left arrow if not at the start
+    this.canScrollLeft = scrollLeft > 10; // 10px threshold for smooth UX
+
+    // Show right arrow if not at the end
+    this.canScrollRight = scrollLeft < maxScroll - 10; // 10px threshold for smooth UX
+
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    if (this.isBrowser) {
+      setTimeout(() => this.updateDateSliderArrows(), 100);
+    }
   }
 
   // Flight grouping and filtering methods

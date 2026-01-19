@@ -484,7 +484,15 @@
         <!-- Date Slider spanning sidebar and results -->
         <div class="date-slider-bar" *ngIf="flightType === 'oneway'">
           <div class="date-slider-wrapper">
-            <div class="date-slider-scroll-wrapper" #scrollContainer>
+            <!-- Left Arrow Button (Desktop Only) -->
+            <button class="date-slider-arrow date-slider-arrow-left" 
+                    *ngIf="canScrollLeft"
+                    (click)="scrollDateSlider('left')"
+                    aria-label="Scroll left">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="date-slider-scroll-wrapper" #scrollContainer (scroll)="onDateSliderScroll()">
               <div class="date-slider-container">
                 <div class="date-card" *ngFor="let item of datePrices; let i = index"
                   [class.selected]="item.date === highlightedDate" [class.no-price]="item.price === 0 || !item.price"
@@ -498,6 +506,14 @@
                 </div>
               </div>
             </div>
+            
+            <!-- Right Arrow Button (Desktop Only) -->
+            <button class="date-slider-arrow date-slider-arrow-right" 
+                    *ngIf="canScrollRight"
+                    (click)="scrollDateSlider('right')"
+                    aria-label="Scroll right">
+              <i class="fas fa-chevron-right"></i>
+            </button>
           </div>
         </div>
 

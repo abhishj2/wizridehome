@@ -1631,6 +1631,51 @@ img {
   align-items: center;
   gap: 12px;
   width: 100%;
+  position: relative;
+}
+
+/* Arrow Navigation Buttons (Desktop Only) */
+.date-slider-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e5e5e5;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date-slider-arrow:hover {
+  background: #f8f9fa;
+  border-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 139, 139, 0.2);
+  transform: scale(1.05);
+}
+
+.date-slider-arrow:active {
+  transform: scale(0.95);
+}
+
+.date-slider-arrow i {
+  color: #000;
+  font-size: 16px;
+}
+
+.date-slider-arrow:hover i {
+  color: #006666;
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+  .date-slider-arrow {
+    display: none !important;
+  }
 }
 
 .date-slider-scroll-wrapper {
@@ -1638,26 +1683,46 @@ img {
   overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: #000 #f0f0f0;
+  position: relative;
 }
 
-.date-slider-scroll-wrapper::-webkit-scrollbar {
-  height: 6px;
+/* Hide scrollbar on desktop, show on mobile */
+@media (min-width: 769px) {
+  .date-slider-scroll-wrapper {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .date-slider-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
-.date-slider-scroll-wrapper::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 3px;
-}
+/* Show scrollbar on mobile */
+@media (max-width: 768px) {
+  .date-slider-scroll-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #008b8b #f0f0f0;
+  }
 
-.date-slider-scroll-wrapper::-webkit-scrollbar-thumb {
-  background: #008b8b;
-  border-radius: 3px;
-}
+  .date-slider-scroll-wrapper::-webkit-scrollbar {
+    height: 6px;
+    display: block;
+  }
 
-.date-slider-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #006666;
+  .date-slider-scroll-wrapper::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+  }
+
+  .date-slider-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #008b8b;
+    border-radius: 3px;
+  }
+
+  .date-slider-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #006666;
+  }
 }
 
 .date-slider-container {

@@ -611,6 +611,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             duration: this.formatDuration(durationMins),
             cabinBaggage: seg.CabinBaggage,
             checkInBaggage: seg.Baggage,
+            cabin: seg.CabinBaggage || '7 KG',
+            checkIn: seg.Baggage || '15 Kilograms (1 piece only)',
             fareTag: seg.SupplierFareClass,
             layover: null,
             originCode: origin.AirportCode,
@@ -696,6 +698,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             duration: this.formatDuration(durationMins),
             cabinBaggage: seg.CabinBaggage,
             checkInBaggage: seg.Baggage,
+            cabin: seg.CabinBaggage || '7 KG',
+            checkIn: seg.Baggage || '15 Kilograms (1 piece only)',
             fareTag: seg.SupplierFareClass,
             layover: null,
             originCode: origin.AirportCode,
@@ -792,6 +796,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         toAirport: destCity,
         cabinBaggage: 'N/A',
         checkInBaggage: 'N/A',
+        cabin: '7 KG',
+        checkIn: '15 Kilograms (1 piece only)',
         isPlaceholder: true
       }];
       
