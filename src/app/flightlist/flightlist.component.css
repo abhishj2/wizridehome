@@ -645,6 +645,7 @@ img {
     border-radius: 0 0 12px 12px;
     max-height: 300px;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 999999999 !important;
     display: block;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
@@ -654,6 +655,13 @@ img {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease-out;
+    /* Hide scrollbar but keep scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .city-suggestions::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 
   .city-suggestions.active {
@@ -769,8 +777,8 @@ img {
     border-radius: 15px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
     z-index: 999999999 !important;
-    padding: 28px;
-    margin-top: 10px;
+    padding: 16px 20px;
+    margin-top: 8px;
     display: none;
     min-width: 380px;
     max-width: 420px;
@@ -785,7 +793,8 @@ img {
   .travelers-panel h3 {
     color: #212529;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    margin-top: 0;
     font-size: clamp(1rem, 2vw, 1.2rem);
   }
 
@@ -793,7 +802,7 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #f8f9fa;
   }
 
@@ -804,13 +813,15 @@ img {
   .traveler-info h4 {
     color: #212529;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    margin-top: 0;
     font-size: 14px;
   }
 
   .traveler-info p {
     color: #474747;
     font-size: 12px;
+    margin: 0;
   }
 
   .counter {
@@ -860,8 +871,8 @@ img {
   }
 
   .class-selection {
-    margin-top: 28px;
-    padding-top: 28px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid #f8f9fa;
   }
 
@@ -869,7 +880,8 @@ img {
     font-size: 14px;
     font-weight: 600;
     color: #212529;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    margin-top: 0;
   }
 
   .class-options {
@@ -905,6 +917,8 @@ img {
 
   .panel-actions {
     display: flex;
+    margin-top: 12px;
+    padding-top: 0;
     justify-content: flex-end;
     margin-top: 28px;
   }
