@@ -962,26 +962,40 @@
       <!-- Multi-City Routes Inline Form -->
       <ng-container *ngIf="tripType === 'multi-city'">
         <div *ngFor="let route of flightRoutes; let i = index" style="margin-bottom: 16px; position: relative;">
-          <div class="wr-grid-2" style="grid-template-columns: 1fr 1fr;">
-            <div class="wr-grid-2-col">
-              <div class="wr-field-label">From City</div>
-              <div class="wr-field-pill" (click)="openMobileMultiCityLocationPopup('from', i)">
-                <span *ngIf="route.from">{{ getCityCodeFromDisplay(route.from) }} - {{ getCityNameFromDisplay(route.from) }}</span>
-                <span *ngIf="!route.from" style="color: #9ca3af;">Select city</span>
-              </div>
+          <div class="wr-route-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-weight: 600; color: #1f2937; font-size: 14px;">Route {{ i + 1 }}</span>
+            <button
+              *ngIf="flightRoutes.length > 1"
+              style="background: transparent; border: none; font-size: 18px; color: #ef4444; padding: 4px 8px; cursor: pointer;"
+              (click)="removeFlightRoute(i); $event.stopPropagation()"
+              type="button"
+              aria-label="Remove this route">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          
+          <div class="wr-route-row" style="margin-bottom: 12px;">
+            <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('from', i)">
+              <div class="wr-field-label wr-field-label-left-pad">From</div>
+              <ng-container *ngIf="route.from">
+                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.from) }}</div>
+                <div class="wr-route-code">{{ getCityNameFromDisplay(route.from) }}</div>
+              </ng-container>
+              <div class="wr-route-code" *ngIf="!route.from" style="color: #374151;">Select city</div>
             </div>
 
-            <div class="wr-grid-2-col">
-              <div class="wr-field-label">To City</div>
-              <div class="wr-field-pill" (click)="openMobileMultiCityLocationPopup('to', i)">
-                <span *ngIf="route.to">{{ getCityCodeFromDisplay(route.to) }} - {{ getCityNameFromDisplay(route.to) }}</span>
-                <span *ngIf="!route.to" style="color: #9ca3af;">Select city</span>
-              </div>
+            <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('to', i)">
+              <div class="wr-field-label wr-field-label-left-pad">To</div>
+              <ng-container *ngIf="route.to">
+                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.to) }}</div>
+                <div class="wr-route-code">{{ getCityNameFromDisplay(route.to) }}</div>
+              </ng-container>
+              <div class="wr-route-code" *ngIf="!route.to" style="color: #374151;">Select city</div>
             </div>
           </div>
 
           <div class="wr-field-block" style="margin-top: 12px; margin-bottom: 0;">
-            <div class="wr-field-label">Date</div>
+            <div class="wr-field-label">Departure Date</div>
             <div class="wr-field-pill" (click)="openMobileMultiCityDatePicker(i)">
               <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <circle cx="12" cy="12" r="7"></circle>
@@ -991,15 +1005,6 @@
               <span *ngIf="!route.date" style="color: #9ca3af;">Select date</span>
             </div>
           </div>
-
-          <button
-            *ngIf="flightRoutes.length > 1"
-            style="position: absolute; top: 0; right: 0; background: transparent; border: none; font-size: 18px; color: #666; padding: 4px 8px; cursor: pointer;"
-            (click)="removeFlightRoute(i); $event.stopPropagation()"
-            type="button"
-            aria-label="Remove this route">
-            ✕
-          </button>
         </div>
 
         <div class="wr-field-block" style="margin-top: 8px;">
@@ -2091,68 +2096,6 @@
     </div>
 </div>
 
-<!-- Mobile Multi-City Routes Modal -->
-<div class="mobile-multicity-overlay" [class.active]="showMobileMultiCityModal" (click)="closeMobileMultiCityModal()">
-    <div class="mobile-multicity-modal" (click)="$event.stopPropagation()">
-        <div class="mobile-multicity-header">
-            <button class="mobile-multicity-back" (click)="closeMobileMultiCityModal()" aria-label="Multi-City Routes Back">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <h3>Multi-City Routes</h3>
-            <button class="mobile-multicity-close" aria-label="Close Multi-City Routes" (click)="closeMobileMultiCityModal()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="mobile-multicity-content">
-            <div class="mobile-multicity-route" *ngFor="let route of flightRoutes; let i = index">
-                <div class="mobile-route-header">
-                    <span class="mobile-route-number">Route {{ i + 1 }}</span>
-                    <button class="mobile-remove-route-btn" 
-                            (click)="removeFlightRoute(i)"
-                            [disabled]="flightRoutes.length <= 1"
-                            *ngIf="flightRoutes.length > 1"
-                            aria-label="Remove this route">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-
-                <div class="mobile-route-fields">
-                    <div class="mobile-route-field" (click)="openMobileMultiCityLocationPopup('from', i)">
-                        <div class="mobile-route-label">From</div>
-                        <div class="mobile-route-value">
-                            <span *ngIf="route.from" class="mobile-route-code">{{ getCityCodeFromDisplay(route.from) }}</span>
-                            <span *ngIf="route.from" class="mobile-route-city-name">{{ getCityNameFromDisplay(route.from) }}</span>
-                            <span *ngIf="!route.from" class="mobile-route-placeholder">Select city</span>
-                        </div>
-                    </div>
-
-                    <div class="mobile-route-field" (click)="openMobileMultiCityLocationPopup('to', i)">
-                        <div class="mobile-route-label">To</div>
-                        <div class="mobile-route-value">
-                            <span *ngIf="route.to" class="mobile-route-code">{{ getCityCodeFromDisplay(route.to) }}</span>
-                            <span *ngIf="route.to" class="mobile-route-city-name">{{ getCityNameFromDisplay(route.to) }}</span>
-                            <span *ngIf="!route.to" class="mobile-route-placeholder">Select city</span>
-                        </div>
-                    </div>
-
-                    <div class="mobile-route-field" (click)="openMobileMultiCityDatePicker(i)">
-                        <div class="mobile-route-label">Departure Date</div>
-                        <div class="mobile-route-value">
-                            <span>{{ getMobileDateDisplay(route.date) || 'Select date' }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="mobile-add-route-btn" 
-                    (click)="addFlightRoute()"
-                    [disabled]="flightRoutes.length >= 5">
-                <i class="fas fa-plus"></i> Add  Route
-            </button>
-        </div>
-    </div>
-</div>
 
 <!-- Custom Phone Number Keypad (Mobile Only) -->
 <div class="custom-keypad-overlay" *ngIf="showCustomKeypad && isMobileView()" (click)="closeCustomKeypad()">

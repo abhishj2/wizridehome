@@ -535,23 +535,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       actualTarget = 'flight-from-0';
     } else if (this.mobilePopupTarget === 'mobile-flight-to') {
       actualTarget = 'flight-to-0';
-    } else if (this.mobilePopupTarget && this.mobilePopupTarget.startsWith('flight-')) {
+    } else if (this.mobilePopupTarget && (this.mobilePopupTarget.startsWith('mobile-flight-from-') || this.mobilePopupTarget.startsWith('mobile-flight-to-'))) {
       // Handle multi-city route selection directly
-      actualTarget = this.mobilePopupTarget;
-      const parts = this.mobilePopupTarget.split('-');
-      if (parts.length >= 3) {
-        const field = parts[1]; // 'from' or 'to'
-        const routeIndex = parseInt(parts[2]);
-        if (!isNaN(routeIndex)) {
-          this.selectMultiCity(cityName, cityCode, this.mobilePopupTarget);
-          this.closeMobileLocationPopup();
-          // Re-open multi-city modal after city selection
-          setTimeout(() => {
-            this.showMobileMultiCityModal = true;
-          }, 100);
-          return;
-        }
-      }
+      actualTarget = this.mobilePopupTarget.replace('mobile-', '');
+      this.selectMultiCity(cityName, cityCode, actualTarget);
+      this.closeMobileLocationPopup();
+      return;
     }
     
     if (actualTarget) {
@@ -619,7 +608,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Filter out selected airport from the other field
       if (normalizedTarget.startsWith('flight-from-')) {
-        const selectedTo = this.flightRoutes[0]?.to || this.formValues.flightTo || '';
+        const routeIndex = parseInt(normalizedTarget.replace('flight-from-', ''));
+        const selectedTo = this.flightRoutes[routeIndex]?.to || (routeIndex === 0 ? this.formValues.flightTo : '') || '';
         if (selectedTo) {
           const toCityName = this.extractCityNameFromDisplay(selectedTo);
           allAirports = allAirports.filter(airport =>
@@ -627,7 +617,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           );
         }
       } else if (normalizedTarget.startsWith('flight-to-')) {
-        const selectedFrom = this.flightRoutes[0]?.from || this.formValues.flightFrom || '';
+        const routeIndex = parseInt(normalizedTarget.replace('flight-to-', ''));
+        const selectedFrom = this.flightRoutes[routeIndex]?.from || (routeIndex === 0 ? this.formValues.flightFrom : '') || '';
         if (selectedFrom) {
           const fromCityName = this.extractCityNameFromDisplay(selectedFrom);
           allAirports = allAirports.filter(airport =>
@@ -971,6 +962,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return target;
     }
     
+    // Handle mobile multi-city flight targets (mobile-flight-from-0, mobile-flight-to-1, etc.)
+    if (target.startsWith('mobile-flight-from-') || target.startsWith('mobile-flight-to-')) {
+      return target.replace('mobile-', '');
+    }
+    
     switch (target) {
       case 'mobile-shared-pickup':
         return 'shared-pickup';
@@ -1178,6 +1174,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showMobileMultiCityModal = false;
   }
 
+  openMobileMultiCityLocationPopupDirect(field: 'from' | 'to', routeIndex: number): void {
+    const target = `mobile-flight-${field}-${routeIndex}`;
+    this.mobilePopupTarget = target;
+    this.mobilePopupType = field;
+    this.mobileSearchQuery = '';
+    this.currentMultiCityRouteIndex = routeIndex;
+    this.currentMultiCityField = field;
+    // Use the normalized target (without mobile- prefix) for suggestions
+    const normalizedTarget = target.replace('mobile-', '');
+    this.showCitySuggestionsOnFocus(target);
+    this.showMobileLocationPopup = true;
+  }
+
   openMobileMultiCityLocationPopup(field: 'from' | 'to', routeIndex: number): void {
     this.currentMultiCityRouteIndex = routeIndex;
     this.currentMultiCityField = field;
@@ -1208,6 +1217,33 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   getCityNameFromDisplay(displayValue: string): string {
     if (!displayValue) return '';
     return displayValue.replace(/\s*\([^)]+\)\s*$/, '').trim();
+  }
+
+  getMultiCityCode(displayValue: string): string {
+    if (!displayValue || typeof displayValue !== 'string') return '';
+    // Extract code from format like "CityName (CODE)" or "Guwahati (GAU)"
+    const codeMatch = displayValue.match(/\(([^)]+)\)/);
+    if (codeMatch && codeMatch[1]) {
+      return codeMatch[1].trim();
+    }
+    // If no parentheses, try to extract from format like "CODE - CityName"
+    const dashMatch = displayValue.match(/^([A-Z]{2,4})\s*-\s*/);
+    if (dashMatch && dashMatch[1]) {
+      return dashMatch[1].trim();
+    }
+    return '';
+  }
+
+  getMultiCityName(displayValue: string): string {
+    if (!displayValue || typeof displayValue !== 'string') return '';
+    // Extract city name from format like "CityName (CODE)" or "Guwahati (GAU)"
+    let name = displayValue.replace(/\s*\([^)]+\)\s*$/, '').trim();
+    // If format is "CODE - CityName", extract the city name part
+    const dashMatch = name.match(/^[A-Z]{2,4}\s*-\s*(.+)$/);
+    if (dashMatch && dashMatch[1]) {
+      return dashMatch[1].trim();
+    }
+    return name || '';
   }
 
   closeMobileDatePicker(): void {
