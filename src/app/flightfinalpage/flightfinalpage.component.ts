@@ -1046,6 +1046,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   processBaggage(baggageArray: any, isReturn: boolean) {
     if (!baggageArray || !Array.isArray(baggageArray) || baggageArray.length === 0) {
       isReturn ? (this.baggageOptionsReturn = []) : (this.baggageOptions = []);
+      if (isReturn) {
+        this.extraBaggageAvailableReturn = false;
+      } else {
+        this.extraBaggageAvailable = false;
+      }
       return;
     }
 
@@ -1053,30 +1058,41 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const flatBaggage = Array.isArray(baggageArray[0]) ? baggageArray.flat() : baggageArray;
 
     const mapped = flatBaggage
-      .filter((item: any) => item && item.Price !== undefined)
+      .filter((item: any) => item && item.Price !== undefined && item.Price !== null)
       .map((item: any) => {
-        const weightKey = item.Weight || item.kgs || '0';
+        const weightKey = String(item.Weight || item.kgs || item.Kgs || item.WeightKG || '0');
         const codeKey = item.Code || weightKey;
+        const price = Number(item.Price) || 0;
         
         // Map price to both Code and Weight to prevent look-up failures
-        this.baggagePrices[codeKey] = item.Price;
-        this.baggagePrices[weightKey] = item.Price;
+        this.baggagePrices[codeKey] = price;
+        this.baggagePrices[weightKey] = price;
+        this.baggagePrices[String(weightKey)] = price; // Also store as string key
 
         return {
           kgs: weightKey,
-          price: item.Price,
+          Weight: weightKey, // Add uppercase for compatibility
+          Kgs: weightKey, // Add Kgs for compatibility
+          WeightKG: weightKey, // Add WeightKG for compatibility
+          price: price,
+          Price: price, // Add uppercase for compatibility
           Code: codeKey,
-          Description: item.Description || `${weightKey} kg`
+          Description: item.Description || item.AirlineDescription || `${weightKey} kg`
         };
       });
 
+    console.log(`✅ Processed ${mapped.length} baggage options for ${isReturn ? 'return' : 'onward'}:`, mapped);
+
     if (isReturn) {
       this.baggageOptionsReturn = mapped;
-      this.extraBaggageAvailableReturn = true;
+      this.extraBaggageAvailableReturn = mapped.length > 0;
     } else {
       this.baggageOptions = mapped;
-      this.extraBaggageAvailable = true;
+      this.extraBaggageAvailable = mapped.length > 0;
     }
+    
+    // Trigger change detection to update UI
+    this.cdr.detectChanges();
   }
 
   addBaggage(option: any, isReturn: boolean = false): void {
@@ -1085,7 +1101,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const totalPax = this.totalAdults + this.totalChildren; // Infants usually don't get extra baggage slots in UI logic
 
     if (currentTotal < totalPax) {
-      counts[option.Code] = (counts[option.Code] || 0) + 1;
+      const key = option.Code || option.kgs;
+      counts[key] = (counts[key] || 0) + 1;
+      
+      // Also sync with mobile counts for consistency
+      if (this.tripType === 'oneway') {
+        this.baggageCounts[key] = (this.baggageCounts[key] || 0) + 1;
+      } else {
+        if (isReturn) {
+          this.returnBaggageCounts[key] = (this.returnBaggageCounts[key] || 0) + 1;
+        } else {
+          this.onwardBaggageCounts[key] = (this.onwardBaggageCounts[key] || 0) + 1;
+        }
+      }
+      
       this.updateBaggageTotal(isReturn);
     } else {
       Swal.fire('Limit Reached', 'Cannot add more baggage than passengers', 'warning');
@@ -1094,23 +1123,54 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   removeBaggage(option: any, isReturn: boolean = false): void {
     const counts = isReturn ? this.selectedBaggageCountsReturn : this.selectedBaggageCounts;
-    if (counts[option.Code] > 0) {
-      counts[option.Code]--;
+    const key = option.Code || option.kgs;
+    
+    if (counts[key] > 0) {
+      counts[key]--;
+      
+      // Also sync with mobile counts for consistency
+      if (this.tripType === 'oneway') {
+        if (this.baggageCounts[key] > 0) {
+          this.baggageCounts[key]--;
+        }
+      } else {
+        if (isReturn) {
+          if (this.returnBaggageCounts[key] > 0) {
+            this.returnBaggageCounts[key]--;
+          }
+        } else {
+          if (this.onwardBaggageCounts[key] > 0) {
+            this.onwardBaggageCounts[key]--;
+          }
+        }
+      }
+      
       this.updateBaggageTotal(isReturn);
     }
   }
 
   updateBaggageTotal(isReturn: boolean = false) {
     let total = 0;
-    // Ensure we use the correct counts based on the journey type
-    const counts = isReturn ? this.returnBaggageCounts : this.baggageCounts;
     const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+    
+    // Merge both count systems to get accurate totals
+    let counts: { [key: string]: number } = {};
+    if (this.tripType === 'oneway') {
+      counts = { ...this.baggageCounts, ...this.selectedBaggageCounts };
+    } else {
+      if (isReturn) {
+        counts = { ...this.returnBaggageCounts, ...this.selectedBaggageCountsReturn };
+      } else {
+        counts = { ...this.onwardBaggageCounts, ...this.selectedBaggageCounts };
+      }
+    }
 
     options.forEach(opt => {
       const key = opt.kgs || opt.Code;
-      const count = counts[key] || 0;
-      // Get price from option object (opt.price or opt.Price)
-      const price = opt.price || opt.Price || 0;
+      const codeKey = opt.Code || key;
+      const count = counts[key] || counts[codeKey] || 0;
+      // Get price from option object (opt.price or opt.Price) or from baggagePrices
+      const price = opt.price || opt.Price || this.baggagePrices[key] || this.baggagePrices[codeKey] || 0;
       total += count * price;
     });
 
@@ -2483,51 +2543,74 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private buildBaggageChargesForSummary(isReturn: boolean): any[] {
-    // Match mobile version: use baggageCounts (keyed by weight/kgs) for oneway, or onwardBaggageCounts/returnBaggageCounts for roundtrip
-    const getBaggageCharges = (baggageCounts: { [key: number]: number }) =>
-      Object.entries(baggageCounts)
-        .filter(([_, count]) => count > 0)
-        .map(([kgs, count]) => {
-          // Try both string and number keys for baggagePrices (weightKey is stored as string)
-          const price = this.baggagePrices[kgs] || this.baggagePrices[+kgs] || 0;
-          return {
-            label: `Excess ${kgs}kg : ${count} × ₹${price.toLocaleString()}`,
-            amount: price * count
-          };
-        });
-
+    // Get the appropriate baggage options and counts based on trip type and return flag
+    const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+    let counts: { [key: string]: number } = {};
+    
     if (this.tripType === 'oneway') {
-      return getBaggageCharges(this.baggageCounts);
+      // For oneway, use baggageCounts (from mobile template) or selectedBaggageCounts (from desktop)
+      counts = { ...this.baggageCounts, ...this.selectedBaggageCounts };
     } else {
-      // Round trip: use onwardBaggageCounts or returnBaggageCounts based on isReturn
-      return getBaggageCharges(isReturn ? this.returnBaggageCounts : this.onwardBaggageCounts);
+      // For roundtrip, use onwardBaggageCounts/returnBaggageCounts or selectedBaggageCounts/selectedBaggageCountsReturn
+      if (isReturn) {
+        counts = { ...this.returnBaggageCounts, ...this.selectedBaggageCountsReturn };
+      } else {
+        counts = { ...this.onwardBaggageCounts, ...this.selectedBaggageCounts };
+      }
     }
+
+    // Build charges array from baggage options and their counts
+    const charges: any[] = [];
+    options.forEach((opt: any) => {
+      const key = opt.kgs || opt.Code;
+      const codeKey = opt.Code || key;
+      const count = counts[key] || counts[codeKey] || 0;
+      
+      if (count > 0) {
+        const price = opt.price || opt.Price || this.baggagePrices[key] || this.baggagePrices[codeKey] || 0;
+        charges.push({
+          label: `Excess ${opt.kgs || opt.Weight || key}kg : ${count} × ₹${price.toLocaleString()}`,
+          amount: price * count
+        });
+      }
+    });
+
+    return charges;
   }
 
   private buildBaggageArray(isReturn: boolean): any[] {
     const baggageArray: any[] = [];
     
-    // Match mobile version: use baggageCounts for oneway, or onwardBaggageCounts/returnBaggageCounts for roundtrip
-    let counts: { [key: number]: number } = {};
+    // Get the appropriate baggage options and counts based on trip type and return flag
     const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
+    let counts: { [key: string]: number } = {};
     
     if (this.tripType === 'oneway') {
-      counts = this.baggageCounts;
+      // For oneway, merge baggageCounts (from mobile template) and selectedBaggageCounts (from desktop)
+      counts = { ...this.baggageCounts, ...this.selectedBaggageCounts };
     } else {
-      counts = isReturn ? this.returnBaggageCounts : this.onwardBaggageCounts;
+      // For roundtrip, merge appropriate counts
+      if (isReturn) {
+        counts = { ...this.returnBaggageCounts, ...this.selectedBaggageCountsReturn };
+      } else {
+        counts = { ...this.onwardBaggageCounts, ...this.selectedBaggageCounts };
+      }
     }
 
     options.forEach((opt: any) => {
       // Match mobile version: use weight/kgs as key, fallback to Code
       const key = opt.kgs || opt.Code;
-      const count = counts[key] || 0;
+      const codeKey = opt.Code || key;
+      const count = counts[key] || counts[codeKey] || 0;
+      
       for (let i = 0; i < count; i++) {
         baggageArray.push({
           Code: opt.Code,
-          Description: opt.Description,
-          Weight: opt.kgs,
-          WeightKG: opt.kgs, // Add both for compatibility
-          Price: opt.price,
+          Description: opt.Description || `${opt.kgs || opt.Weight || key} kg`,
+          Weight: opt.kgs || opt.Weight || key,
+          WeightKG: opt.kgs || opt.Weight || key, // Add both for compatibility
+          Kgs: opt.kgs || opt.Weight || key, // Add Kgs for compatibility with addon page
+          Price: opt.price || opt.Price || this.baggagePrices[key] || this.baggagePrices[codeKey] || 0,
           Origin: isReturn 
             ? (this.flightSegmentsReturn[0]?.originCode || this.flightSegments[this.flightSegments.length - 1]?.destinationCode)
             : (this.flightSegments[0]?.originCode || ''),
