@@ -422,6 +422,7 @@
           <span class="baggage-icon">💼</span>
           <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> / Adult</span>
         </div>
+        
         <div class="mobile-baggage-item">
           <span class="baggage-icon">🧳</span>
           <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</strong> / Adult</span>
@@ -736,9 +737,9 @@
 
       <!-- Add Baggage CTA - Desktop Only -->
       <div class="makemytrip-add-baggage roundtrip-add-baggage roundtrip-desktop-add-baggage extra-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="add-baggage-left baggage-promo">
-          <span class="promo-icon add-baggage-icon">🎒</span>
-          <span class="add-baggage-text promo-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+        <div class="baggage-banner-text">
+          <span class="baggage-emoji">🎒</span>
+          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
         </div>
         <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
@@ -953,9 +954,9 @@
         </div>
       </div>
       <div class="mobile-add-baggage roundtrip-add-baggage roundtrip-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="mobile-add-baggage-content">
-          <span class="add-baggage-icon">🎒</span>
-          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+        <div class="baggage-banner-text">
+          <span class="baggage-emoji">🎒</span>
+          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
         </div>
         <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
@@ -1276,9 +1277,9 @@
 
     <!-- Add Baggage CTA - Desktop Only (Outside loop - appears once) -->
     <div class="makemytrip-add-baggage multicity-add-baggage multicity-desktop-add-baggage extra-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-      <div class="add-baggage-left baggage-promo">
-        <span class="promo-icon add-baggage-icon">🎒</span>
-        <span class="add-baggage-text promo-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+      <div class="baggage-banner-text">
+        <span class="baggage-emoji">🎒</span>
+        <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
       </div>
       <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
         ADD BAGGAGE
@@ -1531,9 +1532,9 @@
         </div>
       </div>
       <div class="mobile-add-baggage multicity-add-baggage multicity-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="mobile-add-baggage-content">
-          <span class="add-baggage-icon">🎒</span>
-          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+        <div class="baggage-banner-text">
+          <span class="baggage-emoji">🎒</span>
+          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
         </div>
         <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
