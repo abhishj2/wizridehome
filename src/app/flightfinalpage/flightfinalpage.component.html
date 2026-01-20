@@ -1918,12 +1918,14 @@
     </ng-container>
   </div>
   <div class="baggage-footer">
-    <div class="footer-left">
-      <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected</div>
-      <div class="added-to-fare">Added to fare</div>
-      <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
+    <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected</div>
+    <div class="footer-right">
+      <div class="fare-details">
+        <div class="added-to-fare">Added to fare</div>
+        <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
+      </div>
+      <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">DONE</button>
     </div>
-    <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">DONE</button>
   </div>
 </div>
 
@@ -2041,12 +2043,14 @@
     </div>
   </div>
   <div class="baggage-footer">
-    <div class="footer-left">
-      <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s) Selected</div>
-      <div class="added-to-fare">Added to fare</div>
-      <div class="total-price">₹ {{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</div>
+    <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s) Selected</div>
+    <div class="footer-right">
+      <div class="fare-details">
+        <div class="added-to-fare">Added to fare</div>
+        <div class="total-price">₹ {{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</div>
+      </div>
+      <button class="baggage-done-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
     </div>
-    <button class="baggage-done-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
   </div>
 </div>
 

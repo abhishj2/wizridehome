@@ -130,7 +130,7 @@ body {
 
 /* MMT Style - Blue Route Pill */
 .baggage-route-pill {
-  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  background: #000;
   border-radius: 24px;
   padding: 12px 20px;
   margin-bottom: 20px;
@@ -183,6 +183,7 @@ body {
 }
 
 /* Baggage Footer - MMT Style */
+/* MMT-Style Baggage Footer */
 .baggage-footer {
   display: flex;
   align-items: center;
@@ -192,33 +193,41 @@ body {
   border-top: 1px solid #e9ecef;
 }
 
-.baggage-footer .footer-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .baggage-footer .baggage-count {
   font-size: 14px;
   color: #212529;
   font-weight: 600;
+  flex-shrink: 0;
+}
+
+.baggage-footer .footer-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.baggage-footer .fare-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .baggage-footer .added-to-fare {
   font-size: 12px;
   color: #6c757d;
+  text-align: right;
 }
 
 .baggage-footer .total-price {
   font-size: 20px;
   color: #212529;
   font-weight: 700;
-  margin-top: 4px;
+  text-align: right;
 }
 
 .baggage-done-btn {
-  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  background: #000000;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -1135,6 +1144,15 @@ body {
   z-index: 1001;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+  
+  /* Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.trip-popup::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes slideUp {
@@ -1434,6 +1452,15 @@ body {
   z-index: 1001;
   /* Just above navbar (1000) */
   animation: slideUp 0.3s ease;
+  
+  /* Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.baggage-popup::-webkit-scrollbar {
+  display: none;
 }
 
 .baggage-note {
@@ -1653,6 +1680,15 @@ body {
   z-index: 1001;
   /* Just above navbar (1000) */
   animation: slideUp 0.3s ease;
+  
+  /* Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.gst-popup::-webkit-scrollbar {
+  display: none;
 }
 
 .gst-header {
@@ -3261,13 +3297,23 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px;
+    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 85vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Enable scrolling */
+    
+    /* Hide scrollbar but keep scroll functionality */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .trip-popup::-webkit-scrollbar {
+    display: none;
   }
 
   /* Baggage Popup - Center on desktop, improved styling */
@@ -3275,13 +3321,23 @@ body {
     max-width: 600px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px;
+    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 80vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Enable scrolling */
+    
+    /* Hide scrollbar but keep scroll functionality */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .baggage-popup::-webkit-scrollbar {
+    display: none;
   }
 
   /* GST Popup - Center on desktop, improved styling */
@@ -3289,13 +3345,23 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px;
+    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 85vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Enable scrolling */
+    
+    /* Hide scrollbar but keep scroll functionality */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .gst-popup::-webkit-scrollbar {
+    display: none;
   }
 
   /* Trip Popup Header - Enhanced for desktop */
@@ -3910,9 +3976,10 @@ body {
     max-width: 650px;
     width: 90%;
     max-height: 85vh;
-    border-radius: 20px;
+    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
     animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto; /* Enable scrolling */
   }
 
   @keyframes fadeInScale {
@@ -4348,18 +4415,32 @@ body {
     flex-direction: column;
     gap: 16px;
     padding: 20px;
-  }
-
-  .baggage-footer .footer-left {
-    width: 100%;
+    align-items: stretch;
   }
 
   .baggage-footer .baggage-count {
     font-size: 13px;
+    text-align: left;
+  }
+
+  .baggage-footer .footer-right {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .baggage-footer .fare-details {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .baggage-footer .added-to-fare {
+    text-align: left;
   }
 
   .baggage-footer .total-price {
     font-size: 18px;
+    text-align: left;
   }
 
   .baggage-done-btn {
