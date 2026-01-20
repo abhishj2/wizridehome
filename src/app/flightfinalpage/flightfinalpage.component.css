@@ -3691,6 +3691,64 @@ body {
   color: #1f2937;
 }
 
+/* Multi-City Cancellation Tabs */
+.multicity-cancellation-tabs .cancellation-header {
+  margin-bottom: 20px;
+}
+
+.cancellation-tab-headers {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cancellation-tab-headers::-webkit-scrollbar {
+  display: none;
+}
+
+.cancellation-tab-header {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: transparent;
+}
+
+.cancellation-tab-header:hover {
+  color: #008b8b;
+  background: #f8f9fa;
+}
+
+.cancellation-tab-header.active {
+  color: #008b8b;
+  border-bottom-color: #008b8b;
+  background: transparent;
+}
+
+.cancellation-tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .view-policy-link {
   color: #008b8b;
   font-size: 14px;
@@ -3723,6 +3781,25 @@ body {
   background: #1a1a1a;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Cancellation Tabs */
+@media (max-width: 768px) {
+  .multicity-cancellation-tabs {
+    display: none !important;
+  }
+
+  .cancellation-tab-header {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .cancellation-tab-header {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 }
 
 /* Hide MakeMyTrip baggage and cancellation sections on mobile */
