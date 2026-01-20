@@ -553,6 +553,7 @@
 
     <!-- Price Footer -->
     <div class="footer-bar">
+      <!-- Desktop Fare Summary -->
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
         
@@ -618,6 +619,16 @@
           <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
         </div>
       </div>
+
+      <!-- Mobile Price Display (Clickable) -->
+      <div class="mobile-price-bar" (click)="openMobileFareBreakdown()">
+        <div class="mobile-price-info">
+          <span class="mobile-price-label">Total Price</span>
+          <span class="mobile-price-amount">{{ formatCurrency(finalAmount) }}</span>
+        </div>
+        <i class="fas fa-chevron-up"></i>
+      </div>
+
       <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
         Proceed
       </button>
@@ -1199,6 +1210,7 @@
 
     <!-- Price Footer -->
     <div class="footer-bar">
+      <!-- Desktop Fare Summary -->
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
         
@@ -1264,6 +1276,16 @@
           <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
         </div>
       </div>
+
+      <!-- Mobile Price Display (Clickable) -->
+      <div class="mobile-price-bar" (click)="openMobileFareBreakdown()">
+        <div class="mobile-price-info">
+          <span class="mobile-price-label">Total Price</span>
+          <span class="mobile-price-amount">{{ formatCurrency(finalAmount) }}</span>
+        </div>
+        <i class="fas fa-chevron-up"></i>
+      </div>
+
       <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
         Proceed
       </button>
@@ -2463,6 +2485,78 @@
   </div>
 </div>
 
+<!-- Mobile Fare Breakdown Bottom Sheet -->
+<div class="bottom-sheet-overlay" *ngIf="showMobileFareBreakdown" (click)="closeMobileFareBreakdown()"></div>
+<div class="bottom-sheet-modal fare-breakdown-sheet" [class.show]="showMobileFareBreakdown">
+  <div class="bottom-sheet-header">
+    <div class="bottom-sheet-handle"></div>
+    <div class="bottom-sheet-title">Fare Breakdown</div>
+    <button class="bottom-sheet-close" (click)="closeMobileFareBreakdown()">×</button>
+  </div>
+  <div class="bottom-sheet-content">
+    <!-- Base Fare -->
+    <div class="fare-breakdown-item">
+      <div class="fare-breakdown-row main" (click)="toggleBaseFare()">
+        <div class="fare-breakdown-left">
+          <i class="fas" [ngClass]="isBaseFareExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+          <span>Base Fare</span>
+        </div>
+        <span class="fare-breakdown-amount">{{ formatCurrency(totalBaseFare) }}</span>
+      </div>
+      <div class="fare-breakdown-details" [class.expanded]="isBaseFareExpanded">
+        <div class="fare-breakdown-detail" *ngIf="totalAdults > 0">
+          <span>Adult(s) ({{ totalAdults }} X {{ formatCurrency(adultBaseFare) }})</span>
+        </div>
+        <div class="fare-breakdown-detail" *ngIf="totalChildren > 0">
+          <span>Child(ren) ({{ totalChildren }} X {{ formatCurrency(childrenBaseFare) }})</span>
+        </div>
+        <div class="fare-breakdown-detail" *ngIf="totalInfants > 0">
+          <span>Infant(s) ({{ totalInfants }} X {{ formatCurrency(infantBaseFare) }})</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Taxes & Surcharges -->
+    <div class="fare-breakdown-item">
+      <div class="fare-breakdown-row main" (click)="toggleTaxes()">
+        <div class="fare-breakdown-left">
+          <i class="fas" [ngClass]="isTaxesExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+          <span>Taxes and Surcharges</span>
+        </div>
+        <span class="fare-breakdown-amount">{{ formatCurrency(totalTaxes) }}</span>
+      </div>
+      <div class="fare-breakdown-details" [class.expanded]="isTaxesExpanded">
+        <div class="fare-breakdown-detail">
+          <span>Airline Taxes and Surcharges</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other Services (if baggage exists) -->
+    <div class="fare-breakdown-item" *ngIf="baggageTotal + baggageTotalReturn > 0">
+      <div class="fare-breakdown-row main" (click)="toggleBaggage()">
+        <div class="fare-breakdown-left">
+          <i class="fas" [ngClass]="isBaggageExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+          <span>Other Services</span>
+        </div>
+        <span class="fare-breakdown-amount">{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+      </div>
+      <div class="fare-breakdown-details" [class.expanded]="isBaggageExpanded">
+        <div class="fare-breakdown-detail">
+          <span>Extra Baggage</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="fare-breakdown-divider" />
+    
+    <!-- Total Amount -->
+    <div class="fare-breakdown-total">
+      <span class="fare-breakdown-total-label">Total Amount</span>
+      <span class="fare-breakdown-total-value">{{ formatCurrency(finalAmount) }}</span>
+    </div>
+  </div>
+</div>
 
 <app-phone-dialer
 [isVisible]="showPhoneDialer"

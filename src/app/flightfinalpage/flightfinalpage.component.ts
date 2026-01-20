@@ -182,6 +182,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showPolicyModal: boolean = false;
   showGSTModal: boolean = false;
   isGSTExpanded: boolean = false;
+  showMobileFareBreakdown: boolean = false;
   
   // Fare Summary Accordion States
   isBaseFareExpanded: boolean = false;
@@ -1776,6 +1777,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   toggleTaxes() { this.isTaxesExpanded = !this.isTaxesExpanded; }
   toggleOtherServices() { this.isOtherServicesExpanded = !this.isOtherServicesExpanded; }
   toggleBaggage() { this.isBaggageExpanded = !this.isBaggageExpanded; }
+
+  // Mobile Fare Breakdown Modal
+  openMobileFareBreakdown() { this.showMobileFareBreakdown = true; }
+  closeMobileFareBreakdown() { this.showMobileFareBreakdown = false; }
+  
   
   openPassengerModal(type: 'adult' | 'child' | 'infant', index: number) {
     this.currentPassengerType = type;
