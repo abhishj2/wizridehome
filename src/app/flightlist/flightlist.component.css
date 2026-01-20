@@ -1307,7 +1307,7 @@ img {
 
 .time-slot.selected {
   border-color: #008b8b;
-  background: #e0f7f7;
+  background: #f1f9f9;
   color: #008b8b;
 }
 
@@ -1768,7 +1768,7 @@ img {
 
 .date-card.selected {
   border: 1px solid rgba(0, 139, 139, .25) !important;
-   background: radial-gradient(circle at 50% 0%, rgba(0, 139, 139, 0.08), transparent 70%) !important;
+   background: #f1f9f9 !important;
   box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
   transform: translateY(-2px);
 
@@ -5129,7 +5129,7 @@ img {
   .desktop-arrival-section {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     min-width: 110px;
     flex: 0 0 auto;
   }
@@ -5239,7 +5239,7 @@ img {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 6px;
+    gap: 4px;
     min-width: 150px;
     flex-shrink: 0;
   }
