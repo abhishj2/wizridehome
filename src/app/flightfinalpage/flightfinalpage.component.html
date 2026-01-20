@@ -520,19 +520,68 @@
     <div class="footer-bar">
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        <div class="fare-summary-line">
-          <span>Base Fare</span>
-          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        
+        <!-- Base Fare Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleBaseFare()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaseFareExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Base Fare</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalBaseFare) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaseFareExpanded">
+            <div class="fare-accordion-detail" *ngIf="totalAdults > 0">
+              <span>Adult(s) ({{ totalAdults }} X {{ formatCurrency(adultBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalChildren > 0">
+              <span>Child(ren) ({{ totalChildren }} X {{ formatCurrency(childrenBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalInfants > 0">
+              <span>Infant(s) ({{ totalInfants }} X {{ formatCurrency(infantBaseFare) }})</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line">
-          <span>Taxes & Surcharges</span>
-          <span>{{ formatCurrency(totalTaxes) }}</span>
+
+        <!-- Taxes & Surcharges Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleTaxes()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isTaxesExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Taxes and Surcharges</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalTaxes) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isTaxesExpanded">
+            <div class="fare-accordion-detail">
+              <span>Airline Taxes and Surcharges</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
-          <span>Baggage</span>
-          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+
+        <!-- Other Services Accordion (if baggage exists) -->
+        <div class="fare-accordion-item" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <div class="fare-accordion-header" (click)="toggleBaggage()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaggageExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Other Services</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaggageExpanded">
+            <div class="fare-accordion-detail">
+              <span>Extra Baggage</span>
+            </div>
+          </div>
         </div>
+
         <hr class="fare-summary-divider" />
+        
+        <!-- Total Amount -->
+        <div class="fare-total-amount">
+          <span class="fare-total-label">Total Amount</span>
+          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+        </div>
       </div>
       <div class="total"  style="cursor: pointer">
         ₹ Total Price<br />
@@ -1018,19 +1067,68 @@
     <div class="footer-bar">
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        <div class="fare-summary-line">
-          <span>Base Fare</span>
-          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        
+        <!-- Base Fare Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleBaseFare()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaseFareExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Base Fare</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalBaseFare) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaseFareExpanded">
+            <div class="fare-accordion-detail" *ngIf="totalAdults > 0">
+              <span>Adult(s) ({{ totalAdults }} X {{ formatCurrency(adultBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalChildren > 0">
+              <span>Child(ren) ({{ totalChildren }} X {{ formatCurrency(childrenBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalInfants > 0">
+              <span>Infant(s) ({{ totalInfants }} X {{ formatCurrency(infantBaseFare) }})</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line">
-          <span>Taxes & Surcharges</span>
-          <span>{{ formatCurrency(totalTaxes) }}</span>
+
+        <!-- Taxes & Surcharges Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleTaxes()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isTaxesExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Taxes and Surcharges</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalTaxes) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isTaxesExpanded">
+            <div class="fare-accordion-detail">
+              <span>Airline Taxes and Surcharges</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
-          <span>Baggage</span>
-          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+
+        <!-- Other Services Accordion (if baggage exists) -->
+        <div class="fare-accordion-item" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <div class="fare-accordion-header" (click)="toggleBaggage()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaggageExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Other Services</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaggageExpanded">
+            <div class="fare-accordion-detail">
+              <span>Extra Baggage</span>
+            </div>
+          </div>
         </div>
+
         <hr class="fare-summary-divider" />
+        
+        <!-- Total Amount -->
+        <div class="fare-total-amount">
+          <span class="fare-total-label">Total Amount</span>
+          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+        </div>
       </div>
       <div class="total" style="cursor: pointer">
         ₹ Total Price<br />
@@ -1501,19 +1599,68 @@
     <div class="footer-bar">
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        <div class="fare-summary-line">
-          <span>Base Fare</span>
-          <span>{{ formatCurrency(totalBaseFare) }}</span>
+        
+        <!-- Base Fare Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleBaseFare()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaseFareExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Base Fare</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalBaseFare) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaseFareExpanded">
+            <div class="fare-accordion-detail" *ngIf="totalAdults > 0">
+              <span>Adult(s) ({{ totalAdults }} X {{ formatCurrency(adultBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalChildren > 0">
+              <span>Child(ren) ({{ totalChildren }} X {{ formatCurrency(childrenBaseFare) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="totalInfants > 0">
+              <span>Infant(s) ({{ totalInfants }} X {{ formatCurrency(infantBaseFare) }})</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line">
-          <span>Taxes & Surcharges</span>
-          <span>{{ formatCurrency(totalTaxes) }}</span>
+
+        <!-- Taxes & Surcharges Accordion -->
+        <div class="fare-accordion-item">
+          <div class="fare-accordion-header" (click)="toggleTaxes()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isTaxesExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Taxes and Surcharges</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(totalTaxes) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isTaxesExpanded">
+            <div class="fare-accordion-detail">
+              <span>Airline Taxes and Surcharges</span>
+            </div>
+          </div>
         </div>
-        <div class="fare-summary-line" *ngIf="baggageTotal + baggageTotalReturn > 0">
-          <span>Baggage</span>
-          <span>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+
+        <!-- Other Services Accordion (if baggage exists) -->
+        <div class="fare-accordion-item" *ngIf="baggageTotal + baggageTotalReturn > 0">
+          <div class="fare-accordion-header" (click)="toggleBaggage()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isBaggageExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Other Services</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isBaggageExpanded">
+            <div class="fare-accordion-detail">
+              <span>Extra Baggage</span>
+            </div>
+          </div>
         </div>
+
         <hr class="fare-summary-divider" />
+        
+        <!-- Total Amount -->
+        <div class="fare-total-amount">
+          <span class="fare-total-label">Total Amount</span>
+          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+        </div>
       </div>
       <div class="total" (click)="openFareSummary()" style="cursor: pointer">
         ₹ Total Price<br />

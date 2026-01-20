@@ -182,6 +182,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showAddBaggageModal: boolean = false;
   showPolicyModal: boolean = false;
   showGSTModal: boolean = false;
+  
+  // Fare Summary Accordion States
+  isBaseFareExpanded: boolean = false;
+  isTaxesExpanded: boolean = false;
+  isOtherServicesExpanded: boolean = false;
+  isBaggageExpanded: boolean = false;
   showPassengerModal: boolean = false;
   showFareRules: boolean = false;
   
@@ -1748,6 +1754,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
   closeGSTModal() { this.showGSTModal = false; }
   saveGSTDetails() { this.gstInfo.companyName = this.gstDetails.companyName; this.gstInfo.registrationNo = this.gstDetails.gstNumber; this.contact.hasGST = !!this.gstDetails.companyName; this.closeGSTModal(); }
+  
+  // Fare Summary Accordion Toggle Methods
+  toggleBaseFare() { this.isBaseFareExpanded = !this.isBaseFareExpanded; }
+  toggleTaxes() { this.isTaxesExpanded = !this.isTaxesExpanded; }
+  toggleOtherServices() { this.isOtherServicesExpanded = !this.isOtherServicesExpanded; }
+  toggleBaggage() { this.isBaggageExpanded = !this.isBaggageExpanded; }
   
   openPassengerModal(type: 'adult' | 'child' | 'infant', index: number) {
     this.currentPassengerType = type;

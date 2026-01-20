@@ -2327,7 +2327,7 @@ body {
     .timeline-row {
       display: grid;
       grid-template-columns: auto auto 1fr;
-      gap: clamp(12px, 3vw, 20px);
+      gap: clamp(16px, 4vw, 24px);
       align-items: start;
       position: relative;
       min-height: 60px;
@@ -2357,10 +2357,10 @@ body {
 
     .timeline-connector {
       position: absolute;
-      left: clamp(71px, 15vw, 107px);
+      left: clamp(71px, 15vw, 113px);
       top: clamp(20px, 4vw, 24px);
       width: 2px;
-      height: clamp(45px, 9vw, 56px);
+      height: clamp(45px, 9vw, 82px);
       background: #e5e5e5;
       z-index: 1;
     }
@@ -2380,6 +2380,7 @@ body {
 
     .location-info {
       min-width: 0;
+      padding-left: 8px;
     }
 
     .location-name {
@@ -2393,6 +2394,7 @@ body {
       color: #666666;
       font-size: clamp(12px, 2.4vw, 14px);
       line-height: 1.5;
+      word-wrap: break-word;
     }
 
     /* Baggage Info */
@@ -4528,3 +4530,133 @@ i.fas.fa-plane-departure {
   
   .flight-meta{
   margin-bottom:20px !important;}
+
+/* Fare Summary Accordion Styles */
+.fare-accordion-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 0;
+}
+
+.fare-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fare-accordion-header:hover {
+  opacity: 0.8;
+}
+
+.fare-accordion-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fare-accordion-left i {
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.fare-accordion-left i.fa-minus-circle {
+  color: #1f2937;
+}
+
+.fare-accordion-left i.fa-plus-circle {
+  color: #1f2937;
+}
+
+.fare-accordion-left span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fare-accordion-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.fare-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 30px;
+}
+
+.fare-accordion-content.expanded {
+  max-height: 300px;
+  transition: max-height 0.4s ease-in;
+  margin-top: 12px;
+}
+
+.fare-accordion-detail {
+  padding: 8px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.fare-accordion-detail span {
+  display: block;
+}
+
+/* Total Amount Styling */
+.fare-total-amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 0 0;
+  margin-top: 8px;
+}
+
+.fare-total-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.fare-total-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Override existing fare-summary-title */
+.fare-summary-desktop .fare-summary-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Adjust divider */
+.fare-summary-desktop .fare-summary-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .fare-accordion-item {
+    padding: 12px 0;
+  }
+  
+  .fare-accordion-left span {
+    font-size: 14px;
+  }
+  
+  .fare-accordion-amount {
+    font-size: 14px;
+  }
+  
+  .fare-total-label,
+  .fare-total-value {
+    font-size: 16px;
+  }
+}
