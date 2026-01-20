@@ -519,7 +519,7 @@ body {
   background: #ecfdf5;
   border: 1px solid #10b981;
   border-radius: 8px;
-  padding: 18px 24px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -531,7 +531,7 @@ body {
 .baggage-banner-text {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   font-size: 14px;
   color: #0f172a;
   font-weight: 500;
@@ -540,7 +540,7 @@ body {
 }
 
 .baggage-emoji {
-  font-size: 28px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
