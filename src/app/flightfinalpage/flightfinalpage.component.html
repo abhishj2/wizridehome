@@ -224,7 +224,6 @@
       <div class="cancellation-policy-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
-          <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
         </div>
         <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
           <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
@@ -719,7 +718,6 @@
       <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
-          <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
         </div>
         <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
           <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
@@ -1209,7 +1207,6 @@
         <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
           <div class="cancellation-header">
             <div class="cancellation-title">Cancellation & Date Change Policy</div>
-            <span class="view-policy-link" (click)="showPolicyModal = true; activeTab = 'cancel'">View Policy</span>
           </div>
           <div class="cancellation-airline" *ngIf="group && group.length > 0">
             <img [src]="'assets/images/flightimages/' + group[0].code?.split(' ')[0] + '.png'" class="logo" />
