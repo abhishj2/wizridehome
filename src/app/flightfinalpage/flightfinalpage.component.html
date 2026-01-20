@@ -84,10 +84,20 @@
       <div class="card flight-summary-card" *ngIf="flightSegments?.length">
         <!-- Desktop Flight Summary Design -->
         <div class="desktop-flight-summary" *ngFor="let segment of flightSegments; let i = index">
-          <!-- Header -->
-          <div class="header">
-            <div class="route">
-              <h1>{{ segment.from }} <span class="arrow">→</span> {{ segment.to }}</h1>
+          <!-- Route Header -->
+          <div class="route-header">
+            <div class="route-info">
+              <div class="route-title">
+                {{ segment.from }} <span>→</span> {{ segment.to }}
+              </div>
+              <div class="date-time-section">
+                <span class="date-badge">{{ segment.date | date : "EEEE, MMM dd" }}</span>
+                <span class="flight-duration">
+                  <span *ngIf="flightSegments.length === 1">Non Stop</span>
+                  <span *ngIf="flightSegments.length > 1">{{ flightSegments.length - 1 }} Stop{{ flightSegments.length > 2 ? 's' : '' }}</span>
+                  • {{ segment.duration }}
+                </span>
+              </div>
             </div>
             <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
               CANCELLATION FEES APPLY
@@ -95,54 +105,60 @@
           </div>
 
           <!-- Flight Details -->
-          <div class="flight-details">
-            <div class="date-time-wrapper">
-              <div class="date-time">
-                <span>{{ segment.date | date : "EEEE, MMM dd" }}</span>
+          <div class="flight-details-section">
+            <!-- Airline Info -->
+            <div class="airline-info-row">
+              <div class="airline-left">
+                <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
+                  {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
+                </div>
+                <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
+                <div class="airline-details">
+                  <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
+                  <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
+                </div>
               </div>
-              <span class="duration">
-                <span *ngIf="flightSegments.length === 1">Non Stop</span>
-                <span *ngIf="flightSegments.length > 1">{{ flightSegments.length - 1 }} Stop{{ flightSegments.length > 2 ? 's' : '' }}</span>
-                · {{ segment.duration }}
-              </span>
+              <div class="fare-info">
+                <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+              </div>
             </div>
-            <a href="#" class="fare-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
-          </div>
 
-          <!-- Airline Info -->
-          <div class="airline-info">
-            <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">✕</div>
-            <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
-            <div class="airline-details">
-              <span class="airline-name">{{ segment.airline }}</span>
-              <span class="flight-number">{{ segment.code }}</span>
-              <span class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</span>
-            </div>
-            <div class="class-info">
-              <span class="class-label">Economy ></span>
-              <span class="class-value" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
-            </div>
-          </div>
+            <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
 
-          <!-- Flight Timeline -->
-          <div class="flight-timeline">
-            <div class="timeline-wrapper">
-              <div class="timeline-row">
+            <!-- Flight Timeline -->
+            <div class="flight-timeline-grid">
+              <div class="timeline-item">
                 <div class="time">{{ segment.departureTime }}</div>
                 <div class="timeline-dot"></div>
                 <div class="location-info">
-                  <div class="location-name">{{ segment.from }}</div>
-                  <div class="location-details">{{ segment.fromAirport || segment.from + ' Airport' }}</div>
+                  <div class="city-name">{{ segment.from }}</div>
+                  <div class="airport-name">{{ segment.fromAirport || segment.from + ' Airport' }}</div>
+                  <div class="duration">{{ segment.duration }}</div>
                 </div>
               </div>
-              <div class="timeline-connector"></div>
-              <div class="duration-label">{{ segment.duration }}</div>
-              <div class="timeline-row">
+
+              <div class="timeline-item">
                 <div class="time">{{ segment.arrivalTime }}</div>
                 <div class="timeline-dot"></div>
                 <div class="location-info">
-                  <div class="location-name">{{ segment.to }}</div>
-                  <div class="location-details">{{ segment.toAirport || segment.to + ' Airport' }}</div>
+                  <div class="city-name">{{ segment.to }}</div>
+                  <div class="airport-name">{{ segment.toAirport || segment.to + ' Airport' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Baggage Info -->
+            <div class="baggage-info-grid">
+              <div class="baggage-item">
+                <span class="baggage-icon">💼</span>
+                <div>
+                  <span class="baggage-label">Cabin Baggage:</span> {{ segment.cabin || '7 KG' }} / Adult
+                </div>
+              </div>
+              <div class="baggage-item">
+                <span class="baggage-icon">🧳</span>
+                <div>
+                  <span class="baggage-label">Check-In Baggage:</span> {{ segment.checkIn || '15 Kilograms (1 piece only)' }} / Adult
                 </div>
               </div>
             </div>
@@ -192,33 +208,16 @@
           </div>
         </div>
 
-        <!-- Baggage Info - Desktop Only -->
-        <div class="baggage-info" *ngIf="flightSegments?.length">
-          <div class="baggage-item">
-            <span class="baggage-icon">💼</span>
-            <div class="baggage-label">
-              <span>Cabin Baggage: </span>
-              <span class="baggage-weight">{{ flightSegments[0]?.cabin || '7 KG' }}</span>
-              <span> / Adult</span>
-            </div>
+        <!-- Extra Baggage Banner - Desktop Only -->
+        <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+          <div class="baggage-banner-text">
+            <span class="baggage-emoji">🎒</span>
+            <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance for {{ flightSegments[0]?.from || 'IXB' }}-{{ flightSegments[0]?.to || 'BOM' }} at fab rates!</span>
+            <span *ngIf="baggageTotal > 0">{{ getTotalOneWayBaggageCount() }} KGs of extra baggage added on your trip for ₹ {{ baggageTotal | number : '1.0-0' }}! Total check-in baggage is now {{ 15 + getTotalOneWayBaggageCount() }} KGs.</span>
           </div>
-          <div class="baggage-item">
-            <span class="baggage-icon">🧳</span>
-            <div class="baggage-label">
-              <span>Check-In Baggage: </span>
-              <span class="baggage-weight">{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</span>
-              <span> / Adult</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Extra Baggage Promo - Desktop Only -->
-        <div class="extra-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-          <div class="baggage-promo">
-            <span class="promo-icon">🎒</span>
-            <span class="promo-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance for {{ flightSegments[0]?.from || 'IXB' }}-{{ flightSegments[0]?.to || 'BOM' }} at fab rates!</span>
-          </div>
-          <button class="add-baggage-btn" (click)="showAddBaggageModal = true">ADD BAGGAGE</button>
+          <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
+            {{ baggageTotal > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
+          </button>
         </div>
 
       <!-- Cancellation Policy Section - Desktop Only -->
@@ -2387,7 +2386,7 @@
 <div *ngIf="showFareRules" class="trip-popup fare-summary-modal">
   <div class="trip-header">
     Fare Rules
-    <button (click)="showFareRules = false">×</button>
+    <button class="modal-close-btn" (click)="showFareRules = false">×</button>
   </div>
   <div class="trip-body">
     <div class="fare-tabs" *ngIf="tripType === 'roundtrip'">

@@ -250,6 +250,414 @@ body {
   transform: translateY(0);
 }
 
+/* ============================================
+   Modern Flight Card Design (Desktop)
+   ============================================ */
+
+.flight-summary-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.desktop-flight-summary {
+  padding: 40px;
+}
+
+.mobile-flight-summary {
+  display: none;
+}
+
+/* Route Header */
+.route-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #10b981;
+}
+
+.route-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.route-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.route-title span {
+  margin: 0 10px;
+  color: #64748b;
+}
+
+.date-time-section {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date-badge {
+  background: #fef3c7;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #92400e;
+  font-size: 15px;
+}
+
+.flight-duration {
+  color: #475569;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.cancellation-badge {
+  background: #10b981;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Flight Details Section */
+.flight-details-section {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 30px;
+  margin-bottom: 0;
+}
+
+/* Airline Info Row */
+.airline-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.airline-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.airline-logo {
+  width: 45px;
+  height: 45px;
+  background: #dc2626;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.airline-logo-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+.airline-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.airline-name {
+  font-size: 16px;
+  color: #334155;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.aircraft-badge {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.fare-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #475569;
+}
+
+.fare-type {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.view-rules {
+  color: #10b981;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.view-rules:hover {
+  text-decoration: underline;
+}
+
+/* Flight Timeline Grid */
+.flight-timeline-grid {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 30px 1fr;
+  align-items: start;
+  gap: 15px;
+}
+
+.time {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  border: 3px solid #cbd5e1;
+  border-radius: 50%;
+  background: white;
+  position: relative;
+  margin-top: 6px;
+}
+
+.timeline-item:first-child .timeline-dot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 85px;
+  background: transparent;
+  border-left: 2px dashed #cbd5e1;
+}
+
+.location-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.city-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.airport-name {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.duration {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+/* Baggage Info Grid */
+.baggage-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding-top: 25px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.baggage-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.baggage-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.baggage-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Extra Baggage Banner */
+.extra-baggage-banner {
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.baggage-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #0f172a;
+  font-weight: 500;
+  flex: 1;
+  line-height: 1.5;
+}
+
+.baggage-emoji {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.change-baggage-btn {
+  background: transparent;
+  border: none;
+  color: #0ea5e9;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+  .change-baggage-btn:hover {
+    background: rgba(14, 165, 233, 0.1);
+  }
+
+  /* Mobile Responsive Styles for Modern Flight Card */
+  @media (max-width: 768px) {
+    .flight-summary-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .desktop-flight-summary {
+      padding: 25px;
+    }
+
+    .mobile-flight-summary {
+      display: block;
+    }
+
+    .route-title {
+      font-size: 22px;
+    }
+
+    .timeline-item {
+      grid-template-columns: 70px 25px 1fr;
+    }
+
+    .time {
+      font-size: 18px;
+    }
+
+    .baggage-info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .route-header {
+      grid-template-columns: 1fr;
+    }
+
+    .cancellation-badge {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .desktop-flight-summary {
+      padding: 20px;
+    }
+
+    .flight-details-section {
+      padding: 20px;
+    }
+
+    .route-title {
+      font-size: 20px;
+    }
+
+    .date-badge {
+      font-size: 13px;
+      padding: 6px 12px;
+    }
+
+    .flight-duration {
+      font-size: 13px;
+    }
+
+    .airline-info-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .timeline-item {
+      grid-template-columns: 60px 20px 1fr;
+      gap: 10px;
+    }
+
+    .time {
+      font-size: 16px;
+    }
+
+    .city-name {
+      font-size: 16px;
+    }
+
+    .airport-name {
+      font-size: 13px;
+    }
+
+    .extra-baggage-banner {
+      padding: 15px;
+    }
+
+    .baggage-banner-text {
+      font-size: 13px;
+    }
+
+    .baggage-emoji {
+      font-size: 24px;
+    }
+  }
+
 
 
 /* Mobile Flight Final Page Styles */
@@ -1817,23 +2225,94 @@ body {
 }
 
 /* Fare Summary Modal */
+/* Fare Rules Modal Styling */
 .fare-summary-modal {
-  max-height: 80vh;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .fare-summary-modal .trip-header {
   border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.fare-summary-modal .trip-header > div:first-child {
-  font-size: 18px;
-  font-weight: 700;
+/* Modal Close Button - Square with Border */
+.fare-summary-modal .modal-close-btn {
+  width: 32px;
+  height: 32px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 20px;
+  color: #6c757d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.fare-summary-modal .modal-close-btn:hover {
+  background: #e9ecef;
   color: #212529;
+  border-color: #adb5bd;
+}
+
+.fare-summary-modal .trip-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fare-summary-modal .trip-body::-webkit-scrollbar {
+  display: none;
 }
 
 .fare-summary-modal .trip-footer {
   padding: 20px 24px;
   border-top: 1px solid #e9ecef;
+  flex-shrink: 0;
+  background: white;
+}
+
+.fare-summary-modal .proceed-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: #000000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fare-summary-modal .proceed-btn:hover {
+  background: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fare-summary-modal .proceed-btn:active {
+  transform: translateY(0);
 }
 
 .fare-summary-content {
@@ -1900,32 +2379,41 @@ body {
   box-shadow: none;
 }
 
-/* Fare Tabs */
+/* Fare Tabs - Modern Styling */
 .fare-tabs {
   display: flex;
   gap: 0;
-  border-bottom: 2px solid #e9ecef;
-  padding: 0 20px;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 0 24px;
+  flex-shrink: 0;
+  background: white;
 }
 
 .fare-tab {
   flex: 1;
-  padding: 12px;
+  padding: 14px 20px;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  color: #6c757d;
+  color: #64748b;
   cursor: pointer;
   border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.fare-tab:hover {
+  color: #0f172a;
+  background: #f8fafc;
 }
 
 .fare-tab.fare-tab-active {
-  color: #008b8b;
-  border-bottom-color: #008b8b;
+  color: #0f172a;
+  border-bottom-color: #000000;
 }
 
 .fare-tab-panels {
-  padding: 20px;
+  padding: 0;
 }
 
 .fare-tab-panel {
@@ -1936,11 +2424,108 @@ body {
   display: block;
 }
 
+/* Fare Info Text Styling */
 .fare-info-text {
   font-size: 14px;
-  color: #495057;
+  color: #334155;
+  line-height: 1.7;
+  padding: 24px;
+}
+
+.fare-info-text p {
+  margin-bottom: 16px;
+  color: #475569;
+}
+
+.fare-info-text ul {
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.fare-info-text li {
+  margin-bottom: 12px;
+  color: #475569;
   line-height: 1.6;
-  padding: 20px;
+}
+
+.fare-info-text strong,
+.fare-info-text b {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Table Styling for Fare Rules - Clean & Minimal */
+.fare-info-text table {
+  width: 100%;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  margin: 24px 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+}
+
+.fare-info-text th {
+  background: white;
+  color: #212529;
+  font-weight: 700;
+  padding: 16px 18px;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.fare-info-text th small {
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 400;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.fare-info-text td {
+  padding: 16px 18px;
+  border: 1px solid #e0e0e0;
+  color: #212529;
+  font-size: 14px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+/* Remove hover effect for cleaner look */
+.fare-info-text tr:hover td,
+.fare-info-text tr:hover th {
+  background: white;
+}
+
+/* Table footnote styling */
+.fare-info-text .table-footnote {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: -12px;
+  margin-bottom: 20px;
+}
+
+/* Responsive Table */
+@media (max-width: 640px) {
+  .fare-info-text table {
+    font-size: 13px;
+    margin: 20px 0;
+  }
+  
+  .fare-info-text th,
+  .fare-info-text td {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  
+  .fare-info-text th small {
+    font-size: 11px;
+    margin-top: 4px;
+  }
 }
 
 .input-group-row {
@@ -2325,7 +2910,7 @@ body {
     }
 
     .cancellation-badge {
-      background: #20c997;
+      background: #000;
       color: white;
       padding: 8px 14px;
       border-radius: 6px;
@@ -4936,4 +5521,19 @@ i.fas.fa-plane-departure {
 
 .fare-summary-divider{
   border-top:1px solid #000 !important;
+}
+
+.trip-body {
+  table {
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+    margin:20px 0 !Important;
+}
+  table,
+table th,
+table td {
+  border: 1px solid #333 !important;
+  padding:10px;
+}
+
 }
