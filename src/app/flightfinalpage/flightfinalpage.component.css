@@ -573,7 +573,7 @@ body {
     }
 
     .mobile-flight-summary {
-      display: block;
+      display: none !important;
     }
 
     .route-title {
@@ -2849,7 +2849,7 @@ body {
     }
 
     .mobile-flight-summary {
-      display: block !important;
+      display: none !important;
     }
 
     .baggage-info,
@@ -5707,6 +5707,10 @@ table td {
 
                       .card.flight-summary-card{
 padding:0 !important
+                      }
+
+                      .desktop-flight-summary{
+                        margin-bottom:0  !important;
                       }
                       
                       }
