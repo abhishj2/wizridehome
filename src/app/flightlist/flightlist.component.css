@@ -1230,18 +1230,85 @@ img {
 .filter-option {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 0;
+  gap: 12px;
+  padding: 10px 12px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
+.filter-option:hover {
+  background: #f8fafa;
+}
+
+/* Hide default checkbox */
 .filter-option input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 10px;
+  height: 16px;
   cursor: pointer;
-  accent-color: #008b8b;
+  position: relative;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Custom checkbox background */
+.filter-option input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Checkmark */
+.filter-option input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 78%;
+  transform: translate(-50%, -50%) scale(0) rotate(45deg);
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  opacity: 0;
+}
+
+/* Checked state */
+.filter-option input[type="checkbox"]:checked::before {
+  background: linear-gradient(135deg, #008b8b 0%, #00a8a8 100%);
+  border-color: #008b8b;
+  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+  transform: translate(-50%, -50%) scale(1) rotate(45deg);
+  opacity: 1;
+}
+
+/* Hover effect on checkbox */
+.filter-option input[type="checkbox"]:hover::before {
+  border-color: #008b8b;
+  box-shadow: 0 2px 6px rgba(0, 139, 139, 0.15);
+}
+
+/* Focus state for accessibility */
+.filter-option input[type="checkbox"]:focus-visible::before {
+  outline: 2px solid #008b8b;
+  outline-offset: 2px;
 }
 
 .filter-buttons {
@@ -4601,16 +4668,77 @@ img {
   .mobile-checkbox-inline {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     font-size: 14px;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+  
+  .mobile-checkbox-inline:hover {
+    background: #f8fafa;
   }
 
+  /* Hide default mobile checkbox */
   .mobile-checkbox-inline input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
-    accent-color: #007bff;
+    position: relative;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  
+  /* Custom mobile checkbox background */
+  .mobile-checkbox-inline input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Mobile checkmark */
+  .mobile-checkbox-inline input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0) rotate(45deg);
+    width: 4px;
+    height: 8px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    opacity: 0;
+  }
+  
+  /* Mobile checked state */
+  .mobile-checkbox-inline input[type="checkbox"]:checked::before {
+    background: linear-gradient(135deg, #008b8b 0%, #00a8a8 100%);
+    border-color: #008b8b;
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+  }
+  
+  .mobile-checkbox-inline input[type="checkbox"]:checked::after {
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+    opacity: 1;
+  }
+  
+  /* Mobile hover effect */
+  .mobile-checkbox-inline input[type="checkbox"]:hover::before {
+    border-color: #008b8b;
+    box-shadow: 0 2px 6px rgba(0, 139, 139, 0.15);
   }
 
   /* Button Row */
@@ -6665,3 +6793,17 @@ h2.flight-count-text{
 .city-suggestions{
   width: fit-content;
   }
+
+  @media (max-width: 768px) {
+    .route-locations
+
+ {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+}
