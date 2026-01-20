@@ -212,7 +212,7 @@
         <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
           <div class="baggage-banner-text">
             <span class="baggage-emoji">🎒</span>
-            <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance for {{ flightSegments[0]?.from || 'IXB' }}-{{ flightSegments[0]?.to || 'BOM' }} at fab rates!</span>
+            <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
             <span *ngIf="baggageTotal > 0">{{ getTotalOneWayBaggageCount() }} KGs of extra baggage added on your trip for ₹ {{ baggageTotal | number : '1.0-0' }}! Total check-in baggage is now {{ 15 + getTotalOneWayBaggageCount() }} KGs.</span>
           </div>
           <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
@@ -240,11 +240,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Trip Summary CTA -->
-      <button class="details-btn" (click)="openTripSummary()">
-        View Trip & Fare Details
-      </button>
     </div>
 
     <!-- Add Passenger Card -->
@@ -734,11 +729,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Trip Summary CTA -->
-      <button class="details-btn" (click)="openTripSummary()">
-        View Trip & Fare Details
-      </button>
     </div>
 
     <!-- Add Passenger Card -->
@@ -1227,9 +1217,6 @@
 
       <!-- CTA button -->
       <div class="card no-padding">
-        <button class="details-btn" (click)="openTripSummary()">
-          View Trip & Fare Details
-        </button>
       </div>
     </ng-container>
 
@@ -1661,171 +1648,6 @@
   </div>
 
   <!-- Modals and Popups -->
-  <!-- Trip Summary Overlay -->
-  <div class="trip-overlay" *ngIf="showTripSummary" (click)="closeTripSummary()"></div>
-
-  <!-- Trip Summary Bottom Sheet -->
-  <div class="trip-popup" *ngIf="showTripSummary && tripType !== 'roundtrip'">
-    <div class="trip-header">
-      <div>Trip Summary</div>
-      <button class="close-btn" (click)="closeTripSummary()">×</button>
-    </div>
-    <div class="trip-body">
-      <div class="trip-flight" *ngFor="let segment of flightSegments; let i = index">
-        <div class="trip-airline">
-          <img [src]="segment.logo" class="logo" />
-          <div>{{ segment.airline }}</div>
-          <div class="code">{{ segment.code }}</div>
-        </div>
-        <div class="trip-times">
-          <div>
-            <div>{{ segment.departureTime }}</div>
-            <div class="trip-subtext">
-              {{ segment.date | date : "EEE, dd MMM" }}
-            </div>
-          </div>
-          <div class="trip-duration">
-            <div class="trip-duration-icon">
-              <i class="fas fa-plane"></i>
-            </div>
-            <div class="trip-subtext">{{ segment.duration }}</div>
-          </div>
-          <div class="trip-alignRight">
-            <div>{{ segment.arrivalTime }}</div>
-            <div class="trip-subtext">
-              {{ segment.date | date : "EEE, dd MMM" }}
-            </div>
-          </div>
-        </div>
-        <div class="trip-meta">
-          <div>
-            <strong>{{ segment.from }}</strong>
-            <div class="trip-subtext">{{ segment.fromAirport }}</div>
-          </div>
-          <div class="trip-route-line"></div>
-          <div style="text-align: right">
-            <strong>{{ segment.to }}</strong>
-            <div class="trip-subtext">{{ segment.toAirport }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="trip-footer">
-      <button class="proceed-btn trip-done-btn" (click)="closeTripSummary()">DONE</button>
-    </div>
-  </div>
-
-  <!-- Round Trip Summary -->
-  <div class="trip-popup" *ngIf="showTripSummary && tripType === 'roundtrip'">
-    <div class="trip-header">
-      <div>Trip Summary</div>
-      <button class="close-btn" (click)="closeTripSummary()">×</button>
-    </div>
-    <div class="policy-tabs">
-      <div [class.active]="activeTripTab === 'onward'" (click)="activeTripTab = 'onward'">
-        Onward
-      </div>
-      <div [class.active]="activeTripTab === 'return'" (click)="activeTripTab = 'return'">
-        Return
-      </div>
-    </div>
-    <div class="tab-content-container">
-      <div class="tab-content-wrapper" [class.return-active]="activeTripTab === 'return'">
-        <div class="tab-panel">
-          <div class="trip-body">
-            <div class="trip-flight" *ngFor="let segment of flightSegments">
-              <div class="trip-airline">
-                <img [src]="segment.logo" class="logo" />
-                <div>{{ segment.airline }}</div>
-                <div class="code">{{ segment.code }}</div>
-              </div>
-              <div class="trip-times">
-                <div>
-                  <div>{{ segment.departureTime }}</div>
-                  <div class="trip-subtext">
-                    {{ segment.date | date : "EEE, dd MMM" }}
-                  </div>
-                </div>
-                <div>
-                  <i class="fas fa-plane-arrival"></i>
-                  <div class="trip-subtext">{{ segment.duration }}</div>
-                </div>
-                <div class="trip-alignRight">
-                  <div>{{ segment.arrivalTime }}</div>
-                  <div class="trip-subtext">
-                    {{ segment.date | date : "EEE, dd MMM" }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Onward Fare Summary -->
-          <div class="trip-fare-summary">
-            <div class="fare-summary-title-small">Fare Summary</div>
-            <div class="fare-line">
-              <div>Base Fare</div>
-              <div>{{ formatCurrency(getOnwardBaseFare()) }}</div>
-            </div>
-            <div class="fare-line">
-              <div>Taxes & Surcharges</div>
-              <div>{{ formatCurrency(getOnwardTaxes()) }}</div>
-            </div>
-            <div class="fare-line total-line">
-              <strong>Total</strong>
-              <strong>{{ formatCurrency(getOnwardTotal()) }}</strong>
-            </div>
-          </div>
-        </div>
-        <div class="tab-panel">
-          <div class="trip-body">
-            <div class="trip-flight" *ngFor="let segment of flightSegmentsReturn">
-              <div class="trip-airline">
-                <img [src]="segment.logo" class="logo" />
-                <div>{{ segment.airline }}</div>
-                <div class="code">{{ segment.code }}</div>
-              </div>
-              <div class="trip-times">
-                <div>
-                  <div>{{ segment.departureTime }}</div>
-                  <div class="trip-subtext">
-                    {{ segment.date | date : "EEE, dd MMM" }}
-                  </div>
-                </div>
-                <div>
-                  <i class="fas fa-plane-arrival"></i>
-                  <div class="trip-subtext">{{ segment.duration }}</div>
-                </div>
-                <div class="trip-alignRight">
-                  <div>{{ segment.arrivalTime }}</div>
-                  <div class="trip-subtext">
-                    {{ segment.date | date : "EEE, dd MMM" }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Return Fare Summary -->
-          <div class="trip-fare-summary">
-            <div class="fare-summary-title-small">Fare Summary</div>
-            <div class="fare-line">
-              <div>Base Fare</div>
-              <div>{{ formatCurrency(getReturnBaseFare()) }}</div>
-            </div>
-            <div class="fare-line">
-              <div>Taxes & Surcharges</div>
-              <div>{{ formatCurrency(getReturnTaxes()) }}</div>
-            </div>
-            <div class="fare-line total-line">
-              <strong>Total</strong>
-              <strong>{{ formatCurrency(getReturnTotal()) }}</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- Fare Summary Modal -->

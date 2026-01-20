@@ -177,7 +177,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   tripType: 'oneway' | 'roundtrip' | 'multicity' = 'oneway';
   
   // Modal States
-  showTripSummary: boolean = false;
   showFareSummaryModal: boolean = false;
   showAddBaggageModal: boolean = false;
   showPolicyModal: boolean = false;
@@ -1737,7 +1736,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   
   openFareRuleModal() { this.showFareRuleModal = true; }
   closeFareRuleModal() { this.showFareRuleModal = false; }
-  toggleSection(section: 'base' | 'taxes' | 'services') { this.expanded[section] = !this.expanded[section]; }
   
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: any) {
@@ -1747,8 +1745,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   // Mobile Template Methods
-  openTripSummary() { this.showTripSummary = true; }
-  closeTripSummary() { this.showTripSummary = false; }
   openFareSummary() { this.showFareSummaryModal = true; }
   closeFareSummary() { this.showFareSummaryModal = false; }
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
