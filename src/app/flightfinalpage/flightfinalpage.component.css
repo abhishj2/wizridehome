@@ -3785,7 +3785,8 @@ body {
 
 /* Responsive Cancellation Tabs */
 @media (max-width: 768px) {
-  .multicity-cancellation-tabs {
+  .multicity-cancellation-tabs,
+  .roundtrip-cancellation-tabs {
     display: none !important;
   }
 
@@ -5714,4 +5715,8 @@ padding:0 !important
 .desktop-flight-summary{
   padding:0 !important;
   margin-bottom:20px;
+}
+
+.flight-card-item .card{
+  padding:0 !important;
 }

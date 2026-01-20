@@ -746,23 +746,55 @@
         </button>
       </div>
 
-      <!-- Cancellation Policy Section - Desktop Only (Onward) -->
-      <div class="makemytrip-cancellation-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+      <!-- Cancellation Policy Section with Tabs - Desktop Only -->
+      <div class="makemytrip-cancellation-section roundtrip-cancellation-tabs" *ngIf="(flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0) || (flightDataReturn && getCancellationRows(flightDataReturn).length > 0)">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
         </div>
-        <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
-          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
-          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+
+        <!-- Onward / Return Tabs -->
+        <div class="cancellation-tab-headers">
+          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'onward'" (click)="activePolicyTab = 'onward'">
+            Onward
+          </div>
+          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'return'" (click)="activePolicyTab = 'return'">
+            Return
+          </div>
         </div>
-        <div class="cancellation-criteria-header">
-          <div class="criteria-left">Cancellation Criteria</div>
-          <div class="criteria-right">Charges</div>
+
+        <!-- Onward Tab Content -->
+        <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'onward' && flightDataDeparture">
+          <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
+            <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
+            <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+          </div>
+          <div class="cancellation-criteria-header">
+            <div class="criteria-left">Cancellation Criteria</div>
+            <div class="criteria-right">Charges</div>
+          </div>
+          <div class="cancellation-rows">
+            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+              <div class="criteria-left">{{ row.range }}</div>
+              <div class="criteria-right">{{ row.price }}</div>
+            </div>
+          </div>
         </div>
-        <div class="cancellation-rows">
-          <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-            <div class="criteria-left">{{ row.range }}</div>
-            <div class="criteria-right">{{ row.price }}</div>
+
+        <!-- Return Tab Content -->
+        <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'return' && flightDataReturn">
+          <div class="cancellation-airline" *ngIf="flightDataReturn?.Segments?.[0]?.[0]">
+            <img [src]="'assets/images/flightimages/' + flightDataReturn.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
+            <span class="airline-route">{{ flightDataReturn.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+          </div>
+          <div class="cancellation-criteria-header">
+            <div class="criteria-left">Cancellation Criteria</div>
+            <div class="criteria-right">Charges</div>
+          </div>
+          <div class="cancellation-rows">
+            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataReturn)">
+              <div class="criteria-left">{{ row.range }}</div>
+              <div class="criteria-right">{{ row.price }}</div>
+            </div>
           </div>
         </div>
       </div>
