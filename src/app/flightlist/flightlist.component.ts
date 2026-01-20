@@ -4247,8 +4247,20 @@ getMultiCityRouteDestination(index: number): string {
 
   // City Suggestions Methods (like homepage)
   showCitySuggestions(query: string, target: string) {
+    // If query is empty, show all airports (limited to reasonable number)
     if (!query || !query.trim()) {
-      this.activeSuggestions[target] = [];
+      // Show all airports, excluding the one selected in the opposite field
+      let allAirports = this.flightAirports.slice();
+      
+      if (target === 'summary-from' && this.flightInputData['toAirportCode']) {
+        const toCode = this.flightInputData['toAirportCode'].toLowerCase();
+        allAirports = allAirports.filter(city => city.code.toLowerCase() !== toCode);
+      } else if (target === 'summary-to' && this.flightInputData['fromAirportCode']) {
+        const fromCode = this.flightInputData['fromAirportCode'].toLowerCase();
+        allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
+      }
+      
+      this.activeSuggestions[target] = allAirports;
       return;
     }
 
@@ -4258,15 +4270,15 @@ getMultiCityRouteDestination(index: number): string {
     );
 
     // Exclude the city selected in the other field
-    if (target === 'summary-from' && this.modifySearchForm.get('to')?.value) {
-      const toValue = this.modifySearchForm.get('to')?.value.toLowerCase();
+    if (target === 'summary-from' && this.flightInputData['toAirportCode']) {
+      const toCode = this.flightInputData['toAirportCode'].toLowerCase();
       this.activeSuggestions[target] = filtered.filter(city =>
-        city.name.toLowerCase() !== toValue && city.code.toLowerCase() !== toValue
+        city.code.toLowerCase() !== toCode
       );
-    } else if (target === 'summary-to' && this.modifySearchForm.get('from')?.value) {
-      const fromValue = this.modifySearchForm.get('from')?.value.toLowerCase();
+    } else if (target === 'summary-to' && this.flightInputData['fromAirportCode']) {
+      const fromCode = this.flightInputData['fromAirportCode'].toLowerCase();
       this.activeSuggestions[target] = filtered.filter(city =>
-        city.name.toLowerCase() !== fromValue && city.code.toLowerCase() !== fromValue
+        city.code.toLowerCase() !== fromCode
       );
     } else {
       this.activeSuggestions[target] = filtered;
@@ -4274,8 +4286,18 @@ getMultiCityRouteDestination(index: number): string {
   }
 
   showCitySuggestionsOnFocus(target: string) {
-    // Show all airports on focus
-    this.activeSuggestions[target] = this.flightAirports.slice(0, 10);
+    // Show all airports on focus, excluding the one selected in the opposite field
+    let allAirports = this.flightAirports.slice();
+    
+    if (target === 'summary-from' && this.flightInputData['toAirportCode']) {
+      const toCode = this.flightInputData['toAirportCode'].toLowerCase();
+      allAirports = allAirports.filter(city => city.code.toLowerCase() !== toCode);
+    } else if (target === 'summary-to' && this.flightInputData['fromAirportCode']) {
+      const fromCode = this.flightInputData['fromAirportCode'].toLowerCase();
+      allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
+    }
+    
+    this.activeSuggestions[target] = allAirports;
   }
 
   selectCity(cityName: string, cityCode: string, target: string, event?: Event) {
@@ -4333,11 +4355,23 @@ getMultiCityRouteDestination(index: number): string {
 
   onFromInputChange(value: string) {
     this.flightInputData['fromCity'] = value;
+    // Clear airport code and related fields when user types to allow blank input
+    if (!value || value.trim() === '') {
+      this.flightInputData['fromAirportCode'] = '';
+      this.flightInputData['fromAirport'] = '';
+      this.modifySearchForm.patchValue({ from: '' });
+    }
     this.showCitySuggestions(value, 'summary-from');
   }
 
   onToInputChange(value: string) {
     this.flightInputData['toCity'] = value;
+    // Clear airport code and related fields when user types to allow blank input
+    if (!value || value.trim() === '') {
+      this.flightInputData['toAirportCode'] = '';
+      this.flightInputData['toAirport'] = '';
+      this.modifySearchForm.patchValue({ to: '' });
+    }
     this.showCitySuggestions(value, 'summary-to');
   }
 
