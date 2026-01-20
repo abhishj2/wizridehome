@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class CustomCalendarComponent implements OnInit, OnChanges {
   @Input() selectedDate: string = '';
   @Input() minDate: string = '';
+  @Input() maxDate: string = '';
   @Input() placeholder: string = 'Select Date';
   @Input() disabled: boolean = false;
   @Input() alwaysOpen: boolean = false;
@@ -54,9 +55,29 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
       }
     }
     
-    // Generate available years (current year to +10 years only)
+    // Generate available years based on minDate and maxDate
     const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year <= currentYear + 10; year++) {
+    let startYear = currentYear;
+    let endYear = currentYear + 10;
+    
+    // If maxDate is set and is in the past (DOB scenarios), adjust year range
+    if (this.maxDate) {
+      const maxDateObj = new Date(this.maxDate);
+      if (maxDateObj.getFullYear() < currentYear) {
+        endYear = maxDateObj.getFullYear();
+        startYear = endYear - 100; // Show 100 years range for DOB
+      }
+    }
+    
+    // If minDate is set and is in the past, use it as start
+    if (this.minDate) {
+      const minDateObj = new Date(this.minDate);
+      if (minDateObj.getFullYear() < startYear) {
+        startYear = minDateObj.getFullYear();
+      }
+    }
+    
+    for (let year = startYear; year <= endYear; year++) {
       this.availableYears.push(year);
     }
   }
@@ -64,6 +85,32 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedDate'] && !changes['selectedDate'].firstChange) {
       this.updateSelectedDate();
+    }
+    if ((changes['minDate'] || changes['maxDate']) && !changes['minDate']?.firstChange && !changes['maxDate']?.firstChange) {
+      // Regenerate available years when date range changes
+      this.availableYears = [];
+      const currentYear = new Date().getFullYear();
+      let startYear = currentYear;
+      let endYear = currentYear + 10;
+      
+      if (this.maxDate) {
+        const maxDateObj = new Date(this.maxDate);
+        if (maxDateObj.getFullYear() < currentYear) {
+          endYear = maxDateObj.getFullYear();
+          startYear = endYear - 100;
+        }
+      }
+      
+      if (this.minDate) {
+        const minDateObj = new Date(this.minDate);
+        if (minDateObj.getFullYear() < startYear) {
+          startYear = minDateObj.getFullYear();
+        }
+      }
+      
+      for (let year = startYear; year <= endYear; year++) {
+        this.availableYears.push(year);
+      }
     }
   }
 
@@ -82,6 +129,17 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
     } else {
       this.selectedDateObj = null;
       if (!this.displayMonth) {
+        // For DOB scenarios (when maxDate is in the past), show a more appropriate initial date
+        if (this.maxDate) {
+          const maxDateObj = new Date(this.maxDate);
+          const currentYear = new Date().getFullYear();
+          if (maxDateObj.getFullYear() < currentYear) {
+            // This is likely a DOB picker, show the max allowed date's year
+            this.displayMonth = new Date(maxDateObj);
+            this.displayYear = this.displayMonth.getFullYear();
+            return;
+          }
+        }
         this.displayMonth = new Date();
         this.displayYear = this.displayMonth.getFullYear();
       }
@@ -140,12 +198,17 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
 
   selectDate(date: Date) {
     // Use the same logic as isDateDisabled
-    const referenceDate = this.minDate ? new Date(this.minDate) : new Date();
-    referenceDate.setHours(0, 0, 0, 0);
+    const minDateObj = this.minDate ? new Date(this.minDate) : null;
+    const maxDateObj = this.maxDate ? new Date(this.maxDate) : null;
     
-    // Don't allow selection of dates before the reference date
-    if (date < referenceDate) {
-      return;
+    if (minDateObj) {
+      minDateObj.setHours(0, 0, 0, 0);
+      if (date < minDateObj) return;
+    }
+    
+    if (maxDateObj) {
+      maxDateObj.setHours(0, 0, 0, 0);
+      if (date > maxDateObj) return;
     }
 
     this.selectedDateObj = new Date(date);
@@ -180,12 +243,18 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
   }
 
   isDateDisabled(date: Date): boolean {
-    // Use minimum date as the reference point (not today)
-    const referenceDate = this.minDate ? new Date(this.minDate) : new Date();
-    referenceDate.setHours(0, 0, 0, 0);
+    const minDateObj = this.minDate ? new Date(this.minDate) : null;
+    const maxDateObj = this.maxDate ? new Date(this.maxDate) : null;
     
-    // Disable dates before the reference date (minimum date or today)
-    if (date < referenceDate) return true;
+    if (minDateObj) {
+      minDateObj.setHours(0, 0, 0, 0);
+      if (date < minDateObj) return true;
+    }
+    
+    if (maxDateObj) {
+      maxDateObj.setHours(0, 0, 0, 0);
+      if (date > maxDateObj) return true;
+    }
     
     return false;
   }

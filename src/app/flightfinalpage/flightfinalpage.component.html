@@ -295,20 +295,13 @@
                 </div>
                 <div class="form-group">
                   <label>Date of Birth</label>
-                  <div class="input-group-row">
-                    <select [(ngModel)]="adult.dobDay" [class.error]="passengerValidationErrors.dobDay && expandedPassengerKey === 'adult-' + i">
-                      <option value="">DD</option>
-                      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobMonth" [class.error]="passengerValidationErrors.dobMonth && expandedPassengerKey === 'adult-' + i">
-                      <option value="">MM</option>
-                      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobYear" [class.error]="passengerValidationErrors.dobYear && expandedPassengerKey === 'adult-' + i">
-                      <option value="">YYYY</option>
-                      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-                    </select>
-                  </div>
+                  <app-custom-calendar
+                    [selectedDate]="getDOBAsDateString(adult)"
+                    [minDate]="getAdultMinDOB()"
+                    [maxDate]="getAdultMaxDOB()"
+                    placeholder="Select Date of Birth"
+                    (dateSelected)="onDOBSelected(adult, $event)">
+                  </app-custom-calendar>
                   <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
                     {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
                   </div>
@@ -904,20 +897,13 @@
                 </div>
                 <div class="form-group">
                   <label>Date of Birth</label>
-                  <div class="input-group-row">
-                    <select [(ngModel)]="adult.dobDay" [class.error]="passengerValidationErrors.dobDay && expandedPassengerKey === 'adult-' + i">
-                      <option value="">DD</option>
-                      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobMonth" [class.error]="passengerValidationErrors.dobMonth && expandedPassengerKey === 'adult-' + i">
-                      <option value="">MM</option>
-                      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobYear" [class.error]="passengerValidationErrors.dobYear && expandedPassengerKey === 'adult-' + i">
-                      <option value="">YYYY</option>
-                      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-                    </select>
-                  </div>
+                  <app-custom-calendar
+                    [selectedDate]="getDOBAsDateString(adult)"
+                    [minDate]="getAdultMinDOB()"
+                    [maxDate]="getAdultMaxDOB()"
+                    placeholder="Select Date of Birth"
+                    (dateSelected)="onDOBSelected(adult, $event)">
+                  </app-custom-calendar>
                   <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
                     {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
                   </div>
@@ -1550,20 +1536,13 @@
                 </div>
                 <div class="form-group">
                   <label>Date of Birth</label>
-                  <div class="input-group-row">
-                    <select [(ngModel)]="adult.dobDay" [class.error]="passengerValidationErrors.dobDay && expandedPassengerKey === 'adult-' + i">
-                      <option value="">DD</option>
-                      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobMonth" [class.error]="passengerValidationErrors.dobMonth && expandedPassengerKey === 'adult-' + i">
-                      <option value="">MM</option>
-                      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-                    </select>
-                    <select [(ngModel)]="adult.dobYear" [class.error]="passengerValidationErrors.dobYear && expandedPassengerKey === 'adult-' + i">
-                      <option value="">YYYY</option>
-                      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-                    </select>
-                  </div>
+                  <app-custom-calendar
+                    [selectedDate]="getDOBAsDateString(adult)"
+                    [minDate]="getAdultMinDOB()"
+                    [maxDate]="getAdultMaxDOB()"
+                    placeholder="Select Date of Birth"
+                    (dateSelected)="onDOBSelected(adult, $event)">
+                  </app-custom-calendar>
                   <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
                     {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
                   </div>
@@ -2338,20 +2317,13 @@
     </div>
     <div class="form-group">
       <label>Date of Birth</label>
-      <div class="input-group-row">
-        <select [(ngModel)]="currentPassengerDetails.dobDay" [class.error]="passengerValidationErrors.dobDay">
-          <option value="">DD</option>
-          <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-        </select>
-        <select [(ngModel)]="currentPassengerDetails.dobMonth" [class.error]="passengerValidationErrors.dobMonth">
-          <option value="">MM</option>
-          <option *ngFor="let month of months" [value]="month">{{ month }}</option>
-        </select>
-        <select [(ngModel)]="currentPassengerDetails.dobYear" [class.error]="passengerValidationErrors.dobYear">
-          <option value="">YYYY</option>
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-        </select>
-      </div>
+      <app-custom-calendar
+        [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
+        [minDate]="getCurrentPassengerMinDOB()"
+        [maxDate]="getCurrentPassengerMaxDOB()"
+        placeholder="Select Date of Birth"
+        (dateSelected)="onDOBSelected(currentPassengerDetails, $event)">
+      </app-custom-calendar>
       <div class="error-message" *ngIf="passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear">
         {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
       </div>

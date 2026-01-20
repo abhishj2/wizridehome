@@ -9,11 +9,12 @@ import { FlightdataService } from '../services/flightdata.service';
 import { FlightbookingpayloadService } from '../services/flightbookingpayload.service';
 import Swal from 'sweetalert2';
 import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
+import { CustomCalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-flightfinalpage',
   standalone: true,
-  imports: [CommonModule, FormsModule, PhoneDialerComponent],
+  imports: [CommonModule, FormsModule, PhoneDialerComponent, CustomCalendarComponent],
   templateUrl: './flightfinalpage.component.html',
   styleUrls: ['./flightfinalpage.component.css']
 })
@@ -1686,6 +1687,107 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         age--;
     }
     return age >= 12;
+  }
+
+  // Helper method to get DOB as date string for calendar component
+  getDOBAsDateString(passenger: any): string {
+    if (!passenger.dobYear || !passenger.dobMonth || !passenger.dobDay) return '';
+    
+    // Handle month names or numbers
+    let monthNum: string;
+    if (typeof passenger.dobMonth === 'string' && isNaN(parseInt(passenger.dobMonth))) {
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthIndex = monthNames.indexOf(passenger.dobMonth);
+      monthNum = String(monthIndex + 1).padStart(2, '0');
+    } else {
+      monthNum = String(passenger.dobMonth).padStart(2, '0');
+    }
+    
+    const day = String(passenger.dobDay).padStart(2, '0');
+    return `${passenger.dobYear}-${monthNum}-${day}`;
+  }
+
+  // Helper method to set DOB from calendar selection
+  onDOBSelected(passenger: any, dateString: string): void {
+    if (!dateString) return;
+    
+    const date = new Date(dateString);
+    passenger.dobDay = String(date.getDate()).padStart(2, '0');
+    passenger.dobMonth = String(date.getMonth() + 1).padStart(2, '0');
+    passenger.dobYear = String(date.getFullYear());
+  }
+
+  // Get max date for adult DOB (must be at least 12 years old)
+  getAdultMaxDOB(): string {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 12);
+    return this.formatDateForCalendar(date);
+  }
+
+  // Get min date for adult DOB (reasonable max age, e.g., 100 years)
+  getAdultMinDOB(): string {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 100);
+    return this.formatDateForCalendar(date);
+  }
+
+  // Get max date for child DOB (2-12 years old, so max is 2 years ago)
+  getChildMaxDOB(): string {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 2);
+    return this.formatDateForCalendar(date);
+  }
+
+  // Get min date for child DOB (must be less than 12 years old)
+  getChildMinDOB(): string {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 12);
+    date.setDate(date.getDate() + 1); // One day after 12 years
+    return this.formatDateForCalendar(date);
+  }
+
+  // Get max date for infant DOB (under 2 years old, so max is today)
+  getInfantMaxDOB(): string {
+    return this.formatDateForCalendar(new Date());
+  }
+
+  // Get min date for infant DOB (must be less than 2 years old)
+  getInfantMinDOB(): string {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 2);
+    date.setDate(date.getDate() + 1); // One day after 2 years
+    return this.formatDateForCalendar(date);
+  }
+
+  // Format date for calendar component (YYYY-MM-DD)
+  formatDateForCalendar(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Get min/max dates based on current passenger type
+  getCurrentPassengerMinDOB(): string {
+    if (this.currentPassengerType === 'adult') {
+      return this.getAdultMinDOB();
+    } else if (this.currentPassengerType === 'child') {
+      return this.getChildMinDOB();
+    } else if (this.currentPassengerType === 'infant') {
+      return this.getInfantMinDOB();
+    }
+    return this.getAdultMinDOB();
+  }
+
+  getCurrentPassengerMaxDOB(): string {
+    if (this.currentPassengerType === 'adult') {
+      return this.getAdultMaxDOB();
+    } else if (this.currentPassengerType === 'child') {
+      return this.getChildMaxDOB();
+    } else if (this.currentPassengerType === 'infant') {
+      return this.getInfantMaxDOB();
+    }
+    return this.getAdultMaxDOB();
   }
 
   // Handles the "Continue" click to unlock services
