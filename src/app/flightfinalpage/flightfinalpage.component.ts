@@ -1750,6 +1750,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   closeFareSummary() { this.showFareSummaryModal = false; }
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
   closeGSTModal() { this.showGSTModal = false; }
+  handleGSTClick() {
+    if (this.isMobileView()) {
+      this.openGSTModal();
+    } else {
+      this.toggleGSTForm();
+    }
+  }
   toggleGSTForm() { 
     if (!this.isGSTExpanded) {
       this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' };
