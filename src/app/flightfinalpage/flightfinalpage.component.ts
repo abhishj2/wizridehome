@@ -611,7 +611,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             duration: this.formatDuration(durationMins),
             cabinBaggage: seg.CabinBaggage,
             checkInBaggage: seg.Baggage,
+            cabin: seg.CabinBaggage, // For desktop template
+            checkIn: seg.Baggage, // For desktop template
             fareTag: seg.SupplierFareClass,
+            fareClass: seg.SupplierFareClass, // For desktop template
             layover: null,
             originCode: origin.AirportCode,
             destinationCode: destination.AirportCode,
@@ -696,7 +699,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
             duration: this.formatDuration(durationMins),
             cabinBaggage: seg.CabinBaggage,
             checkInBaggage: seg.Baggage,
+            cabin: seg.CabinBaggage, // For desktop template
+            checkIn: seg.Baggage, // For desktop template
             fareTag: seg.SupplierFareClass,
+            fareClass: seg.SupplierFareClass, // For desktop template
             layover: null,
             originCode: origin.AirportCode,
             destinationCode: destination.AirportCode,

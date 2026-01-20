@@ -2805,6 +2805,137 @@ body {
   }
 }
 
+/* Desktop Baggage Section Styling */
+.makemytrip-baggage-section {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.baggage-allowance-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.baggage-allowance-item .baggage-icon {
+  color: #008b8b;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.baggage-allowance-item .baggage-text {
+  line-height: 1.5;
+}
+
+/* Desktop Add Baggage CTA */
+.makemytrip-add-baggage {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #fff7ed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.add-baggage-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.add-baggage-left .add-baggage-icon {
+  color: #008b8b;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.add-baggage-left .add-baggage-text {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.add-baggage-btn {
+  padding: 12px 24px;
+  background: #008b8b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.add-baggage-btn:hover {
+  background: #006666;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 139, 139, 0.3);
+}
+
+/* Desktop Cancellation Policy Section */
+.makemytrip-cancellation-section {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+}
+
+.cancellation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cancellation-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.view-policy-link {
+  color: #008b8b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.view-policy-link:hover {
+  text-decoration: underline;
+}
+
+/* Details button inside flight card */
+.makemytrip-flight-card .details-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.makemytrip-flight-card .details-btn:hover {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 /* Hide MakeMyTrip baggage and cancellation sections on mobile */
 @media (max-width: 768px) {
   .makemytrip-baggage-section,
