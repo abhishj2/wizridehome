@@ -472,20 +472,61 @@
     <!-- GST Details Card -->
     <div class="card">
       <div class="section-title">GST - (Optional)</div>
-      <div class="gst-box" (click)="openGSTModal()">
-        <div class="icon"><i class="fas fa-building"></i></div>
-        <div class="label">
-          <span class="gst-label-text">
-            {{
-            gstDetails.companyName
-            ? gstDetails.companyName
-            : "Travelling for Business?"
-            }}
-          </span>
+      <div class="passenger-item-wrapper">
+        <div class="gst-box" [class.completed]="gstDetails.companyName">
+          <div class="icon"><i class="fas fa-building"></i></div>
+          <div class="label">
+            <span class="gst-label-text">
+              {{
+              gstDetails.companyName
+              ? gstDetails.companyName
+              : "Travelling for Business?"
+              }}
+            </span>
+          </div>
+          <button class="add-btn light small" (click)="toggleGSTForm()">
+            {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+          </button>
         </div>
-        <button class="add-btn light small">
-          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
-        </button>
+        <!-- Desktop Inline Form -->
+        <div class="passenger-inline-form gst-inline-form desktop-only" [class.expanded]="isGSTExpanded">
+          <div class="passenger-form-content" *ngIf="isGSTExpanded">
+            <div class="gst-note">
+              <div class="note-header">
+                <i class="fas fa-info-circle"></i>
+                <div>NOTE</div>
+              </div>
+              <div class="note-text">
+                This is an optional section. Fill this if you wish to claim GST credit for this booking.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" [(ngModel)]="gstDetails.companyName" placeholder="Enter company name" />
+            </div>
+            <div class="form-group">
+              <label>Company Billing Address</label>
+              <textarea [(ngModel)]="gstDetails.companyAddress" placeholder="Enter billing address" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Phone Number</label>
+                <input type="tel" [(ngModel)]="gstDetails.companyPhone" placeholder="Enter phone number" />
+              </div>
+              <div class="form-group">
+                <label>Company Email Address</label>
+                <input type="email" [(ngModel)]="gstDetails.companyEmail" placeholder="Enter email address" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>GST Number</label>
+              <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
+            </div>
+            <div class="form-actions">
+              <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1082,20 +1123,61 @@
     <!-- GST Details Card -->
     <div class="card">
       <div class="section-title">GST - (Optional)</div>
-      <div class="gst-box" (click)="openGSTModal()">
-        <div class="icon"><i class="fas fa-building"></i></div>
-        <div class="label">
-          <span class="gst-label-text">
-            {{
-            gstDetails.companyName
-            ? gstDetails.companyName
-            : "Travelling for Business?"
-            }}
-          </span>
+      <div class="passenger-item-wrapper">
+        <div class="gst-box" [class.completed]="gstDetails.companyName">
+          <div class="icon"><i class="fas fa-building"></i></div>
+          <div class="label">
+            <span class="gst-label-text">
+              {{
+              gstDetails.companyName
+              ? gstDetails.companyName
+              : "Travelling for Business?"
+              }}
+            </span>
+          </div>
+          <button class="add-btn light small" (click)="toggleGSTForm()">
+            {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+          </button>
         </div>
-        <button class="add-btn light small">
-          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
-        </button>
+        <!-- Desktop Inline Form -->
+        <div class="passenger-inline-form gst-inline-form desktop-only" [class.expanded]="isGSTExpanded">
+          <div class="passenger-form-content" *ngIf="isGSTExpanded">
+            <div class="gst-note">
+              <div class="note-header">
+                <i class="fas fa-info-circle"></i>
+                <div>NOTE</div>
+              </div>
+              <div class="note-text">
+                This is an optional section. Fill this if you wish to claim GST credit for this booking.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" [(ngModel)]="gstDetails.companyName" placeholder="Enter company name" />
+            </div>
+            <div class="form-group">
+              <label>Company Billing Address</label>
+              <textarea [(ngModel)]="gstDetails.companyAddress" placeholder="Enter billing address" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Phone Number</label>
+                <input type="tel" [(ngModel)]="gstDetails.companyPhone" placeholder="Enter phone number" />
+              </div>
+              <div class="form-group">
+                <label>Company Email Address</label>
+                <input type="email" [(ngModel)]="gstDetails.companyEmail" placeholder="Enter email address" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>GST Number</label>
+              <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
+            </div>
+            <div class="form-actions">
+              <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1640,20 +1722,61 @@
     <!-- GST Details Card -->
     <div class="card">
       <div class="section-title">GST - (Optional)</div>
-      <div class="gst-box" (click)="openGSTModal()">
-        <div class="icon"><i class="fas fa-building"></i></div>
-        <div class="label">
-          <span class="gst-label-text">
-            {{
-            gstDetails.companyName
-            ? gstDetails.companyName
-            : "Travelling for Business?"
-            }}
-          </span>
+      <div class="passenger-item-wrapper">
+        <div class="gst-box" [class.completed]="gstDetails.companyName">
+          <div class="icon"><i class="fas fa-building"></i></div>
+          <div class="label">
+            <span class="gst-label-text">
+              {{
+              gstDetails.companyName
+              ? gstDetails.companyName
+              : "Travelling for Business?"
+              }}
+            </span>
+          </div>
+          <button class="add-btn light small" (click)="toggleGSTForm()">
+            {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
+          </button>
         </div>
-        <button class="add-btn light small">
-          {{ gstDetails.companyName ? "CHANGE" : "ADD" }}
-        </button>
+        <!-- Desktop Inline Form -->
+        <div class="passenger-inline-form gst-inline-form desktop-only" [class.expanded]="isGSTExpanded">
+          <div class="passenger-form-content" *ngIf="isGSTExpanded">
+            <div class="gst-note">
+              <div class="note-header">
+                <i class="fas fa-info-circle"></i>
+                <div>NOTE</div>
+              </div>
+              <div class="note-text">
+                This is an optional section. Fill this if you wish to claim GST credit for this booking.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" [(ngModel)]="gstDetails.companyName" placeholder="Enter company name" />
+            </div>
+            <div class="form-group">
+              <label>Company Billing Address</label>
+              <textarea [(ngModel)]="gstDetails.companyAddress" placeholder="Enter billing address" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Phone Number</label>
+                <input type="tel" [(ngModel)]="gstDetails.companyPhone" placeholder="Enter phone number" />
+              </div>
+              <div class="form-group">
+                <label>Company Email Address</label>
+                <input type="email" [(ngModel)]="gstDetails.companyEmail" placeholder="Enter email address" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>GST Number</label>
+              <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
+            </div>
+            <div class="form-actions">
+              <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

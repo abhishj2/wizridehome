@@ -181,6 +181,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showAddBaggageModal: boolean = false;
   showPolicyModal: boolean = false;
   showGSTModal: boolean = false;
+  isGSTExpanded: boolean = false;
   
   // Fare Summary Accordion States
   isBaseFareExpanded: boolean = false;
@@ -1749,7 +1750,19 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   closeFareSummary() { this.showFareSummaryModal = false; }
   openGSTModal() { this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' }; this.showGSTModal = true; }
   closeGSTModal() { this.showGSTModal = false; }
-  saveGSTDetails() { this.gstInfo.companyName = this.gstDetails.companyName; this.gstInfo.registrationNo = this.gstDetails.gstNumber; this.contact.hasGST = !!this.gstDetails.companyName; this.closeGSTModal(); }
+  toggleGSTForm() { 
+    if (!this.isGSTExpanded) {
+      this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' };
+    }
+    this.isGSTExpanded = !this.isGSTExpanded;
+  }
+  saveGSTDetails() { 
+    this.gstInfo.companyName = this.gstDetails.companyName; 
+    this.gstInfo.registrationNo = this.gstDetails.gstNumber; 
+    this.contact.hasGST = !!this.gstDetails.companyName; 
+    this.closeGSTModal(); 
+    this.isGSTExpanded = false;
+  }
   
   // Fare Summary Accordion Toggle Methods
   toggleBaseFare() { this.isBaseFareExpanded = !this.isBaseFareExpanded; }

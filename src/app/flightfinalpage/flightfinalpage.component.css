@@ -1379,6 +1379,11 @@ body {
   border-color: #d1d5db;
 }
 
+.gst-box.completed {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
 .gst-box .icon {
   width: 32px;
   height: 32px;
@@ -1422,6 +1427,65 @@ body {
   background: #f0fdfa;
   border-color: #0d9488;
   color: #0d9488;
+}
+
+/* GST Inline Form Specific Styles */
+.gst-inline-form .gst-note {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.gst-inline-form .gst-note .note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.gst-inline-form .gst-note .note-header i {
+  color: #3b82f6;
+  font-size: 16px;
+}
+
+.gst-inline-form .gst-note .note-header div {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e40af;
+}
+
+.gst-inline-form .gst-note .note-text {
+  font-size: 13px;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
+.gst-inline-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.gst-inline-form .save-btn {
+  padding: 12px 32px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gst-inline-form .save-btn:hover {
+  background: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Compact GST section title */
