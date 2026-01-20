@@ -293,21 +293,21 @@
                   </div>
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
-                <div class="form-group">
-                  <label>Date of Birth</label>
-                  <app-custom-calendar
-                    [selectedDate]="getDOBAsDateString(adult)"
-                    [minDate]="getAdultMinDOB()"
-                    [maxDate]="getAdultMaxDOB()"
-                    placeholder="Select Date of Birth"
-                    (dateSelected)="onDOBSelected(adult, $event)">
-                  </app-custom-calendar>
-                  <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                    {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
-                  </div>
-                </div>
-                <div class="form-row">
+                <div class="form-row form-row-three">
                   <div class="form-group">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(adult)"
+                      [minDate]="getAdultMinDOB()"
+                      [maxDate]="getAdultMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(adult, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                  <div class="form-group form-group-small">
                     <label>Country Code</label>
                     <select class="dial-select" [(ngModel)]="adult.mobileDialCode">
                       <option value="+91">IN +91</option>
@@ -895,21 +895,21 @@
                   </div>
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
-                <div class="form-group">
-                  <label>Date of Birth</label>
-                  <app-custom-calendar
-                    [selectedDate]="getDOBAsDateString(adult)"
-                    [minDate]="getAdultMinDOB()"
-                    [maxDate]="getAdultMaxDOB()"
-                    placeholder="Select Date of Birth"
-                    (dateSelected)="onDOBSelected(adult, $event)">
-                  </app-custom-calendar>
-                  <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                    {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
-                  </div>
-                </div>
-                <div class="form-row">
+                <div class="form-row form-row-three">
                   <div class="form-group">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(adult)"
+                      [minDate]="getAdultMinDOB()"
+                      [maxDate]="getAdultMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(adult, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                  <div class="form-group form-group-small">
                     <label>Country Code</label>
                     <select class="dial-select" [(ngModel)]="adult.mobileDialCode">
                       <option value="+91">IN +91</option>
@@ -1534,21 +1534,21 @@
                   </div>
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
-                <div class="form-group">
-                  <label>Date of Birth</label>
-                  <app-custom-calendar
-                    [selectedDate]="getDOBAsDateString(adult)"
-                    [minDate]="getAdultMinDOB()"
-                    [maxDate]="getAdultMaxDOB()"
-                    placeholder="Select Date of Birth"
-                    (dateSelected)="onDOBSelected(adult, $event)">
-                  </app-custom-calendar>
-                  <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                    {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
-                  </div>
-                </div>
-                <div class="form-row">
+                <div class="form-row form-row-three">
                   <div class="form-group">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(adult)"
+                      [minDate]="getAdultMinDOB()"
+                      [maxDate]="getAdultMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(adult, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                  <div class="form-group form-group-small">
                     <label>Country Code</label>
                     <select class="dial-select" [(ngModel)]="adult.mobileDialCode">
                       <option value="+91">IN +91</option>

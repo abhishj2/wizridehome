@@ -1210,6 +1210,23 @@ body {
   margin-bottom: 0;
 }
 
+/* Three-column row for DOB + Country Code + Phone */
+.passenger-form-content .form-row-three {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 1.2fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.passenger-form-content .form-row-three .form-group {
+  margin-bottom: 0;
+}
+
+.passenger-form-content .form-row-three .form-group-small {
+  flex: 0 0 auto;
+  min-width: 110px;
+}
+
 /* Responsive: Stack form rows on smaller desktop screens */
 @media (max-width: 1024px) {
   .passenger-form-content .form-row {
@@ -1218,6 +1235,15 @@ body {
   }
   
   .passenger-form-content .form-row .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .passenger-form-content .form-row-three {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .passenger-form-content .form-row-three .form-group {
     margin-bottom: 16px;
   }
 }
@@ -6021,4 +6047,18 @@ padding:0 !important
 
 .flight-card-item .card{
   padding:0 !important;
+}
+
+/* Custom Calendar Input Padding Override for Flight Final Page */
+.passenger-form-content .form-group .custom-calendar-container .calendar-input {
+  padding: 11px 20px 11px 44px !important;
+  font-size: 14px !important;
+}
+
+/* Mobile Calendar Input Override */
+@media (max-width: 768px) {
+  .form-group .custom-calendar-container .calendar-input {
+    padding: 10px 14px 10px 38px !important;
+    font-size: 14px !important;
+  }
 }

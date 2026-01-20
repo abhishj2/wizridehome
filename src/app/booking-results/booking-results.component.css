@@ -3989,3 +3989,13 @@ img.seat-watermark-img {
 .vehicle-cards .card {
   border:1px solid #eee !important
 }
+
+.route-line:before{
+  left:12px !important;
+  right:12px !important;
+}
+
+.results-column,
+.sidebar-column{
+  margin-top:10px !important;
+}
