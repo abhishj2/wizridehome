@@ -1569,11 +1569,12 @@ body {
   background: white;
   border-top: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .mobile-price-bar:active {
-  background: #f9fafb;
+  background: #f3f4f6;
+  transform: scale(0.98);
 }
 
 .mobile-price-info {
@@ -1589,16 +1590,11 @@ body {
 }
 
 .mobile-price-amount {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #000;
 }
 
-.mobile-price-bar i {
-  font-size: 16px;
-  color: #6c757d;
-  transition: transform 0.3s ease;
-}
 
 /* Bottom Sheet Modal */
 .bottom-sheet-overlay {
