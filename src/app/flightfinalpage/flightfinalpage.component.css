@@ -1719,17 +1719,7 @@ body {
   align-items: center;
 }
 
-.fare-total-label {
-  font-size: 13px;
-  color: #6c757d;
-  font-weight: 400;
-}
-
-.fare-total-amount {
-  font-size: 20px;
-  font-weight: 700;
-  color: #212529;
-}
+/* Old fare-total-label and fare-total-amount styles removed - now using accordion styles below */
 
 .fare-proceed-btn {
   background: #e0e0e0 !important;
@@ -3359,13 +3349,7 @@ body {
     padding: 16px 24px;
   }
 
-  .fare-total-label {
-    font-size: 13px;
-  }
-
-  .fare-total-amount {
-    font-size: 20px;
-  }
+  /* Removed old .fare-total-label override - using accordion styles */
 
   .fare-proceed-btn {
     padding: 16px;
@@ -4603,25 +4587,23 @@ i.fas.fa-plane-departure {
   display: block;
 }
 
-/* Total Amount Styling */
+/* Total Amount Styling - Single Bold Dark Line */
 .fare-total-amount {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 0 0 0;
   margin-top: 8px;
+  flex-wrap: nowrap;
 }
 
-.fare-total-label {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1f2937;
-}
-
+.fare-total-label,
 .fare-total-value {
   font-size: 18px;
   font-weight: 700;
   color: #1f2937;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 /* Override existing fare-summary-title */
@@ -4659,4 +4641,12 @@ i.fas.fa-plane-departure {
   .fare-total-value {
     font-size: 16px;
   }
+}
+
+.fare-summary-desktop .fare-accordion-item{
+  border-bottom:none !important;
+}
+
+.fare-summary-divider{
+  border-top:1px solid #000 !important;
 }
