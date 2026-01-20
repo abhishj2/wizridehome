@@ -2180,6 +2180,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   getTotalOneWayBaggageCount(): number {
     return Object.values(this.baggageCounts).reduce((a: number, b: number) => a + b, 0);
   }
+
+  getTotalRoundTripBaggageCount(): number {
+    const onwardTotal = Object.values(this.onwardBaggageCounts).reduce((a: number, b: number) => a + b, 0);
+    const returnTotal = Object.values(this.returnBaggageCounts).reduce((a: number, b: number) => a + b, 0);
+    return onwardTotal + returnTotal;
+  }
+
   canAddMoreBaggage(): boolean {
     const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
     const total = Object.values(counts).reduce((a: number, b: number) => a + b, 0);

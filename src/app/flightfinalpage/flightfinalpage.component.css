@@ -125,34 +125,120 @@ body {
 
 /* Baggage Modal */
 .baggage-modal {
-  max-width: 500px;
+  max-width: 600px;
 }
 
+/* MMT Style - Blue Route Pill */
+.baggage-route-pill {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  border-radius: 24px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
 
-.baggage-note {
+.baggage-route-pill .route-text {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.baggage-route-pill .route-status {
+  color: rgba(255, 255, 255, 0.9);
   font-size: 13px;
-  color: #6c757d;
-  margin: 0;
+  font-weight: 400;
 }
 
+/* Included Baggage Info */
+.included-baggage-info {
+  font-size: 14px;
+  color: #212529;
+  margin-bottom: 20px;
+  padding: 12px 0;
+  font-weight: 500;
+}
 
+.included-baggage-info .baggage-amount {
+  color: #00897B;
+  font-weight: 700;
+}
+
+/* Baggage Options */
 .baggage-option {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   padding: 16px;
   border: 1px solid #e9ecef;
   border-radius: 8px;
   margin-bottom: 12px;
+  transition: all 0.2s ease;
 }
 
+.baggage-option:hover {
+  border-color: #2196F3;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
 
-
-
-
+/* Baggage Footer - MMT Style */
 .baggage-footer {
-  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0 0 0;
   border-top: 1px solid #e9ecef;
+}
+
+.baggage-footer .footer-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.baggage-footer .baggage-count {
+  font-size: 14px;
+  color: #212529;
+  font-weight: 600;
+}
+
+.baggage-footer .added-to-fare {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.baggage-footer .total-price {
+  font-size: 20px;
+  color: #212529;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.baggage-done-btn {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.baggage-done-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+.baggage-done-btn:active {
+  transform: translateY(0);
 }
 
 
@@ -1415,16 +1501,23 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .option-left i {
-  color: #8b4513;
-  font-size: 20px;
+  color: #6c757d;
+  font-size: 24px;
 }
 
 .baggage-text {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.baggage-weight {
+  font-size: 15px;
+  color: #212529;
+  font-weight: 600;
 }
 
 .baggage-text>div:first-child {
@@ -1443,6 +1536,17 @@ body {
 .option-right {
   display: flex;
   align-items: center;
+  gap: 16px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.baggage-price {
+  font-size: 16px;
+  color: #212529;
+  font-weight: 700;
+  min-width: 80px;
+  text-align: right;
 }
 
 .button-wrapper {
@@ -1451,28 +1555,44 @@ body {
 }
 
 .add-option-btn {
-  padding: 10px 20px;
-  background: #000;
-  color: #ffffff;
-  border: none;
+  padding: 8px 16px;
+  background: #ffffff;
+  color: #212529;
+  border: 2px solid #e9ecef;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.add-option-btn:hover {
+  border-color: #2196F3;
+  background: #f5f5f5;
+}
+
+.add-option-btn i {
+  font-size: 12px;
 }
 
 .counter-wrapper {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  padding: 4px 8px;
 }
 
 .counter-btn {
-  width: 32px;
-  height: 32px;
-  border: 2px solid #e9ecef;
-  background: #ffffff;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
   font-size: 18px;
   font-weight: 600;
   color: #212529;
@@ -1480,18 +1600,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.counter-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+  color: #2196F3;
 }
 
 .counter-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .counter-value {
-  min-width: 30px;
+  min-width: 24px;
   text-align: center;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: #212529;
 }
 
@@ -3382,25 +3508,37 @@ body {
     border-top: 2px solid #e9ecef;
   }
 
-  /* Baggage Modal - Enhanced styling */
+  /* Baggage Modal - Enhanced styling (MMT Style) */
   .baggage-popup .trip-header {
     padding: 28px 32px;
+    border-bottom: 1px solid #e9ecef;
   }
 
   .baggage-popup .trip-body {
-    padding: 32px;
+    padding: 24px 32px;
   }
 
   .baggage-option {
-    padding: 20px;
+    padding: 18px 20px;
     border: 2px solid #e9ecef;
     transition: all 0.3s ease;
   }
 
   .baggage-option:hover {
-    border-color: #008b8b;
-    box-shadow: 0 4px 12px rgba(0, 139, 139, 0.1);
-    transform: translateX(4px);
+    border-color: #2196F3;
+    box-shadow: 0 4px 16px rgba(33, 150, 243, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .baggage-route-pill {
+    padding: 14px 24px;
+    margin-bottom: 24px;
+  }
+
+  .included-baggage-info {
+    font-size: 15px;
+    padding: 16px 0;
+    margin-bottom: 24px;
   }
 
   .baggage-note {
@@ -3411,6 +3549,12 @@ body {
 
   .baggage-footer {
     padding: 24px 32px;
+    border-top: 2px solid #e9ecef;
+  }
+
+  .baggage-done-btn {
+    padding: 16px 50px;
+    font-size: 17px;
   }
 
   /* GST Modal - Enhanced styling */
@@ -4160,6 +4304,68 @@ body {
     top: auto;
     transform: none;
     border-radius: 20px 20px 0 0;
+  }
+
+  /* Mobile baggage modal adjustments */
+  .baggage-route-pill {
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .baggage-route-pill .route-text {
+    font-size: 14px;
+  }
+
+  .baggage-route-pill .route-status {
+    font-size: 12px;
+  }
+
+  .included-baggage-info {
+    font-size: 13px;
+    padding: 12px 0;
+    margin-bottom: 16px;
+  }
+
+  .baggage-option {
+    padding: 14px;
+    flex-wrap: wrap;
+  }
+
+  .option-right {
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .baggage-price {
+    font-size: 15px;
+  }
+
+  .baggage-footer {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .baggage-footer .footer-left {
+    width: 100%;
+  }
+
+  .baggage-footer .baggage-count {
+    font-size: 13px;
+  }
+
+  .baggage-footer .total-price {
+    font-size: 18px;
+  }
+
+  .baggage-done-btn {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 15px;
   }
 
   /* Stack add-baggage section vertically on mobile */

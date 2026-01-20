@@ -1869,33 +1869,38 @@
 <div class="trip-overlay" *ngIf="showAddBaggageModal" (click)="showAddBaggageModal = false"></div>
 <div class="baggage-popup baggage-modal" *ngIf="showAddBaggageModal && tripType !== 'roundtrip'">
   <div class="trip-header">
-    <div>Add Baggage</div>
+    <div>Add Extra Baggage</div>
     <button class="close-btn" (click)="showAddBaggageModal = false">×</button>
   </div>
   <div class="trip-body">
-    <div class="baggage-note">
-      <div class="note-header">
-        <i class="fas fa-suitcase-rolling"></i>
-        <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+    <!-- Flight Route Indicator (Blue Pill - MMT Style) -->
+    <div class="baggage-route-pill" *ngIf="flightSegments?.length">
+      <div class="route-text">
+        {{ flightSegments[0]?.from }}-{{ flightSegments[flightSegments.length - 1]?.to }}
       </div>
-      <div class="note-text">
-        NOTE: Airlines might charge you extra for carrying more than 1 Bag per Adult.
-      </div>
+      <div class="route-status">Selection pending</div>
     </div>
+
+    <!-- Included Baggage Info -->
+    <div class="included-baggage-info">
+      Included Check-in baggage per person - <span class="baggage-amount">15 KGS</span>
+    </div>
+
+    <!-- Baggage Options -->
     <ng-container *ngFor="let baggage of baggageOptions">
       <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
         <div class="option-left">
           <i class="fas fa-suitcase-rolling"></i>
           <div class="baggage-text">
-            <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
-            <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+            <div class="baggage-weight">Additional {{ baggage.kgs || baggage.Weight }} KG</div>
           </div>
         </div>
         <div class="option-right">
+          <div class="baggage-price">₹ {{ baggage.price || baggage.Price }}</div>
           <div class="button-wrapper">
             <button class="add-option-btn" *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
               (click)="incrementBaggage(baggage)">
-              ADD
+              Add <i class="fas fa-plus"></i>
             </button>
             <div class="counter-wrapper" *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
               <button class="counter-btn" (click)="decrementBaggage(baggage)">-</button>
@@ -1913,18 +1918,19 @@
     </ng-container>
   </div>
   <div class="baggage-footer">
-    <div class="total">
-      ₹ Total Price<br />
-      <strong>{{ calculateBaggageTotal() | number : "1.2-2" }}</strong>
+    <div class="footer-left">
+      <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected</div>
+      <div class="added-to-fare">Added to fare</div>
+      <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
     </div>
-    <button class="proceed-btn" (click)="handleOneWayBaggageDone()">DONE</button>
+    <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">DONE</button>
   </div>
 </div>
 
 <!-- Roundtrip Baggage Modal -->
 <div class="baggage-popup baggage-modal" *ngIf="tripType === 'roundtrip' && showAddBaggageModal">
   <div class="trip-header">
-    <div>Add Baggage</div>
+    <div>Add Extra Baggage</div>
     <button class="close-btn" (click)="showAddBaggageModal = false">×</button>
   </div>
   <div class="policy-tabs">
@@ -1938,27 +1944,36 @@
   <div class="trip-body">
     <div class="tab-content-container">
       <div class="tab-content-wrapper" [class.return-active]="activeRoundBaggageTab === 'return'">
+        <!-- Onward Tab -->
         <div class="tab-panel">
-          <div class="baggage-note">
-            <div class="note-header">
-              <i class="fas fa-suitcase-rolling"></i>
-              <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+          <!-- Flight Route Indicator (Blue Pill - MMT Style) -->
+          <div class="baggage-route-pill" *ngIf="flightSegments?.length">
+            <div class="route-text">
+              {{ flightSegments[0]?.from }}-{{ flightSegments[flightSegments.length - 1]?.to }}
             </div>
+            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}</div>
           </div>
+
+          <!-- Included Baggage Info -->
+          <div class="included-baggage-info">
+            Included Check-in baggage per person - <span class="baggage-amount">15 KGS</span>
+          </div>
+
+          <!-- Baggage Options -->
           <ng-container *ngFor="let baggage of baggageOptions">
             <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
               <div class="option-left">
                 <i class="fas fa-suitcase-rolling"></i>
                 <div class="baggage-text">
-                  <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
-                  <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+                  <div class="baggage-weight">Additional {{ baggage.kgs || baggage.Weight }} KG</div>
                 </div>
               </div>
               <div class="option-right">
+                <div class="baggage-price">₹ {{ baggage.price || baggage.Price }}</div>
                 <div class="button-wrapper">
                   <button class="add-option-btn" *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
                     (click)="incrementRoundBaggage(baggage)">
-                    ADD
+                    Add <i class="fas fa-plus"></i>
                   </button>
                   <div class="counter-wrapper" *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
                     <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
@@ -1975,27 +1990,37 @@
             </div>
           </ng-container>
         </div>
+        
+        <!-- Return Tab -->
         <div class="tab-panel">
-          <div class="baggage-note">
-            <div class="note-header">
-              <i class="fas fa-suitcase-rolling"></i>
-              <div>ALREADY INCLUDED CHECK-IN BAGGAGE PER ADULT: 15 KG</div>
+          <!-- Flight Route Indicator (Blue Pill - MMT Style) -->
+          <div class="baggage-route-pill" *ngIf="flightSegmentsReturn?.length">
+            <div class="route-text">
+              {{ flightSegmentsReturn[0]?.from }}-{{ flightSegmentsReturn[flightSegmentsReturn.length - 1]?.to }}
             </div>
+            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}</div>
           </div>
+
+          <!-- Included Baggage Info -->
+          <div class="included-baggage-info">
+            Included Check-in baggage per person - <span class="baggage-amount">15 KGS</span>
+          </div>
+
+          <!-- Baggage Options -->
           <ng-container *ngFor="let baggage of baggageOptionsReturn">
             <div class="baggage-option" *ngIf="(baggage.kgs || baggage.Weight) > 0">
               <div class="option-left">
                 <i class="fas fa-suitcase-rolling"></i>
                 <div class="baggage-text">
-                  <div>Additional {{ baggage.kgs || baggage.Weight }} kgs</div>
-                  <div class="pprice">₹ {{ baggage.price || baggage.Price }}</div>
+                  <div class="baggage-weight">Additional {{ baggage.kgs || baggage.Weight }} KG</div>
                 </div>
               </div>
               <div class="option-right">
+                <div class="baggage-price">₹ {{ baggage.price || baggage.Price }}</div>
                 <div class="button-wrapper">
                   <button class="add-option-btn" *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) === 0"
                     (click)="incrementRoundBaggage(baggage)">
-                    ADD
+                    Add <i class="fas fa-plus"></i>
                   </button>
                   <div class="counter-wrapper" *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
                     <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
@@ -2016,11 +2041,12 @@
     </div>
   </div>
   <div class="baggage-footer">
-    <div class="total">
-      ₹ Total Price<br />
-      <strong>{{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</strong>
+    <div class="footer-left">
+      <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s) Selected</div>
+      <div class="added-to-fare">Added to fare</div>
+      <div class="total-price">₹ {{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</div>
     </div>
-    <button class="proceed-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
+    <button class="baggage-done-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
   </div>
 </div>
 
