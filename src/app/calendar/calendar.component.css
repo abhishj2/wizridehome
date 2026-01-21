@@ -84,7 +84,7 @@
   left: 0;
   background: #ffffff;
   border: 2px solid darkcyan;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0, 139, 139, 0.2);
   z-index: 999999999 !important;
   opacity: 0;
@@ -92,8 +92,8 @@
   transform: translateY(-10px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 5px;
-  width: 300px;
-  max-height: 380px;
+  width: 320px;
+  max-height: 400px;
   overflow: visible;
 }
 
@@ -137,7 +137,7 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 8px 10px 6px;
+  padding: 10px 12px 8px;
   background: linear-gradient(135deg, darkcyan, #20b2aa);
   color: white;
   position: relative;
@@ -148,16 +148,16 @@
 .nav-btn {
   background: rgba(255, 255, 255, 0.2);
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   color: white;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .nav-btn:hover:not(:disabled) {
@@ -179,7 +179,7 @@
 
 .current-month-year {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   text-align: center;
   color: white;
@@ -194,14 +194,14 @@
 .month-selector, .year-selector {
   background: darkcyan;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
+  border-radius: 6px;
   color: white;
-  padding: 3px 6px;
-  font-size: 10px;
+  padding: 4px 8px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 65px;
+  min-width: 70px;
   text-align: center;
 }
 
@@ -271,13 +271,13 @@
 }
 
 .week-day {
-  padding: 4px 2px;
+  padding: 6px 4px;
   text-align: center;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   color: #6c757d;
   text-transform: uppercase;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 /* Calendar Grid */
@@ -292,29 +292,29 @@
 .calendar-day {
   background: white;
   border: none;
-  padding: 3px 2px;
-  font-size: 12px;
+  padding: 4px 3px;
+  font-size: 13px;
   font-weight: 500;
   color: #212529;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 28px;
+  min-height: 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 0px;
+  gap: 1px;
 }
 
 .calendar-day .date-number {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1;
 }
 
 .calendar-day .date-fare {
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 600;
   color: #10b981;
   line-height: 1;
@@ -444,31 +444,31 @@
 /* Desktop specific - ensure proper width */
 @media (min-width: 769px) {
   .calendar-dropdown {
-    width: 310px;
-    min-width: 310px;
+    width: 340px;
+    min-width: 340px;
   }
   
   .calendar-header {
-    padding: 8px 12px 6px;
+    padding: 12px 15px 10px;
   }
   
   .week-day {
-    padding: 5px 3px;
-    font-size: 10px;
+    padding: 8px 6px;
+    font-size: 12px;
   }
   
   .calendar-day {
-    padding: 4px 3px;
-    font-size: 12px;
-    min-height: 36px;
+    padding: 6px 4px;
+    font-size: 14px;
+    min-height: 40px;
   }
   
   .calendar-day .date-number {
-    font-size: 12px;
+    font-size: 14px;
   }
   
   .calendar-day .date-fare {
-    font-size: 8px;
+    font-size: 10px;
   }
 }
 
@@ -490,20 +490,16 @@
   }
 
   .calendar-dropdown {
-    min-width: 100%;
-    max-width: 100%;
-    left: 0;
-    right: 0;
-    max-height: 380px;
-    overflow-y: auto;
     position: fixed;
     top: auto !important;
     bottom: 80px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
-    width: calc(100% - 40px);
-    margin: 0 20px;
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    margin: 0;
+    border-radius: 12px;
   }
   
   .calendar-dropdown.active {
@@ -516,21 +512,29 @@
   }
   
   .calendar-header {
-    padding: 15px 15px 10px;
+    padding: 10px 12px 8px;
   }
   
   .month-year-display h3 {
-    font-size: 16px;
+    font-size: 15px;
   }
   
   .calendar-day {
-    padding: 10px 6px;
-    min-height: 36px;
+    padding: 4px 3px;
+    min-height: 32px;
     font-size: 13px;
   }
   
+  .calendar-day .date-number {
+    font-size: 13px;
+  }
+  
+  .calendar-day .date-fare {
+    font-size: 9px;
+  }
+  
   .week-day {
-    padding: 10px 6px;
+    padding: 6px 4px;
     font-size: 11px;
   }
 }
@@ -552,21 +556,35 @@
   }
 
   .calendar-dropdown {
-    min-width: 95%;
-    max-width: 100%;
-    width: calc(100% - 30px);
-    margin: 0 auto;
-    max-height: 360px;
+    width: 300px;
+    max-width: calc(100vw - 30px);
+    border-radius: 10px;
+  }
+  
+  .calendar-header {
+    padding: 8px 10px 6px;
+  }
+  
+  .current-month-year {
+    font-size: 13px;
   }
   
   .calendar-day {
-    padding: 8px 4px;
-    min-height: 32px;
+    padding: 4px 3px;
+    min-height: 30px;
     font-size: 12px;
   }
   
+  .calendar-day .date-number {
+    font-size: 12px;
+  }
+  
+  .calendar-day .date-fare {
+    font-size: 8px;
+  }
+  
   .week-day {
-    padding: 8px 4px;
+    padding: 5px 3px;
     font-size: 10px;
   }
 }
@@ -660,4 +678,36 @@
   flex-direction: column;
   height: auto;
   width: 100%;
+}
+
+@media(min-width:767px){
+  .week-day{
+    padding:6px !important;
+    font-size:10px !important;
+}
+.calendar-day span{
+    padding:6px !important;
+    font-size:12px !important;
+}
+
+/* .calendar-day{
+min-height: 22px !important;
+height:30px !important;} */
+
+.month-selector,
+.year-selector{
+    font-size:11px !important
+}
+
+.calendar-header{
+    padding:10px !important
+}
+
+/* .calendar-dropdown {
+    min-width:290px !important;
+    width:290px !important;
+} */
+
+
+
 }
