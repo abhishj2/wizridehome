@@ -809,12 +809,12 @@
       </div>
 
       <!-- Add Baggage CTA - Desktop Only -->
-      <div class="makemytrip-add-baggage roundtrip-add-baggage roundtrip-desktop-add-baggage extra-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
           <span class="baggage-emoji">🎒</span>
           <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
         </div>
-        <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
+        <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
         </button>
       </div>
@@ -1457,12 +1457,12 @@
     </div>
 
     <!-- Add Baggage CTA - Desktop Only (Outside loop - appears once) -->
-    <div class="makemytrip-add-baggage multicity-add-baggage multicity-desktop-add-baggage extra-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+    <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
       <div class="baggage-banner-text">
         <span class="baggage-emoji">🎒</span>
         <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
       </div>
-      <button class="add-baggage-btn" (click)="showAddBaggageModal = true">
+      <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
         ADD BAGGAGE
       </button>
     </div>
