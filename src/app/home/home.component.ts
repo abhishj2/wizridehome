@@ -1141,7 +1141,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     return false;
   }
 
-  onMobileSearch(): void {
+  async onMobileSearch(): Promise<void> {
     // Validate phone number from mobile form
     if (!this.phoneNumber || !this.phoneNumber.trim()) {
       Swal.fire({
@@ -1190,6 +1190,19 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         timer: 3000,
         timerProgressBar: true,
         showConfirmButton: false
+      });
+      return;
+    }
+
+    // Check if number is blocked
+    const isBlocked = await this.checkIfNumberBlocked(this.phoneNumber);
+    if (isBlocked) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Access Blocked',
+        text: 'Sorry, you are blocked. Please contact our support for assistance.',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d33'
       });
       return;
     }
@@ -3287,7 +3300,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     }
   }
 
-  confirmPhonePopup() {
+  async confirmPhonePopup() {
     // Clear previous error
     this.phoneError = '';
 
@@ -3319,6 +3332,20 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
     // Store the full phone number with country code
     const completePhoneNumber = this.selectedCountryCode + this.phoneNumber;
+
+    // Check if number is blocked
+    const isBlocked = await this.checkIfNumberBlocked(this.phoneNumber);
+    if (isBlocked) {
+      this.cancelPhonePopup();
+      Swal.fire({
+        icon: 'error',
+        title: 'Access Blocked',
+        text: 'Sorry, you are blocked. Please contact our support for assistance.',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
 
     if (this.pendingAction === 'flights') {
       // Close the popup first
@@ -5675,6 +5702,44 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       a.name.toLowerCase() === cityName.toLowerCase()
     );
     return airport ? airport.code : '';
+  }
+
+  /**
+   * Check if phone number is blocked
+   */
+  async checkIfNumberBlocked(phoneNumber: string): Promise<boolean> {
+    try {
+      // Check with just the phone number
+      const response1: any = await this.apiService.getCheckedBlockedNumber(phoneNumber).toPromise();
+      if (response1 === 'BLOCKED') {
+        return true;
+      }
+
+      // If phone number includes country code, also check without country code
+      if (phoneNumber.length > 10) {
+        // Extract last 10 digits
+        const numberWithoutCode = phoneNumber.slice(-10);
+        const response2: any = await this.apiService.getCheckedBlockedNumber(numberWithoutCode).toPromise();
+        if (response2 === 'BLOCKED') {
+          return true;
+        }
+      }
+
+      // Also check with country code if not already included
+      if (phoneNumber.length === 10 && this.selectedCountryCode) {
+        const numberWithCode = this.selectedCountryCode + phoneNumber;
+        const response3: any = await this.apiService.getCheckedBlockedNumber(numberWithCode).toPromise();
+        if (response3 === 'BLOCKED') {
+          return true;
+        }
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error checking blocked number:', error);
+      // If API fails, allow the search to proceed (fail open for better UX)
+      return false;
+    }
   }
 
   /**
