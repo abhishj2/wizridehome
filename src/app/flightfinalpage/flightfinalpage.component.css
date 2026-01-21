@@ -61,7 +61,7 @@ body {
 .proceed-btn {
   width: 100%;
   padding: 16px;
-  background: #000;
+  background: linear-gradient(135deg, #2196F3, #1565C0);
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -70,12 +70,13 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 24px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
 .proceed-btn:hover:not(:disabled) {
-  background: #006666;
+  background: linear-gradient(135deg, #42A5F5, #1976D2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 139, 139, 0.3);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
 }
 
 .proceed-btn:disabled {
@@ -130,11 +131,12 @@ body {
 
 /* MMT Style - Blue Route Pill */
 .baggage-route-pill {
-  background: #000;
+  background: linear-gradient(135deg, #2196F3, #1565C0);
   border-radius: 24px;
   padding: 12px 20px;
   margin-bottom: 20px;
   display: inline-block;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
 .baggage-route-pill .route-text {
@@ -227,7 +229,7 @@ body {
 }
 
 .baggage-done-btn {
-  background: #000000;
+  background: linear-gradient(135deg, #2196F3, #1565C0);
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -242,8 +244,9 @@ body {
 }
 
 .baggage-done-btn:hover {
+  background: linear-gradient(135deg, #42A5F5, #1976D2);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5);
 }
 
 .baggage-done-btn:active {
@@ -3795,7 +3798,7 @@ body {
   }
 
   .add-baggage-btn {
-    background: #000;
+    background: linear-gradient(135deg, #2196F3, #1565C0);
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -3806,12 +3809,13 @@ body {
     transition: all 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
   }
 
   .add-baggage-btn:hover {
-    background: #1d4ed8;
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
   }
   image.png
   /* Cancellation Policy Section - Desktop Only */
@@ -3963,7 +3967,7 @@ body {
 
 .add-baggage-btn {
   padding: 12px 24px;
-  background: #008b8b;
+  background: linear-gradient(135deg, #2196F3, #1565C0);
   color: white;
   border: none;
   border-radius: 6px;
@@ -3972,12 +3976,13 @@ body {
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
 .add-baggage-btn:hover {
-  background: #006666;
+  background: linear-gradient(135deg, #42A5F5, #1976D2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 139, 139, 0.3);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
 }
 
 /* Desktop Cancellation Policy Section */
@@ -6125,13 +6130,18 @@ padding:0 !important
 }
 
 /* Standard input height for consistency */
-.passenger-form-content .form-row-three .form-group input[type="tel"],
-.passenger-form-content .form-row-three .form-group select {
+.passenger-form-content .form-row-three .form-group #finalpagecal input[type="tel"],
+.passenger-form-content .form-row-three .form-group #finalpagecal select {
   height: 42px !important;
   padding: 10px 12px !important;
   box-sizing: border-box !important;
 }
 
+
+
+#finalpagecal .calendar-input{
+  height:42px !important;
+  padding: 11px 20px 11px 44px;}
 /* Ensure calendar dropdown appears above other content */
 .custom-calendar-container {
   position: relative !important;
@@ -6173,11 +6183,31 @@ padding:0 !important
   }
 }
 
+/* Calendar input overrides for flight final page - Desktop */
+::ng-deep #finalpagecal .calendar-input {
+  height: 42px !important;
+  padding: 11px 20px 11px 44px !important;
+}
+
+::ng-deep #finalpagecal .input-icon {
+  font-size: 14px !important;
+}
+
+::ng-deep #finalpagecal .calendar-arrow {
+  font-size: 12px !important;
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .form-group .custom-calendar-container .calendar-input {
     padding: 10px 14px 10px 38px !important;
     height: 42px !important;
+    font-size: 14px !important;
+  }
+  
+  ::ng-deep #finalpagecal .calendar-input {
+    height: 42px !important;
+    padding: 10px 14px 10px 38px !important;
     font-size: 14px !important;
   }
 }

@@ -294,7 +294,7 @@
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
-                  <div class="form-group">
+                  <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
@@ -919,7 +919,7 @@
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
-                  <div class="form-group">
+                  <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
@@ -1570,7 +1570,7 @@
                   <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
-                  <div class="form-group">
+                  <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
@@ -2351,7 +2351,7 @@
       </select>
       <div class="error-message" *ngIf="passengerValidationErrors.gender">{{ passengerValidationErrors.gender }}</div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="finalpagecal">
       <label>Date of Birth</label>
       <app-custom-calendar
         [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
