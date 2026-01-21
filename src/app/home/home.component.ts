@@ -4941,7 +4941,9 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   private currentCalendarType: 'departure' | 'return' = 'departure';
   
   onCalendarOpened(type: 'departure' | 'return' = 'departure') {
+    this.isCalendarOpen = true;
     this.currentCalendarType = type;
+    this.toggleDropdownActiveClass();
     
     // Get the selected from and to cities
     const fromCity = this.flightRoutes[0]?.from;

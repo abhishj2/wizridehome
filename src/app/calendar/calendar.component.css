@@ -84,7 +84,7 @@
   left: 0;
   background: #ffffff;
   border: 2px solid darkcyan;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 15px 35px rgba(0, 139, 139, 0.2);
   z-index: 999999999 !important;
   opacity: 0;
@@ -92,8 +92,8 @@
   transform: translateY(-10px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 5px;
-  width: 320px;
-  max-height: 400px;
+  width: 300px;
+  max-height: 380px;
   overflow: visible;
 }
 
@@ -137,7 +137,7 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 15px 15px 10px;
+  padding: 8px 10px 6px;
   background: linear-gradient(135deg, darkcyan, #20b2aa);
   color: white;
   position: relative;
@@ -148,16 +148,16 @@
 .nav-btn {
   background: rgba(255, 255, 255, 0.2);
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   color: white;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .nav-btn:hover:not(:disabled) {
@@ -174,12 +174,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .current-month-year {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   text-align: center;
   color: white;
@@ -194,14 +194,14 @@
 .month-selector, .year-selector {
   background: darkcyan;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 6px;
+  border-radius: 5px;
   color: white;
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 3px 6px;
+  font-size: 10px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 70px;
+  min-width: 65px;
   text-align: center;
 }
 
@@ -271,13 +271,13 @@
 }
 
 .week-day {
-  padding: 8px 6px;
+  padding: 4px 2px;
   text-align: center;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 600;
   color: #6c757d;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 
 /* Calendar Grid */
@@ -292,29 +292,29 @@
 .calendar-day {
   background: white;
   border: none;
-  padding: 8px 6px;
-  font-size: 13px;
+  padding: 3px 2px;
+  font-size: 12px;
   font-weight: 500;
   color: #212529;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 32px;
+  min-height: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 2px;
+  gap: 0px;
 }
 
 .calendar-day .date-number {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
 }
 
 .calendar-day .date-fare {
-  font-size: 9px;
+  font-size: 7px;
   font-weight: 600;
   color: #10b981;
   line-height: 1;
@@ -444,31 +444,31 @@
 /* Desktop specific - ensure proper width */
 @media (min-width: 769px) {
   .calendar-dropdown {
-    width: 340px;
-    min-width: 340px;
+    width: 310px;
+    min-width: 310px;
   }
   
   .calendar-header {
-    padding: 15px 20px 10px;
+    padding: 8px 12px 6px;
   }
   
   .week-day {
-    padding: 10px 8px;
-    font-size: 12px;
+    padding: 5px 3px;
+    font-size: 10px;
   }
   
   .calendar-day {
-    padding: 10px 8px;
-    font-size: 14px;
-    min-height: 50px;
+    padding: 4px 3px;
+    font-size: 12px;
+    min-height: 36px;
   }
   
   .calendar-day .date-number {
-    font-size: 14px;
+    font-size: 12px;
   }
   
   .calendar-day .date-fare {
-    font-size: 10px;
+    font-size: 8px;
   }
 }
 
