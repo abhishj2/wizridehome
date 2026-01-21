@@ -636,6 +636,17 @@
         <div class="flight-card-item" *ngIf="flightSegments?.length">
           <div class="card">
             <div class="flight-leg roundtrip-flight-leg roundtrip-onward-flight-leg">
+              <!-- Route Header with Date -->
+              <div class="route-header roundtrip-route-header" *ngIf="flightSegments[0]">
+                <div class="route-info">
+                  <div class="route-title">
+                    {{ flightSegments[0].from }} <span>→</span> {{ flightSegments[flightSegments.length - 1].to }}
+                  </div>
+                  <div class="date-time-section">
+                    <span class="date-badge">{{ flightSegments[0].date | date : "EEEE, MMM dd" }}</span>
+                  </div>
+                </div>
+              </div>
               <div *ngFor="let segment of flightSegments; let i = index">
                 <!-- Flight Details -->
                 <div class="flight-details-section">
@@ -699,6 +710,17 @@
         <div class="flight-card-item" *ngIf="flightSegmentsReturn?.length">
           <div class="card">
             <div class="flight-leg roundtrip-flight-leg roundtrip-return-flight-leg">
+              <!-- Route Header with Date -->
+              <div class="route-header roundtrip-route-header" *ngIf="flightSegmentsReturn[0]">
+                <div class="route-info">
+                  <div class="route-title">
+                    {{ flightSegmentsReturn[0].from }} <span>→</span> {{ flightSegmentsReturn[flightSegmentsReturn.length - 1].to }}
+                  </div>
+                  <div class="date-time-section">
+                    <span class="date-badge">{{ flightSegmentsReturn[0].date | date : "EEEE, MMM dd" }}</span>
+                  </div>
+                </div>
+              </div>
               <div *ngFor="let segment of flightSegmentsReturn; let i = index">
                 <!-- Flight Details -->
                 <div class="flight-details-section">
@@ -1289,6 +1311,17 @@
         *ngFor="let group of flightSegmentGroups; let groupIndex = index"
       >
         <div class="flight-leg multicity-flight-leg">
+          <!-- Route Header with Date -->
+          <div class="route-header multicity-route-header" *ngIf="group?.length > 0">
+            <div class="route-info">
+              <div class="route-title">
+                {{ group[0]?.from }} <span>→</span> {{ group[group.length - 1]?.to }}
+              </div>
+              <div class="date-time-section">
+                <span class="date-badge">{{ group[0]?.date | date : "EEEE, MMM dd" }}</span>
+              </div>
+            </div>
+          </div>
           <ng-container *ngFor="let segment of group; let i = index">
             <!-- Flight Details -->
             <div class="flight-details-section">
