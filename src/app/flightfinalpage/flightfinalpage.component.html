@@ -647,6 +647,9 @@
                     <span class="date-badge">{{ flightSegments[0].date | date : "EEEE, MMM dd" }}</span>
                   </div>
                 </div>
+                <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+                  CANCELLATION FEES APPLY
+                </div>
               </div>
               <div *ngFor="let segment of flightSegments; let i = index">
                 <!-- Flight Details -->
@@ -720,6 +723,9 @@
                   <div class="date-time-section">
                     <span class="date-badge">{{ flightSegmentsReturn[0].date | date : "EEEE, MMM dd" }}</span>
                   </div>
+                </div>
+                <div class="cancellation-badge" *ngIf="flightDataReturn && getCancellationRows(flightDataReturn).length > 0">
+                  CANCELLATION FEES APPLY
                 </div>
               </div>
               <div *ngFor="let segment of flightSegmentsReturn; let i = index">
@@ -1322,6 +1328,9 @@
               <div class="date-time-section">
                 <span class="date-badge">{{ group[0]?.date | date : "EEEE, MMM dd" }}</span>
               </div>
+            </div>
+            <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+              CANCELLATION FEES APPLY
             </div>
           </div>
           <ng-container *ngFor="let segment of group; let i = index">

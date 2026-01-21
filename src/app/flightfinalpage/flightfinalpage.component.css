@@ -6280,3 +6280,6 @@ padding:0 !important
     flex-direction:row !important;
     align-items:center !important;
 }
+.route-header.roundtrip-route-header .cancellation-badge{
+  margin-right:20px !important;
+}
