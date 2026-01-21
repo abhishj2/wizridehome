@@ -299,7 +299,8 @@
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
                       [minDate]="getAdultMinDOB()"
-                      [maxDate]="getAdultMaxDOB()"
+                      [maxDate]="getTodayDate()"
+                      [initialDate]="getTodayDate()"
                       placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
@@ -923,7 +924,8 @@
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
                       [minDate]="getAdultMinDOB()"
-                      [maxDate]="getAdultMaxDOB()"
+                      [maxDate]="getTodayDate()"
+                      [initialDate]="getTodayDate()"
                       placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
@@ -1573,7 +1575,8 @@
                     <app-custom-calendar
                       [selectedDate]="getDOBAsDateString(adult)"
                       [minDate]="getAdultMinDOB()"
-                      [maxDate]="getAdultMaxDOB()"
+                      [maxDate]="getTodayDate()"
+                      [initialDate]="getTodayDate()"
                       placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
@@ -2353,7 +2356,8 @@
       <app-custom-calendar
         [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
         [minDate]="getCurrentPassengerMinDOB()"
-        [maxDate]="getCurrentPassengerMaxDOB()"
+        [maxDate]="getTodayDate()"
+        [initialDate]="getTodayDate()"
         placeholder="Select Date of Birth"
         (dateSelected)="onDOBSelected(currentPassengerDetails, $event)">
       </app-custom-calendar>

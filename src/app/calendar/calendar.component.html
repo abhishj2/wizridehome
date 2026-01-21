@@ -44,22 +44,22 @@
       <div class="month-year-display">
         <h3 class="current-month-year">{{ getMonthYearDisplay() }}</h3>
         <div class="month-year-selectors">
-          <select class="month-selector" (change)="onMonthChange($event)" [value]="displayMonth.getMonth()">
-            <option value="0">January</option>
-            <option value="1">February</option>
-            <option value="2">March</option>
-            <option value="3">April</option>
-            <option value="4">May</option>
-            <option value="5">June</option>
-            <option value="6">July</option>
-            <option value="7">August</option>
-            <option value="8">September</option>
-            <option value="9">October</option>
-            <option value="10">November</option>
-            <option value="11">December</option>
+          <select class="month-selector" (change)="onMonthChange($event)">
+            <option value="0" [selected]="displayMonth.getMonth() === 0">January</option>
+            <option value="1" [selected]="displayMonth.getMonth() === 1">February</option>
+            <option value="2" [selected]="displayMonth.getMonth() === 2">March</option>
+            <option value="3" [selected]="displayMonth.getMonth() === 3">April</option>
+            <option value="4" [selected]="displayMonth.getMonth() === 4">May</option>
+            <option value="5" [selected]="displayMonth.getMonth() === 5">June</option>
+            <option value="6" [selected]="displayMonth.getMonth() === 6">July</option>
+            <option value="7" [selected]="displayMonth.getMonth() === 7">August</option>
+            <option value="8" [selected]="displayMonth.getMonth() === 8">September</option>
+            <option value="9" [selected]="displayMonth.getMonth() === 9">October</option>
+            <option value="10" [selected]="displayMonth.getMonth() === 10">November</option>
+            <option value="11" [selected]="displayMonth.getMonth() === 11">December</option>
           </select>
-          <select class="year-selector" (change)="onYearChange($event)" [value]="displayYear">
-            <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+          <select class="year-selector" (change)="onYearChange($event)">
+            <option *ngFor="let year of availableYears" [value]="year" [selected]="year === displayYear">{{ year }}</option>
           </select>
         </div>
       </div>

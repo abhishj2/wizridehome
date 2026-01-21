@@ -1724,6 +1724,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return this.formatDateForCalendar(date);
   }
 
+  // Get today's date for calendar display (current year)
+  getTodayDate(): string {
+    return this.formatDateForCalendar(new Date());
+  }
+
   // Get min date for adult DOB (reasonable max age, e.g., 100 years)
   getAdultMinDOB(): string {
     const date = new Date();

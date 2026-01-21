@@ -15,6 +15,7 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
   @Input() placeholder: string = 'Select Date';
   @Input() disabled: boolean = false;
   @Input() alwaysOpen: boolean = false;
+  @Input() initialDate: string = ''; // Date to show when calendar opens with no selection
   @Output() dateSelected = new EventEmitter<string>();
   @Output() calendarOpened = new EventEmitter<void>();
   @Output() calendarClosed = new EventEmitter<void>();
@@ -86,7 +87,10 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
     if (changes['selectedDate'] && !changes['selectedDate'].firstChange) {
       this.updateSelectedDate();
     }
-    if ((changes['minDate'] || changes['maxDate']) && !changes['minDate']?.firstChange && !changes['maxDate']?.firstChange) {
+    if (changes['initialDate'] && !changes['initialDate'].firstChange) {
+      this.updateSelectedDate();
+    }
+    if ((changes['minDate'] || changes['maxDate'] || changes['initialDate']) && !changes['minDate']?.firstChange && !changes['maxDate']?.firstChange) {
       // Regenerate available years when date range changes
       this.availableYears = [];
       const currentYear = new Date().getFullYear();
@@ -128,21 +132,29 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
       }
     } else {
       this.selectedDateObj = null;
-      if (!this.displayMonth) {
-        // For DOB scenarios (when maxDate is in the past), show a more appropriate initial date
-        if (this.maxDate) {
-          const maxDateObj = new Date(this.maxDate);
-          const currentYear = new Date().getFullYear();
-          if (maxDateObj.getFullYear() < currentYear) {
-            // This is likely a DOB picker, show the max allowed date's year
-            this.displayMonth = new Date(maxDateObj);
-            this.displayYear = this.displayMonth.getFullYear();
-            return;
-          }
+      // Use initialDate if provided (for DOB scenarios)
+      if (this.initialDate) {
+        const initialDateObj = new Date(this.initialDate);
+        if (!isNaN(initialDateObj.getTime())) {
+          this.displayMonth = new Date(initialDateObj);
+          this.displayYear = this.displayMonth.getFullYear();
+          return;
         }
-        this.displayMonth = new Date();
-        this.displayYear = this.displayMonth.getFullYear();
       }
+      // For DOB scenarios (when maxDate is in the past), show a more appropriate initial date
+      if (this.maxDate) {
+        const maxDateObj = new Date(this.maxDate);
+        const currentYear = new Date().getFullYear();
+        if (maxDateObj.getFullYear() < currentYear) {
+          // This is likely a DOB picker, show the max allowed date's year
+          this.displayMonth = new Date(maxDateObj);
+          this.displayYear = this.displayMonth.getFullYear();
+          return;
+        }
+      }
+      // Default to current date
+      this.displayMonth = new Date();
+      this.displayYear = this.displayMonth.getFullYear();
     }
   }
 
@@ -152,6 +164,8 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
     if (!this.isOpen) {
       // Check available space before opening
       this.checkAvailableSpace();
+      // Ensure displayYear is in sync with displayMonth
+      this.displayYear = this.displayMonth.getFullYear();
     }
     
     this.isOpen = !this.isOpen;
