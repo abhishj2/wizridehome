@@ -82,7 +82,6 @@
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
   background: #ffffff;
   border: 2px solid darkcyan;
   border-radius: 12px;
@@ -93,10 +92,9 @@
   transform: translateY(-10px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 5px;
-  min-width: 280px;
-  max-width: 320px;
+  width: 320px;
   max-height: 400px;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 /* Smart positioning - open upward if no space below */
@@ -410,6 +408,28 @@
   background: #5a6268;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* Desktop specific - ensure proper width */
+@media (min-width: 769px) {
+  .calendar-dropdown {
+    width: 340px;
+    min-width: 340px;
+  }
+  
+  .calendar-header {
+    padding: 15px 20px 10px;
+  }
+  
+  .week-day {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .calendar-day {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
 }
 
 /* Responsive Design */
