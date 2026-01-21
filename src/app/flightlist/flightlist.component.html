@@ -402,9 +402,6 @@
     <div class="mobile-modify-drawer" [class.open]="showModifyForm" (click)="showModifyForm = false" *ngIf="flightType !== 'multi'">
       <div class="mobile-modify-drawer-content" (click)="$event.stopPropagation()">
         <button class="mobile-modify-drawer-close" (click)="showModifyForm = false">×</button>
-        <div class="mobile-modify-drawer-header">
-          <h2>Modify Search</h2>
-        </div>
         <form [formGroup]="modifySearchForm" (ngSubmit)="onModifySearch()" class="mobile-modify-search-form">
           <div class="mobile-form-group">
             <label>From:</label>
