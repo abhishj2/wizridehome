@@ -105,13 +105,18 @@
         [class.current-month]="isCurrentMonth(date)"
         [class.other-month]="!isCurrentMonth(date)"
         [class.today]="isToday(date)"
+        [class.has-fare]="getFareForDate(date)"
+        [class.lowest-fare]="isLowestFare(date)"
         [attr.aria-label]="'Select ' + date.toLocaleDateString()"
         [attr.aria-selected]="isDateSelected(date)"
         [disabled]="isDateDisabled(date)"
         (click)="selectDate(date)"
         role="gridcell"
         [attr.tabindex]="isDateSelected(date) ? 0 : -1">
-        {{ date.getDate() }}
+        <span class="date-number">{{ date.getDate() }}</span>
+        <span class="date-fare" *ngIf="getFareForDate(date) && isCurrentMonth(date)">
+          ₹{{ getFareForDate(date).price | number : '1.0-0' }}
+        </span>
       </button>
     </div>
 

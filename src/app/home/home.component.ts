@@ -80,6 +80,12 @@ interface Offer {
   code: string;
   image: string;
 }
+interface FareData {
+  date: string;
+  price: number;
+  airline: string;
+  isLowest: boolean;
+}
 
 interface HomepagePopup {
   id: number;
@@ -156,6 +162,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showHomepagePopup = false;
   homepagePopupData: HomepagePopup | null = null;
   isLoadingPopup = false;
+  calendarFareMap: Map<string, FareData> = new Map();
+calendarFareMapReturn: Map<string, FareData> = new Map();
 
   // State-wise city data from API
   stateWiseCities: StateWiseCity[] = [];
@@ -251,7 +259,49 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.autoplayInterval = null;
     }
   }
-
+  async fetchCalendarFare(from: string, to: string, fareMap: Map<string, FareData>) {
+    console.log(`Fetching calendar fares from ${from} to ${to}`);
+    fareMap.clear();
+    const today = new Date();
+    const startMonth = today.getMonth();
+    const startYear = today.getFullYear();
+    const fetchPromises = [];
+  
+    for (let i = 0; i < 12; i++) {
+      const start = i === 0 ? new Date(today) : new Date(startYear, startMonth + i, 1);
+      const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+  
+      const startDate = this.formatDate(start);
+      const endDate = this.formatDate(end);
+  
+      const promise = this.apiService
+        .getCalendarFare(this.ip, this.tboTokenId, 'oneway', from, to, 'all', startDate, endDate)
+        .toPromise()
+        .then((res: any) => {
+          const results = res?.Response?.SearchResults || [];
+          results.forEach((fare: any) => {
+            const raw = fare.DepartureDate;
+            const date = new Date(new Date(raw).getTime() + 5.5 * 3600 * 1000);
+            const iso = this.formatDate(date);
+            fareMap.set(iso, {
+              date: iso,
+              price: fare.Fare,
+              airline: fare.AirlineName,
+              isLowest: fare.IsLowestFareOfMonth
+            });
+          });
+        })
+        .catch((error) => {
+          console.error(`Error fetching fares for ${startDate} to ${endDate}:`, error);
+        });
+  
+      fetchPromises.push(promise);
+    }
+  
+    await Promise.all(fetchPromises);
+    return fareMap;
+  }
+  
   // Navigation methods
   nextSlide(): void {
     this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
@@ -1159,11 +1209,40 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   openMobileDatePicker(type: 'shared' | 'reserved' | 'flights'): void {
     this.mobileDatePickerType = type;
     this.showMobileDatePicker = true;
+    
+    // Fetch calendar fares for flight departure
+    if (type === 'flights') {
+      const fromCity = this.flightRoutes[0]?.from;
+      const toCity = this.flightRoutes[0]?.to;
+      
+      if (fromCity && toCity) {
+        const fromCode = this.extractAirportCode(fromCity);
+        const toCode = this.extractAirportCode(toCity);
+        
+        if (fromCode && toCode) {
+          this.fetchCalendarFare(fromCode, toCode, this.calendarFareMap);
+        }
+      }
+    }
   }
 
   openMobileReturnDatePicker(): void {
     this.mobileDatePickerType = 'flights-return';
     this.showMobileDatePicker = true;
+    
+    // Fetch calendar fares for flight return (reversed route)
+    const fromCity = this.flightRoutes[0]?.from;
+    const toCity = this.flightRoutes[0]?.to;
+    
+    if (fromCity && toCity) {
+      const fromCode = this.extractAirportCode(fromCity);
+      const toCode = this.extractAirportCode(toCity);
+      
+      if (fromCode && toCode) {
+        // Reversed: to -> from for return flight
+        this.fetchCalendarFare(toCode, fromCode, this.calendarFareMapReturn);
+      }
+    }
   }
 
   openMobileMultiCityModal(): void {
@@ -1454,9 +1533,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ip: string = '';
   loader: boolean = true;
 
-  // Calendar fare maps
-  calendarFareMap: Map<string, any> = new Map();
-  calendarFareMapReturn: Map<string, any> = new Map();
+  // Calendar fare fetched flags
   calendarFareFetched = false;
   fullYearCalendarFare: any[] = [];
 
@@ -2328,6 +2405,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   getTodayDate(): string {
     const today = new Date();
     return today.toISOString().split('T')[0];
+  }
+
+  // Format any date to YYYY-MM-DD format
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   /** -------------------
@@ -4853,10 +4938,31 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isCalendarOpen: boolean = false;
-
-  onCalendarOpened(): void {
-    this.isCalendarOpen = true;
-    this.toggleDropdownActiveClass();
+  private currentCalendarType: 'departure' | 'return' = 'departure';
+  
+  onCalendarOpened(type: 'departure' | 'return' = 'departure') {
+    this.currentCalendarType = type;
+    
+    // Get the selected from and to cities
+    const fromCity = this.flightRoutes[0]?.from;
+    const toCity = this.flightRoutes[0]?.to;
+    
+    if (fromCity && toCity) {
+      // Extract airport codes from city strings
+      const fromCode = this.extractAirportCode(fromCity);
+      const toCode = this.extractAirportCode(toCity);
+      
+      if (fromCode && toCode) {
+        // Fetch departure fares (from -> to)
+        if (type === 'departure') {
+          this.fetchCalendarFare(fromCode, toCode, this.calendarFareMap);
+        } 
+        // Fetch return fares (to -> from)
+        else if (type === 'return') {
+          this.fetchCalendarFare(toCode, fromCode, this.calendarFareMapReturn);
+        }
+      }
+    }
   }
 
   onCalendarClosed(): void {

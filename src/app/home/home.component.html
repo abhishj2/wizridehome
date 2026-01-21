@@ -435,9 +435,10 @@
                                         <app-custom-calendar
                                             [selectedDate]="route.date"
                                             [minDate]="getTodayDate()"
+                                            [calendarFareMap]="calendarFareMap"
                                             placeholder="Select Date"
                                             (dateSelected)="onFlightDepartureDateSelected($event, i)"
-                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarOpened)="onCalendarOpened('departure')"
                                             (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
@@ -448,9 +449,10 @@
                                         <app-custom-calendar
                                             [selectedDate]="formValues.flightReturn"
                                             [minDate]="getReturnMinDate()"
+                                            [calendarFareMap]="calendarFareMapReturn"
                                             placeholder="Select Return Date"
                                             (dateSelected)="onFlightReturnDateSelected($event)"
-                                            (calendarOpened)="onCalendarOpened()"
+                                            (calendarOpened)="onCalendarOpened('return')"
                                             (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                         <div class="validation-error" *ngIf="returnDateError">
@@ -2069,6 +2071,7 @@
                     *ngIf="mobileDatePickerType === 'flights'"
                     [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
                     [minDate]="getTodayDate()"
+                    [calendarFareMap]="calendarFareMap"
                     [alwaysOpen]="true"
                     placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, 'flights')">
@@ -2078,6 +2081,7 @@
                     *ngIf="mobileDatePickerType === 'flights-return'"
                     [selectedDate]="formValues.flightReturn"
                     [minDate]="getReturnMinDate()"
+                    [calendarFareMap]="calendarFareMapReturn"
                     [alwaysOpen]="true"
                     placeholder="Select return date"
                     (dateSelected)="onMobileDateSelected($event, 'flights-return')">

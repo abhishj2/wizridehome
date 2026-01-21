@@ -16,6 +16,7 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
   @Input() disabled: boolean = false;
   @Input() alwaysOpen: boolean = false;
   @Input() initialDate: string = ''; // Date to show when calendar opens with no selection
+  @Input() calendarFareMap?: Map<string, any>; // Fare data for each date
   @Output() dateSelected = new EventEmitter<string>();
   @Output() calendarOpened = new EventEmitter<void>();
   @Output() calendarClosed = new EventEmitter<void>();
@@ -408,5 +409,19 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
     const selectedYear = parseInt(target.value);
     this.displayMonth = new Date(selectedYear, this.displayMonth.getMonth(), 1);
     this.displayYear = selectedYear;
+  }
+
+  // Get fare data for a specific date
+  getFareForDate(date: Date): any {
+    if (!this.calendarFareMap) return null;
+    
+    const dateString = this.formatDateForInput(date);
+    return this.calendarFareMap.get(dateString);
+  }
+
+  // Check if a date has the lowest fare
+  isLowestFare(date: Date): boolean {
+    const fareData = this.getFareForDate(date);
+    return fareData?.isLowest === true;
   }
 }
