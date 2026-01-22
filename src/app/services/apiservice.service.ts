@@ -823,7 +823,7 @@ sellYourCar(fullName : any,contactNumber : any, cityName : any, carType : any,
         ISLCC : ISLCC, 
         ISLCCRETURN : ISLCCRETURN,
         //  dev : 'test',
-        dev : 'prod',
+        dev : 'test',
         type : 'FLIGHT'   
   
       }    

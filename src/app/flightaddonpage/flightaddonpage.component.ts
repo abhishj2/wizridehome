@@ -1160,42 +1160,46 @@ prepareFareSummaryData(): void {
         this.flightData.departureDate,
         this.flightData.returnDate,
         finalOnwardPayload, returnPayload, onwardAmount, returnAmount,
-        totalAmount, isLCC,isLCCReturn
-      ).subscribe((val: any) => {
-        if (val['payment_session_id']) {
-          cashfree(val['payment_session_id']);       
-          console.log("jee end loader", val['payment_session_id']);
-
-          // ✅ Navigate to result page with parameters
-          // this.router.navigate([
-          //   '/result',
-          //   this.orderId,
-          //   totalAmount,
-          //   'FLIGHT'
-          // ]);
-
-        } else {
-          if (val["message"] && val["message"].toString().toUpperCase().trim().includes('INVALID EMAIL')) {
-            Swal.fire({
-              title: 'Sorry!',
-              html: 'Please Enter Email ID in Correct Format.',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
-            this.loader = false;
+        totalAmount, isLCC, isLCCReturn
+      ).subscribe({
+        next: (val: any) => {
+          // DEBUG: Verify exactly what the server returned
+          console.log('Backend Payment Response:', val);
+    
+          // 1. Try to find the session ID in various common locations
+          const sessionId = val?.payment_session_id || val?.data?.payment_session_id || val?.session_id;
+    
+          if (sessionId) {
+            // 2. Call the global cashfree function declared at the top of your TS file
+            if (typeof cashfree === 'function') {
+              console.log("Redirecting to Cashfree with Session ID:", sessionId);
+              cashfree(sessionId);
+            } else {
+              console.error("Cashfree SDK (cashfree.js) is not loaded in index.html");
+              Swal.fire('Error', 'Payment SDK failed to load. Please refresh.', 'error');
+              this.loader = false;
+            }
           } else {
+            // 3. Handle the "Not Found" scenario
+            console.error("No Payment Session ID found in response object:", val);
+            const errorMsg = val?.message || 'Server failed to generate a payment session.';
+            
             Swal.fire({
-              title: 'Sorry!',
-              html: val["message"] || 'Payment session creation failed',
+              title: 'Payment Error',
+              text: errorMsg,
               icon: 'error',
               confirmButtonText: 'OK'
             });
             this.loader = false;
           }
+        },
+        error: (err) => {
+          console.error('Network/API Error:', err);
+          Swal.fire('Error', 'Could not connect to payment server.', 'error');
+          this.loader = false;
         }
-      })  
-    )
-
+      })
+    );
 
 
     return;
