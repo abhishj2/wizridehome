@@ -360,22 +360,87 @@
           <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-            <i class="fas fa-check" *ngIf="child.firstName"></i>
+        <ng-container *ngFor="let child of children; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="child.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+                <i class="fas fa-check" *ngIf="child.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                child.firstName
+                ? child.firstName + " " + child.lastName
+                : "Child " + (i + 1) + " (2 to 12 yrs)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
+                {{ child.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('child', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('child', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group" id="finalpagecal">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(child)"
+                      [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()"
+                      [initialDate]="getChildMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(child, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="child.requiresWheelchair" />
+                    <span>I require wheelchair (Optional)</span>
+                  </label>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="form-group" *ngIf="panInfoRequired">
+                  <label>PAN Number</label>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-            child.firstName
-            ? child.firstName + " " + child.lastName
-            : "Child " + (i + 1) + " (2 to 12 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
-            {{ child.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Infants Section -->
@@ -384,22 +449,76 @@
           <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+        <ng-container *ngFor="let infant of infants; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="infant.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                infant.firstName
+                ? infant.firstName + " " + infant.lastName
+                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
+                {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('infant', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('infant', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group" id="finalpagecal">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(infant)"
+                      [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()"
+                      [initialDate]="getInfantMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(infant, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-            infant.firstName
-            ? infant.firstName + " " + infant.lastName
-            : "Infant " + (i + 1) + " (15 days to 2 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
-            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Important Note -->
@@ -1053,22 +1172,87 @@
           <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-            <i class="fas fa-check" *ngIf="child.firstName"></i>
+        <ng-container *ngFor="let child of children; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="child.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+                <i class="fas fa-check" *ngIf="child.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                child.firstName
+                ? child.firstName + " " + child.lastName
+                : "Child " + (i + 1) + " (2 to 12 yrs)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
+                {{ child.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('child', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('child', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group" id="finalpagecal">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(child)"
+                      [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()"
+                      [initialDate]="getChildMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(child, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="child.requiresWheelchair" />
+                    <span>I require wheelchair (Optional)</span>
+                  </label>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="form-group" *ngIf="panInfoRequired">
+                  <label>PAN Number</label>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-            child.firstName
-            ? child.firstName + " " + child.lastName
-            : "Child " + (i + 1) + " (2 to 12 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
-            {{ child.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Infants Section -->
@@ -1077,22 +1261,76 @@
           <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+        <ng-container *ngFor="let infant of infants; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="infant.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                infant.firstName
+                ? infant.firstName + " " + infant.lastName
+                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
+                {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('infant', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('infant', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group" id="finalpagecal">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(infant)"
+                      [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()"
+                      [initialDate]="getInfantMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(infant, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-            infant.firstName
-            ? infant.firstName + " " + infant.lastName
-            : "Infant " + (i + 1) + " (15 days to 2 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
-            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Important Note -->
@@ -1544,146 +1782,86 @@
       </div>
 
       <!-- Tab Body -->
-      <div
-        class="tab-body"
-        *ngIf="groupedFlightSegments?.[activeCancelTabIndex]"
-      >
-        <ng-container
-          *ngFor="let segment of groupedFlightSegments[activeCancelTabIndex]"
-        >
-          <div class="cancellation-row">
-            <div class="flight-airline">
-              <img
-                [src]="'assets/logos/' + segment.code.split(' ')[0] + '.png'"
-                class="logo"
-              />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-
-            <div class="criteria">
-              <div class="left">Cancellation Criteria</div>
-              <div class="right">Charges</div>
-            </div>
-
-            <div
-              class="criteria-detail"
-              *ngFor="let row of getCancellationRows(flightDataDeparture)"
-            >
-              <div class="left">{{ row.range }}</div>
-              <div class="right">{{ row.price }}</div>
-            </div>
-          </div>
-
-          <hr class="baggage-divider" />
-        </ng-container>
-      </div>
-    </div>
-
-    <!-- Add Passenger Card -->
-    <div class="card">
-      <div class="section-title">Add Passenger Details</div>
-      
-      <!-- Adults Section -->
-      <div class="passenger-section">
+      <div class="passenger-section" *ngIf="children.length > 0">
         <div class="passenger-category-header">
-          <span class="passenger-category-title">ADULTS (12+ YRS)</span>
-          <span class="passenger-count">{{ getCompletedCount(adults) }}/{{ adults.length }} added</span>
+          <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
+          <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
         </div>
-        <ng-container *ngFor="let adult of adults; let i = index">
+        <ng-container *ngFor="let child of children; let i = index">
           <div class="passenger-item-wrapper">
-            <div class="passenger-box" [class.completed]="adult.firstName">
+            <div class="passenger-box" [class.completed]="child.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
-                <i class="fas fa-check" *ngIf="adult.firstName"></i>
+                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
+                <i class="fas fa-check" *ngIf="child.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
-                  adult.firstName
-                    ? getPassengerDisplayName(adult)
-                    : "Adult " + (i + 1) + " (12 yrs+)"
+                  child.firstName
+                    ? child.firstName + " " + child.lastName
+                    : "Child " + (i + 1) + " (2 to 12 yrs)"
                 }}
               </div>
-              <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
-                {{ adult.firstName ? "CHANGE" : "+ ADD" }}
+              <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
+                {{ child.firstName ? "CHANGE" : "+ ADD" }}
               </button>
             </div>
             <!-- Desktop Inline Form -->
-            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('adult', i)">
-              <div class="passenger-form-content" *ngIf="isPassengerExpanded('adult', i)">
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('child', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('child', i)">
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'" (click)="adult.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'" (click)="adult.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
                 </div>
-                <div class="form-row form-row-three">
+                <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
                     <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(adult)"
-                      [minDate]="getAdultMinDOB()"
-                      [maxDate]="getTodayDate()"
-                      [initialDate]="getTodayDate()"
+                      [selectedDate]="getDOBAsDateString(child)"
+                      [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()"
+                      [initialDate]="getChildMaxDOB()"
                       placeholder="Select Date of Birth"
-                      (dateSelected)="onDOBSelected(adult, $event)">
+                      (dateSelected)="onDOBSelected(child, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
                       {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
                     </div>
                   </div>
-                  <div class="form-group form-group-small">
-                    <label>Country Code</label>
-                    <select class="dial-select" [(ngModel)]="adult.mobileDialCode">
-                      <option value="+91">IN +91</option>
-                      <option value="+1">US +1</option>
-                      <option value="+44">UK +44</option>
-                      <option value="+971">AE +971</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Mobile No</label>
-                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10" [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.mobileNumber }}</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" [(ngModel)]="adult.email" placeholder="Email" [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.email }}</div>
                 </div>
                 <div class="form-group checkbox-group">
                   <label class="checkbox-label">
-                    <input type="checkbox" [(ngModel)]="adult.requiresWheelchair" />
+                    <input type="checkbox" [(ngModel)]="child.requiresWheelchair" />
                     <span>I require wheelchair (Optional)</span>
                   </label>
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -1692,52 +1870,82 @@
         </ng-container>
       </div>
 
-      <!-- Children Section -->
-      <div class="passenger-section" *ngIf="children.length > 0">
-        <div class="passenger-category-header">
-          <span class="passenger-category-title">CHILDREN (2-12 YRS)</span>
-          <span class="passenger-count">{{ getCompletedCount(children) }}/{{ children.length }} added</span>
-        </div>
-        <div class="passenger-box" [class.completed]="child.firstName" *ngFor="let child of children; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-            <i class="fas fa-check" *ngIf="child.firstName"></i>
-          </div>
-          <div class="passenger-label">
-            {{
-              child.firstName
-                ? child.firstName + " " + child.lastName
-                : "Child " + (i + 1) + " (2 to 12 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
-            {{ child.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
-      </div>
-
       <!-- Infants Section -->
       <div class="passenger-section" *ngIf="infants.length > 0">
         <div class="passenger-category-header">
           <span class="passenger-category-title">INFANTS (0-2 YRS)</span>
           <span class="passenger-count">{{ getCompletedCount(infants) }}/{{ infants.length }} added</span>
         </div>
-        <div class="passenger-box" [class.completed]="infant.firstName" *ngFor="let infant of infants; let i = index">
-          <div class="passenger-icon-circle">
-            <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-            <i class="fas fa-check" *ngIf="infant.firstName"></i>
+        <ng-container *ngFor="let infant of infants; let i = index">
+          <div class="passenger-item-wrapper">
+            <div class="passenger-box" [class.completed]="infant.firstName">
+              <div class="passenger-icon-circle">
+                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+              </div>
+              <div class="passenger-label">
+                {{
+                  infant.firstName
+                    ? infant.firstName + " " + infant.lastName
+                    : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+                }}
+              </div>
+              <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
+                {{ infant.firstName ? "CHANGE" : "+ ADD" }}
+              </button>
+            </div>
+            <!-- Desktop Inline Form -->
+            <div class="passenger-inline-form desktop-only" [class.expanded]="isPassengerExpanded('infant', i)">
+              <div class="passenger-form-content" *ngIf="isPassengerExpanded('infant', i)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>First & Middle Name</label>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <div class="gender-buttons">
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                  </div>
+                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group" id="finalpagecal">
+                    <label>Date of Birth</label>
+                    <app-custom-calendar
+                      [selectedDate]="getDOBAsDateString(infant)"
+                      [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()"
+                      [initialDate]="getInfantMaxDOB()"
+                      placeholder="Select Date of Birth"
+                      (dateSelected)="onDOBSelected(infant, $event)">
+                    </app-custom-calendar>
+                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="passportInfoRequired">
+                  <label>Passport Number</label>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                </div>
+                <div class="passenger-form-actions">
+                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="passenger-label">
-            {{
-              infant.firstName
-                ? infant.firstName + " " + infant.lastName
-                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
-            }}
-          </div>
-          <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
-            {{ infant.firstName ? "CHANGE" : "+ ADD" }}
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Important Note -->
