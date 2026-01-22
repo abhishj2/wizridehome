@@ -6288,3 +6288,155 @@ padding:0 !important
   border-left: 3px solid #10b981;
   padding-left:20px; 
 }
+
+/* Important Information Section Styles */
+.info-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.info-card .section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.info-card .section-title i {
+  color: #1565C0;
+  font-size: 20px;
+}
+
+/* Info Item Compact Layout */
+.info-item-compact {
+  display: flex;
+  gap: 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.info-item-compact:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.info-item-compact:last-child {
+  margin-bottom: 0;
+}
+
+/* Icon Circle */
+.info-item-compact .icon-circle {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  background: linear-gradient(135deg, #2196F3, #1565C0) !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-item-compact .icon-circle i {
+  color: #FFF;
+  font-size: 20px;
+}
+
+
+.info-item-compact .item-content-wrapper {
+  flex: 1;
+}
+
+/* Item Header */
+.info-item-compact .item-header {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+/* Item Content */
+.info-item-compact .item-content {
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.info-item-compact .item-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.info-item-compact .item-content li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+.info-item-compact .item-content li:last-child {
+  margin-bottom: 0;
+}
+
+.info-item-compact .item-content li::before {
+  content: '•';
+  position: absolute;
+  left: 10px;
+  color: #1565C0;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: bold;
+}
+
+/* Responsive Design for Important Information */
+@media (max-width: 768px) {
+  .info-card {
+    padding: 24px 20px;
+  }
+
+  .info-card .section-title {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+
+  .info-card .section-title i {
+    font-size: 22px;
+  }
+
+  .info-item-compact {
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .info-item-compact .icon-circle {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .info-item-compact .icon-circle i {
+    font-size: 18px;
+  }
+
+  .info-item-compact .item-header {
+    font-size: 15px;
+  }
+
+  .info-item-compact .item-content {
+    font-size: 14px;
+  }
+}
