@@ -1350,3 +1350,25 @@ html, body {
     width: 100%;
   }
 } */
+
+@media (max-width: 768px) {
+  .route-top-mobile[_ngcontent-ng-c1626078384] {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr 1fr !Important;
+      gap: 6px !important;
+      width: 100% !important;
+      min-height: 60px !important;
+      transition: gap .3s ease, min-height .3s ease;
+  }
+}
+
+@media (max-width: 768px) {
+  .route-location-group { 
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important; 
+      gap: 6px !important;
+      min-width: 0 !important;
+      transition: gap .3s ease !important;
+  }
+}
