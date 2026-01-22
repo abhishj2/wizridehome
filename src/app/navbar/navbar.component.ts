@@ -114,8 +114,13 @@ export class NavbarComponent {
     
     {
       name: 'Passes & Permits',
-      hasDropdown: false,
-      link: '/passesandpermits'
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Sikkim Inner Line Permit', link: '/sikkim_permit_guide' },
+        { name: 'Arunachal Inner Line Permit', link: '/inner-line-permit/arunachal-inner-line-permit' },
+        { name: 'Nagaland Inner Line Permit', link: '/inner-line-permit/nagaland-inner-line-permit' }
+     ]
+     
     },
     {
       name: 'Company',
