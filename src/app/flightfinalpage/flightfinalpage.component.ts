@@ -1615,6 +1615,125 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       return true;
   }
 
+  getValidationErrors(): string[] {
+    const errors: string[] = [];
+    const adults = this.travellers || [];
+    const children = this.children || [];
+    const infants = this.infants || [];
+    
+    // Check primary adult contact info
+    const primaryAdult = adults[0];
+    if (!primaryAdult) {
+      errors.push('Add at least one adult passenger');
+      return errors;
+    }
+    
+    const hasValidEmail = primaryAdult.email && primaryAdult.email.trim().length > 0;
+    const hasValidMobile = primaryAdult.mobileNumber && primaryAdult.mobileNumber.length >= 10;
+    
+    if (!hasValidEmail) {
+      const hasOldEmail = this.contact.email && this.contact.email.trim().length > 0;
+      if (!hasOldEmail) {
+        errors.push('Enter primary passenger email address');
+      }
+    }
+    
+    if (!hasValidMobile) {
+      const hasOldMobile = this.contact.mobile && this.contact.mobile.length >= 10;
+      if (!hasOldMobile) {
+        errors.push('Enter primary passenger mobile number');
+      }
+    }
+    
+    // Check each adult
+    for (let i = 0; i < adults.length; i++) {
+      const t = adults[i];
+      const label = `Adult ${i + 1}`;
+      
+      if (!t.firstName || !t.firstName.trim()) {
+        errors.push(`${label}: Enter first name`);
+      }
+      if (!t.lastName || !t.lastName.trim()) {
+        errors.push(`${label}: Enter last name`);
+      }
+      if (!t.gender || !t.gender.trim()) {
+        errors.push(`${label}: Select gender`);
+      }
+      if (!t.dobYear || !t.dobMonth || !t.dobDay) {
+        errors.push(`${label}: Enter date of birth`);
+      } else if (!this.validateAdultDOB(t)) {
+        errors.push(`${label}: Invalid date of birth (must be 12+ years old)`);
+      }
+      if (this.passportInfoRequired && (!t.passportNumber || !t.passportNumber.trim())) {
+        errors.push(`${label}: Enter passport number`);
+      }
+      if (this.panInfoRequired && (!t.panNumber || !t.panNumber.trim())) {
+        errors.push(`${label}: Enter PAN number`);
+      }
+    }
+    
+    // Check each child
+    for (let i = 0; i < children.length; i++) {
+      const c = children[i];
+      const label = `Child ${i + 1}`;
+      
+      if (!c.firstName || !c.firstName.trim()) {
+        errors.push(`${label}: Enter first name`);
+      }
+      if (!c.lastName || !c.lastName.trim()) {
+        errors.push(`${label}: Enter last name`);
+      }
+      if (!c.gender || !c.gender.trim()) {
+        errors.push(`${label}: Select gender`);
+      }
+      if (!c.dobYear || !c.dobMonth || !c.dobDay) {
+        errors.push(`${label}: Enter date of birth`);
+      }
+      if (this.passportInfoRequired && (!c.passportNumber || !c.passportNumber.trim())) {
+        errors.push(`${label}: Enter passport number`);
+      }
+      if (this.panInfoRequired && (!c.panNumber || !c.panNumber.trim())) {
+        errors.push(`${label}: Enter PAN number`);
+      }
+    }
+    
+    // Check each infant
+    for (let i = 0; i < infants.length; i++) {
+      const inf = infants[i];
+      const label = `Infant ${i + 1}`;
+      
+      if (!inf.firstName || !inf.firstName.trim()) {
+        errors.push(`${label}: Enter first name`);
+      }
+      if (!inf.lastName || !inf.lastName.trim()) {
+        errors.push(`${label}: Enter last name`);
+      }
+      if (!inf.gender || !inf.gender.trim()) {
+        errors.push(`${label}: Select gender`);
+      }
+      if (!inf.dobYear || !inf.dobMonth || !inf.dobDay) {
+        errors.push(`${label}: Enter date of birth`);
+      }
+      if (this.passportInfoRequired && (!inf.passportNumber || !inf.passportNumber.trim())) {
+        errors.push(`${label}: Enter passport number`);
+      }
+    }
+    
+    // Check GST if mandatory
+    const hasGST = this.gstDetails?.companyName || this.contact.hasGST;
+    if (hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
+      const gstNumber = this.gstDetails?.gstNumber || this.gstInfo?.registrationNo;
+      if (!this.gstDetails?.companyName && !this.gstInfo?.companyName) {
+        errors.push('GST: Enter company name');
+      }
+      if (!gstNumber || !gstNumber.trim()) {
+        errors.push('GST: Enter GST number');
+      }
+    }
+    
+    return errors;
+  }
+
   // --- FIX 4: Implemented Missing Methods for Template Errors ---
 
   // Opens modal for fare rules (maps to existing logic)
@@ -2074,14 +2193,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
   
   finalProceed() {
-    if (!this.updateProceedButton()) {
-      Swal.fire('Incomplete', 'Please complete all required fields and accept terms', 'warning');
+    // Check terms and conditions first
+    if (!this.termsAgreed) {
+      Swal.fire({
+        title: 'Terms & Conditions Required',
+        html: 'Please accept the <b>Terms & Conditions</b> to proceed with your booking.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6'
+      });
       return;
     }
     
-    // Validate all passenger details
-    if (!this.canProceed()) {
-      Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
+    // Detailed validation check
+    const validationErrors = this.getValidationErrors();
+    if (validationErrors.length > 0) {
+      const errorList = validationErrors.map(error => `• ${error}`).join('<br>');
+      Swal.fire({
+        title: 'Incomplete Details',
+        html: `<div style="text-align: left;">Please complete the following:<br><br>${errorList}</div>`,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d33',
+        width: '500px'
+      });
       return;
     }
     
