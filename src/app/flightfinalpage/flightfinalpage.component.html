@@ -370,7 +370,7 @@
               <div class="passenger-label">
                 {{
                 child.firstName
-                ? child.firstName + " " + child.lastName
+                ? getPassengerDisplayName(child)
                 : "Child " + (i + 1) + " (2 to 12 yrs)"
                 }}
               </div>
@@ -459,7 +459,7 @@
               <div class="passenger-label">
                 {{
                 infant.firstName
-                ? infant.firstName + " " + infant.lastName
+                ? getPassengerDisplayName(infant)
                 : "Infant " + (i + 1) + " (15 days to 2 yrs)"
                 }}
               </div>
@@ -1182,7 +1182,7 @@
               <div class="passenger-label">
                 {{
                 child.firstName
-                ? child.firstName + " " + child.lastName
+                ? getPassengerDisplayName(child)
                 : "Child " + (i + 1) + " (2 to 12 yrs)"
                 }}
               </div>
@@ -1271,7 +1271,7 @@
               <div class="passenger-label">
                 {{
                 infant.firstName
-                ? infant.firstName + " " + infant.lastName
+                ? getPassengerDisplayName(infant)
                 : "Infant " + (i + 1) + " (15 days to 2 yrs)"
                 }}
               </div>
