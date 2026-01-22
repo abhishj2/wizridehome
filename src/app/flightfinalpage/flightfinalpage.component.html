@@ -1516,26 +1516,6 @@
           </ng-container>
         </div>
 
-        <!-- Baggage Allowance Section - Desktop Only -->
-        <div class="makemytrip-baggage-section multicity-baggage-section multicity-desktop-baggage baggage-info">
-          <div class="baggage-allowance-item baggage-item">
-            <span class="baggage-icon">💼</span>
-            <div class="baggage-label baggage-text">
-              <span>Cabin Baggage: </span>
-              <span class="baggage-weight">{{ group[0]?.cabin || '7 KG' }}</span>
-              <span> / Adult</span>
-            </div>
-          </div>
-          <div class="baggage-allowance-item baggage-item">
-            <span class="baggage-icon">🧳</span>
-            <div class="baggage-label baggage-text">
-              <span>Check-In Baggage: </span>
-              <span class="baggage-weight">{{ group[0]?.checkIn || '15 Kilograms (1 piece only)' }}</span>
-              <span> / Adult</span>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <!-- CTA button -->
@@ -1544,51 +1524,53 @@
     </ng-container>
 
     <!-- Cancellation Policy Section with Tabs - Desktop Only -->
-    <div class="makemytrip-cancellation-section multicity-cancellation-tabs" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0 && flightSegmentGroups?.length">
-      <div class="cancellation-header">
-        <div class="cancellation-title">Cancellation & Date Change Policy</div>
-      </div>
+    <div class="card" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0 && flightSegmentGroups?.length">
+      <div class="makemytrip-cancellation-section multicity-cancellation-tabs">
+        <div class="cancellation-header">
+          <div class="cancellation-title">Cancellation & Date Change Policy</div>
+        </div>
 
-      <!-- Tab Headers -->
-      <div class="cancellation-tab-headers">
-        <div
-          *ngFor="let group of flightSegmentGroups; let i = index"
-          class="cancellation-tab-header"
-          [class.active]="i === activeCancelTabIndex"
-          (click)="activeCancelTabIndex = i"
-        >
-          {{ group[0]?.originCode }} - {{ group[group.length - 1]?.destinationCode }}
+        <!-- Tab Headers -->
+        <div class="cancellation-tab-headers">
+          <div
+            *ngFor="let group of flightSegmentGroups; let i = index"
+            class="cancellation-tab-header"
+            [class.active]="i === activeCancelTabIndex"
+            (click)="activeCancelTabIndex = i"
+          >
+            {{ group[0]?.originCode }} - {{ group[group.length - 1]?.destinationCode }}
+          </div>
         </div>
-      </div>
 
-      <!-- Tab Content -->
-      <div class="cancellation-tab-content" *ngIf="flightSegmentGroups?.[activeCancelTabIndex] as activeGroup">
-        <div class="cancellation-airline" *ngIf="activeGroup && activeGroup.length > 0">
-          <img [src]="'assets/images/flightimages/' + activeGroup[0].code?.split(' ')[0] + '.png'" class="logo" />
-          <span class="airline-route">{{ activeGroup[0].originCode }}-{{ activeGroup[activeGroup.length - 1].destinationCode }}</span>
-        </div>
-        <div class="cancellation-criteria-header">
-          <div class="criteria-left">Cancellation Criteria</div>
-          <div class="criteria-right">Charges</div>
-        </div>
-        <div class="cancellation-rows">
-          <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-            <div class="criteria-left">{{ row.range }}</div>
-            <div class="criteria-right">{{ row.price }}</div>
+        <!-- Tab Content -->
+        <div class="cancellation-tab-content" *ngIf="flightSegmentGroups?.[activeCancelTabIndex] as activeGroup">
+          <div class="cancellation-airline" *ngIf="activeGroup && activeGroup.length > 0">
+            <img [src]="'assets/images/flightimages/' + activeGroup[0].code?.split(' ')[0] + '.png'" class="logo" />
+            <span class="airline-route">{{ activeGroup[0].originCode }}-{{ activeGroup[activeGroup.length - 1].destinationCode }}</span>
+          </div>
+          <div class="cancellation-criteria-header">
+            <div class="criteria-left">Cancellation Criteria</div>
+            <div class="criteria-right">Charges</div>
+          </div>
+          <div class="cancellation-rows">
+            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+              <div class="criteria-left">{{ row.range }}</div>
+              <div class="criteria-right">{{ row.price }}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Add Baggage CTA - Desktop Only (Outside loop - appears once) -->
-    <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-      <div class="baggage-banner-text">
-        <span class="baggage-emoji">🎒</span>
-        <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+      <!-- Add Baggage CTA - Desktop Only (Inside card) -->
+      <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+        <div class="baggage-banner-text">
+          <span class="baggage-emoji">🎒</span>
+          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+        </div>
+        <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
+          ADD BAGGAGE
+        </button>
       </div>
-      <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-        ADD BAGGAGE
-      </button>
     </div>
 
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
@@ -1814,30 +1796,6 @@
       <!-- Important Note -->
       <div class="passenger-important-note">
         <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
-      </div>
-    </div>
-
-    <!-- Baggage Section - Mobile Only -->
-    <div class="card mobile-baggage-section multicity-baggage-section multicity-mobile-baggage">
-      <div class="section-title">Baggage Allowance</div>
-      <div class="mobile-baggage-content">
-        <div class="mobile-baggage-item">
-          <span class="baggage-icon">💼</span>
-          <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> / Adult</span>
-        </div>
-        <div class="mobile-baggage-item">
-          <span class="baggage-icon">🧳</span>
-          <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</strong> / Adult</span>
-        </div>
-      </div>
-      <div class="mobile-add-baggage multicity-add-baggage multicity-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-        <div class="baggage-banner-text">
-          <span class="baggage-emoji">🎒</span>
-          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
-        </div>
-        <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
-          ADD BAGGAGE
-        </button>
       </div>
     </div>
 
