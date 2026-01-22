@@ -14,7 +14,7 @@ import {
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SeoService } from '../services/seo.service';
 import { WordpressService } from '../services/wordpress.service';
@@ -411,6 +411,17 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
   setMobileTab(tab: 'shared' | 'reserved' | 'flights'): void {
     this.mobileTab = tab;
+    
+    // Update URL to reflect the current tab
+    const urlMap = {
+      'shared': '/shared',
+      'reserved': '/reserved',
+      'flights': '/flight'
+    };
+    
+    if (isPlatformBrowser(this.platformId)) {
+      this.router.navigate([urlMap[tab]], { replaceUrl: true });
+    }
     
     // On mobile, ensure flight fields are empty (no defaults) when switching to flights tab
     if (tab === 'flights' && this.isMobileView()) {
@@ -1969,11 +1980,21 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
     private router: Router,
+    private route: ActivatedRoute,
     private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    // Check route data for tab parameter
+    this.subscriptions.add(
+      this.route.data.subscribe(data => {
+        if (data['tab']) {
+          this.mobileTab = data['tab'];
+        }
+      })
+    );
+
     // Set canonical URL using SEO service
     this.seoService.setCanonicalURL('https://wizzride.com/');
 

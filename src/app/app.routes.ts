@@ -133,6 +133,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
       { path: '', component: HomeComponent,pathMatch: 'full'},
+      { path: 'shared', component: HomeComponent, data: { tab: 'shared' } },
+      { path: 'reserved', component: HomeComponent, data: { tab: 'reserved' } },
+      { path: 'flight', component: HomeComponent, data: { tab: 'flights' } },
       { path: 'booking-results', component: BookingResultsComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'thankyou', component: ThankyouComponent },

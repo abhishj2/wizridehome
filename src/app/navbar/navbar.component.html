@@ -115,9 +115,9 @@
               [class.open]="isMobileAccordionOpen(item.name)">
               <a 
                 *ngFor="let dropdownItem of item.dropdownItems" 
-                [href]="dropdownItem.link" 
+                [routerLink]="dropdownItem.link" 
                 class="mobile-nav-drawer-dropdown-item"
-                (click)="handleMobileDropdownItemClick()">
+                (click)="handleMobileDropdownItemClick(dropdownItem.link)">
                 {{ dropdownItem.name }}
               </a>
             </div>
