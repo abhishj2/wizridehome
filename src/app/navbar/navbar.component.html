@@ -95,7 +95,11 @@
             [href]="item.link || '#'" 
             class="mobile-nav-drawer-link"
             (click)="handleMobileItemClick(item, $event)">
-            {{ item.name }}
+            <div class="mobile-nav-icon-wrapper">
+              <i [class]="item.icon" class="mobile-nav-icon"></i>
+            </div>
+            <span class="mobile-nav-text">{{ item.name }}</span>
+            <i class="fas fa-chevron-right mobile-nav-arrow"></i>
           </a>
 
           <!-- Item with dropdown (accordion) -->
@@ -104,7 +108,10 @@
               class="mobile-nav-drawer-link mobile-nav-drawer-accordion-header"
               [class.active]="isMobileAccordionOpen(item.name)"
               (click)="toggleMobileAccordion(item.name, $event)">
-              <span>{{ item.name }}</span>
+              <div class="mobile-nav-icon-wrapper">
+                <i [class]="item.icon" class="mobile-nav-icon"></i>
+              </div>
+              <span class="mobile-nav-text">{{ item.name }}</span>
               <i class="fas fa-chevron-down mobile-accordion-icon" 
                  [class.rotated]="isMobileAccordionOpen(item.name)"></i>
             </div>
@@ -118,7 +125,10 @@
                 [routerLink]="dropdownItem.link" 
                 class="mobile-nav-drawer-dropdown-item"
                 (click)="handleMobileDropdownItemClick(dropdownItem.link)">
-                {{ dropdownItem.name }}
+                <div class="mobile-nav-dropdown-icon-wrapper">
+                  <i [class]="dropdownItem.icon" class="mobile-nav-dropdown-icon"></i>
+                </div>
+                <span class="mobile-nav-dropdown-text">{{ dropdownItem.name }}</span>
               </a>
             </div>
           </div>

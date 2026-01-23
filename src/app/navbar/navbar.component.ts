@@ -7,7 +7,8 @@ interface NavigationItem {
   name: string;
   hasDropdown: boolean;
   link?: string;
-  dropdownItems?: { name: string; link: string }[];
+  icon?: string;
+  dropdownItems?: { name: string; link: string; icon?: string }[];
 }
 
 @Component({
@@ -91,61 +92,64 @@ export class NavbarComponent {
     {
       name: 'Booking',
       hasDropdown: true,
-     dropdownItems: [
-        { name: 'Shared', link: '/shared' },
-        { name: 'Reserved', link: '/reserved' },
-        { name: 'Flight', link: '/flight' }
-     ]
-    },
-    {
-      name: 'Explore ',
-      hasDropdown: true,
+      icon: 'fas fa-calendar-check',
       dropdownItems: [
-        { name: 'Top Destinations', link: '/destinations' },
-        { name: 'Blogs', link: '/blogs' },
-       
+        { name: 'Shared', link: '/shared', icon: 'fas fa-users' },
+        { name: 'Reserved', link: '/reserved', icon: 'fas fa-car-side' },
+        { name: 'Flight', link: '/flight', icon: 'fas fa-plane' }
       ]
     },
-        {
+    {
+      name: 'Explore',
+      hasDropdown: true,
+      icon: 'fas fa-compass',
+      dropdownItems: [
+        { name: 'Top Destinations', link: '/destinations', icon: 'fas fa-map-marked-alt' },
+        { name: 'Blogs', link: '/blogs', icon: 'fas fa-blog' }
+      ]
+    },
+    {
       name: 'Our Services',
       hasDropdown: false,
-      link: '/ourservices'
+      link: '/ourservices',
+      icon: 'fas fa-concierge-bell'
     },
-    
     {
       name: 'Passes & Permits',
       hasDropdown: true,
+      icon: 'fas fa-id-card',
       dropdownItems: [
-        { name: 'Sikkim Inner Line Permit', link: '/sikkim_permit_guide' },
-        { name: 'Arunachal Inner Line Permit', link: '/inner-line-permit/arunachal-inner-line-permit' },
-        { name: 'Nagaland Inner Line Permit', link: '/inner-line-permit/nagaland-inner-line-permit' }
-     ]
-     
+        { name: 'Sikkim Inner Line Permit', link: '/sikkim_permit_guide', icon: 'fas fa-file-contract' },
+        { name: 'Arunachal Inner Line Permit', link: '/inner-line-permit/arunachal-inner-line-permit', icon: 'fas fa-file-contract' },
+        { name: 'Nagaland Inner Line Permit', link: '/inner-line-permit/nagaland-inner-line-permit', icon: 'fas fa-file-contract' }
+      ]
     },
     {
       name: 'Company',
       hasDropdown: true,
+      icon: 'fas fa-building',
       dropdownItems: [
-        { name: 'About Us', link: '/aboutcompany' },
-        { name: 'Careers', link: '/applyforjob' },
-        { name: 'Collaborate', link: '/applyforjob/partnerwithus/influencer' },
-        { name: 'Sell Your Car', link: '/sellyourcar' }
+        { name: 'About Us', link: '/aboutcompany', icon: 'fas fa-info-circle' },
+        { name: 'Careers', link: '/applyforjob', icon: 'fas fa-briefcase' },
+        { name: 'Collaborate', link: '/applyforjob/partnerwithus/influencer', icon: 'fas fa-handshake' },
+        { name: 'Sell Your Car', link: '/sellyourcar', icon: 'fas fa-car' }
       ]
     },
     {
       name: 'Support',
       hasDropdown: true,
+      icon: 'fas fa-headset',
       dropdownItems: [
-        { name: 'Cancel Ticket', link: '/cancelticket' },
-        { name: 'Contact Us', link: '/contactus' }
+        { name: 'Cancel Ticket', link: '/cancelticket', icon: 'fas fa-times-circle' },
+        { name: 'Contact Us', link: '/contactus', icon: 'fas fa-envelope' }
       ]
     },
-     {
+    {
       name: 'Sell Your Car',
       hasDropdown: false,
-      link: '/sellyourcar'
-    },
-  
+      link: '/sellyourcar',
+      icon: 'fas fa-car'
+    }
   ];
 
   // Toggle mobile menu
@@ -262,7 +266,7 @@ export class NavbarComponent {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize(): void {
     if (isPlatformBrowser(this.platformId) && window.innerWidth > 768) {
       this.isMobileMenuOpen = false;
@@ -271,7 +275,7 @@ export class NavbarComponent {
     }
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll(): void {
     if (!isPlatformBrowser(this.platformId) || window.innerWidth > 768) {
       return;
