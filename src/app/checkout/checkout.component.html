@@ -289,17 +289,17 @@
           <div class="fare-breakdown">
             <div class="fare-item">
               <span class="fare-label">Ride Fare (in Rs.):</span>
-              <span class="fare-amount">₹ {{ rideFare.toFixed(2) }}</span>
+              <span class="fare-amount">₹ {{ rideFare }}</span>
             </div>
             
             <div class="fare-item">
               <span class="fare-label">Goods & Services Tax (in Rs.):</span>
-              <span class="fare-amount">₹ {{ gstAmount.toFixed(2) }}</span>
+              <span class="fare-amount">₹ {{ gstAmount }}</span>
             </div>
             
             <div class="fare-item" *ngIf="travelInsuranceCost > 0">
               <span class="fare-label">Travel Insurance (in Rs.):</span>
-              <span class="fare-amount">₹ {{ travelInsuranceCost.toFixed(2) }}</span>
+              <span class="fare-amount">₹ {{ travelInsuranceCost }}</span>
             </div>
             
             <div class="fare-item" *ngIf="deficitAmount > 0">

@@ -753,23 +753,23 @@ export class CheckoutComponent implements OnInit {
     // Calculate ride fare based on booking type
     if (this.bookingData.bookingType === 'shared' && this.bookingData.selectedSeats?.length) {
       // For shared cabs, sum up the prices of selected seats
-      this.rideFare = this.bookingData.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+      this.rideFare = Math.round(this.bookingData.selectedSeats.reduce((sum, seat) => sum + seat.price, 0));
     } else if (this.bookingData.bookingType === 'reserved') {
       // For reserved cabs, rate is per cab regardless of number of seats/passengers
       const vehiclePrice = this.bookingData.vehicleDetails?.price || 0;
-      this.rideFare = vehiclePrice; // Fixed price per cab, not per passenger
+      this.rideFare = Math.round(vehiclePrice); // Fixed price per cab, not per passenger
     } else {
       // Fallback to totalPrice if available
-      this.rideFare = this.bookingData.totalPrice || 0;
+      this.rideFare = Math.round(this.bookingData.totalPrice || 0);
     }
 
-    // Calculate 5% GST
+    // Calculate 5% GST - exact amount without rounding
     this.gstAmount = this.rideFare * this.GST_RATE;
     
     // Calculate travel insurance cost (added after GST)
     this.travelInsuranceCost = this.passengerDetails.hasTravelInsurance ? this.TRAVEL_INSURANCE_RATE : 0;
     
-    // Calculate total fare (ride fare + GST + travel insurance)
+    // Calculate total fare (ride fare + GST + travel insurance) - exact amount without rounding
     // Note: Deficit amount is NOT added here as payment gateway will add it separately
     this.totalFare = this.rideFare + this.gstAmount + this.travelInsuranceCost;
   }
@@ -796,11 +796,11 @@ export class CheckoutComponent implements OnInit {
   // Get display total fare (includes deficit for UI display only)
   // Note: This is for display purposes only. The actual totalFare variable (without deficit) is sent to payment gateway
   getDisplayTotalFare(): number {
-    return Math.round(this.totalFare + this.deficitAmount);
+    return this.totalFare + this.deficitAmount;
   }
 
   getRoundedDeficitAmount(): number {
-    return Math.round(this.deficitAmount);
+    return this.deficitAmount;
   }
 
   onCouponSubmit() {
