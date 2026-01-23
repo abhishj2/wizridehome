@@ -837,22 +837,42 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
     // Validate form
     if (!this.modifyFormValues.from || !this.modifyFormValues.to) {
-      alert('Please select both pickup and drop-off cities.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please select both pickup and drop-off cities.',
+        confirmButtonColor: '#ff6b35'
+      });
       return;
     }
 
     if (!this.modifyFormValues.date) {
-      alert('Please select a date.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please select a date.',
+        confirmButtonColor: '#ff6b35'
+      });
       return;
     }
 
     if (this.searchParams.type === 'reserved' && !this.modifyFormValues.pickupTime) {
-      alert('Please select a pickup time.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please select a pickup time.',
+        confirmButtonColor: '#ff6b35'
+      });
       return;
     }
 
     if (!this.modifyFormValues.pickupLocation || !this.modifyFormValues.dropLocation) {
-      alert('Please enter specific pickup and drop-off locations.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        text: 'Please enter specific pickup and drop-off locations.',
+        confirmButtonColor: '#ff6b35'
+      });
       return;
     }
 
@@ -862,7 +882,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       const toCity = this.reservedCities.find(c => c.name === this.modifyFormValues.to);
       
       if (!fromCity || !toCity) {
-        alert('Please select valid cities.');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Selection',
+          text: 'Please select valid cities.',
+          confirmButtonColor: '#ff6b35'
+        });
         return;
       }
 
@@ -1033,7 +1058,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      alert('Please fill in all the required fields.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Form',
+        text: 'Please fill in all the required fields.',
+        confirmButtonColor: '#ff6b35'
+      });
     }
   }
 
@@ -1353,18 +1383,33 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
             this.closeSeatPopup();
           } else {
             console.log('❌ SEATS ARE BLOCKED - Cannot proceed to checkout');
-            alert('Selected seats are currently blocked. Please select different seats.');
+            Swal.fire({
+              icon: 'error',
+              title: 'Seats Unavailable',
+              text: 'Selected seats are currently blocked. Please select different seats.',
+              confirmButtonColor: '#ff6b35'
+            });
           }
         },
         error: (error) => {
           console.error('========== shareSeatBlock API ERROR ==========');
           console.error('Error:', error);
           console.error('===============================================');
-          alert('Error checking seat availability. Please try again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Connection Error',
+            text: 'Error checking seat availability. Please try again.',
+            confirmButtonColor: '#ff6b35'
+          });
         }
       });
     } else {
-      alert('Please select at least one seat to proceed.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Seat Selected',
+        text: 'Please select at least one seat to proceed.',
+        confirmButtonColor: '#ff6b35'
+      });
     }
   }
 
