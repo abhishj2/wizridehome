@@ -623,3 +623,11 @@
     animation: none;
   }
 }
+
+select{
+  font-size: 10px !important;
+}
+
+.calendar-arrow {
+  display:none !important;
+}

@@ -797,7 +797,7 @@ h2 {
 
 .travelers-btn {
     width: 100%;
-    padding: 16px 20px;
+    padding: 10px 20px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
     background: #ffffff;
@@ -1167,7 +1167,7 @@ small {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 12px 20px;
+    padding: 9px 20px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
     background: #ffffff;
@@ -2910,11 +2910,13 @@ a.service-cta-btn {
 }
 
 .passenger-counter {
-    padding: 14px 20px !important;
+    padding: 9px 20px !important;
 }
 
 .search-btn {
     padding: 16px 30px !important;
+}input.form-input {
+    padding:12px 20px; 
 }
 
 .cab-form-row {
@@ -6046,3 +6048,4 @@ button.nav-tab.active img {
 .form-row.multrow{
     align-items:end;
 }
+
