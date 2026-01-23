@@ -19,7 +19,8 @@
             <span class="date">{{ formatDate(bookingData.searchParams.date) }}</span>
             <span class="pickup-time" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">{{ formatPickupTime(bookingData.searchParams.pickupTime) }}</span>
             <span class="pickup-time" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">{{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}</span>
-            <span class="passengers">{{ getTotalSeatsCount() }} seats</span>
+            <span class="passengers" *ngIf="bookingData.bookingType === 'shared'">{{ getTotalSeatsCount() }} seats</span>
+            <!-- <span class="passengers" *ngIf="bookingData.bookingType === 'reserved'">Entire Cab</span> -->
             <span class="passengers" *ngIf="bookingData?.selectedSeats?.length">Seat No: {{ getSelectedSeats() }}</span>
           </div>
         </div>
@@ -83,11 +84,12 @@
         <!-- Vehicle and Seat Details Section -->
         <div class="vehicle-seat-mobile">
           <div class="vehicle-info-mobile">
-            <span class="total-seats-mobile">Total Seats: {{ getTotalSeatsCount() }}</span>
+            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'shared'">Total Seats: {{ getTotalSeatsCount() }}</span>
+            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'reserved'">Booking Type: Entire Cab</span>
           </div>
           <div class="seat-info-mobile">
-            <span *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected :{{ getSelectedSeats() }}</span>
-            <span *ngIf="bookingData.bookingType === 'reserved'">Seat No. Selected :{{ getSelectedSeats() }}</span>
+            <span *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected: {{ getSelectedSeats() }}</span>
+            <span *ngIf="bookingData.bookingType === 'reserved'">Full Cab Reserved</span>
           </div>
         </div>
       </div>
@@ -175,6 +177,7 @@
                   [readonly]="isMobileView()"
                   (click)="openPhoneDialer('primary', $event)"
                   (focus)="openPhoneDialer('primary', $event)"
+                  (input)="validatePhoneNumbers()"
                   required>
               </div>
               <div class="field-error" *ngIf="(formSubmitted || primaryPhoneCtrl.touched) && primaryPhoneCtrl.invalid">
@@ -204,11 +207,15 @@
                   [readonly]="isMobileView()"
                   (click)="openPhoneDialer('alternate', $event)"
                   (focus)="openPhoneDialer('alternate', $event)"
+                  (input)="validatePhoneNumbers()"
                   required>
               </div>
               <div class="field-error" *ngIf="(formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
                 <span *ngIf="alternatePhoneCtrl.errors?.['required']">Alternate phone is required.</span>
                 <span *ngIf="alternatePhoneCtrl.errors?.['minlength'] || alternatePhoneCtrl.errors?.['maxlength'] || alternatePhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
+              </div>
+              <div class="field-error" *ngIf="phoneNumbersAreSame">
+                <span>Primary and Alternate contact numbers cannot be the same. Please provide different numbers.</span>
               </div>
             </div>
           </form>

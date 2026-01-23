@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiserviceService } from '../services/apiservice.service';
+import { CustomCalendarComponent } from '../calendar/calendar.component';
 import Swal from 'sweetalert2';
 
 interface BookingSearchParams {
@@ -54,7 +55,7 @@ interface CarAdditionFormData {
 @Component({
   selector: 'app-booking-results',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CustomCalendarComponent],
   templateUrl: './booking-results.component.html',
   styleUrls: ['./booking-results.component.css']
 })
@@ -934,6 +935,81 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   cancelModifyForm() {
     this.showModifyForm = false;
     this.modifyFormSuggestions = {};
+  }
+
+  // Swap from and to cities
+  swapCities() {
+    const temp = this.modifyFormValues.from;
+    this.modifyFormValues.from = this.modifyFormValues.to;
+    this.modifyFormValues.to = temp;
+
+    // Also swap pickup and drop locations if they exist
+    const tempLocation = this.modifyFormValues.pickupLocation;
+    this.modifyFormValues.pickupLocation = this.modifyFormValues.dropLocation;
+    this.modifyFormValues.dropLocation = tempLocation;
+  }
+
+  // Increment passengers count
+  incrementPassengers() {
+    if (this.modifyFormValues.passengers < 10) {
+      this.modifyFormValues.passengers++;
+    }
+  }
+
+  // Decrement passengers count
+  decrementPassengers() {
+    if (this.modifyFormValues.passengers > 1) {
+      this.modifyFormValues.passengers--;
+    }
+  }
+
+  // Get today's date in YYYY-MM-DD format for date input min attribute
+  getTodayDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Show city suggestions on focus
+  showModifyCitySuggestionsOnFocus(field: 'from' | 'to') {
+    const value = field === 'from' ? this.modifyFormValues.from : this.modifyFormValues.to;
+    this.showModifyCitySuggestions(value, field);
+  }
+
+  // Show location suggestions on focus
+  showModifyLocationSuggestionsOnFocus(field: 'pickupLocation' | 'dropLocation') {
+    const value = field === 'pickupLocation' ? this.modifyFormValues.pickupLocation : this.modifyFormValues.dropLocation;
+    this.showModifyLocationSuggestions(value, field);
+  }
+
+  // Hide location suggestions
+  hideLocationSuggestions(field: string) {
+    setTimeout(() => {
+      const key = `modify-${field}`;
+      this.modifyFormSuggestions[key] = [];
+    }, 200);
+  }
+
+  // Handle date selection from custom calendar
+  onModifyDateSelected(date: string) {
+    this.modifyFormValues.date = date;
+  }
+
+  // Calendar opened handler
+  onCalendarOpened() {
+    // Handle calendar opened if needed
+  }
+
+  // Calendar closed handler
+  onCalendarClosed() {
+    // Handle calendar closed if needed
+  }
+
+  // Handle document click
+  onDocumentClick(event: Event) {
+    // Close suggestions when clicking outside
   }
 
   private getCityState(cityName: string): string {

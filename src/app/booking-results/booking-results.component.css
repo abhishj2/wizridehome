@@ -46,6 +46,257 @@
   width: 100%;
 }
 
+/* Modern Form Styles (Homepage Design) */
+.modify-form .cab-form-row {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.modify-form .form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 150px;
+}
+
+.modify-form .form-group label {
+  display: block;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.8px;
+}
+
+.modify-form .form-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #212529;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.modify-form .form-input:focus {
+  outline: none;
+  border-color: darkcyan;
+  box-shadow: 0 0 0 4px rgba(0, 139, 139, 0.1);
+}
+
+.modify-form .input-with-icon {
+  position: relative;
+}
+
+.modify-form .input-with-icon .form-input {
+  padding-left: 44px;
+}
+
+.modify-form .input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.modify-form .city-select {
+  position: relative;
+}
+
+.modify-form .city-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 999999999 !important;
+  display: none;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  min-height: 50px;
+}
+
+.modify-form .city-suggestions.active {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+  z-index: 999999999 !important;
+}
+
+.modify-form .city-suggestion {
+  padding: 16px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f8f9fa;
+  transition: all 0.3s ease;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.modify-form .city-suggestion:hover {
+  background: linear-gradient(135deg, rgba(0, 139, 139, 0.05), rgba(32, 178, 170, 0.05));
+}
+
+.modify-form .city-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 14px;
+}
+
+.modify-form .swap-btn {
+  background: linear-gradient(135deg, darkcyan, #20b2aa);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  color: #ffffff;
+  font-size: 18px;
+  box-shadow: 0 4px 15px rgba(0, 139, 139, 0.3);
+  align-self: end;
+  margin-bottom: 2px;
+}
+
+.modify-form .swap-btn:hover {
+  transform: rotate(180deg) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 139, 139, 0.4);
+}
+
+.modify-form .passenger-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 9px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  background: #ffffff;
+  width: 100%;
+}
+
+.modify-form .counter-btn {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid #e9ecef;
+  background: darkcyan;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modify-form .counter-btn:hover:not(:disabled) {
+  border-color: darkcyan;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.modify-form .counter-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.modify-form .counter-value {
+  font-weight: 600;
+  font-size: 15px;
+  min-width: 35px;
+  text-align: center;
+  color: #212529;
+}
+
+.modify-form .search-btn {
+  background: darkcyan;
+  color: #ffffff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px rgba(0, 139, 139, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: end;
+  align-self: end;
+}
+
+.modify-form .search-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 139, 139, 0.4);
+  background: linear-gradient(135deg, #006666, darkcyan);
+}
+
+.modify-form .search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modify-form .location-details {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 24px;
+  margin-top: 20px;
+  border: 2px solid #e9ecef;
+  display: none;
+  animation: slideDown 0.4s ease-out;
+}
+
+.modify-form .location-details.active {
+  display: block;
+}
+
+.modify-form .location-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: end;
+}
+
+.modify-form .location-details h3 {
+  color: #212529;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .modify-form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -233,6 +484,49 @@
   .modify-submit-btn {
     width: 100%;
   }
+
+  /* Modern form mobile styles */
+  .modify-form .cab-form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modify-form .form-group {
+    flex: 1 1 100%;
+  }
+
+  .modify-form .swap-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    align-self: center;
+    margin: -6px 0;
+  }
+
+  .modify-form .location-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .modify-form .search-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 24px;
+  }
+
+  .modify-form .form-input {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .modify-form .input-with-icon .form-input {
+    padding-left: 40px;
+  }
+
+  .modify-form .input-icon {
+    left: 12px;
+    font-size: 14px;
+  }
 }
 
 /* Component Host - Ensure no overflow constraints that prevent sticky positioning */
@@ -268,7 +562,7 @@ img {
   padding: 0 24px;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   box-sizing: border-box;
 }
 .steering-icon img{

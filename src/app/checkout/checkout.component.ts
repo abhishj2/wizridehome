@@ -65,6 +65,9 @@ export class CheckoutComponent implements OnInit {
   // Deficit check status
   isCheckingDeficit = false; // Whether deficit check is in progress
   isDeficitChecked = false; // Whether deficit has been checked and user has been informed
+  
+  // Phone number validation
+  phoneNumbersAreSame = false; // Track if primary and alternate numbers are the same
 
   // Country codes
   countryList = [
@@ -345,6 +348,19 @@ export class CheckoutComponent implements OnInit {
       return;
     }
     
+    // Validate that primary and alternate contact numbers are not the same
+    if (this.passengerDetails.primaryContactNo === this.passengerDetails.alternateContactNo) {
+      console.log('Manual validation failed - primary and alternate contact numbers cannot be the same');
+      Swal.fire({
+        title: 'Invalid Contact Numbers',
+        text: 'Primary and Alternate contact numbers cannot be the same. Please provide different contact numbers.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6'
+      });
+      this.scrollToForm();
+      return;
+    }
+    
     // Prevent multiple clicks while checking
     if (this.isCheckingDeficit) {
       console.log('Already checking deficit, ignoring click');
@@ -554,7 +570,12 @@ export class CheckoutComponent implements OnInit {
 
   processSharedCabPayment() {
     if (!this.bookingData) {
-      alert('Booking data not found');
+      Swal.fire({
+        title: 'Error',
+        text: 'Booking data not found',
+        icon: 'error',
+        confirmButtonColor: '#3085d6'
+      });
       return;
     }
 
@@ -616,8 +637,15 @@ export class CheckoutComponent implements OnInit {
     console.log('Complete Payment Data:', paymentData);
     console.log('=============================================');
 
-    // Display order ID in alert for debugging
-    alert(`Order ID: ${PNR}`);
+    // Display order ID in SweetAlert for debugging
+    Swal.fire({
+      title: 'Processing Payment',
+      text: `Order ID: ${PNR}`,
+      icon: 'info',
+      confirmButtonColor: '#3085d6',
+      timer: 2000,
+      timerProgressBar: true
+    });
 
     this.apiService.sendSharePayment(
       PNR,
@@ -652,13 +680,23 @@ export class CheckoutComponent implements OnInit {
           (window as any).cashfree(paymentSessionId);
         } else {
           console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
-          alert('Payment session created. Session ID: ' + paymentSessionId);
+          Swal.fire({
+            title: 'Payment Session Created',
+            text: `Session ID: ${paymentSessionId}`,
+            icon: 'success',
+            confirmButtonColor: '#3085d6'
+          });
         }
       } else {
         const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
         const isEmailError = msg.includes('INVALID EMAIL');
         
-        alert(isEmailError ? 'Please Enter Email ID in Correct Format.' : msg);
+        Swal.fire({
+          title: 'Error',
+          text: isEmailError ? 'Please Enter Email ID in Correct Format.' : msg,
+          icon: 'error',
+          confirmButtonColor: '#3085d6'
+        });
       }
     });
   }
@@ -804,12 +842,31 @@ export class CheckoutComponent implements OnInit {
     return Math.round(this.deficitAmount * 100) / 100;
   }
 
+  // Validate that phone numbers are not the same
+  validatePhoneNumbers(): void {
+    const primary = this.passengerDetails.primaryContactNo?.trim() || '';
+    const alternate = this.passengerDetails.alternateContactNo?.trim() || '';
+    
+    // Check if both numbers are filled and if they're the same
+    this.phoneNumbersAreSame = primary.length === 10 && alternate.length === 10 && primary === alternate;
+  }
+
   onCouponSubmit() {
     if (this.passengerDetails.couponCode.trim()) {
       console.log('Coupon code submitted:', this.passengerDetails.couponCode);
-      alert(`Coupon code submitted: ${this.passengerDetails.couponCode}`);
+      Swal.fire({
+        title: 'Coupon Submitted',
+        text: `Coupon code: ${this.passengerDetails.couponCode}`,
+        icon: 'success',
+        confirmButtonColor: '#3085d6'
+      });
     } else {
-      alert('Please enter a coupon code');
+      Swal.fire({
+        title: 'Missing Coupon',
+        text: 'Please enter a coupon code',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6'
+      });
     }
   }
 
@@ -888,6 +945,7 @@ export class CheckoutComponent implements OnInit {
     const currentValue = this.passengerDetails[field];
     if (currentValue.length < 10) {
       this.passengerDetails[field] = currentValue + number;
+      this.validatePhoneNumbers(); // Validate after input
     }
   }
 
@@ -902,6 +960,7 @@ export class CheckoutComponent implements OnInit {
     const currentValue = this.passengerDetails[field];
     if (currentValue.length > 0) {
       this.passengerDetails[field] = currentValue.slice(0, -1);
+      this.validatePhoneNumbers(); // Validate after deletion
     }
   }
 
@@ -931,7 +990,12 @@ export class CheckoutComponent implements OnInit {
 
   processReservedCabPayment() {
     if (!this.bookingData) {
-      alert('Booking data not found');
+      Swal.fire({
+        title: 'Error',
+        text: 'Booking data not found',
+        icon: 'error',
+        confirmButtonColor: '#3085d6'
+      });
       return;
     }
 
@@ -1005,8 +1069,15 @@ export class CheckoutComponent implements OnInit {
     console.log('Complete Payment Data:', paymentData);
     console.log('===============================================');
 
-    // Display order ID in alert for debugging
-    alert(`Order ID: ${ORDERID}`);
+    // Display order ID in SweetAlert for debugging
+    Swal.fire({
+      title: 'Processing Payment',
+      text: `Order ID: ${ORDERID}`,
+      icon: 'info',
+      confirmButtonColor: '#3085d6',
+      timer: 2000,
+      timerProgressBar: true
+    });
 
     // Call sendFbPayment API
     this.apiService.sendFbPayment(
@@ -1047,13 +1118,23 @@ export class CheckoutComponent implements OnInit {
           (window as any).cashfree(paymentSessionId);
         } else {
           console.error('Cashfree function not found. Make sure cashfree.js is loaded.');
-          alert('Payment session created. Session ID: ' + paymentSessionId);
+          Swal.fire({
+            title: 'Payment Session Created',
+            text: `Session ID: ${paymentSessionId}`,
+            icon: 'success',
+            confirmButtonColor: '#3085d6'
+          });
         }
       } else {
         const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
         const isEmailError = msg.includes('INVALID EMAIL');
         
-        alert(isEmailError ? 'Please Enter Email ID in Correct Format.' : msg);
+        Swal.fire({
+          title: 'Error',
+          text: isEmailError ? 'Please Enter Email ID in Correct Format.' : msg,
+          icon: 'error',
+          confirmButtonColor: '#3085d6'
+        });
       }
     });
   }

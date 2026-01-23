@@ -410,7 +410,6 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    flex: 1;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 139, 139, 0.3) transparent;
   }
@@ -905,7 +904,6 @@
   .mobile-nav-drawer-items {
     overflow-y: auto !important;
     min-height: 0 !important;
-    flex: 1 !important;
   }
   
   /* Sticky footer */

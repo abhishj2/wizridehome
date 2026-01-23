@@ -36,165 +36,184 @@
 </div>
 
 <!-- Inline Modify Form -->
-<div class="modify-form-container" *ngIf="showModifyForm && searchParams">
+<div class="modify-form-container" *ngIf="showModifyForm && searchParams" (click)="onDocumentClick($event)">
   <div class="container">
     <div class="modify-form-header">
       <h3>Modify Your Search</h3>
-      <button class="close-modify-btn" (click)="cancelModifyForm()">
+      <button class="close-modify-btn" (click)="cancelModifyForm()" aria-label="Close">
         <i class="fas fa-times"></i>
       </button>
     </div>
     
-    <form class="modify-form" (ngSubmit)="submitModifyForm()">
-      <div class="modify-form-row">
+    <form class="modify-form booking-form" (ngSubmit)="submitModifyForm()" #modifyForm="ngForm">
+      <!-- Main Form Row -->
+      <div class="cab-form-row">
         <!-- From City -->
-        <div class="modify-form-group">
+        <div class="form-group city-select">
           <label>From</label>
-          <div class="modify-input-wrapper">
+          <div class="input-with-icon">
+            <i class="fas fa-location-dot input-icon"></i>
             <input 
               type="text" 
-              class="modify-input"
+              class="form-input city-input"
               [(ngModel)]="modifyFormValues.from"
-              (input)="onModifyCityInput($event, 'from')"
-              (focus)="showModifyCitySuggestions(modifyFormValues.from, 'from')"
-              placeholder="Select city"
+              (focus)="showModifyCitySuggestionsOnFocus('from')"
+              (input)="showModifyCitySuggestions(modifyFormValues.from, 'from')"
+              placeholder="Source"
               name="modifyFrom"
               required>
-            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-from']?.length">
-              <div 
-                class="suggestion-item"
-                *ngFor="let city of modifyFormSuggestions['modify-from']"
-                (click)="onModifyCitySelect(city.name, 'from')">
-                {{ city.name }}
-              </div>
+          </div>
+          <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-from'] && modifyFormSuggestions['modify-from'].length > 0">
+            <div 
+              *ngFor="let city of modifyFormSuggestions['modify-from']"
+              class="city-suggestion"
+              (click)="onModifyCitySelect(city.name, 'from')">
+              <span class="city-name">{{ city.name }}</span>
+              <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">{{ city.state }}</div>
             </div>
           </div>
         </div>
+
+        <!-- Swap Button -->
+        <button type="button" class="swap-btn" (click)="swapCities()" aria-label="Swap pickup and dropoff locations">
+          <span>⇄</span>
+        </button>
 
         <!-- To City -->
-        <div class="modify-form-group">
+        <div class="form-group city-select">
           <label>To</label>
-          <div class="modify-input-wrapper">
+          <div class="input-with-icon">
+            <i class="fas fa-location-dot input-icon"></i>
             <input 
               type="text" 
-              class="modify-input"
+              class="form-input city-input"
               [(ngModel)]="modifyFormValues.to"
-              (input)="onModifyCityInput($event, 'to')"
-              (focus)="showModifyCitySuggestions(modifyFormValues.to, 'to')"
-              placeholder="Select city"
+              (focus)="showModifyCitySuggestionsOnFocus('to')"
+              (input)="showModifyCitySuggestions(modifyFormValues.to, 'to')"
+              placeholder="Destination"
               name="modifyTo"
               required>
-            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-to']?.length">
-              <div 
-                class="suggestion-item"
-                *ngFor="let city of modifyFormSuggestions['modify-to']"
-                (click)="onModifyCitySelect(city.name, 'to')">
-                {{ city.name }}
-              </div>
+          </div>
+          <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-to'] && modifyFormSuggestions['modify-to'].length > 0">
+            <div 
+              *ngFor="let city of modifyFormSuggestions['modify-to']"
+              class="city-suggestion"
+              (click)="onModifyCitySelect(city.name, 'to')">
+              <span class="city-name">{{ city.name }}</span>
+              <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">{{ city.state }}</div>
             </div>
           </div>
         </div>
 
-        <!-- Date -->
-        <div class="modify-form-group">
+        <!-- Date with Custom Calendar -->
+        <div class="form-group">
           <label>Date</label>
-          <input 
-            type="date" 
-            class="modify-input"
-            [(ngModel)]="modifyFormValues.date"
-            name="modifyDate"
-            required>
+          <app-custom-calendar
+            class="shared-cabs-calendar"
+            [selectedDate]="modifyFormValues.date"
+            [minDate]="getTodayDate()"
+            placeholder="Select Date"
+            (dateSelected)="onModifyDateSelected($event)"
+            (calendarOpened)="onCalendarOpened()"
+            (calendarClosed)="onCalendarClosed()">
+          </app-custom-calendar>
         </div>
 
         <!-- Pickup Time (for reserved cabs) -->
-        <div class="modify-form-group" *ngIf="searchParams?.type === 'reserved'">
+        <div class="form-group" *ngIf="searchParams?.type === 'reserved'">
           <label>Pickup Time</label>
-          <input 
-            type="time" 
-            class="modify-input"
-            [(ngModel)]="modifyFormValues.pickupTime"
-            name="modifyPickupTime"
-            required>
+          <div class="input-with-icon">
+            <i class="fas fa-clock input-icon"></i>
+            <input 
+              type="time" 
+              class="form-input"
+              [(ngModel)]="modifyFormValues.pickupTime"
+              name="modifyPickupTime"
+              required>
+          </div>
         </div>
 
-        <!-- Passengers -->
-        <div class="modify-form-group">
-          <label>Passengers</label>
-          <div class="modify-passenger-counter">
+        <!-- Passengers (only for shared cabs) -->
+        <div class="form-group" *ngIf="searchParams?.type === 'shared'">
+          <label>Passengers <small>(Age 2yrs & above)</small></label>
+          <div class="passenger-counter">
             <button 
               type="button"
-              class="modify-counter-btn" 
+              class="counter-btn" 
               [disabled]="modifyFormValues.passengers <= 1"
-              (click)="modifyFormValues.passengers = modifyFormValues.passengers > 1 ? modifyFormValues.passengers - 1 : 1">
-              -
-            </button>
-            <span class="modify-counter-value">{{ modifyFormValues.passengers }}</span>
+              (click)="decrementPassengers()">-</button>
+            <span class="counter-value">{{ modifyFormValues.passengers }}</span>
             <button 
               type="button"
-              class="modify-counter-btn" 
-              (click)="modifyFormValues.passengers = modifyFormValues.passengers + 1">
-              +
-            </button>
+              class="counter-btn" 
+              (click)="incrementPassengers()">+</button>
           </div>
         </div>
+
+        <!-- Search Button -->
+        <button type="submit" class="search-btn" [disabled]="modifyForm.invalid" aria-label="Search">
+          <span><i class="fas fa-search"></i></span>
+        </button>
       </div>
 
-      <!-- Pickup and Drop Locations (shown when cities are selected) -->
-      <div class="modify-form-row" *ngIf="modifyFormLocationDetailsVisible || (modifyFormValues.pickupLocation && modifyFormValues.dropLocation)">
-        <!-- Pickup Location -->
-        <div class="modify-form-group">
-          <label>Pickup Location</label>
-          <div class="modify-input-wrapper">
-            <input 
-              type="text" 
-              class="modify-input"
-              [(ngModel)]="modifyFormValues.pickupLocation"
-              (input)="onModifyLocationInput($event, 'pickupLocation')"
-              (focus)="showModifyLocationSuggestions(modifyFormValues.pickupLocation, 'pickupLocation')"
-              placeholder="Select pickup location"
-              name="modifyPickupLocation"
-              required>
-            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-pickupLocation']?.length">
+      <!-- Pickup and Drop Locations -->
+      <div class="location-details" [class.active]="modifyFormLocationDetailsVisible">
+        <h3>📍 Specify Pickup & Drop-off Locations</h3>
+        <div class="location-row">
+          <!-- Pickup Location -->
+          <div class="form-group city-select">
+            <label>Pickup Location</label>
+            <div class="input-with-icon">
+              <i class="fas fa-location-dot input-icon"></i>
+              <input 
+                type="text" 
+                class="form-input city-input"
+                [(ngModel)]="modifyFormValues.pickupLocation"
+                (input)="showModifyLocationSuggestions(modifyFormValues.pickupLocation, 'pickupLocation')"
+                (focus)="showModifyLocationSuggestionsOnFocus('pickupLocation')"
+                (blur)="hideLocationSuggestions('pickupLocation')"
+                placeholder="Enter specific pickup location"
+                name="modifyPickupLocation"
+                required>
+            </div>
+            <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-pickupLocation'] && modifyFormSuggestions['modify-pickupLocation'].length > 0">
               <div 
-                class="suggestion-item"
                 *ngFor="let location of modifyFormSuggestions['modify-pickupLocation']"
-                (click)="onModifyLocationSelect(location, 'pickupLocation')">
-                {{ location }}
+                class="city-suggestion"
+                (mousedown)="onModifyLocationSelect(location, 'pickupLocation')">
+                <span class="city-name">{{ location }}</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Drop Location -->
-        <div class="modify-form-group">
-          <label>Drop Location</label>
-          <div class="modify-input-wrapper">
-            <input 
-              type="text" 
-              class="modify-input"
-              [(ngModel)]="modifyFormValues.dropLocation"
-              (input)="onModifyLocationInput($event, 'dropLocation')"
-              (focus)="showModifyLocationSuggestions(modifyFormValues.dropLocation, 'dropLocation')"
-              placeholder="Select drop location"
-              name="modifyDropLocation"
-              required>
-            <div class="modify-suggestions" *ngIf="modifyFormSuggestions['modify-dropLocation']?.length">
+          <!-- Drop Location -->
+          <div class="form-group city-select">
+            <label>Drop Location</label>
+            <div class="input-with-icon">
+              <i class="fas fa-location-dot input-icon"></i>
+              <input 
+                type="text" 
+                class="form-input city-input"
+                [(ngModel)]="modifyFormValues.dropLocation"
+                (input)="showModifyLocationSuggestions(modifyFormValues.dropLocation, 'dropLocation')"
+                (focus)="showModifyLocationSuggestionsOnFocus('dropLocation')"
+                (blur)="hideLocationSuggestions('dropLocation')"
+                placeholder="Enter specific drop location"
+                name="modifyDropLocation"
+                required>
+            </div>
+            <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-dropLocation'] && modifyFormSuggestions['modify-dropLocation'].length > 0">
               <div 
-                class="suggestion-item"
                 *ngFor="let location of modifyFormSuggestions['modify-dropLocation']"
-                (click)="onModifyLocationSelect(location, 'dropLocation')">
-                {{ location }}
+                class="city-suggestion"
+                (mousedown)="onModifyLocationSelect(location, 'dropLocation')">
+                <span class="city-name">{{ location }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Form Actions -->
-      <div class="modify-form-actions">
-        <button type="button" class="modify-cancel-btn" (click)="cancelModifyForm()">Cancel</button>
-        <button type="submit" class="modify-submit-btn">Search</button>
-      </div>
     </form>
   </div>
 </div>
