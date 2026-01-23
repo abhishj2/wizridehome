@@ -1175,15 +1175,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
     this.currentSelectedVehicle = vehicle;
     
-    // Calculate price excluding GST for seat display
-    const priceExcludingGST = this.getPriceExcludingGST(vehicle.price);
+    // Calculate price excluding GST (for shared cabs, remove 5% GST from API price)
+    const seatPrice = this.getPriceExcludingGST(vehicle.price);
     
     // Initialize seats with default status first
-    this.initializeSeats(priceExcludingGST);
+    this.initializeSeats(seatPrice);
     
     // Fetch actual seat availability from API
     if (vehicle.tid) {
-      this.fetchSeatDetails(vehicle.tid, priceExcludingGST);
+      this.fetchSeatDetails(vehicle.tid, seatPrice);
     }
     
     this.showSeatPopup = true;
@@ -1304,12 +1304,20 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     return this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
   }
 
-  // Calculate price excluding GST (5%)
-  getPriceExcludingGST(priceWithGST: number): number {
-    // Price with GST = Base Price × 1.05
-    // Base Price = Price with GST / 1.05
-    const basePrice = priceWithGST / 1.05;
-    return Math.round(basePrice); // Round to nearest integer
+  // Calculate price excluding GST based on cab type
+  // For shared cabs: Remove 5% GST (API price is GST inclusive)
+  // For reserved cabs: Return price as is (API price is already without GST)
+  getPriceExcludingGST(price: number): number {
+    if (this.searchParams?.type === 'shared') {
+      // Shared cab price includes GST, so remove 5%
+      // Price with GST = Base Price × 1.05
+      // Base Price = Price with GST / 1.05
+      const basePrice = price / 1.05;
+      return Math.round(basePrice);
+    } else {
+      // Reserved cab price is already without GST
+      return Math.round(price);
+    }
   }
 
   proceedToBooking() {
@@ -1360,12 +1368,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
               perSeatPrice: this.selectedSeats[0]?.price || 0
             };
             
-            // Create booking data for checkout with price excluding GST
+            // Create booking data for checkout
             const bookingData = {
               searchParams: this.searchParams,
               vehicleDetails: {
                 ...this.currentSelectedVehicle,
-                price: this.getPriceExcludingGST(this.currentSelectedVehicle!.price) // Override with price excluding GST
+                price: this.getPriceExcludingGST(this.currentSelectedVehicle!.price) // Price excluding GST
               },
               selectedSeats: this.selectedSeats,
               bookingType: 'shared' as const,
@@ -1421,15 +1429,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       ? this.formatPickupTime(this.searchParams.pickupTime) 
       : vehicle.departureTime;
     
-    // Calculate price excluding GST for checkout
-    const priceExcludingGST = this.getPriceExcludingGST(vehicle.price);
+    // Calculate price excluding GST
+    const vehiclePrice = this.getPriceExcludingGST(vehicle.price);
     
     // Create booking details
     const bookingDetails = {
       vehicle: {
         id: vehicle.id,
         name: vehicle.name,
-        price: priceExcludingGST,
+        price: vehiclePrice,
         departureTime: departureTime,
         duration: vehicle.duration
       },
@@ -1441,18 +1449,18 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       },
       searchParams: this.searchParams,
       bookingTime: new Date().toISOString(),
-      totalPrice: priceExcludingGST
+      totalPrice: vehiclePrice
     };
     
-    // Create booking data for checkout with price excluding GST
+    // Create booking data for checkout
     const bookingData = {
       searchParams: this.searchParams,
       vehicleDetails: {
         ...vehicle,
-        price: priceExcludingGST // Override with price excluding GST
+        price: vehiclePrice // Price excluding GST
       },
       bookingType: 'reserved' as const,
-      totalPrice: priceExcludingGST
+      totalPrice: vehiclePrice
     };
     
     // Store booking data
