@@ -584,7 +584,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         duration: '', // Duration not available in API response
         price: price,
         seatsLeft: capacity,
-        amenities: ['AC', 'Luggage', 'Personal Driver'], // Default amenities
+        amenities: ['AC', 'Luggage', 'Personal Driver','Door Pick & Door Drop within City.'], // Default amenities
         route: baseRoute,
         pickupLocation: this.searchParams?.pickupLocation || '',
         dropLocation: this.searchParams?.dropLocation || '',

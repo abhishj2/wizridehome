@@ -283,7 +283,8 @@
 
                 <div class="price">₹{{ getPriceExcludingGST(vehicle.price) }}</div>
                 <div>
-                  <p>{{ vehicle.seatsLeft }} Seat Left</p>
+                  <p *ngIf="searchParams?.type === 'shared'">{{ vehicle.seatsLeft }} Seat Left</p>
+                  <p *ngIf="searchParams?.type === 'reserved'">Capacity: {{ vehicle.seatsLeft }}</p>
                 </div>
               </div>
             </div>
@@ -325,7 +326,8 @@
             <div class="mobile-price-row">
               <div class="mobile-seats-left">
                 <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="mobile-seat-icon" />
-                <span>Seats Left : {{ vehicle.seatsLeft }}</span>
+                <span *ngIf="searchParams?.type === 'shared'">Seats Left : {{ vehicle.seatsLeft }}</span>
+                <span *ngIf="searchParams?.type === 'reserved'">Capacity: {{ vehicle.seatsLeft }}</span>
               </div>
               <div class="mobile-start-price">
                 <span>Starts </span>
@@ -390,8 +392,15 @@
               <div class="option-item">
                 <div class="default-amenities">
                   <div class="amenity-item">
-                    <i class="fas fa-coffee"></i>
-                    <span>Refreshment</span>
+                    
+                    <ng-container *ngIf="searchParams?.type === 'shared'">
+                      <i class="fas fa-coffee"></i>
+                      <span>Refreshment</span>
+                    </ng-container>
+                    <ng-container *ngIf="searchParams?.type === 'reserved'">
+                      <i class="fas fa-clock"></i>
+                      <span>On Time Pickup</span>
+                    </ng-container>
                   </div>
                 </div>
                 <div class="hover-dropdowns">
