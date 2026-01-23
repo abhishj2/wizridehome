@@ -1313,10 +1313,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       // Price with GST = Base Price × 1.05
       // Base Price = Price with GST / 1.05
       const basePrice = price / 1.05;
-      return Math.round(basePrice);
+      // Round to 2 decimal places
+      return Math.round(basePrice * 100) / 100;
     } else {
       // Reserved cab price is already without GST
-      return Math.round(price);
+      // Round to 2 decimal places
+      return Math.round(price * 100) / 100;
     }
   }
 

@@ -750,28 +750,29 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    // Calculate ride fare based on booking type
+    // Calculate ride fare based on booking type - show exact price with 2 decimal places
     if (this.bookingData.bookingType === 'shared' && this.bookingData.selectedSeats?.length) {
       // For shared cabs, sum up the prices of selected seats
-      this.rideFare = Math.round(this.bookingData.selectedSeats.reduce((sum, seat) => sum + seat.price, 0));
+      const totalPrice = this.bookingData.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+      this.rideFare = Math.round(totalPrice * 100) / 100;
     } else if (this.bookingData.bookingType === 'reserved') {
       // For reserved cabs, rate is per cab regardless of number of seats/passengers
       const vehiclePrice = this.bookingData.vehicleDetails?.price || 0;
-      this.rideFare = Math.round(vehiclePrice); // Fixed price per cab, not per passenger
+      this.rideFare = Math.round(vehiclePrice * 100) / 100; // Fixed price per cab, not per passenger
     } else {
       // Fallback to totalPrice if available
-      this.rideFare = Math.round(this.bookingData.totalPrice || 0);
+      this.rideFare = Math.round((this.bookingData.totalPrice || 0) * 100) / 100;
     }
 
-    // Calculate 5% GST - exact amount without rounding
-    this.gstAmount = this.rideFare * this.GST_RATE;
+    // Calculate 5% GST - rounded to 2 decimal places
+    this.gstAmount = Math.round((this.rideFare * this.GST_RATE) * 100) / 100;
     
     // Calculate travel insurance cost (added after GST)
     this.travelInsuranceCost = this.passengerDetails.hasTravelInsurance ? this.TRAVEL_INSURANCE_RATE : 0;
     
-    // Calculate total fare (ride fare + GST + travel insurance) - exact amount without rounding
+    // Calculate total fare (ride fare + GST + travel insurance) - rounded to 2 decimal places
     // Note: Deficit amount is NOT added here as payment gateway will add it separately
-    this.totalFare = this.rideFare + this.gstAmount + this.travelInsuranceCost;
+    this.totalFare = Math.round((this.rideFare + this.gstAmount + this.travelInsuranceCost) * 100) / 100;
   }
 
   getSelectedSeats(): string {
@@ -796,11 +797,11 @@ export class CheckoutComponent implements OnInit {
   // Get display total fare (includes deficit for UI display only)
   // Note: This is for display purposes only. The actual totalFare variable (without deficit) is sent to payment gateway
   getDisplayTotalFare(): number {
-    return this.totalFare + this.deficitAmount;
+    return Math.round((this.totalFare + this.deficitAmount) * 100) / 100;
   }
 
   getRoundedDeficitAmount(): number {
-    return this.deficitAmount;
+    return Math.round(this.deficitAmount * 100) / 100;
   }
 
   onCouponSubmit() {
