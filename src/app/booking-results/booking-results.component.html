@@ -281,7 +281,7 @@
 
               <div class="price-info">
 
-                <div class="price">₹{{ getPriceExcludingGST(vehicle.price) }}</div>
+                <div class="price">₹ {{ getPriceExcludingGST(vehicle.price) }}</div>
                 <div>
                   <p *ngIf="searchParams?.type === 'shared'">{{ vehicle.seatsLeft }} Seat Left</p>
                   <p *ngIf="searchParams?.type === 'reserved'">Capacity: {{ vehicle.seatsLeft }}</p>
@@ -667,7 +667,7 @@
 
         <div class="summary-row total">
           <span class="summary-label">Total Amount</span>
-          <span class="summary-value">₹{{ getTotalPrice() }}</span>
+          <span class="summary-value">₹ {{ getTotalPrice() }}</span>
         </div>
 
         <div class="summary-row hint" *ngIf="selectedSeats.length === 0">
