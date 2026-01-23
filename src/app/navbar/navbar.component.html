@@ -82,7 +82,15 @@
   <!-- Mobile Nav Drawer with Accordion -->
   <div class="mobile-nav-drawer" [class.open]="isMobileMenuOpen" (click)="closeMobileDrawer($event)">
     <div class="mobile-nav-drawer-content" (click)="$event.stopPropagation()">
-      <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()">×</button>
+      <!-- Mobile Drawer Header -->
+      <div class="mobile-drawer-header">
+        <div class="mobile-drawer-logo">
+          <img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide">
+        </div>
+        <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()" aria-label="Close menu">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
       
       <div class="mobile-nav-drawer-items">
         <div 
