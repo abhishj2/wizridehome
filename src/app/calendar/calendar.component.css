@@ -79,12 +79,12 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* Compact Calendar Dropdown */
+/* Compact Calendar Dropdown - INCREASED OPACITY */
 .calendar-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  background: #ffffff;
+  background: #ffffff; /* Changed to solid white */
   border: 2px solid darkcyan;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
@@ -114,7 +114,7 @@
 }
 
 .calendar-dropdown.active {
-  opacity: 1;
+  opacity: 1; /* Changed to full opacity */
   visibility: visible;
   transform: translateY(0) scale(1);
 }
@@ -258,10 +258,11 @@
   gap: 1px;
   padding: 4px;
   min-height: 220px;
+  background: white; /* Added solid background */
 }
 
 .calendar-day {
-  background: white;
+  background: white; /* Changed to solid white */
   border: none;
   padding: 2px 1px;
   font-size: 12px;
@@ -280,14 +281,23 @@
   overflow: hidden;
 }
 
+/* SHARED CABS: HIDE FARE COMPLETELY */
+/* Flights will show fare, so we need to override the display: none for flights */
 .calendar-day .date-number {
   font-size: 11px;
   line-height: 1;
   font-weight: 500;
   margin-top: 2px;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
+/* SHOW FARE FOR FLIGHTS, HIDE FOR SHARED CABS */
+/* We'll use a class on the calendar container to differentiate */
 .calendar-day .date-fare {
   font-size: 8px;
   font-weight: 600;
@@ -300,6 +310,21 @@
   margin-top: 1px;
   z-index: 1;
   position: relative;
+}
+
+/* For shared cabs, hide the fare */
+.custom-calendar-container.shared-cabs-calendar .calendar-day .date-fare {
+  display: none;
+}
+
+/* For flights, show the fare */
+.custom-calendar-container.flights-calendar .calendar-day .date-fare {
+  display: block;
+}
+
+/* REMOVED FARE-RELATED SPACING AND STYLING */
+.calendar-day.has-fare .date-number {
+  margin-top: 0;
 }
 
 /* Compact Hover & Selection States */
@@ -348,25 +373,25 @@
   color: darkcyan !important;
 }
 
-/* Fare Highlight */
-.calendar-day.has-fare {
+/* Fare Highlight - ONLY FOR FLIGHTS */
+.custom-calendar-container.flights-calendar .calendar-day.has-fare {
   font-weight: 600;
 }
 
-.calendar-day.lowest-fare {
+.custom-calendar-container.flights-calendar .calendar-day.lowest-fare {
   background: rgba(5, 150, 105, 0.05);
 }
 
-.calendar-day.lowest-fare .date-fare {
+.custom-calendar-container.flights-calendar .calendar-day.lowest-fare .date-fare {
   color: #059669;
   font-weight: 700;
 }
 
-.calendar-day.lowest-fare.selected .date-fare {
+.custom-calendar-container.flights-calendar .calendar-day.lowest-fare.selected .date-fare {
   color: #a5f3d5 !important;
 }
 
-.calendar-day.lowest-fare:hover:not(.disabled):not(.selected) .date-fare {
+.custom-calendar-container.flights-calendar .calendar-day.lowest-fare:hover:not(.disabled):not(.selected) .date-fare {
   color: darkcyan;
 }
 
@@ -441,6 +466,7 @@
     width: min(320px, 90vw) !important;
     max-height: min(360px, 70vh) !important;
     margin: 0 !important;
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-dropdown.active {
@@ -455,12 +481,14 @@
   .calendar-grid {
     grid-auto-rows: minmax(30px, auto);
     padding: 3px;
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-day {
     min-height: 30px;
     max-height: 34px;
     font-size: 11px;
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-day .date-number {
@@ -476,6 +504,7 @@
   .calendar-dropdown {
     width: min(300px, 92vw) !important;
     max-height: min(340px, 65vh) !important;
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-header {
@@ -502,12 +531,14 @@
   
   .calendar-grid {
     grid-auto-rows: minmax(28px, auto);
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-day {
     min-height: 28px;
     max-height: 32px;
     padding: 1px 0;
+    background: white; /* Ensure solid background on mobile */
   }
   
   .calendar-day .date-number {

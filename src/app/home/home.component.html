@@ -151,6 +151,7 @@
                                     <div class="form-group">
                                         <label>Date</label>
                                         <app-custom-calendar
+                                             class="shared-cabs-calendar"
                                             [selectedDate]="formValues.sharedDateTime"
                                             [minDate]="getTodayDate()"
                                             placeholder="Select Date"
@@ -433,6 +434,7 @@
                                     <div class="form-group">
                                         <label>Departure</label>
                                         <app-custom-calendar
+                                        class="flights-calendar"
                                             [selectedDate]="route.date"
                                             [minDate]="getTodayDate()"
                                             [calendarFareMap]="calendarFareMap"
@@ -447,6 +449,7 @@
                                         [style.display]="tripType === 'round-trip' && i === 0 ? 'block' : 'none'">
                                         <label>Return</label>
                                         <app-custom-calendar
+                                        class="flights-calendar"
                                             [selectedDate]="formValues.flightReturn"
                                             [minDate]="getReturnMinDate()"
                                             [calendarFareMap]="calendarFareMapReturn"
@@ -2051,6 +2054,7 @@
             <div class="mobile-calendar-wrapper">
                 <app-custom-calendar
                     *ngIf="mobileDatePickerType === 'shared'"
+                    class="shared-cabs-calendar"
                     [selectedDate]="formValues.sharedDateTime"
                     [minDate]="getTodayDate()"
                     [alwaysOpen]="true"
@@ -2061,6 +2065,7 @@
                 <app-custom-calendar
                     *ngIf="mobileDatePickerType === 'reserved'"
                     [selectedDate]="formValues.reservedDate"
+                    class="shared-cabs-calendar"
                     [minDate]="getTodayDate()"
                     [alwaysOpen]="true"
                     placeholder="Select date"
@@ -2069,6 +2074,7 @@
                 
                 <app-custom-calendar
                     *ngIf="mobileDatePickerType === 'flights'"
+                    class="flights-calendar"
                     [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
                     [minDate]="getTodayDate()"
                     [calendarFareMap]="calendarFareMap"
@@ -2079,6 +2085,7 @@
                 
                 <app-custom-calendar
                     *ngIf="mobileDatePickerType === 'flights-return'"
+                    class="flights-calendar"
                     [selectedDate]="formValues.flightReturn"
                     [minDate]="getReturnMinDate()"
                     [calendarFareMap]="calendarFareMapReturn"
@@ -2091,6 +2098,7 @@
                     *ngIf="mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')"
                     [selectedDate]="(flightRoutes[currentMultiCityRouteIndex] && flightRoutes[currentMultiCityRouteIndex].date) ? flightRoutes[currentMultiCityRouteIndex].date : ''"
                     [minDate]="getTodayDate()"
+                    class="flights-calendar"
                     [alwaysOpen]="true"
                     placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, mobileDatePickerType.toString())">
