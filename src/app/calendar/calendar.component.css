@@ -79,12 +79,13 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* Compact Calendar Dropdown - INCREASED OPACITY */
+/* Compact Calendar Dropdown - MATCHES INPUT WIDTH */
 .calendar-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  background: #ffffff; /* Changed to solid white */
+  right: 0;
+  background: #ffffff;
   border: 2px solid darkcyan;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
@@ -94,11 +95,11 @@
   transform: translateY(-8px) scale(0.98);
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 4px;
-  width: 268px;
-  max-width: 268px;
-  min-width: 260px;
+  /* FIXED: Match input width exactly */
+  width: 100%;
   overflow: hidden;
-  max-height: min(380px, 80vh);
+  max-height: 350px;
+  box-sizing: border-box;
 }
 
 .calendar-dropdown.open-upward {
@@ -114,7 +115,7 @@
 }
 
 .calendar-dropdown.active {
-  opacity: 1; /* Changed to full opacity */
+  opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
 }
@@ -254,15 +255,17 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(32px, auto);
+  grid-auto-rows: minmax(32px, 36px);
   gap: 1px;
   padding: 4px;
   min-height: 220px;
-  background: white; /* Added solid background */
+  max-height: 250px;
+  background: white;
+  overflow-y: auto;
 }
 
 .calendar-day {
-  background: white; /* Changed to solid white */
+  background: white;
   border: none;
   padding: 2px 1px;
   font-size: 12px;
@@ -694,18 +697,23 @@
   }
 }
 
-/* Zoom Safe Design */
-@media (max-width: 1024px) {
+/* Zoom Safe Design - Match input width */
+@media (min-width: 769px) and (max-width: 1600px) {
   .calendar-dropdown {
     transform-origin: top left;
+    max-height: 350px;
+  }
+
+  .calendar-grid {
+    max-height: 250px;
   }
   
   .calendar-day .date-fare {
-    font-size: clamp(6px, 0.8vw, 8px);
+    font-size: 8px;
   }
   
   .calendar-day .date-number {
-    font-size: clamp(10px, 1.1vw, 12px);
+    font-size: 11px;
   }
 }
 
@@ -725,7 +733,7 @@
 @keyframes calendarSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.96);
+    transform: translateY(-10px) scale(0.98);
   }
   to {
     opacity: 1;
