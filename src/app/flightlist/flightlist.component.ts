@@ -132,10 +132,16 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   datePrices: { date: string; price: number; isLowest: boolean }[] = [];
+  allAvailableDates: { date: string; price: number; isLowest: boolean }[] = []; // All dates from API
   highlightedDate: any = '';
   initialScrollIndex: number = -1;
   canScrollLeft: boolean = false;
   canScrollRight: boolean = true;
+  
+  // Lazy loading variables
+  currentBatchSize: number = 15; // Show 15 dates initially
+  loadMoreThreshold: number = 5; // Load more when 5 dates from the end
+  isLoadingMore: boolean = false; // Public so template can access it
 
   @ViewChild('fareScrollContainer') fareScrollContainer!: ElementRef;
   showFareModal = false;
@@ -1448,7 +1454,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
   }
 
+  // REQUIREMENT 5: When user clicks another date, reload page with selected date
   selectDateFromSlider(date: string, index: number): void {
+    // Don't reload if clicking the already selected date
+    if (date === this.highlightedDate) {
+      return;
+    }
+    
     this.highlightedDate = date;
     this.flightInputData["departureDate"] = this.highlightedDate;
     this.loader = true;
@@ -1546,82 +1558,140 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    // Filter to show 31 days from selected date (or from today if no selection)
-    const referenceDate = selected ? new Date(selected + 'T00:00:00') : new Date();
-    // Strip time for comparison
-    const refDateOnly = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
-    const endDate = new Date(refDateOnly);
-    endDate.setDate(endDate.getDate() + 31); // Add 31 days
-
-    console.log('Filtering dates from', refDateOnly.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
-    console.log('Total sorted entries before filter:', sortedEntries.length);
+    console.log('Total sorted entries:', sortedEntries.length);
     console.log('Sample entries:', sortedEntries.slice(0, 5).map(e => ({ date: e.date, price: e.price })));
 
-    // Create a map of existing fare data for quick lookup
-    const fareDataMap = new Map<string, any>();
-    sortedEntries.forEach(item => {
-      const itemDateStr = item.date.split('T')[0];
-      fareDataMap.set(itemDateStr, item);
-    });
+    // REQUIREMENT 1 & 2: Show only dates which have prices (price > 0)
+    // Store all available dates from calendar fare API
+    this.allAvailableDates = sortedEntries.filter(item => item.price > 0);
+    
+    console.log('Filtered dates with prices:', this.allAvailableDates.length);
+    console.log('Sample filtered dates:', this.allAvailableDates.slice(0, 10).map(e => ({ date: e.date, price: e.price })));
 
-    // Generate all 31 dates from selected date, filling in fare data where available
-    const allDates: { date: string; price: number; isLowest: boolean }[] = [];
-
-    for (let i = 0; i < 31; i++) {
-      const currentDate = new Date(refDateOnly);
-      currentDate.setDate(currentDate.getDate() + i);
-      const dateStr = this.formatToISO(currentDate);
-
-      // Check if we have fare data for this date
-      const existingFare = fareDataMap.get(dateStr);
-      if (existingFare) {
-        allDates.push(existingFare);
-      } else {
-        // Add date with 0 price if no fare data available (will show as unavailable)
-        allDates.push({
-          date: dateStr,
-          price: 0,
-          isLowest: false
-        });
-      }
-    }
-
-    this.datePrices = allDates;
-    console.log('Generated', allDates.length, 'dates for slider');
-    console.log('Dates with prices:', allDates.filter(d => d.price > 0).length);
-    console.log('Sample dates:', allDates.slice(0, 10).map(e => ({ date: e.date, price: e.price })));
-
-    const selectedIndex = this.datePrices.findIndex(item => item.date === selected);
-    if (selectedIndex >= 0) {
-      this.highlightedDate = selected;
-      this.initialScrollIndex = selectedIndex;
-      this.cdr.detectChanges();
-      if (this.isBrowser) {
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-          this.centerScrollToIndex(selectedIndex);
-          setTimeout(() => this.updateDateSliderArrows(), 300);
-        });
-      }
+    if (this.allAvailableDates.length === 0) {
+      console.warn('No dates with prices available');
+      this.datePrices = [];
       return;
     }
 
-    const selectedTime = new Date(selected).getTime();
-    let nearest = this.datePrices.reduce((prev, curr) => {
-      const currTime = new Date(curr.date).getTime();
-      const prevTime = new Date(prev.date).getTime();
-      return Math.abs(currTime - selectedTime) < Math.abs(prevTime - selectedTime) ? curr : prev;
+    // REQUIREMENT 3: Use lazy loading - initially load only first batch of dates
+    this.loadInitialDates(selected);
+
+  }
+
+  // REQUIREMENT 3: Lazy loading - load initial batch of dates
+  loadInitialDates(selectedDate: string): void {
+    if (this.allAvailableDates.length === 0) {
+      this.datePrices = [];
+      return;
+    }
+
+    // Find the selected date in all available dates
+    let selectedIndex = this.allAvailableDates.findIndex(item => item.date === selectedDate);
+    
+    // If selected date not found, find the nearest date
+    if (selectedIndex === -1) {
+      const selectedTime = new Date(selectedDate).getTime();
+      selectedIndex = this.allAvailableDates.findIndex((item, idx, arr) => {
+        const currTime = new Date(item.date).getTime();
+        const nextTime = arr[idx + 1] ? new Date(arr[idx + 1].date).getTime() : Infinity;
+        return selectedTime >= currTime && selectedTime < nextTime;
+      });
+      // If still not found, default to first date
+      if (selectedIndex === -1) {
+        selectedIndex = 0;
+      }
+    }
+
+    // REQUIREMENT 4: Load dates around selected date to center it
+    // Calculate start and end indices for initial load
+    const halfBatch = Math.floor(this.currentBatchSize / 2);
+    let startIndex = Math.max(0, selectedIndex - halfBatch);
+    let endIndex = Math.min(this.allAvailableDates.length, startIndex + this.currentBatchSize);
+    
+    // Adjust start if we're near the end
+    if (endIndex === this.allAvailableDates.length) {
+      startIndex = Math.max(0, endIndex - this.currentBatchSize);
+    }
+
+    // Load the initial batch
+    this.datePrices = this.allAvailableDates.slice(startIndex, endIndex);
+    
+    // Set the highlighted date to the selected date or nearest available
+    const actualSelectedDate = this.allAvailableDates[selectedIndex].date;
+    this.highlightedDate = actualSelectedDate;
+    
+    // Find index in the visible datePrices array
+    const visibleIndex = this.datePrices.findIndex(item => item.date === actualSelectedDate);
+    this.initialScrollIndex = visibleIndex;
+
+    console.log('Loaded initial batch:', {
+      total: this.allAvailableDates.length,
+      startIndex,
+      endIndex,
+      visibleCount: this.datePrices.length,
+      selectedIndex,
+      visibleIndex,
+      highlightedDate: this.highlightedDate
     });
 
-    this.highlightedDate = nearest.date;
-    const nearestIndex = this.datePrices.findIndex(item => item.date === nearest.date);
-    this.initialScrollIndex = nearestIndex;
+    // REQUIREMENT 4: Scroll to center selected date
     this.cdr.detectChanges();
-    if (this.isBrowser) {
+    if (this.isBrowser && visibleIndex >= 0) {
       this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-        this.centerScrollToIndex(nearestIndex);
+        this.centerScrollToIndex(visibleIndex);
         setTimeout(() => this.updateDateSliderArrows(), 300);
       });
     }
+  }
+
+  // REQUIREMENT 3: Load more dates when scrolling near the end
+  loadMoreDates(direction: 'start' | 'end'): void {
+    if (this.isLoadingMore || this.allAvailableDates.length === 0) {
+      return;
+    }
+
+    this.isLoadingMore = true;
+
+    const currentFirstDate = this.datePrices[0]?.date;
+    const currentLastDate = this.datePrices[this.datePrices.length - 1]?.date;
+
+    // Find indices in allAvailableDates
+    const firstIndex = this.allAvailableDates.findIndex(d => d.date === currentFirstDate);
+    const lastIndex = this.allAvailableDates.findIndex(d => d.date === currentLastDate);
+
+    if (direction === 'start' && firstIndex > 0) {
+      // Load previous dates
+      const loadCount = Math.min(10, firstIndex); // Load 10 more or remaining
+      const newDates = this.allAvailableDates.slice(firstIndex - loadCount, firstIndex);
+      this.datePrices = [...newDates, ...this.datePrices];
+      console.log('Loaded', loadCount, 'dates at start. Total now:', this.datePrices.length);
+      
+      // Adjust scroll position to maintain view
+      if (this.isBrowser && this.scrollContainer) {
+        setTimeout(() => {
+          const container = this.scrollContainer.nativeElement as HTMLElement;
+          const cards = container.querySelectorAll('.date-card');
+          if (cards && cards[loadCount]) {
+            const card = cards[loadCount] as HTMLElement;
+            container.scrollLeft = card.offsetLeft - 100;
+          }
+        }, 50);
+      }
+    } else if (direction === 'end' && lastIndex < this.allAvailableDates.length - 1) {
+      // Load next dates
+      const remainingCount = this.allAvailableDates.length - lastIndex - 1;
+      const loadCount = Math.min(10, remainingCount); // Load 10 more or remaining
+      const newDates = this.allAvailableDates.slice(lastIndex + 1, lastIndex + 1 + loadCount);
+      this.datePrices = [...this.datePrices, ...newDates];
+      console.log('Loaded', loadCount, 'dates at end. Total now:', this.datePrices.length);
+    }
+
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.updateDateSliderArrows();
+      this.isLoadingMore = false;
+    }, 100);
   }
 
   centerScrollToIndex(index: number, retryCount: number = 0): void {
@@ -1689,6 +1759,48 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   onDateSliderScroll(): void {
     this.updateDateSliderArrows();
+    
+    // REQUIREMENT 3: Lazy loading - check if we need to load more dates
+    if (!this.isBrowser || !this.scrollContainer || this.isLoadingMore) {
+      return;
+    }
+
+    const container = this.scrollContainer.nativeElement as HTMLElement;
+    if (!container) return;
+
+    const scrollLeft = container.scrollLeft;
+    const scrollWidth = container.scrollWidth;
+    const clientWidth = container.clientWidth;
+    const maxScroll = scrollWidth - clientWidth;
+
+    // Calculate approximate visible date indices
+    const cards = container.querySelectorAll('.date-card');
+    if (!cards || cards.length === 0) return;
+
+    const cardWidth = (cards[0] as HTMLElement).offsetWidth + 8; // Card width + gap
+    const firstVisibleIndex = Math.floor(scrollLeft / cardWidth);
+    const lastVisibleIndex = Math.min(
+      this.datePrices.length - 1,
+      Math.ceil((scrollLeft + clientWidth) / cardWidth)
+    );
+
+    // Load more if scrolling near the start (within 5 dates)
+    if (firstVisibleIndex <= this.loadMoreThreshold && this.datePrices[0]) {
+      const currentFirstDate = this.datePrices[0].date;
+      const firstIndexInAll = this.allAvailableDates.findIndex(d => d.date === currentFirstDate);
+      if (firstIndexInAll > 0) {
+        this.loadMoreDates('start');
+      }
+    }
+
+    // Load more if scrolling near the end (within 5 dates from end)
+    if (lastVisibleIndex >= this.datePrices.length - this.loadMoreThreshold && this.datePrices[this.datePrices.length - 1]) {
+      const currentLastDate = this.datePrices[this.datePrices.length - 1].date;
+      const lastIndexInAll = this.allAvailableDates.findIndex(d => d.date === currentLastDate);
+      if (lastIndexInAll < this.allAvailableDates.length - 1) {
+        this.loadMoreDates('end');
+      }
+    }
   }
 
   updateDateSliderArrows(): void {
