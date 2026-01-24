@@ -94,9 +94,9 @@
   transform: translateY(-8px) scale(0.98);
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 4px;
-  width: min(340px, 90vw);
-  max-width: 340px;
-  min-width: 280px;
+  width: 268px;
+  max-width: 268px;
+  min-width: 260px;
   overflow: hidden;
   max-height: min(380px, 80vh);
 }
