@@ -6440,3 +6440,598 @@ padding:0 !important
     font-size: 14px;
   }
 }
+
+/* ========================================
+   Addon Services Section Styles
+   ======================================== */
+
+.addon-services-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.addon-services-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.continue-btn-top {
+  background: #4f46e5;
+  color: #ffffff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.continue-btn-top:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.continue-btn-top:active {
+  transform: translateY(0);
+}
+
+.addon-section {
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.addon-section:last-child {
+  border-bottom: none;
+}
+
+.addon-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.addon-section-header:hover {
+  background-color: #f9fafb;
+}
+
+.addon-section.expanded .addon-section-header {
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.addon-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.addon-section-title i {
+  color: #6b7280;
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.addon-section-title span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.addon-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  margin-left: 8px;
+}
+
+.addon-chevron {
+  color: #9ca3af;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.addon-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.addon-section-content {
+  padding: 0 24px 24px 24px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.addon-placeholder {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.addon-placeholder p {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.addon-select-btn {
+  background: #ffffff;
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.addon-select-btn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.addon-select-btn:active {
+  transform: translateY(0);
+}
+
+/* Desktop responsiveness */
+@media (min-width: 768px) {
+  .addon-services-card {
+    margin-bottom: 20px;
+  }
+  
+  .addon-section-header {
+    padding: 24px 30px;
+  }
+  
+  .addon-section-content {
+    padding: 0 30px 30px 30px;
+  }
+  
+  .addon-services-header {
+    padding: 24px 30px;
+  }
+}
+
+/* Mobile hide addon services */
+@media (max-width: 767px) {
+  .addon-services-card.desktop-only {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   Seats & Meals Tabs Styles
+   ======================================== */
+
+.seats-meals-content {
+  padding: 0 !important;
+}
+
+.seats-meals-tabs {
+  display: flex;
+  border-bottom: 2px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.seats-meals-tabs .tab-header {
+  flex: 1;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  color: #6b7280;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+}
+
+.seats-meals-tabs .tab-header:hover {
+  background: #f3f4f6;
+  color: #4f46e5;
+}
+
+.seats-meals-tabs .tab-header.active {
+  color: #4f46e5;
+  background: #ffffff;
+  border-bottom-color: #4f46e5;
+}
+
+.seats-meals-tabs .tab-header i {
+  font-size: 18px;
+}
+
+.tab-content-panel {
+  padding: 24px 30px;
+  min-height: 400px;
+}
+
+/* Promo Banner */
+.promo-banner {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.2);
+}
+
+.promo-banner i {
+  font-size: 20px;
+}
+
+.promo-banner strong {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Flight Route Info */
+.flight-route-info {
+  margin-bottom: 30px;
+}
+
+.flight-route-info:last-child {
+  margin-bottom: 0;
+}
+
+.route-header-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.route-title-inline strong {
+  font-size: 16px;
+  color: #1f2937;
+}
+
+.selection-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seats-selected {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.complete {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Seat Map */
+.seat-map-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.seat-map-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.seat-map {
+  padding: 20px;
+  min-width: 600px;
+}
+
+/* Seat Legend */
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.seat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px 6px 2px 2px;
+  border: 2px solid #d1d5db;
+  position: relative;
+}
+
+.seat-icon.free {
+  background: #10b981;
+  border-color: #059669;
+}
+
+.seat-icon.paid {
+  background: #93c5fd;
+  border-color: #3b82f6;
+}
+
+.seat-icon.premium {
+  background: #c4b5fd;
+  border-color: #8b5cf6;
+}
+
+.seat-icon.xl {
+  background: #fca5a5;
+  border-color: #ef4444;
+}
+
+.seat-icon.occupied {
+  background: repeating-linear-gradient(
+    45deg,
+    #f3f4f6,
+    #f3f4f6 2px,
+    #9ca3af 2px,
+    #9ca3af 4px
+  );
+  border-color: #9ca3af;
+}
+
+.seat-icon.selected {
+  background: #4f46e5;
+  border-color: #4338ca;
+  box-shadow: 0 0 0 2px #4f46e5;
+}
+
+/* Seat Grid */
+.seat-grid {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.seat-row {
+  display: grid;
+  grid-template-columns: 40px repeat(3, 50px) 30px repeat(3, 50px) 40px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.seat-row.header-row {
+  margin-bottom: 12px;
+}
+
+.seat-row.header-row .seat-col {
+  font-weight: 700;
+  color: #6b7280;
+  text-align: center;
+  font-size: 13px;
+}
+
+.row-number {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.seat-col {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seat-col.aisle {
+  width: 30px;
+}
+
+.seat {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px 8px 3px 3px;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.seat:hover:not(.occupied):not(.unavailable) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.seat.free {
+  background: #10b981;
+  border-color: #059669;
+}
+
+.seat.paid {
+  background: #93c5fd;
+  border-color: #3b82f6;
+}
+
+.seat.premium {
+  background: #c4b5fd;
+  border-color: #8b5cf6;
+}
+
+.seat.xl {
+  background: #fca5a5;
+  border-color: #ef4444;
+}
+
+.seat.occupied {
+  background: repeating-linear-gradient(
+    45deg,
+    #f3f4f6,
+    #f3f4f6 3px,
+    #9ca3af 3px,
+    #9ca3af 6px
+  );
+  border-color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.seat.selected {
+  background: #4f46e5 !important;
+  border-color: #4338ca !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+  transform: scale(1.05);
+}
+
+.seat.unavailable {
+  visibility: hidden;
+}
+
+.seat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.seat-price {
+  font-size: 10px;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
+
+.seat.selected .seat-price {
+  color: #ffffff;
+}
+
+/* No Seats Message */
+.no-seats-message, .no-meals-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.no-seats-message p, .no-meals-message p {
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Meals Container */
+.meals-container {
+  min-height: 300px;
+}
+
+.meals-info {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .seat-row {
+    grid-template-columns: 35px repeat(3, 45px) 25px repeat(3, 45px) 35px;
+    gap: 6px;
+  }
+
+  .seat {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tab-content-panel {
+    padding: 16px 20px;
+  }
+
+  .route-header-inline {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .selection-status {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .seat-row {
+    grid-template-columns: 30px repeat(3, 38px) 20px repeat(3, 38px) 30px;
+    gap: 4px;
+  }
+
+  .seat {
+    width: 36px;
+    height: 36px;
+  }
+
+  .seat-price {
+    font-size: 9px;
+  }
+}

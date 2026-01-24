@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiserviceService } from '../services/apiservice.service';
 import { FlightdataService } from '../services/flightdata.service';
 import { FlightbookingpayloadService } from '../services/flightbookingpayload.service';
+import { FlightaddonsService } from '../services/flightaddons.service';
 import Swal from 'sweetalert2';
 import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
@@ -41,6 +42,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   totalSpecialServiceCharges: number = 0;
   extraBaggageAvailable: boolean = false;
   extraBaggageAvailableReturn: boolean = false;
+  
+  // Addon Services State
+  isSeatsExpanded: boolean = false;
+  isCabsExpanded: boolean = false;
+  isAddonsExpanded: boolean = false;
+  activeSeatsTab: 'seats' | 'meals' = 'seats';
   
   // Baggage & Meals
   baggageOptions: any[] = [];
@@ -280,6 +287,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   constructor(
     public apiService: ApiserviceService,
     public flightDataService: FlightdataService,
+    public flightAddonsService: FlightaddonsService,
     public router: Router,
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
@@ -2683,6 +2691,177 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   getReturnTotal(): number {
     return this.getReturnBaseFare() + this.getReturnTaxes();
+  }
+
+  // Addon Services Methods
+  toggleSeatsSection(): void {
+    this.isSeatsExpanded = !this.isSeatsExpanded;
+    if (this.isSeatsExpanded) {
+      this.isCabsExpanded = false;
+      this.isAddonsExpanded = false;
+      // Initialize seat map if not already done from SSR data
+      if (!this.seatMap || this.seatMap.length === 0) {
+        this.initializeSeatMapFromSSR();
+      }
+    }
+  }
+
+  toggleCabsSection(): void {
+    this.isCabsExpanded = !this.isCabsExpanded;
+    if (this.isCabsExpanded) {
+      this.isSeatsExpanded = false;
+      this.isAddonsExpanded = false;
+    }
+  }
+
+  toggleAddonsSection(): void {
+    this.isAddonsExpanded = !this.isAddonsExpanded;
+    if (this.isAddonsExpanded) {
+      this.isSeatsExpanded = false;
+      this.isCabsExpanded = false;
+    }
+  }
+
+  openCabSelection(event: Event): void {
+    event.stopPropagation();
+    // TODO: Navigate to cab booking page
+    console.log('Opening cab selection...');
+  }
+
+  openAddonsSelection(event: Event): void {
+    event.stopPropagation();
+    // TODO: Navigate to addons page (insurance, baggage courier)
+    console.log('Opening addons selection...');
+  }
+
+  scrollToPassengers(): void {
+    const passengerSection = document.querySelector('.section-title');
+    if (passengerSection) {
+      passengerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // Seat Selection Methods
+  getTotalPassengers(): number {
+    return this.adults.length + this.children.length + this.infants.length;
+  }
+
+  getSelectedSeatsCount(segmentIndex: number): number {
+    if (!this.selectedSeats[segmentIndex]) {
+      return 0;
+    }
+    return this.selectedSeats[segmentIndex].length;
+  }
+
+  toggleSeatSelection(segmentIndex: number, rowIndex: number, seat: any): void {
+    if (seat.isOccupied || seat.isUnavailable) {
+      return;
+    }
+
+    const isReturn = false; // For now, only handling onward journey on this page
+    
+    // Use the addon service's method to toggle selection
+    this.flightAddonsService.toggleSeatSelection(segmentIndex, seat, isReturn);
+
+    // Update local state
+    if (!this.selectedSeats[segmentIndex]) {
+      this.selectedSeats[segmentIndex] = [];
+    }
+
+    const seatIndex = this.selectedSeats[segmentIndex].findIndex(
+      s => s.Code === seat.Code
+    );
+
+    // Check if seat is now selected in the service
+    const isSelected = this.flightAddonsService.isSeatSelected(segmentIndex, seat.Code, isReturn);
+
+    if (seatIndex >= 0 && !isSelected) {
+      // Deselect seat
+      this.selectedSeats[segmentIndex].splice(seatIndex, 1);
+      seat.isSelected = false;
+    } else if (seatIndex < 0 && isSelected) {
+      // Select seat
+      this.selectedSeats[segmentIndex].push(seat);
+      seat.isSelected = true;
+    }
+
+    console.log(`Seat ${seat.seatNumber} selection toggled for segment ${segmentIndex}`);
+  }
+
+  initializeSeatMapFromSSR(): void {
+    // Use actual SSR data from ssrValues
+    const ssrOnward = this.ssrValues;
+    
+    if (!ssrOnward || !ssrOnward.Response) {
+      console.warn('No SSR data available for seat selection');
+      return;
+    }
+
+    // Set passenger counts in the service
+    this.flightAddonsService.setPassengerCounts(
+      this.adults.length,
+      this.children.length,
+      this.infants.length
+    );
+
+    // Set flight segments
+    this.flightAddonsService.setFlightSegments(this.flightSegments, false);
+
+    // Process SSR data to get seat maps
+    const { seatData } = this.flightAddonsService.processSSRData(
+      ssrOnward,
+      this.flightSegments,
+      false
+    );
+
+    // Map the processed seat data to our seat map structure
+    this.seatMap = seatData.seatMaps.map((segmentSeatMap: any) => {
+      if (!segmentSeatMap.rows || segmentSeatMap.rows.length === 0) {
+        return [];
+      }
+
+      // Transform the service's seat structure to match our component's structure
+      return segmentSeatMap.rows.map((row: any) => {
+        const rowNumber = row.rowNo;
+        const seats: any[] = [];
+
+        // Flatten all seat blocks into a single array
+        row.seatBlocks.forEach((block: any) => {
+          Object.keys(block).forEach(letter => {
+            const seat = block[letter];
+            if (seat) {
+              seats.push({
+                seatNumber: seat.displaySeatNo || `${rowNumber}${letter}`,
+                Code: seat.Code,
+                price: seat.Price || 0,
+                isXL: seat.Description && seat.Description.toLowerCase().includes('extra legroom'),
+                isOccupied: !seat.isAvailable,
+                isSelected: false,
+                isUnavailable: false,
+                letter: letter,
+                Origin: seat.Origin,
+                Destination: seat.Destination,
+                FlightNumber: seat.FlightNumber,
+                priceCategory: seat.priceCategory
+              });
+            } else {
+              // Empty seat (aisle or unavailable)
+              seats.push({
+                seatNumber: '',
+                isUnavailable: true
+              });
+            }
+          });
+        });
+
+        return {
+          rowNumber: parseInt(rowNumber),
+          seats: seats
+        };
+      });
+    });
+
+    console.log('Initialized seat map from SSR data:', this.seatMap);
   }
 
   ngOnDestroy(): void {

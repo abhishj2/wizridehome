@@ -242,6 +242,200 @@
       </div>
     </div>
 
+    <!-- Addon Services Section - Desktop Only (Oneway) -->
+    <div class="card addon-services-card desktop-only">
+      <div class="addon-services-header">
+        <button class="continue-btn-top" (click)="scrollToPassengers()">CONTINUE</button>
+      </div>
+
+      <!-- Seats & Meals Section -->
+      <div class="addon-section" [class.expanded]="isSeatsExpanded">
+        <div class="addon-section-header" (click)="toggleSeatsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-chair"></i>
+            <span>Seats & Meals</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
+        </div>
+        <div class="addon-section-content seats-meals-content" *ngIf="isSeatsExpanded">
+          <!-- Seats & Meals Tabs -->
+          <div class="seats-meals-tabs">
+            <div class="tab-header" [class.active]="activeSeatsTab === 'seats'" (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
+              <i class="fas fa-chair"></i>
+              <span>Seats</span>
+            </div>
+            <div class="tab-header" [class.active]="activeSeatsTab === 'meals'" (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
+              <i class="fas fa-utensils"></i>
+              <span>Meals</span>
+            </div>
+          </div>
+
+          <!-- Seats Tab Content -->
+          <div class="tab-content-panel" *ngIf="activeSeatsTab === 'seats'">
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+              <i class="fas fa-ticket-alt"></i>
+              <span>Use code <strong>FREESEAT</strong> to get a free seat (up to 500/passenger)</span>
+            </div>
+
+            <!-- Flight Route Info -->
+            <div class="flight-route-info" *ngFor="let segment of flightSegments; let segIndex = index">
+              <div class="route-header-inline">
+                <div class="route-title-inline">
+                  <strong>{{ segment.from }} → {{ segment.to }}</strong>
+                </div>
+                <div class="selection-status">
+                  <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }} Seat(s) Selected</span>
+                  <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()" [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
+                    {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection pending' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Seat Map -->
+              <div class="seat-map-container">
+                <div class="seat-map-scroll">
+                  <div class="seat-map">
+                    <!-- Seat Legend -->
+                    <div class="seat-legend">
+                      <div class="legend-item">
+                        <div class="seat-icon free"></div>
+                        <span>Free</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon paid"></div>
+                        <span>₹ 300-660</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon premium"></div>
+                        <span>₹ 780-2040</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon xl"></div>
+                        <span>Extra Legroom</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon occupied"></div>
+                        <span>Occupied</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon selected"></div>
+                        <span>Selected</span>
+                      </div>
+                    </div>
+
+                    <!-- Seat Grid -->
+                    <div class="seat-grid" *ngIf="seatMap && seatMap[segIndex]">
+                      <!-- Column Headers -->
+                      <div class="seat-row header-row">
+                        <div class="row-number"></div>
+                        <div class="seat-col">A</div>
+                        <div class="seat-col">B</div>
+                        <div class="seat-col">C</div>
+                        <div class="seat-col aisle"></div>
+                        <div class="seat-col">D</div>
+                        <div class="seat-col">E</div>
+                        <div class="seat-col">F</div>
+                        <div class="row-number"></div>
+                      </div>
+
+                      <!-- Seat Rows -->
+                      <div class="seat-row" *ngFor="let row of seatMap[segIndex]; let rowIndex = index">
+                        <div class="row-number">{{ row.rowNumber }}</div>
+                        <div class="seat-col" *ngFor="let seat of row.seats.slice(0, 3)">
+                          <div class="seat" 
+                               *ngIf="seat.seatNumber"
+                               [class.free]="seat.price === 0 && !seat.isOccupied"
+                               [class.paid]="seat.price > 0 && seat.price <= 660 && !seat.isOccupied"
+                               [class.premium]="seat.price > 660 && !seat.isXL && !seat.isOccupied"
+                               [class.xl]="seat.isXL && !seat.isOccupied"
+                               [class.occupied]="seat.isOccupied"
+                               [class.selected]="seat.isSelected"
+                               [class.unavailable]="seat.isUnavailable"
+                               (click)="toggleSeatSelection(segIndex, rowIndex, seat)">
+                            <span class="seat-label" *ngIf="seat.isXL">XL</span>
+                            <div class="seat-price" *ngIf="seat.price > 0 && !seat.isOccupied">₹{{ seat.price }}</div>
+                          </div>
+                        </div>
+                        <div class="seat-col aisle"></div>
+                        <div class="seat-col" *ngFor="let seat of row.seats.slice(3, 6)">
+                          <div class="seat" 
+                               *ngIf="seat.seatNumber"
+                               [class.free]="seat.price === 0 && !seat.isOccupied"
+                               [class.paid]="seat.price > 0 && seat.price <= 660 && !seat.isOccupied"
+                               [class.premium]="seat.price > 660 && !seat.isXL && !seat.isOccupied"
+                               [class.xl]="seat.isXL && !seat.isOccupied"
+                               [class.occupied]="seat.isOccupied"
+                               [class.selected]="seat.isSelected"
+                               [class.unavailable]="seat.isUnavailable"
+                               (click)="toggleSeatSelection(segIndex, rowIndex, seat)">
+                            <span class="seat-label" *ngIf="seat.isXL">XL</span>
+                            <div class="seat-price" *ngIf="seat.price > 0 && !seat.isOccupied">₹{{ seat.price }}</div>
+                          </div>
+                        </div>
+                        <div class="row-number">{{ row.rowNumber }}</div>
+                      </div>
+                    </div>
+
+                    <!-- No Seat Map Available -->
+                    <div class="no-seats-message" *ngIf="!seatMap || !seatMap[segIndex]">
+                      <p>Seat selection not available for this flight segment.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meals Tab Content -->
+          <div class="tab-content-panel" *ngIf="activeSeatsTab === 'meals'">
+            <div class="meals-container">
+              <p class="meals-info">Pre-book your meals for a delightful journey.</p>
+              <!-- Meals selection will be implemented here -->
+              <div class="no-meals-message">
+                <p>Meal selection will be available soon.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabs Section -->
+      <div class="addon-section" [class.expanded]="isCabsExpanded">
+        <div class="addon-section-header" (click)="toggleCabsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-car"></i>
+            <span>Cabs</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isCabsExpanded"></i>
+        </div>
+        <div class="addon-section-content" *ngIf="isCabsExpanded">
+          <div class="addon-placeholder">
+            <p>Book a cab for convenient airport transfers.</p>
+            <button class="addon-select-btn" (click)="openCabSelection($event)">BOOK CAB</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add-ons Section -->
+      <div class="addon-section" [class.expanded]="isAddonsExpanded">
+        <div class="addon-section-header" (click)="toggleAddonsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add ons</span>
+            <span class="addon-subtitle">Flight Delay Insurance, Baggage Courier Service</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
+        </div>
+        <div class="addon-section-content" *ngIf="isAddonsExpanded">
+          <div class="addon-placeholder">
+            <p>Protect your journey with travel insurance and baggage courier services.</p>
+            <button class="addon-select-btn" (click)="openAddonsSelection($event)">ADD SERVICES</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
