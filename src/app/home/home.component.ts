@@ -728,6 +728,26 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     return 'Other';
   }
 
+  // Get actual city state from state-wise cities data
+  private getActualCityState(cityName: string): string {
+    if (!this.stateWiseCitiesLoaded || !this.stateWiseCities || this.stateWiseCities.length === 0) {
+      return this.getCityState(cityName);
+    }
+    
+    // Search through state-wise cities to find the city and return its state
+    for (const stateData of this.stateWiseCities) {
+      const foundCity = stateData.cities.find(
+        cityData => cityData.city.toLowerCase() === cityName.toLowerCase()
+      );
+      if (foundCity) {
+        return stateData.state;
+      }
+    }
+    
+    // Fallback to getCityState if not found in state-wise cities
+    return this.getCityState(cityName);
+  }
+
   // Group cities by state for Popular Searches
   getCitiesGroupedByState(): { state: string; cities: City[]; expanded: boolean }[] {
     // If state-wise cities are loaded, use them
@@ -2040,7 +2060,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
             return {
               name: name,
               code: id || name.substring(0, 3).toUpperCase(),
-              state: this.getCityState(name)
+              state: this.getActualCityState(name)
             };
           });
           // console.log('Source cities populated:', this.sourceCities);
@@ -2208,6 +2228,15 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           //   popularType: typeof c.popular 
           // })));
         });
+        
+        // Update sourceCities with actual state information if they were already loaded
+        if (this.sourceCities && this.sourceCities.length > 0) {
+          this.sourceCities = this.sourceCities.map(city => ({
+            ...city,
+            state: this.getActualCityState(city.name)
+          }));
+          // console.log('Source cities updated with actual state information');
+        }
       } else {
         // console.warn('=== NO STATE-WISE CITIES DATA ===');
         // console.warn('No state-wise cities data received from API');

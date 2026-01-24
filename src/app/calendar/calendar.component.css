@@ -79,13 +79,12 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* Compact Calendar Dropdown - MATCHES INPUT WIDTH */
+/* Compact Calendar Dropdown - INCREASED OPACITY */
 .calendar-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
-  background: #ffffff;
+  background: #ffffff; /* Changed to solid white */
   border: 2px solid darkcyan;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
@@ -95,8 +94,7 @@
   transform: translateY(-8px) scale(0.98);
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin-top: 4px;
-  /* FIXED: Match input width exactly */
-  width: 100%;
+  width: 280px;
   overflow: hidden;
   max-height: 350px;
   box-sizing: border-box;
@@ -115,7 +113,7 @@
 }
 
 .calendar-dropdown.active {
-  opacity: 1;
+  opacity: 1; /* Changed to full opacity */
   visibility: visible;
   transform: translateY(0) scale(1);
 }
@@ -260,12 +258,11 @@
   padding: 4px;
   min-height: 220px;
   max-height: 250px;
-  background: white;
-  overflow-y: auto;
+  background: white; /* Added solid background */
 }
 
 .calendar-day {
-  background: white;
+  background: white; /* Changed to solid white */
   border: none;
   padding: 2px 1px;
   font-size: 12px;
@@ -697,23 +694,23 @@
   }
 }
 
-/* Zoom Safe Design - Match input width */
-@media (min-width: 769px) and (max-width: 1600px) {
+/* Zoom Safe Design */
+@media (max-width: 1024px) {
   .calendar-dropdown {
     transform-origin: top left;
-    max-height: 350px;
+    max-height: 380px;
   }
 
   .calendar-grid {
-    max-height: 250px;
+    max-height: 260px;
   }
   
   .calendar-day .date-fare {
-    font-size: 8px;
+    font-size: clamp(6px, 0.8vw, 8px);
   }
   
   .calendar-day .date-number {
-    font-size: 11px;
+    font-size: clamp(10px, 1.1vw, 12px);
   }
 }
 
@@ -733,7 +730,7 @@
 @keyframes calendarSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.98);
+    transform: translateY(-10px) scale(0.96);
   }
   to {
     opacity: 1;
