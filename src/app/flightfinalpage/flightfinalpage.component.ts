@@ -48,6 +48,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   isCabsExpanded: boolean = false;
   isAddonsExpanded: boolean = false;
   activeSeatsTab: 'seats' | 'meals' = 'seats';
+  /**
+   * Progressive unlock for add-ons (MMT style)
+   * 0 = locked (passenger details incomplete)
+   * 1 = Seats & Meals unlocked
+   * 2 = Cabs unlocked
+   * 3 = Add ons unlocked
+   */
+  addonUnlockStep: 0 | 1 | 2 | 3 = 0;
   
   // Baggage & Meals
   baggageOptions: any[] = [];
@@ -2703,7 +2711,65 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   // Addon Services Methods
+  getAddonContinueText(): string {
+    if (this.addonUnlockStep === 0) return 'CONTINUE';
+    if (this.addonUnlockStep === 1) return 'CONTINUE TO CABS';
+    if (this.addonUnlockStep === 2) return 'CONTINUE TO ADD ONS';
+    return 'CONTINUE';
+  }
+
+  private showAddonLockedAlert(): void {
+    Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details to continue.', 'warning');
+    this.scrollToPassengers();
+  }
+
+  private ensureAddonUnlocked(minStep: 1 | 2 | 3): boolean {
+    if (this.addonUnlockStep < minStep) {
+      this.showAddonLockedAlert();
+      return false;
+    }
+    return true;
+  }
+
+  onAddonContinue(): void {
+    // Step 0 -> validate passenger details, then unlock Seats & Meals
+    if (this.addonUnlockStep === 0) {
+      if (!this.canProceed()) {
+        this.showAddonLockedAlert();
+        return;
+      }
+
+      this.addonUnlockStep = 1;
+      this.isSeatsExpanded = true;
+      this.isCabsExpanded = false;
+      this.isAddonsExpanded = false;
+
+      if (!this.seatMap || this.seatMap.length === 0) {
+        this.initializeSeatMapFromSSR();
+      }
+      return;
+    }
+
+    // Step 1 -> unlock/open Cabs
+    if (this.addonUnlockStep === 1) {
+      this.addonUnlockStep = 2;
+      this.isSeatsExpanded = false;
+      this.isCabsExpanded = true;
+      this.isAddonsExpanded = false;
+      return;
+    }
+
+    // Step 2 -> unlock/open Add ons
+    if (this.addonUnlockStep === 2) {
+      this.addonUnlockStep = 3;
+      this.isSeatsExpanded = false;
+      this.isCabsExpanded = false;
+      this.isAddonsExpanded = true;
+    }
+  }
+
   toggleSeatsSection(): void {
+    if (!this.ensureAddonUnlocked(1)) return;
     this.isSeatsExpanded = !this.isSeatsExpanded;
     if (this.isSeatsExpanded) {
       this.isCabsExpanded = false;
@@ -2716,6 +2782,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleCabsSection(): void {
+    if (!this.ensureAddonUnlocked(2)) return;
     this.isCabsExpanded = !this.isCabsExpanded;
     if (this.isCabsExpanded) {
       this.isSeatsExpanded = false;
@@ -2724,6 +2791,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleAddonsSection(): void {
+    if (!this.ensureAddonUnlocked(3)) return;
     this.isAddonsExpanded = !this.isAddonsExpanded;
     if (this.isAddonsExpanded) {
       this.isSeatsExpanded = false;
@@ -2744,7 +2812,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   scrollToPassengers(): void {
-    const passengerSection = document.querySelector('.section-title');
+    const passengerSection = document.querySelector('#passenger-details-card') || document.querySelector('.section-title');
     if (passengerSection) {
       passengerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

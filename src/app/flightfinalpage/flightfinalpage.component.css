@@ -6507,6 +6507,15 @@ padding:0 !important
   background-color: #f9fafb;
 }
 
+.addon-section.locked .addon-section-header {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.addon-section.locked .addon-section-header:hover {
+  background-color: transparent;
+}
+
 .addon-section.expanded .addon-section-header {
   background-color: #f9fafb;
   border-bottom: 1px solid #e5e7eb;
