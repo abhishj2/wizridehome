@@ -6528,6 +6528,22 @@ padding:0 !important
   flex: 1;
 }
 
+.addon-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.addon-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1f2933;
+}
+
+.addon-subtext {
+  font-size: 13px;
+  color: #6b7280;
+}
+
 .addon-section-title i {
   color: #6b7280;
   font-size: 20px;
@@ -7352,4 +7368,18 @@ padding:0 !important
   .service-route {
     font-size: 12px;
   }
+}
+
+button.continue-btn-main ,
+.addon-continue-btn
+{
+  background: linear-gradient(135deg, #2196F3, #1565C0);
+color: white;
+padding: 8px 14px;
+border-radius: 6px;
+font-size: clamp(10px, 2vw, 11px);
+font-weight: 700;
+letter-spacing: 0.8px;
+white-space: nowrap;
+border:none;
 }

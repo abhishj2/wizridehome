@@ -2247,11 +2247,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     
     this.loader = true;
     
-    // For multi-city, proceed directly to payment (skip addons page)
+    // Always proceed directly to payment (align with addon page flow)
     if (this.tripType === 'multicity') {
       this.handleMultiCityBooking();
     } else {
-      this.proceedToAddons();
+      this.proceedToPayment();
     }
   }
   

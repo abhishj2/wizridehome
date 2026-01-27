@@ -527,10 +527,20 @@
       </div>
     </div>
 
+    <!-- Continue to unlock addons (shows only after passengers filled) -->
+    <div class="card desktop-only" *ngIf="addonUnlockStep === 0">
+      <button class="continue-btn-main" (click)="onAddonContinue()">
+        {{ getAddonContinueText() }}
+      </button>
+    </div>
+
     <!-- Addon Services Section - Desktop Only (Oneway) -->
     <div class="card addon-services-card desktop-only">
       <div class="addon-services-header">
-        <button class="continue-btn-top" (click)="onAddonContinue()">{{ getAddonContinueText() }}</button>
+        <div class="addon-header-left">
+          <div class="addon-title">Addon Services</div>
+          <div class="addon-subtext">Seats & Meals · Cabs · Add ons</div>
+        </div>
       </div>
 
       <!-- Seats & Meals Section -->
@@ -704,6 +714,11 @@
               </div>
             </div>
           </div>
+
+          <!-- Inline continue inside Seats & Meals -->
+          <div class="addon-continue-footer">
+            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO CABS</button>
+          </div>
         </div>
       </div>
 
@@ -720,6 +735,10 @@
           <div class="addon-placeholder">
             <p>Cab services are not available for this journey.</p>
           </div>
+        </div>
+
+        <div class="addon-continue-footer" *ngIf="isCabsExpanded">
+          <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
         </div>
       </div>
 
