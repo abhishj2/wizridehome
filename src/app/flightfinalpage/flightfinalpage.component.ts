@@ -316,6 +316,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit(): void {
     this.initializePassportExpiryYears();
     
+    // Reset addon charges when component initializes to prevent stale data
+    this.flightAddonsService.totalSeats = 0;
+    this.flightAddonsService.totalMealCharges = 0;
+    this.flightAddonsService.totalSpecialServiceCharges = 0;
+    console.log('Component initialized - Reset all addon charges to 0');
+    
     this.subscriptions.add(
       this.flightDataService.currentMessage.subscribe((val) => {
         if (!val) {
@@ -2764,6 +2770,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     
     // Use the addon service's method to toggle selection
     this.flightAddonsService.toggleSeatSelection(segmentIndex, seat, isReturn);
+    
+    // Trigger change detection to update fare summary
+    this.cdr.detectChanges();
 
     console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex}`);
   }
@@ -2781,11 +2790,17 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   incrementMeal(segmentIndex: number, meal: any): void {
     const isReturn = false;
     this.flightAddonsService.incrementMeal(segmentIndex, meal, isReturn);
+    
+    // Trigger change detection to update fare summary
+    this.cdr.detectChanges();
   }
 
   decrementMeal(segmentIndex: number, meal: any): void {
     const isReturn = false;
     this.flightAddonsService.decrementMeal(segmentIndex, meal, isReturn);
+    
+    // Trigger change detection to update fare summary
+    this.cdr.detectChanges();
   }
 
   getMealCountForMeal(segmentIndex: number, mealCode: string): number {
@@ -2826,12 +2841,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   addService(service: any): void {
     const isReturn = false;
     this.flightAddonsService.addService(service, isReturn);
+    
+    // Trigger change detection to update fare summary
+    this.cdr.detectChanges();
+    
     console.log('Service added:', service.Description);
   }
 
   removeService(service: any): void {
     const isReturn = false;
     this.flightAddonsService.removeService(service, isReturn);
+    
+    // Trigger change detection to update fare summary
+    this.cdr.detectChanges();
+    
     console.log('Service removed:', service.Description);
   }
 
@@ -2843,7 +2866,41 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const serviceEntry = selectedServices.find((s: any) => 
       s.service.Code === serviceCode && s.service.isReturn === isReturn
     );
-    return serviceEntry ? 1 : 0; // Services can only be added once
+    // Return the actual count, not just 0 or 1
+    return serviceEntry ? (serviceEntry.count || 0) : 0;
+  }
+
+  // Addon Charges Calculation - Using FlightAddonsService directly
+  getTotalSeatCharges(): number {
+    // Access the service's maintained totalSeats property
+    return this.flightAddonsService?.totalSeats || 0;
+  }
+
+  getTotalMealCharges(): number {
+    // Access the service's maintained totalMealCharges property
+    return this.flightAddonsService?.totalMealCharges || 0;
+  }
+
+  getTotalServiceCharges(): number {
+    // Access the service's maintained totalSpecialServiceCharges property
+    return this.flightAddonsService?.totalSpecialServiceCharges || 0;
+  }
+
+  getTotalAddonCharges(): number {
+    // Use the service's method which combines all addon charges
+    return this.flightAddonsService?.getTotalAddonCharges() || 0;
+  }
+
+  getTotalAmountWithAddons(): number {
+    const addonCharges = this.getTotalAddonCharges();
+    return this.finalAmount + addonCharges;
+  }
+
+  // Accordion state for addons
+  isAddonsAccordionExpanded: boolean = false;
+
+  toggleAddonsAccordion(): void {
+    this.isAddonsAccordionExpanded = !this.isAddonsAccordionExpanded;
   }
 
   initializeSeatMapFromSSR(): void {
@@ -2854,6 +2911,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       console.warn('No SSR data available for seat selection');
       return;
     }
+
+    // Reset addon charges from any previous session
+    this.flightAddonsService.totalSeats = 0;
+    this.flightAddonsService.totalMealCharges = 0;
+    this.flightAddonsService.totalSpecialServiceCharges = 0;
+    console.log('Reset addon charges to 0');
 
     // Set passenger counts in the service
     this.flightAddonsService.setPassengerCounts(

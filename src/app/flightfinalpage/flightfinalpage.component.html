@@ -1040,12 +1040,34 @@
           </div>
         </div>
 
+        <!-- Add-ons Accordion (Seats, Meals, Services) -->
+        <div class="fare-accordion-item" *ngIf="getTotalAddonCharges() > 0">
+          <div class="fare-accordion-header" (click)="toggleAddonsAccordion()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isAddonsAccordionExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Add-ons</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(getTotalAddonCharges()) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isAddonsAccordionExpanded">
+            <div class="fare-accordion-detail" *ngIf="getTotalSeatCharges() > 0">
+              <span>Seats ({{ formatCurrency(getTotalSeatCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalMealCharges() > 0">
+              <span>Meals ({{ formatCurrency(getTotalMealCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalServiceCharges() > 0">
+              <span>Special Services ({{ formatCurrency(getTotalServiceCharges()) }})</span>
+            </div>
+          </div>
+        </div>
+
         <hr class="fare-summary-divider" />
         
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
-          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+          <span class="fare-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
 
@@ -1053,7 +1075,7 @@
       <div class="mobile-price-bar" (click)="openMobileFareBreakdown()">
         <div class="mobile-price-info">
           <span class="mobile-price-label">Total Price</span>
-          <span class="mobile-price-amount">{{ formatCurrency(finalAmount) }}</span>
+          <span class="mobile-price-amount">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
 
@@ -1899,12 +1921,34 @@
           </div>
         </div>
 
+        <!-- Add-ons Accordion (Seats, Meals, Services) -->
+        <div class="fare-accordion-item" *ngIf="getTotalAddonCharges() > 0">
+          <div class="fare-accordion-header" (click)="toggleAddonsAccordion()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isAddonsAccordionExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Add-ons</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(getTotalAddonCharges()) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isAddonsAccordionExpanded">
+            <div class="fare-accordion-detail" *ngIf="getTotalSeatCharges() > 0">
+              <span>Seats ({{ formatCurrency(getTotalSeatCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalMealCharges() > 0">
+              <span>Meals ({{ formatCurrency(getTotalMealCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalServiceCharges() > 0">
+              <span>Special Services ({{ formatCurrency(getTotalServiceCharges()) }})</span>
+            </div>
+          </div>
+        </div>
+
         <hr class="fare-summary-divider" />
         
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
-          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+          <span class="fare-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
 
@@ -1912,7 +1956,7 @@
       <div class="mobile-price-bar" (click)="openMobileFareBreakdown()">
         <div class="mobile-price-info">
           <span class="mobile-price-label">Total Price</span>
-          <span class="mobile-price-amount">{{ formatCurrency(finalAmount) }}</span>
+          <span class="mobile-price-amount">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
 
@@ -2591,12 +2635,34 @@
           </div>
         </div>
 
+        <!-- Add-ons Accordion (Seats, Meals, Services) -->
+        <div class="fare-accordion-item" *ngIf="getTotalAddonCharges() > 0">
+          <div class="fare-accordion-header" (click)="toggleAddonsAccordion()">
+            <div class="fare-accordion-left">
+              <i class="fas" [ngClass]="isAddonsAccordionExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+              <span>Add-ons</span>
+            </div>
+            <span class="fare-accordion-amount">{{ formatCurrency(getTotalAddonCharges()) }}</span>
+          </div>
+          <div class="fare-accordion-content" [class.expanded]="isAddonsAccordionExpanded">
+            <div class="fare-accordion-detail" *ngIf="getTotalSeatCharges() > 0">
+              <span>Seats ({{ formatCurrency(getTotalSeatCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalMealCharges() > 0">
+              <span>Meals ({{ formatCurrency(getTotalMealCharges()) }})</span>
+            </div>
+            <div class="fare-accordion-detail" *ngIf="getTotalServiceCharges() > 0">
+              <span>Special Services ({{ formatCurrency(getTotalServiceCharges()) }})</span>
+            </div>
+          </div>
+        </div>
+
         <hr class="fare-summary-divider" />
         
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
-          <span class="fare-total-value">{{ formatCurrency(finalAmount) }}</span>
+          <span class="fare-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
       <button
@@ -2633,10 +2699,14 @@
         <div>Baggage</div>
         <div>{{ formatCurrency(baggageTotal + baggageTotalReturn) }}</div>
       </div>
+      <div class="fare-line" *ngIf="getTotalAddonCharges() > 0">
+        <div>Add-ons</div>
+        <div>{{ formatCurrency(getTotalAddonCharges()) }}</div>
+      </div>
       <div class="fare-summary-divider"></div>
       <div class="fare-total-box">
         <div class="fare-total-label">₹ Total Price</div>
-        <div class="fare-total-amount">{{ finalAmount | number : "1.2-2" }}</div>
+        <div class="fare-total-amount">{{ getTotalAmountWithAddons() | number : "1.2-2" }}</div>
       </div>
     </div>
   </div>
@@ -3255,12 +3325,34 @@
       </div>
     </div>
 
+    <!-- Add-ons (Seats, Meals, Services) -->
+    <div class="fare-breakdown-item" *ngIf="getTotalAddonCharges() > 0">
+      <div class="fare-breakdown-row main" (click)="toggleAddonsAccordion()">
+        <div class="fare-breakdown-left">
+          <i class="fas" [ngClass]="isAddonsAccordionExpanded ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
+          <span>Add-ons</span>
+        </div>
+        <span class="fare-breakdown-amount">{{ formatCurrency(getTotalAddonCharges()) }}</span>
+      </div>
+      <div class="fare-breakdown-details" [class.expanded]="isAddonsAccordionExpanded">
+        <div class="fare-breakdown-detail" *ngIf="getTotalSeatCharges() > 0">
+          <span>Seats ({{ formatCurrency(getTotalSeatCharges()) }})</span>
+        </div>
+        <div class="fare-breakdown-detail" *ngIf="getTotalMealCharges() > 0">
+          <span>Meals ({{ formatCurrency(getTotalMealCharges()) }})</span>
+        </div>
+        <div class="fare-breakdown-detail" *ngIf="getTotalServiceCharges() > 0">
+          <span>Special Services ({{ formatCurrency(getTotalServiceCharges()) }})</span>
+        </div>
+      </div>
+    </div>
+
     <hr class="fare-breakdown-divider" />
     
     <!-- Total Amount -->
     <div class="fare-breakdown-total">
       <span class="fare-breakdown-total-label">Total Amount</span>
-      <span class="fare-breakdown-total-value">{{ formatCurrency(finalAmount) }}</span>
+      <span class="fare-breakdown-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
     </div>
   </div>
 </div>
