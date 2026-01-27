@@ -2747,14 +2747,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getSelectedSeatsCount(segmentIndex: number): number {
-    if (!this.selectedSeats[segmentIndex]) {
-      return 0;
-    }
-    return this.selectedSeats[segmentIndex].length;
+    const isReturn = false;
+    const selectedSeats = isReturn ? this.flightAddonsService.selectedSeatsReturn : this.flightAddonsService.selectedSeats;
+    return selectedSeats[segmentIndex]?.length || 0;
   }
 
-  toggleSeatSelection(segmentIndex: number, rowIndex: number, seat: any): void {
-    if (seat.isOccupied || seat.isUnavailable) {
+  toggleSeatSelectionAPI(segmentIndex: number, seat: any): void {
+    if (!seat || !seat.isAvailable) {
       return;
     }
 
@@ -2763,29 +2762,47 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // Use the addon service's method to toggle selection
     this.flightAddonsService.toggleSeatSelection(segmentIndex, seat, isReturn);
 
-    // Update local state
-    if (!this.selectedSeats[segmentIndex]) {
-      this.selectedSeats[segmentIndex] = [];
-    }
+    console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex}`);
+  }
 
-    const seatIndex = this.selectedSeats[segmentIndex].findIndex(
-      s => s.Code === seat.Code
-    );
+  isSeatSelected(segmentIndex: number, seatCode: string): boolean {
+    const isReturn = false;
+    return this.flightAddonsService.isSeatSelected(segmentIndex, seatCode, isReturn);
+  }
 
-    // Check if seat is now selected in the service
-    const isSelected = this.flightAddonsService.isSeatSelected(segmentIndex, seat.Code, isReturn);
+  getSeatTooltip(seat: any): string {
+    return this.flightAddonsService.getSeatTooltip(seat);
+  }
 
-    if (seatIndex >= 0 && !isSelected) {
-      // Deselect seat
-      this.selectedSeats[segmentIndex].splice(seatIndex, 1);
-      seat.isSelected = false;
-    } else if (seatIndex < 0 && isSelected) {
-      // Select seat
-      this.selectedSeats[segmentIndex].push(seat);
-      seat.isSelected = true;
-    }
+  // Meal Methods
+  incrementMeal(segmentIndex: number, meal: any): void {
+    const isReturn = false;
+    this.flightAddonsService.incrementMeal(segmentIndex, meal, isReturn);
+  }
 
-    console.log(`Seat ${seat.seatNumber} selection toggled for segment ${segmentIndex}`);
+  decrementMeal(segmentIndex: number, meal: any): void {
+    const isReturn = false;
+    this.flightAddonsService.decrementMeal(segmentIndex, meal, isReturn);
+  }
+
+  getMealCountForMeal(segmentIndex: number, mealCode: string): number {
+    const isReturn = false;
+    const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
+    const segmentMeals = selected[segmentIndex] || [];
+    const mealEntry = segmentMeals.find((m: any) => m.meal.Code === mealCode);
+    return mealEntry ? mealEntry.count : 0;
+  }
+
+  getMealCount(segmentIndex: number): number {
+    const isReturn = false;
+    const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
+    return selected[segmentIndex]?.reduce((sum: number, item: any) => sum + item.count, 0) || 0;
+  }
+
+  getTotalSelectedMeals(segmentIndex: number): number {
+    const isReturn = false;
+    const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
+    return selected[segmentIndex]?.reduce((sum: number, { count }: any) => sum + count, 0) || 0;
   }
 
   initializeSeatMapFromSSR(): void {
@@ -2807,61 +2824,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // Set flight segments
     this.flightAddonsService.setFlightSegments(this.flightSegments, false);
 
-    // Process SSR data to get seat maps
-    const { seatData } = this.flightAddonsService.processSSRData(
+    // Process SSR data to get seat maps and meal data
+    const { seatData, mealSegments } = this.flightAddonsService.processSSRData(
       ssrOnward,
       this.flightSegments,
       false
     );
 
-    // Map the processed seat data to our seat map structure
-    this.seatMap = seatData.seatMaps.map((segmentSeatMap: any) => {
-      if (!segmentSeatMap.rows || segmentSeatMap.rows.length === 0) {
-        return [];
-      }
-
-      // Transform the service's seat structure to match our component's structure
-      return segmentSeatMap.rows.map((row: any) => {
-        const rowNumber = row.rowNo;
-        const seats: any[] = [];
-
-        // Flatten all seat blocks into a single array
-        row.seatBlocks.forEach((block: any) => {
-          Object.keys(block).forEach(letter => {
-            const seat = block[letter];
-            if (seat) {
-              seats.push({
-                seatNumber: seat.displaySeatNo || `${rowNumber}${letter}`,
-                Code: seat.Code,
-                price: seat.Price || 0,
-                isXL: seat.Description && seat.Description.toLowerCase().includes('extra legroom'),
-                isOccupied: !seat.isAvailable,
-                isSelected: false,
-                isUnavailable: false,
-                letter: letter,
-                Origin: seat.Origin,
-                Destination: seat.Destination,
-                FlightNumber: seat.FlightNumber,
-                priceCategory: seat.priceCategory
-              });
-            } else {
-              // Empty seat (aisle or unavailable)
-              seats.push({
-                seatNumber: '',
-                isUnavailable: true
-              });
-            }
-          });
-        });
-
-        return {
-          rowNumber: parseInt(rowNumber),
-          seats: seats
-        };
-      });
-    });
+    // Use the seat map directly from the service - no transformation needed
+    this.seatMap = seatData.seatMaps;
+    this.selectedSeats = seatData.selectedSeats;
+    
+    // Update flight segments with meal data
+    if (mealSegments && mealSegments.length > 0) {
+      this.flightSegments = mealSegments;
+    }
 
     console.log('Initialized seat map from SSR data:', this.seatMap);
+    console.log('Flight segments with meals:', this.flightSegments);
   }
 
   ngOnDestroy(): void {

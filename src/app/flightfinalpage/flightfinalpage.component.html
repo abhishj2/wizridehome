@@ -293,7 +293,7 @@
               </div>
 
               <!-- Seat Map -->
-              <div class="seat-map-container">
+              <div class="seat-map-container" *ngIf="seatMap && seatMap[segIndex] && seatMap[segIndex].rows?.length > 0">
                 <div class="seat-map-scroll">
                   <div class="seat-map">
                     <!-- Seat Legend -->
@@ -302,87 +302,72 @@
                         <div class="seat-icon free"></div>
                         <span>Free</span>
                       </div>
-                      <div class="legend-item">
-                        <div class="seat-icon paid"></div>
-                        <span>₹ 300-660</span>
+                      <div class="legend-item" *ngFor="let category of seatMap[segIndex].priceCategories">
+                        <div class="seat-icon" [ngClass]="category.category"></div>
+                        <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ? 'Medium' : 'High' }}</span>
+                        <span *ngIf="category.min !== 0 || category.max !== 0">
+                          (₹{{ category.min | number : '1.0-0' }} - ₹{{ category.max | number : '1.0-0' }})
+                        </span>
                       </div>
                       <div class="legend-item">
-                        <div class="seat-icon premium"></div>
-                        <span>₹ 780-2040</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="seat-icon xl"></div>
-                        <span>Extra Legroom</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="seat-icon occupied"></div>
-                        <span>Occupied</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="seat-icon selected"></div>
-                        <span>Selected</span>
+                        <div class="seat-icon not-available"></div>
+                        <span>Not Available</span>
                       </div>
                     </div>
 
-                    <!-- Seat Grid -->
-                    <div class="seat-grid" *ngIf="seatMap && seatMap[segIndex]">
+                    <!-- Seat Grid with Dynamic Blocks -->
+                    <div class="seat-grid-dynamic">
                       <!-- Column Headers -->
-                      <div class="seat-row header-row">
-                        <div class="row-number"></div>
-                        <div class="seat-col">A</div>
-                        <div class="seat-col">B</div>
-                        <div class="seat-col">C</div>
-                        <div class="seat-col aisle"></div>
-                        <div class="seat-col">D</div>
-                        <div class="seat-col">E</div>
-                        <div class="seat-col">F</div>
-                        <div class="row-number"></div>
+                      <div class="seat-row-dynamic header-row">
+                        <div class="row-label-header">Row</div>
+                        <ng-container *ngFor="let block of seatMap[segIndex].seatBlocks; let blockIndex = index">
+                          <div class="seat-block-header-group">
+                            <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
+                          </div>
+                          <div class="aisle-divider-header" *ngIf="blockIndex < seatMap[segIndex].seatBlocks.length - 1"></div>
+                        </ng-container>
                       </div>
 
                       <!-- Seat Rows -->
-                      <div class="seat-row" *ngFor="let row of seatMap[segIndex]; let rowIndex = index">
-                        <div class="row-number">{{ row.rowNumber }}</div>
-                        <div class="seat-col" *ngFor="let seat of row.seats.slice(0, 3)">
-                          <div class="seat" 
-                               *ngIf="seat.seatNumber"
-                               [class.free]="seat.price === 0 && !seat.isOccupied"
-                               [class.paid]="seat.price > 0 && seat.price <= 660 && !seat.isOccupied"
-                               [class.premium]="seat.price > 660 && !seat.isXL && !seat.isOccupied"
-                               [class.xl]="seat.isXL && !seat.isOccupied"
-                               [class.occupied]="seat.isOccupied"
-                               [class.selected]="seat.isSelected"
-                               [class.unavailable]="seat.isUnavailable"
-                               (click)="toggleSeatSelection(segIndex, rowIndex, seat)">
-                            <span class="seat-label" *ngIf="seat.isXL">XL</span>
-                            <div class="seat-price" *ngIf="seat.price > 0 && !seat.isOccupied">₹{{ seat.price }}</div>
+                      <div class="seat-row-dynamic" *ngFor="let row of seatMap[segIndex].rows">
+                        <div class="row-label">{{ row.rowNo }}</div>
+                        <ng-container *ngFor="let block of row.seatBlocks; let blockIndex = index">
+                          <div class="seat-block-group">
+                            <div class="seat-cell"
+                                 *ngFor="let letter of seatMap[segIndex].seatBlocks[blockIndex]"
+                                 [ngClass]="{
+                                   'disabled': !block[letter],
+                                   'not-available': block[letter] && !block[letter].isAvailable,
+                                   'free': block[letter]?.isAvailable && block[letter].priceCategory === 'free',
+                                   'low-price': block[letter]?.isAvailable && block[letter].priceCategory === 'low-price',
+                                   'medium-price': block[letter]?.isAvailable && block[letter].priceCategory === 'medium-price',
+                                   'high-price': block[letter]?.isAvailable && block[letter].priceCategory === 'high-price',
+                                   'selected': block[letter] && isSeatSelected(segIndex, block[letter]?.Code)
+                                 }"
+                                 (click)="block[letter]?.isAvailable && toggleSeatSelectionAPI(segIndex, block[letter])"
+                                 [title]="block[letter] ? getSeatTooltip(block[letter]) : ''">
+                              <ng-container *ngIf="block[letter]; else noSeat">
+                                <ng-container *ngIf="block[letter].priceCategory === 'free'; else showPrice">
+                                  Free
+                                </ng-container>
+                                <ng-template #showPrice>
+                                  {{ block[letter].Price | number : '1.0-0' }}
+                                </ng-template>
+                              </ng-container>
+                              <ng-template #noSeat>-</ng-template>
+                            </div>
                           </div>
-                        </div>
-                        <div class="seat-col aisle"></div>
-                        <div class="seat-col" *ngFor="let seat of row.seats.slice(3, 6)">
-                          <div class="seat" 
-                               *ngIf="seat.seatNumber"
-                               [class.free]="seat.price === 0 && !seat.isOccupied"
-                               [class.paid]="seat.price > 0 && seat.price <= 660 && !seat.isOccupied"
-                               [class.premium]="seat.price > 660 && !seat.isXL && !seat.isOccupied"
-                               [class.xl]="seat.isXL && !seat.isOccupied"
-                               [class.occupied]="seat.isOccupied"
-                               [class.selected]="seat.isSelected"
-                               [class.unavailable]="seat.isUnavailable"
-                               (click)="toggleSeatSelection(segIndex, rowIndex, seat)">
-                            <span class="seat-label" *ngIf="seat.isXL">XL</span>
-                            <div class="seat-price" *ngIf="seat.price > 0 && !seat.isOccupied">₹{{ seat.price }}</div>
-                          </div>
-                        </div>
-                        <div class="row-number">{{ row.rowNumber }}</div>
+                          <div class="aisle-divider" *ngIf="blockIndex < row.seatBlocks.length - 1"></div>
+                        </ng-container>
                       </div>
-                    </div>
-
-                    <!-- No Seat Map Available -->
-                    <div class="no-seats-message" *ngIf="!seatMap || !seatMap[segIndex]">
-                      <p>Seat selection not available for this flight segment.</p>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <!-- No Seat Map Available -->
+              <div class="no-seats-message" *ngIf="!seatMap || !seatMap[segIndex] || !seatMap[segIndex].rows || seatMap[segIndex].rows.length === 0">
+                <p>Seat selection not available for this flight segment.</p>
               </div>
             </div>
           </div>
@@ -390,10 +375,47 @@
           <!-- Meals Tab Content -->
           <div class="tab-content-panel" *ngIf="activeSeatsTab === 'meals'">
             <div class="meals-container">
-              <p class="meals-info">Pre-book your meals for a delightful journey.</p>
-              <!-- Meals selection will be implemented here -->
-              <div class="no-meals-message">
-                <p>Meal selection will be available soon.</p>
+              <!-- Meal Segments -->
+              <div class="meal-segment-wrapper" *ngFor="let segment of flightSegments; let segIndex = index">
+                <div class="meal-segment-header">
+                  <strong>{{ segment.from }} → {{ segment.to }}</strong>
+                  <span class="meal-selection-count">{{ getMealCount(segIndex) }} meal(s) selected</span>
+                </div>
+
+                <div class="meal-scroll-container" *ngIf="segment?.mealOptions?.length; else noMeals">
+                  <div class="meal-list">
+                    <div class="meal-card" *ngFor="let meal of segment.mealOptions">
+                      <div class="meal-visual">
+                        <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
+                        <div class="meal-price" *ngIf="meal.Price > 0">
+                          ₹{{ meal.Price | number : '1.2-2' }}
+                        </div>
+                        <div class="meal-price free-meal" *ngIf="meal.Price == 0">
+                          Free
+                        </div>
+                      </div>
+                      <div class="meal-details">
+                        <div class="meal-name">
+                          {{ meal.AirlineDescription || meal.Description }}
+                        </div>
+                      </div>
+                      <div class="meal-quantity">
+                        <button [disabled]="getMealCountForMeal(segIndex, meal.Code) === 0" (click)="decrementMeal(segIndex, meal)">
+                          -
+                        </button>
+                        <span>{{ getMealCountForMeal(segIndex, meal.Code) }}</span>
+                        <button [disabled]="getTotalSelectedMeals(segIndex) >= getTotalPassengers()" (click)="incrementMeal(segIndex, meal)">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noMeals>
+                  <div class="no-meals-message">
+                    <p>No meals available for this segment.</p>
+                  </div>
+                </ng-template>
               </div>
             </div>
           </div>
