@@ -1422,8 +1422,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     const returnPayload = this.tripType === 'roundtrip' ? onwardPayload : null;
-    const onwardAmount = this.tripType === 'roundtrip' ? this.getOnwardTotal() : this.finalAmount;
+    const addonCharges = this.getTotalAddonCharges(); // seats + meals + services (from FlightaddonsService)
+    const onwardBaseAmount = this.tripType === 'roundtrip' ? this.getOnwardTotal() : this.finalAmount;
+    const onwardAmount = onwardBaseAmount + addonCharges;
     const returnAmount = this.tripType === 'roundtrip' ? this.getReturnTotal() : null;
+    const finalPayableAmount = (this.tripType === 'roundtrip' ? this.finalAmount : this.finalAmount) + addonCharges;
 
     console.log('Calling flightSuccess API with:', {
       appid: appid,
@@ -1440,7 +1443,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       returnPayload: returnPayload,
       onwardAmount: onwardAmount,
       returnAmount: returnAmount,
-      finalAmount: this.finalAmount,
+      finalAmount: finalPayableAmount,
       isLCC: isLCC,
       isLCCReturn: isLCCReturn
     });
@@ -1464,7 +1467,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         returnPayload,
         onwardAmount,
         returnAmount,
-        this.finalAmount,
+        finalPayableAmount,
         isLCC,
         isLCCReturn
       ).subscribe((val: any) => {
