@@ -7123,6 +7123,144 @@ padding:0 !important
   text-align: center;
 }
 
+/* Services Section */
+.services-content {
+  padding: 20px;
+}
+
+.services-selection {
+  min-height: 200px;
+}
+
+.services-scroll-container {
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.services-list {
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+}
+
+.service-card {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.2s ease;
+}
+
+.service-card:hover {
+  border-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+}
+
+.service-visual {
+  position: relative;
+}
+
+.service-image {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.service-price {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #4f46e5;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.service-details {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.service-route {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.service-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.service-add-btn,
+.service-remove-btn {
+  height: 38px;
+  border-radius: 20px;
+  border: 2px solid #4f46e5;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.service-add-btn {
+  background: #ffffff;
+  color: #4f46e5;
+  padding: 0 20px;
+  flex: 1;
+}
+
+.service-add-btn:hover:not(:disabled) {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.service-add-btn:disabled {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+  cursor: default;
+}
+
+.service-remove-btn {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+  width: 38px;
+  padding: 0;
+}
+
+.service-remove-btn:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.service-add-btn i,
+.service-remove-btn i {
+  font-size: 12px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .seat-cell {
@@ -7188,5 +7326,21 @@ padding:0 !important
 
   .meal-name {
     font-size: 13px;
+  }
+
+  .service-card {
+    min-width: 180px;
+  }
+
+  .service-image {
+    height: 110px;
+  }
+
+  .service-name {
+    font-size: 14px;
+  }
+
+  .service-route {
+    font-size: 12px;
   }
 }

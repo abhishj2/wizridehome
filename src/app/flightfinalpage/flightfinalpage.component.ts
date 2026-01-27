@@ -73,6 +73,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   selectedSeats: { [segmentIndex: number]: any[] } = {};
   selectedSeatsReturn: { [segmentIndex: number]: any[] } = {};
   
+  // Special Services
+  services: any[] = [];
+  
   private subscriptions: Subscription = new Subscription();
   
   // Passengers & Fares
@@ -2805,6 +2808,44 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return selected[segmentIndex]?.reduce((sum: number, { count }: any) => sum + count, 0) || 0;
   }
 
+  // Special Services Methods
+  getFilteredServices(): any[] {
+    if (!this.services || this.services.length === 0) {
+      return [];
+    }
+
+    // Filter services for the current onward journey
+    const originCode = this.flightSegments[0]?.originCode;
+    const destinationCode = this.flightSegments[this.flightSegments.length - 1]?.destinationCode;
+
+    return this.services.filter((service: any) => 
+      service.Origin === originCode && service.Destination === destinationCode
+    );
+  }
+
+  addService(service: any): void {
+    const isReturn = false;
+    this.flightAddonsService.addService(service, isReturn);
+    console.log('Service added:', service.Description);
+  }
+
+  removeService(service: any): void {
+    const isReturn = false;
+    this.flightAddonsService.removeService(service, isReturn);
+    console.log('Service removed:', service.Description);
+  }
+
+  getServiceCount(serviceCode: string, service: any): number {
+    const isReturn = false;
+    const selectedServices = this.flightAddonsService.selectedServices;
+    
+    // Find the service in selectedServices by checking service.Code and isReturn flag
+    const serviceEntry = selectedServices.find((s: any) => 
+      s.service.Code === serviceCode && s.service.isReturn === isReturn
+    );
+    return serviceEntry ? 1 : 0; // Services can only be added once
+  }
+
   initializeSeatMapFromSSR(): void {
     // Use actual SSR data from ssrValues
     const ssrOnward = this.ssrValues;
@@ -2824,8 +2865,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // Set flight segments
     this.flightAddonsService.setFlightSegments(this.flightSegments, false);
 
-    // Process SSR data to get seat maps and meal data
-    const { seatData, mealSegments } = this.flightAddonsService.processSSRData(
+    // Process SSR data to get seat maps, meal data, and services
+    const { seatData, mealSegments, services } = this.flightAddonsService.processSSRData(
       ssrOnward,
       this.flightSegments,
       false
@@ -2840,8 +2881,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.flightSegments = mealSegments;
     }
 
+    // Store services data
+    if (services && services.length > 0) {
+      this.services = services;
+    }
+
     console.log('Initialized seat map from SSR data:', this.seatMap);
     console.log('Flight segments with meals:', this.flightSegments);
+    console.log('Special services:', this.services);
   }
 
   ngOnDestroy(): void {

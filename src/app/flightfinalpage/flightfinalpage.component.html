@@ -433,13 +433,12 @@
         </div>
         <div class="addon-section-content" *ngIf="isCabsExpanded">
           <div class="addon-placeholder">
-            <p>Book a cab for convenient airport transfers.</p>
-            <button class="addon-select-btn" (click)="openCabSelection($event)">BOOK CAB</button>
+            <p>Cab services are not available for this journey.</p>
           </div>
         </div>
       </div>
 
-      <!-- Add-ons Section -->
+      <!-- Add-ons Section (Special Services) -->
       <div class="addon-section" [class.expanded]="isAddonsExpanded">
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
@@ -449,11 +448,50 @@
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
         </div>
-        <div class="addon-section-content" *ngIf="isAddonsExpanded">
-          <div class="addon-placeholder">
-            <p>Protect your journey with travel insurance and baggage courier services.</p>
-            <button class="addon-select-btn" (click)="openAddonsSelection($event)">ADD SERVICES</button>
+        <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
+          <div class="services-selection" *ngIf="services?.length; else noServices">
+            <div class="services-scroll-container">
+              <div class="services-list">
+                <div class="service-card" *ngFor="let service of getFilteredServices()">
+                  <div class="service-visual">
+                    <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
+                    <div class="service-price">
+                      ₹{{ service.Price | number : '1.2-2' }}
+                    </div>
+                  </div>
+                  <div class="service-details">
+                    <div class="service-name">
+                      {{ service.Description }}
+                    </div>
+                    <div class="service-route">
+                      {{ service.Origin }} - {{ service.Destination }}
+                    </div>
+                  </div>
+                  <div class="service-actions">
+                    <button 
+                      class="service-remove-btn" 
+                      *ngIf="getServiceCount(service.Code, service) > 0"
+                      (click)="removeService(service)">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button 
+                      class="service-add-btn"
+                      [disabled]="getServiceCount(service.Code, service) >= 1"
+                      (click)="addService(service)">
+                      <i class="fas fa-plus"></i>
+                      <span *ngIf="getServiceCount(service.Code, service) === 0">ADD</span>
+                      <span *ngIf="getServiceCount(service.Code, service) > 0">ADDED</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <ng-template #noServices>
+            <div class="addon-placeholder">
+              <p>No additional services available for this journey.</p>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
