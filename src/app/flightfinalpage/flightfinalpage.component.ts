@@ -83,6 +83,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Special Services
   services: any[] = [];
+  servicesReturn: any[] = [];
 
   private subscriptions: Subscription = new Subscription();
 
@@ -1454,11 +1455,23 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     const returnPayload = this.tripType === 'roundtrip' ? onwardPayload : null;
-    const addonCharges = this.getTotalAddonCharges(); // seats + meals + services (from FlightaddonsService)
-    const onwardBaseAmount = this.tripType === 'roundtrip' ? this.getOnwardTotal() : this.finalAmount;
-    const onwardAmount = onwardBaseAmount + addonCharges;
-    const returnAmount = this.tripType === 'roundtrip' ? this.getReturnTotal() : null;
-    const finalPayableAmount = (this.tripType === 'roundtrip' ? this.finalAmount : this.finalAmount) + addonCharges;
+
+    const onwardAddonCharges = this.getAddonChargesByJourney(false);
+    const returnAddonCharges = this.tripType === 'roundtrip' ? this.getAddonChargesByJourney(true) : 0;
+
+    // Match flightaddon page: base+tax + baggage + addons (per leg)
+    const onwardAmount =
+      this.getOnwardTotal() +
+      (this.baggageTotal || 0) +
+      onwardAddonCharges;
+
+    const returnAmount = this.tripType === 'roundtrip'
+      ? (this.getReturnTotal() + (this.baggageTotalReturn || 0) + returnAddonCharges)
+      : null;
+
+    const finalPayableAmount = this.tripType === 'roundtrip'
+      ? (onwardAmount + (returnAmount || 0))
+      : onwardAmount;
 
     console.log('Calling flightSuccess API with:', {
       appid: appid,
@@ -2774,13 +2787,18 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         return;
       }
 
+      // Reset addon totals once when starting addon flow
+      this.flightAddonsService.totalSeats = 0;
+      this.flightAddonsService.totalMealCharges = 0;
+      this.flightAddonsService.totalSpecialServiceCharges = 0;
+
       this.addonUnlockStep = 1;
       this.isSeatsExpanded = true;
       this.isCabsExpanded = false;
       this.isAddonsExpanded = false;
 
       if (!this.seatMap || this.seatMap.length === 0) {
-        this.initializeSeatMapFromSSR();
+        this.initializeSeatMapFromSSR(false);
       }
       return;
     }
@@ -2810,8 +2828,29 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.isCabsExpanded = false;
       this.isAddonsExpanded = false;
       // Initialize seat map if not already done from SSR data
+      const isReturn = this.activeJourneyTab === 'return';
+      if (isReturn) {
+        if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
+          this.initializeSeatMapFromSSR(true);
+        }
+      } else {
+        if (!this.seatMap || this.seatMap.length === 0) {
+          this.initializeSeatMapFromSSR(false);
+        }
+      }
+    }
+  }
+
+  onJourneyTabChange(tab: 'departure' | 'return'): void {
+    this.activeJourneyTab = tab;
+    // Lazy initialize seat map for selected leg
+    if (tab === 'return') {
+      if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
+        this.initializeSeatMapFromSSR(true);
+      }
+    } else {
       if (!this.seatMap || this.seatMap.length === 0) {
-        this.initializeSeatMapFromSSR();
+        this.initializeSeatMapFromSSR(false);
       }
     }
   }
@@ -2859,7 +2898,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getSelectedSeatsCount(segmentIndex: number): number {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     const selectedSeats = isReturn ? this.flightAddonsService.selectedSeatsReturn : this.flightAddonsService.selectedSeats;
     return selectedSeats[segmentIndex]?.length || 0;
   }
@@ -2869,7 +2908,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       return;
     }
 
-    const isReturn = false; // For now, only handling onward journey on this page
+    const isReturn = this.activeJourneyTab === 'return';
 
     // Use the addon service's method to toggle selection
     this.flightAddonsService.toggleSeatSelection(segmentIndex, seat, isReturn);
@@ -2877,11 +2916,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
 
-    console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex}`);
+    console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex} (${isReturn ? 'return' : 'onward'})`);
   }
 
   isSeatSelected(segmentIndex: number, seatCode: string): boolean {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     return this.flightAddonsService.isSeatSelected(segmentIndex, seatCode, isReturn);
   }
 
@@ -2891,7 +2930,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Meal Methods
   incrementMeal(segmentIndex: number, meal: any): void {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     this.flightAddonsService.incrementMeal(segmentIndex, meal, isReturn);
 
     // Trigger change detection to update fare summary
@@ -2899,7 +2938,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   decrementMeal(segmentIndex: number, meal: any): void {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     this.flightAddonsService.decrementMeal(segmentIndex, meal, isReturn);
 
     // Trigger change detection to update fare summary
@@ -2907,7 +2946,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getMealCountForMeal(segmentIndex: number, mealCode: string): number {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
     const segmentMeals = selected[segmentIndex] || [];
     const mealEntry = segmentMeals.find((m: any) => m.meal.Code === mealCode);
@@ -2915,34 +2954,36 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getMealCount(segmentIndex: number): number {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
     return selected[segmentIndex]?.reduce((sum: number, item: any) => sum + item.count, 0) || 0;
   }
 
   getTotalSelectedMeals(segmentIndex: number): number {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
     return selected[segmentIndex]?.reduce((sum: number, { count }: any) => sum + count, 0) || 0;
   }
 
   // Special Services Methods
   getFilteredServices(): any[] {
-    if (!this.services || this.services.length === 0) {
+    const isReturn = this.activeJourneyTab === 'return';
+    const list = isReturn ? this.servicesReturn : this.services;
+    if (!list || list.length === 0) {
       return [];
     }
 
-    // Filter services for the current onward journey
-    const originCode = this.flightSegments[0]?.originCode;
-    const destinationCode = this.flightSegments[this.flightSegments.length - 1]?.destinationCode;
+    const segs = isReturn ? (this.flightSegmentsReturn || []) : (this.flightSegments || []);
+    const originCode = segs[0]?.originCode;
+    const destinationCode = segs[segs.length - 1]?.destinationCode;
 
-    return this.services.filter((service: any) =>
+    return list.filter((service: any) =>
       service.Origin === originCode && service.Destination === destinationCode
     );
   }
 
   addService(service: any): void {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     this.flightAddonsService.addService(service, isReturn);
 
     // Trigger change detection to update fare summary
@@ -2952,7 +2993,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   removeService(service: any): void {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     this.flightAddonsService.removeService(service, isReturn);
 
     // Trigger change detection to update fare summary
@@ -2962,7 +3003,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getServiceCount(serviceCode: string, service: any): number {
-    const isReturn = false;
+    const isReturn = this.activeJourneyTab === 'return';
     const selectedServices = this.flightAddonsService.selectedServices;
 
     // Find the service in selectedServices by checking service.Code and isReturn flag
@@ -2994,6 +3035,36 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return this.flightAddonsService?.getTotalAddonCharges() || 0;
   }
 
+  // Compute add-on charges per journey (needed for roundtrip payment split)
+  getAddonChargesByJourney(isReturn: boolean): number {
+    const selectedSeats = isReturn ? this.flightAddonsService.selectedSeatsReturn : this.flightAddonsService.selectedSeats;
+    const selectedMeals = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
+    const selectedServices = this.flightAddonsService.selectedServices || [];
+
+    let seatTotal = 0;
+    Object.keys(selectedSeats || {}).forEach((k: string) => {
+      const idx = parseInt(k);
+      const seats = selectedSeats[idx] || [];
+      seats.forEach((s: any) => { seatTotal += (s.Price || 0); });
+    });
+
+    let mealTotal = 0;
+    Object.keys(selectedMeals || {}).forEach((k: string) => {
+      const idx = parseInt(k);
+      const meals = selectedMeals[idx] || [];
+      meals.forEach((m: any) => { mealTotal += ((m.meal?.Price || 0) * (m.count || 0)); });
+    });
+
+    let serviceTotal = 0;
+    selectedServices.forEach((entry: any) => {
+      if (entry?.service?.isReturn === isReturn) {
+        serviceTotal += ((entry.service.Price || 0) * (entry.count || 0));
+      }
+    });
+
+    return seatTotal + mealTotal + serviceTotal;
+  }
+
   getTotalAmountWithAddons(): number {
     const addonCharges = this.getTotalAddonCharges();
     return this.finalAmount + addonCharges;
@@ -3006,37 +3077,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.isAddonsAccordionExpanded = !this.isAddonsAccordionExpanded;
   }
 
-  initializeSeatMapFromSSR(): void {
-    console.log('🚀 ===== initializeSeatMapFromSSR CALLED =====');
+  initializeSeatMapFromSSR(isReturn: boolean = false): void {
+    const ssrData = isReturn ? this.ssrValuesReturn : this.ssrValues;
+    const segments = isReturn ? (this.flightSegmentsReturn || []) : (this.flightSegments || []);
 
-    // Use actual SSR data from ssrValues
-    const ssrOnward = this.ssrValues;
-
-    console.log('📊 SSR Onward Data:', ssrOnward);
-    console.log('📊 SSR Response exists?', !!ssrOnward?.Response);
-
-    if (!ssrOnward || !ssrOnward.Response) {
-      console.warn('❌ No SSR data available for seat selection');
+    if (!ssrData || !ssrData.Response) {
+      console.warn(`❌ No SSR data available for ${isReturn ? 'return' : 'onward'} seat selection`);
       return;
     }
-
-    // Log raw SSR response structure
-    console.log('📦 SSR Response Structure:', {
-      hasSeatDynamic: !!ssrOnward.Response.SeatDynamic,
-      hasMeal: !!ssrOnward.Response.Meal,
-      hasBaggage: !!ssrOnward.Response.Baggage,
-      hasSpecialServices: !!ssrOnward.Response.SpecialServices,
-      SeatDynamic: ssrOnward.Response.SeatDynamic,
-      Meal: ssrOnward.Response.Meal,
-      Baggage: ssrOnward.Response.Baggage,
-      SpecialServices: ssrOnward.Response.SpecialServices
-    });
-
-    // Reset addon charges from any previous session
-    this.flightAddonsService.totalSeats = 0;
-    this.flightAddonsService.totalMealCharges = 0;
-    this.flightAddonsService.totalSpecialServiceCharges = 0;
-    console.log('✅ Reset addon charges to 0');
 
     // Set passenger counts in the service
     this.flightAddonsService.setPassengerCounts(
@@ -3044,69 +3092,35 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.children.length,
       this.infants.length
     );
-    console.log('👥 Passenger counts set:', {
-      adults: this.adults.length,
-      children: this.children.length,
-      infants: this.infants.length
-    });
 
-    // Set flight segments
-    this.flightAddonsService.setFlightSegments(this.flightSegments, false);
-    console.log('✈️ Flight segments set (count):', this.flightSegments.length);
+    // Set flight segments for correct leg
+    this.flightAddonsService.setFlightSegments(segments, isReturn);
 
-    // Process SSR data to get seat maps, meal data, and services
-    console.log('🔄 Processing SSR data via flightAddonsService.processSSRData...');
     const { seatData, mealSegments, services } = this.flightAddonsService.processSSRData(
-      ssrOnward,
-      this.flightSegments,
-      false
+      ssrData,
+      segments,
+      isReturn
     );
 
-    console.log('📥 Processed SSR Data Results:', {
-      seatDataExists: !!seatData,
-      seatMapsCount: seatData?.seatMaps?.length || 0,
-      mealSegmentsCount: mealSegments?.length || 0,
-      servicesCount: services?.length || 0,
-      seatData,
-      mealSegments,
-      services
-    });
-
-    // Use the seat map directly from the service - no transformation needed
-    this.seatMap = seatData.seatMaps;
-    this.selectedSeats = seatData.selectedSeats;
-    console.log('🪑 Seat map assigned:', {
-      seatMapLength: this.seatMap?.length || 0,
-      seatMap: this.seatMap
-    });
-
-    // Update flight segments with meal data
-    if (mealSegments && mealSegments.length > 0) {
-      this.flightSegments = mealSegments;
-      console.log('🍽️ Meal segments updated:', mealSegments);
+    if (isReturn) {
+      this.seatMapReturn = seatData.seatMaps;
+      this.selectedSeatsReturn = seatData.selectedSeats;
+      if (mealSegments && mealSegments.length > 0) {
+        this.flightSegmentsReturn = mealSegments;
+      }
+      if (services && services.length > 0) {
+        this.servicesReturn = services;
+      }
     } else {
-      console.warn('⚠️ No meal segments returned from processSSRData');
+      this.seatMap = seatData.seatMaps;
+      this.selectedSeats = seatData.selectedSeats;
+      if (mealSegments && mealSegments.length > 0) {
+        this.flightSegments = mealSegments;
+      }
+      if (services && services.length > 0) {
+        this.services = services;
+      }
     }
-
-    // Store services data
-    if (services && services.length > 0) {
-      this.services = services;
-      console.log('🎫 Services data stored:', services);
-    } else {
-      console.warn('⚠️ No services returned from processSSRData');
-    }
-
-    console.log('✅ Final state after initialization:', {
-      seatMapCount: this.seatMap?.length || 0,
-      flightSegmentsCount: this.flightSegments?.length || 0,
-      servicesCount: this.services?.length || 0,
-      flightSegmentsWithMeals: this.flightSegments.map((seg: any) => ({
-        from: seg.from,
-        to: seg.to,
-        mealOptionsCount: seg.mealOptions?.length || 0
-      }))
-    });
-    console.log('🏁 ===== initializeSeatMapFromSSR COMPLETED =====');
   }
 
   ngOnDestroy(): void {

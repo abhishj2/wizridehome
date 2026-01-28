@@ -725,7 +725,7 @@
 
               <!-- No Seat Map Available -->
               <div class="no-seats-message"
-                *ngIf="!seatMap || !seatMap[segIndex] || !seatMap[segIndex].rows || seatMap[segIndex].rows.length === 0">
+                *ngIf="!(activeJourneyTab === 'return' ? seatMapReturn : seatMap) || !(activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex] || !(activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].rows || (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].rows.length === 0">
                 <p>Seat selection not available for this flight segment.</p>
               </div>
             </div>
@@ -1815,12 +1815,12 @@
             <div class="journey-tabs-wrapper" *ngIf="(flightSegmentsReturn || []).length > 0">
               <div class="journey-tabs">
                 <button class="journey-tab" [class.active]="activeJourneyTab === 'departure'"
-                  (click)="activeJourneyTab = 'departure'; $event.stopPropagation()">
+                  (click)="onJourneyTabChange('departure'); $event.stopPropagation()">
                   <i class="fas fa-plane-departure"></i>
                   <span>Onward</span>
                 </button>
                 <button class="journey-tab" [class.active]="activeJourneyTab === 'return'"
-                  (click)="activeJourneyTab = 'return'; $event.stopPropagation()">
+                  (click)="onJourneyTabChange('return'); $event.stopPropagation()">
                   <i class="fas fa-plane-arrival"></i>
                   <span>Return</span>
                 </button>
@@ -1940,12 +1940,12 @@
             <div class="journey-tabs-wrapper" *ngIf="(flightSegmentsReturn || []).length > 0">
               <div class="journey-tabs">
                 <button class="journey-tab" [class.active]="activeJourneyTab === 'departure'"
-                  (click)="activeJourneyTab = 'departure'; $event.stopPropagation()">
+                  (click)="onJourneyTabChange('departure'); $event.stopPropagation()">
                   <i class="fas fa-plane-departure"></i>
                   <span>Onward</span>
                 </button>
                 <button class="journey-tab" [class.active]="activeJourneyTab === 'return'"
-                  (click)="activeJourneyTab = 'return'; $event.stopPropagation()">
+                  (click)="onJourneyTabChange('return'); $event.stopPropagation()">
                   <i class="fas fa-plane-arrival"></i>
                   <span>Return</span>
                 </button>

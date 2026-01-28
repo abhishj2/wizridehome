@@ -7131,6 +7131,9 @@ i.fas.fa-plane-departure {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 700;
+  z-index: 5;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .meal-price.free-meal {
@@ -7547,14 +7550,23 @@ button.continue-btn-main,
 }
 
 .meal-price {
-  font-size: 14px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
   margin-top: 8px;
-  color: #1976D2;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #4f46e5;
+  color: #ffffff;
+  width: fit-content;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .meal-price.free-meal {
-  color: #10b981;
+  background: #10b981;
+  color: #ffffff;
 }
 
 .meal-details {
