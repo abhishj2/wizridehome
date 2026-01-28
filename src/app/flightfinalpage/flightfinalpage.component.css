@@ -339,7 +339,8 @@ body {
 }
 
 .cancellation-badge {
-  background: linear-gradient(135deg, #2196F3, #1565C0);  color: white;
+  background: linear-gradient(135deg, #2196F3, #1565C0);
+  color: white;
   padding: 6px 14px;
   border-radius: 6px;
   font-size: 11px;
@@ -447,8 +448,8 @@ body {
 
 .timeline-item {
   display: grid;
-  grid-template-columns: 80px 30px 1fr;
-  align-items: start;
+  grid-template-columns: 50px 20px 1fr;
+  align-items: center;
   gap: 15px;
 }
 
@@ -475,7 +476,7 @@ body {
   top: 100%;
   transform: translateX(-50%);
   width: 2px;
-  height: 85px;
+  height: 80px;
   background: transparent;
   border-left: 2px dashed #cbd5e1;
 }
@@ -575,105 +576,105 @@ body {
   transition: all 0.2s ease;
 }
 
-  .change-baggage-btn:hover {
-    background: rgba(14, 165, 233, 0.1);
+.change-baggage-btn:hover {
+  background: rgba(14, 165, 233, 0.1);
+}
+
+/* Mobile Responsive Styles for Modern Flight Card */
+@media (max-width: 768px) {
+  .flight-summary-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  /* Mobile Responsive Styles for Modern Flight Card */
-  @media (max-width: 768px) {
-    .flight-summary-card {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .desktop-flight-summary {
-      padding: 25px;
-    }
-
-    .mobile-flight-summary {
-      display: none !important;
-    }
-
-    .route-title {
-      font-size: 22px;
-    }
-
-    .timeline-item {
-      grid-template-columns: 70px 25px 1fr;
-    }
-
-    .time {
-      font-size: 18px;
-    }
-
-    .baggage-info-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .route-header {
-      grid-template-columns: 1fr;
-    }
-
-    .cancellation-badge {
-      justify-self: start;
-    }
+  .desktop-flight-summary {
+    padding: 25px;
   }
 
-  @media (max-width: 480px) {
-    .desktop-flight-summary {
-      padding: 20px;
-    }
-
-    .flight-details-section {
-      padding: 20px;
-    }
-
-    .route-title {
-      font-size: 20px;
-    }
-
-    .date-badge {
-      font-size: 13px;
-      padding: 6px 12px;
-    }
-
-    .flight-duration {
-      font-size: 13px;
-    }
-
-    .airline-info-row {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .timeline-item {
-      grid-template-columns: 60px 20px 1fr;
-      gap: 10px;
-    }
-
-    .time {
-      font-size: 16px;
-    }
-
-    .city-name {
-      font-size: 16px;
-    }
-
-    .airport-name {
-      font-size: 13px;
-    }
-
-    .extra-baggage-banner {
-      padding: 15px;
-    }
-
-    .baggage-banner-text {
-      font-size: 13px;
-    }
-
-    .baggage-emoji {
-      font-size: 24px;
-    }
+  .mobile-flight-summary {
+    display: none !important;
   }
+
+  .route-title {
+    font-size: 22px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 70px 25px 1fr;
+  }
+
+  .time {
+    font-size: 18px;
+  }
+
+  .baggage-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-header {
+    grid-template-columns: 1fr;
+  }
+
+  .cancellation-badge {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .desktop-flight-summary {
+    padding: 20px;
+  }
+
+  .flight-details-section {
+    padding: 20px;
+  }
+
+  .route-title {
+    font-size: 20px;
+  }
+
+  .date-badge {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .flight-duration {
+    font-size: 13px;
+  }
+
+  .airline-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .timeline-item {
+    grid-template-columns: 60px 20px 1fr;
+    gap: 10px;
+  }
+
+  .time {
+    font-size: 16px;
+  }
+
+  .city-name {
+    font-size: 16px;
+  }
+
+  .airport-name {
+    font-size: 13px;
+  }
+
+  .extra-baggage-banner {
+    padding: 15px;
+  }
+
+  .baggage-banner-text {
+    font-size: 13px;
+  }
+
+  .baggage-emoji {
+    font-size: 24px;
+  }
+}
 
 
 
@@ -685,7 +686,8 @@ body {
   padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   /* Support for iPhone safe area insets with fallback */
   min-height: 100vh;
-  min-height: 100dvh; /* Use dynamic viewport height for better mobile support */
+  min-height: 100dvh;
+  /* Use dynamic viewport height for better mobile support */
   width: 100%;
   box-sizing: border-box;
   /* Prevent horizontal scroll */
@@ -809,11 +811,12 @@ body {
 @media (min-width: 769px) {
   .footer-bar {
     top: 100px !important;
-}
+  }
 
-.scroll-wrapper {
+  .scroll-wrapper {
     overflow: visible !important
-}
+  }
+
   /* Hide mobile baggage section on desktop */
   .mobile-baggage-section {
     display: none;
@@ -1250,23 +1253,23 @@ body {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .passenger-form-content .form-row .form-group {
     margin-bottom: 16px;
   }
-  
+
   .passenger-form-content .form-row-three {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .passenger-form-content .form-row-three .form-group {
     margin-bottom: 16px;
   }
 }
 
 .passenger-form-content .form-group label {
-  
+
   font-size: 13px;
   font-weight: 600;
   color: #374151;
@@ -1653,8 +1656,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .bottom-sheet-modal {
@@ -1861,10 +1869,12 @@ body {
   z-index: 1001;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
-  
+
   /* Hide scrollbar but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -2169,10 +2179,12 @@ body {
   z-index: 1001;
   /* Just above navbar (1000) */
   animation: slideUp 0.3s ease;
-  
+
   /* Hide scrollbar but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -2397,10 +2409,12 @@ body {
   z-index: 1001;
   /* Just above navbar (1000) */
   animation: slideUp 0.3s ease;
-  
+
   /* Hide scrollbar but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -2582,7 +2596,7 @@ body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  
+
   /* Hide scrollbar but keep functionality */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -2642,12 +2656,12 @@ body {
   color: #212529;
 }
 
-.fare-line > div:first-child {
+.fare-line>div:first-child {
   font-weight: 400;
   color: #212529;
 }
 
-.fare-line > div:last-child {
+.fare-line>div:last-child {
   font-weight: 400;
   color: #212529;
 }
@@ -2824,13 +2838,13 @@ body {
     font-size: 13px;
     margin: 20px 0;
   }
-  
+
   .fare-info-text th,
   .fare-info-text td {
     padding: 14px 16px;
     font-size: 13px;
   }
-  
+
   .fare-info-text th small {
     font-size: 11px;
     margin-top: 4px;
@@ -3105,7 +3119,7 @@ body {
   }
 
 
-  
+
 
   .flight-route .city {
     font-size: 20px;
@@ -3140,11 +3154,13 @@ body {
 
   /* Desktop Flight Summary - New Design */
   .desktop-flight-summary {
-    display: none; /* Hidden by default, shown only on desktop */
+    display: none;
+    /* Hidden by default, shown only on desktop */
   }
 
   .mobile-flight-summary {
-    display: block; /* Shown by default for mobile */
+    display: block;
+    /* Shown by default for mobile */
   }
 
   /* Desktop baggage info - hidden by default, shown on desktop */
@@ -3235,6 +3251,7 @@ body {
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -3732,7 +3749,7 @@ body {
   }
 
   @media (min-width: 769px) {
-    .desktop-flight-summary + .baggage-section-desktop {
+    .desktop-flight-summary+.baggage-section-desktop {
       margin-top: 16px;
       padding-top: 16px;
       border-top: 1px solid #e5e7eb;
@@ -3816,7 +3833,9 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
   }
+
   image.png
+
   /* Cancellation Policy Section - Desktop Only */
   .cancellation-policy-section {
     margin-top: 20px;
@@ -4056,6 +4075,7 @@ body {
     opacity: 0;
     transform: translateY(-5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -4098,6 +4118,7 @@ body {
 
 /* Responsive Cancellation Tabs */
 @media (max-width: 768px) {
+
   .multicity-cancellation-tabs,
   .roundtrip-cancellation-tabs {
     display: none !important;
@@ -4118,6 +4139,7 @@ body {
 
 /* Hide MakeMyTrip baggage and cancellation sections on mobile */
 @media (max-width: 768px) {
+
   .makemytrip-baggage-section,
   .makemytrip-add-baggage,
   .cancellation-policy-section {
@@ -4317,7 +4339,7 @@ body {
   /* Footer Bar - Sticky on desktop, move to sidebar position */
   .footer-bar {
     position: sticky;
-   
+
     /* Position below navbar (navbar is ~70-80px height + some margin) */
     max-width: 100%;
     left: auto;
@@ -4352,18 +4374,22 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
+    border-radius: 20px !important;
+    /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 85vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow-y: auto; /* Enable scrolling */
-    
+    overflow-y: auto;
+    /* Enable scrolling */
+
     /* Hide scrollbar but keep scroll functionality */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -4376,18 +4402,22 @@ body {
     max-width: 600px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
+    border-radius: 20px !important;
+    /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 80vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow-y: auto; /* Enable scrolling */
-    
+    overflow-y: auto;
+    /* Enable scrolling */
+
     /* Hide scrollbar but keep scroll functionality */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -4400,18 +4430,22 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
+    border-radius: 20px !important;
+    /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
     max-height: 85vh;
     right: auto;
     animation: fadeIn 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow-y: auto; /* Enable scrolling */
-    
+    overflow-y: auto;
+    /* Enable scrolling */
+
     /* Hide scrollbar but keep scroll functionality */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -5031,10 +5065,12 @@ body {
     max-width: 650px;
     width: 90%;
     max-height: 85vh;
-    border-radius: 20px !important; /* Ensure uniform border radius on all corners */
+    border-radius: 20px !important;
+    /* Ensure uniform border radius on all corners */
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
     animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto; /* Enable scrolling */
+    overflow-y: auto;
+    /* Enable scrolling */
   }
 
   @keyframes fadeInScale {
@@ -5342,7 +5378,8 @@ body {
     padding-bottom: calc(120px + env(safe-area-inset-bottom));
     /* Increased padding to account for footer height + safe area */
     min-height: 100vh;
-    min-height: 100dvh; /* Use dynamic viewport height for mobile */
+    min-height: 100dvh;
+    /* Use dynamic viewport height for mobile */
   }
 
   .flight-final-page {
@@ -5350,7 +5387,7 @@ body {
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   /* Prevent layout shift on mobile */
   .card {
     will-change: auto;
@@ -5755,13 +5792,13 @@ i.fas.fa-plane-departure {
     min-width: 100px;
     /* Prevents text from being crushed */
   }
-  
+
   /* Prevent content from being hidden behind footer */
   .scroll-wrapper {
     padding-bottom: calc(140px + env(safe-area-inset-bottom)) !important;
     /* Increased to ensure all content is visible */
   }
-  
+
   /* Ensure cards are visible and not hidden */
   .card {
     visibility: visible !important;
@@ -5769,101 +5806,103 @@ i.fas.fa-plane-departure {
     display: block !important;
   }
 }
-  @media (max-width: 768px) {
-    .flight-route {
-      display: grid !important;
-      /* Sets Source and Destination to equal width, icon takes what it needs */
-      grid-template-columns: 1fr auto 1fr !important;
-      align-items: center !important;
-      gap: 0 !important;
-      padding: 32px 0 !important;
-      position: relative !important;
-    }
 
-    /* The City text styling for mobile */
-    .flight-route .city {
-      position: relative !important;
-      z-index: 2 !important;
-      background: #ffffff !important;
-      padding: 0 8px !important;
-      font-size: 22px !important;
-      font-weight: 700 !important;
-    }
-
-    /* Container for the plane icon and the line */
-    .flight-route .plane-icon {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      /* Adjust width based on spacing needs */
-      height: 40px;
-      z-index: 2;
-      background: #ffffff;
-      /* Masks the line behind the icon */
-    }
-
-    .flight-route .plane-icon i {
-      font-size: 20px !important;
-      color: #474747 !important;
-      margin: 0 !important;
-      /* Reset existing margins */
-      padding: 0 !important;
-      background: transparent !important;
-    }
-
-    /* The Dashed Route Line */
-    .flight-route::before {
-      content: '' !important;
-      position: absolute !important;
-      top: 50% !important;
-      /* Adjust these % values to change where the line starts/ends relative to city names */
-      left: 10% !important;
-      right: 10% !important;
-      height: 2px !important;
-      background-image: linear-gradient(to right, #474747 50%, transparent 50%) !important;
-      background-size: 10px 2px !important;
-      background-repeat: repeat-x !important;
-      transform: translateY(-50%) !important;
-      z-index: 1 !important;
-    }
-
-    /* Customizing the Icon appearance to match your reference image */
-    .flight-route .plane-icon {
-      position: relative !important;
-      z-index: 2 !important;
-      background: #ffffff !important;
-      /* White background hides line behind icon */
-      padding: 0 12px !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-    }
-
-    .flight-route .city:last-child {
-      text-align: right !important;
-    }
-
-    button.details-btn {
-      margin: auto !important;
-      font-size: 12px !important;
-    }
-
-    .flight-route {
-      padding: 0 !important;
-    }
-
-    .flight-meta {
-
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .terms-text a{
-      font-size:13px !important;
-    }
+@media (max-width: 768px) {
+  .flight-route {
+    display: grid !important;
+    /* Sets Source and Destination to equal width, icon takes what it needs */
+    grid-template-columns: 1fr auto 1fr !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 32px 0 !important;
+    position: relative !important;
   }
+
+  /* The City text styling for mobile */
+  .flight-route .city {
+    position: relative !important;
+    z-index: 2 !important;
+    background: #ffffff !important;
+    padding: 0 8px !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Container for the plane icon and the line */
+  .flight-route .plane-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    /* Adjust width based on spacing needs */
+    height: 40px;
+    z-index: 2;
+    background: #ffffff;
+    /* Masks the line behind the icon */
+  }
+
+  .flight-route .plane-icon i {
+    font-size: 20px !important;
+    color: #474747 !important;
+    margin: 0 !important;
+    /* Reset existing margins */
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* The Dashed Route Line */
+  .flight-route::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    /* Adjust these % values to change where the line starts/ends relative to city names */
+    left: 10% !important;
+    right: 10% !important;
+    height: 2px !important;
+    background-image: linear-gradient(to right, #474747 50%, transparent 50%) !important;
+    background-size: 10px 2px !important;
+    background-repeat: repeat-x !important;
+    transform: translateY(-50%) !important;
+    z-index: 1 !important;
+  }
+
+  /* Customizing the Icon appearance to match your reference image */
+  .flight-route .plane-icon {
+    position: relative !important;
+    z-index: 2 !important;
+    background: #ffffff !important;
+    /* White background hides line behind icon */
+    padding: 0 12px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .flight-route .city:last-child {
+    text-align: right !important;
+  }
+
+  button.details-btn {
+    margin: auto !important;
+    font-size: 12px !important;
+  }
+
+  .flight-route {
+    padding: 0 !important;
+  }
+
+  .flight-meta {
+
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .terms-text a {
+    font-size: 13px !important;
+  }
+}
+
 .terms-text a {
   text-decoration: none !important;
   font-size: 13px;
@@ -5876,17 +5915,18 @@ i.fas.fa-plane-departure {
 }
 
 .flexflight {
-  display:flex;
-  flex-direction:column;
-  gap:20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-  
-  .flight-airline{
-      padding-bottom:20px;
-  }
-  
-  .flight-meta{
-  margin-bottom:20px !important;}
+
+.flight-airline {
+  padding-bottom: 20px;
+}
+
+.flight-meta {
+  margin-bottom: 20px !important;
+}
 
 /* Fare Summary Accordion Styles */
 .fare-accordion-item {
@@ -6001,73 +6041,76 @@ i.fas.fa-plane-departure {
   .fare-accordion-item {
     padding: 12px 0;
   }
-  
+
   .fare-accordion-left span {
     font-size: 14px;
   }
-  
+
   .fare-accordion-amount {
     font-size: 14px;
   }
-  
+
   .fare-total-label,
   .fare-total-value {
     font-size: 16px;
   }
 }
 
-.fare-summary-desktop .fare-accordion-item{
-  border-bottom:none !important;
+.fare-summary-desktop .fare-accordion-item {
+  border-bottom: none !important;
 }
 
-.fare-summary-divider{
-  border-top:1px solid #000 !important;
+.fare-summary-divider {
+  border-top: 1px solid #000 !important;
 }
 
 .trip-body {
   table {
-  border-collapse: collapse !important;
-  border-spacing: 0 !important;
-    margin:20px 0 !Important;
-}
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    margin: 20px 0 !Important;
+  }
+
   table,
-table th,
-table td {
-  border: 1px solid #333 !important;
-  padding:10px;
-}
+  table th,
+  table td {
+    border: 1px solid #333 !important;
+    padding: 10px;
+  }
 
 }
 
 .cancellation-policy-section {
-  margin-top:20px;
+  margin-top: 20px;
 }
 
-@media(max-width:767px){.scroll-wrapper {
-  padding-top:0 !important;
+@media(max-width:767px) {
+  .scroll-wrapper {
+    padding-top: 0 !important;
+  }
+
+  .card.flight-summary-card {
+    padding: 0 !important
+  }
+
+  .desktop-flight-summary {
+    margin-bottom: 0 !important;
+  }
+
+  .baggage-info-grid {
+    display: none;
+  }
+
 }
 
-                      .card.flight-summary-card{
-padding:0 !important
-                      }
 
-                      .desktop-flight-summary{
-                        margin-bottom:0  !important;
-                      }
-                      .baggage-info-grid{
-                        display:none;
-                      }
-                      
-                      }
-
-
-.desktop-flight-summary{
-  padding:0 !important;
-  margin-bottom:20px;
+.desktop-flight-summary {
+  padding: 0 !important;
+  margin-bottom: 20px;
 }
 
-.flight-card-item .card{
-  padding:0 !important;
+.flight-card-item .card {
+  padding: 0 !important;
 }
 
 /* Custom Calendar Input Padding Override for Flight Final Page */
@@ -6086,8 +6129,8 @@ padding:0 !important
 
 
 .route-header.roundtrip-route-header {
-  margin-left:20px !important;
-  margin-top:20px !important;
+  margin-left: 20px !important;
+  margin-top: 20px !important;
 }
 
 /* Fix calendar cutoff issue - ensure proper z-index and overflow */
@@ -6097,7 +6140,8 @@ padding:0 !important
 }
 
 .passenger-form-content .form-group:has(.custom-calendar-container) {
-  z-index: 10; /* Higher z-index when calendar is open */
+  z-index: 10;
+  /* Higher z-index when calendar is open */
 }
 
 /* Allow calendar dropdown to overflow parent containers */
@@ -6116,7 +6160,8 @@ padding:0 !important
 /* Make calendar input height consistent with phone number input */
 .passenger-form-content .form-row-three .form-group .custom-calendar-container .calendar-input {
   padding: 10px 20px 10px 44px !important;
-  height: 42px !important; /* Match standard input height */
+  height: 42px !important;
+  /* Match standard input height */
   font-size: 14px !important;
   line-height: 1.5 !important;
   box-sizing: border-box !important;
@@ -6138,9 +6183,11 @@ padding:0 !important
 
 
 
-#finalpagecal .calendar-input{
-  height:42px !important;
-  padding: 11px 20px 11px 44px;}
+#finalpagecal .calendar-input {
+  height: 42px !important;
+  padding: 11px 20px 11px 44px;
+}
+
 /* Ensure calendar dropdown appears above other content */
 .custom-calendar-container {
   position: relative !important;
@@ -6161,12 +6208,13 @@ padding:0 !important
 
 /* Desktop specific adjustments */
 @media (min-width: 769px) {
+
   /* Ensure three-column row has proper overflow */
   .passenger-form-content .form-row-three {
     position: relative;
     overflow: visible !important;
   }
-  
+
   /* Make all inputs in the three-column row same height */
   .passenger-form-content .form-row-three .form-group input,
   .passenger-form-content .form-row-three .form-group select,
@@ -6174,7 +6222,7 @@ padding:0 !important
     height: 42px !important;
     box-sizing: border-box !important;
   }
-  
+
   /* Adjust dial select to match */
   .passenger-form-content .form-row-three .dial-select {
     height: 42px !important;
@@ -6203,7 +6251,7 @@ padding:0 !important
     height: 42px !important;
     font-size: 14px !important;
   }
-  
+
   ::ng-deep #finalpagecal .calendar-input {
     height: 42px !important;
     padding: 10px 14px 10px 38px !important;
@@ -6220,9 +6268,11 @@ padding:0 !important
 
 .timeline-item {
   display: grid !important;
-  grid-template-columns: 80px 30px 1fr !important;
-  align-items: center !important; /* This centers everything vertically */
-  gap: 15px !important;;
+  grid-template-columns: 50px 20px 1fr;
+  align-items: center !important;
+  /* This centers everything vertically */
+  gap: 15px !important;
+  ;
 }
 
 /* Ensure the time is centered */
@@ -6230,28 +6280,39 @@ padding:0 !important
   font-size: 20px !important;
   font-weight: 700 !important;
   color: #0f172a !important;
-  line-height: 1 !important;/* Prevents extra height from line-height */
+  line-height: 1 !important;
+  /* Prevents extra height from line-height */
   display: flex !important;
-  align-items: center !important; /* Center the text itself */
+  align-items: center !important;
+  /* Center the text itself */
 }
 
 /* Timeline dot - already centered via parent align-items */
 .timeline-dot {
-  width: 14px !important;;
-  height: 14px !important;;
+  width: 14px !important;
+  ;
+  height: 14px !important;
+  ;
   border: 3px solid #cbd5e1 !important;
-  border-radius: 50% !important;;
-  background: white !important;;
-  position: relative !important;;
-  flex-shrink: 0 !important;; /* Prevents shrinking */
+  border-radius: 50% !important;
+  ;
+  background: white !important;
+  ;
+  position: relative !important;
+  ;
+  flex-shrink: 0 !important;
+  ;
+  /* Prevents shrinking */
 }
 
 /* Location info container */
 .location-info {
-  display: flex !important;;
+  display: flex !important;
+  ;
   flex-direction: column !important;
   gap: 4px !important;
-  justify-content: center !important; /* Centers content vertically within its space */
+  justify-content: center !important;
+  /* Centers content vertically within its space */
 }
 
 /* Ensure consistent line heights */
@@ -6275,18 +6336,20 @@ padding:0 !important
   line-height: 1 !important;
 }
 
-.airline-details ,
-.airline-left{
-    flex-direction:row !important;
-    align-items:center !important;
+.airline-details,
+.airline-left {
+  flex-direction: row !important;
+  align-items: center !important;
 }
-.route-header.roundtrip-route-header .cancellation-badge{
-  margin-right:20px !important;
+
+.route-header.roundtrip-route-header .cancellation-badge {
+  margin-right: 20px !important;
 }
+
 .fare-summary-title {
-    
+
   border-left: 3px solid #10b981;
-  padding-left:20px; 
+  padding-left: 20px;
 }
 
 /* Important Information Section Styles */
@@ -6584,6 +6647,7 @@ padding:0 !important
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -6634,15 +6698,15 @@ padding:0 !important
   .addon-services-card {
     margin-bottom: 20px;
   }
-  
+
   .addon-section-header {
     padding: 24px 30px;
   }
-  
+
   .addon-section-content {
     padding: 0 30px 30px 30px;
   }
-  
+
   .addon-services-header {
     padding: 24px 30px;
   }
@@ -6852,13 +6916,11 @@ padding:0 !important
 }
 
 .seat-icon.occupied {
-  background: repeating-linear-gradient(
-    45deg,
-    #f3f4f6,
-    #f3f4f6 2px,
-    #9ca3af 2px,
-    #9ca3af 4px
-  );
+  background: repeating-linear-gradient(45deg,
+      #f3f4f6,
+      #f3f4f6 2px,
+      #9ca3af 2px,
+      #9ca3af 4px);
   border-color: #9ca3af;
 }
 
@@ -6974,13 +7036,11 @@ padding:0 !important
 }
 
 .seat-cell.not-available {
-  background: repeating-linear-gradient(
-    45deg,
-    #f3f4f6,
-    #f3f4f6 3px,
-    #9ca3af 3px,
-    #9ca3af 6px
-  );
+  background: repeating-linear-gradient(45deg,
+      #f3f4f6,
+      #f3f4f6 3px,
+      #9ca3af 3px,
+      #9ca3af 6px);
   border-color: #9ca3af;
   cursor: not-allowed;
   opacity: 0.6;
@@ -6995,13 +7055,15 @@ padding:0 !important
 }
 
 /* No Seats Message */
-.no-seats-message, .no-meals-message {
+.no-seats-message,
+.no-meals-message {
   text-align: center;
   padding: 60px 20px;
   color: #6b7280;
 }
 
-.no-seats-message p, .no-meals-message p {
+.no-seats-message p,
+.no-meals-message p {
   font-size: 15px;
   margin: 0;
 }
@@ -7370,19 +7432,19 @@ padding:0 !important
   }
 }
 
-button.continue-btn-main ,
-.addon-continue-btn
-{
+button.continue-btn-main,
+.addon-continue-btn {
   background: linear-gradient(135deg, #2196F3, #1565C0);
-color: white;
-padding: 8px 14px;
-border-radius: 6px;
-font-size: clamp(10px, 2vw, 11px);
-font-weight: 700;
-letter-spacing: 0.8px;
-white-space: nowrap;
-border:none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: clamp(10px, 2vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  border: none;
 }
-.addon-continue-btn{
-  margin-bottom:20px !important;
+
+.addon-continue-btn {
+  margin-bottom: 20px !important;
 }
