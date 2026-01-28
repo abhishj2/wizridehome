@@ -7691,3 +7691,21 @@ button.continue-btn-main,
 .journey-tab span {
   white-space: nowrap;
 }
+
+/* Calendar Width Override for Desktop */
+@media (min-width: 769px) {
+  #finalpagecal ::ng-deep .calendar-dropdown {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+  }
+
+  #finalpagecal ::ng-deep .calendar-container {
+    width: 100% !important;
+  }
+
+  #finalpagecal ::ng-deep .calendar-header,
+  #finalpagecal ::ng-deep .calendar-body {
+    width: 100% !important;
+  }
+}
