@@ -7716,6 +7716,24 @@ button.continue-btn-main,
   }
 }
 
+/* Center Seat Map on Desktop */
+@media (min-width: 769px) {
+  .seat-map-scroll {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .seat-map {
+    margin: 0 auto;
+  }
+
+  .seat-grid-dynamic {
+    width: 400px !important;
+    margin: 0 auto !important;
+  }
+}
+
 @media(max-width:767px) {
   .mobile-baggage-section {
     display: none !important;
