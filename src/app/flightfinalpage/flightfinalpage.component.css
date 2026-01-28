@@ -586,6 +586,8 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
+
+
   .desktop-flight-summary {
     padding: 25px;
   }
@@ -616,6 +618,10 @@ body {
 
   .cancellation-badge {
     justify-self: start;
+  }
+
+  .mobile-baggage-section {
+    display: none !important;
   }
 }
 
@@ -7707,5 +7713,15 @@ button.continue-btn-main,
   #finalpagecal ::ng-deep .calendar-header,
   #finalpagecal ::ng-deep .calendar-body {
     width: 100% !important;
+  }
+}
+
+@media(max-width:767px) {
+  .mobile-baggage-section {
+    display: none !important;
+  }
+
+  .extra-baggage-banner {
+    flex-direction: column !important
   }
 }

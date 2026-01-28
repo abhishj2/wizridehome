@@ -2293,14 +2293,47 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       return;
     }
 
-    this.loader = true;
+    // Check if mobile (width < 769px)
+    const isMobile = window.innerWidth < 769;
 
-    // Always proceed directly to payment (align with addon page flow)
-    if (this.tripType === 'multicity') {
-      this.handleMultiCityBooking();
+    if (isMobile) {
+      // Mobile: Redirect to addon page with all details
+      this.navigateToAddonPage();
     } else {
-      this.proceedToPayment();
+      // Desktop: Stay on same page and proceed to payment
+      this.loader = true;
+
+      if (this.tripType === 'multicity') {
+        this.handleMultiCityBooking();
+      } else {
+        this.proceedToPayment();
+      }
     }
+  }
+
+  // Navigate to addon page for mobile
+  navigateToAddonPage() {
+    // Store all necessary data for addon page
+    sessionStorage.setItem('flightData', JSON.stringify({
+      tripType: this.tripType,
+      flightDataDeparture: this.flightDataDeparture,
+      flightDataReturn: this.flightDataReturn,
+      flightSegments: this.flightSegments,
+      flightSegmentsReturn: this.flightSegmentsReturn,
+      adults: this.adults,
+      children: this.children,
+      infants: this.infants,
+      gstDetails: this.gstDetails,
+      termsAgreed: this.termsAgreed,
+      finalAmount: this.finalAmount,
+      totalBaseFare: this.totalBaseFare,
+      totalTaxes: this.totalTaxes,
+      baggageTotal: this.baggageTotal,
+      baggageTotalReturn: this.baggageTotalReturn
+    }));
+
+    // Navigate to addon page
+    this.router.navigate(['/flightaddons']);
   }
 
   handleMultiCityBooking(): void {
