@@ -35,14 +35,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   resultIndexReturn: any = '';
   @ViewChildren('segmentCards') segmentCards!: QueryList<ElementRef>;
   @ViewChild('seatCarousel') seatCarousel!: ElementRef;
-  
+
   // State Variables
   activeSeatIndex: number = 0;
   activeMealIndex: number = 0;
   totalSpecialServiceCharges: number = 0;
   extraBaggageAvailable: boolean = false;
   extraBaggageAvailableReturn: boolean = false;
-  
+
   // Addon Services State
   isSeatsExpanded: boolean = false;
   isCabsExpanded: boolean = false;
@@ -56,7 +56,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
    * 3 = Add ons unlocked
    */
   addonUnlockStep: 0 | 1 | 2 | 3 = 0;
-  
+
   // Baggage & Meals
   baggageOptions: any[] = [];
   baggageOptionsReturn: any[] = [];
@@ -69,28 +69,28 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Selected SSRs
   selectedBaggage: any[] = [];
   selectedMeals: any[] = [];
-  
+
   // Segments
   flightSegments: any[] = [];
   flightSegmentsReturn: any[] = [];
-  
+
   // Seats
   totalMealCharges: number = 0;
   seatMap: any[] = [];
   seatMapReturn: any[] = [];
   selectedSeats: { [segmentIndex: number]: any[] } = {};
   selectedSeatsReturn: { [segmentIndex: number]: any[] } = {};
-  
+
   // Special Services
   services: any[] = [];
-  
+
   private subscriptions: Subscription = new Subscription();
-  
+
   // Passengers & Fares
   totalAdults: number = 0;
   totalChildren: number = 0;
   totalInfants: number = 0;
-  
+
   // Fare Variables Outbound
   adultBaseFare: any = 0;
   childrenBaseFare: any = 0;
@@ -98,7 +98,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   adultTaxes: any = 0;
   childrenTaxes: any = 0;
   infantTaxes: any = 0;
-  
+
   // Totals
   totalBaseFare: any = 0;
   totalAdultBaseFare: any = 0;
@@ -113,25 +113,25 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   totalTripSecure: any = 0;
   totalSeats: any = 0;
   finalAmount: any = 0;
-  
+
   // Data Containers
   fullFlightData: any = [];
   flightDataDeparture: any = [];
   flightDataReturn: any = [];
-  
+
   // Policies
   cancellationPolicy: any[] = [];
   dateChangePolicy: any[] = [];
   cancellationPolicyReturn: any[] = [];
   dateChangePolicyReturn: any[] = [];
-  
+
   totalFlightDuration: string = '';
   stopSummary: string = '';
   totalFlightDurationReturn: string = '';
   stopSummaryReturn: string = '';
-  
+
   fareQuoteReturn: any;
-  
+
   // Fare Return
   adultBaseFareReturn: number = 0;
   childrenBaseFareReturn: number = 0;
@@ -139,15 +139,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   adultTaxesReturn: number = 0;
   childrenTaxesReturn: number = 0;
   infantTaxesReturn: number = 0;
-  
+
   loader: boolean = true;
   passportInfoRequired: boolean = false;
-  
+
   // Form Data
   travellers: any[] = [];
   children: any[] = [];
   infants: any[] = [];
-  
+
   // Dropdown Data
   days: string[] = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'));
   months: string[] = [
@@ -156,19 +156,19 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   ];
   years: string[] = Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => (1900 + i).toString()).reverse();
   passportExpiryYears: number[] = [];
-  
+
   contact = {
     countryCode: '91',
     mobile: '',
     email: '',
     hasGST: false
   };
-  
+
   gstInfo = {
     companyName: '',
     registrationNo: ''
   };
-  
+
   // Flags & UI
   isCompanyNameValid: boolean = true;
   isRegistrationValid: boolean = true;
@@ -176,7 +176,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showModal: boolean = false;
   selectedTab: 'cancel' | 'change' = 'cancel';
   activeTab: 'cancel' | 'reschedule' = 'cancel';
-  
+
   // Flag to prevent double execution of baggage done handler
   private isProcessingBaggageDone: boolean = false;
   gstMandatoryOnward: boolean = false;
@@ -186,15 +186,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   fareRuleText: SafeHtml = '';
   fareRuleTextReturn: SafeHtml = '';
   bookingSubmitted: boolean = false;
-  
+
   // --- MISSING PROPERTIES ADDED HERE ---
   termsAccepted: boolean = false;
   servicesUnlocked: boolean = false;
   termsAgreed: boolean = false;
-  
+
   // Trip Type
   tripType: 'oneway' | 'roundtrip' | 'multicity' = 'oneway';
-  
+
   // Modal States
   showFareSummaryModal: boolean = false;
   showAddBaggageModal: boolean = false;
@@ -202,7 +202,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   showGSTModal: boolean = false;
   isGSTExpanded: boolean = false;
   showMobileFareBreakdown: boolean = false;
-  
+
   // Fare Summary Accordion States
   isBaseFareExpanded: boolean = false;
   isTaxesExpanded: boolean = false;
@@ -210,7 +210,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   isBaggageExpanded: boolean = false;
   showPassengerModal: boolean = false;
   showFareRules: boolean = false;
-  
+
   // Tab States
   activeBaggageTab: 'onward' | 'return' = 'onward';
   activePolicyTab: 'onward' | 'return' = 'onward';
@@ -219,11 +219,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   activePolicySubTab: 'cancel' | 'reschedule' = 'cancel';
   activeRoundBaggageTab: 'onward' | 'return' = 'onward';
   fareTab: 'onward' | 'return' = 'onward';
-  
+
   // Passenger Arrays (aliases for mobile template compatibility)
   get adults() { return this.travellers; }
   // Note: children and infants are already defined as properties above
-  
+
   // GST Details (alias for mobile template)
   gstDetails: any = {
     companyName: '',
@@ -232,42 +232,42 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     companyEmail: '',
     gstNumber: ''
   };
-  
+
   // Passenger Modal
   currentPassengerType: 'adult' | 'child' | 'infant' = 'adult';
   currentPassengerIndex: number = 0;
   currentPassengerDetails: any = null;
   passengerValidationErrors: any = {};
   get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
-  
+
   // Desktop inline form expansion
   expandedPassengerKey: string | null = null; // Format: "adult-0", "child-1", etc.
-  
+
   // Baggage Counts (for mobile template)
   baggageCounts: { [key: number]: number } = {};
   onwardBaggageCounts: { [key: number]: number } = {};
   returnBaggageCounts: { [key: number]: number } = {};
   maxAllowedBaggageCount: number = 0;
-  
+
   // Fare Summary
   onwardFareSummary: any = {};
   returnFareSummary: any = {};
   travelerCount: number = 0;
-  
+
   // Date properties
   departureDate: Date | null = null;
   returnDate: Date | null = null;
-  
+
   // Additional flags
   panInfoRequired: boolean = false;
   isUnifiedSegmentFormat: boolean = false;
-  
+
   // Multicity support
   flightSegmentGroups: any[] = [];
   groupedFlightSegments: any[] = [];
   activeTabIndex: number = 0;
   activeCancelTabIndex: number = 0;
-  
+
   // Math reference for template
   Math = Math;
   // -------------------------------------
@@ -306,7 +306,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     private cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
     public bookingPayloadService: FlightbookingpayloadService
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -323,20 +323,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     this.initializePassportExpiryYears();
-    
+
     // Reset addon charges when component initializes to prevent stale data
     this.flightAddonsService.totalSeats = 0;
     this.flightAddonsService.totalMealCharges = 0;
     this.flightAddonsService.totalSpecialServiceCharges = 0;
     console.log('Component initialized - Reset all addon charges to 0');
-    
+
     this.subscriptions.add(
       this.flightDataService.currentMessage.subscribe((val) => {
         if (!val) {
           this.router.navigate(['/']);
           return;
         }
-        
+
         this.processFlightDataInput(val);
       })
     );
@@ -347,12 +347,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
   openPhoneDialer(field: 'primary', event?: Event): void {
     if (!this.isMobileView()) return;
-  
+
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
-  
+
     // Prevent native keyboard from opening
     if (this.contactMobileInput && this.contactMobileInput.nativeElement) {
       const inputElement = this.contactMobileInput.nativeElement;
@@ -360,14 +360,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       inputElement.setAttribute('readonly', 'readonly');
       inputElement.setAttribute('inputmode', 'none');
     }
-  
+
     this.activePhoneField = field;
     this.showPhoneDialer = true;
-  
+
     if (isPlatformBrowser(this.platformId)) {
       this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
     }
-  
+
     // Wait for dialer animation to complete (300ms) + extra buffer, then scroll
     setTimeout(() => {
       this.scrollToContactInput();
@@ -375,30 +375,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
   private scrollToContactInput(): void {
     if (!isPlatformBrowser(this.platformId) || !this.contactMobileInput) return;
-  
+
     const el = this.contactMobileInput.nativeElement;
-    
+
     // Find the modal popup which is the scrollable container
     const modal: HTMLElement | null = el.closest('.trip-popup') as HTMLElement;
-    
+
     if (modal) {
       // Get dialer height (approximately 280px with reduced size)
       const dialerHeight = 280;
       const modalRect = modal.getBoundingClientRect();
       const elementRect = el.getBoundingClientRect();
-      
+
       // Calculate the visible area of the modal (above the dialer)
       const visibleHeight = modalRect.height - dialerHeight;
-      
+
       // Calculate element position relative to modal's scroll position
       const elementTopRelative = elementRect.top - modalRect.top + modal.scrollTop;
-      
+
       // We want the input to be visible with padding above the dialer
       // Calculate target scroll position to show input in the visible area
       const inputHeight = elementRect.height;
       const padding = 20; // Padding above input
       const targetScrollTop = elementTopRelative - (visibleHeight - inputHeight - padding);
-      
+
       // Only scroll if the element is not already visible
       if (targetScrollTop > modal.scrollTop || elementRect.bottom > (modalRect.top + visibleHeight)) {
         modal.scrollTo({
@@ -408,8 +408,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       }
     } else {
       // Fallback: try to scroll the input into view
-      el.scrollIntoView({ 
-        behavior: 'smooth', 
+      el.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -419,7 +419,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   closePhoneDialer(): void {
     this.showPhoneDialer = false;
     this.activePhoneField = null;
-  
+
     // Restore input behavior - remove readonly and inputmode on desktop
     if (this.contactMobileInput && this.contactMobileInput.nativeElement) {
       const inputElement = this.contactMobileInput.nativeElement;
@@ -429,7 +429,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         inputElement.setAttribute('inputmode', 'numeric');
       }
     }
-  
+
     if (isPlatformBrowser(this.platformId)) {
       this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
     }
@@ -437,9 +437,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   onDialerNumberClick(number: string): void {
     if (!this.activePhoneField || !this.currentPassengerDetails) return;
-  
+
     const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
-  
+
     if (currentValue.length < 10) {
       this.currentPassengerDetails = {
         ...this.currentPassengerDetails,
@@ -451,9 +451,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   onDialerBackspace(): void {
     if (!this.activePhoneField || !this.currentPassengerDetails) return;
-  
+
     const currentValue: string = this.currentPassengerDetails.mobileNumber || '';
-  
+
     if (currentValue.length > 0) {
       this.currentPassengerDetails = {
         ...this.currentPassengerDetails,
@@ -478,7 +478,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.ipAddress = val['ipAddress'];
     this.tboToken = val['tboToken'];
     this.traceid = val['traceid'];
-    
+
     // Set trip type
     const tripTypeVal = val['tripType'] || '';
     if (tripTypeVal === 'round' || tripTypeVal === 'roundtrip') {
@@ -488,11 +488,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     } else {
       this.tripType = 'oneway';
     }
-    
+
     // Extract resultIndex and flightDataDeparture (matches mobile version - set before checking trip type)
     const departureFlightData = val['departureFlightData'];
     const returnFlightData = val['returnFlightData'];
-    
+
     // Extract resultIndex - check both possible locations
     if (departureFlightData?.selectedFare?.originalFareOption?.ResultIndex) {
       this.resultIndex = departureFlightData.selectedFare.originalFareOption.ResultIndex;
@@ -509,7 +509,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.resultIndex = '';
       this.flightDataDeparture = departureFlightData;
     }
-    
+
     if (returnFlightData) {
       if (returnFlightData?.selectedFare?.originalFareOption?.ResultIndex) {
         this.resultIndexReturn = returnFlightData.selectedFare.originalFareOption.ResultIndex;
@@ -530,7 +530,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.resultIndexReturn = '';
       this.flightDataReturn = null;
     }
-    
+
     // Handle multi-city (matches mobile version - simple check after extracting flightDataDeparture)
     if (this.tripType === 'multicity') {
       if (this.flightDataDeparture && this.flightDataDeparture.Segments) {
@@ -540,24 +540,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         this.loader = false;
         return;
       }
-      
+
       // Initialize passenger counts from input data
       this.totalAdults = val['adults'] || 1;
       this.totalChildren = val['children'] || 0;
       this.totalInfants = val['infants'] || 0;
-      
+
       // Initialize passenger arrays
       this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
       this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
       this.infants = Array(this.totalInfants).fill(0).map(() => this.getBlankInfant());
-      
+
       // Initialize baggage counts
       this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
       this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
-      
+
       // Load fare rules
       this.loadFareRules();
-      
+
       // Call fare quote to get fare breakdown and SSR data
       if (this.traceid && this.resultIndex) {
         this.callFareQuote();
@@ -566,7 +566,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       }
       return;
     }
-    
+
     // Handle one-way and round-trip (below)
     // Set dates
     if (val['departureDate']) {
@@ -580,7 +580,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.totalAdults = val['adults'] || 1;
     this.totalChildren = val['children'] || 0;
     this.totalInfants = val['infants'] || 0;
-    
+
     // Initialize passenger arrays
     this.travellers = Array(this.totalAdults).fill(0).map(() => this.getBlankAdult());
     this.children = Array(this.totalChildren).fill(0).map(() => this.getBlankChild());
@@ -593,14 +593,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (this.flightDataReturn) {
       this.processSegments(this.flightDataReturn, true);
     }
-    
+
     // Initialize baggage counts
     this.maxAllowedBaggageCount = this.totalAdults + this.totalChildren;
     this.travelerCount = this.totalAdults + this.totalChildren + this.totalInfants;
-    
+
     // Load fare rules
     this.loadFareRules();
-    
+
     // Call fare quote to get fare breakdown and SSR data
     if (this.traceid && this.resultIndex) {
       this.callFareQuote();
@@ -612,77 +612,77 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   processSegments(flightData: any, isReturn: boolean) {
     const segments = flightData.Segments?.[0] || [];
     // Clear existing
-    if(isReturn) this.flightSegmentsReturn = []; else this.flightSegments = [];
-    
+    if (isReturn) this.flightSegmentsReturn = []; else this.flightSegments = [];
+
     let firstDepTime: Date | null = null;
     let lastArrTime: Date | null = null;
     const stopCities: string[] = [];
 
     for (let i = 0; i < segments.length; i++) {
-        const seg = segments[i];
-        const origin = seg.Origin?.Airport || {};
-        const destination = seg.Destination?.Airport || {};
-        const depDate = new Date(seg.DepTime || seg.Origin?.DepTime);
-        const arrDate = new Date(seg.ArrTime || seg.Destination?.ArrTime);
-        
-        if (i === 0) firstDepTime = depDate;
-        if (i === segments.length - 1) lastArrTime = arrDate;
-        
-        const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
-        
-        const segmentObj: any = {
-            airline: seg.Airline?.AirlineName,
-            logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
-            code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
-            aircraft: seg.Craft,
-            departureTime: this.formatTime(depDate),
-            arrivalTime: this.formatTime(arrDate),
-            from: origin.CityName,
-            fromAirport: `${origin.AirportName}, Terminal ${origin.Terminal || 'N/A'}`,
-            to: destination.CityName,
-            toAirport: `${destination.AirportName}, Terminal ${destination.Terminal || 'N/A'}`,
-            duration: this.formatDuration(durationMins),
-            cabinBaggage: seg.CabinBaggage,
-            checkInBaggage: seg.Baggage,
-            cabin: seg.CabinBaggage, // For desktop template
-            checkIn: seg.Baggage, // For desktop template
-            fareTag: seg.SupplierFareClass,
-            fareClass: seg.SupplierFareClass, // For desktop template
-            layover: null,
-            originCode: origin.AirportCode,
-            destinationCode: destination.AirportCode,
-            date: depDate, // For mobile template
-            depDate: depDate, // For mobile template
-            arrDate: arrDate, // For mobile template
-        };
+      const seg = segments[i];
+      const origin = seg.Origin?.Airport || {};
+      const destination = seg.Destination?.Airport || {};
+      const depDate = new Date(seg.DepTime || seg.Origin?.DepTime);
+      const arrDate = new Date(seg.ArrTime || seg.Destination?.ArrTime);
 
-        if (i < segments.length - 1) {
-            const nextDep = new Date(segments[i + 1].DepTime || segments[i + 1].Origin?.DepTime);
-            const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
-            segmentObj.layover = {
-                duration: this.formatDuration(layoverMins),
-                location: destination.CityName
-            };
-            stopCities.push(destination.CityName);
-        }
-        
-        if(isReturn) this.flightSegmentsReturn.push(segmentObj);
-        else this.flightSegments.push(segmentObj);
+      if (i === 0) firstDepTime = depDate;
+      if (i === segments.length - 1) lastArrTime = arrDate;
+
+      const durationMins = Math.floor((arrDate.getTime() - depDate.getTime()) / 60000);
+
+      const segmentObj: any = {
+        airline: seg.Airline?.AirlineName,
+        logo: `assets/images/flightimages/${seg.Airline?.AirlineCode}.png`,
+        code: `${seg.Airline?.AirlineCode} ${seg.Airline?.FlightNumber}`,
+        aircraft: seg.Craft,
+        departureTime: this.formatTime(depDate),
+        arrivalTime: this.formatTime(arrDate),
+        from: origin.CityName,
+        fromAirport: `${origin.AirportName}, Terminal ${origin.Terminal || 'N/A'}`,
+        to: destination.CityName,
+        toAirport: `${destination.AirportName}, Terminal ${destination.Terminal || 'N/A'}`,
+        duration: this.formatDuration(durationMins),
+        cabinBaggage: seg.CabinBaggage,
+        checkInBaggage: seg.Baggage,
+        cabin: seg.CabinBaggage, // For desktop template
+        checkIn: seg.Baggage, // For desktop template
+        fareTag: seg.SupplierFareClass,
+        fareClass: seg.SupplierFareClass, // For desktop template
+        layover: null,
+        originCode: origin.AirportCode,
+        destinationCode: destination.AirportCode,
+        date: depDate, // For mobile template
+        depDate: depDate, // For mobile template
+        arrDate: arrDate, // For mobile template
+      };
+
+      if (i < segments.length - 1) {
+        const nextDep = new Date(segments[i + 1].DepTime || segments[i + 1].Origin?.DepTime);
+        const layoverMins = Math.floor((nextDep.getTime() - arrDate.getTime()) / 60000);
+        segmentObj.layover = {
+          duration: this.formatDuration(layoverMins),
+          location: destination.CityName
+        };
+        stopCities.push(destination.CityName);
+      }
+
+      if (isReturn) this.flightSegmentsReturn.push(segmentObj);
+      else this.flightSegments.push(segmentObj);
     }
 
     if (firstDepTime && lastArrTime) {
-        const totalDuration = this.formatDuration(Math.floor((lastArrTime.getTime() - firstDepTime.getTime()) / 60000));
-        const stopTxt = segments.length === 1 ? 'Non-stop' : `${segments.length - 1} stop(s) via ${stopCities.join(', ')}`;
-        
-        if(isReturn) {
-            this.totalFlightDurationReturn = totalDuration;
-            this.stopSummaryReturn = stopTxt;
-            this.cancellationPolicyReturn = flightData.cancellationPolicy || [];
-        } else {
-            this.totalFlightDuration = totalDuration;
-            this.stopSummary = stopTxt;
-            this.cancellationPolicy = flightData.cancellationPolicy || [];
-        }
+      const totalDuration = this.formatDuration(Math.floor((lastArrTime.getTime() - firstDepTime.getTime()) / 60000));
+      const stopTxt = segments.length === 1 ? 'Non-stop' : `${segments.length - 1} stop(s) via ${stopCities.join(', ')}`;
+
+      if (isReturn) {
+        this.totalFlightDurationReturn = totalDuration;
+        this.stopSummaryReturn = stopTxt;
+        this.cancellationPolicyReturn = flightData.cancellationPolicy || [];
+      } else {
+        this.totalFlightDuration = totalDuration;
+        this.stopSummary = stopTxt;
+        this.cancellationPolicy = flightData.cancellationPolicy || [];
+      }
     }
   }
 
@@ -765,7 +765,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
         this.flightSegmentGroups.push(group);
       }
-      
+
       // Total duration across all legs
       if (overallFirstDepTime && overallLastArrTime) {
         const totalDurationMins = Math.floor((overallLastArrTime.getTime() - overallFirstDepTime.getTime()) / 60000);
@@ -783,7 +783,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Cancellation & Date change policies
       this.cancellationPolicy = this.flightDataDeparture.cancellationPolicy || [];
       this.dateChangePolicy = this.flightDataDeparture.dateChangePolicy || [];
-      
+
       // Set groupedFlightSegments for mobile template compatibility
       this.groupedFlightSegments = this.flightSegmentGroups;
     } else {
@@ -801,18 +801,18 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (multiCitySegment[missingIndex]) {
       const segmentInfo = multiCitySegment[missingIndex];
       console.log(`Creating placeholder for missing segment ${missingIndex}:`, segmentInfo);
-      
+
       // Extract origin and destination - handle both airport code and full airport object
       const originCode = segmentInfo.Origin?.Airport?.AirportCode || segmentInfo.Origin?.AirportCode || segmentInfo.Origin || '';
       const destCode = segmentInfo.Destination?.Airport?.AirportCode || segmentInfo.Destination?.AirportCode || segmentInfo.Destination || '';
       const originCity = segmentInfo.Origin?.Airport?.CityName || segmentInfo.Origin?.CityName || originCode;
       const destCity = segmentInfo.Destination?.Airport?.CityName || segmentInfo.Destination?.CityName || destCode;
-      
+
       // Create a basic segment structure from the route info
       // Ensure we always have a valid date for the template
       const depDate = segmentInfo.PreferredDepartureTime ? new Date(segmentInfo.PreferredDepartureTime) : new Date();
       const arrDate = segmentInfo.PreferredArrivalTime ? new Date(segmentInfo.PreferredArrivalTime) : depDate;
-      
+
       const placeholderGroup: any[] = [{
         from: originCity,
         to: destCity,
@@ -833,11 +833,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         checkInBaggage: 'N/A',
         isPlaceholder: true
       }];
-      
+
       this.flightSegmentGroups.push(placeholderGroup);
       this.groupedFlightSegments.push(placeholderGroup);
       allSegments.push(...placeholderGroup);
-      
+
       console.log(`✓ Created placeholder for segment ${missingIndex}:`, {
         from: originCity,
         to: destCity,
@@ -851,15 +851,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!fareBreakdown || !Array.isArray(fareBreakdown)) return 0;
     const adultFare = fareBreakdown.find((f: any) => f.PassengerType === 1);
     if (!adultFare) return 0;
-    return adultFare.PassengerCount > 0 
-      ? (adultFare.BaseFare + adultFare.Tax) / adultFare.PassengerCount 
+    return adultFare.PassengerCount > 0
+      ? (adultFare.BaseFare + adultFare.Tax) / adultFare.PassengerCount
       : (adultFare.BaseFare + adultFare.Tax);
   }
 
   processMultiCityFareBreakdown(multiCitySelectedFares: any): void {
     let totalBaseFare = 0;
     let totalTaxes = 0;
-    
+
     // Sum up fares from all segments
     Object.values(multiCitySelectedFares).forEach((fareData: any) => {
       if (fareData.selectedFare) {
@@ -901,30 +901,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         }
       }
     });
-    
+
     this.totalBaseFare = totalBaseFare;
     this.totalTaxes = totalTaxes;
     this.adultBaseFare = this.totalAdults > 0 ? totalBaseFare / this.totalAdults : 0;
     this.adultTaxes = this.totalAdults > 0 ? totalTaxes / this.totalAdults : 0;
-    
+
     this.updateFinalFare();
   }
 
   loadFareRules() {
     this.subscriptions.add(
-        this.apiService.getFareRule(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
+      this.apiService.getFareRule(this.ipAddress, this.tboToken, this.traceid, this.resultIndex)
         .subscribe((val: any) => {
-            const rawHtml = val?.Response?.FareRules?.[0]?.FareRuleDetail || 'Fare rule not available.';
-            this.fareRuleText = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
+          const rawHtml = val?.Response?.FareRules?.[0]?.FareRuleDetail || 'Fare rule not available.';
+          this.fareRuleText = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
         })
     );
-    
+
     if (this.resultIndexReturn) {
       this.subscriptions.add(
-          this.apiService.getFareRule(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
+        this.apiService.getFareRule(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn)
           .subscribe((val: any) => {
-              const rawHtml = val?.Response?.FareRules?.[0]?.FareRuleDetail || 'Fare rule not available.';
-              this.fareRuleTextReturn = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
+            const rawHtml = val?.Response?.FareRules?.[0]?.FareRuleDetail || 'Fare rule not available.';
+            this.fareRuleTextReturn = this.sanitizer.bypassSecurityTrustHtml(rawHtml);
           })
       );
     }
@@ -971,9 +971,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
           this.fareQuote = val;
           this.gstMandatoryOnward = this.fareQuote?.Response?.Results?.IsGSTMandatory;
-          
-          if(this.fareQuote?.Response?.IsPriceChanged){
-             Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });  
+
+          if (this.fareQuote?.Response?.IsPriceChanged) {
+            Swal.fire({ title: 'Price Changed', text: 'The flight price has been updated by the airline.', icon: 'warning', confirmButtonText: 'Ok' });
           }
 
           this.processPassportReqs(this.fareQuote?.Response?.Results);
@@ -1005,14 +1005,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
                     this.router.navigate(['/']);
                     return;
                   }
-                  
+
                   this.fareQuoteReturn = returnVal;
                   this.gstMandatoryReturn = this.fareQuoteReturn?.Response?.Results?.IsGSTMandatory;
-                  
-                  if(this.fareQuoteReturn?.Response?.IsPriceChanged) {
+
+                  if (this.fareQuoteReturn?.Response?.IsPriceChanged) {
                     Swal.fire({ title: 'Return Price Changed', icon: 'warning' });
                   }
-                  
+
                   this.processPassportReqs(this.fareQuoteReturn?.Response?.Results);
                   this.processFareBreakdown(returnVal, true);
                   this.aggregateFareSummary();
@@ -1037,84 +1037,116 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   processPassportReqs(results: any) {
-      if(!results) return;
-      
-      // Process passport requirements
-      const passportChecks = {
-        IsPassportFullDetailRequiredAtBook: results.IsPassportFullDetailRequiredAtBook,
-        IsPassportRequiredAtBook: results.IsPassportRequiredAtBook,
-        IsPassportRequiredAtTicket: results.IsPassportRequiredAtTicket
-      };
-      
-      this.passportInfoRequired = this.passportInfoRequired || !!(
-        passportChecks.IsPassportFullDetailRequiredAtBook ||
-        passportChecks.IsPassportRequiredAtBook ||
-        passportChecks.IsPassportRequiredAtTicket
-      );
-      
-      // Process PAN requirements (similar to mobile version)
-      const panChecks = {
-        IsPanRequiredAtTicket: results.IsPanRequiredAtTicket,
-        IsPanRequiredAtBook: results.IsPanRequiredAtBook
-      };
-      
-      this.panInfoRequired = this.panInfoRequired || !!(
-        panChecks.IsPanRequiredAtTicket ||
-        panChecks.IsPanRequiredAtBook
-      );
+    if (!results) return;
+
+    // Process passport requirements
+    const passportChecks = {
+      IsPassportFullDetailRequiredAtBook: results.IsPassportFullDetailRequiredAtBook,
+      IsPassportRequiredAtBook: results.IsPassportRequiredAtBook,
+      IsPassportRequiredAtTicket: results.IsPassportRequiredAtTicket
+    };
+
+    this.passportInfoRequired = this.passportInfoRequired || !!(
+      passportChecks.IsPassportFullDetailRequiredAtBook ||
+      passportChecks.IsPassportRequiredAtBook ||
+      passportChecks.IsPassportRequiredAtTicket
+    );
+
+    // Process PAN requirements (similar to mobile version)
+    const panChecks = {
+      IsPanRequiredAtTicket: results.IsPanRequiredAtTicket,
+      IsPanRequiredAtBook: results.IsPanRequiredAtBook
+    };
+
+    this.panInfoRequired = this.panInfoRequired || !!(
+      panChecks.IsPanRequiredAtTicket ||
+      panChecks.IsPanRequiredAtBook
+    );
   }
 
   fetchSSRAfterFareQuotes() {
-      console.log('🔍 Fetching SSR with params:', {
-        ipAddress: this.ipAddress,
-        tboToken: this.tboToken,
-        traceid: this.traceid,
-        resultIndex: this.resultIndex
-      });
-      
-      this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe(
-        (val: any) => {
-          console.log('✅ SSR Response (Onward):', val);
-          this.ssrValues = val;
-          
-          if (val?.Response?.Baggage) {
-            console.log('✅ Baggage data found (Onward):', val.Response.Baggage);
-            this.processBaggage(val.Response.Baggage, false);
-          } else {
-            console.warn('⚠️ No baggage data in SSR response (Onward):', val);
-            this.extraBaggageAvailable = false;
-          }
-        },
-        (error) => {
-          console.error('❌ Error fetching SSR (Onward):', error);
+    console.log('🔍 Fetching SSR with params:', {
+      ipAddress: this.ipAddress,
+      tboToken: this.tboToken,
+      traceid: this.traceid,
+      resultIndex: this.resultIndex
+    });
+
+    this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndex).subscribe(
+      (val: any) => {
+        console.log('✅ SSR Response (Onward):', val);
+        this.ssrValues = val;
+
+        if (val?.Response?.Baggage) {
+          console.log('✅ Baggage data found (Onward):', val.Response.Baggage);
+          this.processBaggage(val.Response.Baggage, false);
+        } else {
+          console.warn('⚠️ No baggage data in SSR response (Onward):', val);
           this.extraBaggageAvailable = false;
         }
-      );
-      
-      if(this.resultIndexReturn) {
-          console.log('🔍 Fetching SSR for return with params:', {
-            resultIndexReturn: this.resultIndexReturn
-          });
-          
-          this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe(
-            (val: any) => {
-              console.log('✅ SSR Response (Return):', val);
-              this.ssrValuesReturn = val;
-              
-              if (val?.Response?.Baggage) {
-                console.log('✅ Baggage data found (Return):', val.Response.Baggage);
-                this.processBaggage(val.Response.Baggage, true);
-              } else {
-                console.warn('⚠️ No baggage data in SSR response (Return):', val);
-                this.extraBaggageAvailableReturn = false;
-              }
-            },
-            (error) => {
-              console.error('❌ Error fetching SSR (Return):', error);
-              this.extraBaggageAvailableReturn = false;
-            }
-          );
+
+        // Log all SSR components
+        console.log('📋 SSR Data Summary (Onward):', {
+          hasSeatDynamic: !!val?.Response?.SeatDynamic,
+          hasMeal: !!val?.Response?.Meal,
+          hasBaggage: !!val?.Response?.Baggage,
+          hasSpecialServices: !!val?.Response?.SpecialServices,
+          SeatDynamicCount: Array.isArray(val?.Response?.SeatDynamic) ? val.Response.SeatDynamic.length :
+            (val?.Response?.SeatDynamic ? 'Object (not array)' : 0),
+          MealCount: Array.isArray(val?.Response?.Meal) ? val.Response.Meal.length :
+            (val?.Response?.Meal ? 'Object (not array)' : 0),
+          BaggageCount: Array.isArray(val?.Response?.Baggage) ? val.Response.Baggage.length :
+            (val?.Response?.Baggage ? 'Object (not array)' : 0),
+          SpecialServicesCount: Array.isArray(val?.Response?.SpecialServices) ? val.Response.SpecialServices.length :
+            (val?.Response?.SpecialServices ? 'Object (not array)' : 0)
+        });
+      },
+      (error) => {
+        console.error('❌ Error fetching SSR (Onward):', error);
+        this.extraBaggageAvailable = false;
       }
+    );
+
+    if (this.resultIndexReturn) {
+      console.log('🔍 Fetching SSR for return with params:', {
+        resultIndexReturn: this.resultIndexReturn
+      });
+
+      this.apiService.getSSR(this.ipAddress, this.tboToken, this.traceid, this.resultIndexReturn).subscribe(
+        (val: any) => {
+          console.log('✅ SSR Response (Return):', val);
+          this.ssrValuesReturn = val;
+
+          if (val?.Response?.Baggage) {
+            console.log('✅ Baggage data found (Return):', val.Response.Baggage);
+            this.processBaggage(val.Response.Baggage, true);
+          } else {
+            console.warn('⚠️ No baggage data in SSR response (Return):', val);
+            this.extraBaggageAvailableReturn = false;
+          }
+
+          // Log all SSR components
+          console.log('📋 SSR Data Summary (Return):', {
+            hasSeatDynamic: !!val?.Response?.SeatDynamic,
+            hasMeal: !!val?.Response?.Meal,
+            hasBaggage: !!val?.Response?.Baggage,
+            hasSpecialServices: !!val?.Response?.SpecialServices,
+            SeatDynamicCount: Array.isArray(val?.Response?.SeatDynamic) ? val.Response.SeatDynamic.length :
+              (val?.Response?.SeatDynamic ? 'Object (not array)' : 0),
+            MealCount: Array.isArray(val?.Response?.Meal) ? val.Response.Meal.length :
+              (val?.Response?.Meal ? 'Object (not array)' : 0),
+            BaggageCount: Array.isArray(val?.Response?.Baggage) ? val.Response.Baggage.length :
+              (val?.Response?.Baggage ? 'Object (not array)' : 0),
+            SpecialServicesCount: Array.isArray(val?.Response?.SpecialServices) ? val.Response.SpecialServices.length :
+              (val?.Response?.SpecialServices ? 'Object (not array)' : 0)
+          });
+        },
+        (error) => {
+          console.error('❌ Error fetching SSR (Return):', error);
+          this.extraBaggageAvailableReturn = false;
+        }
+      );
+    }
   }
 
   // =================================================================
@@ -1127,7 +1159,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       isArray: Array.isArray(baggageArray),
       length: baggageArray?.length
     });
-    
+
     if (!baggageArray || !Array.isArray(baggageArray) || baggageArray.length === 0) {
       console.warn(`⚠️ No baggage array or empty (isReturn: ${isReturn})`);
       isReturn ? (this.baggageOptionsReturn = []) : (this.baggageOptions = []);
@@ -1144,7 +1176,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       .map((item: any) => {
         const weightKey = item.Weight || item.kgs || '0';
         const codeKey = item.Code || weightKey;
-        
+
         // Map price to both Code and Weight to prevent look-up failures
         this.baggagePrices[codeKey] = item.Price;
         this.baggagePrices[weightKey] = item.Price;
@@ -1169,7 +1201,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.extraBaggageAvailable = mapped.length > 0;
       console.log(`✅ extraBaggageAvailable set to: ${this.extraBaggageAvailable}`);
     }
-    
+
     this.cdr.detectChanges();
   }
 
@@ -1235,23 +1267,23 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     let totalAdults = 0, totalChildren = 0, totalInfants = 0;
 
-    fareBreakdown.forEach(( breakdown: any ) => {
+    fareBreakdown.forEach((breakdown: any) => {
       const type = breakdown.PassengerType;
       const count = breakdown.PassengerCount;
       const baseFare = breakdown.BaseFare / count;
-      const tax = breakdown.Tax / count; 
+      const tax = breakdown.Tax / count;
 
       if (type === 1) { // Adult
         totalAdults = count;
-        if(isReturn) { this.adultBaseFareReturn = baseFare; this.adultTaxesReturn = tax; }
+        if (isReturn) { this.adultBaseFareReturn = baseFare; this.adultTaxesReturn = tax; }
         else { this.adultBaseFare = baseFare; this.adultTaxes = tax; }
       } else if (type === 2) { // Child
         totalChildren = count;
-        if(isReturn) { this.childrenBaseFareReturn = baseFare; this.childrenTaxesReturn = tax; }
+        if (isReturn) { this.childrenBaseFareReturn = baseFare; this.childrenTaxesReturn = tax; }
         else { this.childrenBaseFare = baseFare; this.childrenTaxes = tax; }
       } else if (type === 3) { // Infant
         totalInfants = count;
-        if(isReturn) { this.infantBaseFareReturn = baseFare; this.infantTaxesReturn = tax; }
+        if (isReturn) { this.infantBaseFareReturn = baseFare; this.infantTaxesReturn = tax; }
         else { this.infantBaseFare = baseFare; this.infantTaxes = tax; }
       }
     });
@@ -1282,10 +1314,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   aggregateFareSummary(): void {
     this.totalBaseFare = (this.adultBaseFare * this.totalAdults) + (this.childrenBaseFare * this.totalChildren) + (this.infantBaseFare * this.totalInfants);
     this.totalTaxes = (this.adultTaxes * this.totalAdults) + (this.childrenTaxes * this.totalChildren) + (this.infantTaxes * this.totalInfants);
-    
-    if(this.resultIndexReturn) {
-        this.totalBaseFare += (this.adultBaseFareReturn * this.totalAdults) + (this.childrenBaseFareReturn * this.totalChildren) + (this.infantBaseFareReturn * this.totalInfants);
-        this.totalTaxes += (this.adultTaxesReturn * this.totalAdults) + (this.childrenTaxesReturn * this.totalChildren) + (this.infantTaxesReturn * this.totalInfants);
+
+    if (this.resultIndexReturn) {
+      this.totalBaseFare += (this.adultBaseFareReturn * this.totalAdults) + (this.childrenBaseFareReturn * this.totalChildren) + (this.infantBaseFareReturn * this.totalInfants);
+      this.totalTaxes += (this.adultTaxesReturn * this.totalAdults) + (this.childrenTaxesReturn * this.totalChildren) + (this.infantTaxesReturn * this.totalInfants);
     }
 
     this.updateFinalFare();
@@ -1293,35 +1325,35 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   updateFinalFare() {
-    this.finalAmount = 
-      this.totalBaseFare + 
-      this.totalTaxes + 
-      (this.baggageTotal || 0) + 
-      (this.baggageTotalReturn || 0) + 
-      (this.totalMealCharges || 0) + 
+    this.finalAmount =
+      this.totalBaseFare +
+      this.totalTaxes +
+      (this.baggageTotal || 0) +
+      (this.baggageTotalReturn || 0) +
+      (this.totalMealCharges || 0) +
       (this.totalSpecialServiceCharges || 0) +
       (this.totalSeats || 0);
   }
 
   proceedToAddons(): void {
     // Check agreement
-    if(!this.termsAgreed) {
-        Swal.fire('Terms & Conditions', 'Please accept the terms and conditions to proceed', 'warning');
-        this.loader = false;
-        return;
+    if (!this.termsAgreed) {
+      Swal.fire('Terms & Conditions', 'Please accept the terms and conditions to proceed', 'warning');
+      this.loader = false;
+      return;
     }
 
     this.continueClicked = true;
-    
-    if(!this.canProceed()) {
-        Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
-        this.loader = false;
-        return;
+
+    if (!this.canProceed()) {
+      Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
+      this.loader = false;
+      return;
     }
 
     // Prepare mobile final page data for addons
     this.prepareMobFinalPageData();
-    
+
     // Navigate to addons page
     this.router.navigate(['/flightaddons']);
   }
@@ -1376,7 +1408,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       PANNumber: a.panNumber || '',
       RequiresWheelchair: a.requiresWheelchair || false
     }));
-    
+
     const childPassengers = children.map((c: any) => ({
       Title: c.title || 'Mstr',
       FirstName: c.firstName,
@@ -1391,7 +1423,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       PANNumber: c.panNumber || '',
       RequiresWheelchair: c.requiresWheelchair || false
     }));
-    
+
     const infantPassengers = infants.map((i: any) => ({
       Title: i.title || 'Mstr',
       FirstName: i.firstName,
@@ -1406,7 +1438,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       PANNumber: '',
       RequiresWheelchair: false
     }));
-    
+
     const onwardPayload: any = {
       Passengers: [...adultPassengers, ...childPassengers, ...infantPassengers],
       Contact: {
@@ -1472,7 +1504,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         isLCCReturn
       ).subscribe((val: any) => {
         console.log('Payment API Response:', val);
-        
+
         if (val && val['payment_session_id']) {
           // Call cashfree payment gateway
           if (typeof (window as any).cashfree === 'function') {
@@ -1487,7 +1519,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           // Handle error response
           const errorMessage = val?.message || 'Payment session creation failed';
           const isEmailError = errorMessage.toString().toUpperCase().trim().includes('INVALID EMAIL');
-          
+
           Swal.fire({
             title: 'Sorry!',
             html: isEmailError ? 'Please Enter Email ID in Correct Format.' : errorMessage,
@@ -1510,137 +1542,137 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   canProceed(): boolean {
-      // Get passenger arrays (support both old and new structure)
-      const adults = this.travellers || [];
-      const children = this.children || [];
-      const infants = this.infants || [];
-      
-      // 1. Validate Contact Info from first adult (mobile template structure)
-      const primaryAdult = adults[0];
-      if (!primaryAdult) {
-        console.log('canProceed: No primary adult found');
+    // Get passenger arrays (support both old and new structure)
+    const adults = this.travellers || [];
+    const children = this.children || [];
+    const infants = this.infants || [];
+
+    // 1. Validate Contact Info from first adult (mobile template structure)
+    const primaryAdult = adults[0];
+    if (!primaryAdult) {
+      console.log('canProceed: No primary adult found');
+      return false;
+    }
+
+    // Check email and mobile from primary adult
+    const hasValidEmail = primaryAdult.email && primaryAdult.email.trim().length > 0;
+    const hasValidMobile = primaryAdult.mobileNumber && primaryAdult.mobileNumber.length >= 10;
+
+    if (!hasValidEmail || !hasValidMobile) {
+      // Fallback to old contact structure
+      const hasOldEmail = this.contact.email && this.contact.email.trim().length > 0;
+      const hasOldMobile = this.contact.mobile && this.contact.mobile.length >= 10;
+      if (!hasOldEmail || !hasOldMobile) {
+        console.log('canProceed: Missing contact info', { hasValidEmail, hasValidMobile, hasOldEmail, hasOldMobile });
         return false;
       }
-      
-      // Check email and mobile from primary adult
-      const hasValidEmail = primaryAdult.email && primaryAdult.email.trim().length > 0;
-      const hasValidMobile = primaryAdult.mobileNumber && primaryAdult.mobileNumber.length >= 10;
-      
-      if (!hasValidEmail || !hasValidMobile) {
-        // Fallback to old contact structure
-        const hasOldEmail = this.contact.email && this.contact.email.trim().length > 0;
-        const hasOldMobile = this.contact.mobile && this.contact.mobile.length >= 10;
-        if (!hasOldEmail || !hasOldMobile) {
-          console.log('canProceed: Missing contact info', { hasValidEmail, hasValidMobile, hasOldEmail, hasOldMobile });
-          return false;
-        }
-      }
-      
-      // 2. Validate Adult Details
-      for(let i = 0; i < adults.length; i++) {
-          const t = adults[i];
-          if(!t.firstName || !t.firstName.trim()) {
-            console.log(`canProceed: Adult ${i+1} missing firstName`);
-            return false;
-          }
-          if(!t.lastName || !t.lastName.trim()) {
-            console.log(`canProceed: Adult ${i+1} missing lastName`);
-            return false;
-          }
-          if(!t.gender || !t.gender.trim()) {
-            console.log(`canProceed: Adult ${i+1} missing gender`);
-            return false;
-          }
-          if(!t.dobYear || !t.dobMonth || !t.dobDay) {
-            console.log(`canProceed: Adult ${i+1} missing DOB`, { dobYear: t.dobYear, dobMonth: t.dobMonth, dobDay: t.dobDay });
-            return false;
-          }
-          // Passport validation - only check passportNumber if required, expiryYear is optional
-          if(this.passportInfoRequired && (!t.passportNumber || !t.passportNumber.trim())) {
-            console.log(`canProceed: Adult ${i+1} missing passport number`);
-            return false;
-          }
-          if(this.panInfoRequired && (!t.panNumber || !t.panNumber.trim())) {
-            console.log(`canProceed: Adult ${i+1} missing PAN number`);
-            return false;
-          }
-          // Date Validation for Adults check
-          if(t.dobYear && t.dobMonth && t.dobDay && !this.validateAdultDOB(t)) {
-            console.log(`canProceed: Adult ${i+1} DOB validation failed`);
-            return false;
-          }
-      }
+    }
 
-      // 3. Validate Child Details
-      for(let i = 0; i < children.length; i++) {
-          const c = children[i];
-          if(!c.firstName || !c.firstName.trim()) {
-            console.log(`canProceed: Child ${i+1} missing firstName`);
-            return false;
-          }
-          if(!c.lastName || !c.lastName.trim()) {
-            console.log(`canProceed: Child ${i+1} missing lastName`);
-            return false;
-          }
-          if(!c.gender || !c.gender.trim()) {
-            console.log(`canProceed: Child ${i+1} missing gender`);
-            return false;
-          }
-          if(!c.dobYear || !c.dobMonth || !c.dobDay) {
-            console.log(`canProceed: Child ${i+1} missing DOB`);
-            return false;
-          }
-          if(this.passportInfoRequired && (!c.passportNumber || !c.passportNumber.trim())) {
-            console.log(`canProceed: Child ${i+1} missing passport number`);
-            return false;
-          }
-          if(this.panInfoRequired && (!c.panNumber || !c.panNumber.trim())) {
-            console.log(`canProceed: Child ${i+1} missing PAN number`);
-            return false;
-          }
+    // 2. Validate Adult Details
+    for (let i = 0; i < adults.length; i++) {
+      const t = adults[i];
+      if (!t.firstName || !t.firstName.trim()) {
+        console.log(`canProceed: Adult ${i + 1} missing firstName`);
+        return false;
       }
-
-      // 4. Validate Infant Details
-      for(let i = 0; i < infants.length; i++) {
-          const inf = infants[i];
-          if(!inf.firstName || !inf.firstName.trim()) {
-            console.log(`canProceed: Infant ${i+1} missing firstName`);
-            return false;
-          }
-          if(!inf.lastName || !inf.lastName.trim()) {
-            console.log(`canProceed: Infant ${i+1} missing lastName`);
-            return false;
-          }
-          if(!inf.gender || !inf.gender.trim()) {
-            console.log(`canProceed: Infant ${i+1} missing gender`);
-            return false;
-          }
-          if(!inf.dobYear || !inf.dobMonth || !inf.dobDay) {
-            console.log(`canProceed: Infant ${i+1} missing DOB`);
-            return false;
-          }
-          if(this.passportInfoRequired && (!inf.passportNumber || !inf.passportNumber.trim())) {
-            console.log(`canProceed: Infant ${i+1} missing passport number`);
-            return false;
-          }
+      if (!t.lastName || !t.lastName.trim()) {
+        console.log(`canProceed: Adult ${i + 1} missing lastName`);
+        return false;
       }
-
-      // 5. Validate GST if applicable
-      const hasGST = this.gstDetails?.companyName || this.contact.hasGST;
-      if(hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
-          const gstNumber = this.gstDetails?.gstNumber || this.gstInfo?.registrationNo;
-          if(!this.gstDetails?.companyName && !this.gstInfo?.companyName) {
-            console.log('canProceed: GST mandatory but company name missing');
-            return false;
-          }
-          if(!gstNumber || !gstNumber.trim()) {
-            console.log('canProceed: GST mandatory but GST number missing');
-            return false;
-          }
+      if (!t.gender || !t.gender.trim()) {
+        console.log(`canProceed: Adult ${i + 1} missing gender`);
+        return false;
       }
+      if (!t.dobYear || !t.dobMonth || !t.dobDay) {
+        console.log(`canProceed: Adult ${i + 1} missing DOB`, { dobYear: t.dobYear, dobMonth: t.dobMonth, dobDay: t.dobDay });
+        return false;
+      }
+      // Passport validation - only check passportNumber if required, expiryYear is optional
+      if (this.passportInfoRequired && (!t.passportNumber || !t.passportNumber.trim())) {
+        console.log(`canProceed: Adult ${i + 1} missing passport number`);
+        return false;
+      }
+      if (this.panInfoRequired && (!t.panNumber || !t.panNumber.trim())) {
+        console.log(`canProceed: Adult ${i + 1} missing PAN number`);
+        return false;
+      }
+      // Date Validation for Adults check
+      if (t.dobYear && t.dobMonth && t.dobDay && !this.validateAdultDOB(t)) {
+        console.log(`canProceed: Adult ${i + 1} DOB validation failed`);
+        return false;
+      }
+    }
 
-      console.log('canProceed: All validations passed');
-      return true;
+    // 3. Validate Child Details
+    for (let i = 0; i < children.length; i++) {
+      const c = children[i];
+      if (!c.firstName || !c.firstName.trim()) {
+        console.log(`canProceed: Child ${i + 1} missing firstName`);
+        return false;
+      }
+      if (!c.lastName || !c.lastName.trim()) {
+        console.log(`canProceed: Child ${i + 1} missing lastName`);
+        return false;
+      }
+      if (!c.gender || !c.gender.trim()) {
+        console.log(`canProceed: Child ${i + 1} missing gender`);
+        return false;
+      }
+      if (!c.dobYear || !c.dobMonth || !c.dobDay) {
+        console.log(`canProceed: Child ${i + 1} missing DOB`);
+        return false;
+      }
+      if (this.passportInfoRequired && (!c.passportNumber || !c.passportNumber.trim())) {
+        console.log(`canProceed: Child ${i + 1} missing passport number`);
+        return false;
+      }
+      if (this.panInfoRequired && (!c.panNumber || !c.panNumber.trim())) {
+        console.log(`canProceed: Child ${i + 1} missing PAN number`);
+        return false;
+      }
+    }
+
+    // 4. Validate Infant Details
+    for (let i = 0; i < infants.length; i++) {
+      const inf = infants[i];
+      if (!inf.firstName || !inf.firstName.trim()) {
+        console.log(`canProceed: Infant ${i + 1} missing firstName`);
+        return false;
+      }
+      if (!inf.lastName || !inf.lastName.trim()) {
+        console.log(`canProceed: Infant ${i + 1} missing lastName`);
+        return false;
+      }
+      if (!inf.gender || !inf.gender.trim()) {
+        console.log(`canProceed: Infant ${i + 1} missing gender`);
+        return false;
+      }
+      if (!inf.dobYear || !inf.dobMonth || !inf.dobDay) {
+        console.log(`canProceed: Infant ${i + 1} missing DOB`);
+        return false;
+      }
+      if (this.passportInfoRequired && (!inf.passportNumber || !inf.passportNumber.trim())) {
+        console.log(`canProceed: Infant ${i + 1} missing passport number`);
+        return false;
+      }
+    }
+
+    // 5. Validate GST if applicable
+    const hasGST = this.gstDetails?.companyName || this.contact.hasGST;
+    if (hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
+      const gstNumber = this.gstDetails?.gstNumber || this.gstInfo?.registrationNo;
+      if (!this.gstDetails?.companyName && !this.gstInfo?.companyName) {
+        console.log('canProceed: GST mandatory but company name missing');
+        return false;
+      }
+      if (!gstNumber || !gstNumber.trim()) {
+        console.log('canProceed: GST mandatory but GST number missing');
+        return false;
+      }
+    }
+
+    console.log('canProceed: All validations passed');
+    return true;
   }
 
   getValidationErrors(): string[] {
@@ -1648,36 +1680,36 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const adults = this.travellers || [];
     const children = this.children || [];
     const infants = this.infants || [];
-    
+
     // Check primary adult contact info
     const primaryAdult = adults[0];
     if (!primaryAdult) {
       errors.push('Add at least one adult passenger');
       return errors;
     }
-    
+
     const hasValidEmail = primaryAdult.email && primaryAdult.email.trim().length > 0;
     const hasValidMobile = primaryAdult.mobileNumber && primaryAdult.mobileNumber.length >= 10;
-    
+
     if (!hasValidEmail) {
       const hasOldEmail = this.contact.email && this.contact.email.trim().length > 0;
       if (!hasOldEmail) {
         errors.push('Enter primary passenger email address');
       }
     }
-    
+
     if (!hasValidMobile) {
       const hasOldMobile = this.contact.mobile && this.contact.mobile.length >= 10;
       if (!hasOldMobile) {
         errors.push('Enter primary passenger mobile number');
       }
     }
-    
+
     // Check each adult
     for (let i = 0; i < adults.length; i++) {
       const t = adults[i];
       const label = `Adult ${i + 1}`;
-      
+
       if (!t.firstName || !t.firstName.trim()) {
         errors.push(`${label}: Enter first name`);
       }
@@ -1699,12 +1731,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         errors.push(`${label}: Enter PAN number`);
       }
     }
-    
+
     // Check each child
     for (let i = 0; i < children.length; i++) {
       const c = children[i];
       const label = `Child ${i + 1}`;
-      
+
       if (!c.firstName || !c.firstName.trim()) {
         errors.push(`${label}: Enter first name`);
       }
@@ -1724,12 +1756,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         errors.push(`${label}: Enter PAN number`);
       }
     }
-    
+
     // Check each infant
     for (let i = 0; i < infants.length; i++) {
       const inf = infants[i];
       const label = `Infant ${i + 1}`;
-      
+
       if (!inf.firstName || !inf.firstName.trim()) {
         errors.push(`${label}: Enter first name`);
       }
@@ -1746,7 +1778,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         errors.push(`${label}: Enter passport number`);
       }
     }
-    
+
     // Check GST if mandatory
     const hasGST = this.gstDetails?.companyName || this.contact.hasGST;
     if (hasGST && (this.gstMandatoryOnward || this.gstMandatoryReturn)) {
@@ -1758,7 +1790,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         errors.push('GST: Enter GST number');
       }
     }
-    
+
     return errors;
   }
 
@@ -1772,10 +1804,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Baggage Modal Handlers
   openBaggageModal(isReturn: boolean = false) {
-    if(isReturn) {
-        this.baggageModalOpenReturn = true;
+    if (isReturn) {
+      this.baggageModalOpenReturn = true;
     } else {
-        this.baggageModalOpenOutbound = true;
+      this.baggageModalOpenOutbound = true;
     }
   }
 
@@ -1812,7 +1844,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Validates if adult is >= 12 years old
   validateAdultDOB(traveller: any): boolean {
     if (!traveller.dobYear || !traveller.dobMonth || !traveller.dobDay) return true; // Skip if empty (handled by required check)
-    
+
     // Handle month names (e.g., "January", "May") or numbers
     let monthIndex: number;
     if (typeof traveller.dobMonth === 'string' && isNaN(parseInt(traveller.dobMonth))) {
@@ -1824,14 +1856,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Month is a number
       monthIndex = parseInt(traveller.dobMonth) - 1;
     }
-    
+
     const dob = new Date(parseInt(traveller.dobYear), monthIndex, parseInt(traveller.dobDay));
     const today = new Date();
     let age = today.getFullYear() - dob.getFullYear();
     const m = today.getMonth() - dob.getMonth();
-    
+
     if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
+      age--;
     }
     return age >= 12;
   }
@@ -1839,7 +1871,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Helper method to get DOB as date string for calendar component
   getDOBAsDateString(passenger: any): string {
     if (!passenger.dobYear || !passenger.dobMonth || !passenger.dobDay) return '';
-    
+
     // Handle month names or numbers
     let monthNum: string;
     if (typeof passenger.dobMonth === 'string' && isNaN(parseInt(passenger.dobMonth))) {
@@ -1849,7 +1881,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     } else {
       monthNum = String(passenger.dobMonth).padStart(2, '0');
     }
-    
+
     const day = String(passenger.dobDay).padStart(2, '0');
     return `${passenger.dobYear}-${monthNum}-${day}`;
   }
@@ -1857,7 +1889,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Helper method to set DOB from calendar selection
   onDOBSelected(passenger: any, dateString: string): void {
     if (!dateString) return;
-    
+
     const date = new Date(dateString);
     passenger.dobDay = String(date.getDate()).padStart(2, '0');
     passenger.dobMonth = String(date.getMonth() + 1).padStart(2, '0');
@@ -1944,20 +1976,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Handles the "Continue" click to unlock services
   onContinueClicked() {
-      if(this.canProceed()) {
-        this.continueClicked = true;
-        this.servicesUnlocked = true;
-        
-        // Scroll to services section if needed
-        setTimeout(() => {
-            if(isPlatformBrowser(this.platformId)) {
-                const element = document.getElementById('serviceSection');
-                if(element) element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 100);
-      } else {
-        Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details correctly before continuing.', 'warning');
-      }
+    if (this.canProceed()) {
+      this.continueClicked = true;
+      this.servicesUnlocked = true;
+
+      // Scroll to services section if needed
+      setTimeout(() => {
+        if (isPlatformBrowser(this.platformId)) {
+          const element = document.getElementById('serviceSection');
+          if (element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details correctly before continuing.', 'warning');
+    }
   }
 
   // -----------------------------------------------------------
@@ -1967,7 +1999,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const currentYear = new Date().getFullYear();
     this.passportExpiryYears = Array.from({ length: 15 }, (_, i) => currentYear + i);
   }
-  
+
   formatTime(date: Date): string {
     return isNaN(date.getTime()) ? '' : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   }
@@ -1985,14 +2017,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   getBlankAdult() { return { firstName: '', lastName: '', gender: '', title: 'Mr', email: '', mobileDialCode: '+91', mobileNumber: '', requiresWheelchair: false, passportNumber: '', passportExpiryYear: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
   getBlankChild() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', requiresWheelchair: false, passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
   getBlankInfant() { return { firstName: '', lastName: '', gender: '', title: 'Mstr', passportNumber: '', panNumber: '', dobDay: '', dobMonth: '', dobYear: '' }; }
-  
+
   trackByGroupIndex(index: number, group: any): any {
     return index;
   }
-  
+
   openFareRuleModal() { this.showFareRuleModal = true; }
   closeFareRuleModal() { this.showFareRuleModal = false; }
-  
+
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: any) {
     if (this.continueClicked && !this.bookingSubmitted) {
@@ -2012,20 +2044,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.toggleGSTForm();
     }
   }
-  toggleGSTForm() { 
+  toggleGSTForm() {
     if (!this.isGSTExpanded) {
       this.gstDetails = { ...this.gstInfo, companyAddress: '', companyPhone: '', companyEmail: '', gstNumber: this.gstInfo.registrationNo || '' };
     }
     this.isGSTExpanded = !this.isGSTExpanded;
   }
-  saveGSTDetails() { 
-    this.gstInfo.companyName = this.gstDetails.companyName; 
-    this.gstInfo.registrationNo = this.gstDetails.gstNumber; 
-    this.contact.hasGST = !!this.gstDetails.companyName; 
-    this.closeGSTModal(); 
+  saveGSTDetails() {
+    this.gstInfo.companyName = this.gstDetails.companyName;
+    this.gstInfo.registrationNo = this.gstDetails.gstNumber;
+    this.contact.hasGST = !!this.gstDetails.companyName;
+    this.closeGSTModal();
     this.isGSTExpanded = false;
   }
-  
+
   // Fare Summary Accordion Toggle Methods
   toggleBaseFare() { this.isBaseFareExpanded = !this.isBaseFareExpanded; }
   toggleTaxes() { this.isTaxesExpanded = !this.isTaxesExpanded; }
@@ -2035,14 +2067,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Mobile Fare Breakdown Modal
   openMobileFareBreakdown() { this.showMobileFareBreakdown = true; }
   closeMobileFareBreakdown() { this.showMobileFareBreakdown = false; }
-  
-  
+
+
   openPassengerModal(type: 'adult' | 'child' | 'infant', index: number) {
     this.currentPassengerType = type;
     this.currentPassengerIndex = index;
     const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
     this.currentPassengerDetails = arr[index] ? { ...arr[index] } : this.getBlankPassenger(type);
-    
+
     // Desktop: expand inline form, Mobile: show modal
     if (this.isMobileView()) {
       this.showPassengerModal = true;
@@ -2052,53 +2084,53 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.expandedPassengerKey = this.expandedPassengerKey === key ? null : key;
     }
   }
-  
+
   isPassengerExpanded(type: 'adult' | 'child' | 'infant', index: number): boolean {
     if (this.isMobileView()) return false;
     return this.expandedPassengerKey === `${type}-${index}`;
   }
-  
+
   getPassengerKey(type: 'adult' | 'child' | 'infant', index: number): string {
     return `${type}-${index}`;
   }
-  
+
   getBlankPassenger(type: 'adult' | 'child' | 'infant') {
     if (type === 'adult') return this.getBlankAdult();
     if (type === 'child') return this.getBlankChild();
     return this.getBlankInfant();
   }
-  
-  closePassengerModal() { 
+
+  closePassengerModal() {
     this.showPassengerModal = false;
     this.passengerValidationErrors = {};
   }
-  
+
   collapsePassengerForm() {
     this.expandedPassengerKey = null;
     this.passengerValidationErrors = {};
   }
-  
+
   getPassengerDetailsForForm(type: 'adult' | 'child' | 'infant', index: number): any {
     const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
     return arr[index] ? { ...arr[index] } : this.getBlankPassenger(type);
   }
-  
+
   setPassengerDetailsForForm(type: 'adult' | 'child' | 'infant', index: number, details: any) {
     const arr = type === 'adult' ? this.travellers : type === 'child' ? this.children : this.infants;
     if (arr[index]) {
       Object.assign(arr[index], details);
     }
   }
-  
+
   savePassengerDetailsInline(type: 'adult' | 'child' | 'infant', index: number, details: any) {
     // Set current passenger context for validation
     this.currentPassengerType = type;
     this.currentPassengerIndex = index;
     this.currentPassengerDetails = { ...details }; // Create a copy for validation
-    
+
     // Clear previous errors
     this.passengerValidationErrors = {};
-    
+
     // Validate before saving
     if (!this.validatePassengerDetails(this.currentPassengerDetails)) {
       // Keep the form expanded if validation fails
@@ -2108,13 +2140,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Save the details
     this.setPassengerDetailsForForm(type, index, this.currentPassengerDetails);
-    
+
     // Collapse the form after successful save
     this.expandedPassengerKey = null;
     this.passengerValidationErrors = {};
     this.cdr.detectChanges();
   }
-  
+
   validatePassengerDetails(details: any): boolean {
     this.passengerValidationErrors = {};
     let isValid = true;
@@ -2205,7 +2237,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       // Trigger change detection to update the proceed button state
       this.cdr.detectChanges();
     }
-    
+
     // Close modal on mobile, collapse form on desktop
     if (this.isMobileView()) {
       this.closePassengerModal();
@@ -2215,11 +2247,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.passengerValidationErrors = {};
     }
   }
-  
+
   updateProceedButton(): boolean {
     return this.termsAgreed && this.canProceed();
   }
-  
+
   finalProceed() {
     // Check terms and conditions first
     if (!this.termsAgreed) {
@@ -2232,7 +2264,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       });
       return;
     }
-    
+
     // Detailed validation check
     const validationErrors = this.getValidationErrors();
     if (validationErrors.length > 0) {
@@ -2247,9 +2279,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       });
       return;
     }
-    
+
     this.loader = true;
-    
+
     // Always proceed directly to payment (align with addon page flow)
     if (this.tripType === 'multicity') {
       this.handleMultiCityBooking();
@@ -2257,15 +2289,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.proceedToPayment();
     }
   }
-  
+
   handleMultiCityBooking(): void {
     console.log("Make Final Payload and book the ticket for multi-city");
-    
+
     const isLCC = this.fullFlightData.departureFlightData?.selectedFare?.originalFareOption?.IsLCC || false;
-    
+
     // Prepare fare summary
     const onwardFareSummary = this.buildFareSummaryForAddons(false);
-    
+
     const onwardFlightData = {
       adultFareDetail: onwardFareSummary?.adultFareDetails || {},
       childrenFareDetail: onwardFareSummary?.childFareDetail || {},
@@ -2282,41 +2314,41 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       isReturn: false,
       baggage: this.buildBaggageArray(false)
     };
-    
+
     const bookingParams = {
       tboToken: this.tboToken,
       traceId: this.traceid,
       resultIndex: this.resultIndex,
       ipAddress: this.ipAddress
     };
-    
+
     const passengersFinal = {
       adults: this.travellers || [],
       children: this.children || [],
       infants: this.infants || []
     };
-    
+
     const primaryAdult = passengersFinal.adults[0];
     if (!primaryAdult) {
       Swal.fire('Error', 'Primary passenger details not found', 'error');
       this.loader = false;
       return;
     }
-    
+
     const contact = {
       countryCode: primaryAdult.mobileDialCode || '+91',
       mobile: primaryAdult.mobileNumber || '',
       email: primaryAdult.email || ''
     };
-    
+
     const gstInfo = {
       companyName: this.gstDetails?.companyName || '',
       registrationNo: this.gstDetails?.gstNumber || ''
     };
-    
+
     const gstMandatory = this.fullFlightData.departureFlightData?.selectedFare?.originalFareOption?.IsGSTMandatory || false;
     const passportInfoRequired = this.passportInfoRequired || false;
-    
+
     console.log('Multi-city booking params:', {
       isLCC,
       onwardFlightData,
@@ -2327,7 +2359,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       gstMandatory,
       passportInfoRequired
     });
-    
+
     const onwardPayload = this.bookingPayloadService.generateBookingPayloadMultiCity(
       isLCC,
       onwardFlightData,
@@ -2339,14 +2371,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       passportInfoRequired,
       null
     );
-    
+
     const appid = contact.mobile;
     const orderId = 'FL' + Math.random().toString(36).substr(2, 6).toUpperCase();
     const customerName = `${primaryAdult.firstName} ${primaryAdult.lastName}`;
     const customerEmail = contact.email;
     const customerDialCountryCode = contact.countryCode;
     const customerPhone = contact.mobile;
-    
+
     console.log('Calling flightSuccess for multi-city:', {
       appid,
       orderId,
@@ -2356,7 +2388,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       customerPhone,
       onwardPayload
     });
-    
+
     this.subscriptions.add(
       this.apiService.flightSuccess(
         appid,
@@ -2380,7 +2412,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         null // isLCCReturn - null for multicity
       ).subscribe((val: any) => {
         console.log('Payment API Response:', val);
-        
+
         if (val && val['payment_session_id']) {
           // Call cashfree payment gateway with session ID and order ID
           if (typeof (window as any).cashfree === 'function') {
@@ -2395,7 +2427,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           // Handle error response
           const errorMessage = val?.message || 'Payment session creation failed';
           const isEmailError = errorMessage.toString().toUpperCase().trim().includes('INVALID EMAIL');
-          
+
           Swal.fire({
             title: 'Sorry!',
             html: isEmailError ? 'Please Enter Email ID in Correct Format.' : errorMessage,
@@ -2416,7 +2448,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       })
     );
   }
-  
+
   // Baggage methods for mobile
   incrementBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
@@ -2442,12 +2474,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
- 
-  
+
+
   incrementRoundBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
     const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
-    
+
     if (!counts[key]) counts[key] = 0;
 
     const totalInThisLeg = Object.values(counts).reduce((a: number, b: number) => a + b, 0);
@@ -2462,13 +2494,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   decrementRoundBaggage(baggage: any) {
     const key = baggage.kgs || baggage.Code;
     const counts = this.activeRoundBaggageTab === 'onward' ? this.onwardBaggageCounts : this.returnBaggageCounts;
-    
+
     if (counts[key] && counts[key] > 0) {
       counts[key]--;
       this.updateRoundTripBaggageTotal();
     }
   }
-  
+
   getTotalOneWayBaggageCount(): number {
     return Object.values(this.baggageCounts).reduce((a: number, b: number) => a + b, 0);
   }
@@ -2484,31 +2516,31 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const total = Object.values(counts).reduce((a: number, b: number) => a + b, 0);
     return total < (this.totalAdults + this.totalChildren);
   }
-  
+
   calculateBaggageTotal(): number {
     return this.baggageTotal;
   }
-  
+
   calculateRoundTripBaggageTotal(): number {
     return this.baggageTotal + this.baggageTotalReturn;
   }
-  
+
   handleOneWayBaggageDone() {
     // For one-way, just close modal
     // updateBaggageTotal and updateFinalFare are already called on increment/decrement
     this.showAddBaggageModal = false;
     this.cdr.detectChanges();
   }
-  
+
   handleRoundTripBaggageDone() {
     // Prevent double execution
     if (this.isProcessingBaggageDone) {
       return;
     }
-    
+
     // Update totals first
     this.updateRoundTripBaggageTotal();
-    
+
     // Check if user is on onward tab and has added baggage
     if (this.activeRoundBaggageTab === 'onward') {
       // Calculate current onward baggage total directly from counts
@@ -2518,15 +2550,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         const price = opt.Price || opt.price || 0;
         onwardBaggageTotal += (this.onwardBaggageCounts[key] || 0) * price;
       });
-      
+
       // Check if return baggage is already added
       const hasReturnBaggage = Object.values(this.returnBaggageCounts).some(count => count > 0);
-      
+
       if (onwardBaggageTotal > 0 && !hasReturnBaggage) {
         // Close modal first
         this.showAddBaggageModal = false;
         this.cdr.detectChanges();
-        
+
         // Then show alert asking if user wants to add return baggage
         setTimeout(() => {
           Swal.fire({
@@ -2553,7 +2585,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         return; // Exit early
       }
     }
-    
+
     // If we reach here, either:
     // - On return tab
     // - No onward baggage
@@ -2562,29 +2594,29 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.showAddBaggageModal = false;
     this.cdr.detectChanges();
   }
-  
+
   updateRoundTripBaggageTotal() {
     let onwardTotal = 0, returnTotal = 0;
-    
+
     // Calculate onward baggage total
     this.baggageOptions.forEach(opt => {
       const key = opt.kgs || opt.Code;
       const price = opt.Price || opt.price || 0;
       onwardTotal += (this.onwardBaggageCounts[key] || 0) * price;
     });
-    
+
     // Calculate return baggage total
     this.baggageOptionsReturn.forEach(opt => {
       const key = opt.kgs || opt.Code;
       const price = opt.Price || opt.price || 0;
       returnTotal += (this.returnBaggageCounts[key] || 0) * price;
     });
-    
+
     this.baggageTotal = onwardTotal;
     this.baggageTotalReturn = returnTotal;
     this.updateFinalFare();
   }
-  
+
   getCancellationRows(flightData: any): any[] {
     if (!flightData?.cancellationPolicy) return [];
     return flightData.cancellationPolicy.map((p: any) => ({
@@ -2592,7 +2624,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       price: `₹ ${p.Details}`
     }));
   }
-  
+
   getDateChangeRows(flightData: any): any[] {
     if (!flightData?.dateChangePolicy) return [];
     return flightData.dateChangePolicy.map((p: any) => ({
@@ -2600,13 +2632,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       price: `₹ ${p.Details}`
     }));
   }
-  
+
   calculateDayChange(arrDate: Date, depDate: Date): string {
     if (!arrDate || !depDate) return '';
     const diff = Math.floor((depDate.getTime() - arrDate.getTime()) / (1000 * 60 * 60 * 24));
     return diff > 0 ? `+ ${diff} Day${diff > 1 ? 's' : ''}` : '';
   }
-  
+
   calculateLayoverDuration(arrDate: Date, depDate: Date): string {
     if (!arrDate || !depDate) return '';
     const mins = Math.floor((depDate.getTime() - arrDate.getTime()) / 60000);
@@ -2617,15 +2649,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Calculate onward fare breakdown
   getOnwardBaseFare(): number {
-    return (this.adultBaseFare * this.totalAdults) + 
-           (this.childrenBaseFare * this.totalChildren) + 
-           (this.infantBaseFare * this.totalInfants);
+    return (this.adultBaseFare * this.totalAdults) +
+      (this.childrenBaseFare * this.totalChildren) +
+      (this.infantBaseFare * this.totalInfants);
   }
 
   getOnwardTaxes(): number {
-    return (this.adultTaxes * this.totalAdults) + 
-           (this.childrenTaxes * this.totalChildren) + 
-           (this.infantTaxes * this.totalInfants);
+    return (this.adultTaxes * this.totalAdults) +
+      (this.childrenTaxes * this.totalChildren) +
+      (this.infantTaxes * this.totalInfants);
   }
 
   getOnwardTotal(): number {
@@ -2635,28 +2667,28 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   // Calculate age from date of birth
   calculateAge(dobDay: string, dobMonth: string, dobYear: string): number | null {
     if (!dobDay || !dobMonth || !dobYear) return null;
-    
+
     try {
       // Handle month as string (e.g., "May") or number
       let monthIndex: number;
       if (typeof dobMonth === 'string' && isNaN(parseInt(dobMonth))) {
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'];
         monthIndex = monthNames.findIndex(m => m.toLowerCase() === dobMonth.toLowerCase());
         if (monthIndex === -1) monthIndex = parseInt(dobMonth) - 1;
       } else {
         monthIndex = parseInt(dobMonth) - 1;
       }
-      
+
       const dob = new Date(parseInt(dobYear), monthIndex, parseInt(dobDay));
       const today = new Date();
       let age = today.getFullYear() - dob.getFullYear();
       const monthDiff = today.getMonth() - dob.getMonth();
-      
+
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
         age--;
       }
-      
+
       return age >= 0 ? age : null;
     } catch (error) {
       return null;
@@ -2674,13 +2706,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!passenger.firstName && !passenger.lastName) {
       return '';
     }
-    
+
     const name = `${passenger.firstName || ''} ${passenger.lastName || ''}`.trim();
     if (!name) return '';
-    
+
     const genderAbbr = this.getGenderAbbreviation(passenger.gender);
     const age = this.calculateAge(passenger.dobDay, passenger.dobMonth, passenger.dobYear);
-    
+
     let suffix = '';
     if (genderAbbr) {
       suffix = genderAbbr;
@@ -2690,23 +2722,23 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     } else if (age !== null && age >= 0) {
       suffix = `${age} years`;
     }
-    
+
     return suffix ? `${name}, ${suffix}` : name;
   }
 
   // Calculate return fare breakdown
   getReturnBaseFare(): number {
     if (!this.resultIndexReturn) return 0;
-    return (this.adultBaseFareReturn * this.totalAdults) + 
-           (this.childrenBaseFareReturn * this.totalChildren) + 
-           (this.infantBaseFareReturn * this.totalInfants);
+    return (this.adultBaseFareReturn * this.totalAdults) +
+      (this.childrenBaseFareReturn * this.totalChildren) +
+      (this.infantBaseFareReturn * this.totalInfants);
   }
 
   getReturnTaxes(): number {
     if (!this.resultIndexReturn) return 0;
-    return (this.adultTaxesReturn * this.totalAdults) + 
-           (this.childrenTaxesReturn * this.totalChildren) + 
-           (this.infantTaxesReturn * this.totalInfants);
+    return (this.adultTaxesReturn * this.totalAdults) +
+      (this.childrenTaxesReturn * this.totalChildren) +
+      (this.infantTaxesReturn * this.totalInfants);
   }
 
   getReturnTotal(): number {
@@ -2838,10 +2870,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     const isReturn = false; // For now, only handling onward journey on this page
-    
+
     // Use the addon service's method to toggle selection
     this.flightAddonsService.toggleSeatSelection(segmentIndex, seat, isReturn);
-    
+
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
 
@@ -2861,7 +2893,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   incrementMeal(segmentIndex: number, meal: any): void {
     const isReturn = false;
     this.flightAddonsService.incrementMeal(segmentIndex, meal, isReturn);
-    
+
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
   }
@@ -2869,7 +2901,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   decrementMeal(segmentIndex: number, meal: any): void {
     const isReturn = false;
     this.flightAddonsService.decrementMeal(segmentIndex, meal, isReturn);
-    
+
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
   }
@@ -2904,7 +2936,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const originCode = this.flightSegments[0]?.originCode;
     const destinationCode = this.flightSegments[this.flightSegments.length - 1]?.destinationCode;
 
-    return this.services.filter((service: any) => 
+    return this.services.filter((service: any) =>
       service.Origin === originCode && service.Destination === destinationCode
     );
   }
@@ -2912,29 +2944,29 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   addService(service: any): void {
     const isReturn = false;
     this.flightAddonsService.addService(service, isReturn);
-    
+
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
-    
+
     console.log('Service added:', service.Description);
   }
 
   removeService(service: any): void {
     const isReturn = false;
     this.flightAddonsService.removeService(service, isReturn);
-    
+
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
-    
+
     console.log('Service removed:', service.Description);
   }
 
   getServiceCount(serviceCode: string, service: any): number {
     const isReturn = false;
     const selectedServices = this.flightAddonsService.selectedServices;
-    
+
     // Find the service in selectedServices by checking service.Code and isReturn flag
-    const serviceEntry = selectedServices.find((s: any) => 
+    const serviceEntry = selectedServices.find((s: any) =>
       s.service.Code === serviceCode && s.service.isReturn === isReturn
     );
     // Return the actual count, not just 0 or 1
@@ -2975,19 +3007,36 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   initializeSeatMapFromSSR(): void {
+    console.log('🚀 ===== initializeSeatMapFromSSR CALLED =====');
+
     // Use actual SSR data from ssrValues
     const ssrOnward = this.ssrValues;
-    
+
+    console.log('📊 SSR Onward Data:', ssrOnward);
+    console.log('📊 SSR Response exists?', !!ssrOnward?.Response);
+
     if (!ssrOnward || !ssrOnward.Response) {
-      console.warn('No SSR data available for seat selection');
+      console.warn('❌ No SSR data available for seat selection');
       return;
     }
+
+    // Log raw SSR response structure
+    console.log('📦 SSR Response Structure:', {
+      hasSeatDynamic: !!ssrOnward.Response.SeatDynamic,
+      hasMeal: !!ssrOnward.Response.Meal,
+      hasBaggage: !!ssrOnward.Response.Baggage,
+      hasSpecialServices: !!ssrOnward.Response.SpecialServices,
+      SeatDynamic: ssrOnward.Response.SeatDynamic,
+      Meal: ssrOnward.Response.Meal,
+      Baggage: ssrOnward.Response.Baggage,
+      SpecialServices: ssrOnward.Response.SpecialServices
+    });
 
     // Reset addon charges from any previous session
     this.flightAddonsService.totalSeats = 0;
     this.flightAddonsService.totalMealCharges = 0;
     this.flightAddonsService.totalSpecialServiceCharges = 0;
-    console.log('Reset addon charges to 0');
+    console.log('✅ Reset addon charges to 0');
 
     // Set passenger counts in the service
     this.flightAddonsService.setPassengerCounts(
@@ -2995,44 +3044,79 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.children.length,
       this.infants.length
     );
+    console.log('👥 Passenger counts set:', {
+      adults: this.adults.length,
+      children: this.children.length,
+      infants: this.infants.length
+    });
 
     // Set flight segments
     this.flightAddonsService.setFlightSegments(this.flightSegments, false);
+    console.log('✈️ Flight segments set (count):', this.flightSegments.length);
 
     // Process SSR data to get seat maps, meal data, and services
+    console.log('🔄 Processing SSR data via flightAddonsService.processSSRData...');
     const { seatData, mealSegments, services } = this.flightAddonsService.processSSRData(
       ssrOnward,
       this.flightSegments,
       false
     );
 
+    console.log('📥 Processed SSR Data Results:', {
+      seatDataExists: !!seatData,
+      seatMapsCount: seatData?.seatMaps?.length || 0,
+      mealSegmentsCount: mealSegments?.length || 0,
+      servicesCount: services?.length || 0,
+      seatData,
+      mealSegments,
+      services
+    });
+
     // Use the seat map directly from the service - no transformation needed
     this.seatMap = seatData.seatMaps;
     this.selectedSeats = seatData.selectedSeats;
-    
+    console.log('🪑 Seat map assigned:', {
+      seatMapLength: this.seatMap?.length || 0,
+      seatMap: this.seatMap
+    });
+
     // Update flight segments with meal data
     if (mealSegments && mealSegments.length > 0) {
       this.flightSegments = mealSegments;
+      console.log('🍽️ Meal segments updated:', mealSegments);
+    } else {
+      console.warn('⚠️ No meal segments returned from processSSRData');
     }
 
     // Store services data
     if (services && services.length > 0) {
       this.services = services;
+      console.log('🎫 Services data stored:', services);
+    } else {
+      console.warn('⚠️ No services returned from processSSRData');
     }
 
-    console.log('Initialized seat map from SSR data:', this.seatMap);
-    console.log('Flight segments with meals:', this.flightSegments);
-    console.log('Special services:', this.services);
+    console.log('✅ Final state after initialization:', {
+      seatMapCount: this.seatMap?.length || 0,
+      flightSegmentsCount: this.flightSegments?.length || 0,
+      servicesCount: this.services?.length || 0,
+      flightSegmentsWithMeals: this.flightSegments.map((seg: any) => ({
+        from: seg.from,
+        to: seg.to,
+        mealOptionsCount: seg.mealOptions?.length || 0
+      }))
+    });
+    console.log('🏁 ===== initializeSeatMapFromSSR COMPLETED =====');
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  
+
   // Empty placeholders to satisfy template bindings if not fully implemented
-  processMeals(isReturn: boolean) {} 
-  parseSeatData(isReturn: boolean) {} 
-  processSpecialServices(rawSSR: any[], type: 'onward' | 'return') {}
+  processMeals(isReturn: boolean) { }
+  parseSeatData(isReturn: boolean) { }
+  processSpecialServices(rawSSR: any[], type: 'onward' | 'return') { }
 
   // Prepare mobile final page data structure for addon page
   prepareMobFinalPageData(): void {
@@ -3114,7 +3198,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           infantTaxes: this.infantTaxes
         });
       }
-      
+
       if (this.totalAdults > 0) {
         baseFareArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultBaseFare });
         taxesArray.push({ label: 'Adults', count: this.totalAdults, amount: this.adultTaxes });
@@ -3154,8 +3238,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     return {
       summary: summary,
-      adultFareDetails: isReturn ? 
-        { BaseFare: this.adultBaseFareReturn, Tax: this.adultTaxesReturn } : 
+      adultFareDetails: isReturn ?
+        { BaseFare: this.adultBaseFareReturn, Tax: this.adultTaxesReturn } :
         { BaseFare: this.adultBaseFare, Tax: this.adultTaxes },
       childFareDetail: isReturn ?
         { BaseFare: this.childrenBaseFareReturn, Tax: this.childrenTaxesReturn } :
@@ -3191,11 +3275,11 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   private buildBaggageArray(isReturn: boolean): any[] {
     const baggageArray: any[] = [];
-    
+
     // Match mobile version: use baggageCounts for oneway, or onwardBaggageCounts/returnBaggageCounts for roundtrip
     let counts: { [key: number]: number } = {};
     const options = isReturn ? this.baggageOptionsReturn : this.baggageOptions;
-    
+
     if (this.tripType === 'oneway') {
       counts = this.baggageCounts;
     } else {
@@ -3213,7 +3297,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           Weight: opt.kgs,
           WeightKG: opt.kgs, // Add both for compatibility
           Price: opt.price,
-          Origin: isReturn 
+          Origin: isReturn
             ? (this.flightSegmentsReturn[0]?.originCode || this.flightSegments[this.flightSegments.length - 1]?.destinationCode)
             : (this.flightSegments[0]?.originCode || ''),
           Destination: isReturn

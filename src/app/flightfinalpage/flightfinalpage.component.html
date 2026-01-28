@@ -78,156 +78,167 @@
 </div>
 
 <div class="scroll-wrapper" *ngIf="!loader">
-    <!-- Oneway Trip -->
-    <div class="flight-final-page" *ngIf="tripType == 'oneway'" id="oneway-section">
-      <!-- Flight Summary Card -->
-      <div class="card flight-summary-card" *ngIf="flightSegments?.length">
-        <!-- Desktop Flight Summary Design -->
-        <div class="desktop-flight-summary" *ngFor="let segment of flightSegments; let i = index">
-          <!-- Route Header -->
-          <div class="route-header">
-            <div class="route-info">
-              <div class="route-title">
-                {{ segment.from }} <span>→</span> {{ segment.to }}
+  <!-- Oneway Trip -->
+  <div class="flight-final-page" *ngIf="tripType == 'oneway'" id="oneway-section">
+    <!-- Flight Summary Card -->
+    <div class="card flight-summary-card" *ngIf="flightSegments?.length">
+      <!-- Desktop Flight Summary Design -->
+      <div class="desktop-flight-summary" *ngFor="let segment of flightSegments; let i = index">
+        <!-- Route Header -->
+        <div class="route-header">
+          <div class="route-info">
+            <div class="route-title">
+              {{ segment.from }} <span>→</span> {{ segment.to }}
+            </div>
+            <div class="date-time-section">
+              <span class="date-badge">{{ segment.date | date : "EEEE, MMM dd" }}</span>
+              <span class="flight-duration">
+                <span *ngIf="flightSegments.length === 1">Non Stop</span>
+                <span *ngIf="flightSegments.length > 1">{{ flightSegments.length - 1 }} Stop{{ flightSegments.length > 2
+                  ? 's' : '' }}</span>
+                • {{ segment.duration }}
+              </span>
+            </div>
+          </div>
+          <div class="cancellation-badge"
+            *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+            CANCELLATION FEES APPLY
+          </div>
+        </div>
+
+        <!-- Flight Details -->
+        <div class="flight-details-section">
+          <!-- Airline Info -->
+          <div class="airline-info-row">
+            <div class="airline-left">
+              <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
+                {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
               </div>
-              <div class="date-time-section">
-                <span class="date-badge">{{ segment.date | date : "EEEE, MMM dd" }}</span>
-                <span class="flight-duration">
-                  <span *ngIf="flightSegments.length === 1">Non Stop</span>
-                  <span *ngIf="flightSegments.length > 1">{{ flightSegments.length - 1 }} Stop{{ flightSegments.length > 2 ? 's' : '' }}</span>
-                  • {{ segment.duration }}
-                </span>
+              <img [src]="segment.logo" class="airline-logo-img"
+                *ngIf="segment.logo && !segment.logo.includes('default')" />
+              <div class="airline-details">
+                <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
+                <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
               </div>
             </div>
-            <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
-              CANCELLATION FEES APPLY
+            <div class="fare-info">
+              <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
             </div>
           </div>
 
-          <!-- Flight Details -->
-          <div class="flight-details-section">
+          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
+
+          <!-- Flight Timeline -->
+          <div class="flight-timeline-grid">
+            <div class="timeline-item">
+              <div class="time">{{ segment.departureTime }}</div>
+              <div class="timeline-dot"></div>
+              <div class="location-info">
+                <div class="city-name">{{ segment.from }}</div>
+                <div class="airport-name">{{ segment.fromAirport || segment.from + ' Airport' }}</div>
+                <div class="duration">{{ segment.duration }}</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="time">{{ segment.arrivalTime }}</div>
+              <div class="timeline-dot"></div>
+              <div class="location-info">
+                <div class="city-name">{{ segment.to }}</div>
+                <div class="airport-name">{{ segment.toAirport || segment.to + ' Airport' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Baggage Info -->
+          <div class="baggage-info-grid">
+            <div class="baggage-item">
+              <span class="baggage-icon">💼</span>
+              <div>
+                <span class="baggage-label">Cabin Baggage:</span> {{ segment.cabin || '7 KG' }} / Adult
+              </div>
+            </div>
+            <div class="baggage-item">
+              <span class="baggage-icon">🧳</span>
+              <div>
+                <span class="baggage-label">Check-In Baggage:</span> {{ segment.checkIn || '15 Kilograms (1 piece only)'
+                }} / Adult
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Flight Summary (Original Design) -->
+      <div class="mobile-flight-summary">
+        <div class="flight-leg oneway-flight-leg">
+          <div class="flexflight" *ngFor="let segment of flightSegments; let i = index">
             <!-- Airline Info -->
-            <div class="airline-info-row">
-              <div class="airline-left">
-                <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
-                  {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
-                </div>
-                <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
-                <div class="airline-details">
-                  <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
-                  <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
-                </div>
-              </div>
-              <div class="fare-info">
-                <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
-              </div>
+            <div class="flight-airline">
+              <img [src]="segment.logo" class="logo" />
+              <div class="name">{{ segment.airline }}</div>
+              <div class="code">{{ segment.code }}</div>
             </div>
 
-            <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
-
-            <!-- Flight Timeline -->
-            <div class="flight-timeline-grid">
-              <div class="timeline-item">
-                <div class="time">{{ segment.departureTime }}</div>
-                <div class="timeline-dot"></div>
-                <div class="location-info">
-                  <div class="city-name">{{ segment.from }}</div>
-                  <div class="airport-name">{{ segment.fromAirport || segment.from + ' Airport' }}</div>
-                  <div class="duration">{{ segment.duration }}</div>
-                </div>
+            <!-- Route Info -->
+            <div class="flight-route">
+              <div class="city">{{ segment.from }}</div>
+              <div class="plane-icon">
+                <i class="fas fa-plane"></i>
               </div>
-
-              <div class="timeline-item">
-                <div class="time">{{ segment.arrivalTime }}</div>
-                <div class="timeline-dot"></div>
-                <div class="location-info">
-                  <div class="city-name">{{ segment.to }}</div>
-                  <div class="airport-name">{{ segment.toAirport || segment.to + ' Airport' }}</div>
-                </div>
-              </div>
+              <div class="city">{{ segment.to }}</div>
             </div>
 
-            <!-- Baggage Info -->
-            <div class="baggage-info-grid">
-              <div class="baggage-item">
-                <span class="baggage-icon">💼</span>
-                <div>
-                  <span class="baggage-label">Cabin Baggage:</span> {{ segment.cabin || '7 KG' }} / Adult
+            <!-- Timing & Duration -->
+            <div class="flight-meta">
+              {{ segment.date | date : "EEE, dd MMM" }} |
+              {{ segment.departureTime }} - {{ segment.arrivalTime }} |
+              {{ segment.duration }}
+            </div>
+
+            <!-- Layover if applicable -->
+            <div class="layover-row" *ngIf="i < flightSegments.length - 1 && segment.layover">
+              <div class="line"></div>
+              <div class="layover">
+                <div *ngIf="segment.layover.hours >= 24" class="plus-day">
+                  + 1 Day
                 </div>
+                {{ segment.layover.duration }} Layover in
+                {{ segment.layover.location }}
               </div>
-              <div class="baggage-item">
-                <span class="baggage-icon">🧳</span>
-                <div>
-                  <span class="baggage-label">Check-In Baggage:</span> {{ segment.checkIn || '15 Kilograms (1 piece only)' }} / Adult
-                </div>
-              </div>
+              <div class="line"></div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Mobile Flight Summary (Original Design) -->
-        <div class="mobile-flight-summary">
-          <div class="flight-leg oneway-flight-leg">
-            <div class="flexflight" *ngFor="let segment of flightSegments; let i = index">
-              <!-- Airline Info -->
-              <div class="flight-airline">
-                <img [src]="segment.logo" class="logo" />
-                <div class="name">{{ segment.airline }}</div>
-                <div class="code">{{ segment.code }}</div>
-              </div>
-
-              <!-- Route Info -->
-              <div class="flight-route">
-                <div class="city">{{ segment.from }}</div>
-                <div class="plane-icon">
-                  <i class="fas fa-plane"></i>
-                </div>
-                <div class="city">{{ segment.to }}</div>
-              </div>
-
-              <!-- Timing & Duration -->
-              <div class="flight-meta">
-                {{ segment.date | date : "EEE, dd MMM" }} |
-                {{ segment.departureTime }} - {{ segment.arrivalTime }} |
-                {{ segment.duration }}
-              </div>
-
-              <!-- Layover if applicable -->
-              <div class="layover-row" *ngIf="i < flightSegments.length - 1 && segment.layover">
-                <div class="line"></div>
-                <div class="layover">
-                  <div *ngIf="segment.layover.hours >= 24" class="plus-day">
-                    + 1 Day
-                  </div>
-                  {{ segment.layover.duration }} Layover in
-                  {{ segment.layover.location }}
-                </div>
-                <div class="line"></div>
-              </div>
-            </div>
-          </div>
+      <!-- Extra Baggage Banner - Desktop Only -->
+      <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+        <div class="baggage-banner-text">
+          <span class="baggage-emoji">🎒</span>
+          <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab
+            rates!</span>
+          <span *ngIf="baggageTotal > 0">{{ getTotalOneWayBaggageCount() }} KGs of extra baggage added on your trip for
+            ₹ {{ baggageTotal | number : '1.0-0' }}! Total check-in baggage is now {{ 15 + getTotalOneWayBaggageCount()
+            }} KGs.</span>
         </div>
-
-        <!-- Extra Baggage Banner - Desktop Only -->
-        <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
-          <div class="baggage-banner-text">
-            <span class="baggage-emoji">🎒</span>
-            <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
-            <span *ngIf="baggageTotal > 0">{{ getTotalOneWayBaggageCount() }} KGs of extra baggage added on your trip for ₹ {{ baggageTotal | number : '1.0-0' }}! Total check-in baggage is now {{ 15 + getTotalOneWayBaggageCount() }} KGs.</span>
-          </div>
-          <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-            {{ baggageTotal > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
-          </button>
-        </div>
+        <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
+          {{ baggageTotal > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
+        </button>
+      </div>
 
       <!-- Cancellation Policy Section - Desktop Only -->
-      <div class="cancellation-policy-section" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+      <div class="cancellation-policy-section"
+        *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
         </div>
         <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
-          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
-          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'"
+            class="logo" />
+          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{
+            flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode
+            }}</span>
         </div>
         <div class="cancellation-criteria-header">
           <div class="criteria-left">Cancellation Criteria</div>
@@ -245,7 +256,7 @@
     <!-- Add Passenger Card -->
     <div class="card" id="passenger-details-card">
       <div class="section-title">Add Passenger Details</div>
-      
+
       <!-- Adults Section -->
       <div class="passenger-section">
         <div class="passenger-category-header">
@@ -276,36 +287,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'" (click)="adult.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'" (click)="adult.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'"
+                      (click)="adult.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'"
+                      (click)="adult.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(adult)"
-                      [minDate]="getAdultMinDOB()"
-                      [maxDate]="getTodayDate()"
-                      [initialDate]="getTodayDate()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(adult)" [minDate]="getAdultMinDOB()"
+                      [maxDate]="getTodayDate()" [initialDate]="getTodayDate()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                   <div class="form-group form-group-small">
@@ -319,14 +338,20 @@
                   </div>
                   <div class="form-group">
                     <label>Mobile No</label>
-                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10" [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.mobileNumber }}</div>
+                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10"
+                      [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.mobileNumber }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Email</label>
-                  <input type="email" [(ngModel)]="adult.email" placeholder="Email" [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.email }}</div>
+                  <input type="email" [(ngModel)]="adult.email" placeholder="Email"
+                    [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.email }}</div>
                 </div>
                 <div class="form-group checkbox-group">
                   <label class="checkbox-label">
@@ -336,16 +361,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -384,36 +416,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'"
+                      (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'"
+                      (click)="child.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(child)"
-                      [minDate]="getChildMinDOB()"
-                      [maxDate]="getChildMaxDOB()"
-                      [initialDate]="getChildMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(child)" [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()" [initialDate]="getChildMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(child, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
@@ -425,16 +465,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -473,46 +520,58 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'"
+                      (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'"
+                      (click)="infant.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(infant)"
-                      [minDate]="getInfantMinDOB()"
-                      [maxDate]="getInfantMaxDOB()"
-                      [initialDate]="getInfantMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(infant)" [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()" [initialDate]="getInfantMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(infant, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -555,11 +614,13 @@
         <div class="addon-section-content seats-meals-content" *ngIf="isSeatsExpanded">
           <!-- Seats & Meals Tabs -->
           <div class="seats-meals-tabs">
-            <div class="tab-header" [class.active]="activeSeatsTab === 'seats'" (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
+            <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
+              (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
               <i class="fas fa-chair"></i>
               <span>Seats</span>
             </div>
-            <div class="tab-header" [class.active]="activeSeatsTab === 'meals'" (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
+            <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
+              (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
               <i class="fas fa-utensils"></i>
               <span>Meals</span>
             </div>
@@ -580,15 +641,19 @@
                   <strong>{{ segment.from }} → {{ segment.to }}</strong>
                 </div>
                 <div class="selection-status">
-                  <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }} Seat(s) Selected</span>
-                  <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()" [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
-                    {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection pending' }}
+                  <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }}
+                    Seat(s) Selected</span>
+                  <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
+                    [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
+                    {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection
+                    pending' }}
                   </span>
                 </div>
               </div>
 
               <!-- Seat Map -->
-              <div class="seat-map-container" *ngIf="seatMap && seatMap[segIndex] && seatMap[segIndex].rows?.length > 0">
+              <div class="seat-map-container"
+                *ngIf="seatMap && seatMap[segIndex] && seatMap[segIndex].rows?.length > 0">
                 <div class="seat-map-scroll">
                   <div class="seat-map">
                     <!-- Seat Legend -->
@@ -599,7 +664,8 @@
                       </div>
                       <div class="legend-item" *ngFor="let category of seatMap[segIndex].priceCategories">
                         <div class="seat-icon" [ngClass]="category.category"></div>
-                        <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ? 'Medium' : 'High' }}</span>
+                        <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ?
+                          'Medium' : 'High' }}</span>
                         <span *ngIf="category.min !== 0 || category.max !== 0">
                           (₹{{ category.min | number : '1.0-0' }} - ₹{{ category.max | number : '1.0-0' }})
                         </span>
@@ -619,7 +685,8 @@
                           <div class="seat-block-header-group">
                             <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
                           </div>
-                          <div class="aisle-divider-header" *ngIf="blockIndex < seatMap[segIndex].seatBlocks.length - 1"></div>
+                          <div class="aisle-divider-header"
+                            *ngIf="blockIndex < seatMap[segIndex].seatBlocks.length - 1"></div>
                         </ng-container>
                       </div>
 
@@ -628,9 +695,8 @@
                         <div class="row-label">{{ row.rowNo }}</div>
                         <ng-container *ngFor="let block of row.seatBlocks; let blockIndex = index">
                           <div class="seat-block-group">
-                            <div class="seat-cell"
-                                 *ngFor="let letter of seatMap[segIndex].seatBlocks[blockIndex]"
-                                 [ngClass]="{
+                            <div class="seat-cell" *ngFor="let letter of seatMap[segIndex].seatBlocks[blockIndex]"
+                              [ngClass]="{
                                    'disabled': !block[letter],
                                    'not-available': block[letter] && !block[letter].isAvailable,
                                    'free': block[letter]?.isAvailable && block[letter].priceCategory === 'free',
@@ -639,8 +705,8 @@
                                    'high-price': block[letter]?.isAvailable && block[letter].priceCategory === 'high-price',
                                    'selected': block[letter] && isSeatSelected(segIndex, block[letter]?.Code)
                                  }"
-                                 (click)="block[letter]?.isAvailable && toggleSeatSelectionAPI(segIndex, block[letter])"
-                                 [title]="block[letter] ? getSeatTooltip(block[letter]) : ''">
+                              (click)="block[letter]?.isAvailable && toggleSeatSelectionAPI(segIndex, block[letter])"
+                              [title]="block[letter] ? getSeatTooltip(block[letter]) : ''">
                               <ng-container *ngIf="block[letter]; else noSeat">
                                 <ng-container *ngIf="block[letter].priceCategory === 'free'; else showPrice">
                                   Free
@@ -661,7 +727,8 @@
               </div>
 
               <!-- No Seat Map Available -->
-              <div class="no-seats-message" *ngIf="!seatMap || !seatMap[segIndex] || !seatMap[segIndex].rows || seatMap[segIndex].rows.length === 0">
+              <div class="no-seats-message"
+                *ngIf="!seatMap || !seatMap[segIndex] || !seatMap[segIndex].rows || seatMap[segIndex].rows.length === 0">
                 <p>Seat selection not available for this flight segment.</p>
               </div>
             </div>
@@ -695,11 +762,13 @@
                         </div>
                       </div>
                       <div class="meal-quantity">
-                        <button [disabled]="getMealCountForMeal(segIndex, meal.Code) === 0" (click)="decrementMeal(segIndex, meal)">
+                        <button [disabled]="getMealCountForMeal(segIndex, meal.Code) === 0"
+                          (click)="decrementMeal(segIndex, meal)">
                           -
                         </button>
                         <span>{{ getMealCountForMeal(segIndex, meal.Code) }}</span>
-                        <button [disabled]="getTotalSelectedMeals(segIndex) >= getTotalPassengers()" (click)="incrementMeal(segIndex, meal)">
+                        <button [disabled]="getTotalSelectedMeals(segIndex) >= getTotalPassengers()"
+                          (click)="incrementMeal(segIndex, meal)">
                           +
                         </button>
                       </div>
@@ -772,15 +841,11 @@
                     </div>
                   </div>
                   <div class="service-actions">
-                    <button 
-                      class="service-remove-btn" 
-                      *ngIf="getServiceCount(service.Code, service) > 0"
+                    <button class="service-remove-btn" *ngIf="getServiceCount(service.Code, service) > 0"
                       (click)="removeService(service)">
                       <i class="fas fa-minus"></i>
                     </button>
-                    <button 
-                      class="service-add-btn"
-                      [disabled]="getServiceCount(service.Code, service) >= 1"
+                    <button class="service-add-btn" [disabled]="getServiceCount(service.Code, service) >= 1"
                       (click)="addService(service)">
                       <i class="fas fa-plus"></i>
                       <span *ngIf="getServiceCount(service.Code, service) === 0">ADD</span>
@@ -806,18 +871,22 @@
       <div class="mobile-baggage-content">
         <div class="mobile-baggage-item">
           <span class="baggage-icon">💼</span>
-          <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> / Adult</span>
+          <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> /
+            Adult</span>
         </div>
-        
+
         <div class="mobile-baggage-item">
           <span class="baggage-icon">🧳</span>
-          <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</strong> / Adult</span>
+          <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece
+              only)' }}</strong> / Adult</span>
         </div>
       </div>
-      <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage"
+        *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
           <span class="add-baggage-icon">🎒</span>
-          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab
+            rates!</span>
         </div>
         <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
           ADD BAGGAGE
@@ -1004,7 +1073,7 @@
       <!-- Desktop Fare Summary -->
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        
+
         <!-- Base Fare Accordion -->
         <div class="fare-accordion-item">
           <div class="fare-accordion-header" (click)="toggleBaseFare()">
@@ -1082,7 +1151,7 @@
         </div>
 
         <hr class="fare-summary-divider" />
-        
+
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
@@ -1123,7 +1192,8 @@
                     <span class="date-badge">{{ flightSegments[0].date | date : "EEEE, MMM dd" }}</span>
                   </div>
                 </div>
-                <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+                <div class="cancellation-badge"
+                  *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
                   CANCELLATION FEES APPLY
                 </div>
               </div>
@@ -1136,18 +1206,21 @@
                       <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
                         {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
                       </div>
-                      <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
+                      <img [src]="segment.logo" class="airline-logo-img"
+                        *ngIf="segment.logo && !segment.logo.includes('default')" />
                       <div class="airline-details">
                         <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
                         <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
                       </div>
                     </div>
                     <div class="fare-info">
-                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                        }}</span>
                     </div>
                   </div>
 
-                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
+                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                    Rules</a>
 
                   <!-- Flight Timeline -->
                   <div class="flight-timeline-grid">
@@ -1194,13 +1267,15 @@
               <div class="route-header roundtrip-route-header" *ngIf="flightSegmentsReturn[0]">
                 <div class="route-info">
                   <div class="route-title">
-                    {{ flightSegmentsReturn[0].from }} <span>→</span> {{ flightSegmentsReturn[flightSegmentsReturn.length - 1].to }}
+                    {{ flightSegmentsReturn[0].from }} <span>→</span> {{
+                    flightSegmentsReturn[flightSegmentsReturn.length - 1].to }}
                   </div>
                   <div class="date-time-section">
                     <span class="date-badge">{{ flightSegmentsReturn[0].date | date : "EEEE, MMM dd" }}</span>
                   </div>
                 </div>
-                <div class="cancellation-badge" *ngIf="flightDataReturn && getCancellationRows(flightDataReturn).length > 0">
+                <div class="cancellation-badge"
+                  *ngIf="flightDataReturn && getCancellationRows(flightDataReturn).length > 0">
                   CANCELLATION FEES APPLY
                 </div>
               </div>
@@ -1213,18 +1288,21 @@
                       <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
                         {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
                       </div>
-                      <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
+                      <img [src]="segment.logo" class="airline-logo-img"
+                        *ngIf="segment.logo && !segment.logo.includes('default')" />
                       <div class="airline-details">
                         <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
                         <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
                       </div>
                     </div>
                     <div class="fare-info">
-                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                        }}</span>
                     </div>
                   </div>
 
-                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
+                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                    Rules</a>
 
                   <!-- Flight Timeline -->
                   <div class="flight-timeline-grid">
@@ -1265,7 +1343,8 @@
       </div>
 
       <!-- Baggage Allowance Section - Desktop Only (Onward) -->
-      <div class="makemytrip-baggage-section roundtrip-baggage-section roundtrip-desktop-baggage baggage-info" *ngIf="flightSegments?.length">
+      <div class="makemytrip-baggage-section roundtrip-baggage-section roundtrip-desktop-baggage baggage-info"
+        *ngIf="flightSegments?.length">
         <div class="baggage-allowance-item baggage-item">
           <span class="baggage-icon">💼</span>
           <div class="baggage-label baggage-text">
@@ -1296,17 +1375,20 @@
       </div>
 
       <!-- Cancellation Policy Section with Tabs - Desktop Only -->
-      <div class="makemytrip-cancellation-section roundtrip-cancellation-tabs" *ngIf="(flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0) || (flightDataReturn && getCancellationRows(flightDataReturn).length > 0)">
+      <div class="makemytrip-cancellation-section roundtrip-cancellation-tabs"
+        *ngIf="(flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0) || (flightDataReturn && getCancellationRows(flightDataReturn).length > 0)">
         <div class="cancellation-header">
           <div class="cancellation-title">Cancellation & Date Change Policy</div>
         </div>
 
         <!-- Onward / Return Tabs -->
         <div class="cancellation-tab-headers">
-          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'onward'" (click)="activePolicyTab = 'onward'">
+          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'onward'"
+            (click)="activePolicyTab = 'onward'">
             Onward
           </div>
-          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'return'" (click)="activePolicyTab = 'return'">
+          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'return'"
+            (click)="activePolicyTab = 'return'">
             Return
           </div>
         </div>
@@ -1314,8 +1396,12 @@
         <!-- Onward Tab Content -->
         <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'onward' && flightDataDeparture">
           <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
-            <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
-            <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+            <img
+              [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'"
+              class="logo" />
+            <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{
+              flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length -
+              1]?.Destination?.Airport?.CityCode }}</span>
           </div>
           <div class="cancellation-criteria-header">
             <div class="criteria-left">Cancellation Criteria</div>
@@ -1332,8 +1418,11 @@
         <!-- Return Tab Content -->
         <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'return' && flightDataReturn">
           <div class="cancellation-airline" *ngIf="flightDataReturn?.Segments?.[0]?.[0]">
-            <img [src]="'assets/images/flightimages/' + flightDataReturn.Segments[0][0].Airline?.AirlineCode + '.png'" class="logo" />
-            <span class="airline-route">{{ flightDataReturn.Segments[0][0].Origin?.Airport?.CityCode }}-{{ flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1]?.Destination?.Airport?.CityCode }}</span>
+            <img [src]="'assets/images/flightimages/' + flightDataReturn.Segments[0][0].Airline?.AirlineCode + '.png'"
+              class="logo" />
+            <span class="airline-route">{{ flightDataReturn.Segments[0][0].Origin?.Airport?.CityCode }}-{{
+              flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1]?.Destination?.Airport?.CityCode
+              }}</span>
           </div>
           <div class="cancellation-criteria-header">
             <div class="criteria-left">Cancellation Criteria</div>
@@ -1352,7 +1441,7 @@
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
-      
+
       <!-- Adults Section -->
       <div class="passenger-section">
         <div class="passenger-category-header">
@@ -1383,36 +1472,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'" (click)="adult.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'" (click)="adult.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'"
+                      (click)="adult.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'"
+                      (click)="adult.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(adult)"
-                      [minDate]="getAdultMinDOB()"
-                      [maxDate]="getTodayDate()"
-                      [initialDate]="getTodayDate()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(adult)" [minDate]="getAdultMinDOB()"
+                      [maxDate]="getTodayDate()" [initialDate]="getTodayDate()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                   <div class="form-group form-group-small">
@@ -1426,14 +1523,20 @@
                   </div>
                   <div class="form-group">
                     <label>Mobile No</label>
-                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10" [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.mobileNumber }}</div>
+                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10"
+                      [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.mobileNumber }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Email</label>
-                  <input type="email" [(ngModel)]="adult.email" placeholder="Email" [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.email }}</div>
+                  <input type="email" [(ngModel)]="adult.email" placeholder="Email"
+                    [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.email }}</div>
                 </div>
                 <div class="form-group checkbox-group">
                   <label class="checkbox-label">
@@ -1443,16 +1546,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -1491,36 +1601,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'"
+                      (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'"
+                      (click)="child.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(child)"
-                      [minDate]="getChildMinDOB()"
-                      [maxDate]="getChildMaxDOB()"
-                      [initialDate]="getChildMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(child)" [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()" [initialDate]="getChildMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(child, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
@@ -1532,16 +1650,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -1580,46 +1705,58 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'"
+                      (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'"
+                      (click)="infant.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(infant)"
-                      [minDate]="getInfantMinDOB()"
-                      [maxDate]="getInfantMaxDOB()"
-                      [initialDate]="getInfantMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(infant)" [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()" [initialDate]="getInfantMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(infant, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -1634,20 +1771,302 @@
       </div>
     </div>
 
+    <!-- Continue to unlock addons (shows only after passengers filled) -->
+    <div class="card desktop-only" *ngIf="addonUnlockStep === 0">
+      <button class="continue-btn-main" (click)="onAddonContinue()">
+        {{ getAddonContinueText() }}
+      </button>
+    </div>
+
+    <!-- Addon Services Section - Desktop Only (Roundtrip) -->
+    <div class="card addon-services-card desktop-only">
+      <div class="addon-services-header">
+        <div class="addon-header-left">
+          <div class="addon-title">Addon Services</div>
+          <div class="addon-subtext">Seats & Meals · Cabs · Add ons</div>
+        </div>
+      </div>
+
+      <!-- Seats & Meals Section -->
+      <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
+        <div class="addon-section-header" (click)="toggleSeatsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-chair"></i>
+            <span>Seats & Meals</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
+        </div>
+        <div class="addon-section-content seats-meals-content" *ngIf="isSeatsExpanded">
+          <!-- Seats & Meals Tabs -->
+          <div class="seats-meals-tabs">
+            <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
+              (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
+              <i class="fas fa-chair"></i>
+              <span>Seats</span>
+            </div>
+            <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
+              (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
+              <i class="fas fa-utensils"></i>
+              <span>Meals</span>
+            </div>
+          </div>
+
+          <!-- Seats Tab Content -->
+          <div class="tab-content-panel" *ngIf="activeSeatsTab === 'seats'">
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+              <i class="fas fa-ticket-alt"></i>
+              <span>Use code <strong>FREESEAT</strong> to get a free seat (up to 500/passenger)</span>
+            </div>
+
+            <!-- Flight Route Info -->
+            <div class="flight-route-info" *ngFor="let segment of flightSegments; let segIndex = index">
+              <div class="route-header-inline">
+                <div class="route-title-inline">
+                  <strong>{{ segment.from }} → {{ segment.to }}</strong>
+                </div>
+                <div class="selection-status">
+                  <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }}
+                    Seat(s) Selected</span>
+                  <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
+                    [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
+                    {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection
+                    pending' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Seat Map -->
+              <div class="seat-map-container"
+                *ngIf="seatMap && seatMap[segIndex] && seatMap[segIndex].rows?.length > 0">
+                <div class="seat-map-scroll">
+                  <div class="seat-map">
+                    <!-- Seat Legend -->
+                    <div class="seat-legend">
+                      <div class="legend-item">
+                        <div class="seat-icon free"></div>
+                        <span>Free</span>
+                      </div>
+                      <div class="legend-item" *ngFor="let category of seatMap[segIndex].priceCategories">
+                        <div class="seat-icon" [ngClass]="category.category"></div>
+                        <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ?
+                          'Medium' : 'High' }}</span>
+                        <span *ngIf="category.min !== 0 || category.max !== 0">
+                          (₹{{ category.min | number : '1.0-0' }} - ₹{{ category.max | number : '1.0-0' }})
+                        </span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="seat-icon not-available"></div>
+                        <span>Not Available</span>
+                      </div>
+                    </div>
+
+                    <!-- Seat Grid with Dynamic Blocks -->
+                    <div class="seat-grid-dynamic">
+                      <!-- Column Headers -->
+                      <div class="seat-row-dynamic header-row">
+                        <div class="row-label-header">Row</div>
+                        <ng-container *ngFor="let block of seatMap[segIndex].seatBlocks; let blockIndex = index">
+                          <div class="seat-block-header-group">
+                            <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
+                          </div>
+                          <div class="aisle-divider-header"
+                            *ngIf="blockIndex < seatMap[segIndex].seatBlocks.length - 1"></div>
+                        </ng-container>
+                      </div>
+
+                      <!-- Seat Rows -->
+                      <div class="seat-row-dynamic" *ngFor="let row of seatMap[segIndex].rows">
+                        <div class="row-label">{{ row.rowNo }}</div>
+                        <ng-container *ngFor="let block of row.seatBlocks; let blockIndex = index">
+                          <div class="seat-block-group">
+                            <div class="seat-cell" *ngFor="let letter of seatMap[segIndex].seatBlocks[blockIndex]"
+                              [ngClass]="{
+                                   'disabled': !block[letter],
+                                   'not-available': block[letter] && !block[letter].isAvailable,
+                                   'free': block[letter]?.isAvailable && block[letter].priceCategory === 'free',
+                                   'low-price': block[letter]?.isAvailable && block[letter].priceCategory === 'low-price',
+                                   'medium-price': block[letter]?.isAvailable && block[letter].priceCategory === 'medium-price',
+                                   'high-price': block[letter]?.isAvailable && block[letter].priceCategory === 'high-price',
+                                   'selected': block[letter] && isSeatSelected(segIndex, block[letter]?.Code)
+                                 }"
+                              (click)="block[letter]?.isAvailable && toggleSeatSelectionAPI(segIndex, block[letter])"
+                              [title]="block[letter] ? getSeatTooltip(block[letter]) : ''">
+                              <ng-container *ngIf="block[letter]; else noSeat">
+                                <ng-container *ngIf="block[letter].priceCategory === 'free'; else showPrice">
+                                  Free
+                                </ng-container>
+                                <ng-template #showPrice>
+                                  {{ block[letter].Price | number : '1.0-0' }}
+                                </ng-template>
+                              </ng-container>
+                              <ng-template #noSeat>-</ng-template>
+                            </div>
+                          </div>
+                          <div class="aisle-divider" *ngIf="blockIndex < row.seatBlocks.length - 1"></div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- No Seat Map Available -->
+              <div class="no-seats-message"
+                *ngIf="!seatMap || !seatMap[segIndex] || !seatMap[segIndex].rows || seatMap[segIndex].rows.length === 0">
+                <p>Seat selection not available for this flight segment.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meals Tab Content -->
+          <div class="tab-content-panel" *ngIf="activeSeatsTab === 'meals'">
+            <div class="meals-container">
+              <!-- Meal Segments -->
+              <div class="meal-segment-wrapper" *ngFor="let segment of flightSegments; let segIndex = index">
+                <div class="meal-segment-header">
+                  <strong>{{ segment.from }} → {{ segment.to }}</strong>
+                  <span class="meal-selection-count">{{ getMealCount(segIndex) }} meal(s) selected</span>
+                </div>
+
+                <div class="meal-scroll-container" *ngIf="segment?.mealOptions?.length; else noMeals">
+                  <div class="meal-list">
+                    <div class="meal-card" *ngFor="let meal of segment.mealOptions">
+                      <div class="meal-visual">
+                        <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
+                        <div class="meal-price" *ngIf="meal.Price > 0">
+                          ₹{{ meal.Price | number : '1.2-2' }}
+                        </div>
+                        <div class="meal-price free-meal" *ngIf="meal.Price == 0">
+                          Free
+                        </div>
+                      </div>
+                      <div class="meal-details">
+                        <div class="meal-name">
+                          {{ meal.AirlineDescription || meal.Description }}
+                        </div>
+                      </div>
+                      <div class="meal-quantity">
+                        <button [disabled]="getMealCountForMeal(segIndex, meal.Code) === 0"
+                          (click)="decrementMeal(segIndex, meal)">
+                          -
+                        </button>
+                        <span>{{ getMealCountForMeal(segIndex, meal.Code) }}</span>
+                        <button [disabled]="getTotalSelectedMeals(segIndex) >= getTotalPassengers()"
+                          (click)="incrementMeal(segIndex, meal)">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noMeals>
+                  <div class="no-meals-message">
+                    <p>No meals available for this segment.</p>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inline continue inside Seats & Meals -->
+          <div class="addon-continue-footer">
+            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO CABS</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabs Section -->
+      <div class="addon-section" [class.expanded]="isCabsExpanded" [class.locked]="addonUnlockStep < 2">
+        <div class="addon-section-header" (click)="toggleCabsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-car"></i>
+            <span>Cabs</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isCabsExpanded"></i>
+        </div>
+        <div class="addon-section-content" *ngIf="isCabsExpanded">
+          <div class="addon-placeholder">
+            <p>Cab services are not available for this journey.</p>
+          </div>
+        </div>
+
+        <div class="addon-continue-footer" *ngIf="isCabsExpanded">
+          <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
+        </div>
+      </div>
+
+      <!-- Add-ons Section (Special Services) -->
+      <div class="addon-section" [class.expanded]="isAddonsExpanded" [class.locked]="addonUnlockStep < 3">
+        <div class="addon-section-header" (click)="toggleAddonsSection()">
+          <div class="addon-section-title">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add ons</span>
+            <span class="addon-subtitle">Flight Delay Insurance, Baggage Courier Service</span>
+          </div>
+          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
+        </div>
+        <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
+          <div class="services-selection" *ngIf="services?.length; else noServices">
+            <div class="services-scroll-container">
+              <div class="services-list">
+                <div class="service-card" *ngFor="let service of getFilteredServices()">
+                  <div class="service-visual">
+                    <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
+                    <div class="service-price">
+                      ₹{{ service.Price | number : '1.2-2' }}
+                    </div>
+                  </div>
+                  <div class="service-details">
+                    <div class="service-name">
+                      {{ service.Description }}
+                    </div>
+                    <div class="service-route">
+                      {{ service.Origin }} - {{ service.Destination }}
+                    </div>
+                  </div>
+                  <div class="service-actions">
+                    <button class="service-remove-btn" *ngIf="getServiceCount(service.Code, service) > 0"
+                      (click)="removeService(service)">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="service-add-btn" [disabled]="getServiceCount(service.Code, service) >= 1"
+                      (click)="addService(service)">
+                      <i class="fas fa-plus"></i>
+                      <span *ngIf="getServiceCount(service.Code, service) === 0">ADD</span>
+                      <span *ngIf="getServiceCount(service.Code, service) > 0">ADDED</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noServices>
+            <div class="addon-placeholder">
+              <p>No additional services available for this journey.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
     <!-- Baggage Section - Mobile Only -->
     <div class="card mobile-baggage-section roundtrip-baggage-section roundtrip-mobile-baggage">
       <div class="section-title">Baggage Allowance</div>
       <div class="mobile-baggage-content">
         <div class="mobile-baggage-item">
           <span class="baggage-icon">💼</span>
-          <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> / Adult</span>
+          <span class="baggage-text">Cabin Baggage: <strong>{{ flightSegments[0]?.cabin || '7 KG' }}</strong> /
+            Adult</span>
         </div>
         <div class="mobile-baggage-item">
           <span class="baggage-icon">🧳</span>
-          <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</strong> / Adult</span>
+          <span class="baggage-text">Check-In Baggage: <strong>{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece
+              only)' }}</strong> / Adult</span>
         </div>
       </div>
-      <div class="mobile-add-baggage roundtrip-add-baggage roundtrip-mobile-add-baggage" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
+      <div class="mobile-add-baggage roundtrip-add-baggage roundtrip-mobile-add-baggage"
+        *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
           <span class="baggage-emoji">🎒</span>
           <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
@@ -1885,7 +2304,7 @@
       <!-- Desktop Fare Summary -->
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        
+
         <!-- Base Fare Accordion -->
         <div class="fare-accordion-item">
           <div class="fare-accordion-header" (click)="toggleBaseFare()">
@@ -1963,7 +2382,7 @@
         </div>
 
         <hr class="fare-summary-divider" />
-        
+
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
@@ -1990,13 +2409,8 @@
     <!-- Flight Summary Card -->
     <!-- Flight Summary Cards: One per segment -->
     <!-- Flight Summary Cards: One per segment group -->
-    <ng-container
-      *ngIf="tripType === 'multicity' && flightSegmentGroups?.length"
-    >
-      <div
-        class="card makemytrip-flight-card"
-        *ngFor="let group of flightSegmentGroups; let groupIndex = index"
-      >
+    <ng-container *ngIf="tripType === 'multicity' && flightSegmentGroups?.length">
+      <div class="card makemytrip-flight-card" *ngFor="let group of flightSegmentGroups; let groupIndex = index">
         <div class="flight-leg multicity-flight-leg">
           <!-- Route Header with Date -->
           <div class="route-header multicity-route-header" *ngIf="group?.length > 0">
@@ -2008,7 +2422,8 @@
                 <span class="date-badge">{{ group[0]?.date | date : "EEEE, MMM dd" }}</span>
               </div>
             </div>
-            <div class="cancellation-badge" *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+            <div class="cancellation-badge"
+              *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
               CANCELLATION FEES APPLY
             </div>
           </div>
@@ -2021,14 +2436,16 @@
                   <div class="airline-logo" *ngIf="!segment.logo || segment.logo.includes('default')">
                     {{ segment.airline?.substring(0, 2).toUpperCase() || 'AI' }}
                   </div>
-                  <img [src]="segment.logo" class="airline-logo-img" *ngIf="segment.logo && !segment.logo.includes('default')" />
+                  <img [src]="segment.logo" class="airline-logo-img"
+                    *ngIf="segment.logo && !segment.logo.includes('default')" />
                   <div class="airline-details">
                     <div class="airline-name">{{ segment.airline }} {{ segment.code }}</div>
                     <div class="aircraft-badge" *ngIf="segment.aircraft">Boeing {{ segment.aircraft }}</div>
                   </div>
                 </div>
                 <div class="fare-info">
-                  <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+                  <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                    }}</span>
                 </div>
               </div>
 
@@ -2077,22 +2494,15 @@
 
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
     <div class="card cancellation-policy-card-mobile">
-      <div
-        class="section-title-row"
-        (click)="showPolicyModal = true; activeTab = 'cancel'"
-      >
+      <div class="section-title-row" (click)="showPolicyModal = true; activeTab = 'cancel'">
         <div class="section-title">Cancellation & Rescheduling Policy</div>
         <div class="section-arrow">›</div>
       </div>
 
       <!-- Tab Headers -->
       <div class="tab-header-scroll">
-        <div
-          *ngFor="let group of groupedFlightSegments; let i = index"
-          class="tab-header"
-          [class.active]="i === activeCancelTabIndex"
-          (click)="activeCancelTabIndex = i"
-        >
+        <div *ngFor="let group of groupedFlightSegments; let i = index" class="tab-header"
+          [class.active]="i === activeCancelTabIndex" (click)="activeCancelTabIndex = i">
           {{ group[0]?.originCode }} -
           {{ group[group.length - 1]?.destinationCode }}
         </div>
@@ -2127,7 +2537,7 @@
     <!-- Add Passenger Card -->
     <div class="card">
       <div class="section-title">Add Passenger Details</div>
-      
+
       <!-- Adults Section -->
       <div class="passenger-section">
         <div class="passenger-category-header">
@@ -2143,9 +2553,9 @@
               </div>
               <div class="passenger-label">
                 {{
-                  adult.firstName
-                    ? getPassengerDisplayName(adult)
-                    : "Adult " + (i + 1) + " (12 yrs+)"
+                adult.firstName
+                ? getPassengerDisplayName(adult)
+                : "Adult " + (i + 1) + " (12 yrs+)"
                 }}
               </div>
               <button class="passenger-add-btn" (click)="openPassengerModal('adult', i)">
@@ -2158,36 +2568,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="adult.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="adult.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'" (click)="adult.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'" (click)="adult.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Male'"
+                      (click)="adult.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="adult.gender === 'Female'"
+                      (click)="adult.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row form-row-three">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(adult)"
-                      [minDate]="getAdultMinDOB()"
-                      [maxDate]="getTodayDate()"
-                      [initialDate]="getTodayDate()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(adult)" [minDate]="getAdultMinDOB()"
+                      [maxDate]="getTodayDate()" [initialDate]="getTodayDate()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(adult, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                   <div class="form-group form-group-small">
@@ -2201,14 +2619,20 @@
                   </div>
                   <div class="form-group">
                     <label>Mobile No</label>
-                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10" [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.mobileNumber }}</div>
+                    <input type="tel" [(ngModel)]="adult.mobileNumber" placeholder="Mobile No" maxlength="10"
+                      [class.error]="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.mobileNumber && expandedPassengerKey === 'adult-' + i">{{
+                      passengerValidationErrors.mobileNumber }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Email</label>
-                  <input type="email" [(ngModel)]="adult.email" placeholder="Email" [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.email }}</div>
+                  <input type="email" [(ngModel)]="adult.email" placeholder="Email"
+                    [class.error]="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.email && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.email }}</div>
                 </div>
                 <div class="form-group checkbox-group">
                   <label class="checkbox-label">
@@ -2218,16 +2642,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="adult.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'adult-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('adult', i, adult)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -2251,9 +2682,9 @@
               </div>
               <div class="passenger-label">
                 {{
-                  child.firstName
-                    ? child.firstName + " " + child.lastName
-                    : "Child " + (i + 1) + " (2 to 12 yrs)"
+                child.firstName
+                ? child.firstName + " " + child.lastName
+                : "Child " + (i + 1) + " (2 to 12 yrs)"
                 }}
               </div>
               <button class="passenger-add-btn" (click)="openPassengerModal('child', i)">
@@ -2266,36 +2697,44 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="child.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="child.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'child-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'" (click)="child.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'" (click)="child.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Male'"
+                      (click)="child.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="child.gender === 'Female'"
+                      (click)="child.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(child)"
-                      [minDate]="getChildMinDOB()"
-                      [maxDate]="getChildMaxDOB()"
-                      [initialDate]="getChildMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(child)" [minDate]="getChildMinDOB()"
+                      [maxDate]="getChildMaxDOB()" [initialDate]="getChildMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(child, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
@@ -2307,16 +2746,23 @@
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="child.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="form-group" *ngIf="panInfoRequired">
                   <label>PAN Number</label>
-                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{ passengerValidationErrors.panNumber }}</div>
+                  <input type="text" [(ngModel)]="child.panNumber" placeholder="Enter PAN number"
+                    [class.error]="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.panNumber && expandedPassengerKey === 'child-' + i">{{
+                    passengerValidationErrors.panNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('child', i, child)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -2340,9 +2786,9 @@
               </div>
               <div class="passenger-label">
                 {{
-                  infant.firstName
-                    ? infant.firstName + " " + infant.lastName
-                    : "Infant " + (i + 1) + " (15 days to 2 yrs)"
+                infant.firstName
+                ? infant.firstName + " " + infant.lastName
+                : "Infant " + (i + 1) + " (15 days to 2 yrs)"
                 }}
               </div>
               <button class="passenger-add-btn" (click)="openPassengerModal('infant', i)">
@@ -2355,46 +2801,58 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label>First & Middle Name</label>
-                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name" [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.firstName }}</div>
+                    <input type="text" [(ngModel)]="infant.firstName" placeholder="First & Middle Name"
+                      [class.error]="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.firstName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.firstName }}</div>
                   </div>
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name" [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
-                    <div class="error-message" *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.lastName }}</div>
+                    <input type="text" [(ngModel)]="infant.lastName" placeholder="Last Name"
+                      [class.error]="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i" />
+                    <div class="error-message"
+                      *ngIf="passengerValidationErrors.lastName && expandedPassengerKey === 'infant-' + i">{{
+                      passengerValidationErrors.lastName }}</div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Gender</label>
                   <div class="gender-buttons">
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'" (click)="infant.gender = 'Male'">MALE</button>
-                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'" (click)="infant.gender = 'Female'">FEMALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Male'"
+                      (click)="infant.gender = 'Male'">MALE</button>
+                    <button type="button" class="gender-btn" [class.active]="infant.gender === 'Female'"
+                      (click)="infant.gender = 'Female'">FEMALE</button>
                   </div>
-                  <div class="error-message" *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.gender }}</div>
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.gender && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.gender }}</div>
                 </div>
                 <div class="form-row">
                   <div class="form-group" id="finalpagecal">
                     <label>Date of Birth</label>
-                    <app-custom-calendar
-                      [selectedDate]="getDOBAsDateString(infant)"
-                      [minDate]="getInfantMinDOB()"
-                      [maxDate]="getInfantMaxDOB()"
-                      [initialDate]="getInfantMaxDOB()"
-                      placeholder="Select Date of Birth"
+                    <app-custom-calendar [selectedDate]="getDOBAsDateString(infant)" [minDate]="getInfantMinDOB()"
+                      [maxDate]="getInfantMaxDOB()" [initialDate]="getInfantMaxDOB()" placeholder="Select Date of Birth"
                       (dateSelected)="onDOBSelected(infant, $event)">
                     </app-custom-calendar>
-                    <div class="error-message" *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
-                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+                    <div class="error-message"
+                      *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
+                      {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth ||
+                      passengerValidationErrors.dobYear }}
                     </div>
                   </div>
                 </div>
                 <div class="form-group" *ngIf="passportInfoRequired">
                   <label>Passport Number</label>
-                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
-                  <div class="error-message" *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{ passengerValidationErrors.passportNumber }}</div>
+                  <input type="text" [(ngModel)]="infant.passportNumber" placeholder="Enter passport number"
+                    [class.error]="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i" />
+                  <div class="error-message"
+                    *ngIf="passengerValidationErrors.passportNumber && expandedPassengerKey === 'infant-' + i">{{
+                    passengerValidationErrors.passportNumber }}</div>
                 </div>
                 <div class="passenger-form-actions">
-                  <button class="passenger-save-btn" (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
+                  <button class="passenger-save-btn"
+                    (click)="savePassengerDetailsInline('infant', i, infant)">SAVE</button>
                   <button class="passenger-cancel-btn" (click)="collapsePassengerForm()">CANCEL</button>
                 </div>
               </div>
@@ -2418,12 +2876,8 @@
 
       <!-- Tab Headers -->
       <div class="tab-header-scroll">
-        <div
-          *ngFor="let group of groupedFlightSegments; let i = index"
-          class="tab-header"
-          [class.active]="i === activeCancelTabIndex"
-          (click)="activeCancelTabIndex = i"
-        >
+        <div *ngFor="let group of groupedFlightSegments; let i = index" class="tab-header"
+          [class.active]="i === activeCancelTabIndex" (click)="activeCancelTabIndex = i">
           {{ group[0]?.originCode }} -
           {{ group[group.length - 1]?.destinationCode }}
         </div>
@@ -2586,9 +3040,8 @@
           <span class="checkmark"></span>
           <span class="terms-text">
             I understand and agree with the
-            <span class="link-text" (click)="showFareRules = true"
-              >Fare Rules</span
-            >, the Privacy Policy, the User Agreement & the Terms of Service of
+            <span class="link-text" (click)="showFareRules = true">Fare Rules</span>, the Privacy Policy, the User
+            Agreement & the Terms of Service of
             Wizzride.
           </span>
         </label>
@@ -2599,7 +3052,7 @@
     <div class="footer-bar">
       <div class="fare-summary-desktop">
         <div class="fare-summary-title">Fare Summary</div>
-        
+
         <!-- Base Fare Accordion -->
         <div class="fare-accordion-item">
           <div class="fare-accordion-header" (click)="toggleBaseFare()">
@@ -2677,18 +3130,14 @@
         </div>
 
         <hr class="fare-summary-divider" />
-        
+
         <!-- Total Amount -->
         <div class="fare-total-amount">
           <span class="fare-total-label">Total Amount</span>
           <span class="fare-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
       </div>
-      <button
-        class="proceed-btn"
-        [disabled]="!updateProceedButton()"
-        (click)="finalProceed()"
-      >
+      <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
         Proceed
       </button>
     </div>
@@ -2787,7 +3236,8 @@
     </ng-container>
   </div>
   <div class="baggage-footer">
-    <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected</div>
+    <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected
+    </div>
     <div class="footer-right">
       <div class="fare-details">
         <div class="added-to-fare">Added to fare</div>
@@ -2822,7 +3272,8 @@
             <div class="route-text">
               {{ flightSegments[0]?.from }}-{{ flightSegments[flightSegments.length - 1]?.to }}
             </div>
-            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}</div>
+            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}
+            </div>
           </div>
 
           <!-- Included Baggage Info -->
@@ -2861,7 +3312,7 @@
             </div>
           </ng-container>
         </div>
-        
+
         <!-- Return Tab -->
         <div class="tab-panel">
           <!-- Flight Route Indicator (Blue Pill - MMT Style) -->
@@ -2869,7 +3320,8 @@
             <div class="route-text">
               {{ flightSegmentsReturn[0]?.from }}-{{ flightSegmentsReturn[flightSegmentsReturn.length - 1]?.to }}
             </div>
-            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}</div>
+            <div class="route-status">{{ activeRoundBaggageTab === 'onward' ? '1 of 2 selected' : '2 of 2 selected' }}
+            </div>
           </div>
 
           <!-- Included Baggage Info -->
@@ -2912,7 +3364,8 @@
     </div>
   </div>
   <div class="baggage-footer">
-    <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s) Selected</div>
+    <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s)
+      Selected</div>
     <div class="footer-right">
       <div class="fare-details">
         <div class="added-to-fare">Added to fare</div>
@@ -3123,13 +3576,17 @@
   <div class="trip-body">
     <div class="form-group">
       <label>First Name</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.firstName" placeholder="Enter first name" [class.error]="passengerValidationErrors.firstName" />
-      <div class="error-message" *ngIf="passengerValidationErrors.firstName">{{ passengerValidationErrors.firstName }}</div>
+      <input type="text" [(ngModel)]="currentPassengerDetails.firstName" placeholder="Enter first name"
+        [class.error]="passengerValidationErrors.firstName" />
+      <div class="error-message" *ngIf="passengerValidationErrors.firstName">{{ passengerValidationErrors.firstName }}
+      </div>
     </div>
     <div class="form-group">
       <label>Last Name</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.lastName" placeholder="Enter last name" [class.error]="passengerValidationErrors.lastName" />
-      <div class="error-message" *ngIf="passengerValidationErrors.lastName">{{ passengerValidationErrors.lastName }}</div>
+      <input type="text" [(ngModel)]="currentPassengerDetails.lastName" placeholder="Enter last name"
+        [class.error]="passengerValidationErrors.lastName" />
+      <div class="error-message" *ngIf="passengerValidationErrors.lastName">{{ passengerValidationErrors.lastName }}
+      </div>
     </div>
     <div class="form-group">
       <label>Gender</label>
@@ -3142,16 +3599,14 @@
     </div>
     <div class="form-group" id="finalpagecal">
       <label>Date of Birth</label>
-      <app-custom-calendar
-        [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
-        [minDate]="getCurrentPassengerMinDOB()"
-        [maxDate]="getTodayDate()"
-        [initialDate]="getTodayDate()"
-        placeholder="Select Date of Birth"
-        (dateSelected)="onDOBSelected(currentPassengerDetails, $event)">
+      <app-custom-calendar [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
+        [minDate]="getCurrentPassengerMinDOB()" [maxDate]="getTodayDate()" [initialDate]="getTodayDate()"
+        placeholder="Select Date of Birth" (dateSelected)="onDOBSelected(currentPassengerDetails, $event)">
       </app-custom-calendar>
-      <div class="error-message" *ngIf="passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear">
-        {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear }}
+      <div class="error-message"
+        *ngIf="passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear">
+        {{ passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear
+        }}
       </div>
     </div>
     <div class="form-group" *ngIf="currentPassengerType === 'adult'">
@@ -3202,25 +3657,19 @@
           <option value="+51">PE +51</option>
           <option value="+64">NZ +64</option>
         </select>
-        <input
-        type="tel"
-         name="contactMobile"
-         #contactMobileInput
-        [(ngModel)]="currentPassengerDetails.mobileNumber"
-        placeholder="10-digit mobile starts 6-9"
-        maxlength="10"
-        [readonly]="isMobileView()"
-        [attr.inputmode]="isMobileView() ? 'none' : 'numeric'"
-        (click)="openPhoneDialer('primary', $event)"
-        (focus)="isMobileView() && openPhoneDialer('primary', $event)"
-        [class.error]="passengerValidationErrors.mobileNumber"
-      />
+        <input type="tel" name="contactMobile" #contactMobileInput [(ngModel)]="currentPassengerDetails.mobileNumber"
+          placeholder="10-digit mobile starts 6-9" maxlength="10" [readonly]="isMobileView()"
+          [attr.inputmode]="isMobileView() ? 'none' : 'numeric'" (click)="openPhoneDialer('primary', $event)"
+          (focus)="isMobileView() && openPhoneDialer('primary', $event)"
+          [class.error]="passengerValidationErrors.mobileNumber" />
       </div>
-      <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber">{{ passengerValidationErrors.mobileNumber }}</div>
+      <div class="error-message" *ngIf="passengerValidationErrors.mobileNumber">{{
+        passengerValidationErrors.mobileNumber }}</div>
     </div>
     <div class="form-group" *ngIf="currentPassengerType === 'adult'">
       <label>Email</label>
-      <input type="email" [(ngModel)]="currentPassengerDetails.email" placeholder="Enter email" [class.error]="passengerValidationErrors.email" />
+      <input type="email" [(ngModel)]="currentPassengerDetails.email" placeholder="Enter email"
+        [class.error]="passengerValidationErrors.email" />
       <div class="error-message" *ngIf="passengerValidationErrors.email">{{ passengerValidationErrors.email }}</div>
     </div>
     <div class="form-group checkbox-group" *ngIf="currentPassengerType !== 'infant'">
@@ -3231,13 +3680,17 @@
     </div>
     <div class="form-group" *ngIf="passportInfoRequired">
       <label>Passport Number</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.passportNumber" placeholder="Enter passport number" [class.error]="passengerValidationErrors.passportNumber" />
-      <div class="error-message" *ngIf="passengerValidationErrors.passportNumber">{{ passengerValidationErrors.passportNumber }}</div>
+      <input type="text" [(ngModel)]="currentPassengerDetails.passportNumber" placeholder="Enter passport number"
+        [class.error]="passengerValidationErrors.passportNumber" />
+      <div class="error-message" *ngIf="passengerValidationErrors.passportNumber">{{
+        passengerValidationErrors.passportNumber }}</div>
     </div>
     <div class="form-group" *ngIf="panInfoRequired">
       <label>PAN Number</label>
-      <input type="text" [(ngModel)]="currentPassengerDetails.panNumber" placeholder="Enter PAN number" [class.error]="passengerValidationErrors.panNumber" />
-      <div class="error-message" *ngIf="passengerValidationErrors.panNumber">{{ passengerValidationErrors.panNumber }}</div>
+      <input type="text" [(ngModel)]="currentPassengerDetails.panNumber" placeholder="Enter PAN number"
+        [class.error]="passengerValidationErrors.panNumber" />
+      <div class="error-message" *ngIf="passengerValidationErrors.panNumber">{{ passengerValidationErrors.panNumber }}
+      </div>
     </div>
   </div>
   <div class="trip-footer">
@@ -3367,7 +3820,7 @@
     </div>
 
     <hr class="fare-breakdown-divider" />
-    
+
     <!-- Total Amount -->
     <div class="fare-breakdown-total">
       <span class="fare-breakdown-total-label">Total Amount</span>
@@ -3376,12 +3829,6 @@
   </div>
 </div>
 
-<app-phone-dialer
-[isVisible]="showPhoneDialer"
-[currentValue]="getCurrentDialerValue()"
-[maxLength]="10"
-(numberClick)="onDialerNumberClick($event)"
-(backspaceClick)="onDialerBackspace()"
-(doneClick)="onDialerDone()"
-(closeDialer)="closePhoneDialer()"
-></app-phone-dialer>
+<app-phone-dialer [isVisible]="showPhoneDialer" [currentValue]="getCurrentDialerValue()" [maxLength]="10"
+  (numberClick)="onDialerNumberClick($event)" (backspaceClick)="onDialerBackspace()" (doneClick)="onDialerDone()"
+  (closeDialer)="closePhoneDialer()"></app-phone-dialer>
