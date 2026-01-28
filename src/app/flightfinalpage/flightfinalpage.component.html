@@ -1811,9 +1811,25 @@
           <!-- Seats Tab Content -->
           <div class="tab-content-panel" *ngIf="activeSeatsTab === 'seats'">
 
+            <!-- Journey Tabs for Roundtrip -->
+            <div class="journey-tabs-wrapper" *ngIf="(flightSegmentsReturn || []).length > 0">
+              <div class="journey-tabs">
+                <button class="journey-tab" [class.active]="activeJourneyTab === 'departure'"
+                  (click)="activeJourneyTab = 'departure'; $event.stopPropagation()">
+                  <i class="fas fa-plane-departure"></i>
+                  <span>Onward</span>
+                </button>
+                <button class="journey-tab" [class.active]="activeJourneyTab === 'return'"
+                  (click)="activeJourneyTab = 'return'; $event.stopPropagation()">
+                  <i class="fas fa-plane-arrival"></i>
+                  <span>Return</span>
+                </button>
+              </div>
+            </div>
 
             <!-- Flight Route Info -->
-            <div class="flight-route-info" *ngFor="let segment of flightSegments; let segIndex = index">
+            <div class="flight-route-info"
+              *ngFor="let segment of (activeJourneyTab === 'return' && (flightSegmentsReturn || []).length > 0 ? (flightSegmentsReturn || []) : flightSegments); let segIndex = index">
               <div class="route-header-inline">
                 <div class="route-title-inline">
                   <strong>{{ segment.from }} → {{ segment.to }}</strong>
@@ -1831,7 +1847,7 @@
 
               <!-- Seat Map -->
               <div class="seat-map-container"
-                *ngIf="seatMap && seatMap[segIndex] && seatMap[segIndex].rows?.length > 0">
+                *ngIf="(activeJourneyTab === 'return' ? seatMapReturn : seatMap) && (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex] && (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].rows?.length > 0">
                 <div class="seat-map-scroll">
                   <div class="seat-map">
                     <!-- Seat Legend -->
@@ -1840,7 +1856,8 @@
                         <div class="seat-icon free"></div>
                         <span>Free</span>
                       </div>
-                      <div class="legend-item" *ngFor="let category of seatMap[segIndex].priceCategories">
+                      <div class="legend-item"
+                        *ngFor="let category of (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].priceCategories">
                         <div class="seat-icon" [ngClass]="category.category"></div>
                         <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ?
                           'Medium' : 'High' }}</span>
@@ -1859,21 +1876,25 @@
                       <!-- Column Headers -->
                       <div class="seat-row-dynamic header-row">
                         <div class="row-label-header">Row</div>
-                        <ng-container *ngFor="let block of seatMap[segIndex].seatBlocks; let blockIndex = index">
+                        <ng-container
+                          *ngFor="let block of (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].seatBlocks; let blockIndex = index">
                           <div class="seat-block-header-group">
                             <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
                           </div>
                           <div class="aisle-divider-header"
-                            *ngIf="blockIndex < seatMap[segIndex].seatBlocks.length - 1"></div>
+                            *ngIf="blockIndex < (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].seatBlocks.length - 1">
+                          </div>
                         </ng-container>
                       </div>
 
                       <!-- Seat Rows -->
-                      <div class="seat-row-dynamic" *ngFor="let row of seatMap[segIndex].rows">
+                      <div class="seat-row-dynamic"
+                        *ngFor="let row of (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].rows">
                         <div class="row-label">{{ row.rowNo }}</div>
                         <ng-container *ngFor="let block of row.seatBlocks; let blockIndex = index">
                           <div class="seat-block-group">
-                            <div class="seat-cell" *ngFor="let letter of seatMap[segIndex].seatBlocks[blockIndex]"
+                            <div class="seat-cell"
+                              *ngFor="let letter of (activeJourneyTab === 'return' ? seatMapReturn : seatMap)[segIndex].seatBlocks[blockIndex]"
                               [ngClass]="{
                                    'disabled': !block[letter],
                                    'not-available': block[letter] && !block[letter].isAvailable,
@@ -1914,9 +1935,27 @@
 
           <!-- Meals Tab Content -->
           <div class="tab-content-panel" *ngIf="activeSeatsTab === 'meals'">
+
+            <!-- Journey Tabs for Roundtrip -->
+            <div class="journey-tabs-wrapper" *ngIf="(flightSegmentsReturn || []).length > 0">
+              <div class="journey-tabs">
+                <button class="journey-tab" [class.active]="activeJourneyTab === 'departure'"
+                  (click)="activeJourneyTab = 'departure'; $event.stopPropagation()">
+                  <i class="fas fa-plane-departure"></i>
+                  <span>Onward</span>
+                </button>
+                <button class="journey-tab" [class.active]="activeJourneyTab === 'return'"
+                  (click)="activeJourneyTab = 'return'; $event.stopPropagation()">
+                  <i class="fas fa-plane-arrival"></i>
+                  <span>Return</span>
+                </button>
+              </div>
+            </div>
+
             <div class="meals-container">
               <!-- Meal Segments -->
-              <div class="meal-segment-wrapper" *ngFor="let segment of flightSegments; let segIndex = index">
+              <div class="meal-segment-wrapper"
+                *ngFor="let segment of (activeJourneyTab === 'return' && (flightSegmentsReturn || []).length > 0 ? (flightSegmentsReturn || []) : flightSegments); let segIndex = index">
                 <div class="meal-segment-header">
                   <strong>{{ segment.from }} → {{ segment.to }}</strong>
                   <span class="meal-selection-count">{{ getMealCount(segIndex) }} meal(s) selected</span>
