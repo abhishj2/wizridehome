@@ -584,13 +584,13 @@
       <div class="passenger-important-note">
         <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
       </div>
-    </div>
 
-    <!-- Continue to unlock addons (shows only after passengers filled) -->
-    <div class="card desktop-only" *ngIf="addonUnlockStep === 0">
-      <button class="continue-btn-main" (click)="onAddonContinue()">
-        {{ getAddonContinueText() }}
-      </button>
+      <!-- Continue Button -->
+      <div class="passenger-continue-wrapper desktop-only" *ngIf="addonUnlockStep === 0">
+        <button class="continue-btn-main" (click)="onAddonContinue()">
+          {{ getAddonContinueText() }}
+        </button>
+      </div>
     </div>
 
     <!-- Addon Services Section - Desktop Only (Oneway) -->
@@ -629,10 +629,7 @@
           <!-- Seats Tab Content -->
           <div class="tab-content-panel" *ngIf="activeSeatsTab === 'seats'">
             <!-- Promo Banner -->
-            <div class="promo-banner">
-              <i class="fas fa-ticket-alt"></i>
-              <span>Use code <strong>FREESEAT</strong> to get a free seat (up to 500/passenger)</span>
-            </div>
+
 
             <!-- Flight Route Info -->
             <div class="flight-route-info" *ngFor="let segment of flightSegments; let segIndex = index">
@@ -1769,13 +1766,13 @@
       <div class="passenger-important-note">
         <strong>Important:</strong> Enter name as mentioned on your passport or Government approved IDs.
       </div>
-    </div>
 
-    <!-- Continue to unlock addons (shows only after passengers filled) -->
-    <div class="card desktop-only" *ngIf="addonUnlockStep === 0">
-      <button class="continue-btn-main" (click)="onAddonContinue()">
-        {{ getAddonContinueText() }}
-      </button>
+      <!-- Continue Button -->
+      <div class="passenger-continue-wrapper desktop-only" *ngIf="addonUnlockStep === 0">
+        <button class="continue-btn-main" (click)="onAddonContinue()">
+          {{ getAddonContinueText() }}
+        </button>
+      </div>
     </div>
 
     <!-- Addon Services Section - Desktop Only (Roundtrip) -->
@@ -1813,11 +1810,7 @@
 
           <!-- Seats Tab Content -->
           <div class="tab-content-panel" *ngIf="activeSeatsTab === 'seats'">
-            <!-- Promo Banner -->
-            <div class="promo-banner">
-              <i class="fas fa-ticket-alt"></i>
-              <span>Use code <strong>FREESEAT</strong> to get a free seat (up to 500/passenger)</span>
-            </div>
+
 
             <!-- Flight Route Info -->
             <div class="flight-route-info" *ngFor="let segment of flightSegments; let segIndex = index">
