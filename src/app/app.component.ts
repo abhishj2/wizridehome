@@ -1,21 +1,37 @@
-import { Component, AfterViewInit, OnDestroy, Renderer2, Inject, ElementRef, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  Renderer2,
+  Inject,
+  ElementRef,
+  PLATFORM_ID
+} from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { NavbarComponent } from "./navbar/navbar.component";
-import { FooterComponent } from "./footer/footer.component";
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './footer/footer.component';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, CommonModule, NavbarComponent, FooterComponent],
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    CommonModule,
+    NavbarComponent,
+    FooterComponent
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'wizbooking';
+
   showNavbarFooter = true;
+  showFooter = true;
 
   constructor(
     private router: Router,
@@ -24,48 +40,66 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      // Hide navbar/footer for thankyou pages and not-found page
-      this.showNavbarFooter = !event.url.includes('/thankyou') && !event.url.includes('/not-found');
-      
-      // Re-initialize FAQ functionality after route change (only in browser)
-      if (isPlatformBrowser(this.platformId)) {
-        setTimeout(() => {
-          this.initFAQFunctionality();
-        }, 100);
-      }
-    });
+    this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd =>
+            event instanceof NavigationEnd
+        )
+      )
+      .subscribe(event => {
+        const url = event.urlAfterRedirects || event.url;
+
+        // Hide navbar + footer on thankyou / not-found
+        this.showNavbarFooter =
+          !url.includes('/thankyou') && !url.includes('/not-found');
+
+        // Hide footer only on mobile + flightfinalsection
+        this.showFooter = !(
+          url.includes('/flightfinalsection') && this.isMobile()
+        );
+
+        if (isPlatformBrowser(this.platformId)) {
+          setTimeout(() => this.initFAQFunctionality(), 100);
+        }
+      });
   }
 
   ngAfterViewInit(): void {
-    // Initialize FAQ functionality on app load (only in browser)
     if (isPlatformBrowser(this.platformId)) {
       this.initFAQFunctionality();
     }
   }
 
   ngOnDestroy(): void {
-    // Clean up any event listeners if needed
+    // no-op
   }
 
-  // Initialize FAQ functionality
+  /* =======================
+     Helpers
+  ======================= */
+
+  private isMobile(): boolean {
+    return isPlatformBrowser(this.platformId) && window.innerWidth <= 768;
+  }
+
+  /* =======================
+     FAQ Logic
+  ======================= */
+
   private initFAQFunctionality(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     const faqItems = this.document.querySelectorAll('.faq-item');
-    
+
     faqItems.forEach((item: Element) => {
       const question = item.querySelector('.faq-question');
       const icon = item.querySelector('.faq-icon i');
-      
+
       if (question) {
-        // Remove existing listeners to prevent duplicates
         this.renderer.listen(question, 'click', () => {
           const isActive = item.classList.contains('active');
-          
-          // Close other items
+
           faqItems.forEach((otherItem: Element) => {
             if (otherItem !== item) {
               otherItem.classList.remove('active');
@@ -75,8 +109,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               }
             }
           });
-          
-          // Toggle current item
+
           if (isActive) {
             item.classList.remove('active');
             if (icon) {
@@ -91,7 +124,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         });
       }
 
-      // Hover effects
       this.renderer.listen(item, 'mouseenter', () => {
         if (!item.classList.contains('active')) {
           (item as HTMLElement).style.transform = 'translateY(-2px)';
