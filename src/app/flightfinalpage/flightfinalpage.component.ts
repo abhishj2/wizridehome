@@ -2298,7 +2298,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     if (isMobile) {
       // Mobile: Redirect to addon page with all details
-      this.navigateToAddonPage();
+      this.proceedToAddons();
     } else {
       // Desktop: Stay on same page and proceed to payment
       this.loader = true;
@@ -2313,26 +2313,24 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   // Navigate to addon page for mobile
   navigateToAddonPage() {
-    // Store all necessary data for addon page
-    sessionStorage.setItem('flightData', JSON.stringify({
-      tripType: this.tripType,
-      flightDataDeparture: this.flightDataDeparture,
-      flightDataReturn: this.flightDataReturn,
-      flightSegments: this.flightSegments,
-      flightSegmentsReturn: this.flightSegmentsReturn,
-      adults: this.adults,
-      children: this.children,
-      infants: this.infants,
-      gstDetails: this.gstDetails,
-      termsAgreed: this.termsAgreed,
-      finalAmount: this.finalAmount,
-      totalBaseFare: this.totalBaseFare,
-      totalTaxes: this.totalTaxes,
-      baggageTotal: this.baggageTotal,
-      baggageTotalReturn: this.baggageTotalReturn
-    }));
+    if (!this.termsAgreed) {
+      Swal.fire('Terms & Conditions', 'Please accept the terms and conditions to proceed', 'warning');
+      this.loader = false;
+      return;
+    }
 
-    // Navigate to addon page
+    this.continueClicked = true;
+
+    if (!this.canProceed()) {
+      Swal.fire('Incomplete Details', 'Please fill all mandatory passenger details', 'error');
+      this.loader = false;
+      return;
+    }
+
+    // Prepare mobile final page data for addons
+    this.prepareMobFinalPageData();
+
+    // Navigate to addons page
     this.router.navigate(['/flightaddons']);
   }
 
