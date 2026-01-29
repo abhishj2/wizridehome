@@ -7761,12 +7761,16 @@ button.continue-btn-main,
 
   .baggage-banner-text,
   .change-baggage-btn,
-  .airport-name {
+  .airport-name,
+  .passenger-important-note,
+  .item-content,
+  .item-content li {
     font-size: 10px !important;
   }
 
   .city-name,
-  .duration {
+  .duration,
+  .info-content .item-header {
     font-size: 12px !important;
   }
 }
