@@ -136,8 +136,13 @@
               <div class="location-info">
                 <div class="city-name">{{ segment.from }}</div>
                 <div class="airport-name">{{ segment.fromAirport || segment.from + ' Airport' }}</div>
-                <div class="duration">{{ segment.duration }}</div>
+                <!-- <div class="duration">{{ segment.duration }}</div> -->
               </div>
+            </div>
+            <div class="timeline-item">
+              <div></div>
+              <div></div>
+              <div class="duration">{{ segment.duration }}</div>
             </div>
 
             <div class="timeline-item">
@@ -1227,8 +1232,13 @@
                       <div class="location-info">
                         <div class="city-name">{{ segment.from }}</div>
                         <div class="airport-name">{{ segment.fromAirport || segment.from + ', Terminal N/A' }}</div>
-                        <div class="duration">{{ segment.duration }}</div>
+
                       </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div></div>
+                      <div></div>
+                      <div class="duration">{{ segment.duration }}</div>
                     </div>
 
                     <div class="timeline-item">
@@ -1311,6 +1321,11 @@
                         <div class="airport-name">{{ segment.fromAirport || segment.from + ', Terminal N/A' }}</div>
                         <div class="duration">{{ segment.duration }}</div>
                       </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div></div>
+                      <div></div>
+                      <div class="duration">{{ segment.duration }}</div>
                     </div>
 
                     <div class="timeline-item">
@@ -2494,7 +2509,11 @@
                     <div class="duration">{{ segment.duration }}</div>
                   </div>
                 </div>
-
+                <div class="timeline-item">
+                  <div></div>
+                  <div></div>
+                  <div class="duration">{{ segment.duration }}</div>
+                </div>
                 <div class="timeline-item">
                   <div class="time">{{ segment.arrivalTime }}</div>
                   <div class="timeline-dot"></div>
