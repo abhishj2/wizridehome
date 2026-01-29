@@ -533,7 +533,7 @@ export class ApiserviceService {
     const data = {
       page: 'authenticatetbo',
       // env : 'test'
-      env: 'prod'
+      env: 'test'
 
     }
 
@@ -559,7 +559,7 @@ export class ApiserviceService {
       departureDate: departureDate,
       resultFareType: fareType,
       // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -587,7 +587,7 @@ export class ApiserviceService {
       returnDate: returnDate,
       resultFareType: fareType,
       // env : 'test'  // COMMENTED OUT - Using production environment for real flight data
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -604,7 +604,7 @@ export class ApiserviceService {
       traceid: traceid,
       resultindex: resultindex,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -621,7 +621,7 @@ export class ApiserviceService {
       traceid: traceid,
       resultindex: resultindex,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -638,7 +638,7 @@ export class ApiserviceService {
       traceid: traceid,
       resultindex: resultindex,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -661,7 +661,7 @@ export class ApiserviceService {
       departureDate: departureDate,
       extendedDate: extendedDate,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -679,7 +679,7 @@ export class ApiserviceService {
       resultindex: resultindex,
       payload: payload,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
     // console.log("Data for Sell Your Car",data)
     // console.log('Selected Add-on Payload:', JSON.stringify(data, null, 2));
@@ -697,7 +697,7 @@ export class ApiserviceService {
       resultindex: resultindex,
       payload: payload,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -717,7 +717,7 @@ export class ApiserviceService {
       bookingid: bookingid,
       passport: passport,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -743,7 +743,7 @@ export class ApiserviceService {
       passengerContact: passengerContact,
       orderAmount: orderAmount,
       payload: payload,
-      dev: 'prod',
+      dev: 'test',
       // dev : 'prod',
       type: 'FLIGHTWEB'
     }
@@ -771,7 +771,7 @@ export class ApiserviceService {
       PNR: pnr,
       firstName: firstName,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
@@ -811,7 +811,7 @@ export class ApiserviceService {
       ISLCC: ISLCC,
       ISLCCRETURN: ISLCCRETURN,
       //  dev : 'test',
-      dev: 'prod',
+      dev: 'test',
       type: 'FLIGHT'
 
     }
@@ -827,7 +827,7 @@ export class ApiserviceService {
       ORDERID: orderId,
       TOTALAMOUNT: orderAmount,
       //  dev : 'test',
-      dev: 'prod',
+      dev: 'test',
     }
 
     // console.log("Payment Data",data)
@@ -900,7 +900,7 @@ export class ApiserviceService {
       segments: segments,
       resultFareType: fareType,
       // env : 'test'
-      env: 'prod'
+      env: 'test'
     }
 
     // console.log("Data for Sell Your Car",data)
