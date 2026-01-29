@@ -502,7 +502,6 @@ body {
 .duration {
   font-size: 13px;
   color: #64748b;
-  margin-top: 8px;
 }
 
 /* Baggage Info Grid */
@@ -6338,7 +6337,6 @@ i.fas.fa-plane-departure {
 .duration {
   font-size: 13px !important;
   color: #64748b !important;
-  margin-top: 8px !important;
   line-height: 1 !important;
 }
 
@@ -7751,7 +7749,7 @@ button.continue-btn-main,
 @media(max-width:767px) {
   .timeline-item:first-child .timeline-dot::after {
 
-    height: 102px !important;
+    height: 98px !important;
 
   }
 
@@ -7764,13 +7762,44 @@ button.continue-btn-main,
   .airport-name,
   .passenger-important-note,
   .item-content,
-  .item-content li {
-    font-size: 10px !important;
+  .item-content li,
+  .criteria,
+  .criteria-detail,
+  .flight-airline .name,
+  .flight-airline .code,
+  .passenger-category-title,
+  .passenger-count,
+  .gst-label-text,
+  .terms-text {
+    font-size: 12px !important;
   }
 
   .city-name,
   .duration,
   .info-content .item-header {
     font-size: 12px !important;
+  }
+
+  .info-item-compact {
+    flex-direction: row !important;
+    gap: 6px !important;
+  }
+
+  .icon-circle,
+  .gst-box .icon {
+    height: 20px !important;
+    width: 20px !important;
+    min-width: 20px !important;
+  }
+
+
+
+  .icon-circle i,
+  .gst-box i {
+    font-size: 10px !important;
+  }
+
+  footer {
+    display: none !important;
   }
 }
