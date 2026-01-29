@@ -7751,7 +7751,22 @@ button.continue-btn-main,
 @media(max-width:767px) {
   .timeline-item:first-child .timeline-dot::after {
 
-    height: 130px !important;
+    height: 102px !important;
 
+  }
+
+  .extra-baggage-banner {
+    gap: 0px !important;
+  }
+
+  .baggage-banner-text,
+  .change-baggage-btn,
+  .airport-name {
+    font-size: 10px !important;
+  }
+
+  .city-name,
+  .duration {
+    font-size: 12px !important;
   }
 }
