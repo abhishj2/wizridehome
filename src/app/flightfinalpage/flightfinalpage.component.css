@@ -7749,7 +7749,7 @@ button.continue-btn-main,
 @media(max-width:767px) {
   .timeline-item:first-child .timeline-dot::after {
 
-    height: 98px !important;
+    height: 89px !important;
 
   }
 

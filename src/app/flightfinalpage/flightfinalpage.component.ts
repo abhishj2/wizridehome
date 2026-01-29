@@ -2262,23 +2262,20 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   updateProceedButton(): boolean {
-    return this.termsAgreed && this.canProceed();
+    return true;
+  }
+
+  scrollToElement(elementId: string) {
+    if (isPlatformBrowser(this.platformId)) {
+      const element = this.document.getElementById(elementId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   }
 
   finalProceed() {
-    // Check terms and conditions first
-    if (!this.termsAgreed) {
-      Swal.fire({
-        title: 'Terms & Conditions Required',
-        html: 'Please accept the <b>Terms & Conditions</b> to proceed with your booking.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#3085d6'
-      });
-      return;
-    }
-
-    // Detailed validation check
+    // 1. Detailed validation check first (Swapped order as per requirement)
     const validationErrors = this.getValidationErrors();
     if (validationErrors.length > 0) {
       const errorList = validationErrors.map(error => `• ${error}`).join('<br>');
@@ -2289,7 +2286,26 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         confirmButtonText: 'OK',
         confirmButtonColor: '#d33',
         width: '500px'
+      }).then(() => {
+        this.scrollToElement('passenger-details-card');
       });
+      // Also scroll immediately
+      this.scrollToElement('passenger-details-card');
+      return;
+    }
+
+    // 2. Check terms and conditions second
+    if (!this.termsAgreed) {
+      Swal.fire({
+        title: 'Terms & Conditions Required',
+        html: 'Please accept the <b>Terms & Conditions</b> to proceed with your booking.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6'
+      }).then(() => {
+        this.scrollToElement('terms-card');
+      });
+      this.scrollToElement('terms-card');
       return;
     }
 
