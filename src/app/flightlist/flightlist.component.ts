@@ -137,6 +137,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   initialScrollIndex: number = -1;
   canScrollLeft: boolean = false;
   canScrollRight: boolean = true;
+  private pendingCenterIndex: number = -1;
   
   // Lazy loading variables
   currentBatchSize: number = 15; // Show 15 dates initially
@@ -1386,7 +1387,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     if (this.isBrowser) {
       this.ngZone.onStable.pipe(take(1)).subscribe(() => {
         if (this.scrollContainer && this.initialScrollIndex >= 0) {
-          this.centerScrollToIndex(this.initialScrollIndex);
+          this.scheduleCenterDateCard(this.initialScrollIndex);
+        }
+        // If initial dates were computed before the view existed, center now.
+        if (this.pendingCenterIndex >= 0) {
+          const idx = this.pendingCenterIndex;
+          this.pendingCenterIndex = -1;
+          this.scheduleCenterDateCard(idx);
         }
         // Initialize round trip tab
         if (this.flightType === 'round') {
@@ -1638,11 +1645,50 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     // REQUIREMENT 4: Scroll to center selected date
     this.cdr.detectChanges();
     if (this.isBrowser && visibleIndex >= 0) {
-      this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-        this.centerScrollToIndex(visibleIndex);
-        setTimeout(() => this.updateDateSliderArrows(), 300);
-      });
+      // IMPORTANT: on first page load Angular may already be "stable", so onStable(take(1))
+      // may never fire again. Use a short retry schedule until date cards exist.
+      this.scheduleCenterDateCard(visibleIndex);
     }
+  }
+
+  /**
+   * Centers the given date-card index in the horizontal date slider.
+   * Uses a short retry schedule so it works on initial render (desktop + mobile).
+   */
+  private scheduleCenterDateCard(index: number): void {
+    if (!this.isBrowser || index < 0) return;
+
+    // `loadInitialDates()` can run before ViewChild is available on initial load.
+    // Store the request and it will be executed from `ngAfterViewInit()`.
+    if (!this.scrollContainer) {
+      this.pendingCenterIndex = index;
+      return;
+    }
+
+    const attemptDelays = [0, 50, 150, 300, 600, 900];
+
+    attemptDelays.forEach((delay, attempt) => {
+      setTimeout(() => {
+        if (!this.scrollContainer) return;
+
+        const container = this.scrollContainer.nativeElement as HTMLElement;
+        const cards = container?.querySelectorAll?.('.date-card');
+
+        // Wait until the DOM for cards is ready
+        if (!cards || !cards.length || !cards[index]) {
+          return;
+        }
+
+        // Center and update arrows once we have a real card element
+        this.centerScrollToIndex(index);
+        setTimeout(() => this.updateDateSliderArrows(), 100);
+
+        // Extra: on mobile layouts card widths can settle after images/fonts load
+        if (attempt < 3) {
+          setTimeout(() => this.centerScrollToIndex(index), 200);
+        }
+      }, delay);
+    });
   }
 
   // REQUIREMENT 3: Load more dates when scrolling near the end
