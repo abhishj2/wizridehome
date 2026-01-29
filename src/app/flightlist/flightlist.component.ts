@@ -1877,7 +1877,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.cdr.detectChanges();
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onWindowResize(): void {
     if (this.isBrowser) {
       setTimeout(() => this.updateDateSliderArrows(), 100);
@@ -2449,6 +2449,32 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         });
         break;
     }
+  }
+
+  /**
+   * Returns count of flights for the currently visible list (used in mobile "flights found" pill).
+   */
+  getMobileVisibleFlightsCount(): number {
+    // One-way: use groupedFlights
+    if (this.flightType === 'oneway') {
+      return this.groupedFlights?.length || 0;
+    }
+
+    // Round trip: respect activeTab (onward / return)
+    if (this.flightType === 'round') {
+      if (this.activeTab === 'return') {
+        return this.groupedFlightsOutbound?.length || 0;
+      }
+      return this.groupedFlights?.length || 0;
+    }
+
+    // Multi-city: use current tab's grouped flights if available
+    if (this.flightType === 'multi') {
+      const currentTab = this.multicityTabData?.[this.selectedMulticityTab];
+      return currentTab?.groupedFlights?.length || 0;
+    }
+
+    return 0;
   }
 
   getTotalDurationMinutes(segments: any[]): number {
