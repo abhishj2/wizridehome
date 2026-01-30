@@ -84,10 +84,10 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: #ffffff; /* Changed to solid white */
+  background: #ffffff;
   border: 2px solid darkcyan;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 139, 139, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 139, 139, 0.1);
   z-index: 9999;
   opacity: 0;
   visibility: hidden;
@@ -96,8 +96,10 @@
   margin-top: 4px;
   width: 280px;
   overflow: hidden;
-  max-height: 350px;
+  max-height: 320px;
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .calendar-dropdown.open-upward {
@@ -258,18 +260,18 @@
   padding: 4px;
   min-height: 220px;
   max-height: 250px;
-  background: white; /* Added solid background */
+  background: #fff;
 }
 
 .calendar-day {
-  background: white; /* Changed to solid white */
+  background: #fff;
   border: none;
   padding: 2px 1px;
   font-size: 12px;
   font-weight: 500;
   color: #212529;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all .2s ease;
   min-height: 32px;
   max-height: 36px;
   display: flex;
@@ -278,48 +280,81 @@
   justify-content: flex-start;
   position: relative;
   border-radius: 4px;
-  overflow: hidden;
+  overflow: hidden
 }
 
 /* SHARED CABS: HIDE FARE COMPLETELY */
 /* Flights will show fare, so we need to override the display: none for flights */
 .calendar-day .date-number {
-  font-size: 11px;
-  line-height: 1;
+  font-size: 13px;
+  line-height: 1.2;
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 4px;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
 }
 
 /* SHOW FARE FOR FLIGHTS, HIDE FOR SHARED CABS */
 /* We'll use a class on the calendar container to differentiate */
 .calendar-day .date-fare {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
   color: #059669;
-  line-height: 1;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 90%;
-  margin-top: 1px;
+  max-width: 95%;
+  margin-top: 4px;
   z-index: 1;
   position: relative;
 }
 
 /* For shared cabs, hide the fare */
-.custom-calendar-container.shared-cabs-calendar .calendar-day .date-fare {
+:host.shared-cabs-calendar .calendar-day .date-fare {
   display: none;
 }
 
 /* For flights, show the fare */
-.custom-calendar-container.flights-calendar .calendar-day .date-fare {
+:host.flights-calendar .calendar-day .date-fare {
   display: block;
+}
+
+/* FLIGHTS CALENDAR - Larger sizing for fare display */
+:host.flights-calendar .calendar-dropdown {
+  width: 360px;
+  max-height: 350px;
+}
+
+:host.flights-calendar .calendar-grid {
+  grid-auto-rows: minmax(45px, 50px);
+  gap: 2px;
+  padding: 6px;
+  min-height: 300px;
+  max-height: 350px;
+}
+
+:host.flights-calendar .calendar-day {
+  min-height: 48px;
+  max-height: 50px;
+  padding: 4px 2px;
+}
+
+:host.flights-calendar .calendar-day .date-number {
+  font-size: 13px;
+  line-height: 1.2;
+  margin-top: 6px;
+  height: auto;
+}
+
+:host.flights-calendar .calendar-day .date-fare {
+  font-size: 11px;
+  line-height: 1.2;
+  margin-top: 4px;
+  max-width: 95%;
 }
 
 /* REMOVED FARE-RELATED SPACING AND STYLING */
@@ -374,24 +409,24 @@
 }
 
 /* Fare Highlight - ONLY FOR FLIGHTS */
-.custom-calendar-container.flights-calendar .calendar-day.has-fare {
+:host.flights-calendar .calendar-day.has-fare {
   font-weight: 600;
 }
 
-.custom-calendar-container.flights-calendar .calendar-day.lowest-fare {
+:host.flights-calendar .calendar-day.lowest-fare {
   background: rgba(5, 150, 105, 0.05);
 }
 
-.custom-calendar-container.flights-calendar .calendar-day.lowest-fare .date-fare {
+:host.flights-calendar .calendar-day.lowest-fare .date-fare {
   color: #059669;
   font-weight: 700;
 }
 
-.custom-calendar-container.flights-calendar .calendar-day.lowest-fare.selected .date-fare {
+:host.flights-calendar .calendar-day.lowest-fare.selected .date-fare {
   color: #a5f3d5 !important;
 }
 
-.custom-calendar-container.flights-calendar .calendar-day.lowest-fare:hover:not(.disabled):not(.selected) .date-fare {
+:host.flights-calendar .calendar-day.lowest-fare:hover:not(.disabled):not(.selected) .date-fare {
   color: darkcyan;
 }
 
@@ -469,11 +504,13 @@
     min-width: unset !important;
     max-height: 100vh !important;
     margin: 0 !important;
-    background: white;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    background: #ffffff !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
     border-radius: 0 0 16px 16px !important;
     border: none !important;
     border-bottom: 2px solid #e9ecef !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   
   .calendar-dropdown.active {
@@ -555,20 +592,23 @@
   }
   
   .calendar-grid {
-    grid-auto-rows: minmax(44px, auto);
+    grid-auto-rows: minmax(52px, 58px);
     padding: 8px 12px;
     background: white;
     gap: 4px;
+    min-height: 340px;
+    max-height: 380px;
   }
   
   .calendar-day {
-    min-height: 44px;
-    max-height: 48px;
+    min-height: 52px;
+    max-height: 58px;
     font-size: 14px;
     background: white;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 6px 2px;
   }
 
   .calendar-day:hover:not(.disabled):not(.selected) {
@@ -623,15 +663,26 @@
     font-size: 9px;
     margin-top: 2px;
   }
+  
+  /* Flights calendar mobile - larger text */
+  :host.flights-calendar .calendar-day .date-number {
+    margin-top: 6px;
+  }
+  
+  :host.flights-calendar .calendar-day .date-fare {
+    font-size: 11px;
+    margin-top: 4px;
+  }
 }
 
 @media (max-width: 480px) {
   .calendar-dropdown {
     width: 100% !important;
     max-height: 100vh !important;
-    background: white;
+    background: #ffffff !important;
     transform: translateY(-100%) !important;
     border-radius: 0 0 12px 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
   }
 
   .calendar-dropdown.active {
@@ -692,6 +743,29 @@
     padding: 6px 0;
     min-height: 22px;
   }
+  
+  /* Flights calendar 480px - larger cells for fares */
+  :host.flights-calendar .calendar-grid {
+    grid-auto-rows: minmax(48px, 54px);
+    min-height: 310px;
+    max-height: 350px;
+  }
+  
+  :host.flights-calendar .calendar-day {
+    min-height: 48px;
+    max-height: 54px;
+    padding: 4px 2px;
+  }
+  
+  :host.flights-calendar .calendar-day .date-number {
+    margin-top: 5px;
+  }
+  
+  :host.flights-calendar .calendar-day .date-fare {
+    font-size: 10px;
+    max-width: 95%;
+    margin-top: 3px;
+  }
 }
 
 /* Zoom Safe Design */
@@ -711,6 +785,30 @@
   
   .calendar-day .date-number {
     font-size: clamp(10px, 1.1vw, 12px);
+  }
+  
+  /* Flights calendar 1024px */
+  :host.flights-calendar .calendar-dropdown {
+    max-height: 440px;
+    width: 340px;
+  }
+  
+  :host.flights-calendar .calendar-grid {
+    max-height: 340px;
+    grid-auto-rows: minmax(44px, 50px);
+  }
+  
+  :host.flights-calendar .calendar-day {
+    min-height: 44px;
+    max-height: 50px;
+  }
+  
+  :host.flights-calendar .calendar-day .date-fare {
+    font-size: clamp(8px, 1vw, 10px);
+  }
+  
+  :host.flights-calendar .calendar-day .date-number {
+    font-size: clamp(11px, 1.2vw, 13px);
   }
 }
 

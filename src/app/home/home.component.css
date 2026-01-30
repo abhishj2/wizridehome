@@ -652,7 +652,7 @@ h2 {
     border: 2px solid #e9ecef;
     border-top: none;
     border-radius: 0 0 12px 12px;
-    height: 300px;
+    max-height: 300px;
     overflow-y: auto;
     z-index: 999999999 !important;
     display: none;
@@ -6049,3 +6049,21 @@ button.nav-tab.active img {
     align-items:end;
 }
 
+
+
+@media(min-width:767px){
+    .booking-form.tab-2 .city-suggestions.active {
+        width: 300px !important;
+        margin-top: 10px;
+        overflow-y: auto !important;
+        border-radius: 10px !important;
+    
+        /* Hide scrollbar */
+        scrollbar-width: none;      /* Firefox */
+        -ms-overflow-style: none;   /* IE & Edge */
+    }
+    
+    .booking-form.tab-2 .city-suggestions.active::-webkit-scrollbar {
+        display: none;              /* Chrome, Safari */
+    }
+}

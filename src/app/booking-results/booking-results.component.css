@@ -1143,14 +1143,14 @@ color: #000 !important;
   margin-top:5px !important;
 }
 .price {
-  font-size: 24px;
-  color: #e53935;
+  font-size: 24px !important;
+  
   font-weight: bold;
   font-size: 26px;
   font-weight: bold;
   color: #474747;
   line-height: 1;
-  text-shadow: 1px -2px 1px #ccc;
+  /* text-shadow: 1px -2px 1px #ccc; */
 }
 
 /* Options Row */
@@ -4298,6 +4298,7 @@ img.seat-watermark-img {
 @media(max-width:1280px){
   .price
 {
-  font-size:22px  !important;
+  font-size:20px  !important;
 }
 }
+
