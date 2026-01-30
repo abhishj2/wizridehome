@@ -320,9 +320,15 @@ export class CustomCalendarComponent implements OnInit, OnChanges {
     const newMonth = new Date(this.displayMonth);
     newMonth.setMonth(newMonth.getMonth() - 1);
     
-    // Don't allow going to months before minimum date
-    if (this.minDate && newMonth < new Date(this.minDate)) {
-      return;
+    // Don't allow going to months before minimum date's month
+    if (this.minDate) {
+      const minDateObj = new Date(this.minDate);
+      const newMonthStart = new Date(newMonth.getFullYear(), newMonth.getMonth(), 1);
+      const minMonthStart = new Date(minDateObj.getFullYear(), minDateObj.getMonth(), 1);
+      
+      if (newMonthStart < minMonthStart) {
+        return;
+      }
     }
     
     this.displayMonth = newMonth;
