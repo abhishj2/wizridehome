@@ -3038,7 +3038,31 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.activeSeatIndex = clamped;
   }
 
+  private maybeAutoAdvanceSeatSlide(segmentIndex: number, beforeCount: number, afterCount: number, isReturn: boolean): void {
+    const segments = this.getCurrentSeatSegments();
+    if (!segments || segments.length === 0) return;
+    const total = this.getTotalPassengers();
+    const seatAdded = afterCount > beforeCount;
+
+    // Advance within the same journey if more segments exist
+    if (seatAdded && afterCount >= total && segmentIndex < segments.length - 1) {
+      this.goToSeatSlide(segmentIndex + 1);
+      return;
+    }
+
+    // If this was the last segment of onward and return exists, auto switch to return
+    if (seatAdded && afterCount >= total && !isReturn && segmentIndex === segments.length - 1 && (this.flightSegmentsReturn || []).length > 0) {
+      this.activeJourneyTab = 'return';
+      this.activeSeatIndex = 0;
+      if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
+        this.initializeSeatMapFromSSR(true);
+      }
+      this.cdr.detectChanges();
+    }
+  }
+
   toggleSeatSelectionAPI(segmentIndex: number, seat: any): void {
+    const beforeCount = this.getSelectedSeatsCount(segmentIndex);
     if (!seat || !seat.isAvailable) {
       return;
     }
@@ -3050,6 +3074,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
+
+    const afterCount = this.getSelectedSeatsCount(segmentIndex);
+    this.maybeAutoAdvanceSeatSlide(segmentIndex, beforeCount, afterCount, isReturn);
+    this.maybeOpenMealsAfterSeatCompletion();
 
     console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex} (${isReturn ? 'return' : 'onward'})`);
   }
@@ -3114,6 +3142,43 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const isReturn = this.activeJourneyTab === 'return';
     const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
     return selected[segmentIndex]?.reduce((sum: number, { count }: any) => sum + count, 0) || 0;
+  }
+
+  private maybeOpenMealsAfterSeatCompletion(): void {
+    // Desktop-only behavior
+    if (this.isMobileView()) return;
+
+    const pax = this.getTotalPassengers();
+    if (pax === 0) return;
+
+    const onwardSegments = this.flightSegments || [];
+    const returnSegments = this.flightSegmentsReturn || [];
+
+    const onwardDone = onwardSegments.length === 0 ? true : onwardSegments.every((_, idx) =>
+      (this.flightAddonsService.selectedSeats[idx]?.length || 0) >= pax
+    );
+
+    const returnDone = returnSegments.length === 0 ? true : returnSegments.every((_, idx) =>
+      (this.flightAddonsService.selectedSeatsReturn[idx]?.length || 0) >= pax
+    );
+
+    // If onward finished and return exists but not done, open return leg
+    if (onwardDone && !returnDone && returnSegments.length > 0 && this.activeJourneyTab !== 'return') {
+      this.activeJourneyTab = 'return';
+      this.activeSeatIndex = 0;
+      if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
+        this.initializeSeatMapFromSSR(true);
+      }
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // If all seat selections complete (both legs or single leg), open meals tab
+    if (onwardDone && returnDone) {
+      this.activeSeatsTab = 'meals';
+      this.isSeatsExpanded = true;
+      this.cdr.detectChanges();
+    }
   }
 
   // Special Services Methods
