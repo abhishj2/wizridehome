@@ -2042,18 +2042,61 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   onCalendarOpened() {
     this.isAnyCalendarOpen = true;
     if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = 'hidden';
+      // Only apply these styles on mobile (width < 769px)
+      if (window.innerWidth < 769) {
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = '0';
+
+        // Prevent scroll on the modal popup itself
+        const tripPopup = this.document.querySelector('.trip-popup');
+        if (tripPopup) {
+          this.renderer.setStyle(tripPopup, 'overflow', 'hidden');
+          this.renderer.setStyle(tripPopup, 'touch-action', 'none');
+        }
+
+        // Prevent scroll on the modal body
+        const popupBody = this.document.querySelector('.trip-popup .trip-body');
+        if (popupBody) {
+          this.renderer.setStyle(popupBody, 'overflow', 'hidden');
+          this.renderer.setStyle(popupBody, 'touch-action', 'none');
+          this.renderer.setStyle(popupBody, 'position', 'relative');
+          this.renderer.setStyle(popupBody, 'height', '100%');
+        }
+      }
     }
   }
-
   onCalendarClosed() {
-    // We might need a small delay or check if another calendar is open, but simple toggle works for now
     this.isAnyCalendarOpen = false;
     if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
+      // Only remove these styles on mobile (width < 769px)
+      if (window.innerWidth < 769) {
+        // Restore body scroll
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+
+        // Restore scroll on the modal popup itself
+        const tripPopup = this.document.querySelector('.trip-popup');
+        if (tripPopup) {
+          this.renderer.removeStyle(tripPopup, 'overflow');
+          this.renderer.removeStyle(tripPopup, 'touch-action');
+        }
+
+        // Restore scroll on the modal body
+        const popupBody = this.document.querySelector('.trip-popup .trip-body');
+        if (popupBody) {
+          this.renderer.removeStyle(popupBody, 'overflow');
+          this.renderer.removeStyle(popupBody, 'touch-action');
+          this.renderer.removeStyle(popupBody, 'position');
+          this.renderer.removeStyle(popupBody, 'height');
+        }
+      }
     }
   }
-
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: any) {
     if (this.continueClicked && !this.bookingSubmitted) {

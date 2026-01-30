@@ -7882,3 +7882,34 @@ button.continue-btn-main,
     gap: 0px !important;
   }
 }
+
+body.calendar-open-mobile {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+}
+
+@media (max-width: 768px) {
+
+  /* Lock the modal when calendar is active */
+  .trip-popup.calendar-active {
+    overflow: hidden !important;
+    touch-action: none !important;
+  }
+
+  .trip-popup.calendar-active .trip-body {
+    overflow: hidden !important;
+    touch-action: none !important;
+    position: relative !important;
+    height: 100% !important;
+  }
+
+  /* Ensure calendar dropdown itself is still scrollable */
+  .trip-popup.calendar-active .custom-calendar-dropdown {
+    overflow-y: auto !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
