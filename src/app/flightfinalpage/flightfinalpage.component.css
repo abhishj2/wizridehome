@@ -6486,7 +6486,7 @@ i.fas.fa-plane-departure {
   .info-item-compact {
     flex-direction: column;
     gap: 16px;
-    padding: 18px;
+    padding: 10px;
   }
 
   .info-item-compact .icon-circle {
@@ -7770,7 +7770,8 @@ button.continue-btn-main,
   .passenger-category-title,
   .passenger-count,
   .gst-label-text,
-  .terms-text {
+  .terms-text,
+  .trip-popup .form-group.checkbox-group span {
     font-size: 12px !important;
   }
 
@@ -7778,6 +7779,18 @@ button.continue-btn-main,
   .duration,
   .info-content .item-header {
     font-size: 12px !important;
+  }
+
+  .time {
+    font-size: 14px !important;
+  }
+
+  .timeline-dot {
+    margin-top: 0 !important;
+  }
+
+  .timeline-item .time {
+    justify-content: flex-end;
   }
 
   .info-item-compact {
@@ -7852,5 +7865,11 @@ button.continue-btn-main,
 
   .calendar-dropdown.active {
     top: 18% !important;
+  }
+
+  a.view-rules {
+    position: absolute;
+    right: 10px;
+    top: 215px;
   }
 }
