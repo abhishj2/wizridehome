@@ -7872,4 +7872,13 @@ button.continue-btn-main,
     right: 10px;
     top: 215px;
   }
+
+  .option-right {
+    flex-wrap: nowrap !important;
+    margin-top: 0 !important;
+  }
+
+  .baggage-option {
+    gap: 0px !important;
+  }
 }
