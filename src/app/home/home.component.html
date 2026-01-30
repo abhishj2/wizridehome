@@ -4,23 +4,22 @@
         <button class="homepage-popup-close" (click)="closeHomepagePopup()" aria-label="Close popup">
             <i class="fas fa-times"></i>
         </button>
-        
+
         <div class="homepage-popup-image" *ngIf="homepagePopupData?.image">
             <img [src]="homepagePopupData!.image" [alt]="homepagePopupData!.title || 'Popup'" />
         </div>
-        
+
         <div class="homepage-popup-content">
             <h2 class="homepage-popup-title" *ngIf="homepagePopupData?.title">
                 {{ homepagePopupData!.title }}
             </h2>
-            
+
             <p class="homepage-popup-subtitle" *ngIf="homepagePopupData?.subtitle">
                 {{ homepagePopupData!.subtitle }}
             </p>
-            
-            <button class="homepage-popup-button" 
-                    *ngIf="homepagePopupData?.button_text"
-                    (click)="onHomepagePopupButtonClick()">
+
+            <button class="homepage-popup-button" *ngIf="homepagePopupData?.button_text"
+                (click)="onHomepagePopupButtonClick()">
                 {{ homepagePopupData!.button_text }}
             </button>
         </div>
@@ -48,12 +47,9 @@
                     <div class="input-group-icon">
                         <i class="fas fa-phone"></i>
                     </div>
-                    <input type="tel" class="form-input phone-input" 
-                           [(ngModel)]="phoneNumber" 
-                           placeholder="Enter Your Phone No."
-                           maxlength="15"
-                           (input)="onPhoneInput($event)"
-                           (keypress)="onPhoneKeyPress($event)">
+                    <input type="tel" class="form-input phone-input" [(ngModel)]="phoneNumber"
+                        placeholder="Enter Your Phone No." maxlength="15" (input)="onPhoneInput($event)"
+                        (keypress)="onPhoneKeyPress($event)">
                 </div>
             </div>
         </div>
@@ -72,11 +68,11 @@
         <div class="nav-tabs desktop-tabs">
             <button *ngFor="let tab of tabs" class="nav-tab" [class.active]="currentTab === tab"
                 (click)="switchTab(tab)">
-                <span class="icon" *ngIf="tab === 'shared-cabs'"><img
-                        src="assets/images/shared-removebg-preview.png" alt="Wizzride shared cab service" /></span>
-                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png" alt="Wizzride reserved cab service"/></span>
-                <span class="icon" *ngIf="tab === 'flights'"><img
-                        src="assets/images/flight.png" alt="flight" /></span>
+                <span class="icon" *ngIf="tab === 'shared-cabs'"><img src="assets/images/shared-removebg-preview.png"
+                        alt="Wizzride shared cab service" /></span>
+                <span class="icon" *ngIf="tab === 'reserved-cabs'"><img src="../../assets/images/reserved.png"
+                        alt="Wizzride reserved cab service" /></span>
+                <span class="icon" *ngIf="tab === 'flights'"><img src="assets/images/flight.png" alt="flight" /></span>
                 {{ tab === 'shared-cabs' ? 'Shared Cabs' : tab === 'reserved-cabs' ? 'Reserved Cabs' : 'Flights' }}
             </button>
         </div>
@@ -117,10 +113,11 @@
                                                 </div>
                                             </ng-container>
                                         </div>
-                                        
+
                                     </div>
 
-                                    <button class="swap-btn" (click)="swapCabLocations('shared')" aria-label="Swap pickup and dropoff locations">
+                                    <button class="swap-btn" (click)="swapCabLocations('shared')"
+                                        aria-label="Swap pickup and dropoff locations">
                                         <span>⇄</span>
                                     </button>
 
@@ -150,14 +147,10 @@
 
                                     <div class="form-group">
                                         <label>Date</label>
-                                        <app-custom-calendar
-                                             class="shared-cabs-calendar"
-                                            [selectedDate]="formValues.sharedDateTime"
-                                            [minDate]="getTodayDate()"
-                                            placeholder="Select Date"
-                                            (dateSelected)="onSharedDateSelected($event)"
-                                            (calendarOpened)="onCalendarOpened()"
-                                            (calendarClosed)="onCalendarClosed()">
+                                        <app-custom-calendar class="shared-cabs-calendar"
+                                            [selectedDate]="formValues.sharedDateTime" [minDate]="getTodayDate()"
+                                            placeholder="Select Date" (dateSelected)="onSharedDateSelected($event)"
+                                            (calendarOpened)="onCalendarOpened()" (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 
@@ -172,16 +165,17 @@
                                         </div>
                                     </div>
 
-                                    <button class="search-btn" (click)="searchCabs('shared')" aria-label="Search shared cabs">
+                                    <button class="search-btn" (click)="searchCabs('shared')"
+                                        aria-label="Search shared cabs">
 
 
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
-<div class="validation-error"
-                                            *ngIf="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)">
-                                            {{getValidationMessage(formValues.sharedPickup, formValues.sharedDropoff)}}
-                                        </div>
+                                <div class="validation-error"
+                                    *ngIf="isSameCitySelected(formValues.sharedPickup, formValues.sharedDropoff)">
+                                    {{getValidationMessage(formValues.sharedPickup, formValues.sharedDropoff)}}
+                                </div>
                                 <div class="location-details" [class.active]="locationDetailsVisible['shared']">
                                     <h3>📍 Specify Pickup & Drop-off Locations</h3>
                                     <div class="location-row">
@@ -360,8 +354,7 @@
                                     <div class="route-header" *ngIf="tripType === 'multi-city'">
                                         <span class="route-number">Route {{i + 1}}</span>
                                         <button class="remove-route-btn" (click)="removeFlightRoute(i)"
-                                            [disabled]="flightRoutes.length <= 1"
-                                            aria-label="Remove this route">
+                                            [disabled]="flightRoutes.length <= 1" aria-label="Remove this route">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -372,7 +365,8 @@
                                             <i class="fas fa-plane-departure input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter departure city (e.g., Delhi DEL)" [(ngModel)]="route.from"
+                                                placeholder="Enter departure city (e.g., Delhi DEL)"
+                                                [(ngModel)]="route.from"
                                                 (focus)="showCitySuggestionsOnFocus('flight-from-' + i)"
                                                 (input)="showCitySuggestions(route.from, 'flight-from-' + i)">
                                         </div>
@@ -385,11 +379,16 @@
                                                     <i class="fas fa-plane-departure"></i>
                                                 </div>
                                                 <div class="city-suggestion-content">
-                                                    <div class="city-suggestion-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state ? ', ' + city.state : '') }}</div>
-                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
-                                                    <div class="city-suggestion-airport-name" *ngIf="!city.airportName && city.state">{{ city.state }}</div>
+                                                    <div class="city-suggestion-city-country">{{ city.name }}{{
+                                                        city.country ? ', ' + city.country : (city.state ? ', ' +
+                                                        city.state : '') }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">
+                                                        {{ city.airportName }}</div>
+                                                    <div class="city-suggestion-airport-name"
+                                                        *ngIf="!city.airportName && city.state">{{ city.state }}</div>
                                                 </div>
-                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]</div>
+                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="validation-error" *ngIf="isSameCitySelected(route.from, route.to)">
@@ -409,7 +408,8 @@
                                             <i class="fas fa-plane-arrival input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter destination city (e.g., Mumbai BOM)" [(ngModel)]="route.to"
+                                                placeholder="Enter destination city (e.g., Mumbai BOM)"
+                                                [(ngModel)]="route.to"
                                                 (focus)="showCitySuggestionsOnFocus('flight-to-' + i)"
                                                 (input)="showCitySuggestions(route.to, 'flight-to-' + i)">
                                         </div>
@@ -422,22 +422,24 @@
                                                     <i class="fas fa-plane-arrival"></i>
                                                 </div>
                                                 <div class="city-suggestion-content">
-                                                    <div class="city-suggestion-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state ? ', ' + city.state : '') }}</div>
-                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
-                                                    <div class="city-suggestion-airport-name" *ngIf="!city.airportName && city.state">{{ city.state }}</div>
+                                                    <div class="city-suggestion-city-country">{{ city.name }}{{
+                                                        city.country ? ', ' + city.country : (city.state ? ', ' +
+                                                        city.state : '') }}</div>
+                                                    <div class="city-suggestion-airport-name" *ngIf="city.airportName">
+                                                        {{ city.airportName }}</div>
+                                                    <div class="city-suggestion-airport-name"
+                                                        *ngIf="!city.airportName && city.state">{{ city.state }}</div>
                                                 </div>
-                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]</div>
+                                                <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code }} ]
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Departure</label>
-                                        <app-custom-calendar
-                                        class="flights-calendar"
-                                            [selectedDate]="route.date"
-                                            [minDate]="getTodayDate()"
-                                            [calendarFareMap]="calendarFareMap"
+                                        <app-custom-calendar class="flights-calendar" [selectedDate]="route.date"
+                                            [minDate]="getTodayDate()" [calendarFareMap]="calendarFareMap"
                                             placeholder="Select Date"
                                             (dateSelected)="onFlightDepartureDateSelected($event, i)"
                                             (calendarOpened)="onCalendarOpened('departure')"
@@ -448,12 +450,9 @@
                                     <div class="form-group return-field"
                                         [style.display]="tripType === 'round-trip' && i === 0 ? 'block' : 'none'">
                                         <label>Return</label>
-                                        <app-custom-calendar
-                                        class="flights-calendar"
-                                            [selectedDate]="formValues.flightReturn"
-                                            [minDate]="getReturnMinDate()"
-                                            [calendarFareMap]="calendarFareMapReturn"
-                                            placeholder="Select Return Date"
+                                        <app-custom-calendar class="flights-calendar"
+                                            [selectedDate]="formValues.flightReturn" [minDate]="getReturnMinDate()"
+                                            [calendarFareMap]="calendarFareMapReturn" placeholder="Select Return Date"
                                             (dateSelected)="onFlightReturnDateSelected($event)"
                                             (calendarOpened)="onCalendarOpened('return')"
                                             (calendarClosed)="onCalendarClosed()">
@@ -540,8 +539,7 @@
                                     </div>
                                     <!-- Add Route Button for Multi City -->
                                     <button class="search-btn" (click)="searchFlights()"
-                                        *ngIf="tripType !== 'multi-city'"
-                                        aria-label="Search flights">
+                                        *ngIf="tripType !== 'multi-city'" aria-label="Search flights">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -561,8 +559,7 @@
 
 
                                     <button class="search-btn" (click)="searchFlights()"
-                                        *ngIf="tripType === 'multi-city'"
-                                        aria-label="Search multi-city flights">
+                                        *ngIf="tripType === 'multi-city'" aria-label="Search multi-city flights">
                                         <span><i class="fas fa-search"></i> Search</span>
                                     </button>
                                 </div>
@@ -571,25 +568,16 @@
                                 <div class="special-fares-section">
                                     <label class="special-fares-label">Special Fares (Optional)</label>
                                     <div class="special-fares-buttons">
-                                        <button
-                                            class="special-fare-btn"
-                                            [class.active]="fareType === 'student'"
-                                            (click)="setFareType('student')"
-                                            type="button">
+                                        <button class="special-fare-btn" [class.active]="fareType === 'student'"
+                                            (click)="setFareType('student')" type="button">
                                             Student Fare
                                         </button>
-                                        <button
-                                            class="special-fare-btn"
-                                            [class.active]="fareType === 'senior'"
-                                            (click)="setFareType('senior')"
-                                            type="button">
+                                        <button class="special-fare-btn" [class.active]="fareType === 'senior'"
+                                            (click)="setFareType('senior')" type="button">
                                             Senior Citizen
                                         </button>
-                                        <button
-                                            class="special-fare-btn"
-                                            [class.active]="fareType === 'armed'"
-                                            (click)="setFareType('armed')"
-                                            type="button">
+                                        <button class="special-fare-btn" [class.active]="fareType === 'armed'"
+                                            (click)="setFareType('armed')" type="button">
                                             Armed Forces
                                         </button>
                                     </div>
@@ -597,18 +585,19 @@
 
                                 <div class="features">
                                     <div class="feature">
-                                        
+
                                         <span class="feature-icon">🛡️</span>
                                         <span>Priority customer service</span>
 
-                                        </div>
-                                    <div class="feature">                   <span class="feature-icon">💳</span>
+                                    </div>
+                                    <div class="feature"> <span class="feature-icon">💳</span>
                                         <span>Lowest fare guaranteed</span>
-                                        </div>  
-                                        <div class="feature"><span class="feature-icon">📝</span>
-                                        <span>Web Check In</span></div>
+                                    </div>
+                                    <div class="feature"><span class="feature-icon">📝</span>
+                                        <span>Web Check In</span>
                                     </div>
                                 </div>
+                            </div>
 
                         </ng-container>
 
@@ -620,8 +609,8 @@
                                         <label>From</label>
                                         <div class="input-with-icon">
                                             <i class="fas fa-location-dot input-icon"></i>
-                                            <input type="text" class="form-input city-input"
-                                                placeholder="Source" [(ngModel)]="formValues.reservedPickup"
+                                            <input type="text" class="form-input city-input" placeholder="Source"
+                                                [(ngModel)]="formValues.reservedPickup"
                                                 (focus)="showCitySuggestionsOnFocus('reserved-pickup')"
                                                 (input)="showCitySuggestions(formValues.reservedPickup, 'reserved-pickup')">
                                         </div>
@@ -637,7 +626,8 @@
                                         </div>
                                     </div>
 
-                                    <button class="swap-btn" (click)="swapCabLocations('reserved')" aria-label="Swap pickup and dropoff locations">
+                                    <button class="swap-btn" (click)="swapCabLocations('reserved')"
+                                        aria-label="Swap pickup and dropoff locations">
                                         <span>⇄</span>
                                     </button>
 
@@ -645,8 +635,7 @@
                                         <label>To</label>
                                         <div class="input-with-icon">
                                             <i class="fas fa-location-dot input-icon"></i>
-                                            <input type="text" class="form-input city-input"
-                                                placeholder="Destination"
+                                            <input type="text" class="form-input city-input" placeholder="Destination"
                                                 [(ngModel)]="formValues.reservedDropoff"
                                                 (focus)="showCitySuggestionsOnFocus('reserved-dropoff')"
                                                 (input)="showCitySuggestions(formValues.reservedDropoff, 'reserved-dropoff')">
@@ -665,13 +654,10 @@
 
                                     <div class="form-group">
                                         <label>Date</label>
-                                        <app-custom-calendar
-                                            [selectedDate]="formValues.reservedDate"
-                                            [minDate]="getTodayDate()"
-                                            placeholder="Select Date"
+                                        <app-custom-calendar [selectedDate]="formValues.reservedDate"
+                                            [minDate]="getTodayDate()" placeholder="Select Date"
                                             (dateSelected)="onReservedDateSelected($event)"
-                                            (calendarOpened)="onCalendarOpened()"
-                                            (calendarClosed)="onCalendarClosed()">
+                                            (calendarOpened)="onCalendarOpened()" (calendarClosed)="onCalendarClosed()">
                                         </app-custom-calendar>
                                     </div>
 
@@ -679,11 +665,9 @@
                                         <label>Pickup Time</label>
                                         <div class="input-with-icon">
                                             <i class="fas fa-clock input-icon"></i>
-                                            <input type="text" class="form-input time-input-display" 
+                                            <input type="text" class="form-input time-input-display"
                                                 [value]="formatTimeDisplay(formValues.reservedTime)"
-                                                placeholder="12:00 PM" 
-                                                (click)="openTimePicker()"
-                                                readonly>
+                                                placeholder="12:00 PM" (click)="openTimePicker()" readonly>
                                         </div>
                                     </div>
 
@@ -697,7 +681,8 @@
                                         </div>
                                     </div>
 
-                                    <button class="search-btn" (click)="searchCabs('reserved')" aria-label="Search reserved cabs">
+                                    <button class="search-btn" (click)="searchCabs('reserved')"
+                                        aria-label="Search reserved cabs">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -760,490 +745,507 @@
 
 <!-- Mobile App-Like Homepage (hidden on desktop, shown via media query) -->
 <div class="wr-mobile-shell">
-  <section class="wr-hero">
-    <p class="wr-hero-sub">Airport connectivity · Northeast India</p>
-    <h1 class="wr-hero-title">Airport rides made effortless.</h1>
-    <p class="wr-hero-sub">Shared, Reserved & Flights — all in one smooth booking experience.</p>
-  </section>
+    <section class="wr-hero">
+        <p class="wr-hero-sub">Airport connectivity · Northeast India</p>
+        <h1 class="wr-hero-title">Airport rides made effortless.</h1>
+        <p class="wr-hero-sub">Shared, Reserved & Flights — all in one smooth booking experience.</p>
+    </section>
 
-  <div class="wr-tabs-modern">
-    <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'" ></div>
-    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'" (click)="setMobileTab('shared')">
-      <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23" alt="Wizzride shared cab service"/></span>
-      <span>Shared</span>
-    </button>
-    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'" (click)="setMobileTab('reserved')">
-      <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23" alt="Wizzride reserved cab service"/></span>
-      <span>Reserved</span>
-    </button>
-    <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'" (click)="setMobileTab('flights')">
-      <span class="wr-tab-icon"><img src="assets/images/flight.png" width="23" alt="flight" /></span>
-      <span>Flights</span>
-    </button>
-  </div>
-
-  <section class="wr-card" id="wr-mobile-booking">
-  
-  <!-- Trip Type Tabs for Flights (Mobile) -->
-  <div class="wr-trip-type-mobile" *ngIf="mobileTab === 'flights'">
-    <button class="wr-trip-type-btn" [class.active]="tripType === 'one-way'" (click)="setTripType('one-way')">
-      One Way
-    </button>
-    <button class="wr-trip-type-btn" [class.active]="tripType === 'round-trip'" (click)="setTripType('round-trip')">
-      Round Trip
-    </button>
-    <button class="wr-trip-type-btn" [class.active]="tripType === 'multi-city'" (click)="setTripType('multi-city')">
-      Multi City
-    </button>
-  </div>
-
-  <div class="wr-route-row" *ngIf="mobileTab !== 'flights' || tripType !== 'multi-city'">
-    <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
-        <div class="wr-field-label wr-field-label-left-pad">From</div>
-        <div class="wr-route-city" *ngIf="getMobileCityCode('from')">{{ getMobileCityCode('from') }}</div>
-        <div class="wr-route-code" *ngIf="getMobileCityName('from')">{{ getMobileCityName('from') }}</div>
-        <div class="wr-route-code" *ngIf="!getMobileCityCode('from') && !getMobileCityName('from')" style="color: #374151;">Select city</div>
-      </div>
-
-      <button class="wr-swap-btn" type="button" (click)="swapMobileLocations($event)" aria-label="Swap route">
-        <svg class="wr-icon wr-icon--muted" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M7 7h11l-3-3"></path>
-          <path d="M17 17H6l3 3"></path>
-        </svg>
-      </button>
-
-      <div class="wr-route-col" (click)="openMobileLocationPopup('to')">
-        <div class="wr-field-label wr-field-label-left-pad">To</div>
-        <div class="wr-route-city" *ngIf="getMobileCityCode('to')">{{ getMobileCityCode('to') }}</div>
-        <div class="wr-route-code" *ngIf="getMobileCityName('to')">{{ getMobileCityName('to') }}</div>
-        <div class="wr-route-code" *ngIf="!getMobileCityCode('to') && !getMobileCityName('to')" style="color: #374151;">Select city</div>
-      </div>
+    <div class="wr-tabs-modern">
+        <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'">
+        </div>
+        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'"
+            (click)="setMobileTab('shared')">
+            <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23"
+                    alt="Wizzride shared cab service" /></span>
+            <span>Shared</span>
+        </button>
+        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'"
+            (click)="setMobileTab('reserved')">
+            <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23"
+                    alt="Wizzride reserved cab service" /></span>
+            <span>Reserved</span>
+        </button>
+        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'"
+            (click)="setMobileTab('flights')">
+            <span class="wr-tab-icon"><img src="assets/images/flight.png" width="23" alt="flight" /></span>
+            <span>Flights</span>
+        </button>
     </div>
 
-    <div class="wr-divider" *ngIf="mobileTab !== 'flights' || tripType !== 'multi-city'"></div>
+    <section class="wr-card" id="wr-mobile-booking">
 
-    <div class="wr-panel" [class.is-active]="mobileTab === 'shared'">
-
-      <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
-        <div class="wr-field-label">Pickup Point</div>
-        <div class="wr-field-pill" (click)="openMobileLocationPopup('pickup')">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
-            <circle cx="12" cy="11" r="2.5"></circle>
-          </svg>
-          <span>{{ formValues.sharedPickupLocation || 'Select pickup point' }}</span>
-        </div>
-      </div>
-
-      <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
-        <div class="wr-field-label">Drop Point</div>
-        <div class="wr-field-pill" (click)="openMobileLocationPopup('dropoff')">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
-            <circle cx="12" cy="11" r="2.5"></circle>
-          </svg>
-          <span>{{ formValues.sharedDropoffLocation || 'Select drop point' }}</span>
-        </div>
-      </div>
-
-      <div class="wr-field-block wr-field-block--reserved-mobile">
-        <div class="wr-field-label">Your Mobile Number</div>
-        <div class="wr-field-pill wr-phone-wrapper">
-          <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)" aria-label="Mobile country code">
-              <option *ngFor="let country of countryList" [value]="country.code">
-                {{ country.code }}
-              </option>
-            </select>
-          </div>
-          <input #phoneInputShared type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputShared, $event)" (click)="openCustomKeypad(phoneInputShared, $event)" [readonly]="isMobileView()">
-        </div>
-      </div>
-
-      <div class="wr-grid-2">
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Date of Travel</div>
-          <div class="wr-field-pill datecl" (click)="openMobileDatePicker('shared')">
-            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="7"></circle>
-              <polyline points="12 8 12 12 15 13.5"></polyline>
-            </svg>
-            <span class="datecltext">{{ getMobileDateDisplay(formValues.sharedDateTime) || 'Select date' }}</span>
-          </div>
-        </div>
-
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
-          <div class="wr-counter" data-counter="sharedPassengers">
-            <button data-action="minus" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">−</button>
-            <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
-            <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
-      <div class="wr-field-block">
-        <div class="wr-field-label">Pickup Time</div>
-        <div class="wr-field-pill datecl" (click)="openTimePicker()">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="7"></circle>
-            <polyline points="12 8 12 12 15 13.5"></polyline>
-          </svg>
-          <span class="datecltext">{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
-        </div>
-      </div>
-      <div class="wr-field-block">
-        <div class="wr-field-label">Your Mobile Number</div>
-        <div class="wr-field-pill wr-phone-wrapper">
-          <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
-              <option *ngFor="let country of countryList" [value]="country.code">
-                {{ country.code }}
-              </option>
-            </select>
-          </div>
-          <input #phoneInputReserved type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputReserved, $event)" (click)="openCustomKeypad(phoneInputReserved, $event)" [readonly]="isMobileView()">
-        </div>
-      </div>
-
-      <div class="wr-grid-2">
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Date</div>
-          <div class="wr-field-pill datecl" (click)="openMobileDatePicker('reserved')">
-            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="7"></circle>
-              <polyline points="12 8 12 12 15 13.5"></polyline>
-            </svg>
-            <span class="datecltext">{{ getMobileDateDisplay(formValues.reservedDate) || 'Select date' }}</span>
-          </div>
-        </div>
-
-        <div class="wr-grid-2-col">
-          <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
-          <div class="wr-counter" data-counter="reservedPassengers">
-            <button data-action="minus" [disabled]="getMobilePassengers() <= 1" (click)="updateMobilePassengers(-1)">−</button>
-            <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
-            <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
-          </div>
-        </div>
-      </div>
-
-     
-
-      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff" style="margin-top: 16px;">
-        <div class="wr-field-label">Pickup Point</div>
-        <div class="wr-field-pill wr-field-pill--input">
-          <input
-            type="text"
-            class="wr-input"
-            placeholder="Enter specific pickup point"
-            [(ngModel)]="formValues.reservedPickupLocation"
-          />
-        </div>
-      </div>
-
-      <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
-        <div class="wr-field-label">Drop Point</div>
-        <div class="wr-field-pill wr-field-pill--input">
-          <input
-            type="text"
-            class="wr-input"
-            placeholder="Enter specific drop point"
-            [(ngModel)]="formValues.reservedDropoffLocation"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
-      <!-- Multi-City Routes Inline Form -->
-      <ng-container *ngIf="tripType === 'multi-city'">
-        <div *ngFor="let route of flightRoutes; let i = index" style="margin-bottom: 16px; position: relative;">
-          <div class="wr-route-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <span style="font-weight: 600; color: #1f2937; font-size: 14px;">Route {{ i + 1 }}</span>
-            <button
-              *ngIf="flightRoutes.length > 1"
-              style="background: transparent; border: none; font-size: 18px; color: #ef4444; padding: 4px 8px; cursor: pointer;"
-              (click)="removeFlightRoute(i); $event.stopPropagation()"
-              type="button"
-              aria-label="Remove this route">
-              <i class="fas fa-trash"></i>
+        <!-- Trip Type Tabs for Flights (Mobile) -->
+        <div class="wr-trip-type-mobile" *ngIf="mobileTab === 'flights'">
+            <button class="wr-trip-type-btn" [class.active]="tripType === 'one-way'" (click)="setTripType('one-way')">
+                One Way
             </button>
-          </div>
-          
-          <div class="wr-route-row" style="margin-bottom: 12px;">
-            <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('from', i)">
-              <div class="wr-field-label wr-field-label-left-pad">From</div>
-              <ng-container *ngIf="route.from">
-                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.from) }}</div>
-                <div class="wr-route-code">{{ getCityNameFromDisplay(route.from) }}</div>
-              </ng-container>
-              <div class="wr-route-code" *ngIf="!route.from" style="color: #374151;">Select city</div>
+            <button class="wr-trip-type-btn" [class.active]="tripType === 'round-trip'"
+                (click)="setTripType('round-trip')">
+                Round Trip
+            </button>
+            <button class="wr-trip-type-btn" [class.active]="tripType === 'multi-city'"
+                (click)="setTripType('multi-city')">
+                Multi City
+            </button>
+        </div>
+
+        <div class="wr-route-row" *ngIf="mobileTab !== 'flights' || tripType !== 'multi-city'">
+            <div class="wr-route-col" (click)="openMobileLocationPopup('from')">
+                <div class="wr-field-label wr-field-label-left-pad">From</div>
+                <div class="wr-route-city" *ngIf="getMobileCityCode('from')">{{ getMobileCityCode('from') }}</div>
+                <div class="wr-route-code" *ngIf="getMobileCityName('from')">{{ getMobileCityName('from') }}</div>
+                <div class="wr-route-code" *ngIf="!getMobileCityCode('from') && !getMobileCityName('from')"
+                    style="color: #374151;">Select city</div>
             </div>
 
-            <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('to', i)">
-              <div class="wr-field-label wr-field-label-left-pad">To</div>
-              <ng-container *ngIf="route.to">
-                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.to) }}</div>
-                <div class="wr-route-code">{{ getCityNameFromDisplay(route.to) }}</div>
-              </ng-container>
-              <div class="wr-route-code" *ngIf="!route.to" style="color: #374151;">Select city</div>
+            <button class="wr-swap-btn" type="button" (click)="swapMobileLocations($event)" aria-label="Swap route">
+                <svg class="wr-icon wr-icon--muted" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 7h11l-3-3"></path>
+                    <path d="M17 17H6l3 3"></path>
+                </svg>
+            </button>
+
+            <div class="wr-route-col" (click)="openMobileLocationPopup('to')">
+                <div class="wr-field-label wr-field-label-left-pad">To</div>
+                <div class="wr-route-city" *ngIf="getMobileCityCode('to')">{{ getMobileCityCode('to') }}</div>
+                <div class="wr-route-code" *ngIf="getMobileCityName('to')">{{ getMobileCityName('to') }}</div>
+                <div class="wr-route-code" *ngIf="!getMobileCityCode('to') && !getMobileCityName('to')"
+                    style="color: #374151;">Select city</div>
             </div>
-          </div>
+        </div>
 
-          <div class="wr-field-block" style="margin-top: 12px; margin-bottom: 0;">
-            <div class="wr-field-label">Departure Date</div>
-            <div class="wr-field-pill" (click)="openMobileMultiCityDatePicker(i)">
-              <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="7"></circle>
-                <polyline points="12 8 12 12 15 13.5"></polyline>
-              </svg>
-              <span *ngIf="route.date">{{ route.date | date:'d MMM' }} {{ route.date | date:'EEE' }}</span>
-              <span *ngIf="!route.date" style="color: #9ca3af;">Select date</span>
+        <div class="wr-divider" *ngIf="mobileTab !== 'flights' || tripType !== 'multi-city'"></div>
+
+        <div class="wr-panel" [class.is-active]="mobileTab === 'shared'">
+
+            <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
+                <div class="wr-field-label">Pickup Point</div>
+                <div class="wr-field-pill" (click)="openMobileLocationPopup('pickup')">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+                        <circle cx="12" cy="11" r="2.5"></circle>
+                    </svg>
+                    <span>{{ formValues.sharedPickupLocation || 'Select pickup point' }}</span>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <div class="wr-field-block" style="margin-top: 8px;">
-          <button
-            style="width: 100%; padding: 12px; background: #fff; border: 1px dashed #ddd; border-radius: 8px; color: #666; font-size: 14px; cursor: pointer;"
-            [disabled]="flightRoutes.length >= 5"
-            (click)="addFlightRoute()"
-            type="button">
-            + ADD CITY
-          </button>
-        </div>
-      </ng-container>
-
-      <div class="wr-field-block" *ngIf="tripType !== 'multi-city'">
-        <div class="wr-field-label">Departure Date</div>
-        <div class="wr-field-pill" (click)="openMobileDatePicker('flights')">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="7"></circle>
-            <polyline points="12 8 12 12 15 13.5"></polyline>
-          </svg>
-          <span>{{ getMobileDateDisplay(flightRoutes[0]?.date || formValues.flightDeparture) || 'Select date' }}</span>
-        </div>
-      </div>
-
-      <!-- Return Date Field (only for round-trip) -->
-      <div class="wr-field-block" *ngIf="tripType === 'round-trip'">
-        <div class="wr-field-label">Return Date</div>
-        <div class="wr-field-pill" (click)="openMobileReturnDatePicker()">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="7"></circle>
-            <polyline points="12 8 12 12 15 13.5"></polyline>
-          </svg>
-          <span>{{ getMobileDateDisplay(formValues.flightReturn) || 'Select return date' }}</span>
-        </div>
-        <div class="validation-error" *ngIf="returnDateError" style="margin-top: 8px; color: #ef4444; font-size: 12px;">
-          {{ returnDateError }}
-        </div>
-      </div>
-
-      <div class="wr-field-block">
-        <div class="wr-field-label">Travellers & Class</div>
-        <div class="wr-field-pill" (click)="openMobileTravelersPopup()">
-          <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <span>{{ getMobileTravelersText() }}</span>
-        </div>
-      </div>
-
-      <div class="wr-field-block">
-        <div class="wr-field-label">Your Mobile Number</div>
-        <div class="wr-field-pill wr-phone-wrapper">
-          <div class="wr-country-select">
-            <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag" alt="Selected country flag">
-            <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode" (change)="onMobileCountryCodeChange($event)">
-              <option *ngFor="let country of countryList" [value]="country.code">
-                {{ country.code }}
-              </option>
-            </select>
-          </div>
-          <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}" (focus)="openCustomKeypad(phoneInputFlights, $event)" (click)="openCustomKeypad(phoneInputFlights, $event)" [readonly]="isMobileView()">
-        </div>
-      </div>
-
-      <!-- Special Fares Section (Mobile) -->
-      <div class="wr-field-block wr-special-fares-mobile">
-        <div class="wr-field-label">Special Fares (Optional)</div>
-        <div class="wr-special-fares-buttons">
-          <button
-            class="wr-special-fare-btn"
-            [class.active]="fareType === 'student'"
-            (click)="setFareType('student')"
-            type="button">
-            Student Fare
-          </button>
-          <button
-            class="wr-special-fare-btn"
-            [class.active]="fareType === 'senior'"
-            (click)="setFareType('senior')"
-            type="button">
-            Senior Citizen
-          </button>
-          <button
-            class="wr-special-fare-btn"
-            [class.active]="fareType === 'armed'"
-            (click)="setFareType('armed')"
-            type="button">
-            Armed Forces
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="wr-divider"></div>
-
-    <button class="wr-primary-btn" (click)="onMobileSearch()">{{ mobileTab === 'flights' ? 'Search Flight' : 'Search Ride' }}</button>
-  </section>
-
-  <section class="wr-offer-section">
-    <div class="wr-offer-header">
-      <div class="wr-section-title">Special Offers</div>
-    </div>
-    <div class="wr-offer-scroller">
-      <button class="wr-offer-card" *ngFor="let offer of infiniteOffers">
-        <div class="wr-offer-media">
-          <img class="wr-offer-img" [src]="offer.image" [alt]="offer.title">
-    
-          <div class="wr-offer-ribbon" *ngIf="offer.code">Use Code: {{offer.code}}</div>
-        </div>
-        <div class="wr-offer-content">
-          <div class="wr-offer-title">{{offer.title}}</div>
-          <div class="wr-offer-sub" *ngIf="offer.subtitle">{{offer.subtitle}}</div>
-          <div class="wr-offer-desc">{{offer.description}}</div>
-        </div>
-      </button>
-    </div>
-  </section>
-
-  <section class="wr-routes-section">
-    <div class="wr-routes-header">
-      <div class="wr-section-title">Popular Routes</div>
-    </div>
-    <div class="wr-routes-scroller">
-      <div class="wr-route-card">
-        <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
-        <div>
-          <div class="wr-route-main">Bagdogra ↔ Gangtok</div>
-          <div class="wr-route-sub">Most booked</div>
-        </div>
-        <div class="wr-route-info-row">
-          <span>123 km</span>
-          <span>4 hr</span>
-        </div>
-      </div>
-      <div class="wr-route-card">
-        <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
-        <div>
-          <div class="wr-route-main">Guwahati ↔ Shillong</div>
-          <div class="wr-route-sub">Most booked</div>
-        </div>
-        <div class="wr-route-info-row">
-          <span>99 km</span>
-          <span>2.5 hr</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="wr-stats-section">
-    <div class="wr-section-title">Our Numbers Say It All</div>
-    <div class="wr-stats-grid">
-      <div class="wr-stat-card" *ngFor="let stat of numbersSectionStats">
-        <div class="wr-stat-icon">
-          <img [src]="stat.icon" [alt]="stat.label">
-        </div>
-        <div class="wr-stat-number">{{ stat.number }}</div>
-        <div class="wr-stat-label">{{ stat.label }}</div>
-        <div class="wr-stat-desc">{{ stat.description }}</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="wr-app-download">
-    <div class="wr-app-card">
-      <div class="wr-app-tag">
-        <span class="wr-app-tag-dot"></span>
-        <span>Try on mobile</span>
-      </div>
-      <h2 class="wr-app-title">Life's much easier on the <span class="highlight">App.</span></h2>
-      <p class="wr-app-subtitle">Download the <span class="brand">WizzRide App</span> today for seamless travel booking.</p>
-      <div class="wr-app-download-row">
-        <div class="wr-app-qr-box">
-          <div class="wr-app-qr">
-            <img src="assets/images/qrframe.png" alt="WizzRide App QR">
-          </div>
-          <span class="wr-app-scan-text">Scan Me</span>
-        </div>
-        <div class="wr-app-store-buttons">
-          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn" aria-label="Download WizzRide App on Google Play Store">
-            <div class="wr-store-icon">▶</div>
-            <div class="wr-store-text">
-              <small>Get it on</small>
-              <strong>Google Play</strong>
+            <div class="wr-field-block" *ngIf="formValues.sharedPickup && formValues.sharedDropoff">
+                <div class="wr-field-label">Drop Point</div>
+                <div class="wr-field-pill" (click)="openMobileLocationPopup('dropoff')">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 21s-6-4.35-6-10a6 6 0 0 1 12 0c0 5.65-6 10-6 10z"></path>
+                        <circle cx="12" cy="11" r="2.5"></circle>
+                    </svg>
+                    <span>{{ formValues.sharedDropoffLocation || 'Select drop point' }}</span>
+                </div>
             </div>
-          </a>
-          <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn wr-store-btn--light" aria-label="Download WizzRide App on Apple App Store">
-            <div class="wr-store-icon"><i class="fab fa-apple"></i></div>
-            <div class="wr-store-text">
-              <small>Download on the</small>
-              <strong>App Store</strong>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="wr-testimonials-section">
-    <div class="wr-testimonials-header">
-      <div class="wr-section-title">What Our Customers Say</div>
-      <p class="wr-testimonials-subtitle">Hear from our satisfied customers about their amazing travel experiences</p>
-    </div>
-    <div class="wr-testimonials-scroller">
-      <div class="wr-testimonial-card" *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
-        <div class="wr-testimonial-content">
-          <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="Quote icon" class="wr-testimonial-quote">
-          <p class="wr-testimonial-text" [class.expanded]="isTestimonialExpanded(testimonial.id)">
-            <span *ngIf="!isTestimonialExpanded(testimonial.id) && shouldShowReadMore(testimonial.text)">
-              {{ getTruncatedText(testimonial.text) }}
-            </span>
-            <span *ngIf="isTestimonialExpanded(testimonial.id) || !shouldShowReadMore(testimonial.text)">
-              {{ testimonial.text }}
-            </span>
-          </p>
-          <button 
-            class="wr-read-more-btn" 
-            *ngIf="shouldShowReadMore(testimonial.text)"
-            (click)="toggleTestimonial(testimonial.id); $event.stopPropagation()">
-            {{ isTestimonialExpanded(testimonial.id) ? 'Read Less' : 'Read More' }}
-          </button>
-          <div class="wr-testimonial-author">
-            <div class="wr-testimonial-avatar">
-              <img [src]="testimonial.avatar" [alt]="testimonial.name" />
+            <div class="wr-field-block wr-field-block--reserved-mobile">
+                <div class="wr-field-label">Your Mobile Number</div>
+                <div class="wr-field-pill wr-phone-wrapper">
+                    <div class="wr-country-select">
+                        <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
+                            alt="Selected country flag">
+                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
+                            (change)="onMobileCountryCodeChange($event)" aria-label="Mobile country code">
+                            <option *ngFor="let country of countryList" [value]="country.code">
+                                {{ country.code }}
+                            </option>
+                        </select>
+                    </div>
+                    <input #phoneInputShared type="tel" class="wr-input" placeholder="Enter phone number"
+                        [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
+                        (focus)="openCustomKeypad(phoneInputShared, $event)"
+                        (click)="openCustomKeypad(phoneInputShared, $event)" [readonly]="isMobileView()">
+                </div>
             </div>
-            <div class="wr-testimonial-author-info">
-              <div class="wr-testimonial-name">{{ testimonial.name }}</div>
-              <div class="wr-testimonial-rating" *ngIf="testimonial.rating">
-                <span *ngFor="let star of [1,2,3,4,5]" class="wr-star" [class.active]="star <= testimonial.rating">★</span>
-              </div>
+
+            <div class="wr-grid-2">
+                <div class="wr-grid-2-col">
+                    <div class="wr-field-label">Date of Travel</div>
+                    <div class="wr-field-pill datecl" (click)="openMobileDatePicker('shared')">
+                        <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="7"></circle>
+                            <polyline points="12 8 12 12 15 13.5"></polyline>
+                        </svg>
+                        <span class="datecltext">{{ getMobileDateDisplay(formValues.sharedDateTime) || 'Select date'
+                            }}</span>
+                    </div>
+                </div>
+
+                <div class="wr-grid-2-col">
+                    <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
+                    <div class="wr-counter" data-counter="sharedPassengers">
+                        <button data-action="minus" [disabled]="getMobilePassengers() <= 1"
+                            (click)="updateMobilePassengers(-1)">−</button>
+                        <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
+                        <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+
+        <div class="wr-panel" [class.is-active]="mobileTab === 'reserved'">
+            <div class="wr-field-block">
+                <div class="wr-field-label">Pickup Time</div>
+                <div class="wr-field-pill datecl" (click)="openTimePicker()">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="7"></circle>
+                        <polyline points="12 8 12 12 15 13.5"></polyline>
+                    </svg>
+                    <span class="datecltext">{{ formatTimeDisplay(formValues.reservedTime) || '12:00 PM' }}</span>
+                </div>
+            </div>
+            <div class="wr-field-block">
+                <div class="wr-field-label">Your Mobile Number</div>
+                <div class="wr-field-pill wr-phone-wrapper">
+                    <div class="wr-country-select">
+                        <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
+                            alt="Selected country flag">
+                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
+                            (change)="onMobileCountryCodeChange($event)">
+                            <option *ngFor="let country of countryList" [value]="country.code">
+                                {{ country.code }}
+                            </option>
+                        </select>
+                    </div>
+                    <input #phoneInputReserved type="tel" class="wr-input" placeholder="Enter phone number"
+                        [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
+                        (focus)="openCustomKeypad(phoneInputReserved, $event)"
+                        (click)="openCustomKeypad(phoneInputReserved, $event)" [readonly]="isMobileView()">
+                </div>
+            </div>
+
+            <div class="wr-grid-2">
+                <div class="wr-grid-2-col">
+                    <div class="wr-field-label">Date</div>
+                    <div class="wr-field-pill datecl" (click)="openMobileDatePicker('reserved')">
+                        <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="7"></circle>
+                            <polyline points="12 8 12 12 15 13.5"></polyline>
+                        </svg>
+                        <span class="datecltext">{{ getMobileDateDisplay(formValues.reservedDate) || 'Select date'
+                            }}</span>
+                    </div>
+                </div>
+
+                <div class="wr-grid-2-col">
+                    <div class="wr-field-label">Passengers <small>(Age 2yrs & above)</small></div>
+                    <div class="wr-counter" data-counter="reservedPassengers">
+                        <button data-action="minus" [disabled]="getMobilePassengers() <= 1"
+                            (click)="updateMobilePassengers(-1)">−</button>
+                        <span class="wr-counter-value">{{ getMobilePassengers() }}</span>
+                        <button data-action="plus" (click)="updateMobilePassengers(1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff"
+                style="margin-top: 16px;">
+                <div class="wr-field-label">Pickup Point</div>
+                <div class="wr-field-pill wr-field-pill--input">
+                    <input type="text" class="wr-input" placeholder="Enter specific pickup point"
+                        [(ngModel)]="formValues.reservedPickupLocation" />
+                </div>
+            </div>
+
+            <div class="wr-field-block" *ngIf="formValues.reservedPickup && formValues.reservedDropoff">
+                <div class="wr-field-label">Drop Point</div>
+                <div class="wr-field-pill wr-field-pill--input">
+                    <input type="text" class="wr-input" placeholder="Enter specific drop point"
+                        [(ngModel)]="formValues.reservedDropoffLocation" />
+                </div>
+            </div>
+        </div>
+
+        <div class="wr-panel" [class.is-active]="mobileTab === 'flights'">
+            <!-- Multi-City Routes Inline Form -->
+            <ng-container *ngIf="tripType === 'multi-city'">
+                <div *ngFor="let route of flightRoutes; let i = index" style="margin-bottom: 16px; position: relative;">
+                    <div class="wr-route-header"
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="font-weight: 600; color: #1f2937; font-size: 14px;">Route {{ i + 1 }}</span>
+                        <button *ngIf="flightRoutes.length > 1"
+                            style="background: transparent; border: none; font-size: 18px; color: #ef4444; padding: 4px 8px; cursor: pointer;"
+                            (click)="removeFlightRoute(i); $event.stopPropagation()" type="button"
+                            aria-label="Remove this route">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div class="wr-route-row" style="margin-bottom: 12px;">
+                        <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('from', i)">
+                            <div class="wr-field-label wr-field-label-left-pad">From</div>
+                            <ng-container *ngIf="route.from">
+                                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.from) }}</div>
+                                <div class="wr-route-code">{{ getCityNameFromDisplay(route.from) }}</div>
+                            </ng-container>
+                            <div class="wr-route-code" *ngIf="!route.from" style="color: #374151;">Select city</div>
+                        </div>
+
+                        <div class="wr-route-col" (click)="openMobileMultiCityLocationPopupDirect('to', i)">
+                            <div class="wr-field-label wr-field-label-left-pad">To</div>
+                            <ng-container *ngIf="route.to">
+                                <div class="wr-route-city">{{ getCityCodeFromDisplay(route.to) }}</div>
+                                <div class="wr-route-code">{{ getCityNameFromDisplay(route.to) }}</div>
+                            </ng-container>
+                            <div class="wr-route-code" *ngIf="!route.to" style="color: #374151;">Select city</div>
+                        </div>
+                    </div>
+
+                    <div class="wr-field-block" style="margin-top: 12px; margin-bottom: 0;">
+                        <div class="wr-field-label">Departure Date</div>
+                        <div class="wr-field-pill" (click)="openMobileMultiCityDatePicker(i)">
+                            <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="7"></circle>
+                                <polyline points="12 8 12 12 15 13.5"></polyline>
+                            </svg>
+                            <span *ngIf="route.date">{{ route.date | date:'d MMM' }} {{ route.date | date:'EEE'
+                                }}</span>
+                            <span *ngIf="!route.date" style="color: #9ca3af;">Select date</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wr-field-block" style="margin-top: 8px;">
+                    <button
+                        style="width: 100%; padding: 12px; background: #fff; border: 1px dashed #ddd; border-radius: 8px; color: #666; font-size: 14px; cursor: pointer;"
+                        [disabled]="flightRoutes.length >= 5" (click)="addFlightRoute()" type="button">
+                        + ADD CITY
+                    </button>
+                </div>
+            </ng-container>
+
+            <div class="wr-field-block" *ngIf="tripType !== 'multi-city'">
+                <div class="wr-field-label">Departure Date</div>
+                <div class="wr-field-pill" (click)="openMobileDatePicker('flights')">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="7"></circle>
+                        <polyline points="12 8 12 12 15 13.5"></polyline>
+                    </svg>
+                    <span>{{ getMobileDateDisplay(flightRoutes[0]?.date || formValues.flightDeparture) || 'Select date'
+                        }}</span>
+                </div>
+            </div>
+
+            <!-- Return Date Field (only for round-trip) -->
+            <div class="wr-field-block" *ngIf="tripType === 'round-trip'">
+                <div class="wr-field-label">Return Date</div>
+                <div class="wr-field-pill" (click)="openMobileReturnDatePicker()">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="7"></circle>
+                        <polyline points="12 8 12 12 15 13.5"></polyline>
+                    </svg>
+                    <span>{{ getMobileDateDisplay(formValues.flightReturn) || 'Select return date' }}</span>
+                </div>
+                <div class="validation-error" *ngIf="returnDateError"
+                    style="margin-top: 8px; color: #ef4444; font-size: 12px;">
+                    {{ returnDateError }}
+                </div>
+            </div>
+
+            <div class="wr-field-block">
+                <div class="wr-field-label">Travellers & Class</div>
+                <div class="wr-field-pill" (click)="openMobileTravelersPopup()">
+                    <svg class="wr-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>{{ getMobileTravelersText() }}</span>
+                </div>
+            </div>
+
+            <div class="wr-field-block">
+                <div class="wr-field-label">Your Mobile Number</div>
+                <div class="wr-field-pill wr-phone-wrapper">
+                    <div class="wr-country-select">
+                        <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
+                            alt="Selected country flag">
+                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
+                            (change)="onMobileCountryCodeChange($event)">
+                            <option *ngFor="let country of countryList" [value]="country.code">
+                                {{ country.code }}
+                            </option>
+                        </select>
+                    </div>
+                    <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number"
+                        [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
+                        (focus)="openCustomKeypad(phoneInputFlights, $event)"
+                        (click)="openCustomKeypad(phoneInputFlights, $event)" [readonly]="isMobileView()">
+                </div>
+            </div>
+
+            <!-- Special Fares Section (Mobile) -->
+            <div class="wr-field-block wr-special-fares-mobile">
+                <div class="wr-field-label">Special Fares (Optional)</div>
+                <div class="wr-special-fares-buttons">
+                    <button class="wr-special-fare-btn" [class.active]="fareType === 'student'"
+                        (click)="setFareType('student')" type="button">
+                        Student Fare
+                    </button>
+                    <button class="wr-special-fare-btn" [class.active]="fareType === 'senior'"
+                        (click)="setFareType('senior')" type="button">
+                        Senior Citizen
+                    </button>
+                    <button class="wr-special-fare-btn" [class.active]="fareType === 'armed'"
+                        (click)="setFareType('armed')" type="button">
+                        Armed Forces
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="wr-divider"></div>
+
+        <button class="wr-primary-btn" (click)="onMobileSearch()">{{ mobileTab === 'flights' ? 'Search Flight' : 'Search
+            Ride' }}</button>
+    </section>
+
+    <section class="wr-offer-section">
+        <div class="wr-offer-header">
+            <div class="wr-section-title">Special Offers</div>
+        </div>
+        <div class="wr-offer-scroller">
+            <button class="wr-offer-card" *ngFor="let offer of infiniteOffers">
+                <div class="wr-offer-media">
+                    <img class="wr-offer-img" [src]="offer.image" [alt]="offer.title">
+
+                    <div class="wr-offer-ribbon" *ngIf="offer.code">Use Code: {{offer.code}}</div>
+                </div>
+                <div class="wr-offer-content">
+                    <div class="wr-offer-title">{{offer.title}}</div>
+                    <div class="wr-offer-sub" *ngIf="offer.subtitle">{{offer.subtitle}}</div>
+                    <div class="wr-offer-desc">{{offer.description}}</div>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <section class="wr-routes-section">
+        <div class="wr-routes-header">
+            <div class="wr-section-title">Popular Routes</div>
+        </div>
+        <div class="wr-routes-scroller">
+            <div class="wr-route-card">
+                <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
+                <div>
+                    <div class="wr-route-main">Bagdogra ↔ Gangtok</div>
+                    <div class="wr-route-sub">Most booked</div>
+                </div>
+                <div class="wr-route-info-row">
+                    <span>123 km</span>
+                    <span>4 hr</span>
+                </div>
+            </div>
+            <div class="wr-route-card">
+                <img src="assets/images/854878.png" alt="routeicon" class="wr-route-icon-img" />
+                <div>
+                    <div class="wr-route-main">Guwahati ↔ Shillong</div>
+                    <div class="wr-route-sub">Most booked</div>
+                </div>
+                <div class="wr-route-info-row">
+                    <span>99 km</span>
+                    <span>2.5 hr</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wr-stats-section">
+        <div class="wr-section-title">Our Numbers Say It All</div>
+        <div class="wr-stats-grid">
+            <div class="wr-stat-card" *ngFor="let stat of numbersSectionStats">
+                <div class="wr-stat-icon">
+                    <img [src]="stat.icon" [alt]="stat.label">
+                </div>
+                <div class="wr-stat-number">{{ stat.number }}</div>
+                <div class="wr-stat-label">{{ stat.label }}</div>
+                <div class="wr-stat-desc">{{ stat.description }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wr-app-download">
+        <div class="wr-app-card">
+            <div class="wr-app-tag">
+                <span class="wr-app-tag-dot"></span>
+                <span>Try on mobile</span>
+            </div>
+            <h2 class="wr-app-title">Life's much easier on the <span class="highlight">App.</span></h2>
+            <p class="wr-app-subtitle">Download the <span class="brand">WizzRide App</span> today for seamless travel
+                booking.</p>
+            <div class="wr-app-download-row">
+                <div class="wr-app-qr-box">
+                    <div class="wr-app-qr">
+                        <img src="assets/images/qrframe.png" alt="WizzRide App QR">
+                    </div>
+                    <span class="wr-app-scan-text">Scan Me</span>
+                </div>
+                <div class="wr-app-store-buttons">
+                    <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener" class="wr-store-btn"
+                        aria-label="Download WizzRide App on Google Play Store">
+                        <div class="wr-store-icon">▶</div>
+                        <div class="wr-store-text">
+                            <small>Get it on</small>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                    <a href="https://onelink.to/7q5zcj" target="_blank" rel="noopener"
+                        class="wr-store-btn wr-store-btn--light" aria-label="Download WizzRide App on Apple App Store">
+                        <div class="wr-store-icon"><i class="fab fa-apple"></i></div>
+                        <div class="wr-store-text">
+                            <small>Download on the</small>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wr-testimonials-section">
+        <div class="wr-testimonials-header">
+            <div class="wr-section-title">What Our Customers Say</div>
+            <p class="wr-testimonials-subtitle">Hear from our satisfied customers about their amazing travel experiences
+            </p>
+        </div>
+        <div class="wr-testimonials-scroller">
+            <div class="wr-testimonial-card" *ngFor="let testimonial of testimonials; trackBy: trackByTestimonial">
+                <div class="wr-testimonial-content">
+                    <img src="https://i.ibb.co/ZcNh6FY/download.png" alt="Quote icon" class="wr-testimonial-quote">
+                    <p class="wr-testimonial-text" [class.expanded]="isTestimonialExpanded(testimonial.id)">
+                        <span *ngIf="!isTestimonialExpanded(testimonial.id) && shouldShowReadMore(testimonial.text)">
+                            {{ getTruncatedText(testimonial.text) }}
+                        </span>
+                        <span *ngIf="isTestimonialExpanded(testimonial.id) || !shouldShowReadMore(testimonial.text)">
+                            {{ testimonial.text }}
+                        </span>
+                    </p>
+                    <button class="wr-read-more-btn" *ngIf="shouldShowReadMore(testimonial.text)"
+                        (click)="toggleTestimonial(testimonial.id); $event.stopPropagation()">
+                        {{ isTestimonialExpanded(testimonial.id) ? 'Read Less' : 'Read More' }}
+                    </button>
+                    <div class="wr-testimonial-author">
+                        <div class="wr-testimonial-avatar">
+                            <img [src]="testimonial.avatar" [alt]="testimonial.name" />
+                        </div>
+                        <div class="wr-testimonial-author-info">
+                            <div class="wr-testimonial-name">{{ testimonial.name }}</div>
+                            <div class="wr-testimonial-rating" *ngIf="testimonial.rating">
+                                <span *ngFor="let star of [1,2,3,4,5]" class="wr-star"
+                                    [class.active]="star <= testimonial.rating">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <!-- Special Offers and Content Sections -->
@@ -1258,13 +1260,11 @@
 
             <div class="offers-slider-container">
                 <div class="offers-slider-track">
-                    <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                        class="offer-card">
+                    <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
                         <div class="offer-card-inner">
                             <!-- Top - Image Section -->
                             <div class="offer-image-section">
-                                <div class="offer-image"
-                                    [style.background-image]="'url(' + offer.image + ')'">
+                                <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
                                 </div>
                             </div>
 
@@ -1279,7 +1279,7 @@
                                     <span class="offer-code">{{ offer.code }}</span>
                                 </div>
 
-                                
+
                             </div>
                         </div>
                     </div>
@@ -1332,13 +1332,11 @@
 
         <div class="offers-slider-container">
             <div class="offers-slider-track">
-                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                    class="offer-card">
+                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
                     <div class="offer-card-inner">
                         <!-- Top - Image Section -->
                         <div class="offer-image-section">
-                            <div class="offer-image"
-                                [style.background-image]="'url(' + offer.image + ')'">
+                            <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
                             </div>
                             <div class="offer-subtitle-under-image">{{ offer.subtitle }}</div>
                         </div>
@@ -1353,7 +1351,7 @@
                                 <span class="offer-code">{{ offer.code }}</span>
                             </div>
 
-                           
+
                         </div>
                     </div>
                 </div>
@@ -1419,13 +1417,11 @@
 
         <div class="offers-slider-container">
             <div class="offers-slider-track">
-                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId"
-                    class="offer-card">
+                <div *ngFor="let offer of infiniteOffers; trackBy: trackByOfferId" class="offer-card">
                     <div class="offer-card-inner">
                         <!-- Top - Image Section -->
                         <div class="offer-image-section">
-                            <div class="offer-image"
-                                [style.background-image]="'url(' + offer.image + ')'">
+                            <div class="offer-image" [style.background-image]="'url(' + offer.image + ')'">
                             </div>
                         </div>
 
@@ -1440,7 +1436,7 @@
                                 <span class="offer-code">{{ offer.code }}</span>
                             </div>
 
-                           
+
                         </div>
                     </div>
                 </div>
@@ -1511,177 +1507,174 @@
 <!-- Sliding Functionality Section -->
 <div class="sliding-section-wrapper">
     <section class="services-slider-section">
-                <div class="services-header">
-                    <h2>Our Services</h2>
-                    <p>Discover our comprehensive range of travel solutions designed to make your journey
-                        seamless and memorable</p>
-                </div>
+        <div class="services-header">
+            <h2>Our Services</h2>
+            <p>Discover our comprehensive range of travel solutions designed to make your journey
+                seamless and memorable</p>
+        </div>
 
-                <div class="services-slider-container">
-                    <div class="services-slider-track">
-                        <div *ngFor="let service of infiniteServices; trackBy: trackByServiceId" class="service-card">
-                            <div class="service-card-inner">
-                                <div class="service-image-container">
-                                    <div class="service-image" [style.background-image]="'url(' + service.image + ')'">
-                                        <div class="service-overlay"></div>
+        <div class="services-slider-container">
+            <div class="services-slider-track">
+                <div *ngFor="let service of infiniteServices; trackBy: trackByServiceId" class="service-card">
+                    <div class="service-card-inner">
+                        <div class="service-image-container">
+                            <div class="service-image" [style.background-image]="'url(' + service.image + ')'">
+                                <div class="service-overlay"></div>
 
-                                    </div>
-                                </div>
-
-                                <div class="service-content">
-                                    <h3 class="service-title">{{ service.title }}</h3>
-                                    <p class="service-description">{{ service.description }}</p>
-                                    <a
-                                    [href]="service.link"
-                                    [attr.aria-label]="'Learn More about ' + service.title"
-                                    class="service-cta-btn"
-                                  >
-                                  <span class="visually-hidden">{{ service.title }}</span>
-  <span aria-hidden="true">Learn More</span>
-                                 
-                                    <i class="fas fa-arrow-right"></i>
-                                  </a>
-                                </div>
                             </div>
+                        </div>
+
+                        <div class="service-content">
+                            <h3 class="service-title">{{ service.title }}</h3>
+                            <p class="service-description">{{ service.description }}</p>
+                            <a [href]="service.link" [attr.aria-label]="'Learn More about ' + service.title"
+                                class="service-cta-btn">
+                                <span class="visually-hidden">{{ service.title }}</span>
+                                <span aria-hidden="true">Learn More</span>
+
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+    </section>
 </div>
 <!-- End of Sliding Functionality Section -->
 
-            <!-- <img src="../../assets/images/banner.jpeg" alt="banner" class="bannerbet"/> -->
-            <section class="airport-connectivity-section">
-                <div class="connectivity-container">
-                    <div class="connectivity-content">
-                        <h1>Expert in Airport Connectivity</h1>
-                        <p class="subtitle">Reliable Shared Cabs from Bagdogra, Guwahati, Sikkim, Shillong & Tezpur</p>
+<!-- <img src="../../assets/images/banner.jpeg" alt="banner" class="bannerbet"/> -->
+<section class="airport-connectivity-section">
+    <div class="connectivity-container">
+        <div class="connectivity-content">
+            <h1>Expert in Airport Connectivity</h1>
+            <p class="subtitle">Reliable Shared Cabs from Bagdogra, Guwahati, Sikkim, Shillong & Tezpur</p>
 
-                        <h2 class="travel-solution-title">We Offer Seamless Travel solution</h2>
+            <h2 class="travel-solution-title">We Offer Seamless Travel solution</h2>
 
-                        <ul class="connectivity-links">
-                            <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/"
-                                    aria-label="Book Shared Cab from Bagdogra Airport to Darjeeling">Bagdogra
-                                    Airport to Darjeeling</a></li>
-                            <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/"
-                                    aria-label="Book Shared Cab from Bagdogra Airport to Gangtok">Bagdogra
-                                    Airport to Gangtok</a></li>
-                            <li><a
-                                    href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/"
-                                    aria-label="Book Shared Cab from Bagdogra Airport to Kalimpong">Bagdogra
-                                    Airport to Kalimpong</a></li>
-                            <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/"
-                                    aria-label="Book Shared Cab from Guwahati Airport to Shillong and Tezpur">Guwahati
-                                    Airport to Shillong and Tezpur Transfers</a></li>
-                        </ul>
+            <ul class="connectivity-links">
+                <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Darjeeling_Shared_Cab_Service/"
+                        aria-label="Book Shared Cab from Bagdogra Airport to Darjeeling">Bagdogra
+                        Airport to Darjeeling</a></li>
+                <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra%20Airport%20to%20Gangtok%20-%20Shared%20Cab%20Service/"
+                        aria-label="Book Shared Cab from Bagdogra Airport to Gangtok">Bagdogra
+                        Airport to Gangtok</a></li>
+                <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/Bagdogra_Airport_To_Kalimpong_Shared_Cab_Service/"
+                        aria-label="Book Shared Cab from Bagdogra Airport to Kalimpong">Bagdogra
+                        Airport to Kalimpong</a></li>
+                <li><a href="https://wizzride.com/ourservices/Luxury-Shared-Cabs/guwahati-to-shillong/"
+                        aria-label="Book Shared Cab from Guwahati Airport to Shillong and Tezpur">Guwahati
+                        Airport to Shillong and Tezpur Transfers</a></li>
+            </ul>
 
-                        <div class="service-description">
-                            <p>Easy trips from Bagdogra Airport to Sikkim or Kalimpoong to Bagdogra Airport, or Guwahati
-                                Airport to Shillong, Guwahati Airport to Tezpur, WizzRide ensures reliable service</p>
+            <div class="service-description">
+                <p>Easy trips from Bagdogra Airport to Sikkim or Kalimpoong to Bagdogra Airport, or Guwahati
+                    Airport to Shillong, Guwahati Airport to Tezpur, WizzRide ensures reliable service</p>
+            </div>
+
+            <p class="cta-text">Start your journey with confidence and <span class="cta-highlight">book your
+                    WizzRide cab today</span> for a seamless travel experience!</p>
+        </div>
+
+        <div class="connectivity-illustration">
+            <img src="assets/images/illustration1.f909f03abb56d801.svg" alt="Travel Illustration">
+        </div>
+    </div>
+</section>
+
+
+<section class="app-download-section">
+    <div class="app-download-container">
+        <!-- Left Side - Phone Mockup with Features -->
+        <div class="phone-mockup-section">
+            <div class="feature-bullets">
+                <div class="feature-item">
+                    <div class="feature-bullet"></div>
+                    <span class="feature-text">Data Privacy,<br>Safety & Security</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-bullet"></div>
+                    <span class="feature-text">Important & Useful<br>Latest In-App features</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-bullet"></div>
+                    <span class="feature-text">Never miss Important<br>Notifications & Updates</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-bullet"></div>
+                    <span class="feature-text">Seamless User Experience<br>through Latest Technology</span>
+                </div>
+            </div>
+
+            <div class="phone-mockup">
+                <img src="assets/images/phonemockup.png" alt="WizzRide App Interface">
+            </div>
+        </div>
+
+        <!-- Right Side - Content -->
+        <div class="app-content">
+            <span class="section-tag">Try On Mobile</span>
+
+            <h2>Life's much easier on the <span class="highlight">App.</span></h2>
+
+            <p class="subtitle">Download the <span class="brand">WizzRide App</span> today for
+                <strong>seamless
+                    travel booking</strong> and a <strong>smarter travel experience.</strong>
+            </p>
+
+            <div class="download-section">
+
+
+                <div class="download-cta">
+                    <div class="qr-code-container">
+                        <div class="qr-code">
+                            <img src="assets/images/qrframe.png" alt="wizrideappqr" />
                         </div>
-
-                        <p class="cta-text">Start your journey with confidence and <span class="cta-highlight">book your
-                                WizzRide cab today</span> for a seamless travel experience!</p>
+                        <span class="scan-text">Scan Me</span>
                     </div>
 
-                    <div class="connectivity-illustration">
-                        <img src="assets/images/illustration1.f909f03abb56d801.svg" alt="Travel Illustration">
+                    <div class="store-buttons">
+                        <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn"
+                            aria-label="Download WizzRide App on Google Play Store">
+                            <i class="fab fa-google-play"></i>
+                            <div class="store-btn-text">
+                                <small>Get it on</small>
+                                <strong>Google Play</strong>
+                            </div>
+                        </a>
+                        <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn"
+                            aria-label="Download WizzRide App on Apple App Store">
+                            <i class="fab fa-apple"></i>
+                            <div class="store-btn-text">
+                                <small>Download on the</small>
+                                <strong>App Store</strong>
+                            </div>
+                        </a>
                     </div>
                 </div>
-            </section>
+            </div>
 
 
-            <section class="app-download-section">
-                <div class="app-download-container">
-                    <!-- Left Side - Phone Mockup with Features -->
-                    <div class="phone-mockup-section">
-                        <div class="feature-bullets">
-                            <div class="feature-item">
-                                <div class="feature-bullet"></div>
-                                <span class="feature-text">Data Privacy,<br>Safety & Security</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-bullet"></div>
-                                <span class="feature-text">Important & Useful<br>Latest In-App features</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-bullet"></div>
-                                <span class="feature-text">Never miss Important<br>Notifications & Updates</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-bullet"></div>
-                                <span class="feature-text">Seamless User Experience<br>through Latest Technology</span>
-                            </div>
-                        </div>
+        </div>
+    </div>
+</section>
 
-                        <div class="phone-mockup">
-                            <img src="assets/images/phonemockup.png" alt="WizzRide App Interface">
-                        </div>
-                    </div>
+<section class="statistics-section">
+    <div class="statistics-header">
+        <h2>Our Numbers Say It All</h2>
+    </div>
 
-                    <!-- Right Side - Content -->
-                    <div class="app-content">
-                        <span class="section-tag">Try On Mobile</span>
-
-                        <h2>Life's much easier on the <span class="highlight">App.</span></h2>
-
-                        <p class="subtitle">Download the <span class="brand">WizzRide App</span> today for
-                            <strong>seamless
-                                travel booking</strong> and a <strong>smarter travel experience.</strong></p>
-
-                        <div class="download-section">
-
-
-                            <div class="download-cta">
-                                <div class="qr-code-container">
-                                    <div class="qr-code">
-                                        <img src="assets/images/qrframe.png" alt="wizrideappqr" />
-                                    </div>
-                                    <span class="scan-text">Scan Me</span>
-                                </div>
-
-                                <div class="store-buttons">
-                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn" aria-label="Download WizzRide App on Google Play Store">
-                                        <i class="fab fa-google-play"></i>
-                                        <div class="store-btn-text">
-                                            <small>Get it on</small>
-                                            <strong>Google Play</strong>
-                                        </div>
-                                    </a>
-                                    <a href="https://onelink.to/7q5zcj" target="_blank" class="store-btn" aria-label="Download WizzRide App on Apple App Store">
-                                        <i class="fab fa-apple"></i>
-                                        <div class="store-btn-text">
-                                            <small>Download on the</small>
-                                            <strong>App Store</strong>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </section>
-
-            <section class="statistics-section">
-                <div class="statistics-header">
-                    <h2>Our Numbers Say It All</h2>
-                </div>
-
-                <div class="statistics-grid">
-                    <div class="stat-card" *ngFor="let stat of numbersSectionStats; let i = index">
-                        <div class="stat-icon" [style.--delay]="i + 1">
-                            <img [src]="stat.icon" [alt]="stat.label">
-                        </div>
-                        <span class="stat-number" data-animate>{{ stat.number }}</span>
-                        <div class="stat-label">{{ stat.label }}</div>
-                        <div class="stat-description">{{ stat.description }}</div>
-                    </div>
-                </div>
-            </section>
+    <div class="statistics-grid">
+        <div class="stat-card" *ngFor="let stat of numbersSectionStats; let i = index">
+            <div class="stat-icon" [style.--delay]="i + 1">
+                <img [src]="stat.icon" [alt]="stat.label">
+            </div>
+            <span class="stat-number" data-animate>{{ stat.number }}</span>
+            <div class="stat-label">{{ stat.label }}</div>
+            <div class="stat-description">{{ stat.description }}</div>
+        </div>
+    </div>
+</section>
 
 
 
@@ -1727,7 +1720,7 @@
         </div>
     </div>
 </section>
- 
+
 <section class="japan-experience-section">
     <!-- Video Background -->
     <video class="japan-video" autoplay muted loop playsinline preload="metadata">
@@ -1756,7 +1749,7 @@
         <a href="/japantour" class="japan-cta" aria-label="See More about Japan Tour - 8 Days Trip">
             See More
         </a>
-       
+
     </div>
 </section>
 
@@ -1769,7 +1762,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div class="time-picker-content">
             <div class="time-columns">
                 <!-- Hours Column -->
@@ -1777,44 +1770,38 @@
                     <div class="column-header">Hrs</div>
                     <div class="time-scroll-container">
                         <div class="time-options" #hoursContainer>
-                            <div class="time-option" 
-                                 *ngFor="let hour of hours" 
-                                 [class.selected]="selectedHour === hour"
-                                 (click)="selectHour(hour)">
+                            <div class="time-option" *ngFor="let hour of hours" [class.selected]="selectedHour === hour"
+                                (click)="selectHour(hour)">
                                 {{hour}}
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Minutes Column -->
                 <div class="time-column">
                     <div class="column-header">Min</div>
                     <div class="time-scroll-container">
                         <div class="time-options">
-                            <div class="time-option" 
-                                 *ngFor="let minute of minutes" 
-                                 [class.selected]="selectedMinute === minute"
-                                 (click)="selectMinute(minute)">
+                            <div class="time-option" *ngFor="let minute of minutes"
+                                [class.selected]="selectedMinute === minute" (click)="selectMinute(minute)">
                                 {{minute}}
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- AM/PM Column -->
                 <div class="time-column">
                     <div class="column-header">A.M/ P.M</div>
                     <div class="time-scroll-container">
                         <div class="time-options">
-                            <div class="time-option" 
-                                 [class.selected]="selectedPeriod === 'AM'"
-                                 (click)="selectPeriod('AM')">
+                            <div class="time-option" [class.selected]="selectedPeriod === 'AM'"
+                                (click)="selectPeriod('AM')">
                                 A.M.
                             </div>
-                            <div class="time-option" 
-                                 [class.selected]="selectedPeriod === 'PM'"
-                                 (click)="selectPeriod('PM')">
+                            <div class="time-option" [class.selected]="selectedPeriod === 'PM'"
+                                (click)="selectPeriod('PM')">
                                 P.M.
                             </div>
                         </div>
@@ -1822,7 +1809,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="time-picker-footer">
             <button class="done-btn" (click)="confirmTimeSelection()">
                 Done
@@ -1835,68 +1822,67 @@
 <div class="mobile-location-popup" [class.active]="showMobileLocationPopup" (click)="closeMobileLocationPopup()">
     <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
         <div class="mobile-location-popup-header">
-            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()" aria-label="Location Popup Back">
+            <button class="mobile-location-popup-back" (click)="closeMobileLocationPopup()"
+                aria-label="Location Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <h3>{{ mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Select Pickup Point' : 'Select Drop Point' }}</h3>
-            <button class="mobile-location-popup-close" aria-label="Close Location Popup" (click)="closeMobileLocationPopup()">
+            <h3>{{ mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination
+                City' : mobilePopupType === 'pickup' ? 'Select Pickup Point' : 'Select Drop Point' }}</h3>
+            <button class="mobile-location-popup-close" aria-label="Close Location Popup"
+                (click)="closeMobileLocationPopup()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="mobile-location-popup-search">
             <i class="fas fa-search"></i>
-            <input type="text" 
-                   class="mobile-location-search-input"
-                   [value]="mobileSearchQuery"
-                   (input)="onMobileLocationInput($any($event.target).value)"
-                   [placeholder]="mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Enter pickup location' : 'Enter drop location'">
+            <input type="text" class="mobile-location-search-input" [value]="mobileSearchQuery"
+                (input)="onMobileLocationInput($any($event.target).value)"
+                [placeholder]="mobilePopupType === 'from' ? 'Enter Source City' : mobilePopupType === 'to' ? 'Enter Destination City' : mobilePopupType === 'pickup' ? 'Enter pickup location' : 'Enter drop location'">
         </div>
 
         <!-- Tabs for Popular Searches and See All (only for from/to cities, NOT for flights) -->
-        <div class="mobile-location-popup-tabs" *ngIf="isMobileCityArray() && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
-            <button class="mobile-location-tab" 
-                    [class.active]="mobileLocationTab === 'popular'"
-                    (click)="setMobileLocationTab('popular')">
+        <div class="mobile-location-popup-tabs"
+            *ngIf="isMobileCityArray() && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
+            <button class="mobile-location-tab" [class.active]="mobileLocationTab === 'popular'"
+                (click)="setMobileLocationTab('popular')">
                 Popular Searches
             </button>
-            <button class="mobile-location-tab" 
-                    [class.active]="mobileLocationTab === 'seeall'"
-                    (click)="setMobileLocationTab('seeall')">
+            <button class="mobile-location-tab" [class.active]="mobileLocationTab === 'seeall'"
+                (click)="setMobileLocationTab('seeall')">
                 See All
             </button>
         </div>
 
         <div class="mobile-location-popup-suggestions">
             <!-- Popular Searches Tab - Grouped by State (NOT for flights) -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
+            <ng-container
+                *ngIf="isMobileCityArray() && mobileLocationTab === 'popular' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
                 <div *ngFor="let stateGroup of getCitiesGroupedByState()" class="mobile-location-state-group">
                     <div class="mobile-location-state-header">{{ stateGroup.state }}</div>
                     <div class="mobile-location-pills-container">
-                        <button *ngFor="let city of getInitialCitiesForState(stateGroup)" 
-                                class="mobile-location-pill"
-                                (click)="selectMobileCity(city.name, city.code)">
+                        <button *ngFor="let city of getInitialCitiesForState(stateGroup)" class="mobile-location-pill"
+                            (click)="selectMobileCity(city.name, city.code)">
                             <i class="fas fa-map-marker-alt"></i>
                             <span>{{ city.name }}</span>
                         </button>
                     </div>
-                    <button *ngIf="hasMoreCities(stateGroup)" 
-                            class="mobile-location-see-more"
-                            (click)="toggleStateExpansion(stateGroup.state)">
+                    <button *ngIf="hasMoreCities(stateGroup)" class="mobile-location-see-more"
+                        (click)="toggleStateExpansion(stateGroup.state)">
                         See More..
                     </button>
-                    <button *ngIf="stateGroup.expanded && hasNonPopularCities(stateGroup)" 
-                            class="mobile-location-see-more mobile-location-see-less"
-                            (click)="toggleStateExpansion(stateGroup.state)">
+                    <button *ngIf="stateGroup.expanded && hasNonPopularCities(stateGroup)"
+                        class="mobile-location-see-more mobile-location-see-less"
+                        (click)="toggleStateExpansion(stateGroup.state)">
                         See Less..
                     </button>
                 </div>
             </ng-container>
 
             <!-- See All Tab - All Cities (NOT for flights) -->
-            <ng-container *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
-                <div *ngFor="let city of getAllCitiesForSeeAll()" 
-                     class="mobile-location-suggestion"
-                     (click)="selectMobileCity(city.name, city.code)">
+            <ng-container
+                *ngIf="isMobileCityArray() && mobileLocationTab === 'seeall' && !mobileSearchQuery && !isFlightPopup() && mobileTab !== 'reserved'">
+                <div *ngFor="let city of getAllCitiesForSeeAll()" class="mobile-location-suggestion"
+                    (click)="selectMobileCity(city.name, city.code)">
                     <i class="fas fa-map-marker-alt"></i>
                     <div class="mobile-location-suggestion-content">
                         <div class="mobile-location-suggestion-name">{{ city.name }}</div>
@@ -1906,36 +1892,42 @@
             </ng-container>
 
             <!-- Search Results (when user types) OR for flights (always show search) -->
-            <ng-container *ngIf="isMobileCityArray() && (mobileSearchQuery || isFlightPopup() || mobileTab === 'reserved')">
-                <div *ngFor="let city of getMobileCitySuggestionsList()" 
-                     class="mobile-location-suggestion"
-                     (click)="selectMobileCity(city.name, city.code)">
+            <ng-container
+                *ngIf="isMobileCityArray() && (mobileSearchQuery || isFlightPopup() || mobileTab === 'reserved')">
+                <div *ngFor="let city of getMobileCitySuggestionsList()" class="mobile-location-suggestion"
+                    (click)="selectMobileCity(city.name, city.code)">
                     <div class="mobile-location-icon">
-                        <i class="fas fa-plane-departure"></i>
+                        <i class="fas"
+                            [ngClass]="mobilePopupType === 'to' ? 'fa-plane-arrival' : 'fa-plane-departure'"></i>
                     </div>
                     <div class="mobile-location-suggestion-content">
-                        <div class="mobile-location-city-country">{{ city.name }}{{ city.country ? ', ' + city.country : (city.state && mobileTab !== 'reserved' ? ', ' + city.state : '') }}</div>
+                        <div class="mobile-location-city-country">{{ city.name }}{{ city.country ? ', ' + city.country :
+                            (city.state && mobileTab !== 'reserved' ? ', ' + city.state : '') }}</div>
                         <div class="mobile-location-airport-name" *ngIf="city.airportName">{{ city.airportName }}</div>
-                        <div class="mobile-location-airport-name" *ngIf="!city.airportName && city.state && !isFlightPopup() && mobileTab !== 'reserved'">{{ city.state }}</div>
+                        <div class="mobile-location-airport-name"
+                            *ngIf="!city.airportName && city.state && !isFlightPopup() && mobileTab !== 'reserved'">{{
+                            city.state }}</div>
                     </div>
-                    <div class="mobile-location-airport-code" *ngIf="city.code && mobileTab !== 'reserved'">[ {{ city.code }} ]</div>
+                    <div class="mobile-location-airport-code" *ngIf="city.code && mobileTab !== 'reserved'">[ {{
+                        city.code }} ]</div>
                 </div>
             </ng-container>
 
             <!-- Location Suggestions (for pickup/drop) -->
             <ng-container *ngIf="!isMobileCityArray()">
-                <div *ngFor="let location of getMobileLocationSuggestionsList()" 
-                     class="mobile-location-suggestion"
-                     (click)="selectMobileLocation(location)">
+                <div *ngFor="let location of getMobileLocationSuggestionsList()" class="mobile-location-suggestion"
+                    (click)="selectMobileLocation(location)">
                     <i class="fas fa-map-marker-alt"></i>
                     <div class="mobile-location-suggestion-content">
                         <div class="mobile-location-suggestion-name">{{ location }}</div>
-                        <div class="mobile-location-suggestion-state" *ngIf="mobileTab === 'shared'">{{ selectedCities.shared.pickup || selectedCities.shared.dropoff }}</div>
+                        <div class="mobile-location-suggestion-state" *ngIf="mobileTab === 'shared'">{{
+                            selectedCities.shared.pickup || selectedCities.shared.dropoff }}</div>
                     </div>
                 </div>
             </ng-container>
 
-            <div *ngIf="getMobilePopupSuggestions().length === 0 && mobileSearchQuery" class="mobile-location-no-results">
+            <div *ngIf="getMobilePopupSuggestions().length === 0 && mobileSearchQuery"
+                class="mobile-location-no-results">
                 <p>No results found</p>
             </div>
         </div>
@@ -1946,19 +1938,21 @@
 <div class="mobile-travelers-popup" [class.active]="showMobileTravelersPopup" (click)="closeMobileTravelersPopup()">
     <div class="mobile-travelers-popup-content" (click)="$event.stopPropagation()">
         <div class="mobile-travelers-popup-header">
-            <button class="mobile-travelers-popup-back" (click)="closeMobileTravelersPopup()" aria-label="Travelers Popup Back">
+            <button class="mobile-travelers-popup-back" (click)="closeMobileTravelersPopup()"
+                aria-label="Travelers Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>Travellers & Class</h3>
-            <button class="mobile-travelers-popup-close" aria-label="Close Travelers Popup" (click)="closeMobileTravelersPopup()">
+            <button class="mobile-travelers-popup-close" aria-label="Close Travelers Popup"
+                (click)="closeMobileTravelersPopup()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div class="mobile-travelers-popup-body">
             <div class="mobile-traveler-section">
                 <h4>Travellers</h4>
-                
+
                 <div class="mobile-traveler-row">
                     <div class="mobile-traveler-info">
                         <h5>Adults</h5>
@@ -1966,11 +1960,9 @@
                     </div>
                     <div class="mobile-traveler-counter">
                         <button class="mobile-counter-btn" [disabled]="!canDecrease('adults')"
-                                [class.active]="counts.adults > 1"
-                                (click)="updateCount('adults', -1)">−</button>
+                            [class.active]="counts.adults > 1" (click)="updateCount('adults', -1)">−</button>
                         <span class="mobile-counter-value">{{ counts.adults }}</span>
-                        <button class="mobile-counter-btn"
-                                (click)="updateCount('adults', 1)">+</button>
+                        <button class="mobile-counter-btn" (click)="updateCount('adults', 1)">+</button>
                     </div>
                 </div>
 
@@ -1981,11 +1973,9 @@
                     </div>
                     <div class="mobile-traveler-counter">
                         <button class="mobile-counter-btn" [disabled]="!canDecrease('children')"
-                                [class.active]="counts.children > 0"
-                                (click)="updateCount('children', -1)">−</button>
+                            [class.active]="counts.children > 0" (click)="updateCount('children', -1)">−</button>
                         <span class="mobile-counter-value">{{ counts.children }}</span>
-                        <button class="mobile-counter-btn"
-                                (click)="updateCount('children', 1)">+</button>
+                        <button class="mobile-counter-btn" (click)="updateCount('children', 1)">+</button>
                     </div>
                 </div>
 
@@ -1996,11 +1986,9 @@
                     </div>
                     <div class="mobile-traveler-counter">
                         <button class="mobile-counter-btn" [disabled]="!canDecrease('infants')"
-                                [class.active]="counts.infants > 0"
-                                (click)="updateCount('infants', -1)">−</button>
+                            [class.active]="counts.infants > 0" (click)="updateCount('infants', -1)">−</button>
                         <span class="mobile-counter-value">{{ counts.infants }}</span>
-                        <button class="mobile-counter-btn"
-                                (click)="updateCount('infants', 1)">+</button>
+                        <button class="mobile-counter-btn" (click)="updateCount('infants', 1)">+</button>
                     </div>
                 </div>
             </div>
@@ -2008,25 +1996,22 @@
             <div class="mobile-class-section">
                 <h4>Travel Class</h4>
                 <div class="mobile-class-options">
-                    <button class="mobile-class-option"
-                            [class.active]="selectedClass === 'economy'"
-                            (click)="updateClass('economy')">
+                    <button class="mobile-class-option" [class.active]="selectedClass === 'economy'"
+                        (click)="updateClass('economy')">
                         Economy
                     </button>
-                    <button class="mobile-class-option"
-                            [class.active]="selectedClass === 'business'"
-                            (click)="updateClass('business')">
+                    <button class="mobile-class-option" [class.active]="selectedClass === 'business'"
+                        (click)="updateClass('business')">
                         Business
                     </button>
-                    <button class="mobile-class-option"
-                            [class.active]="selectedClass === 'first'"
-                            (click)="updateClass('first')">
+                    <button class="mobile-class-option" [class.active]="selectedClass === 'first'"
+                        (click)="updateClass('first')">
                         First
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <div class="mobile-travelers-popup-footer">
             <button class="mobile-travelers-done-btn" (click)="closeMobileTravelersPopup()">Done</button>
         </div>
@@ -2040,63 +2025,44 @@
             <button class="mobile-date-picker-back" (click)="closeMobileDatePicker()" aria-label="Date Picker Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ? 'Select Date' : mobileDatePickerType === 'flights-return' ? 'Select Return Date' : (mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')) ? 'Select Departure Date' : 'Select Departure Date' }}</h3>
+            <h3>{{ mobileDatePickerType === 'shared' ? 'Select Date of Travel' : mobileDatePickerType === 'reserved' ?
+                'Select Date' : mobileDatePickerType === 'flights-return' ? 'Select Return Date' : (mobileDatePickerType
+                && mobileDatePickerType.toString().startsWith('flights-multicity-')) ? 'Select Departure Date' : 'Select
+                Departure Date' }}</h3>
             <button class="mobile-date-picker-close" aria-label="Close Date Picker" (click)="closeMobileDatePicker()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div class="mobile-date-picker-content">
             <div class="mobile-calendar-wrapper">
-                <app-custom-calendar
-                    *ngIf="mobileDatePickerType === 'shared'"
-                    class="shared-cabs-calendar"
-                    [selectedDate]="formValues.sharedDateTime"
-                    [minDate]="getTodayDate()"
-                    [alwaysOpen]="true"
-                    placeholder="Select date"
-                    (dateSelected)="onMobileDateSelected($event, 'shared')">
+                <app-custom-calendar *ngIf="mobileDatePickerType === 'shared'" class="shared-cabs-calendar"
+                    [selectedDate]="formValues.sharedDateTime" [minDate]="getTodayDate()" [alwaysOpen]="true"
+                    placeholder="Select date" (dateSelected)="onMobileDateSelected($event, 'shared')">
                 </app-custom-calendar>
-                
-                <app-custom-calendar
-                    *ngIf="mobileDatePickerType === 'reserved'"
-                    [selectedDate]="formValues.reservedDate"
-                    class="shared-cabs-calendar"
-                    [minDate]="getTodayDate()"
-                    [alwaysOpen]="true"
-                    placeholder="Select date"
+
+                <app-custom-calendar *ngIf="mobileDatePickerType === 'reserved'"
+                    [selectedDate]="formValues.reservedDate" class="shared-cabs-calendar" [minDate]="getTodayDate()"
+                    [alwaysOpen]="true" placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, 'reserved')">
                 </app-custom-calendar>
-                
-                <app-custom-calendar
-                    *ngIf="mobileDatePickerType === 'flights'"
-                    class="flights-calendar"
-                    [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture"
-                    [minDate]="getTodayDate()"
-                    [calendarFareMap]="calendarFareMap"
-                    [alwaysOpen]="true"
-                    placeholder="Select date"
+
+                <app-custom-calendar *ngIf="mobileDatePickerType === 'flights'" class="flights-calendar"
+                    [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture" [minDate]="getTodayDate()"
+                    [calendarFareMap]="calendarFareMap" [alwaysOpen]="true" placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, 'flights')">
                 </app-custom-calendar>
-                
-                <app-custom-calendar
-                    *ngIf="mobileDatePickerType === 'flights-return'"
-                    class="flights-calendar"
-                    [selectedDate]="formValues.flightReturn"
-                    [minDate]="getReturnMinDate()"
-                    [calendarFareMap]="calendarFareMapReturn"
-                    [alwaysOpen]="true"
-                    placeholder="Select return date"
+
+                <app-custom-calendar *ngIf="mobileDatePickerType === 'flights-return'" class="flights-calendar"
+                    [selectedDate]="formValues.flightReturn" [minDate]="getReturnMinDate()"
+                    [calendarFareMap]="calendarFareMapReturn" [alwaysOpen]="true" placeholder="Select return date"
                     (dateSelected)="onMobileDateSelected($event, 'flights-return')">
                 </app-custom-calendar>
-                
+
                 <app-custom-calendar
                     *ngIf="mobileDatePickerType && mobileDatePickerType.toString().startsWith('flights-multicity-')"
                     [selectedDate]="(flightRoutes[currentMultiCityRouteIndex] && flightRoutes[currentMultiCityRouteIndex].date) ? flightRoutes[currentMultiCityRouteIndex].date : ''"
-                    [minDate]="getTodayDate()"
-                    class="flights-calendar"
-                    [alwaysOpen]="true"
-                    placeholder="Select date"
+                    [minDate]="getTodayDate()" class="flights-calendar" [alwaysOpen]="true" placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, mobileDatePickerType.toString())">
                 </app-custom-calendar>
             </div>
@@ -2107,37 +2073,47 @@
 
 <!-- Custom Phone Number Keypad (Mobile Only) -->
 <div class="custom-keypad-overlay" *ngIf="showCustomKeypad && isMobileView()" (click)="closeCustomKeypad()">
-  <div class="custom-keypad" (click)="$event.stopPropagation()">
-    <div class="keypad-row">
-      <button class="keypad-btn" (click)="onKeypadNumberClick('1')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">1</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('2')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">2</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('3')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">3</button>
+    <div class="custom-keypad" (click)="$event.stopPropagation()">
+        <div class="keypad-row">
+            <button class="keypad-btn" (click)="onKeypadNumberClick('1')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">1</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('2')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">2</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('3')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">3</button>
+        </div>
+        <div class="keypad-row">
+            <button class="keypad-btn" (click)="onKeypadNumberClick('4')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">4</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('5')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">5</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('6')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">6</button>
+        </div>
+        <div class="keypad-row">
+            <button class="keypad-btn" (click)="onKeypadNumberClick('7')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">7</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('8')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">8</button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('9')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">9</button>
+        </div>
+        <div class="keypad-row">
+            <button class="keypad-btn keypad-btn-space"></button>
+            <button class="keypad-btn" (click)="onKeypadNumberClick('0')" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">0</button>
+            <button class="keypad-btn keypad-btn-backspace" (click)="onKeypadBackspace()"
+                (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                    <line x1="18" y1="9" x2="12" y2="15"></line>
+                    <line x1="12" y1="9" x2="18" y2="15"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="keypad-row keypad-row-done">
+            <button class="keypad-btn-done" (click)="onKeypadDone()" (touchstart)="onKeypadTouchStart($event)"
+                (touchend)="onKeypadTouchEnd($event)">Done</button>
+        </div>
     </div>
-    <div class="keypad-row">
-      <button class="keypad-btn" (click)="onKeypadNumberClick('4')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">4</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('5')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">5</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('6')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">6</button>
-    </div>
-    <div class="keypad-row">
-      <button class="keypad-btn" (click)="onKeypadNumberClick('7')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">7</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('8')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">8</button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('9')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">9</button>
-    </div>
-    <div class="keypad-row">
-      <button class="keypad-btn keypad-btn-space"></button>
-      <button class="keypad-btn" (click)="onKeypadNumberClick('0')" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">0</button>
-      <button class="keypad-btn keypad-btn-backspace" (click)="onKeypadBackspace()" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-          <line x1="18" y1="9" x2="12" y2="15"></line>
-          <line x1="12" y1="9" x2="18" y2="15"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="keypad-row keypad-row-done">
-      <button class="keypad-btn-done" (click)="onKeypadDone()" (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">Done</button>
-    </div>
-  </div>
 </div>
-
-
