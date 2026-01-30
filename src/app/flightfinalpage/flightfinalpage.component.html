@@ -2651,7 +2651,8 @@
                     <label>Date of Birth</label>
                     <app-custom-calendar [selectedDate]="getDOBAsDateString(adult)" [minDate]="getAdultMinDOB()"
                       [maxDate]="getTodayDate()" [initialDate]="getTodayDate()" placeholder="Select Date of Birth"
-                      (dateSelected)="onDOBSelected(adult, $event)">
+                      (dateSelected)="onDOBSelected(adult, $event)" (calendarOpened)="onCalendarOpened()"
+                      (calendarClosed)="onCalendarClosed()">
                     </app-custom-calendar>
                     <div class="error-message"
                       *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'adult-' + i">
@@ -2780,7 +2781,8 @@
                     <label>Date of Birth</label>
                     <app-custom-calendar [selectedDate]="getDOBAsDateString(child)" [minDate]="getChildMinDOB()"
                       [maxDate]="getChildMaxDOB()" [initialDate]="getChildMaxDOB()" placeholder="Select Date of Birth"
-                      (dateSelected)="onDOBSelected(child, $event)">
+                      (dateSelected)="onDOBSelected(child, $event)" (calendarOpened)="onCalendarOpened()"
+                      (calendarClosed)="onCalendarClosed()">
                     </app-custom-calendar>
                     <div class="error-message"
                       *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'child-' + i">
@@ -2884,7 +2886,8 @@
                     <label>Date of Birth</label>
                     <app-custom-calendar [selectedDate]="getDOBAsDateString(infant)" [minDate]="getInfantMinDOB()"
                       [maxDate]="getInfantMaxDOB()" [initialDate]="getInfantMaxDOB()" placeholder="Select Date of Birth"
-                      (dateSelected)="onDOBSelected(infant, $event)">
+                      (dateSelected)="onDOBSelected(infant, $event)" (calendarOpened)="onCalendarOpened()"
+                      (calendarClosed)="onCalendarClosed()">
                     </app-custom-calendar>
                     <div class="error-message"
                       *ngIf="(passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear) && expandedPassengerKey === 'infant-' + i">
@@ -3652,7 +3655,8 @@
       <label>Date of Birth</label>
       <app-custom-calendar [selectedDate]="getDOBAsDateString(currentPassengerDetails)"
         [minDate]="getCurrentPassengerMinDOB()" [maxDate]="getTodayDate()" [initialDate]="getTodayDate()"
-        placeholder="Select Date of Birth" (dateSelected)="onDOBSelected(currentPassengerDetails, $event)">
+        placeholder="Select Date of Birth" (dateSelected)="onDOBSelected(currentPassengerDetails, $event)"
+        (calendarOpened)="onCalendarOpened()" (calendarClosed)="onCalendarClosed()">
       </app-custom-calendar>
       <div class="error-message"
         *ngIf="passengerValidationErrors.dobDay || passengerValidationErrors.dobMonth || passengerValidationErrors.dobYear">
@@ -3883,3 +3887,5 @@
 <app-phone-dialer [isVisible]="showPhoneDialer" [currentValue]="getCurrentDialerValue()" [maxLength]="10"
   (numberClick)="onDialerNumberClick($event)" (backspaceClick)="onDialerBackspace()" (doneClick)="onDialerDone()"
   (closeDialer)="closePhoneDialer()"></app-phone-dialer>
+
+<div class="calendar-backdrop" *ngIf="isAnyCalendarOpen"></div>

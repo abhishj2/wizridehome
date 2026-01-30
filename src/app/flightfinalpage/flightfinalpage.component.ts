@@ -192,6 +192,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   termsAccepted: boolean = false;
   servicesUnlocked: boolean = false;
   termsAgreed: boolean = false;
+  isAnyCalendarOpen: boolean = false;
 
   // Trip Type
   tripType: 'oneway' | 'roundtrip' | 'multicity' = 'oneway';
@@ -2037,6 +2038,21 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   openFareRuleModal() { this.showFareRuleModal = true; }
   closeFareRuleModal() { this.showFareRuleModal = false; }
+
+  onCalendarOpened() {
+    this.isAnyCalendarOpen = true;
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  onCalendarClosed() {
+    // We might need a small delay or check if another calendar is open, but simple toggle works for now
+    this.isAnyCalendarOpen = false;
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
+  }
 
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: any) {
