@@ -2885,6 +2885,14 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return true;
   }
 
+  private scrollToSection(selector: string): void {
+    if (typeof document === 'undefined') return;
+    const target = document.querySelector(selector) as HTMLElement | null;
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   onAddonContinue(): void {
     // Step 0 -> validate passenger details, then unlock Seats & Meals
     if (this.addonUnlockStep === 0) {
@@ -2915,6 +2923,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.isSeatsExpanded = false;
       this.isCabsExpanded = true;
       this.isAddonsExpanded = false;
+      setTimeout(() => this.scrollToSection('.cabs-section'), 50);
       return;
     }
 
@@ -2924,6 +2933,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.isSeatsExpanded = false;
       this.isCabsExpanded = false;
       this.isAddonsExpanded = true;
+      setTimeout(() => this.scrollToSection('.addons-section'), 50);
     }
   }
 
