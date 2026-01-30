@@ -7913,3 +7913,88 @@ body.calendar-open-mobile {
     -webkit-overflow-scrolling: touch !important;
   }
 }
+
+/* --- Slider styling for seats & meals --- */
+.segment-slider {
+  position: relative;
+  padding: 8px 12px 0;
+}
+
+.seat-slider-window {
+  overflow: hidden;
+}
+
+.seat-slide,
+.meal-slide {
+  display: none;
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.seat-slide.active,
+.meal-slide.active {
+  display: block;
+}
+
+.slider-nav {
+  position: absolute;
+  top: 48%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  color: #4a5568;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+  z-index: 2;
+}
+
+.slider-nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.slider-nav:hover:not(:disabled) {
+  transform: translateY(-50%) scale(1.04);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.slider-nav.prev {
+  left: -6px;
+}
+
+.slider-nav.next {
+  right: -6px;
+}
+
+.slider-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px auto 4px;
+}
+
+.slider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d9dfe7;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.slider-dot:hover {
+  transform: scale(1.05);
+}
+
+.slider-dot.active {
+  background: #1f7ae0;
+}

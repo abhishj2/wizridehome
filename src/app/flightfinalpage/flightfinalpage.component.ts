@@ -2949,6 +2949,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   onJourneyTabChange(tab: 'departure' | 'return'): void {
     this.activeJourneyTab = tab;
+    this.activeSeatIndex = 0;
+    this.activeMealIndex = 0;
     // Lazy initialize seat map for selected leg
     if (tab === 'return') {
       if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
@@ -3009,6 +3011,33 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return selectedSeats[segmentIndex]?.length || 0;
   }
 
+  getCurrentSeatSegments(): any[] {
+    if (this.activeJourneyTab === 'return') {
+      return this.flightSegmentsReturn || [];
+    }
+    return this.flightSegments || [];
+  }
+
+  getCurrentSeatMapArray(): any[] {
+    return this.activeJourneyTab === 'return' ? (this.seatMapReturn || []) : (this.seatMap || []);
+  }
+
+  changeSeatSlide(direction: 'prev' | 'next'): void {
+    const segments = this.getCurrentSeatSegments();
+    if (!segments || segments.length <= 1) {
+      return;
+    }
+    const delta = direction === 'next' ? 1 : -1;
+    this.activeSeatIndex = (this.activeSeatIndex + delta + segments.length) % segments.length;
+  }
+
+  goToSeatSlide(index: number): void {
+    const segments = this.getCurrentSeatSegments();
+    if (!segments || segments.length === 0) return;
+    const clamped = Math.max(0, Math.min(index, segments.length - 1));
+    this.activeSeatIndex = clamped;
+  }
+
   toggleSeatSelectionAPI(segmentIndex: number, seat: any): void {
     if (!seat || !seat.isAvailable) {
       return;
@@ -3063,6 +3092,22 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const isReturn = this.activeJourneyTab === 'return';
     const selected = isReturn ? this.flightAddonsService.selectedMealsReturn : this.flightAddonsService.selectedMeals;
     return selected[segmentIndex]?.reduce((sum: number, item: any) => sum + item.count, 0) || 0;
+  }
+
+  changeMealSlide(direction: 'prev' | 'next'): void {
+    const segments = this.getCurrentSeatSegments();
+    if (!segments || segments.length <= 1) {
+      return;
+    }
+    const delta = direction === 'next' ? 1 : -1;
+    this.activeMealIndex = (this.activeMealIndex + delta + segments.length) % segments.length;
+  }
+
+  goToMealSlide(index: number): void {
+    const segments = this.getCurrentSeatSegments();
+    if (!segments || segments.length === 0) return;
+    const clamped = Math.max(0, Math.min(index, segments.length - 1));
+    this.activeMealIndex = clamped;
   }
 
   getTotalSelectedMeals(segmentIndex: number): number {
