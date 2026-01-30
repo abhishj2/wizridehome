@@ -3055,11 +3055,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const seatAdded = afterCount > beforeCount;
 
     // Advance within the same journey if more segments exist
+    const delay = 1200; // allow check animation to play
+
     if (seatAdded && afterCount >= total && segmentIndex < segments.length - 1) {
       setTimeout(() => {
         this.goToSeatSlide(segmentIndex + 1);
         this.maybeOpenMealsAfterSeatCompletion();
-      }, 900);
+      }, delay);
       return;
     }
 
@@ -3073,13 +3075,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         }
         this.cdr.detectChanges();
         this.maybeOpenMealsAfterSeatCompletion();
-      }, 900);
+      }, delay);
       return;
     }
 
     // If all seats done with no navigation needed
     if (seatAdded && afterCount >= total) {
-      this.maybeOpenMealsAfterSeatCompletion();
+      setTimeout(() => this.maybeOpenMealsAfterSeatCompletion(), delay);
     }
   }
 

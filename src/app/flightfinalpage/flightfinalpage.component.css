@@ -8075,17 +8075,21 @@ body.calendar-open-mobile {
   color: #1f7ae0;
 }
 
+.seat-cell {
+  position: relative;
+}
+
 .seat-selected-tag {
-  margin-top: 4px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 10px;
-  background: #e6f4ff;
-  color: #1f7ae0;
-  font-weight: 600;
-  display: inline-flex;
+  position: absolute;
+  inset: 0;
+  display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  background: transparent;
+  color: #1f7ae0;
+  font-weight: 700;
+  font-size: 16px;
+  pointer-events: none;
   animation: seat-check-pop 0.35s ease;
 }
 
@@ -8097,12 +8101,12 @@ body.calendar-open-mobile {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #1f7ae0;
   color: #ffffff;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
 }
 
