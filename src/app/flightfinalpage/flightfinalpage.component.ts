@@ -3056,18 +3056,30 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Advance within the same journey if more segments exist
     if (seatAdded && afterCount >= total && segmentIndex < segments.length - 1) {
-      this.goToSeatSlide(segmentIndex + 1);
+      setTimeout(() => {
+        this.goToSeatSlide(segmentIndex + 1);
+        this.maybeOpenMealsAfterSeatCompletion();
+      }, 900);
       return;
     }
 
     // If this was the last segment of onward and return exists, auto switch to return
     if (seatAdded && afterCount >= total && !isReturn && segmentIndex === segments.length - 1 && (this.flightSegmentsReturn || []).length > 0) {
-      this.activeJourneyTab = 'return';
-      this.activeSeatIndex = 0;
-      if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
-        this.initializeSeatMapFromSSR(true);
-      }
-      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.activeJourneyTab = 'return';
+        this.activeSeatIndex = 0;
+        if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
+          this.initializeSeatMapFromSSR(true);
+        }
+        this.cdr.detectChanges();
+        this.maybeOpenMealsAfterSeatCompletion();
+      }, 900);
+      return;
+    }
+
+    // If all seats done with no navigation needed
+    if (seatAdded && afterCount >= total) {
+      this.maybeOpenMealsAfterSeatCompletion();
     }
   }
 
@@ -3108,6 +3120,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
+
+    if (this.activeSeatsTab === 'meals' && !this.isMobileView()) {
+      setTimeout(() => this.scrollToSection('.addon-continue-footer'), 200);
+    }
   }
 
   decrementMeal(segmentIndex: number, meal: any): void {
@@ -3116,6 +3132,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
+
+    if (this.activeSeatsTab === 'meals' && !this.isMobileView()) {
+      setTimeout(() => this.scrollToSection('.addon-continue-footer'), 200);
+    }
   }
 
   getMealCountForMeal(segmentIndex: number, mealCode: string): number {

@@ -722,12 +722,17 @@
                                   <ng-container *ngIf="block[letter]; else noSeat">
                                     <div class="seat-meta">
                                       <span class="seat-code">{{ block[letter].displaySeatNo || block[letter].Code }}</span>
-                                      <span class="seat-price" *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
-                                      <ng-template #showPriceInline>
-                                        ₹{{ block[letter].Price | number : '1.0-0' }}
-                                      </ng-template>
+                                      <ng-container *ngIf="!isSeatSelected(segIndex, block[letter]?.Code); else hidePrice">
+                                        <span class="seat-price" *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
+                                        <ng-template #showPriceInline>
+                                          ₹{{ block[letter].Price | number : '1.0-0' }}
+                                        </ng-template>
+                                      </ng-container>
+                                      <ng-template #hidePrice></ng-template>
                                     </div>
-                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">Selected</div>
+                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">
+                                      <span class="check">✓</span>
+                                    </div>
                                   </ng-container>
                                   <ng-template #noSeat>-</ng-template>
                                 </div>
@@ -1987,7 +1992,9 @@
                                         ₹{{ block[letter].Price | number : '1.0-0' }}
                                       </ng-template>
                                     </div>
-                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">Selected</div>
+                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">
+                                      <span class="check">✓</span>
+                                    </div>
                                   </ng-container>
                                   <ng-template #noSeat>-</ng-template>
                                 </div>

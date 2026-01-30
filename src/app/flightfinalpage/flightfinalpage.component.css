@@ -8086,6 +8086,11 @@ body.calendar-open-mobile {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  animation: seat-check-pop 0.35s ease;
+}
+
+.seat-cell.selected {
+  animation: seat-check-pop 0.35s ease;
 }
 
 .seat-selected-tag .check {
@@ -8099,6 +8104,12 @@ body.calendar-open-mobile {
   color: #ffffff;
   font-size: 10px;
   line-height: 1;
+}
+
+@keyframes seat-check-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .addon-continue-footer {
