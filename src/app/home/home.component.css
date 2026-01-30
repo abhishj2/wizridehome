@@ -652,7 +652,7 @@ h2 {
     border: 2px solid #e9ecef;
     border-top: none;
     border-radius: 0 0 12px 12px;
-    max-height: 300px;
+    height: 300px;
     overflow-y: auto;
     z-index: 999999999 !important;
     display: none;

@@ -4090,7 +4090,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
     const filteredLocations = locations.filter(location =>
       location.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 6);
+    );
 
     this.activeSuggestions[storeTarget] = filteredLocations;
     this.toggleDropdownActiveClass();
@@ -4119,7 +4119,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       locations = this.locations[cityName] || [];
     }
 
-    this.activeSuggestions[storeTarget] = locations.slice(0, 6);
+    this.activeSuggestions[storeTarget] = locations;
     this.toggleDropdownActiveClass();
   }
 
