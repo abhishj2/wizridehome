@@ -7999,6 +7999,63 @@ body.calendar-open-mobile {
   background: #1f7ae0;
 }
 
+.services-selection {
+  position: relative;
+}
+
+.addons-slider-header {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.addons-nav {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #d6dbe3;
+  background: #fff;
+  color: #4a5568;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.addons-nav:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.services-scroll-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+}
+
+.services-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.services-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 3px;
+}
+
+.services-list {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+  padding: 4px 0 8px 0;
+}
+
+.service-card {
+  min-width: 230px;
+}
+
 .seat-meta {
   display: flex;
   flex-direction: column;

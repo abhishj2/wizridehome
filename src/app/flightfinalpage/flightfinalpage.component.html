@@ -864,10 +864,18 @@
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
         </div>
         <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
-          <div class="services-selection" *ngIf="services?.length; else noServices">
-            <div class="services-scroll-container">
-              <div class="services-list">
-                <div class="service-card" *ngFor="let service of getFilteredServices()">
+            <div class="services-selection" *ngIf="services?.length; else noServices">
+              <div class="addons-slider-header">
+                <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')" aria-label="Previous services">
+                  ‹
+                </button>
+                <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')" aria-label="Next services">
+                  ›
+                </button>
+              </div>
+              <div class="services-scroll-container" #addonsScroll>
+                <div class="services-list">
+                  <div class="service-card" *ngFor="let service of getFilteredServices()">
                   <div class="service-visual">
                     <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
                     <div class="service-price">

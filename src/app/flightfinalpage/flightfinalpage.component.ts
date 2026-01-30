@@ -3191,6 +3191,15 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  scrollAddons(container: HTMLElement, direction: 'left' | 'right'): void {
+    if (!container) return;
+    const delta = container.clientWidth * 0.8;
+    container.scrollBy({
+      left: direction === 'right' ? delta : -delta,
+      behavior: 'smooth'
+    });
+  }
+
   // Special Services Methods
   getFilteredServices(): any[] {
     const isReturn = this.activeJourneyTab === 'return';
