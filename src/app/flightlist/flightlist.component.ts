@@ -59,7 +59,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   isHeaderSticky: boolean = false;
   showModifyForm: boolean = false;
   editField: 'from' | 'to' | 'departure' | 'travellers' | null = null;
-  
+
   // City suggestions for dropdown
   activeSuggestions: { [key: string]: any[] } = {};
 
@@ -71,7 +71,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     // Toggle the edit field
     const wasOpen = this.editField === field;
     this.editField = wasOpen ? null : field;
-    
+
     // If opening city fields, show suggestions immediately
     if (this.editField === 'from') {
       // Show suggestions immediately
@@ -93,7 +93,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.openDepartureCalendar();
       }, 100);
     }
-    
+
     // If opening travelers, also open the panel
     if (this.editField === 'travellers' && !this.isTravelersOpen) {
       this.isTravelersOpen = true;
@@ -138,7 +138,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   canScrollLeft: boolean = false;
   canScrollRight: boolean = true;
   private pendingCenterIndex: number = -1;
-  
+
   // Lazy loading variables
   currentBatchSize: number = 15; // Show 15 dates initially
   loadMoreThreshold: number = 5; // Load more when 5 dates from the end
@@ -571,19 +571,19 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         const adults = this.flightInputData['adults'] || 1;
         const children = this.flightInputData['children'] || 0;
         const infants = this.flightInputData['infants'] || 0;
-        
+
         // Initialize counts object
         this.counts = {
           adults: adults,
           children: children,
           infants: infants
         };
-        
+
         // Sync with existing variables
         this.adults = adults;
         this.children = children;
         this.infants = infants;
-        
+
         // Initialize selected class
         if (travelClass) {
           this.selectedClass = travelClass.toLowerCase();
@@ -777,7 +777,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.loader = false;
         console.log('Flight fetch complete. Loader set to false.');
         // Scroll to top on mobile after data loads
-        this.scrollToTopOnMobile();
+        this.scrollToTop();
       },
       error: (error) => {
         console.error('Error fetching one-way flights:', error);
@@ -897,7 +897,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         this.loader = false;
         console.log('Round-trip flight fetch complete. Loader set to false.');
         // Scroll to top on mobile after data loads
-        this.scrollToTopOnMobile();
+        this.scrollToTop();
       },
       error: (error) => {
         console.error('Error fetching round-trip flights:', error);
@@ -920,10 +920,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.loader = false;
       return;
     }
-  
+
     // Check for multiCityRoutes or multiCitySegment
     const multiCityRoutes = this.flightInputData['multiCityRoutes'] || this.flightInputData['multiCitySegment'] || [];
-  
+
     // Convert multiCityRoutes format to API format if needed
     let formattedSegments: any[] = [];
     if (multiCityRoutes.length > 0) {
@@ -943,10 +943,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           'first': '6',
           'First': '6'
         };
-  
+
         const travelClass = this.flightInputData['travelClass'] || 'Economy';
         const cabinCode = cabinClassMap[travelClass] || '2'; // Default to Economy
-  
+
         formattedSegments = multiCityRoutes.map((route: any) => {
           // Extract airport codes from display strings (e.g., "Delhi (DEL)" -> "DEL")
           const extractCode = (str: string): string => {
@@ -957,10 +957,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             const found = this.cities.find(c => c.name === str || c.code === str);
             return found?.code || str;
           };
-  
+
           const originCode = extractCode(route.from || '');
           const destCode = extractCode(route.to || '');
-  
+
           // Format date to ISO format
           let preferredDepartureTime = '';
           if (route.date) {
@@ -972,7 +972,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               preferredDepartureTime = `${year}-${month}-${day}T00:00:00`;
             }
           }
-  
+
           return {
             Origin: originCode,
             Destination: destCode,
@@ -983,7 +983,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         });
       }
     }
-  
+
     // Validate required fields for multi-city
     if (!this.flightInputData['tboToken'] || !this.flightInputData['ipAddress'] ||
       formattedSegments.length === 0) {
@@ -995,7 +995,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         formattedSegmentsLength: formattedSegments.length,
         flightInputDataKeys: Object.keys(this.flightInputData)
       });
-  
+
       Swal.fire({
         icon: 'warning',
         title: 'Session Expired',
@@ -1008,7 +1008,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.loader = false;
       return;
     }
-  
+
     this.loader = true;
     console.log('Fetching multi-city flights with data:', {
       ipAddress: this.flightInputData['ipAddress'],
@@ -1018,10 +1018,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       children: this.flightInputData['children'],
       infants: this.flightInputData['infants']
     });
-  
+
     // Store formatted segments back in flightInputData for later use
     this.flightInputData['multiCitySegment'] = formattedSegments;
-  
+
     this.apiService.getFlightDetailsMultiCity(
       this.flightInputData['ipAddress'],
       this.flightInputData['tboToken'],
@@ -1033,7 +1033,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     ).subscribe({
       next: (val: any) => {
         console.log('Multi-city Flight API Response:', val);
-  
+
         // Check if response is null or undefined
         if (!val || val === null) {
           console.error('Multi-city API returned null response');
@@ -1047,7 +1047,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.multicityTabData = [];
           return;
         }
-  
+
         // Check for error response
         if (val?.Response?.Error?.ErrorCode && val.Response.Error.ErrorCode !== 0) {
           Swal.fire({
@@ -1060,7 +1060,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.multicityTabData = [];
           return;
         }
-  
+
         // Check if Response exists
         if (!val.Response) {
           console.error('Multi-city API response missing Response object:', val);
@@ -1074,20 +1074,20 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.multicityTabData = [];
           return;
         }
-  
+
         this.traceid = val['Response']?.['TraceId'];
         console.log('Trace ID:', this.traceid);
-  
+
         // Multi-city API returns all flights in Results[0] (matching working code)
         // Each flight contains multiple segments within it
         const results = val?.Response?.Results?.[0] || [];
-  
+
         console.log('Multi-city API Results:', {
           resultsLength: results.length,
           resultsType: Array.isArray(results) ? 'array' : typeof results,
           sampleResult: results.length > 0 ? results[0] : null
         });
-  
+
         if (results.length === 0) {
           console.warn('No multi-city flight results in API response');
           Swal.fire({
@@ -1100,7 +1100,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.loader = false;
           return;
         }
-  
+
         // Process all flights (matching working code approach)
         // Each flight in results contains all segments for that multi-city route
         const processedFlights = results.map((flight: any) => {
@@ -1111,42 +1111,42 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             dateChangePolicy: rules.filter((r: any) => r.Type === 'Reissue')
           };
         });
-  
+
         // Store in finalFinalList for grouping (matching working code)
         this.finalFinalList = processedFlights;
-  
+
         // Group flights using multi-city grouping method (matching working code)
         this.groupFlightsMultiCity();
-  
+
         // Generate filters
         this.dynamicFilters = this.generateFiltersFromFlightArray(this.groupedFlights);
         this.priceRange = this.dynamicFilters.max_price;
-  
+
         // ===== CHANGED SECTION: Simplified tab data organization =====
         // Multi-city flights contain ALL segments in each flight's Segments array
         // We don't need separate data per tab - just reference the same grouped flights
         const segmentCount = this.flightInputData['multiCitySegment']?.length || 1;
-        
+
         this.multicityTabData = Array.from({ length: segmentCount }, (_, segmentIndex) => ({
           segmentIndex: segmentIndex,
           flights: this.finalFinalList, // All processed flights
           groupedFlights: this.groupedFlights, // All grouped flights (same for all tabs)
           dynamicFilters: this.dynamicFilters
         }));
-  
+
         // Backup original multi-city data for filtering (DEEP COPY)
         this.originalMulticityTabData = this.deepCopy(this.multicityTabData);
         // ===== END CHANGED SECTION =====
-  
+
         console.log('Processed multi-city tab data:', {
           tabCount: this.multicityTabData.length,
           groupedFlightsCount: this.groupedFlights.length,
           sampleTabData: this.multicityTabData[0]
         });
-        
+
         this.loader = false;
         // Scroll to top on mobile after data loads
-        this.scrollToTopOnMobile();
+        this.scrollToTop();
       },
       error: (error) => {
         console.error('Error fetching multi-city flights:', error);
@@ -1328,16 +1328,16 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
-    
+
     // Close passenger dropdown if clicking outside
     if (!target.closest('.passenger-dropdown-wrapper')) {
       this.showPassengerDropdown = false;
     }
-    
+
     // Close city dropdowns when clicking outside
     const isClickInsideCitySelect = target.closest('.summary-section.city-select');
     const isClickInsideCitySuggestions = target.closest('.city-suggestions');
-    
+
     if (!isClickInsideCitySelect && !isClickInsideCitySuggestions) {
       // Close and preserve previous value (already in flightInputData)
       if (this.editField === 'from') {
@@ -1350,11 +1350,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         // Value is already in flightInputData, so it will display correctly
       }
     }
-    
+
     // Close travelers panel when clicking outside
     const isClickInsideTravelersSection = target.closest('.summary-section.travelers-dropdown');
     const isClickInsideTravelersPanel = target.closest('.travelers-panel');
-    
+
     if (!isClickInsideTravelersSection && !isClickInsideTravelersPanel) {
       if (this.editField === 'travellers' || this.isTravelersOpen) {
         this.isTravelersOpen = false;
@@ -1364,11 +1364,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         }
       }
     }
-    
+
     // Close calendar when clicking outside
     const isClickInsideDateSelect = target.closest('.summary-section.date-select');
     const isClickInsideCalendar = target.closest('app-custom-calendar');
-    
+
     if (!isClickInsideDateSelect && !isClickInsideCalendar) {
       if (this.editField === 'departure') {
         this.editField = null;
@@ -1401,7 +1401,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           this.updateUnderlineStyle();
         }
         // Scroll to top on mobile when page loads
-        this.scrollToTopOnMobile();
+        this.scrollToTop();
         // Initialize date slider arrows
         setTimeout(() => this.updateDateSliderArrows(), 300);
       });
@@ -1409,32 +1409,27 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   /**
-   * Scrolls to top of the page on mobile devices
+   * Scrolls to top of the page
    */
-  scrollToTopOnMobile(): void {
+  scrollToTop(): void {
     if (!this.isBrowser) return;
 
-    // Check if mobile (width <= 768px)
-    const isMobile = window.innerWidth <= 768;
+    // Use smooth scroll to top
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
 
-    if (isMobile) {
-      // Use smooth scroll to top
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-
-      // Also try document.documentElement and document.body for better compatibility
-      setTimeout(() => {
-        if (document.documentElement) {
-          document.documentElement.scrollTop = 0;
-        }
-        if (document.body) {
-          document.body.scrollTop = 0;
-        }
-      }, 100);
-    }
+    // Also try document.documentElement and document.body for better compatibility
+    setTimeout(() => {
+      if (document.documentElement) {
+        document.documentElement.scrollTop = 0;
+      }
+      if (document.body) {
+        document.body.scrollTop = 0;
+      }
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -1467,7 +1462,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     if (date === this.highlightedDate) {
       return;
     }
-    
+
     this.highlightedDate = date;
     this.flightInputData["departureDate"] = this.highlightedDate;
     this.loader = true;
@@ -1505,6 +1500,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
             this.centerScrollToIndex(index);
           }
           this.loader = false;
+          this.scrollToTop();
         },
         error: (error) => {
           console.error('Error fetching flights:', error);
@@ -1571,7 +1567,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     // REQUIREMENT 1 & 2: Show only dates which have prices (price > 0)
     // Store all available dates from calendar fare API
     this.allAvailableDates = sortedEntries.filter(item => item.price > 0);
-    
+
     console.log('Filtered dates with prices:', this.allAvailableDates.length);
     console.log('Sample filtered dates:', this.allAvailableDates.slice(0, 10).map(e => ({ date: e.date, price: e.price })));
 
@@ -1595,7 +1591,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
     // Find the selected date in all available dates
     let selectedIndex = this.allAvailableDates.findIndex(item => item.date === selectedDate);
-    
+
     // If selected date not found, find the nearest date
     if (selectedIndex === -1) {
       const selectedTime = new Date(selectedDate).getTime();
@@ -1615,7 +1611,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     const halfBatch = Math.floor(this.currentBatchSize / 2);
     let startIndex = Math.max(0, selectedIndex - halfBatch);
     let endIndex = Math.min(this.allAvailableDates.length, startIndex + this.currentBatchSize);
-    
+
     // Adjust start if we're near the end
     if (endIndex === this.allAvailableDates.length) {
       startIndex = Math.max(0, endIndex - this.currentBatchSize);
@@ -1623,11 +1619,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
     // Load the initial batch
     this.datePrices = this.allAvailableDates.slice(startIndex, endIndex);
-    
+
     // Set the highlighted date to the selected date or nearest available
     const actualSelectedDate = this.allAvailableDates[selectedIndex].date;
     this.highlightedDate = actualSelectedDate;
-    
+
     // Find index in the visible datePrices array
     const visibleIndex = this.datePrices.findIndex(item => item.date === actualSelectedDate);
     this.initialScrollIndex = visibleIndex;
@@ -1712,7 +1708,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       const newDates = this.allAvailableDates.slice(firstIndex - loadCount, firstIndex);
       this.datePrices = [...newDates, ...this.datePrices];
       console.log('Loaded', loadCount, 'dates at start. Total now:', this.datePrices.length);
-      
+
       // Adjust scroll position to maintain view
       if (this.isBrowser && this.scrollContainer) {
         setTimeout(() => {
@@ -1779,7 +1775,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   // Date slider arrow navigation methods
   scrollDateSlider(direction: 'left' | 'right'): void {
     if (!this.isBrowser || !this.scrollContainer) return;
-    
+
     const container = this.scrollContainer.nativeElement as HTMLElement;
     if (!container) return;
 
@@ -1805,7 +1801,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   onDateSliderScroll(): void {
     this.updateDateSliderArrows();
-    
+
     // REQUIREMENT 3: Lazy loading - check if we need to load more dates
     if (!this.isBrowser || !this.scrollContainer || this.isLoadingMore) {
       return;
@@ -3669,11 +3665,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   // Finalize selection
   finalizeSelection(fare: any): void {
     console.log("Fare Selected", fare);
-    
+
     // Handle multi-city separately
     if (this.flightType === 'multi') {
-        console.log('Multi-city booking handled by proceedWithMultiCityBooking');
-        return;
+      console.log('Multi-city booking handled by proceedWithMultiCityBooking');
+      return;
     }
 
     // Existing one-way and round-trip logic...
@@ -3682,36 +3678,36 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.closeFareOptionsModal();
 
     if (this.flightType === 'oneway') {
-        departureFareData = fare;
+      departureFareData = fare;
     } else {
-        departureFareData = fare['departureFare'];
-        returnFareData = fare['returnFare'];
+      departureFareData = fare['departureFare'];
+      returnFareData = fare['returnFare'];
     }
 
     this.flightDataService.setStringValue({
-        tboToken: this.flightInputData['tboToken'],
-        ipAddress: this.flightInputData['ipAddress'],
-        tripType: this.flightInputData['tripType'],
-        fromCity: this.flightInputData['fromCity'],
-        fromAirport: this.flightInputData['fromAirport'],
-        fromAirportCode: this.flightInputData['fromAirportCode'],
-        toCity: this.flightInputData['toCity'],
-        toAirport: this.flightInputData['toAirport'],
-        toAirportCode: this.flightInputData['toAirportCode'],
-        departureDate: this.flightInputData['departureDate'],
-        returnDate: this.flightInputData['returnDate'],
-        fareType: this.flightInputData['fareType'],
-        adults: this.flightInputData['adults'],
-        children: this.flightInputData['children'],
-        infants: this.flightInputData['infants'],
-        travelClass: this.flightInputData['travelClass'],
-        traceid: this.traceid,
-        departureFlightData: departureFareData,
-        returnFlightData: returnFareData
+      tboToken: this.flightInputData['tboToken'],
+      ipAddress: this.flightInputData['ipAddress'],
+      tripType: this.flightInputData['tripType'],
+      fromCity: this.flightInputData['fromCity'],
+      fromAirport: this.flightInputData['fromAirport'],
+      fromAirportCode: this.flightInputData['fromAirportCode'],
+      toCity: this.flightInputData['toCity'],
+      toAirport: this.flightInputData['toAirport'],
+      toAirportCode: this.flightInputData['toAirportCode'],
+      departureDate: this.flightInputData['departureDate'],
+      returnDate: this.flightInputData['returnDate'],
+      fareType: this.flightInputData['fareType'],
+      adults: this.flightInputData['adults'],
+      children: this.flightInputData['children'],
+      infants: this.flightInputData['infants'],
+      travelClass: this.flightInputData['travelClass'],
+      traceid: this.traceid,
+      departureFlightData: departureFareData,
+      returnFlightData: returnFareData
     } as FlightData);
 
     this.router.navigate(['flightfinalsection']);
-}
+  }
 
   // Multi-city methods
   selectMulticityTab(index: number): void {
@@ -3776,11 +3772,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   openFareOptionsModalMultiCity(segmentIndex: number, flight: any, flightIndex: number): void {
     console.log('openFareOptionsModalMultiCity called', { segmentIndex, flight, flightIndex });
-    
+
     this.selectedMultiCitySegmentIndex = segmentIndex;
     this.selectedMultiCityFlight = Object.freeze(this.deepCopy(flight)); // Deep copy and freeze
     this.selectedMultiCityFlightIndex = flightIndex;
-    
+
     // PRE-SELECT this flight with lowest fare option (matching working code)
     if (flight.FareOptions && flight.FareOptions.length > 0) {
       const lowestFare = flight.FareOptions.reduce((a: any, b: any) => {
@@ -3788,17 +3784,17 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         const fareB = b?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
         return fareA < fareB ? a : b;
       });
-      
+
       // Store the pre-selected flight
       this.multicitySelectedFares[segmentIndex] = {
         groupedFlight: this.deepCopy(flight),
         selectedFare: this.deepCopy(lowestFare),
         price: this.getAdultFarePerPerson(lowestFare.FareBreakdown)
       };
-      
+
       console.log('Pre-selected flight for segment', segmentIndex, ':', this.multicitySelectedFares[segmentIndex]);
     }
-    
+
     this.showFareModalMultiCity = true;
   }
   closeFareOptionsModalMultiCity(): void {
@@ -3835,17 +3831,17 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       selectedMultiCityFlight: this.selectedMultiCityFlight,
       currentSelectedFares: this.multicitySelectedFares
     });
-  
+
     if (this.selectedMultiCitySegmentIndex === -1 || !this.selectedMultiCityFlight) {
       console.error('Invalid fare selection state');
       return;
     }
-  
+
     const segmentIndex = this.selectedMultiCitySegmentIndex;
-    
+
     // Get the actual fare option
     let actualFareOption = null;
-    
+
     if (fare?.originalFareOption) {
       actualFareOption = fare.originalFareOption;
     } else if (fare?.fareIndex !== undefined && this.selectedMultiCityFlight?.FareOptions?.[fare.fareIndex]) {
@@ -3853,7 +3849,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     } else if (this.selectedMultiCityFlight?.FareOptions?.length > 0) {
       actualFareOption = this.selectedMultiCityFlight.FareOptions[0];
     }
-  
+
     if (!actualFareOption) {
       console.error('Could not find fare option!');
       Swal.fire({
@@ -3864,35 +3860,35 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       });
       return;
     }
-  
+
     // Update the stored fare with the selected one
     this.multicitySelectedFares[segmentIndex] = {
       groupedFlight: this.deepCopy(this.selectedMultiCityFlight),
       selectedFare: this.deepCopy(actualFareOption),
       price: this.getAdultFarePerPerson(actualFareOption.FareBreakdown)
     };
-  
+
     console.log('Multi-city fare updated for segment', segmentIndex);
     console.log('Current multicitySelectedFares:', JSON.stringify(this.multicitySelectedFares, null, 2));
-  
+
     // Close modal
     this.closeFareOptionsModalMultiCity();
-  
+
     // Check total segments
-    const totalSegments = this.multicityTabData?.length || 
-                         this.flightInputData['multiCitySegment']?.length || 
-                         1;
+    const totalSegments = this.multicityTabData?.length ||
+      this.flightInputData['multiCitySegment']?.length ||
+      1;
     const selectedCount = Object.keys(this.multicitySelectedFares).length;
-  
+
     console.log('Multi-city booking progress:', {
       selectedCount,
       totalSegments,
       allSelected: selectedCount >= totalSegments
     });
-  
+
     // Proceed to booking immediately (matching working code behavior)
     console.log('Proceeding to booking...');
-    
+
     setTimeout(() => {
       this.proceedWithMultiCityBooking(true);
     }, 100);
@@ -3927,36 +3923,36 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     if (!segment) return '';
 
     if (segment.Origin) {
-        // API format
-        const city = this.cities.find(c => c.code === segment.Origin);
-        return city ? `${city.name} (${segment.Origin})` : segment.Origin;
+      // API format
+      const city = this.cities.find(c => c.code === segment.Origin);
+      return city ? `${city.name} (${segment.Origin})` : segment.Origin;
     } else if (segment.from) {
-        // Form input format
-        return segment.from;
+      // Form input format
+      return segment.from;
     }
 
     // Fallback
     const route = this.flightInputData['multiCityRoutes']?.[index];
     return route?.from || '';
-}
+  }
 
-getMultiCityRouteDestination(index: number): string {
-  const segment = this.flightInputData['multiCitySegment']?.[index];
-  if (!segment) return '';
+  getMultiCityRouteDestination(index: number): string {
+    const segment = this.flightInputData['multiCitySegment']?.[index];
+    if (!segment) return '';
 
-  if (segment.Destination) {
+    if (segment.Destination) {
       // API format
       const city = this.cities.find(c => c.code === segment.Destination);
       return city ? `${city.name} (${segment.Destination})` : segment.Destination;
-  } else if (segment.to) {
+    } else if (segment.to) {
       // Form input format
       return segment.to;
-  }
+    }
 
-  // Fallback
-  const route = this.flightInputData['multiCityRoutes']?.[index];
-  return route?.to || '';
-}
+    // Fallback
+    const route = this.flightInputData['multiCityRoutes']?.[index];
+    return route?.to || '';
+  }
 
 
 
@@ -3976,20 +3972,20 @@ getMultiCityRouteDestination(index: number): string {
     if (!segmentGroups || !Array.isArray(segmentGroups)) {
       return false;
     }
-    
+
     // Iterate through all segment groups to find matching origin/destination
     for (const segGroup of segmentGroups) {
       if (!Array.isArray(segGroup) || segGroup.length === 0) {
         continue;
       }
-      
+
       const firstSeg = segGroup[0];
       const lastSeg = segGroup[segGroup.length - 1];
-      
+
       // Get origin and destination codes from segment
       const segOrigin = firstSeg.Origin?.Airport?.AirportCode || firstSeg.Origin?.AirportCode || '';
       const segDest = lastSeg.Destination?.Airport?.AirportCode || lastSeg.Destination?.AirportCode || '';
-      
+
       // Check if this segment group matches the route
       if (segOrigin === routeOrigin && segDest === routeDest) {
         // Extract departure date/time
@@ -3998,86 +3994,86 @@ getMultiCityRouteDestination(index: number): string {
           enhancedSeg.departureDate = firstSeg.Origin.DepTime.split('T')[0] || '';
           enhancedSeg.departureTime = firstSeg.Origin.DepTime.split('T')[1]?.split('.')[0]?.substring(0, 5) || '';
         }
-        
+
         // Extract arrival date/time
         if (lastSeg.Destination?.ArrTime) {
           enhancedSeg.arrivalDateTime = lastSeg.Destination.ArrTime;
           enhancedSeg.arrivalDate = lastSeg.Destination.ArrTime.split('T')[0] || '';
           enhancedSeg.arrivalTime = lastSeg.Destination.ArrTime.split('T')[1]?.split('.')[0]?.substring(0, 5) || '';
         }
-        
+
         return true; // Found and extracted segment data
       }
     }
-    
+
     return false; // Segment data not found in this fare
   }
 
   proceedWithMultiCityBooking(skipCheck: boolean = false): void {
     // Add debug call
     this.debugMultiCityState();
-    
+
     console.log('proceedWithMultiCityBooking called', {
-        skipCheck,
-        multicitySelectedFaresCount: Object.keys(this.multicitySelectedFares).length
+      skipCheck,
+      multicitySelectedFaresCount: Object.keys(this.multicitySelectedFares).length
     });
 
     // Validate we have selections for all segments
     // Use the same logic as multicityHasSelectedFares to ensure consistency
-    const totalSegments = this.multicityTabData?.length || 
-                         this.flightInputData['multiCitySegment']?.length || 
-                         this.flightInputData['multiCityRoutes']?.length || 
-                         0;
-    
+    const totalSegments = this.multicityTabData?.length ||
+      this.flightInputData['multiCitySegment']?.length ||
+      this.flightInputData['multiCityRoutes']?.length ||
+      0;
+
     if (totalSegments === 0) {
-        console.error('No multi-city segments found!');
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No flight segments found. Please try again.',
-            confirmButtonText: 'Ok'
-        });
-        return;
+      console.error('No multi-city segments found!');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No flight segments found. Please try again.',
+        confirmButtonText: 'Ok'
+      });
+      return;
     }
-    
+
     // Check if all segments (0 to totalSegments-1) have selected fares
     let missingSegments: number[] = [];
     for (let i = 0; i < totalSegments; i++) {
-        if (!this.multicitySelectedFares[i] || !this.multicitySelectedFares[i].selectedFare) {
-            missingSegments.push(i);
-        }
+      if (!this.multicitySelectedFares[i] || !this.multicitySelectedFares[i].selectedFare) {
+        missingSegments.push(i);
+      }
     }
-    
+
     if (missingSegments.length > 0 && !skipCheck) {
-        console.error('Not all segments selected!', {
-            selected: Object.keys(this.multicitySelectedFares).length,
-            total: totalSegments,
-            missingSegments: missingSegments
-        });
-        Swal.fire({
-            icon: 'warning',
-            title: 'Incomplete Selection',
-            text: `Please select flights for all ${totalSegments} segments before proceeding.`,
-            confirmButtonText: 'Ok'
-        });
-        return;
+      console.error('Not all segments selected!', {
+        selected: Object.keys(this.multicitySelectedFares).length,
+        total: totalSegments,
+        missingSegments: missingSegments
+      });
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Selection',
+        text: `Please select flights for all ${totalSegments} segments before proceeding.`,
+        confirmButtonText: 'Ok'
+      });
+      return;
     }
 
     // Get all segment indices and sort them
     const segmentIndices = Object.keys(this.multicitySelectedFares)
-        .map(Number)
-        .sort((a, b) => a - b);
-    
+      .map(Number)
+      .sort((a, b) => a - b);
+
     console.log('Segment indices selected:', segmentIndices);
 
     // Get multiCitySegments for building booking data
     const multiCitySegments = this.flightInputData['multiCitySegment'] || this.flightInputData['multiCityRoutes'] || [];
-    
+
     // Enhance multiCitySegments with actual departure/arrival dates and times from selected fares
     const enhancedMultiCitySegments = multiCitySegments.map((seg: any, segIndex: number) => {
       const selectedFareData = this.multicitySelectedFares[segIndex];
       const enhancedSeg = this.deepCopy(seg);
-      
+
       // First, set default dates from segment definition if available
       // Only extract date, not time (time should come from actual flight segments, not default)
       if (seg.PreferredDepartureTime) {
@@ -4092,19 +4088,19 @@ getMultiCityRouteDestination(index: number): string {
         enhancedSeg.departureDate = depDate;
         enhancedSeg.departureTime = '';
       }
-      
+
       // Extract departure and arrival times from selected fare's segments
       // IMPORTANT: For multi-city, one fare option contains ALL segments
       // So we need to check ALL selected fares to find data for this segment
       const routeOrigin = seg.Origin || seg.fromAirportCode;
       const routeDest = seg.Destination || seg.toAirportCode;
-      
+
       // First, try the fare selected for this specific segment index
       let foundSegmentData = false;
       if (selectedFareData?.selectedFare?.Segments) {
         foundSegmentData = this.extractSegmentTimes(selectedFareData.selectedFare.Segments, routeOrigin, routeDest, enhancedSeg);
       }
-      
+
       // If not found in the specific segment's fare, check ALL selected fares
       // (because in multi-city, one fare contains all segments)
       if (!foundSegmentData) {
@@ -4118,18 +4114,18 @@ getMultiCityRouteDestination(index: number): string {
           }
         }
       }
-      
+
       return enhancedSeg;
     });
-    
+
     // Get airport names from codes
     const fromAirportCode = enhancedMultiCitySegments[0]?.Origin || enhancedMultiCitySegments[0]?.fromAirportCode || '';
-    const toAirportCode = enhancedMultiCitySegments[totalSegments - 1]?.Destination || 
-                          enhancedMultiCitySegments[totalSegments - 1]?.toAirportCode || '';
-    
+    const toAirportCode = enhancedMultiCitySegments[totalSegments - 1]?.Destination ||
+      enhancedMultiCitySegments[totalSegments - 1]?.toAirportCode || '';
+
     const fromAirportObj = this.cities.find(c => c.code === fromAirportCode);
     const toAirportObj = this.cities.find(c => c.code === toAirportCode);
-    
+
     const fromAirport = fromAirportObj?.airport || fromAirportObj?.name || fromAirportCode;
     const toAirport = toAirportObj?.airport || toAirportObj?.name || toAirportCode;
 
@@ -4140,81 +4136,81 @@ getMultiCityRouteDestination(index: number): string {
     const selectedFareOption = firstSelectedFareData?.selectedFare || null;
 
     if (!selectedFareOption) {
-        console.error('No selected fare option found for multi-city booking');
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No flight selection found. Please try again.',
-            confirmButtonText: 'Ok'
-        });
-        return;
+      console.error('No selected fare option found for multi-city booking');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No flight selection found. Please try again.',
+        confirmButtonText: 'Ok'
+      });
+      return;
     }
 
     // Prepare the complete multi-city booking data
     // Structure matches mobile final page expectations: departureFlightData.selectedFare.originalFareOption
     // The selectedFareOption contains ALL segments of the multi-city journey in its Segments array
     const multiCityBookingData: FlightData & { multiCitySegment?: any; multiCitySelectedFares?: any; totalPrice?: number } = {
-        tboToken: this.flightInputData['tboToken'],
-        ipAddress: this.flightInputData['ipAddress'],
-        tripType: 'multicity', // Match mobile format: 'multicity' not 'multi'
-        
-        // Route info from first and last segments (overall journey endpoints)
-        fromCity: this.getMultiCityRouteOrigin(0),
-        fromAirport: fromAirport,
-        fromAirportCode: fromAirportCode,
-        toCity: this.getMultiCityRouteDestination(totalSegments - 1),
-        toAirport: toAirport,
-        toAirportCode: toAirportCode,
-        
-        // Flight data structure matching mobile final page expectations
-        // departureFlightData.selectedFare.originalFareOption contains the complete flight with all segments
-        departureFlightData: {
-            selectedFare: {
-                originalFareOption: this.deepCopy(selectedFareOption) // Contains Segments array with all multi-city segments
-            }
-        },
-        returnFlightData: null,
-        
-        // Multi-city specific data (kept for backward compatibility and additional info)
-        // multiCitySegment: Array of route definitions with departure/arrival dates and times
-        // Each segment represents one leg of the journey (e.g., Bagdogra->Kolkata, Kolkata->Delhi)
-        // Enhanced with actual departureDateTime, arrivalDateTime, departureDate, arrivalDate, departureTime, arrivalTime
-        multiCitySegment: this.deepCopy(enhancedMultiCitySegments),
-        
-        // multiCitySelectedFares: Object mapping segment index to selected flight+fare
-        // Each selected fare contains complete Segments array with ALL legs of the journey
-        // Example: multicitySelectedFares[0] contains a flight with Segments = [Bagdogra->Kolkata, Kolkata->Delhi]
-        multiCitySelectedFares: this.deepCopy(this.multicitySelectedFares),
-        
-        // Passenger info
-        departureDate: enhancedMultiCitySegments[0]?.departureDate || 
-                      enhancedMultiCitySegments[0]?.PreferredDepartureTime?.split('T')[0] || 
-                      enhancedMultiCitySegments[0]?.date?.split('T')[0] ||
-                      this.flightInputData['departureDate'],
-        returnDate: null,
-        adults: this.flightInputData['adults'] || 1,
-        children: this.flightInputData['children'] || 0,
-        infants: this.flightInputData['infants'] || 0,
-        travelClass: this.flightInputData['travelClass'] || 'Economy',
-        fareType: this.flightInputData['fareType'],
-        
-        // Trace ID from API response
-        traceid: this.traceid,
-        
-        // Total price across all selected segments
-        totalPrice: this.multicityTotalFare
+      tboToken: this.flightInputData['tboToken'],
+      ipAddress: this.flightInputData['ipAddress'],
+      tripType: 'multicity', // Match mobile format: 'multicity' not 'multi'
+
+      // Route info from first and last segments (overall journey endpoints)
+      fromCity: this.getMultiCityRouteOrigin(0),
+      fromAirport: fromAirport,
+      fromAirportCode: fromAirportCode,
+      toCity: this.getMultiCityRouteDestination(totalSegments - 1),
+      toAirport: toAirport,
+      toAirportCode: toAirportCode,
+
+      // Flight data structure matching mobile final page expectations
+      // departureFlightData.selectedFare.originalFareOption contains the complete flight with all segments
+      departureFlightData: {
+        selectedFare: {
+          originalFareOption: this.deepCopy(selectedFareOption) // Contains Segments array with all multi-city segments
+        }
+      },
+      returnFlightData: null,
+
+      // Multi-city specific data (kept for backward compatibility and additional info)
+      // multiCitySegment: Array of route definitions with departure/arrival dates and times
+      // Each segment represents one leg of the journey (e.g., Bagdogra->Kolkata, Kolkata->Delhi)
+      // Enhanced with actual departureDateTime, arrivalDateTime, departureDate, arrivalDate, departureTime, arrivalTime
+      multiCitySegment: this.deepCopy(enhancedMultiCitySegments),
+
+      // multiCitySelectedFares: Object mapping segment index to selected flight+fare
+      // Each selected fare contains complete Segments array with ALL legs of the journey
+      // Example: multicitySelectedFares[0] contains a flight with Segments = [Bagdogra->Kolkata, Kolkata->Delhi]
+      multiCitySelectedFares: this.deepCopy(this.multicitySelectedFares),
+
+      // Passenger info
+      departureDate: enhancedMultiCitySegments[0]?.departureDate ||
+        enhancedMultiCitySegments[0]?.PreferredDepartureTime?.split('T')[0] ||
+        enhancedMultiCitySegments[0]?.date?.split('T')[0] ||
+        this.flightInputData['departureDate'],
+      returnDate: null,
+      adults: this.flightInputData['adults'] || 1,
+      children: this.flightInputData['children'] || 0,
+      infants: this.flightInputData['infants'] || 0,
+      travelClass: this.flightInputData['travelClass'] || 'Economy',
+      fareType: this.flightInputData['fareType'],
+
+      // Trace ID from API response
+      traceid: this.traceid,
+
+      // Total price across all selected segments
+      totalPrice: this.multicityTotalFare
     };
 
     console.log('=== FINAL MULTI-CITY BOOKING DATA ===');
     console.log('Complete booking data:', JSON.stringify(multiCityBookingData, null, 2));
-    
+
     // Verify structure of selected fares - each should contain all segments
     const selectedFaresInfo: any = {};
     Object.keys(this.multicitySelectedFares).forEach(key => {
       const selectedFare = this.multicitySelectedFares[Number(key)];
       const segmentsCount = selectedFare?.selectedFare?.Segments?.length || 0;
       const segmentRoutes: string[] = [];
-      
+
       if (selectedFare?.selectedFare?.Segments) {
         selectedFare.selectedFare.Segments.forEach((segGroup: any, idx: number) => {
           if (Array.isArray(segGroup)) {
@@ -4226,7 +4222,7 @@ getMultiCityRouteDestination(index: number): string {
           }
         });
       }
-      
+
       selectedFaresInfo[key] = {
         hasSelectedFare: !!selectedFare?.selectedFare,
         segmentsCount: segmentsCount,
@@ -4234,40 +4230,40 @@ getMultiCityRouteDestination(index: number): string {
         hasFareBreakdown: !!selectedFare?.selectedFare?.FareBreakdown
       };
     });
-    
+
     console.log('Key properties:', {
-        hasMultiCitySegment: !!multiCityBookingData.multiCitySegment,
-        multiCitySegmentLength: multiCityBookingData.multiCitySegment?.length,
-        multiCitySegmentRoutes: multiCityBookingData.multiCitySegment?.map((seg: any) => 
-          `${seg.Origin || seg.fromAirportCode} → ${seg.Destination || seg.toAirportCode}`
-        ),
-        hasMultiCitySelectedFares: !!multiCityBookingData.multiCitySelectedFares,
-        selectedFaresKeys: Object.keys(multiCityBookingData.multiCitySelectedFares || {}).length,
-        selectedFaresInfo: selectedFaresInfo,
-        hasTraceId: !!multiCityBookingData.traceid,
-        hasToken: !!multiCityBookingData.tboToken,
-        totalPrice: multiCityBookingData.totalPrice
+      hasMultiCitySegment: !!multiCityBookingData.multiCitySegment,
+      multiCitySegmentLength: multiCityBookingData.multiCitySegment?.length,
+      multiCitySegmentRoutes: multiCityBookingData.multiCitySegment?.map((seg: any) =>
+        `${seg.Origin || seg.fromAirportCode} → ${seg.Destination || seg.toAirportCode}`
+      ),
+      hasMultiCitySelectedFares: !!multiCityBookingData.multiCitySelectedFares,
+      selectedFaresKeys: Object.keys(multiCityBookingData.multiCitySelectedFares || {}).length,
+      selectedFaresInfo: selectedFaresInfo,
+      hasTraceId: !!multiCityBookingData.traceid,
+      hasToken: !!multiCityBookingData.tboToken,
+      totalPrice: multiCityBookingData.totalPrice
     });
 
     // Validate critical data
     const requiredFields = ['tboToken', 'ipAddress', 'traceid', 'departureFlightData'];
     const missingFields = requiredFields.filter(field => {
-        if (field === 'departureFlightData') {
-            return !(multiCityBookingData as Record<string, any>)[field] || 
-                   !(multiCityBookingData as Record<string, any>)[field]?.selectedFare?.originalFareOption;
-        }
-        return !(multiCityBookingData as Record<string, any>)[field];
+      if (field === 'departureFlightData') {
+        return !(multiCityBookingData as Record<string, any>)[field] ||
+          !(multiCityBookingData as Record<string, any>)[field]?.selectedFare?.originalFareOption;
+      }
+      return !(multiCityBookingData as Record<string, any>)[field];
     });
-    
+
     if (missingFields.length > 0) {
-        console.error('Missing required fields:', missingFields);
-        Swal.fire({
-            icon: 'error',
-            title: 'Data Error',
-            text: `Missing required information: ${missingFields.join(', ')}. Please try again.`,
-            confirmButtonText: 'Ok'
-        });
-        return;
+      console.error('Missing required fields:', missingFields);
+      Swal.fire({
+        icon: 'error',
+        title: 'Data Error',
+        text: `Missing required information: ${missingFields.join(', ')}. Please try again.`,
+        confirmButtonText: 'Ok'
+      });
+      return;
     }
 
     // DEBUG: Prepare summary for user verification (commented out, kept for future debugging)
@@ -4332,55 +4328,55 @@ getMultiCityRouteDestination(index: number): string {
 
     // Proceed directly to booking (skip preview modal)
     this.saveAndNavigateMultiCity(multiCityBookingData);
-}
+  }
 
   // Helper method to save and navigate for multi-city bookings
   private saveAndNavigateMultiCity(multiCityBookingData: any): void {
     // Save to service
     try {
-        console.log('Saving to flightDataService...');
-        this.flightDataService.setStringValue(multiCityBookingData as FlightData);
-        console.log('✓ Flight data saved to service');
-        
-        // Backup to localStorage
-        if (this.isBrowser && typeof localStorage !== 'undefined') {
-            localStorage.setItem('multiCityFlightData', JSON.stringify(multiCityBookingData));
-            console.log('✓ Flight data backed up to localStorage');
-        }
+      console.log('Saving to flightDataService...');
+      this.flightDataService.setStringValue(multiCityBookingData as FlightData);
+      console.log('✓ Flight data saved to service');
+
+      // Backup to localStorage
+      if (this.isBrowser && typeof localStorage !== 'undefined') {
+        localStorage.setItem('multiCityFlightData', JSON.stringify(multiCityBookingData));
+        console.log('✓ Flight data backed up to localStorage');
+      }
     } catch (error) {
-        console.error('✗ Error saving flight data:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Save Error',
-            text: 'Failed to save flight data. Please try again.',
-            confirmButtonText: 'Ok'
-        });
-        return;
+      console.error('✗ Error saving flight data:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Save Error',
+        text: 'Failed to save flight data. Please try again.',
+        confirmButtonText: 'Ok'
+      });
+      return;
     }
 
     // Navigate to final section
     console.log('→ Navigating to flightfinalsection...');
-    
+
     this.router.navigate(['flightfinalsection']).then(
-        (success) => {
-            if (success) {
-                console.log('✓ Navigation successful');
-            } else {
-                console.error('✗ Navigation returned false');
-                // Try alternate navigation
-                console.log('Trying alternate navigation method...');
-                this.router.navigate(['/flightfinalsection']);
-            }
-        },
-        (error) => {
-            console.error('✗ Router error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Navigation Error',
-                text: 'Unable to navigate to booking page. Please try again.',
-                confirmButtonText: 'Ok'
-            });
+      (success) => {
+        if (success) {
+          console.log('✓ Navigation successful');
+        } else {
+          console.error('✗ Navigation returned false');
+          // Try alternate navigation
+          console.log('Trying alternate navigation method...');
+          this.router.navigate(['/flightfinalsection']);
         }
+      },
+      (error) => {
+        console.error('✗ Router error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Navigation Error',
+          text: 'Unable to navigate to booking page. Please try again.',
+          confirmButtonText: 'Ok'
+        });
+      }
     );
   }
 
@@ -4435,7 +4431,7 @@ getMultiCityRouteDestination(index: number): string {
     if (!query || !query.trim()) {
       // Show all airports, excluding the one selected in the opposite field
       let allAirports = this.flightAirports.slice();
-      
+
       if (target === 'summary-from' && this.flightInputData['toAirportCode']) {
         const toCode = this.flightInputData['toAirportCode'].toLowerCase();
         allAirports = allAirports.filter(city => city.code.toLowerCase() !== toCode);
@@ -4443,7 +4439,7 @@ getMultiCityRouteDestination(index: number): string {
         const fromCode = this.flightInputData['fromAirportCode'].toLowerCase();
         allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
       }
-      
+
       this.activeSuggestions[target] = allAirports;
       return;
     }
@@ -4472,7 +4468,7 @@ getMultiCityRouteDestination(index: number): string {
   showCitySuggestionsOnFocus(target: string) {
     // Show all airports on focus, excluding the one selected in the opposite field
     let allAirports = this.flightAirports.slice();
-    
+
     if (target === 'summary-from' && this.flightInputData['toAirportCode']) {
       const toCode = this.flightInputData['toAirportCode'].toLowerCase();
       allAirports = allAirports.filter(city => city.code.toLowerCase() !== toCode);
@@ -4480,7 +4476,7 @@ getMultiCityRouteDestination(index: number): string {
       const fromCode = this.flightInputData['fromAirportCode'].toLowerCase();
       allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
     }
-    
+
     this.activeSuggestions[target] = allAirports;
   }
 
@@ -4490,14 +4486,14 @@ getMultiCityRouteDestination(index: number): string {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     // Close suggestions immediately to prevent reopening
     this.activeSuggestions[target] = [];
-    
+
     // Close edit field immediately to prevent blur from reopening
     const fieldName = target === 'summary-from' ? 'from' : 'to';
     this.editField = null;
-    
+
     if (target === 'summary-from') {
       // Update form control with code (for form submission)
       this.modifySearchForm.patchValue({ from: cityCode });
@@ -4533,7 +4529,7 @@ getMultiCityRouteDestination(index: number): string {
         this.flightInputData['toCountry'] = airport.country || airport.state || '';
       }
     }
-    
+
     // Don't auto-search, let user click modify search button
   }
 
@@ -4637,7 +4633,7 @@ getMultiCityRouteDestination(index: number): string {
         infants: form.infants || 0
       };
     }
-    
+
     if (delta < 0 && !this.canDecrease(type)) {
       return;
     }
