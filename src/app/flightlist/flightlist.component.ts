@@ -2166,6 +2166,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return flight.Segments?.[0]?.length > 0 ? flight.Segments[0].length - 1 : 0;
   }
 
+  getLayoverCity(flight: any): string {
+    if (flight.Segments?.[0]?.length > 1) {
+      return flight.Segments[0][0].Destination.Airport.CityName;
+    }
+    return '';
+  }
+
   // Helper methods for multi-city desktop layout
   getLastSegmentArrivalTime(flight: any, tabIndex: number): Date {
     const segments = flight.Segments?.[tabIndex] || flight.Segments?.[0] || [];

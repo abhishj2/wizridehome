@@ -999,7 +999,8 @@
                       <div class="desktop-duration-section">
                         <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
                         <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
-                          getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
+                          (getStopsCount(flight) === 1 ? '1 Stop via ' + getLayoverCity(flight) : getStopsCount(flight)
+                          + ' Stops') }}</div>
                       </div>
 
                       <!-- Arrival Section -->
@@ -1590,7 +1591,8 @@
                               <div class="desktop-duration-section">
                                 <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
                                 <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
-                                  getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
+                                  (getStopsCount(flight) === 1 ? '1 Stop via ' + getLayoverCity(flight) :
+                                  getStopsCount(flight) + ' Stops') }}</div>
                               </div>
 
                               <!-- Arrival Section -->
@@ -2108,7 +2110,8 @@
                               <div class="desktop-duration-section">
                                 <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
                                 <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
-                                  getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
+                                  (getStopsCount(flight) === 1 ? '1 Stop via ' + getLayoverCity(flight) :
+                                  getStopsCount(flight) + ' Stops') }}</div>
                               </div>
 
                               <!-- Arrival Section -->
