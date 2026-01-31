@@ -2976,6 +2976,8 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         this.initializeSeatMapFromSSR(false);
       }
     }
+    // Check if the newly selected tab's first slide is available
+    setTimeout(() => this.checkAndSkipUnavailableSeatMap(), 100);
   }
 
   getSeatAnimationKey(segIndex: number, seatCode: string): string {
@@ -3049,6 +3051,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const delta = direction === 'next' ? 1 : -1;
     this.activeSeatIndex = (this.activeSeatIndex + delta + segments.length) % segments.length;
     this.bumpSeatAnimation();
+    setTimeout(() => this.checkAndSkipUnavailableSeatMap(), 50);
   }
 
   goToSeatSlide(index: number): void {
@@ -3057,6 +3060,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     const clamped = Math.max(0, Math.min(index, segments.length - 1));
     this.activeSeatIndex = clamped;
     this.bumpSeatAnimation();
+    setTimeout(() => this.checkAndSkipUnavailableSeatMap(), 50);
   }
 
   private maybeAutoAdvanceSeatSlide(segmentIndex: number, beforeCount: number, afterCount: number, isReturn: boolean): void {
@@ -3396,6 +3400,62 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       if (services && services.length > 0) {
         this.services = services;
       }
+    }
+
+    // Auto-skip if the first loaded map is unavailable
+    setTimeout(() => this.checkAndSkipUnavailableSeatMap(), 100);
+  }
+
+  // Helper to skip empty seat maps
+  private checkAndSkipUnavailableSeatMap(): void {
+    if (this.isMobileView()) return; // Only for Desktop
+
+    const segments = this.getCurrentSeatSegments();
+    const seatMap = this.getCurrentSeatMapArray();
+    const isReturn = this.activeJourneyTab === 'return';
+
+    // Safety checks
+    if (!segments || segments.length === 0) return;
+    // If seatMap array itself isn't ready yet, don't skip blindly
+    if (!seatMap || seatMap.length === 0) return;
+
+    // Check if current seat map is valid/populated
+    const currentMap = seatMap[this.activeSeatIndex];
+    const isAvailable = currentMap && currentMap.rows && currentMap.rows.length > 0;
+
+    if (isAvailable) {
+      return; // Current map is fine
+    }
+
+    console.log(`Seat map at index ${this.activeSeatIndex} (${isReturn ? 'return' : 'onward'}) is unavailable. Skipping...`);
+
+    // Try to find next available segment in this leg
+    let foundIndex = -1;
+    for (let i = this.activeSeatIndex + 1; i < segments.length; i++) {
+      const map = seatMap[i];
+      if (map && map.rows && map.rows.length > 0) {
+        foundIndex = i;
+        break;
+      }
+    }
+
+    if (foundIndex !== -1) {
+      // Found a later segment in same leg
+      this.activeSeatIndex = foundIndex;
+      this.bumpSeatAnimation();
+      // Recurse/Check again? foundIndex is guaranteed available by loop logic
+      return;
+    }
+
+    // If no more available in this leg... switch to next leg or meals
+    if (!isReturn && (this.flightSegmentsReturn || []).length > 0) {
+      // Switch to Return
+      console.log('Skipping to Return tab due to unavailability.');
+      this.onJourneyTabChange('return');
+    } else {
+      // Go to Meals
+      console.log('Skipping to Meals tab due to unavailability.');
+      this.activeSeatsTab = 'meals';
     }
   }
 
