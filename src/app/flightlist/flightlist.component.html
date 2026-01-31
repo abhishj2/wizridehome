@@ -515,42 +515,37 @@
     <!-- Main Content Area -->
     <main class="results-main">
       <div class="container">
-        <!-- Date Slider spanning sidebar and results -->
-        <div class="date-slider-bar" *ngIf="flightType === 'oneway'">
+
+        <!-- <div class="date-slider-bar desktophid" *ngIf="flightType === 'oneway'">
           <div class="date-slider-wrapper">
-            <!-- Left Arrow Button (Desktop Only) -->
-            <button class="date-slider-arrow date-slider-arrow-left" *ngIf="canScrollLeft"
-              (click)="scrollDateSlider('left')" aria-label="Scroll left">
-              <i class="fas fa-chevron-left"></i>
-            </button>
+        <button class="date-slider-arrow date-slider-arrow-left" *ngIf="canScrollLeft"
+          (click)="scrollDateSlider('left')" aria-label="Scroll left">
+          <i class="fas fa-chevron-left"></i>
+        </button>
 
-            <div class="date-slider-scroll-wrapper" #scrollContainer (scroll)="onDateSliderScroll()">
-              <div class="date-slider-container">
-                <!-- REQUIREMENT 1 & 2: Show only dates which have prices from calendar fare API -->
-                <!-- REQUIREMENT 3: Lazy loading - dates loaded in batches as user scrolls -->
-                <!-- REQUIREMENT 4: Selected date is centered on page load -->
-                <div class="date-card" *ngFor="let item of datePrices; let i = index"
-                  [class.selected]="item.date === highlightedDate" (click)="selectDateFromSlider(item.date, i)"
-                  [title]="item.date | date : 'fullDate'">
-                  <div class="date-label">{{ item.date | date : "d MMM" }}</div>
-                  <div class="date-price">₹ {{ item.price | number : "1.0-0" }}</div>
-                </div>
-                <div *ngIf="datePrices.length === 0 && !isLoadingMore" class="date-slider-empty">
-                  Loading dates...
-                </div>
-                <div *ngIf="isLoadingMore" class="date-slider-loading">
-                  <i class="fas fa-spinner fa-spin"></i>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Arrow Button (Desktop Only) -->
-            <button class="date-slider-arrow date-slider-arrow-right" *ngIf="canScrollRight"
-              (click)="scrollDateSlider('right')" aria-label="Scroll right">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
+        <div class="date-slider-scroll-wrapper" #scrollContainer (scroll)="onDateSliderScroll()">
+          <div class="date-slider-container">
+        <div class="date-card" *ngFor="let item of datePrices; let i = index"
+          [class.selected]="item.date === highlightedDate" (click)="selectDateFromSlider(item.date, i)"
+          [title]="item.date | date : 'fullDate'">
+          <div class="date-label">{{ item.date | date : "d MMM" }}</div>
+          <div class="date-price">₹ {{ item.price | number : "1.0-0" }}</div>
         </div>
+        <div *ngIf="datePrices.length === 0 && !isLoadingMore" class="date-slider-empty">
+          Loading dates...
+        </div>
+        <div *ngIf="isLoadingMore" class="date-slider-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+      </div>
+  </div>
+
+  <button class="date-slider-arrow date-slider-arrow-right" *ngIf="canScrollRight" (click)="scrollDateSlider('right')"
+    aria-label="Scroll right">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+</div> -->
 
         <!-- Mobile Filter Chips and Button (only visible on mobile) -->
         <div class="mobile-filter-chips-wrapper"
@@ -912,6 +907,39 @@
 
           <!-- Left Column - Flight Results -->
           <div class="results-column">
+            <div class="date-slider-bar mobilehid" *ngIf="flightType === 'oneway'">
+              <div class="date-slider-wrapper">
+                <!-- Left Arrow Button (Desktop Only) -->
+                <button class="date-slider-arrow date-slider-arrow-left" *ngIf="canScrollLeft"
+                  (click)="scrollDateSlider('left')" aria-label="Scroll left">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="date-slider-scroll-wrapper" #scrollContainer (scroll)="onDateSliderScroll()">
+                  <div class="date-slider-container">
+
+                    <div class="date-card" *ngFor="let item of datePrices; let i = index"
+                      [class.selected]="item.date === highlightedDate" (click)="selectDateFromSlider(item.date, i)"
+                      [title]="item.date | date : 'fullDate'">
+                      <div class="date-label">{{ item.date | date : "d MMM" }}</div>
+                      <div class="date-price">₹ {{ item.price | number : "1.0-0" }}</div>
+                    </div>
+                    <div *ngIf="datePrices.length === 0 && !isLoadingMore" class="date-slider-empty">
+                      Loading dates...
+                    </div>
+                    <div *ngIf="isLoadingMore" class="date-slider-loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Arrow Button (Desktop Only) -->
+                <button class="date-slider-arrow date-slider-arrow-right" *ngIf="canScrollRight"
+                  (click)="scrollDateSlider('right')" aria-label="Scroll right">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
             <!-- One Way Flights -->
             <div *ngIf="flightType === 'oneway'" class="flight-list-container">
               <!-- Debug Info (remove after testing) -->
