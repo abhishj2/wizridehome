@@ -7009,3 +7009,8 @@ h2.flight-count-text {
     display: none;
   }
 }
+
+button.scroll-arrow {
+  font-size: 20px !important;
+  font-weight: bold;
+}

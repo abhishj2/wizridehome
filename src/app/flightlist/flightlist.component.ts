@@ -2168,7 +2168,11 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   getLayoverCity(flight: any): string {
     if (flight.Segments?.[0]?.length > 1) {
-      return flight.Segments[0][0].Destination.Airport.CityName;
+      const segments = flight.Segments[0];
+      return segments
+        .slice(0, segments.length - 1)
+        .map((s: any) => s.Destination.Airport.CityName)
+        .join(', ');
     }
     return '';
   }
