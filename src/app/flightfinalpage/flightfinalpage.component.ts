@@ -1325,6 +1325,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     this.updateFinalFare();
     this.loader = false;
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => window.scrollTo(0, 0), 100);
+    }
   }
 
   updateFinalFare() {
