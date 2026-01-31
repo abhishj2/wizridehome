@@ -7101,3 +7101,354 @@ button.scroll-arrow {
   font-size: 20px !important;
   font-weight: bold;
 }
+/* Round Trip Selection Bottom Strip */
+.roundtrip-selection-strip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  z-index: 1000;
+  padding: 16px 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+.strip-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-flights-info {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.flight-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flight-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  font-weight: 600;
+}
+
+.flight-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.strip-airline-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.flight-times {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.divider-vertical {
+  width: 1px;
+  height: 30px;
+  background: #333;
+}
+
+.strip-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.total-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-price .label {
+  font-size: 11px;
+  color: #ccc;
+}
+
+.total-price .amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.book-now-btn {
+  background: #008b8b;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.book-now-btn:hover {
+  background: #006666;
+  transform: translateY(-1px);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* Mobile responsive adjustments for the strip */
+@media (max-width: 768px) {
+  .roundtrip-selection-strip {
+    padding: 12px 0;
+  }
+  
+  .strip-container {
+    padding: 0 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .selected-flights-info {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .flight-info-col {
+    flex: 1;
+    min-width: 0; 
+  }
+  
+  .flight-times {
+    font-size: 12px;
+    flex-wrap: wrap; 
+  }
+  
+  .strip-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+
+/* Updated Round Trip Strip Styles (Step 77) */
+
+.roundtrip-selection-strip {
+  background: #001120; /* Dark navy background */
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+}
+
+.strip-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1300px;
+  gap: 20px;
+}
+
+.flight-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.section-header {
+  font-size: 13px;
+  color: #c4d7e5;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.strip-airline-logo {
+  width: 32px;
+  height: 32px;
+  background: white;
+  padding: 2px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.flight-details-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flight-route-time {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.flight-details-link {
+  font-size: 12px;
+  color: #00aaff;
+  cursor: pointer;
+  text-decoration: none;
+}
+.flight-details-link:hover {
+  text-decoration: underline;
+}
+
+.section-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-left: auto;
+}
+
+.divider-vertical {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  height: 40px;
+  margin: 0 10px;
+}
+
+.strip-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 280px;
+  justify-content: flex-end;
+}
+
+.total-price-block {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #fff;
+  line-height: 1;
+}
+
+.price-row .currency {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.price-row .amount {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.price-subtitle {
+  font-size: 11px;
+  color: #8da2b5;
+  margin-top: 2px;
+}
+
+.fare-details-link {
+  font-size: 12px;
+  color: #00aaff;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.book-now-btn {
+  background: #0091ff; /* Bright blue */
+  color: white;
+  border: none;
+  border-radius: 25px; /* Rounded pill shape */
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 145, 255, 0.4);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.book-now-btn:hover {
+  background: #007acc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 145, 255, 0.5);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+  .section-header { display: none; }
+  .flight-details-link { display: none; }
+  .section-price { font-size: 15px; }
+  .flight-route-time { font-size: 14px; }
+  .strip-airline-logo { width: 24px; height: 24px; }
+  .price-row .amount { font-size: 20px; }
+  .book-now-btn { padding: 8px 16px; font-size: 13px; }
+  .divider-vertical { height: 30px; }
+  
+  .strip-container {
+    padding: 0 10px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .roundtrip-selection-strip {
+    padding: 8px 0;
+  }
+  .strip-container {
+      flex-wrap: wrap; 
+      justify-content: center;
+      gap: 12px; 
+  }
+  .flight-info-section {
+      min-width: 140px; 
+      flex: 0 0 auto; 
+  }
+  .strip-actions {
+      width: 100%;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 8px;
+  }
+  .divider-vertical { display: none; }
+  .section-price { display: none; } /* Hide individual prices on very small screens to save space if needed, or keep */
+}
+

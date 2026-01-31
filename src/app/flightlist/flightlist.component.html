@@ -2677,6 +2677,84 @@
                 </div>
               </div>
 
+              <!-- Round Trip Selection Bottom Strip -->
+              <div class="roundtrip-selection-strip"
+                *ngIf="flightType === 'round' && selectedOutbound && selectedReturn">
+                <div class="strip-container">
+                  <!-- Onward Flight Info -->
+                  <div class="flight-info-section">
+                    <div class="section-header">Departure • {{ selectedOutbound.Segments[0][0].Airline.AirlineName }}
+                    </div>
+                    <div class="section-body">
+                      <img
+                        [src]="'assets/images/flightimages/' + selectedOutbound.Segments[0][0].Airline.AirlineCode + '.png'"
+                        class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
+                      <div class="flight-details-mid">
+                        <div class="flight-route-time">
+                          {{ selectedOutbound.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
+                          {{ selectedOutbound.Segments[0][selectedOutbound.Segments[0].length-1].Destination.ArrTime |
+                          date:'HH:mm' }}
+                        </div>
+                        <div class="flight-details-link"
+                          (click)="toggleCardExpansion(selectedOutboundIndex, $event); $event.stopPropagation()">Flight
+                          Details</div>
+                      </div>
+                      <div class="section-price">
+                        ₹ {{ (selectedOutbound.selectedFareOption?.Fare?.PublishedFare || selectedOutbound.price) |
+                        number:'1.0-0' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="divider-vertical"></div>
+
+                  <!-- Return Flight Info -->
+                  <div class="flight-info-section">
+                    <div class="section-header">Return • {{ selectedReturn.Segments[0][0].Airline.AirlineName }}</div>
+                    <div class="section-body">
+                      <img
+                        [src]="'assets/images/flightimages/' + selectedReturn.Segments[0][0].Airline.AirlineCode + '.png'"
+                        class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
+                      <div class="flight-details-mid">
+                        <div class="flight-route-time">
+                          {{ selectedReturn.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
+                          {{ selectedReturn.Segments[0][selectedReturn.Segments[0].length-1].Destination.ArrTime |
+                          date:'HH:mm' }}
+                        </div>
+                        <div class="flight-details-link"
+                          (click)="toggleCardExpansion(selectedReturnIndex, $event); $event.stopPropagation()">Flight
+                          Details</div>
+                      </div>
+                      <div class="section-price">
+                        ₹ {{ (selectedReturn.selectedFareOption?.Fare?.PublishedFare || selectedReturn.price) |
+                        number:'1.0-0' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="divider-vertical show-desktop"></div>
+
+                  <!-- Total & Action -->
+                  <div class="strip-actions">
+                    <div class="total-price-block">
+                      <div class="price-row">
+                        <span class="currency">₹</span>
+                        <span class="amount">{{ ((selectedOutbound.selectedFareOption?.Fare?.PublishedFare ||
+                          selectedOutbound.price || 0) + (selectedReturn.selectedFareOption?.Fare?.PublishedFare ||
+                          selectedReturn.price || 0)) | number:'1.0-0' }}</span>
+                      </div>
+                      <div class="price-subtitle">/adult</div>
+                      <div class="fare-details-link">Fare Details</div>
+                    </div>
+                    <div class="action-buttons">
+                      <button class="book-now-btn" (click)="finalizeRoundTripBooking()">
+                        BOOK NOW
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- No Flights Message for Onward -->
               <div class="no-flights"
                 *ngIf="activeTab === 'onward' && (!groupedFlights || groupedFlights.length === 0) && !loader">

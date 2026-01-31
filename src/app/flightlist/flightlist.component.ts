@@ -3100,6 +3100,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           });
 
           // Navigate immediately (matching mobile behavior)
+          /* 
+          // PREVENTED AUTO NAVIGATION - User wants to click "Book Now" in bottom strip
           try {
             this.finalizeSelection({
               departureFare: departureFare,
@@ -3114,6 +3116,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               timer: 3000
             });
           }
+          */
         } else {
           console.error('Cannot proceed: missing flight selections or fares', {
             selectedOutbound: !!this.selectedOutbound,
@@ -3142,6 +3145,43 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
           }
         }
       }
+    }
+  }
+
+  // New method for the "Book Now" button in the bottom strip
+  finalizeRoundTripBooking(): void {
+    if (!this.selectedOutbound || !this.selectedReturn) {
+      return;
+    }
+
+    // Get departure fare from selectedOutbound - check multiple sources
+    let departureFare = this.selectedOutbound?.selectedFareOption;
+    if (!departureFare) {
+      if (this.selectedOutbound?.FareOptions?.length > 0) {
+        departureFare = this.selectedOutbound.FareOptions[0];
+      }
+    }
+
+    // Get return fare from selectedReturn - check multiple sources
+    let returnFare = this.selectedReturn?.selectedFareOption;
+    if (!returnFare) {
+      if (this.selectedReturn?.FareOptions?.length > 0) {
+        returnFare = this.selectedReturn.FareOptions[0];
+      }
+    }
+
+    if (departureFare && returnFare) {
+      this.finalizeSelection({
+        departureFare: departureFare,
+        returnFare: returnFare
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Unable to proceed. Please re-select your flights.',
+        timer: 3000
+      });
     }
   }
 
