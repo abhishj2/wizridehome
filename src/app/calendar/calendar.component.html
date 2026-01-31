@@ -1,15 +1,11 @@
 <div class="custom-calendar-container" [class.always-open-container]="alwaysOpen">
   <!-- Input Field -->
-  <div class="calendar-input-wrapper" *ngIf="!alwaysOpen" (click)="toggleCalendar()" [class.disabled]="disabled" #calendarInputWrapper>
+  <div class="calendar-input-wrapper" *ngIf="!alwaysOpen" (click)="toggleCalendar()" [class.disabled]="disabled"
+    #calendarInputWrapper>
     <div class="input-with-icon">
       <i class="fas fa-calendar input-icon"></i>
-      <input 
-        type="text" 
-        class="calendar-input form-input"
-        [value]="getDisplayDate()"
-        [placeholder]="placeholder"
-        readonly
-        [disabled]="disabled">
+      <input type="text" class="calendar-input form-input" [value]="getDisplayDate()" [placeholder]="placeholder"
+        readonly [disabled]="disabled">
     </div>
     <div class="calendar-arrow" [class.open]="isOpen">
       <i class="fas fa-chevron-down"></i>
@@ -17,32 +13,21 @@
   </div>
 
   <!-- Calendar Dropdown -->
-  <div 
-    class="calendar-dropdown" 
-    [class.active]="isOpen || alwaysOpen"
-    [class.always-open]="alwaysOpen"
-    [class.open-upward]="openUpward"
-    #calendarDropdown
-    role="dialog"
-    aria-label="Date picker"
-    aria-modal="true">
-    
+  <div class="calendar-dropdown" [class.active]="isOpen || alwaysOpen" [class.always-open]="alwaysOpen"
+    [class.open-upward]="openUpward" #calendarDropdown role="dialog" aria-label="Date picker" aria-modal="true">
+
     <!-- Calendar Header -->
     <div class="calendar-header">
       <!-- Close Button - Top Right -->
-     
-      
-      <button 
-        type="button" 
-        class="nav-btn prev-month"
-        (click)="previousMonth()"
-        [disabled]="isPrevMonthDisabled()"
+
+
+      <button type="button" class="nav-btn prev-month" (click)="previousMonth()" [disabled]="isPrevMonthDisabled()"
         aria-label="Previous month">
         <i class="fas fa-chevron-left"></i>
       </button>
-      
+
       <div class="month-year-display">
-        <h3 class="current-month-year">{{ getMonthYearDisplay() }}</h3>
+        <!-- <h3 class="current-month-year">{{ getMonthYearDisplay() }}</h3> -->
         <div class="month-year-selectors">
           <select class="month-selector" (change)="onMonthChange($event)">
             <option value="0" [selected]="displayMonth.getMonth() === 0">January</option>
@@ -59,16 +44,13 @@
             <option value="11" [selected]="displayMonth.getMonth() === 11">December</option>
           </select>
           <select class="year-selector" (change)="onYearChange($event)">
-            <option *ngFor="let year of availableYears" [value]="year" [selected]="year === displayYear">{{ year }}</option>
+            <option *ngFor="let year of availableYears" [value]="year" [selected]="year === displayYear">{{ year }}
+            </option>
           </select>
         </div>
       </div>
-      
-      <button 
-        type="button" 
-        class="nav-btn next-month"
-        (click)="nextMonth()"
-        aria-label="Next month">
+
+      <button type="button" class="nav-btn next-month" (click)="nextMonth()" aria-label="Next month">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
@@ -86,32 +68,19 @@
 
     <!-- Week Days Header -->
     <div class="week-days">
-      <div 
-        *ngFor="let day of weekDays" 
-        class="week-day"
-        [attr.aria-label]="day">
+      <div *ngFor="let day of weekDays" class="week-day" [attr.aria-label]="day">
         {{ day }}
       </div>
     </div>
 
     <!-- Calendar Grid -->
     <div class="calendar-grid" role="grid" aria-label="Calendar">
-      <button
-        *ngFor="let date of getCalendarDays(); let i = index"
-        type="button"
-        class="calendar-day"
-        [class.selected]="isDateSelected(date)"
-        [class.disabled]="isDateDisabled(date)"
-        [class.current-month]="isCurrentMonth(date)"
-        [class.other-month]="!isCurrentMonth(date)"
-        [class.today]="isToday(date)"
-        [class.has-fare]="getFareForDate(date)"
-        [class.lowest-fare]="isLowestFare(date)"
-        [attr.aria-label]="'Select ' + date.toLocaleDateString()"
-        [attr.aria-selected]="isDateSelected(date)"
-        [disabled]="isDateDisabled(date)"
-        (click)="selectDate(date)"
-        role="gridcell"
+      <button *ngFor="let date of getCalendarDays(); let i = index" type="button" class="calendar-day"
+        [class.selected]="isDateSelected(date)" [class.disabled]="isDateDisabled(date)"
+        [class.current-month]="isCurrentMonth(date)" [class.other-month]="!isCurrentMonth(date)"
+        [class.today]="isToday(date)" [class.has-fare]="getFareForDate(date)" [class.lowest-fare]="isLowestFare(date)"
+        [attr.aria-label]="'Select ' + date.toLocaleDateString()" [attr.aria-selected]="isDateSelected(date)"
+        [disabled]="isDateDisabled(date)" (click)="selectDate(date)" role="gridcell"
         [attr.tabindex]="isDateSelected(date) ? 0 : -1">
         <span class="date-number">{{ date.getDate() }}</span>
         <span class="date-fare" *ngIf="getFareForDate(date) && isCurrentMonth(date)">

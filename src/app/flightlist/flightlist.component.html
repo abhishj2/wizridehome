@@ -936,62 +936,75 @@
               <div class="flight-cards" *ngIf="groupedFlights && groupedFlights.length > 0">
                 <div class="card mobile-flight-card-new" [class.card-expanded]="flightDetailsExpanded[i]"
                   (click)="toggleCardExpansion(i, $event)" *ngFor="let flight of groupedFlights; let i = index">
+                  <div class="fltop">
 
-                  <!-- DESKTOP SINGLE ROW LAYOUT -->
-                  <div class="desktop-flight-row">
-                    <!-- Airline Section -->
-                    <div class="desktop-airline-section">
-                      <img class="desktop-airline-logo"
-                        [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'"
-                        [alt]="flight.Segments[0][0].Airline.AirlineName"
-                        onerror="this.src='assets/images/default-airline.png'" />
-                      <div class="desktop-airline-info">
-                        <div class="desktop-airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
-                        <div class="desktop-flight-number">{{ flight.Segments[0][0].Airline.AirlineCode }} {{
-                          flight.Segments[0][0].Airline.FlightNumber }}</div>
-                        <div class="desktop-aircraft-type">{{ flight.Segments[0][0].Craft || 'Aircraft' }}</div>
+                    <!-- DESKTOP SINGLE ROW LAYOUT -->
+                    <div class="desktop-flight-row">
+                      <!-- Airline Section -->
+                      <div class="desktop-airline-section">
+                        <img class="desktop-airline-logo"
+                          [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'"
+                          [alt]="flight.Segments[0][0].Airline.AirlineName"
+                          onerror="this.src='assets/images/default-airline.png'" />
+                        <div class="desktop-airline-info">
+                          <div class="desktop-airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
+                          <div class="desktop-flight-number">{{ flight.Segments[0][0].Airline.AirlineCode }} {{
+                            flight.Segments[0][0].Airline.FlightNumber }}</div>
+                          <div class="desktop-aircraft-type">{{ flight.Segments[0][0].Craft || 'Aircraft' }}</div>
+                        </div>
+
+                      </div>
+
+                      <!-- Departure Section -->
+                      <div class="desktop-departure-section">
+                        <div class="desktop-time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
+                        <div class="desktop-date">{{ flight.Segments[0][0].Origin.DepTime | date : "EEE, dd MMM" }}
+                        </div>
+                        <div class="desktop-airport">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
+                      </div>
+
+                      <!-- Duration & Stops Section -->
+                      <div class="desktop-duration-section">
+                        <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
+                        <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
+                          getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
+                      </div>
+
+                      <!-- Arrival Section -->
+                      <div class="desktop-arrival-section">
+                        <div class="desktop-time">{{ flight.Segments[0][flight.Segments[0].length -
+                          1].Destination.ArrTime
+                          | date : "HH:mm" }}</div>
+                        <div class="desktop-date">{{ flight.Segments[0][flight.Segments[0].length -
+                          1].Destination.ArrTime
+                          | date : "EEE, dd MMM" }}</div>
+                        <div class="desktop-airport">{{ flight.Segments[0][flight.Segments[0].length -
+                          1].Destination.Airport.CityName }}</div>
+                        <div class="desktop-day-diff"
+                          *ngIf="getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) > 0">
+                          +{{ getDayDiff(flight.Segments[0][0].Origin.DepTime,
+                          flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) }} day
+                        </div>
+                      </div>
+
+                      <!-- Price & Button Section -->
+                      <div class="desktop-price-section">
+                        <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
+                        <div class="desktop-price-label">per Adult</div>
+                        <button class="desktop-view-prices-btn"
+                          (click)="openFareOptionsModal(flight); $event.stopPropagation()">
+                          View Prices
+                        </button>
                       </div>
                     </div>
-
-                    <!-- Departure Section -->
-                    <div class="desktop-departure-section">
-                      <div class="desktop-time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}</div>
-                      <div class="desktop-date">{{ flight.Segments[0][0].Origin.DepTime | date : "EEE, dd MMM" }}</div>
-                      <div class="desktop-airport">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
-                    </div>
-
-                    <!-- Duration & Stops Section -->
-                    <div class="desktop-duration-section">
-                      <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                      <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
-                        getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
-                    </div>
-
-                    <!-- Arrival Section -->
-                    <div class="desktop-arrival-section">
-                      <div class="desktop-time">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime
-                        | date : "HH:mm" }}</div>
-                      <div class="desktop-date">{{ flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime
-                        | date : "EEE, dd MMM" }}</div>
-                      <div class="desktop-airport">{{ flight.Segments[0][flight.Segments[0].length -
-                        1].Destination.Airport.CityName }}</div>
-                      <div class="desktop-day-diff"
-                        *ngIf="getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) > 0">
-                        +{{ getDayDiff(flight.Segments[0][0].Origin.DepTime,
-                        flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) }} day
-                      </div>
-                    </div>
-
-                    <!-- Price & Button Section -->
-                    <div class="desktop-price-section">
-                      <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
-                      <div class="desktop-price-label">per Adult</div>
-                      <button class="desktop-view-prices-btn"
-                        (click)="openFareOptionsModal(flight); $event.stopPropagation()">
-                        View Prices
-                      </button>
+                    <div class="flbot">
+                      <button class="expand-card-btn" (click)="toggleCardExpansion(i, $event)">View Flight
+                        Details</button>
+                      <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
                     </div>
                   </div>
+
+
                   <!-- END DESKTOP SINGLE ROW LAYOUT -->
 
                   <!-- NEW MOBILE FLIGHT CARD DESIGN -->
@@ -1511,62 +1524,70 @@
                           (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
                           <input type="radio" name="outboundFlight" [value]="flight" [(ngModel)]="selectedOutbound" />
 
-                          <!-- DESKTOP SINGLE ROW LAYOUT -->
-                          <div class="desktop-flight-row">
-                            <!-- Airline Section -->
-                            <div class="desktop-airline-section">
-                              <img class="desktop-airline-logo"
-                                [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'"
-                                [alt]="flight.Segments[0][0].Airline.AirlineName"
-                                onerror="this.src='assets/images/default-airline.png'" />
-                              <div class="desktop-airline-info">
-                                <div class="desktop-airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}</div>
-                                <div class="desktop-flight-number">{{ flight.Segments[0][0].Airline.AirlineCode }} {{
-                                  flight.Segments[0][0].Airline.FlightNumber }}</div>
-                                <div class="desktop-aircraft-type">{{ flight.Segments[0][0].Craft || 'Aircraft' }}</div>
+                          <div class="fltop">
+                            <!-- DESKTOP SINGLE ROW LAYOUT -->
+                            <div class="desktop-flight-row">
+                              <!-- Airline Section -->
+                              <div class="desktop-airline-section">
+                                <img class="desktop-airline-logo"
+                                  [src]="'assets/images/flightimages/' + flight.Segments[0][0].Airline.AirlineCode + '.png'"
+                                  [alt]="flight.Segments[0][0].Airline.AirlineName"
+                                  onerror="this.src='assets/images/default-airline.png'" />
+                                <div class="desktop-airline-info">
+                                  <div class="desktop-airline-name">{{ flight.Segments[0][0].Airline.AirlineName }}
+                                  </div>
+                                  <div class="desktop-flight-number">{{ flight.Segments[0][0].Airline.AirlineCode }} {{
+                                    flight.Segments[0][0].Airline.FlightNumber }}</div>
+                                  <div class="desktop-aircraft-type">{{ flight.Segments[0][0].Craft || 'Aircraft' }}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
 
-                            <!-- Departure Section -->
-                            <div class="desktop-departure-section">
-                              <div class="desktop-time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}
+                              <!-- Departure Section -->
+                              <div class="desktop-departure-section">
+                                <div class="desktop-time">{{ flight.Segments[0][0].Origin.DepTime | date : "HH:mm" }}
+                                </div>
+                                <div class="desktop-date">{{ flight.Segments[0][0].Origin.DepTime | date : "EEE, dd MMM"
+                                  }}</div>
+                                <div class="desktop-airport">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
                               </div>
-                              <div class="desktop-date">{{ flight.Segments[0][0].Origin.DepTime | date : "EEE, dd MMM"
-                                }}</div>
-                              <div class="desktop-airport">{{ flight.Segments[0][0].Origin.Airport.CityName }}</div>
-                            </div>
 
-                            <!-- Duration & Stops Section -->
-                            <div class="desktop-duration-section">
-                              <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                              <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
-                                getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
-                            </div>
-
-                            <!-- Arrival Section -->
-                            <div class="desktop-arrival-section">
-                              <div class="desktop-time">{{ flight.Segments[0][flight.Segments[0].length -
-                                1].Destination.ArrTime | date : "HH:mm" }}</div>
-                              <div class="desktop-date">{{ flight.Segments[0][flight.Segments[0].length -
-                                1].Destination.ArrTime | date : "EEE, dd MMM" }}</div>
-                              <div class="desktop-airport">{{ flight.Segments[0][flight.Segments[0].length -
-                                1].Destination.Airport.CityName }}</div>
-                              <div class="desktop-day-diff"
-                                *ngIf="getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) > 0">
-                                +{{ getDayDiff(flight.Segments[0][0].Origin.DepTime,
-                                flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) }} day
+                              <!-- Duration & Stops Section -->
+                              <div class="desktop-duration-section">
+                                <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
+                                <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
+                                  getStopsCount(flight) + ' Stop' + (getStopsCount(flight) > 1 ? 's' : '') }}</div>
                               </div>
-                            </div>
 
-                            <!-- Price & Button Section -->
-                            <div class="desktop-price-section">
-                              <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
-                              <div class="desktop-price-label">per Adult</div>
-                              <button class="desktop-view-prices-btn"
-                                (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
-                                View Prices
-                              </button>
+                              <!-- Arrival Section -->
+                              <div class="desktop-arrival-section">
+                                <div class="desktop-time">{{ flight.Segments[0][flight.Segments[0].length -
+                                  1].Destination.ArrTime | date : "HH:mm" }}</div>
+                                <div class="desktop-date">{{ flight.Segments[0][flight.Segments[0].length -
+                                  1].Destination.ArrTime | date : "EEE, dd MMM" }}</div>
+                                <div class="desktop-airport">{{ flight.Segments[0][flight.Segments[0].length -
+                                  1].Destination.Airport.CityName }}</div>
+                                <div class="desktop-day-diff"
+                                  *ngIf="getDayDiff(flight.Segments[0][0].Origin.DepTime, flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) > 0">
+                                  +{{ getDayDiff(flight.Segments[0][0].Origin.DepTime,
+                                  flight.Segments[0][flight.Segments[0].length - 1].Destination.ArrTime) }} day
+                                </div>
+                              </div>
+
+                              <!-- Price & Button Section -->
+                              <div class="desktop-price-section">
+                                <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
+                                <div class="desktop-price-label">per Adult</div>
+                                <button class="desktop-view-prices-btn"
+                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                                  View Prices
+                                </button>
+                              </div>
+
                             </div>
+                          </div>
+                          <div class="flbot">
+                            <a href="#">test</a>
                           </div>
                           <!-- END DESKTOP SINGLE ROW LAYOUT -->
 

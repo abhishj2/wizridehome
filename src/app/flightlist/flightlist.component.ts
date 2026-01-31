@@ -2623,25 +2623,39 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   // Flight details methods
   toggleCardExpansion(index: number, event?: Event): void {
     if (event) {
-      // Don't toggle if clicking on button or interactive elements
       const target = event.target as HTMLElement;
-      if (target.closest('.btn') || target.closest('.dropdown') || target.closest('button')) {
+
+      // ❌ Ignore OTHER buttons
+      if (
+        target.closest('.btn') ||
+        target.closest('.dropdown')
+      ) {
         return;
       }
+
+      // ✅ Allow ONLY this button
+      if (target.closest('button') && !target.closest('.expand-card-btn')) {
+        return;
+      }
+
+      event.stopPropagation();
     }
 
-    this.flightDetailsExpanded = this.flightDetailsExpanded.map((_, i) => i === index ? !this.flightDetailsExpanded[i] : false);
+    // Close others, toggle current
+    this.flightDetailsExpanded = this.flightDetailsExpanded.map(
+      (_, i) => i === index ? !this.flightDetailsExpanded[i] : false
+    );
+
     this.farePanelExpanded[index] = false;
 
-    if (this.flightDetailsExpanded[index] && this.groupedFlights && this.groupedFlights[index]) {
+    if (this.flightDetailsExpanded[index] && this.groupedFlights?.[index]) {
       const flight = this.groupedFlights[index];
       this.activeTabs[index] = 'flight';
 
-      // Find and set the lowest fare option for this flight
-      if (flight.FareOptions && flight.FareOptions.length > 0) {
+      if (flight.FareOptions?.length) {
         const lowestFare = flight.FareOptions.reduce((a: any, b: any) => {
-          const fareA = a?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
-          const fareB = b?.Fare?.PublishedFare || Number.MAX_SAFE_INTEGER;
+          const fareA = a?.Fare?.PublishedFare ?? Number.MAX_SAFE_INTEGER;
+          const fareB = b?.Fare?.PublishedFare ?? Number.MAX_SAFE_INTEGER;
           return fareA < fareB ? a : b;
         });
         this.selectedFareOptions[index] = lowestFare;

@@ -6939,3 +6939,63 @@ h2.flight-count-text {
     grid-template-columns: 1.3fr 0.1fr 1.4fr 0.2fr !important
   }
 }
+
+.fltop {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  transition: all .3s ease;
+}
+
+.flbot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card.mobile-flight-card-new {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px !important;
+
+}
+
+.desktop-flight-row {
+  box-shadow: none !important;
+}
+
+.expand-card-btn {
+  background: none !important;
+  border: none;
+  color: darkcyan;
+  font-weight: bold;
+  font-size: 12px !important;
+  cursor: pointer;
+}
+
+.flbot p {
+  font-size: 12px !important;
+  font-weight: bold;
+  color: #474747 !important;
+
+}
+
+
+
+.desktop-flight-row {
+  margin-bottom: 0 !important;
+}
+
+.desktop-flight-row {
+  padding: 16px 20px 0 !important;
+}
+
+.flbot {
+  border-top: 2px dotted #eee;
+  margin-top: 10px;
+  padding: 10px 20px;
+}
+
+.fltop {
+  padding-bottom: 0px;
+}

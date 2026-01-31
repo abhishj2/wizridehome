@@ -100,7 +100,7 @@ h2 {
 }
 
 .booking-form {
-    opacity: 0.8 !important;
+    opacity: 1 !important;
 }
 
 .nav-tab.active {
@@ -2915,8 +2915,10 @@ a.service-cta-btn {
 
 .search-btn {
     padding: 12px 30px !important;
-}input.form-input {
-    padding:12px 20px; 
+}
+
+input.form-input {
+    padding: 12px 20px;
 }
 
 .cab-form-row {
@@ -3584,7 +3586,7 @@ button.nav-tab img {
 .tabs-container {
     background: #fff !important;
     box-shadow: none !important;
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .trip-type {
@@ -3608,7 +3610,8 @@ button.nav-tab img {
 .features {
     padding: 50px 0 0px !important;
 }
-.tab-2 .features{
+
+.tab-2 .features {
     padding: 30px 0 0px !important;
 }
 
@@ -6019,51 +6022,59 @@ button.nav-tab.active img {
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
-  }
+}
 
 
-  .wr-input {
-  font-size: 16px !important; /* Prevent iOS zoom */
-  -webkit-text-size-adjust: 100% !important; /* Prevent font scaling */
+.wr-input {
+    font-size: 16px !important;
+    /* Prevent iOS zoom */
+    -webkit-text-size-adjust: 100% !important;
+    /* Prevent font scaling */
 }
 
 .wr-field-pill {
-  cursor: pointer !important;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important; /* Remove tap highlight */
-  -webkit-touch-callout: none !important; /* Disable callout menu */
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    /* Remove tap highlight */
+    -webkit-touch-callout: none !important;
+    /* Disable callout menu */
 }
 
 /* Prevent zoom on input focus for iOS */
 @media screen and (max-width: 767px) {
-  input[type="tel"],
-  input[type="text"],
-  .wr-input {
-    font-size: 16px !important;
-  }
+
+    input[type="tel"],
+    input[type="text"],
+    .wr-input {
+        font-size: 16px !important;
+    }
 }
 
-.form-row.multrow{
-    align-items:end;
+.form-row.multrow {
+    align-items: end;
 }
 
 
 
-@media(min-width:767px){
+@media(min-width:767px) {
     .booking-form.tab-2 .city-suggestions.active {
         width: 300px !important;
         margin-top: 10px;
         overflow-y: auto !important;
         border-radius: 10px !important;
-    
+
         /* Hide scrollbar */
-        scrollbar-width: none;      /* Firefox */
-        -ms-overflow-style: none;   /* IE & Edge */
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE & Edge */
     }
-    
+
     .booking-form.tab-2 .city-suggestions.active::-webkit-scrollbar {
-        display: none;              /* Chrome, Safari */
+        display: none;
+        /* Chrome, Safari */
     }
 }

@@ -88,7 +88,7 @@
   border: 2px solid darkcyan;
   border-radius: 12px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 139, 139, 0.1);
-  z-index: 9999;
+  z-index: 2147483647 !important;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px) scale(0.98);
@@ -115,7 +115,8 @@
 }
 
 .calendar-dropdown.active {
-  opacity: 1; /* Changed to full opacity */
+  opacity: 1;
+  /* Changed to full opacity */
   visibility: visible;
   transform: translateY(0) scale(1);
 }
@@ -187,7 +188,8 @@
   justify-content: center;
 }
 
-.month-selector, .year-selector {
+.month-selector,
+.year-selector {
   background: rgba(0, 139, 139, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
@@ -207,16 +209,19 @@
   text-overflow: ellipsis;
 }
 
-.month-selector:hover, .year-selector:hover {
+.month-selector:hover,
+.year-selector:hover {
   background: #20b2aa;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.month-selector:focus, .year-selector:focus {
+.month-selector:focus,
+.year-selector:focus {
   outline: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-.month-selector option, .year-selector option {
+.month-selector option,
+.year-selector option {
   background: darkcyan;
   color: white;
   padding: 4px;
@@ -512,11 +517,11 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  
+
   .calendar-dropdown.active {
     transform: translateY(0) !important;
   }
-  
+
   .calendar-dropdown.open-upward {
     top: 0 !important;
     bottom: auto !important;
@@ -559,7 +564,8 @@
     gap: 8px !important;
   }
 
-  .month-selector, .year-selector {
+  .month-selector,
+  .year-selector {
     background: rgba(255, 255, 255, 0.2) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: white !important;
@@ -570,12 +576,14 @@
     font-weight: 500 !important;
   }
 
-  .month-selector:hover, .year-selector:hover {
+  .month-selector:hover,
+  .year-selector:hover {
     background: rgba(255, 255, 255, 0.3) !important;
     border-color: rgba(255, 255, 255, 0.4) !important;
   }
 
-  .month-selector option, .year-selector option {
+  .month-selector option,
+  .year-selector option {
     background: darkcyan !important;
     color: white !important;
   }
@@ -590,7 +598,7 @@
     color: #6b7280 !important;
     font-weight: 600 !important;
   }
-  
+
   .calendar-grid {
     grid-auto-rows: minmax(52px, 58px);
     padding: 8px 12px;
@@ -599,7 +607,7 @@
     min-height: 340px;
     max-height: 380px;
   }
-  
+
   .calendar-day {
     min-height: 52px;
     max-height: 58px;
@@ -648,7 +656,7 @@
     border-color: #f3f4f6;
     color: #d1d5db;
   }
-  
+
   .calendar-day .date-number {
     font-size: 14px;
     font-weight: 500;
@@ -658,20 +666,20 @@
   .calendar-day.selected .date-number {
     font-weight: 600;
   }
-  
+
   .calendar-day .date-fare {
     font-size: 9px;
     margin-top: 2px;
   }
-  
+
   /* Flights calendar mobile - larger text */
   :host.flights-calendar .calendar-day .date-number {
     margin-top: 6px;
   }
-  
+
   :host.flights-calendar .calendar-day .date-fare {
     font-size: 11px;
-    margin-top: 4px;
+    margin-top: 2px;
   }
 }
 
@@ -688,7 +696,7 @@
   .calendar-dropdown.active {
     transform: translateY(0) !important;
   }
-  
+
   .calendar-header {
     padding: 12px 14px !important;
     min-height: 52px !important;
@@ -699,15 +707,16 @@
     font-size: 15px !important;
     color: white !important;
   }
-  
+
   .nav-btn {
     width: 32px !important;
     height: 32px !important;
     background: rgba(255, 255, 255, 0.2) !important;
     color: white !important;
   }
-  
-  .month-selector, .year-selector {
+
+  .month-selector,
+  .year-selector {
     font-size: 11px !important;
     padding: 4px 8px !important;
     height: 28px !important;
@@ -716,51 +725,51 @@
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: white !important;
   }
-  
+
   .calendar-grid {
     grid-auto-rows: minmax(40px, auto);
     padding: 6px 10px;
     gap: 3px;
   }
-  
+
   .calendar-day {
     min-height: 40px;
     max-height: 44px;
     border-radius: 6px;
   }
-  
+
   .calendar-day .date-number {
     font-size: 13px;
   }
-  
+
   .calendar-day .date-fare {
     font-size: 8px;
     max-width: 90%;
   }
-  
+
   .week-day {
     font-size: 9px;
     padding: 6px 0;
     min-height: 22px;
   }
-  
+
   /* Flights calendar 480px - larger cells for fares */
   :host.flights-calendar .calendar-grid {
     grid-auto-rows: minmax(48px, 54px);
     min-height: 310px;
-    max-height: 350px;
+    max-height: 340px;
   }
-  
+
   :host.flights-calendar .calendar-day {
     min-height: 48px;
     max-height: 54px;
     padding: 4px 2px;
   }
-  
+
   :host.flights-calendar .calendar-day .date-number {
     margin-top: 5px;
   }
-  
+
   :host.flights-calendar .calendar-day .date-fare {
     font-size: 10px;
     max-width: 95%;
@@ -778,35 +787,35 @@
   .calendar-grid {
     max-height: 260px;
   }
-  
+
   .calendar-day .date-fare {
     font-size: clamp(6px, 0.8vw, 8px);
   }
-  
+
   .calendar-day .date-number {
     font-size: clamp(10px, 1.1vw, 12px);
   }
-  
+
   /* Flights calendar 1024px */
   :host.flights-calendar .calendar-dropdown {
     max-height: 440px;
     width: 340px;
   }
-  
+
   :host.flights-calendar .calendar-grid {
     max-height: 340px;
     grid-auto-rows: minmax(44px, 50px);
   }
-  
+
   :host.flights-calendar .calendar-day {
     min-height: 44px;
     max-height: 50px;
   }
-  
+
   :host.flights-calendar .calendar-day .date-fare {
     font-size: clamp(8px, 1vw, 10px);
   }
-  
+
   :host.flights-calendar .calendar-day .date-number {
     font-size: clamp(11px, 1.2vw, 13px);
   }
@@ -814,11 +823,13 @@
 
 /* Prevent Text Overflow on Small Screens */
 @media (max-width: 360px) {
-  .month-selector, .year-selector {
+
+  .month-selector,
+  .year-selector {
     max-width: 60px;
     font-size: 8px;
   }
-  
+
   .current-month-year {
     font-size: 10px;
   }
@@ -830,6 +841,7 @@
     opacity: 0;
     transform: translateY(-10px) scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -840,6 +852,7 @@
   from {
     transform: translateY(-100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -869,6 +882,7 @@
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
   .calendar-dropdown,
   .calendar-day,
   .nav-btn,
@@ -879,10 +893,10 @@
   }
 }
 
-select{
+select {
   font-size: 10px !important;
 }
 
 .calendar-arrow {
-  display:none !important;
+  display: none !important;
 }
