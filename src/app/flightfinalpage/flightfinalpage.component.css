@@ -8013,10 +8013,12 @@ body.calendar-open-mobile {
 
 .addons-slider-header {
   position: absolute;
-  top: -44px;
+  top: 50%;
   right: 0;
   display: flex;
   gap: 8px;
+  width: 100%;
+  justify-content: space-between
 }
 
 .addons-nav {

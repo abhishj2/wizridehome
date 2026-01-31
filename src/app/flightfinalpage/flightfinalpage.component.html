@@ -611,7 +611,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <i class="fas fa-chair"></i>
+            <img src="assets/images/seat.png" alt="seaticon">
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -621,7 +621,7 @@
           <div class="seats-meals-tabs">
             <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
               (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
-              <i class="fas fa-chair"></i>
+              <img src="assets/images/seat.png" />
               <span>Seats</span>
             </div>
             <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
@@ -851,7 +851,7 @@
       <div class="addon-section cabs-section" [class.expanded]="isCabsExpanded" [class.locked]="addonUnlockStep < 2">
         <div class="addon-section-header" (click)="toggleCabsSection()">
           <div class="addon-section-title">
-            <i class="fas fa-car"></i>
+            <img src="assets/images/seat.png" />
             <span>Cabs</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isCabsExpanded"></i>
@@ -880,18 +880,19 @@
         </div>
         <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
           <div class="services-selection" *ngIf="services?.length; else noServices">
-            <div class="addons-slider-header">
-              <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
-                aria-label="Previous services">
-                ‹
-              </button>
-              <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
-                aria-label="Next services">
-                ›
-              </button>
-            </div>
+
             <div class="services-scroll-container" #addonsScroll>
               <div class="services-list">
+                <div class="addons-slider-header">
+                  <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
+                    aria-label="Previous services">
+                    ‹
+                  </button>
+                  <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
+                    aria-label="Next services">
+                    ›
+                  </button>
+                </div>
                 <div class="service-card" *ngFor="let service of getFilteredServices()">
                   <div class="service-visual">
                     <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
@@ -1384,7 +1385,7 @@
                       <div class="location-info">
                         <div class="city-name">{{ segment.from }}</div>
                         <div class="airport-name">{{ segment.fromAirport || segment.from + ', Terminal N/A' }}</div>
-                        <div class="duration">{{ segment.duration }}</div>
+
                       </div>
                     </div>
                     <div class="timeline-item">
@@ -1868,7 +1869,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <i class="fas fa-chair"></i>
+            <img src="assets/images/seat.png" />
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -1878,12 +1879,12 @@
           <div class="seats-meals-tabs">
             <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
               (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
-              <i class="fas fa-chair"></i>
+              <img src="assets/images/seat.png" alt="">
               <span>Seats</span>
             </div>
             <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
               (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
-              <i class="fas fa-utensils"></i>
+              <img src="assets/images/meal.png" alt="">
               <span>Meals</span>
             </div>
           </div>
@@ -2169,18 +2170,19 @@
         </div>
         <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
           <div class="services-selection" *ngIf="services?.length; else noServices">
-            <div class="addons-slider-header">
-              <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
-                aria-label="Previous services">
-                ‹
-              </button>
-              <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
-                aria-label="Next services">
-                ›
-              </button>
-            </div>
+
             <div class="services-scroll-container" #addonsScroll>
               <div class="services-list">
+                <div class="addons-slider-header">
+                  <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
+                    aria-label="Previous services">
+                    ‹
+                  </button>
+                  <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
+                    aria-label="Next services">
+                    ›
+                  </button>
+                </div>
                 <div class="service-card" *ngFor="let service of getFilteredServices()">
                   <div class="service-visual">
                     <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
