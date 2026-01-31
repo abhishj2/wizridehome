@@ -6999,3 +6999,13 @@ h2.flight-count-text {
 .fltop {
   padding-bottom: 0px;
 }
+
+.flight-count-header {
+  justify-content: space-between;
+}
+
+@media(max-width:767px) {
+  .flbot {
+    display: none;
+  }
+}
