@@ -1520,8 +1520,7 @@
                     <div class="flight-cards">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedOutboundIndex === i"
                         *ngFor="let flight of groupedFlights; let i = index">
-                        <label class="flight-radio-wrapper"
-                          (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
+                        <label class="flight-radio-wrapper" (click)="toggleCardExpansion(i, $event)">
                           <input type="radio" name="outboundFlight" [value]="flight" [(ngModel)]="selectedOutbound" />
 
                           <div class="fltop">
@@ -1937,6 +1936,81 @@
                             </div>
                           </div>
                         </label>
+
+                        <!-- Expandable Details -->
+                        <div class="flight-details-expanded" *ngIf="flightDetailsExpanded[i]"
+                          (click)="$event.stopPropagation()">
+                          <div class="flight-tabs">
+                            <div class="tab" *ngFor="let tab of tabs" [class.active]="activeTabs[i] === tab.id"
+                              (click)="selectTab(i, tab.id); $event.stopPropagation()">
+                              {{ tab.label }}
+                            </div>
+                          </div>
+
+                          <!-- Flight Details Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
+                            <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
+                              <div class="flight-segment-layout">
+                                <div class="flight-info-compact">
+                                  <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                    [alt]="segment.Airline.AirlineName" width="60" height="60"
+                                    onerror="this.src='assets/images/default-airline.png'" />
+                                  <div class="flight-name-number">
+                                    <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
+                                    }}
+                                  </div>
+                                </div>
+                                <div class="timing-info">
+                                  <div class="time-block">
+                                    <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                                    <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
+                                      segment.Origin.Airport.AirportCode }})</div>
+                                  </div>
+                                  <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                                  <div class="time-block">
+                                    <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                                    <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
+                                      segment.Destination.Airport.AirportCode }})</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Fare Summary Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
+                            <table class="fare-table">
+                              <tr>
+                                <th>Total</th>
+                                <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
+                                    }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Base Fare</th>
+                                <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}</td>
+                              </tr>
+                              <tr>
+                                <th>Taxes & Fees</th>
+                                <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</td>
+                              </tr>
+                            </table>
+                          </div>
+
+                          <!-- Cancellation Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'cancellation'">
+                            <div class="policy-content">
+                              <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            </div>
+                          </div>
+
+                          <!-- Date Change Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'dateChange'">
+                            <div class="policy-content">
+                              <p>{{ getDateChangeRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1960,8 +2034,7 @@
                     <div class="flight-cards">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedReturnIndex === i"
                         *ngFor="let flight of groupedFlightsOutbound; let i = index">
-                        <label class="flight-radio-wrapper"
-                          (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
+                        <label class="flight-radio-wrapper" (click)="toggleCardExpansion(i, $event)">
                           <input type="radio" name="returnFlight" [value]="flight" [(ngModel)]="selectedReturn" />
 
                           <div class="fltop">
@@ -2377,6 +2450,81 @@
                             </div>
                           </div>
                         </label>
+
+                        <!-- Expandable Details -->
+                        <div class="flight-details-expanded" *ngIf="flightDetailsExpanded[i]"
+                          (click)="$event.stopPropagation()">
+                          <div class="flight-tabs">
+                            <div class="tab" *ngFor="let tab of tabs" [class.active]="activeTabs[i] === tab.id"
+                              (click)="selectTab(i, tab.id); $event.stopPropagation()">
+                              {{ tab.label }}
+                            </div>
+                          </div>
+
+                          <!-- Flight Details Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
+                            <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
+                              <div class="flight-segment-layout">
+                                <div class="flight-info-compact">
+                                  <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                    [alt]="segment.Airline.AirlineName" width="60" height="60"
+                                    onerror="this.src='assets/images/default-airline.png'" />
+                                  <div class="flight-name-number">
+                                    <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
+                                    }}
+                                  </div>
+                                </div>
+                                <div class="timing-info">
+                                  <div class="time-block">
+                                    <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                                    <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
+                                      segment.Origin.Airport.AirportCode }})</div>
+                                  </div>
+                                  <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                                  <div class="time-block">
+                                    <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                                    <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
+                                      segment.Destination.Airport.AirportCode }})</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Fare Summary Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
+                            <table class="fare-table">
+                              <tr>
+                                <th>Total</th>
+                                <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
+                                    }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Base Fare</th>
+                                <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}</td>
+                              </tr>
+                              <tr>
+                                <th>Taxes & Fees</th>
+                                <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</td>
+                              </tr>
+                            </table>
+                          </div>
+
+                          <!-- Cancellation Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'cancellation'">
+                            <div class="policy-content">
+                              <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            </div>
+                          </div>
+
+                          <!-- Date Change Tab -->
+                          <div class="tab-content" *ngIf="activeTabs[i] === 'dateChange'">
+                            <div class="policy-content">
+                              <p>{{ getDateChangeRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 

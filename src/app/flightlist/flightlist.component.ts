@@ -2641,6 +2641,12 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       event.stopPropagation();
     }
 
+    // Determine which list to use based on active tab
+    let currentList = this.groupedFlights;
+    if (this.flightType === 'round' && this.activeTab === 'return') {
+      currentList = this.groupedFlightsOutbound;
+    }
+
     // Close others, toggle current
     this.flightDetailsExpanded = this.flightDetailsExpanded.map(
       (_, i) => i === index ? !this.flightDetailsExpanded[i] : false
@@ -2648,8 +2654,8 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
     this.farePanelExpanded[index] = false;
 
-    if (this.flightDetailsExpanded[index] && this.groupedFlights?.[index]) {
-      const flight = this.groupedFlights[index];
+    if (this.flightDetailsExpanded[index] && currentList?.[index]) {
+      const flight = currentList[index];
       this.activeTabs[index] = 'flight';
 
       if (flight.FareOptions?.length) {
@@ -2784,6 +2790,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   // Tab switching for round trip
   switchTab(tab: 'onward' | 'return'): void {
     this.activeTab = tab;
+
+    // Reset expansion states when switching tabs to prevent conflicts
+    this.flightDetailsExpanded = [];
+    this.activeTabs = [];
+    this.selectedFareOptions = {};
+    this.farePanelExpanded = [];
+
     this.updateUnderlineStyle();
   }
 

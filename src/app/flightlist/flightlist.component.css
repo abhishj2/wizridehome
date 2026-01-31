@@ -1169,7 +1169,7 @@ img {
 
 .results-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 1fr 3.5fr;
   gap: 24px;
   align-items: start;
   justify-items: start;
@@ -4930,7 +4930,7 @@ img {
 @media (min-width: 1024px) {
   .results-layout {
     display: grid !important;
-    grid-template-columns: 400px 1fr !important;
+    grid-template-columns: 1fr 3.5fr !important;
     gap: 24px !important;
   }
 
