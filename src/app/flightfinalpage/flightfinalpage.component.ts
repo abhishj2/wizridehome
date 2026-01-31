@@ -48,6 +48,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   isCabsExpanded: boolean = false;
   isAddonsExpanded: boolean = false;
   activeSeatsTab: 'seats' | 'meals' = 'seats';
+  seatAnimationNonce = 0;
   /**
    * Progressive unlock for add-ons (MMT style)
    * 0 = locked (passenger details incomplete)
@@ -2961,6 +2962,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     this.activeJourneyTab = tab;
     this.activeSeatIndex = 0;
     this.activeMealIndex = 0;
+    this.bumpSeatAnimation();
     // Lazy initialize seat map for selected leg
     if (tab === 'return') {
       if (!this.seatMapReturn || this.seatMapReturn.length === 0) {
@@ -2971,6 +2973,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
         this.initializeSeatMapFromSSR(false);
       }
     }
+  }
+
+  getSeatAnimationKey(segIndex: number, seatCode: string): string {
+    return `${segIndex}-${seatCode}-${this.seatAnimationNonce}`;
   }
 
   toggleCabsSection(): void {
@@ -3039,6 +3045,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }
     const delta = direction === 'next' ? 1 : -1;
     this.activeSeatIndex = (this.activeSeatIndex + delta + segments.length) % segments.length;
+    this.bumpSeatAnimation();
   }
 
   goToSeatSlide(index: number): void {
@@ -3046,6 +3053,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     if (!segments || segments.length === 0) return;
     const clamped = Math.max(0, Math.min(index, segments.length - 1));
     this.activeSeatIndex = clamped;
+    this.bumpSeatAnimation();
   }
 
   private maybeAutoAdvanceSeatSlide(segmentIndex: number, beforeCount: number, afterCount: number, isReturn: boolean): void {
@@ -3074,6 +3082,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           this.initializeSeatMapFromSSR(true);
         }
         this.cdr.detectChanges();
+        this.bumpSeatAnimation();
         this.maybeOpenMealsAfterSeatCompletion();
       }, delay);
       return;
@@ -3081,7 +3090,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // If all seats done with no navigation needed
     if (seatAdded && afterCount >= total) {
-      setTimeout(() => this.maybeOpenMealsAfterSeatCompletion(), delay);
+      setTimeout(() => {
+        this.bumpSeatAnimation();
+        this.maybeOpenMealsAfterSeatCompletion();
+      }, delay);
     }
   }
 
@@ -3098,6 +3110,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     // Trigger change detection to update fare summary
     this.cdr.detectChanges();
+    this.bumpSeatAnimation();
 
     const afterCount = this.getSelectedSeatsCount(segmentIndex);
     this.maybeAutoAdvanceSeatSlide(segmentIndex, beforeCount, afterCount, isReturn);
@@ -3211,6 +3224,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
       this.isSeatsExpanded = true;
       this.cdr.detectChanges();
     }
+  }
+
+  private bumpSeatAnimation(): void {
+    this.seatAnimationNonce++;
   }
 
   scrollAddons(container: HTMLElement, direction: 'left' | 'right'): void {

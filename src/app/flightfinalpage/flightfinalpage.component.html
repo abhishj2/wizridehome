@@ -730,9 +730,11 @@
                                       </ng-container>
                                       <ng-template #hidePrice></ng-template>
                                     </div>
-                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">
-                                      <span class="check">✓</span>
-                                    </div>
+                                    <div class="seat-selected-tag" 
+     *ngIf="isSeatSelected(segIndex, block[letter]?.Code)" 
+     [attr.data-animation-key]="getSeatAnimationKey(segIndex, block[letter]?.Code)">
+  <span class="check">✓</span>
+</div>
                                   </ng-container>
                                   <ng-template #noSeat>-</ng-template>
                                 </div>

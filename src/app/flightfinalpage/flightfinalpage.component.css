@@ -7690,6 +7690,13 @@ button.continue-btn-main,
 
 .journey-tab i {
   font-size: 16px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  transform: translateY(-1px);
 }
 
 .journey-tab span {

@@ -56,7 +56,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
         // Hide footer only on mobile + flightfinalsection
         this.showFooter = !(
-          url.includes('/flightfinalsection') && this.isMobile()
+          url.includes('/flightfinalsection') ||
+          url.includes('/flightlist')
+          
         );
 
         if (isPlatformBrowser(this.platformId)) {
