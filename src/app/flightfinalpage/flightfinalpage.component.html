@@ -645,7 +645,8 @@
               </button>
 
               <div class="seat-slider-window">
-                <div class="flight-route-info seat-slide" *ngFor="let segment of getCurrentSeatSegments(); let segIndex = index"
+                <div class="flight-route-info seat-slide"
+                  *ngFor="let segment of getCurrentSeatSegments(); let segIndex = index"
                   [class.active]="segIndex === activeSeatIndex">
                   <div class="route-header-inline">
                     <div class="route-title-inline">
@@ -654,7 +655,8 @@
                     <div class="selection-status">
                       <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }}
                         Seat(s) Selected</span>
-                      <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
+                      <span class="status-badge"
+                        [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
                         [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
                         {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection
                         pending' }}
@@ -673,7 +675,8 @@
                             <div class="seat-icon free"></div>
                             <span>Free</span>
                           </div>
-                          <div class="legend-item" *ngFor="let category of getCurrentSeatMapArray()[segIndex].priceCategories">
+                          <div class="legend-item"
+                            *ngFor="let category of getCurrentSeatMapArray()[segIndex].priceCategories">
                             <div class="seat-icon" [ngClass]="category.category"></div>
                             <span>{{ category.category === 'low-price' ? 'Low' : category.category === 'medium-price' ?
                               'Medium' : 'High' }}</span>
@@ -692,7 +695,8 @@
                           <!-- Column Headers -->
                           <div class="seat-row-dynamic header-row">
                             <div class="row-label-header">Row</div>
-                            <ng-container *ngFor="let block of getCurrentSeatMapArray()[segIndex].seatBlocks; let blockIndex = index">
+                            <ng-container
+                              *ngFor="let block of getCurrentSeatMapArray()[segIndex].seatBlocks; let blockIndex = index">
                               <div class="seat-block-header-group">
                                 <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
                               </div>
@@ -721,20 +725,22 @@
                                   [title]="block[letter] ? getSeatTooltip(block[letter]) + ' • ' + (block[letter].displaySeatNo || block[letter].Code) : ''">
                                   <ng-container *ngIf="block[letter]; else noSeat">
                                     <div class="seat-meta">
-                                      <span class="seat-code">{{ block[letter].displaySeatNo || block[letter].Code }}</span>
-                                      <ng-container *ngIf="!isSeatSelected(segIndex, block[letter]?.Code); else hidePrice">
-                                        <span class="seat-price" *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
+                                      <span class="seat-code">{{ block[letter].displaySeatNo || block[letter].Code
+                                        }}</span>
+                                      <ng-container
+                                        *ngIf="!isSeatSelected(segIndex, block[letter]?.Code); else hidePrice">
+                                        <span class="seat-price"
+                                          *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
                                         <ng-template #showPriceInline>
                                           ₹{{ block[letter].Price | number : '1.0-0' }}
                                         </ng-template>
                                       </ng-container>
                                       <ng-template #hidePrice></ng-template>
                                     </div>
-                                    <div class="seat-selected-tag" 
-     *ngIf="isSeatSelected(segIndex, block[letter]?.Code)" 
-     [attr.data-animation-key]="getSeatAnimationKey(segIndex, block[letter]?.Code)">
-  <span class="check">✓</span>
-</div>
+                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)"
+                                      [attr.data-animation-key]="getSeatAnimationKey(segIndex, block[letter]?.Code)">
+                                      <span class="check">✓</span>
+                                    </div>
                                   </ng-container>
                                   <ng-template #noSeat>-</ng-template>
                                 </div>
@@ -786,7 +792,8 @@
                       <span class="meal-selection-count">{{ getMealCount(segIndex) }} meal(s) selected</span>
                     </div>
 
-                    <div class="meal-scroll-container" *ngIf="segIndex === activeMealIndex && segment?.mealOptions?.length; else noMeals">
+                    <div class="meal-scroll-container"
+                      *ngIf="segIndex === activeMealIndex && segment?.mealOptions?.length; else noMeals">
                       <div class="meal-list">
                         <div class="meal-card" *ngFor="let meal of segment.mealOptions">
                           <div class="meal-visual">
@@ -861,7 +868,8 @@
       </div>
 
       <!-- Add-ons Section (Special Services) -->
-      <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded" [class.locked]="addonUnlockStep < 3">
+      <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded"
+        [class.locked]="addonUnlockStep < 3">
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
             <i class="fas fa-plus-circle"></i>
@@ -871,18 +879,20 @@
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
         </div>
         <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
-            <div class="services-selection" *ngIf="services?.length; else noServices">
-              <div class="addons-slider-header">
-                <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')" aria-label="Previous services">
-                  ‹
-                </button>
-                <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')" aria-label="Next services">
-                  ›
-                </button>
-              </div>
-              <div class="services-scroll-container" #addonsScroll>
-                <div class="services-list">
-                  <div class="service-card" *ngFor="let service of getFilteredServices()">
+          <div class="services-selection" *ngIf="services?.length; else noServices">
+            <div class="addons-slider-header">
+              <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
+                aria-label="Previous services">
+                ‹
+              </button>
+              <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
+                aria-label="Next services">
+                ›
+              </button>
+            </div>
+            <div class="services-scroll-container" #addonsScroll>
+              <div class="services-list">
+                <div class="service-card" *ngFor="let service of getFilteredServices()">
                   <div class="service-visual">
                     <img class="service-image" src="../../assets/images/meals/special.jpg" alt="Service" />
                     <div class="service-price">
@@ -1910,7 +1920,8 @@
               </button>
 
               <div class="seat-slider-window">
-                <div class="flight-route-info seat-slide" *ngFor="let segment of getCurrentSeatSegments(); let segIndex = index"
+                <div class="flight-route-info seat-slide"
+                  *ngFor="let segment of getCurrentSeatSegments(); let segIndex = index"
                   [class.active]="segIndex === activeSeatIndex">
                   <div class="route-header-inline">
                     <div class="route-title-inline">
@@ -1919,7 +1930,8 @@
                     <div class="selection-status">
                       <span class="seats-selected">{{ getSelectedSeatsCount(segIndex) }} of {{ getTotalPassengers() }}
                         Seat(s) Selected</span>
-                      <span class="status-badge" [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
+                      <span class="status-badge"
+                        [class.pending]="getSelectedSeatsCount(segIndex) < getTotalPassengers()"
                         [class.complete]="getSelectedSeatsCount(segIndex) === getTotalPassengers()">
                         {{ getSelectedSeatsCount(segIndex) === getTotalPassengers() ? 'Selection complete' : 'Selection
                         pending' }}
@@ -1958,7 +1970,8 @@
                           <!-- Column Headers -->
                           <div class="seat-row-dynamic header-row">
                             <div class="row-label-header">Row</div>
-                            <ng-container *ngFor="let block of getCurrentSeatMapArray()[segIndex].seatBlocks; let blockIndex = index">
+                            <ng-container
+                              *ngFor="let block of getCurrentSeatMapArray()[segIndex].seatBlocks; let blockIndex = index">
                               <div class="seat-block-header-group">
                                 <div class="cell-header" *ngFor="let letter of block">{{ letter }}</div>
                               </div>
@@ -1988,13 +2001,16 @@
                                   [title]="block[letter] ? getSeatTooltip(block[letter]) + ' • ' + (block[letter].displaySeatNo || block[letter].Code) : ''">
                                   <ng-container *ngIf="block[letter]; else noSeat">
                                     <div class="seat-meta">
-                                      <span class="seat-code">{{ block[letter].displaySeatNo || block[letter].Code }}</span>
-                                      <span class="seat-price" *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
+                                      <span class="seat-code">{{ block[letter].displaySeatNo || block[letter].Code
+                                        }}</span>
+                                      <span class="seat-price"
+                                        *ngIf="block[letter].priceCategory === 'free'; else showPriceInline">Free</span>
                                       <ng-template #showPriceInline>
                                         ₹{{ block[letter].Price | number : '1.0-0' }}
                                       </ng-template>
                                     </div>
-                                    <div class="seat-selected-tag" *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">
+                                    <div class="seat-selected-tag"
+                                      *ngIf="isSeatSelected(segIndex, block[letter]?.Code)">
                                       <span class="check">✓</span>
                                     </div>
                                   </ng-container>
@@ -2141,7 +2157,8 @@
       </div>
 
       <!-- Add-ons Section (Special Services) -->
-      <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded" [class.locked]="addonUnlockStep < 3">
+      <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded"
+        [class.locked]="addonUnlockStep < 3">
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
             <i class="fas fa-plus-circle"></i>
@@ -2152,7 +2169,17 @@
         </div>
         <div class="addon-section-content services-content" *ngIf="isAddonsExpanded">
           <div class="services-selection" *ngIf="services?.length; else noServices">
-            <div class="services-scroll-container">
+            <div class="addons-slider-header">
+              <button class="addons-nav prev" type="button" (click)="scrollAddons(addonsScroll, 'left')"
+                aria-label="Previous services">
+                ‹
+              </button>
+              <button class="addons-nav next" type="button" (click)="scrollAddons(addonsScroll, 'right')"
+                aria-label="Next services">
+                ›
+              </button>
+            </div>
+            <div class="services-scroll-container" #addonsScroll>
               <div class="services-list">
                 <div class="service-card" *ngFor="let service of getFilteredServices()">
                   <div class="service-visual">

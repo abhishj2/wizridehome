@@ -8007,6 +8007,7 @@ body.calendar-open-mobile {
 }
 
 .services-selection {
+  display: grid;
   position: relative;
 }
 
@@ -8041,16 +8042,18 @@ body.calendar-open-mobile {
   overflow-y: hidden;
   scroll-behavior: smooth;
   padding-bottom: 8px;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 .services-scroll-container::-webkit-scrollbar {
-  height: 6px;
+  display: none;
 }
 
-.services-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: 3px;
-}
+/* Remove old scrollbar thumb styles as they are no longer needed */
+/* .services-scroll-container::-webkit-scrollbar-thumb { ... } */
 
 .services-list {
   display: inline-flex;
