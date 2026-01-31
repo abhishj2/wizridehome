@@ -5443,6 +5443,93 @@ img {
     z-index: 1;
     position: relative;
     margin-top: 2px;
+    cursor: pointer;
+    /* Added cursor pointer */
+  }
+
+  /* Tooltip Styles */
+  .layover-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    padding: 12px 16px;
+    border-radius: 8px;
+    z-index: 100;
+    min-width: 240px;
+    margin-bottom: 12px;
+    border: 1px solid #e5e7eb;
+    pointer-events: none;
+    /* Prevent tooltip from blocking interactions if it overlaps accidentally, though structure prevents it */
+  }
+
+  .layover-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
+
+  .layover-item {
+    margin-bottom: 12px;
+  }
+
+  .layover-item:last-child {
+    margin-bottom: 0px;
+  }
+
+  .layover-header {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .layover-details {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1f2937;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .layover-timeline {
+    height: 2px;
+    background: #fbbf24;
+    /* Orange/Yellowish */
+    width: 60%;
+    margin: 8px auto 0;
+    position: relative;
+    border-radius: 2px;
+  }
+
+  .layover-timeline .dot {
+    width: 8px;
+    height: 8px;
+    background: #9ca3af;
+    /* Gray dot */
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 1px #e5e7eb;
+  }
+
+  /* Text below timeline like '1 stop via Frankfurt' in blue */
+  .layover-timeline-text {
+    font-size: 11px;
+    color: #008b8b;
+    text-align: center;
+    margin-top: 4px;
+    font-weight: 500;
   }
 
   .desktop-price-section {

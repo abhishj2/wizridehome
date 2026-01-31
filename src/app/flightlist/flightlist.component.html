@@ -998,9 +998,27 @@
                       <!-- Duration & Stops Section -->
                       <div class="desktop-duration-section">
                         <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                        <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
+                        <div class="desktop-stops-text" (mouseenter)="hoveredIndex = i"
+                          (mouseleave)="hoveredIndex = -1">
+                          {{ getStopsCount(flight) === 0 ? 'Non Stop' :
                           getStopsCount(flight) + (getStopsCount(flight) === 1 ? ' Stop via ' : ' Stops via ') +
-                          getLayoverCity(flight) }}</div>
+                          getLayoverCity(flight) }}
+
+                          <div class="layover-tooltip" *ngIf="hoveredIndex === i && getStopsCount(flight) > 0">
+                            <div *ngFor="let info of getLayoverInfos(flight)" class="layover-item">
+                              <div class="layover-header">Plane change</div>
+                              <div class="layover-details">
+                                {{ info.city }} ({{ info.code }}) | {{ info.duration }} Layover
+                              </div>
+                              <div class="layover-timeline">
+                                <div class="dot"></div>
+                              </div>
+                              <div class="layover-timeline-text">
+                                {{ getStopsCount(flight) === 1 ? '1 stop' : 'Stop' }} via {{ info.city }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
                       <!-- Arrival Section -->
@@ -1590,9 +1608,27 @@
                               <!-- Duration & Stops Section -->
                               <div class="desktop-duration-section">
                                 <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                                <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
+                                <div class="desktop-stops-text" (mouseenter)="hoveredIndex = i"
+                                  (mouseleave)="hoveredIndex = -1">
+                                  {{ getStopsCount(flight) === 0 ? 'Non Stop' :
                                   getStopsCount(flight) + (getStopsCount(flight) === 1 ? ' Stop via ' : ' Stops via ') +
-                                  getLayoverCity(flight) }}</div>
+                                  getLayoverCity(flight) }}
+
+                                  <div class="layover-tooltip" *ngIf="hoveredIndex === i && getStopsCount(flight) > 0">
+                                    <div *ngFor="let info of getLayoverInfos(flight)" class="layover-item">
+                                      <div class="layover-header">Plane change</div>
+                                      <div class="layover-details">
+                                        {{ info.city }} ({{ info.code }}) | {{ info.duration }} Layover
+                                      </div>
+                                      <div class="layover-timeline">
+                                        <div class="dot"></div>
+                                      </div>
+                                      <div class="layover-timeline-text">
+                                        {{ getStopsCount(flight) === 1 ? '1 stop' : 'Stop' }} via {{ info.city }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
 
                               <!-- Arrival Section -->
@@ -2109,9 +2145,27 @@
                               <!-- Duration & Stops Section -->
                               <div class="desktop-duration-section">
                                 <div class="desktop-duration-text">{{ getTotalDuration(flight.Segments[0]) }}</div>
-                                <div class="desktop-stops-text">{{ getStopsCount(flight) === 0 ? 'Non Stop' :
+                                <div class="desktop-stops-text" (mouseenter)="hoveredIndex = i"
+                                  (mouseleave)="hoveredIndex = -1">
+                                  {{ getStopsCount(flight) === 0 ? 'Non Stop' :
                                   getStopsCount(flight) + (getStopsCount(flight) === 1 ? ' Stop via ' : ' Stops via ') +
-                                  getLayoverCity(flight) }}</div>
+                                  getLayoverCity(flight) }}
+
+                                  <div class="layover-tooltip" *ngIf="hoveredIndex === i && getStopsCount(flight) > 0">
+                                    <div *ngFor="let info of getLayoverInfos(flight)" class="layover-item">
+                                      <div class="layover-header">Plane change</div>
+                                      <div class="layover-details">
+                                        {{ info.city }} ({{ info.code }}) | {{ info.duration }} Layover
+                                      </div>
+                                      <div class="layover-timeline">
+                                        <div class="dot"></div>
+                                      </div>
+                                      <div class="layover-timeline-text">
+                                        {{ getStopsCount(flight) === 1 ? '1 stop' : 'Stop' }} via {{ info.city }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
 
                               <!-- Arrival Section -->

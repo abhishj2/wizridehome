@@ -2177,6 +2177,39 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return '';
   }
 
+  getLayoverInfos(flight: any): any[] {
+    const infos = [];
+    // Handle both one-way segment structure and potentially others if generic
+    // Usually flight.Segments[0] is the main segment group for display in the main card
+    const segments = flight.Segments?.[0];
+
+    if (segments && segments.length > 1) {
+      for (let i = 0; i < segments.length - 1; i++) {
+        const seg1 = segments[i];
+        const seg2 = segments[i + 1];
+
+        // Calculate layover duration
+        const arr = new Date(seg1.Destination.ArrTime);
+        const dep = new Date(seg2.Origin.DepTime);
+        const diffMs = dep.getTime() - arr.getTime();
+        const totalMinutes = Math.floor(diffMs / (1000 * 60));
+        const hrs = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        let durationStr = '';
+        if (hrs > 0) durationStr += `${hrs} hrs `;
+        if (mins > 0 || hrs === 0) durationStr += `${mins} mins`;
+
+        infos.push({
+          city: seg1.Destination.Airport.CityName,
+          code: seg1.Destination.Airport.AirportCode,
+          duration: durationStr.trim()
+        });
+      }
+    }
+    return infos;
+  }
+
   // Helper methods for multi-city desktop layout
   getLastSegmentArrivalTime(flight: any, tabIndex: number): Date {
     const segments = flight.Segments?.[tabIndex] || flight.Segments?.[0] || [];
