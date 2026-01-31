@@ -3117,7 +3117,6 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
     const afterCount = this.getSelectedSeatsCount(segmentIndex);
     this.maybeAutoAdvanceSeatSlide(segmentIndex, beforeCount, afterCount, isReturn);
-    this.maybeOpenMealsAfterSeatCompletion();
 
     console.log(`Seat ${seat.displaySeatNo} selection toggled for segment ${segmentIndex} (${isReturn ? 'return' : 'onward'})`);
   }
