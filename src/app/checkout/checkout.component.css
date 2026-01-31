@@ -441,7 +441,7 @@ html, body {
 }
 
 .total-fare {
-  background: #212529;
+  background:linear-gradient(135deg, #2196F3, #1565C0);
   color: #ffffff;
   padding: 20px;
   border-radius: 12px;
@@ -1371,4 +1371,9 @@ html, body {
       min-width: 0 !important;
       transition: gap .3s ease !important;
   }
+  .route-section-mobile,
+.journey-timing-mobile,
+.vehicle-seat-mobile{
+    padding:10px 16px !important;
+}
 }
