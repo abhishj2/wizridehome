@@ -85,7 +85,7 @@
     <div class="search-summary" [class.sticky]="isHeaderSticky" *ngIf="flightInputData">
       <div class="container">
         <!-- Mobile Summary (existing design) -->
-        <div class="summary-content mobile-summary">
+        <div class="summary-content mobile-summary" [class.multicitysumm]="flightType === 'multi'">
           <div class="summary-info">
             <div class="route-summary">
               <!-- Multi-City Route Display -->

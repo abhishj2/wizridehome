@@ -7823,22 +7823,23 @@ button.continue-btn-main,
   }
 }
 
-/* Calendar Backdrop */
-.calendar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 1005;
-}
+
 
 /* Mobile Calendar Fixes */
 @media (max-width: 768px) {
 
+  /* Calendar Backdrop */
+  .calendar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1005;
+  }
 
   /* Lift the calendar above the backdrop */
   /* Using more specificity to ensure it overrides any component internal styles */
@@ -8117,9 +8118,20 @@ body.calendar-open-mobile {
 }
 
 @keyframes seat-check-pop {
-  0% { transform: scale(0.6); opacity: 0; }
-  60% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .addon-continue-footer {

@@ -6923,3 +6923,19 @@ h2.flight-count-text {
   }
 
 }
+
+@media(max-width:767px) {
+  .multicitysumm .route-locations {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .multicitysumm .summary-info {
+    padding-right: 0 !important
+  }
+
+  .multicitysumm .multicity-segment-item {
+    display: grid !important;
+    grid-template-columns: 1.3fr 0.1fr 1.4fr 0.2fr !important
+  }
+}
