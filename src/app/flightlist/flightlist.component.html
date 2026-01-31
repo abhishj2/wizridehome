@@ -306,6 +306,55 @@
             </button>
           </div>
         </div>
+
+        <!-- Desktop Trip Summary for Multi-city -->
+        <div class="desktop-summary-card" *ngIf="flightType === 'multi' && flightInputData?.multiCitySegment?.length">
+
+          <!-- Route Section -->
+          <div class="summary-section" style="flex: 2; cursor: default;">
+            <div class="summary-label">Route</div>
+            <div class="summary-value"
+              style="font-size: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+              <ng-container *ngFor="let segment of flightInputData['multiCitySegment']; let i = index">
+                <span>{{ getMultiCityRouteOrigin(i) }} <i class="fas fa-long-arrow-alt-right"
+                    style="font-size: 14px; color: #008b8b; margin: 0 4px;"></i> {{ getMultiCityRouteDestination(i)
+                  }}</span>
+                <span *ngIf="i < (flightInputData['multiCitySegment'].length - 1)"
+                  style="color: #cbd5e1; font-weight: 300;">|</span>
+              </ng-container>
+            </div>
+            <div class="summary-detail">
+              {{ flightInputData['multiCitySegment'].length }} Segments · {{ totalPassengers }} {{ totalPassengers > 1 ?
+              'Travellers' : 'Traveller' }}
+            </div>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <!-- Dates Section -->
+          <div class="summary-section" style="cursor: default;">
+            <div class="summary-label">Dates</div>
+            <div class="summary-value" style="font-size: 16px;">
+              <ng-container *ngFor="let segment of flightInputData['multiCitySegment']; let i = index; let last = last">
+                {{ getMultiCityRouteDate(i) | date : "dd MMM" }}<span *ngIf="!last">, </span>
+              </ng-container>
+            </div>
+            <div class="summary-detail">
+              {{ modifySearchForm.get('travelClass')?.value || 'Economy' }}
+            </div>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <!-- Modify Button -->
+          <div class="summary-section summary-actions">
+            <button class="modify-search-btn" (click)="onModifySearch(); $event.stopPropagation()"
+              title="Modify Search">
+              MODIFY SEARCH
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
