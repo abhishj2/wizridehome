@@ -1,37 +1,40 @@
 <!-- Compact Search Summary (Desktop Only) -->
 <div class="search-summary desktop-search-summary" *ngIf="searchParams">
   <div class="container">
-  <div class="summary-content">
-   
-    <div class="summary-info">
-      <div class="route-summary">
-        <div class="route-locations">
-          <div class="location-group">
-            <span class="from">{{ searchParams.from }}</span>
-            <span class="location-detail" *ngIf="searchParams.pickupLocation">{{ searchParams.pickupLocation }}</span>
+    <div class="summary-content">
+
+      <div class="summary-info">
+        <div class="route-summary">
+          <div class="route-locations">
+            <div class="location-group">
+              <span class="from">{{ searchParams.from }}</span>
+              <span class="location-detail" *ngIf="searchParams.pickupLocation">{{ searchParams.pickupLocation }}</span>
+            </div>
+            <i class="fas fa-arrow-right"></i>
+            <div class="location-group">
+              <span class="to">{{ searchParams.to }}</span>
+              <span class="location-detail" *ngIf="searchParams.dropLocation">{{ searchParams.dropLocation }}</span>
+            </div>
           </div>
-          <i class="fas fa-arrow-right"></i>
-          <div class="location-group">
-            <span class="to">{{ searchParams.to }}</span>
-            <span class="location-detail" *ngIf="searchParams.dropLocation">{{ searchParams.dropLocation }}</span>
+          <div class="journey-details">
+            <span class="date">{{ formatDate(searchParams.date) }}</span>
+            <span class="pickup-time" *ngIf="searchParams?.type === 'reserved' && searchParams?.pickupTime">{{
+              formatPickupTime(searchParams.pickupTime!) }}</span>
+            <span class="passengers" *ngIf="searchParams?.type !== 'reserved'">{{ searchParams.passengers }}
+              seats</span>
           </div>
-        </div>
-        <div class="journey-details">
-          <span class="date">{{ formatDate(searchParams.date) }}</span>
-          <span class="pickup-time" *ngIf="searchParams?.type === 'reserved' && searchParams?.pickupTime">{{ formatPickupTime(searchParams.pickupTime!) }}</span>
-          <span class="passengers">{{ searchParams.passengers }} seats</span>
         </div>
       </div>
+      <div class="summary-actions">
+        <button class="modify-btn" (click)="modifySearch()">Modify</button>
+        <button class="request-btn" (click)="requestCarAddition()" *ngIf="searchParams?.type === 'shared'">Request for
+          Addition</button>
+        <!-- <button class="modify-btn" (click)="viewAllCarAdditionRequests()" *ngIf="searchParams?.type === 'shared'" style="background: #6c757d;">View Requests</button> -->
+      </div>
     </div>
-    <div class="summary-actions">
-      <button class="modify-btn" (click)="modifySearch()">Modify</button>
-      <button class="request-btn" (click)="requestCarAddition()" *ngIf="searchParams?.type === 'shared'">Request for Addition</button>
-      <!-- <button class="modify-btn" (click)="viewAllCarAdditionRequests()" *ngIf="searchParams?.type === 'shared'" style="background: #6c757d;">View Requests</button> -->
+    <div class="container">
+
     </div>
-  </div>
-  <div class="container">
-    
-  </div>
   </div>
 </div>
 
@@ -44,7 +47,7 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <form class="modify-form booking-form" (ngSubmit)="submitModifyForm()" #modifyForm="ngForm">
       <!-- Main Form Row -->
       <div class="cab-form-row">
@@ -53,20 +56,14 @@
           <label>From</label>
           <div class="input-with-icon">
             <i class="fas fa-location-dot input-icon"></i>
-            <input 
-              type="text" 
-              class="form-input city-input"
-              [(ngModel)]="modifyFormValues.from"
+            <input type="text" class="form-input city-input" [(ngModel)]="modifyFormValues.from"
               (focus)="showModifyCitySuggestionsOnFocus('from')"
-              (input)="showModifyCitySuggestions(modifyFormValues.from, 'from')"
-              placeholder="Source"
-              name="modifyFrom"
+              (input)="showModifyCitySuggestions(modifyFormValues.from, 'from')" placeholder="Source" name="modifyFrom"
               required>
           </div>
-          <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-from'] && modifyFormSuggestions['modify-from'].length > 0">
-            <div 
-              *ngFor="let city of modifyFormSuggestions['modify-from']"
-              class="city-suggestion"
+          <div class="city-suggestions"
+            [class.active]="modifyFormSuggestions['modify-from'] && modifyFormSuggestions['modify-from'].length > 0">
+            <div *ngFor="let city of modifyFormSuggestions['modify-from']" class="city-suggestion"
               (click)="onModifyCitySelect(city.name, 'from')">
               <span class="city-name">{{ city.name }}</span>
               <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">{{ city.state }}</div>
@@ -84,20 +81,14 @@
           <label>To</label>
           <div class="input-with-icon">
             <i class="fas fa-location-dot input-icon"></i>
-            <input 
-              type="text" 
-              class="form-input city-input"
-              [(ngModel)]="modifyFormValues.to"
+            <input type="text" class="form-input city-input" [(ngModel)]="modifyFormValues.to"
               (focus)="showModifyCitySuggestionsOnFocus('to')"
-              (input)="showModifyCitySuggestions(modifyFormValues.to, 'to')"
-              placeholder="Destination"
-              name="modifyTo"
+              (input)="showModifyCitySuggestions(modifyFormValues.to, 'to')" placeholder="Destination" name="modifyTo"
               required>
           </div>
-          <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-to'] && modifyFormSuggestions['modify-to'].length > 0">
-            <div 
-              *ngFor="let city of modifyFormSuggestions['modify-to']"
-              class="city-suggestion"
+          <div class="city-suggestions"
+            [class.active]="modifyFormSuggestions['modify-to'] && modifyFormSuggestions['modify-to'].length > 0">
+            <div *ngFor="let city of modifyFormSuggestions['modify-to']" class="city-suggestion"
               (click)="onModifyCitySelect(city.name, 'to')">
               <span class="city-name">{{ city.name }}</span>
               <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">{{ city.state }}</div>
@@ -108,14 +99,9 @@
         <!-- Date with Custom Calendar -->
         <div class="form-group">
           <label>Date</label>
-          <app-custom-calendar
-            class="shared-cabs-calendar"
-            [selectedDate]="modifyFormValues.date"
-            [minDate]="getTodayDate()"
-            placeholder="Select Date"
-            (dateSelected)="onModifyDateSelected($event)"
-            (calendarOpened)="onCalendarOpened()"
-            (calendarClosed)="onCalendarClosed()">
+          <app-custom-calendar class="shared-cabs-calendar" [selectedDate]="modifyFormValues.date"
+            [minDate]="getTodayDate()" placeholder="Select Date" (dateSelected)="onModifyDateSelected($event)"
+            (calendarOpened)="onCalendarOpened()" (calendarClosed)="onCalendarClosed()">
           </app-custom-calendar>
         </div>
 
@@ -124,11 +110,7 @@
           <label>Pickup Time</label>
           <div class="input-with-icon">
             <i class="fas fa-clock input-icon"></i>
-            <input 
-              type="time" 
-              class="form-input"
-              [(ngModel)]="modifyFormValues.pickupTime"
-              name="modifyPickupTime"
+            <input type="time" class="form-input" [(ngModel)]="modifyFormValues.pickupTime" name="modifyPickupTime"
               required>
           </div>
         </div>
@@ -137,16 +119,10 @@
         <div class="form-group" *ngIf="searchParams?.type === 'shared'">
           <label>Passengers <small>(Age 2yrs & above)</small></label>
           <div class="passenger-counter">
-            <button 
-              type="button"
-              class="counter-btn" 
-              [disabled]="modifyFormValues.passengers <= 1"
+            <button type="button" class="counter-btn" [disabled]="modifyFormValues.passengers <= 1"
               (click)="decrementPassengers()">-</button>
             <span class="counter-value">{{ modifyFormValues.passengers }}</span>
-            <button 
-              type="button"
-              class="counter-btn" 
-              (click)="incrementPassengers()">+</button>
+            <button type="button" class="counter-btn" (click)="incrementPassengers()">+</button>
           </div>
         </div>
 
@@ -165,21 +141,15 @@
             <label>Pickup Location</label>
             <div class="input-with-icon">
               <i class="fas fa-location-dot input-icon"></i>
-              <input 
-                type="text" 
-                class="form-input city-input"
-                [(ngModel)]="modifyFormValues.pickupLocation"
+              <input type="text" class="form-input city-input" [(ngModel)]="modifyFormValues.pickupLocation"
                 (input)="showModifyLocationSuggestions(modifyFormValues.pickupLocation, 'pickupLocation')"
                 (focus)="showModifyLocationSuggestionsOnFocus('pickupLocation')"
-                (blur)="hideLocationSuggestions('pickupLocation')"
-                placeholder="Enter specific pickup location"
-                name="modifyPickupLocation"
-                required>
+                (blur)="hideLocationSuggestions('pickupLocation')" placeholder="Enter specific pickup location"
+                name="modifyPickupLocation" required>
             </div>
-            <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-pickupLocation'] && modifyFormSuggestions['modify-pickupLocation'].length > 0">
-              <div 
-                *ngFor="let location of modifyFormSuggestions['modify-pickupLocation']"
-                class="city-suggestion"
+            <div class="city-suggestions"
+              [class.active]="modifyFormSuggestions['modify-pickupLocation'] && modifyFormSuggestions['modify-pickupLocation'].length > 0">
+              <div *ngFor="let location of modifyFormSuggestions['modify-pickupLocation']" class="city-suggestion"
                 (mousedown)="onModifyLocationSelect(location, 'pickupLocation')">
                 <span class="city-name">{{ location }}</span>
               </div>
@@ -191,21 +161,15 @@
             <label>Drop Location</label>
             <div class="input-with-icon">
               <i class="fas fa-location-dot input-icon"></i>
-              <input 
-                type="text" 
-                class="form-input city-input"
-                [(ngModel)]="modifyFormValues.dropLocation"
+              <input type="text" class="form-input city-input" [(ngModel)]="modifyFormValues.dropLocation"
                 (input)="showModifyLocationSuggestions(modifyFormValues.dropLocation, 'dropLocation')"
                 (focus)="showModifyLocationSuggestionsOnFocus('dropLocation')"
-                (blur)="hideLocationSuggestions('dropLocation')"
-                placeholder="Enter specific drop location"
-                name="modifyDropLocation"
-                required>
+                (blur)="hideLocationSuggestions('dropLocation')" placeholder="Enter specific drop location"
+                name="modifyDropLocation" required>
             </div>
-            <div class="city-suggestions" [class.active]="modifyFormSuggestions['modify-dropLocation'] && modifyFormSuggestions['modify-dropLocation'].length > 0">
-              <div 
-                *ngFor="let location of modifyFormSuggestions['modify-dropLocation']"
-                class="city-suggestion"
+            <div class="city-suggestions"
+              [class.active]="modifyFormSuggestions['modify-dropLocation'] && modifyFormSuggestions['modify-dropLocation'].length > 0">
+              <div *ngFor="let location of modifyFormSuggestions['modify-dropLocation']" class="city-suggestion"
                 (mousedown)="onModifyLocationSelect(location, 'dropLocation')">
                 <span class="city-name">{{ location }}</span>
               </div>
@@ -253,7 +217,8 @@
 
         <!-- Vehicle Cards -->
         <div class="vehicle-cards" *ngIf="!isLoading">
-          <div class="card" [class.card-expanded]="expandedSections[vehicle.id]" (click)="toggleCardExpansion(vehicle.id, $event)" *ngFor="let vehicle of vehicleOptions">
+          <div class="card" [class.card-expanded]="expandedSections[vehicle.id]"
+            (click)="toggleCardExpansion(vehicle.id, $event)" *ngFor="let vehicle of vehicleOptions">
 
             <!-- Date Hanger -->
             <div class="date-hanger">
@@ -264,59 +229,62 @@
 
             <!-- Route -->
             <ng-container *ngIf="getDepartureDisplay(vehicle) as depTime">
-            <div class="route">
-              <div class="vehicle">
-                <img [src]="vehicle.image" [alt]="vehicle.name">
-              </div>
-
-              <div class="route-column">
-                <div class="route-code">{{ vehicle.route.from.code }}</div>
-                <div class="location">{{ vehicle.route.from.name }}
-                  <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
+              <div class="route">
+                <div class="vehicle">
+                  <img [src]="vehicle.image" [alt]="vehicle.name">
                 </div>
-              </div>
 
-              <div class="route-visualization">
-                <div></div>
-                <div class="route-line">
-                  <div class="route-node start-node"></div>
-                  <div class="route-car">
-                    <img src="../../assets/images/bgremovecar.png" alt="Car">
+                <div class="route-column">
+                  <div class="route-code">{{ vehicle.route.from.code }}</div>
+                  <div class="location">{{ vehicle.route.from.name }}
+                    <div class="sub-location" *ngIf="vehicle.pickupLocation">({{ vehicle.pickupLocation }})</div>
                   </div>
-                  <div class="route-node end-node"></div>
                 </div>
-                <div class="route-details">
-                  <div class="time">{{ depTime }}</div>
-                  <div class="duration">{{ formatDuration(vehicle.duration).replace(' ', '') }}</div>
+
+                <div class="route-visualization">
+                  <div></div>
+                  <div class="route-line">
+                    <div class="route-node start-node"></div>
+                    <div class="route-car">
+                      <img src="../../assets/images/bgremovecar.png" alt="Car">
+                    </div>
+                    <div class="route-node end-node"></div>
+                  </div>
+                  <div class="route-details">
+                    <div class="time">{{ depTime }}</div>
+
+                    <div class="duration" *ngIf="searchParams?.type === 'shared'">{{
+                      formatDuration(vehicle.duration).replace(' ', '') }}</div>
+                  </div>
+                </div>
+
+                <div class="route-column">
+                  <div class="route-code">{{ vehicle.route.to.code }}</div>
+                  <div class="location">{{ vehicle.route.to.name }}
+                    <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
+                  </div>
+                </div>
+
+                <div class="price-info">
+
+                  <div class="price">₹ {{ getPriceExcludingGST(vehicle.price) }}</div>
+                  <div>
+                    <p *ngIf="searchParams?.type === 'shared'">{{ vehicle.seatsLeft }} Seat Left</p>
+                    <p *ngIf="searchParams?.type === 'reserved'">Capacity: {{ vehicle.seatsLeft }}</p>
+                  </div>
                 </div>
               </div>
-
-              <div class="route-column">
-                <div class="route-code">{{ vehicle.route.to.code }}</div>
-                <div class="location">{{ vehicle.route.to.name }}
-                  <div class="sub-location" *ngIf="vehicle.dropLocation">({{ vehicle.dropLocation }})</div>
-                </div>
-              </div>
-
-              <div class="price-info">
-
-                <div class="price">₹ {{ getPriceExcludingGST(vehicle.price) }}</div>
-                <div>
-                  <p *ngIf="searchParams?.type === 'shared'">{{ vehicle.seatsLeft }} Seat Left</p>
-                  <p *ngIf="searchParams?.type === 'reserved'">Capacity: {{ vehicle.seatsLeft }}</p>
-                </div>
-              </div>
-            </div>
-            <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
-              <!-- <div class="mobile-time-row">
+              <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
+                <!-- <div class="mobile-time-row">
                 <span class="time-pill start">{{ depTime }}</span>
                 <span class="time-pill end">{{ arrivalTime }}</span>
               </div> -->
-              <div class="mtrc">
-              <div  class="mobile-time-row"><span class="time-pill start">Pickup Time:</span><span class="time-pill end"><i class="fas fa-clock"> </i> {{ depTime }}</span></div>
-              </div>  
-              
-            </ng-container>
+                <div class="mtrc">
+                  <div class="mobile-time-row"><span class="time-pill start">Pickup Time:</span><span
+                      class="time-pill end"><i class="fas fa-clock"> </i> {{ depTime }}</span></div>
+                </div>
+
+              </ng-container>
             </ng-container>
 
             <!-- Mobile Amenities + Car Display -->
@@ -357,7 +325,7 @@
             <!-- Mobile Booking Button -->
             <div class="mobile-booking-row">
               <button class="btn mobile-book-btn"
-                      (click)="searchParams?.type === 'shared' ? selectSeat(vehicle) : bookCab(vehicle); $event.stopPropagation()">
+                (click)="searchParams?.type === 'shared' ? selectSeat(vehicle) : bookCab(vehicle); $event.stopPropagation()">
                 {{ searchParams?.type === 'shared' ? 'Select Seat' : 'Book Cab' }}
               </button>
             </div>
@@ -411,7 +379,7 @@
               <div class="option-item">
                 <div class="default-amenities">
                   <div class="amenity-item">
-                    
+
                     <ng-container *ngIf="searchParams?.type === 'shared'">
                       <i class="fas fa-coffee"></i>
                       <span>Refreshment</span>
@@ -428,13 +396,13 @@
                     <span>Cancellation Policy</span>
                     <div class="dropdown-content">
                       <ng-container *ngIf="searchParams?.type === 'shared'; else reservedCancelPolicy">
-                        <i class="fas fa-hand-point-right"></i> &gt; 24 hrs before travel: ₹100/seat<br/>
-                        <i class="fas fa-hand-point-right"></i> 12–24 hrs before travel: ₹200/seat<br/>
+                        <i class="fas fa-hand-point-right"></i> &gt; 24 hrs before travel: ₹100/seat<br />
+                        <i class="fas fa-hand-point-right"></i> 12–24 hrs before travel: ₹200/seat<br />
                         <i class="fas fa-hand-point-right"></i> &lt; 12 hrs before travel: No refund
                       </ng-container>
                       <ng-template #reservedCancelPolicy>
-                        <i class="fas fa-hand-point-right"></i> &gt; 5 days before travel: 20% charge<br/>
-                        <i class="fas fa-hand-point-right"></i> 1–5 days before travel: 50% charge<br/>
+                        <i class="fas fa-hand-point-right"></i> &gt; 5 days before travel: 20% charge<br />
+                        <i class="fas fa-hand-point-right"></i> 1–5 days before travel: 50% charge<br />
                         <i class="fas fa-hand-point-right"></i> &lt; 24 hrs before travel: No refund
                       </ng-template>
                     </div>
@@ -444,8 +412,10 @@
 
               <!-- Column 4: Select Seat Button for Shared / Book Cab Button for Reserved -->
               <div class="select-btn-card">
-                <button class="btn" (click)="selectSeat(vehicle); $event.stopPropagation()" *ngIf="searchParams?.type === 'shared'">Select Seat</button>
-                <button class="btn" (click)="bookCab(vehicle); $event.stopPropagation()" *ngIf="searchParams?.type === 'reserved'">Book Cab</button>
+                <button class="btn" (click)="selectSeat(vehicle); $event.stopPropagation()"
+                  *ngIf="searchParams?.type === 'shared'">Select Seat</button>
+                <button class="btn" (click)="bookCab(vehicle); $event.stopPropagation()"
+                  *ngIf="searchParams?.type === 'reserved'">Book Cab</button>
               </div>
             </div>
           </div>
@@ -521,54 +491,31 @@
         <!-- Full Name Field -->
         <div class="form-field">
           <label class="field-label">Full Name :</label>
-          <input 
-            type="text" 
-            class="field-input" 
-            placeholder="Enter your Full Name."
-            [(ngModel)]="carAdditionFormData.fullName"
-            name="fullName"
-            required
-            #fullNameInput="ngModel">
+          <input type="text" class="field-input" placeholder="Enter your Full Name."
+            [(ngModel)]="carAdditionFormData.fullName" name="fullName" required #fullNameInput="ngModel">
         </div>
 
         <!-- Contact Number Field -->
         <div class="form-field">
           <label class="field-label">Contact No :</label>
-          <input 
-            type="tel" 
-            class="field-input" 
-            placeholder="Enter your Contact Number."
-            [(ngModel)]="carAdditionFormData.contactNo"
-            name="contactNo"
-            required
-            #contactNoInput="ngModel">
+          <input type="tel" class="field-input" placeholder="Enter your Contact Number."
+            [(ngModel)]="carAdditionFormData.contactNo" name="contactNo" required #contactNoInput="ngModel">
         </div>
 
         <!-- Email ID Field -->
         <div class="form-field">
           <label class="field-label">Email ID :</label>
-          <input 
-            type="email" 
-            class="field-input" 
-            placeholder="Enter your Email ID."
-            [(ngModel)]="carAdditionFormData.emailId"
-            name="emailId"
-            required
-            #emailIdInput="ngModel">
+          <input type="email" class="field-input" placeholder="Enter your Email ID."
+            [(ngModel)]="carAdditionFormData.emailId" name="emailId" required #emailIdInput="ngModel">
         </div>
 
         <!-- Preferred Time Field -->
         <div class="form-field">
           <label class="field-label">Preferred Time :</label>
           <div class="time-input-wrapper" (click)="openTimePicker()">
-            <input 
-              type="text" 
-              class="field-input time-display-input" 
-              [value]="formatTimeDisplay(carAdditionFormData.preferredTime)"
-              placeholder="Select Preferred Time"
-              readonly
-              name="preferredTime"
-              required>
+            <input type="text" class="field-input time-display-input"
+              [value]="formatTimeDisplay(carAdditionFormData.preferredTime)" placeholder="Select Preferred Time"
+              readonly name="preferredTime" required>
             <i class="fas fa-clock time-icon"></i>
           </div>
           <input type="hidden" [(ngModel)]="carAdditionFormData.preferredTime" name="preferredTimeHidden" required>
@@ -627,29 +574,26 @@
           <!-- Front Row with Driver -->
           <div class="seat-row-modern front-row-modern">
             <ng-container *ngFor="let seat of frontSeats">
-              <div class="seat-item" 
-                   [class.seat-available]="seat.status === 'available'"
-                   [class.seat-selected]="seat.status === 'selected'"
-                   [class.seat-booked]="seat.status === 'booked'"
-                   (click)="selectSeatFromPopup(seat)">
+              <div class="seat-item" [class.seat-available]="seat.status === 'available'"
+                [class.seat-selected]="seat.status === 'selected'" [class.seat-booked]="seat.status === 'booked'"
+                (click)="selectSeatFromPopup(seat)">
                 <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
                 <span class="seat-number-big">{{ seat.number }}</span>
               </div>
             </ng-container>
             <!-- Driver Seat -->
             <div class="seat-item">
-              <div class="steering-icon"><img src="../../assets/images/carmodule/driver.png" alt="Driver" class="driver-img"></div>
+              <div class="steering-icon"><img src="../../assets/images/carmodule/driver.png" alt="Driver"
+                  class="driver-img"></div>
             </div>
           </div>
 
           <!-- Middle Row -->
           <div class="seat-row-modern middle-row-modern">
             <ng-container *ngFor="let seat of middleSeats">
-              <div class="seat-item" 
-                   [class.seat-available]="seat.status === 'available'"
-                   [class.seat-selected]="seat.status === 'selected'"
-                   [class.seat-booked]="seat.status === 'booked'"
-                   (click)="selectSeatFromPopup(seat)">
+              <div class="seat-item" [class.seat-available]="seat.status === 'available'"
+                [class.seat-selected]="seat.status === 'selected'" [class.seat-booked]="seat.status === 'booked'"
+                (click)="selectSeatFromPopup(seat)">
                 <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
                 <span class="seat-number-big">{{ seat.number }}</span>
               </div>
@@ -659,11 +603,9 @@
           <!-- Back Row -->
           <div class="seat-row-modern back-row-modern">
             <ng-container *ngFor="let seat of backSeats">
-              <div class="seat-item" 
-                   [class.seat-available]="seat.status === 'available'"
-                   [class.seat-selected]="seat.status === 'selected'"
-                   [class.seat-booked]="seat.status === 'booked'"
-                   (click)="selectSeatFromPopup(seat)">
+              <div class="seat-item" [class.seat-available]="seat.status === 'available'"
+                [class.seat-selected]="seat.status === 'selected'" [class.seat-booked]="seat.status === 'booked'"
+                (click)="selectSeatFromPopup(seat)">
                 <img src="../../assets/images/carmodule/seat.png" alt="Seat" class="seat-watermark-img">
                 <span class="seat-number-big">{{ seat.number }}</span>
               </div>
@@ -715,7 +657,7 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="time-picker-content">
       <div class="time-columns">
         <!-- Hours Column -->
@@ -723,44 +665,36 @@
           <div class="column-header">Hrs</div>
           <div class="time-scroll-container">
             <div class="time-options" #hoursContainer>
-              <div class="time-option" 
-                   *ngFor="let hour of hours" 
-                   [class.selected]="selectedHour === hour"
-                   (click)="selectHour(hour)">
+              <div class="time-option" *ngFor="let hour of hours" [class.selected]="selectedHour === hour"
+                (click)="selectHour(hour)">
                 {{hour}}
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Minutes Column -->
         <div class="time-column">
           <div class="column-header">Min</div>
           <div class="time-scroll-container">
             <div class="time-options">
-              <div class="time-option" 
-                   *ngFor="let minute of minutes" 
-                   [class.selected]="selectedMinute === minute"
-                   (click)="selectMinute(minute)">
+              <div class="time-option" *ngFor="let minute of minutes" [class.selected]="selectedMinute === minute"
+                (click)="selectMinute(minute)">
                 {{minute}}
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- AM/PM Column -->
         <div class="time-column">
           <div class="column-header">A.M/ P.M</div>
           <div class="time-scroll-container">
             <div class="time-options">
-              <div class="time-option" 
-                   [class.selected]="selectedPeriod === 'AM'"
-                   (click)="selectPeriod('AM')">
+              <div class="time-option" [class.selected]="selectedPeriod === 'AM'" (click)="selectPeriod('AM')">
                 A.M.
               </div>
-              <div class="time-option" 
-                   [class.selected]="selectedPeriod === 'PM'"
-                   (click)="selectPeriod('PM')">
+              <div class="time-option" [class.selected]="selectedPeriod === 'PM'" (click)="selectPeriod('PM')">
                 P.M.
               </div>
             </div>
@@ -768,7 +702,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="time-picker-footer">
       <button class="done-btn" (click)="confirmTimeSelection()">
         Done
