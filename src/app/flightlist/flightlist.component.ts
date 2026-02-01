@@ -4784,5 +4784,39 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     const mins = totalMinutes % 60;
     return `${hrs}h ${mins}m`;
   }
+
+  // Flight Details Popup Logic
+  showFlightDetailsPopup = false;
+  popupFlightOnward: any = null;
+  popupFlightReturn: any = null;
+  activePopupTab: 'onward' | 'return' = 'onward';
+  popupDetailsTab: 'flight' | 'fare' | 'cancellation' | 'dateChange' = 'flight';
+
+  openRoundTripFlightDetails(flight: any, type: 'onward' | 'return') {
+    this.showFlightDetailsPopup = true;
+    this.activePopupTab = type;
+    if (type === 'onward') {
+      this.popupFlightOnward = flight;
+      this.popupFlightReturn = this.selectedReturn || null;
+    } else {
+      this.popupFlightReturn = flight;
+      this.popupFlightOnward = this.selectedOutbound || null;
+    }
+    this.popupDetailsTab = 'flight';
+  }
+
+  closeFlightDetailsPopup() {
+    this.showFlightDetailsPopup = false;
+    this.popupFlightOnward = null;
+    this.popupFlightReturn = null;
+  }
+
+  switchPopupTab(tab: 'onward' | 'return') {
+    this.activePopupTab = tab;
+  }
+
+  switchPopupDetailsTab(tab: 'flight' | 'fare' | 'cancellation' | 'dateChange') {
+    this.popupDetailsTab = tab;
+  }
 }
 

@@ -7101,6 +7101,7 @@ button.scroll-arrow {
   font-size: 20px !important;
   font-weight: bold;
 }
+
 /* Round Trip Selection Bottom Strip */
 .roundtrip-selection-strip {
   position: fixed;
@@ -7214,8 +7215,13 @@ button.scroll-arrow {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 /* Mobile responsive adjustments for the strip */
@@ -7223,29 +7229,29 @@ button.scroll-arrow {
   .roundtrip-selection-strip {
     padding: 12px 0;
   }
-  
+
   .strip-container {
     padding: 0 12px;
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .selected-flights-info {
     width: 100%;
     justify-content: space-between;
     gap: 10px;
   }
-  
+
   .flight-info-col {
     flex: 1;
-    min-width: 0; 
+    min-width: 0;
   }
-  
+
   .flight-times {
     font-size: 12px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
   }
-  
+
   .strip-actions {
     width: 100%;
     justify-content: space-between;
@@ -7256,10 +7262,11 @@ button.scroll-arrow {
 /* Updated Round Trip Strip Styles (Step 77) */
 
 .roundtrip-selection-strip {
-  background: #001120; /* Dark navy background */
+  background: #001120;
+  /* Dark navy background */
   padding: 12px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .strip-container {
@@ -7321,6 +7328,7 @@ button.scroll-arrow {
   cursor: pointer;
   text-decoration: none;
 }
+
 .flight-details-link:hover {
   text-decoration: underline;
 }
@@ -7392,10 +7400,12 @@ button.scroll-arrow {
 }
 
 .book-now-btn {
-  background: #0091ff; /* Bright blue */
+  background: #0091ff;
+  /* Bright blue */
   color: white;
   border: none;
-  border-radius: 25px; /* Rounded pill shape */
+  border-radius: 25px;
+  /* Rounded pill shape */
   font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
@@ -7414,15 +7424,40 @@ button.scroll-arrow {
 
 /* Mobile Responsiveness */
 @media (max-width: 900px) {
-  .section-header { display: none; }
-  .flight-details-link { display: none; }
-  .section-price { font-size: 15px; }
-  .flight-route-time { font-size: 14px; }
-  .strip-airline-logo { width: 24px; height: 24px; }
-  .price-row .amount { font-size: 20px; }
-  .book-now-btn { padding: 8px 16px; font-size: 13px; }
-  .divider-vertical { height: 30px; }
-  
+  .section-header {
+    display: none;
+  }
+
+  .flight-details-link {
+    display: none;
+  }
+
+  .section-price {
+    font-size: 15px;
+  }
+
+  .flight-route-time {
+    font-size: 14px;
+  }
+
+  .strip-airline-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .price-row .amount {
+    font-size: 20px;
+  }
+
+  .book-now-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .divider-vertical {
+    height: 30px;
+  }
+
   .strip-container {
     padding: 0 10px;
     gap: 10px;
@@ -7433,22 +7468,310 @@ button.scroll-arrow {
   .roundtrip-selection-strip {
     padding: 8px 0;
   }
+
   .strip-container {
-      flex-wrap: wrap; 
-      justify-content: center;
-      gap: 12px; 
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
   }
+
   .flight-info-section {
-      min-width: 140px; 
-      flex: 0 0 auto; 
+    min-width: 140px;
+    flex: 0 0 auto;
   }
+
   .strip-actions {
-      width: 100%;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 8px;
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 8px;
   }
-  .divider-vertical { display: none; }
-  .section-price { display: none; } /* Hide individual prices on very small screens to save space if needed, or keep */
+
+  .divider-vertical {
+    display: none;
+  }
+
+  .section-price {
+    display: none;
+  }
+
+  /* Hide individual prices on very small screens to save space if needed, or keep */
 }
 
+/* Flight Details Sliding Popup Styles */
+.flight-details-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.flight-details-popup {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 1001;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  transition: bottom 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.flight-details-popup.active {
+  bottom: 0;
+}
+
+/* Header */
+.popup-header-row {
+  background: #002244;
+  /* Dark blue matches theme */
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  align-items: flex-start;
+}
+
+.popup-flight-summary {
+  flex: 1;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-right: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.popup-flight-summary.active {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fdb913;
+  /* Highlight active side */
+}
+
+.popup-flight-summary:last-child {
+  margin-right: 0;
+  /* logic handled by close btn */
+}
+
+.summary-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.summary-airline {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.summary-route-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.summary-price {
+  font-weight: 700;
+  color: #fdb913;
+}
+
+.summary-times {
+  font-size: 12px;
+}
+
+.popup-close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 0 5px 10px;
+}
+
+/* Tabs */
+.popup-tabs-row {
+  display: flex;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+.popup-tab-btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+
+.popup-tab-btn.active {
+  color: #002244;
+  border-bottom-color: #002244;
+}
+
+/* Content Body */
+.popup-content-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  background: #fff;
+}
+
+.popup-tab-content {
+  animation: fadeIn 0.3s;
+}
+
+/* Segment Details */
+.popup-segment-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.popup-segment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 10px;
+}
+
+.popup-airline-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+.popup-flight-info h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.popup-flight-info p {
+  margin: 0;
+  font-size: 11px;
+  color: #777;
+}
+
+.popup-segment-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-time-loc {
+  text-align: left;
+}
+
+.popup-time-loc.right {
+  text-align: right;
+}
+
+.popup-time {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.popup-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.popup-airport {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.popup-duration-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+}
+
+.popup-duration-text {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.popup-duration-line {
+  height: 2px;
+  width: 100%;
+  background: #ddd;
+  position: relative;
+}
+
+.popup-duration-line::after {
+  content: '✈';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* Fare Table */
+.popup-fare-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.popup-fare-table th,
+.popup-fare-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.popup-fare-table td {
+  text-align: right;
+  font-weight: 600;
+}
+
+.policy-content {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  color: #444;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .popup-header-row {
+    padding: 10px;
+  }
+
+  .popup-flight-summary {
+    margin-right: 5px;
+  }
+}
