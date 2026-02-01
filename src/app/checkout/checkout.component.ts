@@ -65,7 +65,7 @@ export class CheckoutComponent implements OnInit {
   // Deficit check status
   isCheckingDeficit = false; // Whether deficit check is in progress
   isDeficitChecked = false; // Whether deficit has been checked and user has been informed
-  
+
   // Phone number validation
   phoneNumbersAreSame = false; // Track if primary and alternate numbers are the same
 
@@ -220,27 +220,32 @@ export class CheckoutComponent implements OnInit {
   // Phone dialer properties
   showPhoneDialer = false;
   activePhoneField: 'primary' | 'alternate' | null = null;
-  
+
   // Navbar hide on scroll (mobile)
   hideNavbarOnMobile = false;
   private lastScrollTop = 0;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private route: ActivatedRoute,
     private apiService: ApiserviceService,
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2
-  ) {}
+  ) { }
 
   ngOnInit() {
+    // Ensure page starts at top
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo(0, 0);
+    }
+
     // Get booking data from navigation state or localStorage
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.bookingData = navigation.extras.state['bookingData'];
     }
-    
+
     if (!this.bookingData && isPlatformBrowser(this.platformId)) {
       const storedData = localStorage.getItem('bookingData');
       if (storedData) {
@@ -263,7 +268,7 @@ export class CheckoutComponent implements OnInit {
         }
       }
       this.passengerDetails.primaryContactNo = phoneNumber;
-      
+
     }
   }
 
@@ -272,15 +277,15 @@ export class CheckoutComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.isHeaderSticky = scrollPosition > 50;
-    
+
     // Hide navbar on scroll down for mobile only
     if (this.isMobileView()) {
       const scrollingDown = scrollPosition > this.lastScrollTop;
       const shouldHide = scrollingDown && scrollPosition > 50; // Hide when scrolling down past 50px
-      
+
       if (shouldHide !== this.hideNavbarOnMobile) {
         this.hideNavbarOnMobile = shouldHide;
-        
+
         // Add or remove class from body
         if (shouldHide) {
           this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
@@ -288,7 +293,7 @@ export class CheckoutComponent implements OnInit {
           this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
         }
       }
-      
+
       this.lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition;
     } else {
       // Desktop: always show navbar
@@ -307,7 +312,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.formSubmitted = true;
-    
+
     // Debug logging
     console.log('Form validation check:', {
       formExists: !!form,
@@ -319,35 +324,35 @@ export class CheckoutComponent implements OnInit {
       primaryPhone: this.passengerDetails.primaryContactNo,
       alternatePhone: this.passengerDetails.alternateContactNo
     });
-    
+
     if (form && form.invalid) {
       console.log('Form is invalid, showing errors');
       this.scrollToForm();
       return;
     }
-    
+
     if (!form) {
       console.error('Form reference is null/undefined!');
       return;
     }
-    
+
     // Additional manual validation for critical fields
-    if (!this.passengerDetails.firstName || !this.passengerDetails.lastName || 
-        !this.passengerDetails.emailId || !this.passengerDetails.primaryContactNo || 
-        !this.passengerDetails.alternateContactNo) {
+    if (!this.passengerDetails.firstName || !this.passengerDetails.lastName ||
+      !this.passengerDetails.emailId || !this.passengerDetails.primaryContactNo ||
+      !this.passengerDetails.alternateContactNo) {
       console.log('Manual validation failed - required field missing');
       this.scrollToForm();
       return;
     }
-    
+
     // Validate phone numbers are 10 digits
-    if (this.passengerDetails.primaryContactNo.length !== 10 || 
-        this.passengerDetails.alternateContactNo.length !== 10) {
+    if (this.passengerDetails.primaryContactNo.length !== 10 ||
+      this.passengerDetails.alternateContactNo.length !== 10) {
       console.log('Manual validation failed - phone number must be 10 digits');
       this.scrollToForm();
       return;
     }
-    
+
     // Validate that primary and alternate contact numbers are not the same
     if (this.passengerDetails.primaryContactNo === this.passengerDetails.alternateContactNo) {
       console.log('Manual validation failed - primary and alternate contact numbers cannot be the same');
@@ -360,20 +365,20 @@ export class CheckoutComponent implements OnInit {
       this.scrollToForm();
       return;
     }
-    
+
     // Prevent multiple clicks while checking
     if (this.isCheckingDeficit) {
       console.log('Already checking deficit, ignoring click');
       return;
     }
-    
+
     // If deficit has been checked and user has been informed, proceed to payment
     if (this.isDeficitChecked) {
       console.log('Deficit already checked, proceeding to payment');
       this.proceedToPayment();
       return;
     }
-    
+
     // Check deficit amount before proceeding to payment
     console.log('onSubmit called - checking deficit amount');
     this.checkDeficitAmount();
@@ -409,11 +414,11 @@ export class CheckoutComponent implements OnInit {
     this.apiService.getDeficitUnionTotal(primaryNumber, secondaryNumber).subscribe(
       (response: any) => {
         console.log('Deficit Amount Response:', response);
-        
+
         // Extract deficit amount from response based on actual API structure
         // Response structure: { success: true, totalDeficit: 200, rows: [{ deficitAmount: "200.00" }] }
         let deficit = 0;
-        
+
         if (response) {
           // Check for totalDeficit first (most reliable)
           if (response.totalDeficit !== undefined && response.totalDeficit !== null) {
@@ -436,23 +441,23 @@ export class CheckoutComponent implements OnInit {
         console.log('Extracted deficit amount:', deficit);
         this.deficitAmount = deficit || 0;
         console.log('Final deficit amount set to:', this.deficitAmount);
-        
+
         // Recalculate total fare including deficit amount
         this.calculateFare();
         console.log('Total fare after deficit:', this.totalFare);
-        
+
         // Mark as checked
         this.isCheckingDeficit = false;
         this.isDeficitChecked = true;
         console.log('=== DEFICIT CHECK COMPLETE ===');
-        
+
         // If deficit exists, inform user and wait for second click
         if (this.deficitAmount > 0) {
           const roundedTotal = Math.round(this.totalFare);
           const roundedDeficit = Math.round(this.deficitAmount);
           const totalWithDeficit = roundedTotal + roundedDeficit;
           console.log('Deficit found! Showing SweetAlert and waiting for second click');
-          
+
           Swal.fire({
             title: 'Previous Due Amount Found',
             html: `
@@ -474,7 +479,7 @@ export class CheckoutComponent implements OnInit {
             confirmButtonColor: '#3085d6',
             width: '500px'
           });
-          
+
           // Don't proceed to payment - wait for second click
           return; // Explicitly return to prevent proceeding
         } else {
@@ -508,7 +513,7 @@ export class CheckoutComponent implements OnInit {
         totalFare: this.totalFare
       }
     };
-    
+
     // Log complete checkout data to console
     console.log('=== CHECKOUT DATA SUBMITTED ===');
     console.log('Booking Data:', this.bookingData);
@@ -522,7 +527,7 @@ export class CheckoutComponent implements OnInit {
     });
     console.log('Complete Checkout Data:', checkoutData);
     console.log('================================');
-    
+
     // Handle shared cab payment
     if (this.bookingData?.bookingType === 'shared') {
       this.processSharedCabPayment();
@@ -534,7 +539,7 @@ export class CheckoutComponent implements OnInit {
 
   getPrimaryNumberWithoutCountryCode(): string {
     let primaryNumber = '';
-    
+
     // Always use the primary contact number from the form (most reliable)
     if (this.passengerDetails.primaryContactNo) {
       primaryNumber = this.passengerDetails.primaryContactNo;
@@ -553,7 +558,7 @@ export class CheckoutComponent implements OnInit {
         primaryNumber = phoneNumber;
       }
     }
-    
+
     console.log('getPrimaryNumberWithoutCountryCode - returning:', primaryNumber);
     return primaryNumber;
   }
@@ -581,7 +586,7 @@ export class CheckoutComponent implements OnInit {
 
     // Generate 6-digit alphanumeric ORDERID (PNR)
     const PNR = this.generateOrderId();
-    
+
     // Extract primary number without country code
     const primaryNumber = this.getPrimaryNumberWithoutCountryCode();
 
@@ -690,7 +695,7 @@ export class CheckoutComponent implements OnInit {
       } else {
         const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
         const isEmailError = msg.includes('INVALID EMAIL');
-        
+
         Swal.fire({
           title: 'Error',
           text: isEmailError ? 'Please Enter Email ID in Correct Format.' : msg,
@@ -714,10 +719,10 @@ export class CheckoutComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      day: '2-digit', 
-      month: 'short' 
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short'
     });
   }
 
@@ -731,35 +736,35 @@ export class CheckoutComponent implements OnInit {
       'Delhi': 'DEL',
       'Mumbai': 'BOM'
     };
-    
+
     const locationName = location.split('(')[0].trim();
     return codes[locationName] || locationName.substring(0, 3).toUpperCase();
   }
 
   formatPickupTime(timeString: string): string {
     if (!timeString) return '';
-    
+
     // Remove any existing am/pm from the time string (case insensitive)
     let cleanTime = timeString.replace(/\s*(am|pm|AM|PM)\s*/gi, '').trim();
-    
+
     // Split by colon and clean up minute part if it has am/pm
     const parts = cleanTime.split(':');
     if (parts.length < 2) return timeString;
-    
+
     const hour = parts[0].trim();
     let minute = parts[1].trim();
-    
+
     // Remove any remaining am/pm from minute part
     minute = minute.replace(/\s*(am|pm|AM|PM)\s*/gi, '').trim();
-    
+
     const hourNum = parseInt(hour);
     const minuteNum = parseInt(minute);
-    
+
     if (isNaN(hourNum) || isNaN(minuteNum)) return timeString;
-    
+
     let displayHour = hourNum;
     let period = 'AM';
-    
+
     if (hourNum === 0) {
       displayHour = 12;
       period = 'AM';
@@ -773,7 +778,7 @@ export class CheckoutComponent implements OnInit {
       displayHour = hourNum - 12;
       period = 'PM';
     }
-    
+
     return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
   }
 
@@ -804,10 +809,10 @@ export class CheckoutComponent implements OnInit {
 
     // Calculate 5% GST - rounded to 2 decimal places
     this.gstAmount = Math.round((this.rideFare * this.GST_RATE) * 100) / 100;
-    
+
     // Calculate travel insurance cost (added after GST)
     this.travelInsuranceCost = this.passengerDetails.hasTravelInsurance ? this.TRAVEL_INSURANCE_RATE : 0;
-    
+
     // Calculate total fare (ride fare + GST + travel insurance) - rounded to 2 decimal places
     // Note: Deficit amount is NOT added here as payment gateway will add it separately
     this.totalFare = Math.round((this.rideFare + this.gstAmount + this.travelInsuranceCost) * 100) / 100;
@@ -846,7 +851,7 @@ export class CheckoutComponent implements OnInit {
   validatePhoneNumbers(): void {
     const primary = this.passengerDetails.primaryContactNo?.trim() || '';
     const alternate = this.passengerDetails.alternateContactNo?.trim() || '';
-    
+
     // Check if both numbers are filled and if they're the same
     this.phoneNumbersAreSame = primary.length === 10 && alternate.length === 10 && primary === alternate;
   }
@@ -884,49 +889,49 @@ export class CheckoutComponent implements OnInit {
   // Open phone dialer for specific field
   openPhoneDialer(field: 'primary' | 'alternate', event?: Event): void {
     if (!this.isMobileView()) return;
-    
+
     // Prevent default behavior
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     this.activePhoneField = field;
     this.showPhoneDialer = true;
-    
+
     // Hide navbar when dialer opens (add class to body)
     if (isPlatformBrowser(this.platformId)) {
       this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
     }
-    
+
     // Scroll the input into view after a delay to ensure dialer is rendered
     setTimeout(() => {
-      const inputElement = field === 'primary' 
+      const inputElement = field === 'primary'
         ? document.querySelector('input[name="primaryContactNo"]') as HTMLInputElement
         : document.querySelector('input[name="alternateContactNo"]') as HTMLInputElement;
-      
+
       if (inputElement) {
         this.scrollToInput(inputElement);
       }
     }, 200);
   }
-  
+
   // Helper method to scroll input into view
   private scrollToInput(inputElement: HTMLInputElement): void {
     if (!inputElement || !isPlatformBrowser(this.platformId)) return;
-    
+
     // Get the input's current position relative to the document
     const rect = inputElement.getBoundingClientRect();
     const currentScrollY = window.scrollY || window.pageYOffset;
     const inputTopPosition = rect.top + currentScrollY;
-    
+
     // Define offset: this is the space from top of viewport where input should appear
     // Since navbar is hidden, we need less offset (just booking summary + small spacing)
     const offsetFromTop = 180; // Booking summary height + spacing
-    
+
     // Calculate the target scroll position
     const targetScrollPosition = inputTopPosition - offsetFromTop;
-    
+
     // Scroll to position
     window.scrollTo({
       top: Math.max(0, targetScrollPosition),
@@ -937,11 +942,11 @@ export class CheckoutComponent implements OnInit {
   // Handle number click from dialer
   onDialerNumberClick(number: string): void {
     if (!this.activePhoneField) return;
-    
-    const field = this.activePhoneField === 'primary' 
-      ? 'primaryContactNo' 
+
+    const field = this.activePhoneField === 'primary'
+      ? 'primaryContactNo'
       : 'alternateContactNo';
-    
+
     const currentValue = this.passengerDetails[field];
     if (currentValue.length < 10) {
       this.passengerDetails[field] = currentValue + number;
@@ -952,11 +957,11 @@ export class CheckoutComponent implements OnInit {
   // Handle backspace from dialer
   onDialerBackspace(): void {
     if (!this.activePhoneField) return;
-    
-    const field = this.activePhoneField === 'primary' 
-      ? 'primaryContactNo' 
+
+    const field = this.activePhoneField === 'primary'
+      ? 'primaryContactNo'
       : 'alternateContactNo';
-    
+
     const currentValue = this.passengerDetails[field];
     if (currentValue.length > 0) {
       this.passengerDetails[field] = currentValue.slice(0, -1);
@@ -983,8 +988,8 @@ export class CheckoutComponent implements OnInit {
   // Get current value for dialer
   getCurrentDialerValue(): string {
     if (!this.activePhoneField) return '';
-    return this.activePhoneField === 'primary' 
-      ? this.passengerDetails.primaryContactNo 
+    return this.activePhoneField === 'primary'
+      ? this.passengerDetails.primaryContactNo
       : this.passengerDetails.alternateContactNo;
   }
 
@@ -1001,7 +1006,7 @@ export class CheckoutComponent implements OnInit {
 
     // Generate 6-digit alphanumeric ORDERID (PNR) with "F" prefix for reserved cabs
     const ORDERID = 'F' + this.generateOrderId();
-    
+
     // Extract primary number without country code
     const primaryNumber = this.getPrimaryNumberWithoutCountryCode();
 
@@ -1128,7 +1133,7 @@ export class CheckoutComponent implements OnInit {
       } else {
         const msg = val?.message?.toString().toUpperCase() || 'Something went wrong.';
         const isEmailError = msg.includes('INVALID EMAIL');
-        
+
         Swal.fire({
           title: 'Error',
           text: isEmailError ? 'Please Enter Email ID in Correct Format.' : msg,
