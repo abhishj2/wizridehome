@@ -274,7 +274,7 @@
                   </div>
                 </div>
               </div>
-              <ng-container *ngIf="computeArrivalTime(depTime, vehicle.duration) as arrivalTime">
+              <ng-container *ngIf="searchParams?.type === 'reserved' || computeArrivalTime(depTime, vehicle.duration)">
                 <!-- <div class="mobile-time-row">
                 <span class="time-pill start">{{ depTime }}</span>
                 <span class="time-pill end">{{ arrivalTime }}</span>
