@@ -7785,6 +7785,16 @@ button.scroll-arrow {
     position: fixed !important;
     bottom: 0 !important;
     width: 1020px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     z-index: 1000 !important;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .flight-details-popup {
+    width: 1020px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
   }
 }
