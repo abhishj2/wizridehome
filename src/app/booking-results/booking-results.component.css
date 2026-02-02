@@ -4426,3 +4426,15 @@ img.mobile-seat-icon {
     white-space: normal;
   }
 }
+
+@media(min-width:767px) {
+  .dropdown-content.amenities-tooltip .tooltip-item {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 5px !important;
+  }
+
+  .dropdown-content.amenities-tooltip .tooltip-item i {
+    font-size: 10px !important;
+  }
+}
