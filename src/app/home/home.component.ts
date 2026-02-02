@@ -163,7 +163,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   homepagePopupData: HomepagePopup | null = null;
   isLoadingPopup = false;
   calendarFareMap: Map<string, FareData> = new Map();
-calendarFareMapReturn: Map<string, FareData> = new Map();
+  calendarFareMapReturn: Map<string, FareData> = new Map();
 
   // State-wise city data from API
   stateWiseCities: StateWiseCity[] = [];
@@ -266,14 +266,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     const startMonth = today.getMonth();
     const startYear = today.getFullYear();
     const fetchPromises = [];
-  
+
     for (let i = 0; i < 12; i++) {
       const start = i === 0 ? new Date(today) : new Date(startYear, startMonth + i, 1);
       const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
-  
+
       const startDate = this.formatDate(start);
       const endDate = this.formatDate(end);
-  
+
       const promise = this.apiService
         .getCalendarFare(this.ip, this.tboTokenId, 'oneway', from, to, 'all', startDate, endDate)
         .toPromise()
@@ -294,14 +294,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         .catch((error) => {
           console.error(`Error fetching fares for ${startDate} to ${endDate}:`, error);
         });
-  
+
       fetchPromises.push(promise);
     }
-  
+
     await Promise.all(fetchPromises);
     return fareMap;
   }
-  
+
   // Navigation methods
   nextSlide(): void {
     this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
@@ -411,18 +411,18 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
   setMobileTab(tab: 'shared' | 'reserved' | 'flights'): void {
     this.mobileTab = tab;
-    
+
     // Update URL to reflect the current tab
     const urlMap = {
       'shared': '/shared',
       'reserved': '/reserved',
       'flights': '/flight'
     };
-    
+
     if (isPlatformBrowser(this.platformId)) {
       this.router.navigate([urlMap[tab]], { replaceUrl: true });
     }
-    
+
     // On mobile, ensure flight fields are empty (no defaults) when switching to flights tab
     if (tab === 'flights' && this.isMobileView()) {
       if (this.flightRoutes.length > 0) {
@@ -467,7 +467,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           : (type === 'from' ? 'mobile-flight-from' : 'mobile-flight-to'));
       this.showCitySuggestionsOnFocus(targetToLoad);
     }
-    
+
     // Set target based on type and current tab and clear the field for easy re-selection
     if (type === 'from') {
       if (this.mobileTab === 'shared') {
@@ -540,9 +540,9 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         this.mobileSearchQuery = this.formValues.reservedDropoffLocation || '';
       }
     }
-    
+
     this.showMobileLocationPopup = true;
-    
+
     // Load suggestions
     if (type === 'from' || type === 'to') {
       if (this.mobileSearchQuery.trim()) {
@@ -603,11 +603,11 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       this.closeMobileLocationPopup();
       return;
     }
-    
+
     if (actualTarget) {
       this.selectCity(cityName, cityCode, actualTarget);
     }
-    
+
     this.closeMobileLocationPopup();
   }
 
@@ -623,11 +623,11 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     } else if (this.mobilePopupTarget === 'mobile-reserved-dropoff-specific') {
       actualTarget = 'reserved-dropoff-specific';
     }
-    
+
     if (actualTarget) {
       this.selectLocation(locationName, actualTarget);
     }
-    
+
     this.closeMobileLocationPopup();
   }
 
@@ -656,7 +656,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     if (this.isFlightPopup()) {
       const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
       let allAirports = [...this.flightAirports];
-      
+
       // Filter based on search query
       if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
         const query = this.mobileSearchQuery.toLowerCase().trim();
@@ -666,7 +666,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           (airport.state && airport.state.toLowerCase().includes(query))
         );
       }
-      
+
       // Filter out selected airport from the other field
       if (normalizedTarget.startsWith('flight-from-')) {
         const routeIndex = parseInt(normalizedTarget.replace('flight-from-', ''));
@@ -687,10 +687,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           );
         }
       }
-      
+
       return allAirports;
     }
-    
+
     // For reserved (mobile) from/to show full reserved list by default
     const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
     if ((normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff')) {
@@ -707,7 +707,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       }
       return cities;
     }
-    
+
     // For non-flight popups, use existing logic
     const suggestions = this.getMobilePopupSuggestions();
     return this.isMobileCityArray() ? (suggestions as City[]) : [];
@@ -733,7 +733,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     if (!this.stateWiseCitiesLoaded || !this.stateWiseCities || this.stateWiseCities.length === 0) {
       return this.getCityState(cityName);
     }
-    
+
     // Search through state-wise cities to find the city and return its state
     for (const stateData of this.stateWiseCities) {
       const foundCity = stateData.cities.find(
@@ -743,7 +743,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         return stateData.state;
       }
     }
-    
+
     // Fallback to getCityState if not found in state-wise cities
     return this.getCityState(cityName);
   }
@@ -764,7 +764,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           } else if (typeof cityData.popular === 'string') {
             popularValue = cityData.popular.toLowerCase() === 'true';
           }
-          
+
           return {
             name: cityData.city,
             code: cityData.city.substring(0, 3).toUpperCase(), // Generate code from city name
@@ -814,12 +814,12 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
     // Fallback to old logic if API data not loaded
     let allCities: City[] = [];
-    
+
     if (this.mobileSearchQuery && this.mobileSearchQuery.trim()) {
       allCities = this.getMobileCitySuggestionsList();
     } else {
       const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
-      
+
       if (normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff') {
         allCities = [...this.reservedCities];
       } else if (normalizedTarget === 'shared-pickup' || normalizedTarget === 'shared-dropoff') {
@@ -883,7 +883,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // console.log(`State ${stateGroup.state} expanded - showing ALL ${stateGroup.cities.length} cities (popular + non-popular)`);
       return stateGroup.cities;
     }
-    
+
     // When not expanded, show ONLY popular cities (popular = true)
     const popularCities = stateGroup.cities.filter(city => {
       return city.popular === true;
@@ -930,7 +930,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     // If state-wise cities are loaded, use them
     if (this.stateWiseCitiesLoaded && this.stateWiseCities.length > 0) {
       let allCities: City[] = [];
-      
+
       // Flatten all cities from all states
       this.stateWiseCities.forEach(stateData => {
         const cities: City[] = stateData.cities.map(cityData => {
@@ -943,7 +943,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           } else if (typeof cityData.popular === 'string') {
             popularValue = cityData.popular.toLowerCase() === 'true';
           }
-          
+
           return {
             name: cityData.city,
             code: cityData.city.substring(0, 3).toUpperCase(),
@@ -956,7 +956,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
       // Apply filtering logic (exclude selected city from the other field)
       const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
-      
+
       if (normalizedTarget === 'shared-pickup' && this.formValues.sharedDropoff) {
         allCities = allCities.filter(city =>
           city.name.toLowerCase() !== this.formValues.sharedDropoff.toLowerCase()
@@ -982,7 +982,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     // Fallback to old logic if API data not loaded
     let allCities: City[] = [];
     const normalizedTarget = this.normalizeTarget(this.mobilePopupTarget);
-    
+
     if (normalizedTarget === 'reserved-pickup' || normalizedTarget === 'reserved-dropoff') {
       allCities = [...this.reservedCities];
     } else if (normalizedTarget === 'shared-pickup' || normalizedTarget === 'shared-dropoff') {
@@ -1042,12 +1042,12 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     if (target.startsWith('flight-from-') || target.startsWith('flight-to-')) {
       return target;
     }
-    
+
     // Handle mobile multi-city flight targets (mobile-flight-from-0, mobile-flight-to-1, etc.)
     if (target.startsWith('mobile-flight-from-') || target.startsWith('mobile-flight-to-')) {
       return target.replace('mobile-', '');
     }
-    
+
     switch (target) {
       case 'mobile-shared-pickup':
         return 'shared-pickup';
@@ -1253,16 +1253,16 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   openMobileDatePicker(type: 'shared' | 'reserved' | 'flights'): void {
     this.mobileDatePickerType = type;
     this.showMobileDatePicker = true;
-    
+
     // Fetch calendar fares for flight departure
     if (type === 'flights') {
       const fromCity = this.flightRoutes[0]?.from;
       const toCity = this.flightRoutes[0]?.to;
-      
+
       if (fromCity && toCity) {
         const fromCode = this.extractAirportCode(fromCity);
         const toCode = this.extractAirportCode(toCity);
-        
+
         if (fromCode && toCode) {
           this.fetchCalendarFare(fromCode, toCode, this.calendarFareMap);
         }
@@ -1273,15 +1273,15 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   openMobileReturnDatePicker(): void {
     this.mobileDatePickerType = 'flights-return';
     this.showMobileDatePicker = true;
-    
+
     // Fetch calendar fares for flight return (reversed route)
     const fromCity = this.flightRoutes[0]?.from;
     const toCity = this.flightRoutes[0]?.to;
-    
+
     if (fromCity && toCity) {
       const fromCode = this.extractAirportCode(fromCity);
       const toCode = this.extractAirportCode(toCity);
-      
+
       if (fromCode && toCode) {
         // Reversed: to -> from for return flight
         this.fetchCalendarFare(toCode, fromCode, this.calendarFareMapReturn);
@@ -1377,7 +1377,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   onMobileDateSelected(date: string, type?: 'shared' | 'reserved' | 'flights' | 'flights-return' | string): void {
     // If type is provided, use it; otherwise use mobileDatePickerType
     const dateType = type || this.mobileDatePickerType;
-    
+
     if (dateType === 'shared') {
       this.onSharedDateSelected(date);
     } else if (dateType === 'reserved') {
@@ -1407,7 +1407,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     today.setHours(0, 0, 0, 0);
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate.getTime() === today.getTime()) {
       return 'Today';
     }
@@ -1483,7 +1483,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       event.stopPropagation();
       event.preventDefault();
     }
-    
+
     if (this.mobileTab === 'shared') {
       this.swapCabLocations('shared');
     } else if (this.mobileTab === 'reserved') {
@@ -2025,7 +2025,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     if (isPlatformBrowser(this.platformId)) {
 
       // 1. Fetch TBO Token (Browser Only)
-        this.subscriptions.add(
+      this.subscriptions.add(
         this.apiService.getTboToken().subscribe((val: any) => {
           // console.log('TBo Token', val);
           if (val) {
@@ -2037,7 +2037,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         })
       );
 
-        this.subscriptions.add(
+      this.subscriptions.add(
         this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe((res) => {
           this.ip = res.ip;
           // console.log('nIp', this.ip);
@@ -2136,7 +2136,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           const indianAirports = allAirports
             .filter(airport => (airport as any).countryCode === 'IN')
             .sort((a, b) => a.name.localeCompare(b.name));
-          
+
           const otherAirports = allAirports
             .filter(airport => (airport as any).countryCode !== 'IN')
             .sort((a, b) => a.name.localeCompare(b.name));
@@ -2176,7 +2176,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // console.log('Response Type:', typeof data);
       // console.log('Is Array:', Array.isArray(data));
       // console.log('Response Keys:', data && typeof data === 'object' ? Object.keys(data) : 'N/A');
-      
+
       // API returns array of state objects directly: [{state: "Sikkim", cities: [{city: "Gangtok", popular: true}, ...]}, ...]
       let locations: StateWiseCity[] = [];
       if (Array.isArray(data)) {
@@ -2201,16 +2201,16 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       } else {
         // console.warn('Unexpected API response format:', data);
       }
-      
+
       // console.log('Processed locations count:', locations.length);
-      
+
       if (locations.length > 0) {
         this.stateWiseCities = locations;
         this.stateWiseCitiesLoaded = true;
         // console.log('=== STATE-WISE CITIES POPULATED ===');
         // console.log('Total states:', this.stateWiseCities.length);
         // console.log('Full state-wise cities data:', JSON.stringify(this.stateWiseCities, null, 2));
-        
+
         this.stateWiseCities.forEach((state, index) => {
           const popularCount = state.cities.filter(c => {
             if (c.popular === true) return true;
@@ -2228,7 +2228,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           //   popularType: typeof c.popular 
           // })));
         });
-        
+
         // Update sourceCities with actual state information if they were already loaded
         if (this.sourceCities && this.sourceCities.length > 0) {
           this.sourceCities = this.sourceCities.map(city => ({
@@ -2444,14 +2444,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   onFlightReturnDateSelected(date: string) {
     // Get the departure date (check both flightRoutes and formValues)
     const departureDate = this.flightRoutes[0]?.date || this.formValues.flightDeparture;
-    
+
     // Validate that return date is not before departure date
     if (departureDate && date && date < departureDate) {
       this.returnDateError = 'Return date cannot be before departure date.';
       this.formValues.flightReturn = '';
       return;
     }
-    
+
     // Clear error if validation passes
     this.returnDateError = '';
     this.formValues.flightReturn = date;
@@ -2512,7 +2512,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   }
   setTripType(type: string) {
     this.tripType = type;
-    
+
     // Clear return date error when trip type changes
     this.returnDateError = '';
 
@@ -2757,18 +2757,18 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         event.preventDefault();
         event.stopPropagation();
       }
-      
+
       // Store cursor position
       this.phoneInputCursorPosition = inputElement.selectionStart || inputElement.value.length;
-      
+
       // CRITICAL: Use readonly to prevent native keyboard, and create custom cursor
       inputElement.readOnly = true;
       inputElement.setAttribute('readonly', 'readonly');
       inputElement.setAttribute('inputmode', 'none');
-      
+
       // Create and show custom cursor
       this.createCustomCursor(inputElement);
-      
+
       // Add event listeners to track cursor position and prevent native keyboard
       // Use arrow functions to maintain 'this' context
       const clickHandler = (e: MouseEvent) => this.onPhoneInputClick(e);
@@ -2777,7 +2777,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       const selectHandler = (e: Event) => this.onPhoneInputSelect(e);
       const focusHandler = (e: FocusEvent) => this.onPhoneInputFocus(e);
       const touchStartHandler = (e: TouchEvent) => this.onPhoneInputTouchStart(e);
-      
+
       // Store handlers on the element for later removal
       (inputElement as any)._phoneInputClickHandler = clickHandler;
       (inputElement as any)._phoneInputKeyDownHandler = keyDownHandler;
@@ -2785,23 +2785,23 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       (inputElement as any)._phoneInputSelectHandler = selectHandler;
       (inputElement as any)._phoneInputFocusHandler = focusHandler;
       (inputElement as any)._phoneInputTouchStartHandler = touchStartHandler;
-      
+
       inputElement.addEventListener('click', clickHandler, true);
       inputElement.addEventListener('keydown', keyDownHandler, true);
       inputElement.addEventListener('input', inputHandler, true);
       inputElement.addEventListener('select', selectHandler, true);
       inputElement.addEventListener('focus', focusHandler, true);
       inputElement.addEventListener('touchstart', touchStartHandler, true);
-      
+
       this.activePhoneInput = inputElement;
       this.showCustomKeypad = true;
-      
+
       // Focus the input for visual feedback
       inputElement.focus();
-      
+
       // Update custom cursor position
       this.updateCustomCursorPosition();
-      
+
       // Scroll immediately - no delay
       this.scrollToInput(inputElement, true);
     }
@@ -2814,7 +2814,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // CRITICAL: Prevent default to stop native keyboard
       event.preventDefault();
       event.stopPropagation();
-      
+
       // Calculate cursor position based on touch position
       if (event.touches.length > 0) {
         const touch = event.touches[0];
@@ -2822,14 +2822,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         const inputRect = input.getBoundingClientRect();
         const inputStyles = getComputedStyle(input);
         const paddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
-        
+
         const value = input.value || '';
         const relativeX = touchX - inputRect.left - paddingLeft;
-        
+
         // Find the best cursor position
         let bestPos = value.length;
         let minDistance = Infinity;
-        
+
         const tempSpan = this.document.createElement('span');
         tempSpan.style.cssText = `
           position: absolute;
@@ -2840,25 +2840,25 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           font-weight: ${inputStyles.fontWeight};
           letter-spacing: ${inputStyles.letterSpacing};
         `;
-        
+
         const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
         if (wrapper) {
           wrapper.appendChild(tempSpan);
-          
+
           for (let i = 0; i <= value.length; i++) {
             tempSpan.textContent = value.substring(0, i);
             const textWidth = tempSpan.offsetWidth;
             const distance = Math.abs(textWidth - relativeX);
-            
+
             if (distance < minDistance) {
               minDistance = distance;
               bestPos = i;
             }
           }
-          
+
           wrapper.removeChild(tempSpan);
         }
-        
+
         this.phoneInputCursorPosition = bestPos;
         this.updateCustomCursorPosition();
       }
@@ -2884,21 +2884,21 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     if (input && input === this.activePhoneInput) {
       event.preventDefault();
       event.stopPropagation();
-      
+
       // Calculate cursor position based on click position accurately
       const clickX = event.clientX;
       const inputRect = input.getBoundingClientRect();
       const inputStyles = getComputedStyle(input);
       const paddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
-      
+
       // Get the text before cursor to measure width
       const value = input.value || '';
       const relativeX = clickX - inputRect.left - paddingLeft;
-      
+
       // Binary search or linear search to find the correct position
       let bestPos = value.length;
       let minDistance = Infinity;
-      
+
       // Create temporary span for measurement
       const tempSpan = this.document.createElement('span');
       tempSpan.style.cssText = `
@@ -2910,28 +2910,28 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         font-weight: ${inputStyles.fontWeight};
         letter-spacing: ${inputStyles.letterSpacing};
       `;
-      
+
       const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
       if (wrapper) {
         wrapper.appendChild(tempSpan);
-        
+
         // Try each position to find the closest match
         for (let i = 0; i <= value.length; i++) {
           tempSpan.textContent = value.substring(0, i);
           const textWidth = tempSpan.offsetWidth;
           const distance = Math.abs(textWidth - relativeX);
-          
+
           if (distance < minDistance) {
             minDistance = distance;
             bestPos = i;
           }
         }
-        
+
         wrapper.removeChild(tempSpan);
       }
-      
+
       this.phoneInputCursorPosition = bestPos;
-      
+
       // Update custom cursor position
       this.updateCustomCursorPosition();
     }
@@ -2945,7 +2945,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // Allow cursor movement events
       const newValue = input.value;
       const oldValue = this.phoneNumber || '';
-      
+
       // If value changed and it's not from our keypad, prevent it
       // But allow cursor position updates
       if (newValue !== oldValue && newValue.length > oldValue.length) {
@@ -3005,19 +3005,19 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   // Helper method to scroll input into view
   private scrollToInput(inputElement: HTMLInputElement, accountForKeypad: boolean = false): void {
     if (!inputElement || !isPlatformBrowser(this.platformId)) return;
-    
+
     const inputContainer = inputElement.closest('.wr-field-pill, .wr-phone-wrapper') || inputElement;
     const containerRect = inputContainer.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
     const keypadHeight = accountForKeypad ? 350 : 0; // Keypad height when shown
     const padding = 20;
-    
+
     // Calculate target scroll position to center input in visible area
     const inputTop = containerRect.top + window.scrollY;
     const inputHeight = containerRect.height;
     const availableHeight = viewportHeight - keypadHeight - padding;
     const targetScroll = inputTop - (availableHeight / 2) + (inputHeight / 2);
-    
+
     // Check if input is too close to bottom (where keypad will appear)
     if (accountForKeypad && containerRect.bottom > viewportHeight - keypadHeight) {
       const scrollAmount = containerRect.bottom - (viewportHeight - keypadHeight) + padding;
@@ -3037,7 +3037,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   closeCustomKeypad(): void {
     // Remove custom cursor
     this.removeCustomCursor();
-    
+
     // Clean up cached elements
     if (this.cachedMeasurementSpan && this.cachedMeasurementSpan.parentElement) {
       this.cachedMeasurementSpan.parentElement.removeChild(this.cachedMeasurementSpan);
@@ -3045,7 +3045,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     this.cachedMeasurementSpan = null;
     this.cachedInputStyles = null;
     this.cachedInputElement = null;
-    
+
     if (this.activePhoneInput) {
       // Remove event listeners using stored handlers
       const clickHandler = (this.activePhoneInput as any)._phoneInputClickHandler;
@@ -3054,7 +3054,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       const selectHandler = (this.activePhoneInput as any)._phoneInputSelectHandler;
       const focusHandler = (this.activePhoneInput as any)._phoneInputFocusHandler;
       const touchStartHandler = (this.activePhoneInput as any)._phoneInputTouchStartHandler;
-      
+
       if (clickHandler) {
         this.activePhoneInput.removeEventListener('click', clickHandler, true);
         delete (this.activePhoneInput as any)._phoneInputClickHandler;
@@ -3079,12 +3079,12 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         this.activePhoneInput.removeEventListener('touchstart', touchStartHandler, true);
         delete (this.activePhoneInput as any)._phoneInputTouchStartHandler;
       }
-      
+
       // Restore normal behavior
       this.activePhoneInput.readOnly = false;
       this.activePhoneInput.removeAttribute('inputmode');
       this.activePhoneInput.removeAttribute('readonly');
-      
+
       this.activePhoneInput.blur();
       this.activePhoneInput = null;
     }
@@ -3095,10 +3095,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   // Create custom cursor element
   private createCustomCursor(inputElement: HTMLInputElement): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     // Remove existing cursor if any
     this.removeCustomCursor();
-    
+
     // Create cursor element
     const cursor = this.document.createElement('span');
     cursor.className = 'custom-phone-cursor';
@@ -3112,16 +3112,16 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       pointer-events: none;
       z-index: 1000;
     `;
-    
+
     this.customCursorElement = cursor;
-    
+
     // Add to input wrapper
     const wrapper = inputElement.closest('.wr-phone-wrapper') || inputElement.parentElement;
     if (wrapper) {
       (wrapper as HTMLElement).style.position = 'relative';
       wrapper.appendChild(cursor);
     }
-    
+
     // Update position
     this.updateCustomCursorPosition();
   }
@@ -3129,16 +3129,16 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   // Update custom cursor position
   private updateCustomCursorPosition(): void {
     if (!this.customCursorElement || !this.activePhoneInput || !isPlatformBrowser(this.platformId)) return;
-    
+
     const input = this.activePhoneInput;
     const cursor = this.customCursorElement;
     const value = input.value || '';
     const cursorPos = this.phoneInputCursorPosition || value.length;
-    
+
     // Get computed styles for accurate measurement
     const inputStyles = getComputedStyle(input);
     const inputRect = input.getBoundingClientRect();
-    
+
     // Create a temporary span to measure text width with exact same styling
     const tempSpan = this.document.createElement('span');
     tempSpan.style.cssText = `
@@ -3153,22 +3153,22 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       padding-right: ${inputStyles.paddingRight};
     `;
     tempSpan.textContent = value.substring(0, cursorPos);
-    
+
     const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
     if (wrapper) {
       const wrapperRect = wrapper.getBoundingClientRect();
-      
+
       // Measure text width
       wrapper.appendChild(tempSpan);
       const textWidth = tempSpan.offsetWidth;
       wrapper.removeChild(tempSpan);
-      
+
       // Calculate position relative to input's left edge (not wrapper)
       // Account for input's padding and position within wrapper
       const inputLeftInWrapper = inputRect.left - wrapperRect.left;
       const inputPaddingLeft = parseFloat(inputStyles.paddingLeft) || 0;
       const leftOffset = inputLeftInWrapper + inputPaddingLeft + textWidth;
-      
+
       // Position cursor
       cursor.style.left = `${leftOffset}px`;
       cursor.style.top = `${inputRect.top - wrapperRect.top + (inputRect.height - 20) / 2}px`;
@@ -3185,26 +3185,26 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
   onKeypadNumberClick(number: string): void {
     if (!this.activePhoneInput) return;
-    
+
     // Haptic feedback - ultra-light vibration (5ms) for instant tactile response
     this.triggerHapticFeedback(5);
-    
+
     // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
     const cursorPos = this.phoneInputCursorPosition || currentValue.length;
-    
+
     // Check maxlength (10 digits for mobile) - fast exit
     if (currentValue.length >= 10) return;
-    
+
     // Insert number at cursor position - optimized string manipulation
     const newValue = currentValue.slice(0, cursorPos) + number + currentValue.slice(cursorPos);
     const newCursorPos = cursorPos + 1;
-    
+
     // Batch DOM updates for better performance
     this.activePhoneInput.value = newValue;
     this.phoneNumber = newValue;
     this.phoneInputCursorPosition = newCursorPos;
-    
+
     // Defer cursor update to next frame for immediate visual feedback
     requestAnimationFrame(() => {
       this.updateCustomCursorPositionFast();
@@ -3233,15 +3233,15 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     const now = Date.now();
     const timeSinceLastTouch = now - this.lastTouchTime;
     const touchDuration = now - this.touchStartTime;
-    
+
     // Only prevent obvious accidental double-taps (< 100ms between taps on same button)
     // Allow all rapid typing for fast input
-    if (event.target === this.lastTouchTarget && 
-        timeSinceLastTouch < 100 && 
-        touchDuration < 100) {
+    if (event.target === this.lastTouchTarget &&
+      timeSinceLastTouch < 100 &&
+      touchDuration < 100) {
       event.preventDefault();
     }
-    
+
     // Update tracking
     this.lastTouchTime = now;
     this.lastTouchTarget = event.target;
@@ -3249,26 +3249,26 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
   onKeypadBackspace(): void {
     if (!this.activePhoneInput) return;
-    
+
     // Haptic feedback - slightly stronger for backspace (8ms)
     this.triggerHapticFeedback(8);
-    
+
     // Get values directly - no function calls for speed
     const currentValue = this.activePhoneInput.value || '';
     const cursorPos = this.phoneInputCursorPosition || currentValue.length;
-    
+
     // Fast exit if nothing to delete
     if (currentValue.length === 0 || cursorPos === 0) return;
-    
+
     // Delete character at cursor position - optimized string manipulation
     const newValue = currentValue.slice(0, cursorPos - 1) + currentValue.slice(cursorPos);
     const newCursorPos = cursorPos - 1;
-    
+
     // Batch DOM updates for better performance
     this.activePhoneInput.value = newValue;
     this.phoneNumber = newValue;
     this.phoneInputCursorPosition = newCursorPos;
-    
+
     // Defer cursor update to next frame for immediate visual feedback
     requestAnimationFrame(() => {
       this.updateCustomCursorPositionFast();
@@ -3276,12 +3276,12 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   }
   private updateCustomCursorPositionFast(): void {
     if (!this.customCursorElement || !this.activePhoneInput || !isPlatformBrowser(this.platformId)) return;
-    
+
     const input = this.activePhoneInput;
     const cursor = this.customCursorElement;
     const value = input.value || '';
     const cursorPos = this.phoneInputCursorPosition || value.length;
-    
+
     // Cache computed styles to avoid repeated getComputedStyle calls
     if (!this.cachedInputStyles || this.cachedInputElement !== input) {
       const inputStyles = getComputedStyle(input);
@@ -3294,14 +3294,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       };
       this.cachedInputElement = input;
     }
-    
+
     const inputRect = input.getBoundingClientRect();
     const wrapper = input.closest('.wr-phone-wrapper') || input.parentElement;
-    
+
     if (!wrapper) return;
-    
+
     const wrapperRect = wrapper.getBoundingClientRect();
-    
+
     // Reuse or create measurement span
     if (!this.cachedMeasurementSpan) {
       this.cachedMeasurementSpan = this.document.createElement('span');
@@ -3312,22 +3312,22 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       `;
       wrapper.appendChild(this.cachedMeasurementSpan);
     }
-    
+
     // Update measurement span style only if input changed
     const span = this.cachedMeasurementSpan;
     span.style.fontFamily = this.cachedInputStyles.fontFamily;
     span.style.fontSize = this.cachedInputStyles.fontSize;
     span.style.fontWeight = this.cachedInputStyles.fontWeight;
     span.style.letterSpacing = this.cachedInputStyles.letterSpacing;
-    
+
     // Measure text width
     span.textContent = value.substring(0, cursorPos);
     const textWidth = span.offsetWidth;
-    
+
     // Calculate position
     const inputLeftInWrapper = inputRect.left - wrapperRect.left;
     const leftOffset = inputLeftInWrapper + this.cachedInputStyles.paddingLeft + textWidth;
-    
+
     // Update cursor position with transform for better performance
     cursor.style.transform = `translate(${leftOffset}px, ${inputRect.top - wrapperRect.top + (inputRect.height - 20) / 2}px)`;
     cursor.style.left = '0';
@@ -3338,7 +3338,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     this.triggerHapticFeedback(15);
     this.closeCustomKeypad();
   }
-  
+
   // Ultra-fast haptic feedback for keypad
   private triggerHapticFeedback(duration: number = 5): void {
     if (isPlatformBrowser(this.platformId) && 'vibrate' in navigator) {
@@ -3838,7 +3838,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         dropoffLocation: this.formValues.sharedDropoffLocation,
       };
       // console.log('Submitting shared cab booking:', payload);
-    // this.showSwal('Shared cab booking submitted! Check console for details.', 'success', 2500);
+      // this.showSwal('Shared cab booking submitted! Check console for details.', 'success', 2500);
       return;
     }
 
@@ -3855,7 +3855,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       dropoffLocation: this.formValues.reservedDropoffLocation,
     };
     // console.log('[ReservedCab] Submitting booking payload', payload);
-  // this.showSwal('Reserved cab booking submitted! Check console for details.', 'success', 2500);
+    // this.showSwal('Reserved cab booking submitted! Check console for details.', 'success', 2500);
   }
 
   /**
@@ -3865,7 +3865,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   closeAllOtherDropdowns(currentTarget: string) {
     // Close travelers panel
     this.isTravelersOpen = false;
-    
+
     // Close all city/location suggestion dropdowns except the current one
     Object.keys(this.activeSuggestions).forEach(key => {
       if (key !== currentTarget) {
@@ -3877,10 +3877,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   showCitySuggestions(query: string, target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
-    
+
     // Close all other dropdowns before opening this one
     this.closeAllOtherDropdowns(storeTarget);
-    
+
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
       this.toggleDropdownActiveClass();
@@ -3950,7 +3950,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
     // Show all matching cities
     this.activeSuggestions[storeTarget] = filteredCities;
-    
+
     // Toggle dropdown-active class on tabs-container
     this.toggleDropdownActiveClass();
   }
@@ -3958,10 +3958,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   showCitySuggestionsOnFocus(target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
-    
+
     // Close all other dropdowns before opening this one
     this.closeAllOtherDropdowns(storeTarget);
-    
+
     // Clear the field if it already has a value (for easy re-selection)
     if (target === 'shared-pickup' && this.formValues.sharedPickup) {
       this.formValues.sharedPickup = '';
@@ -3991,7 +3991,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         this.flightRoutes[routeIndex].to = '';
       }
     }
-    
+
     // Use reservedCities for reserved cabs, sourceCities for shared cabs, flightAirports for flights, otherwise use cities
     let citiesToShow: City[];
     if (target === 'reserved-pickup' || target === 'reserved-dropoff') {
@@ -4049,7 +4049,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
     // Show all cities when focusing on input
     this.activeSuggestions[storeTarget] = citiesToShow;
-    
+
     // Toggle dropdown-active class on tabs-container
     this.toggleDropdownActiveClass();
   }
@@ -4062,10 +4062,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   showLocationSuggestions(query: string, target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
-    
+
     // Close all other dropdowns before opening this one
     this.closeAllOtherDropdowns(storeTarget);
-    
+
     if (!query.trim()) {
       delete this.activeSuggestions[storeTarget];
       this.toggleDropdownActiveClass();
@@ -4099,10 +4099,10 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
   showLocationSuggestionsOnFocus(target: string) {
     const storeTarget = target;
     target = this.normalizeTarget(target);
-    
+
     // Close all other dropdowns before opening this one
     this.closeAllOtherDropdowns(storeTarget);
-    
+
     let locations: string[] = [];
 
     if (target.includes('shared-pickup-specific')) {
@@ -4140,8 +4140,8 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
       // Handle flight-from-0 and flight-to-0 (for mobile and multi-city)
       if (target.startsWith('flight-from-') || target === 'flight-from') {
-        const routeIndex = target.includes('-') && target.split('-').length > 2 
-          ? parseInt(target.split('-')[2]) 
+        const routeIndex = target.includes('-') && target.split('-').length > 2
+          ? parseInt(target.split('-')[2])
           : 0;
         if (this.flightRoutes[routeIndex]) {
           this.flightRoutes[routeIndex].from = displayValue;
@@ -4151,8 +4151,8 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           this.onAirportSelected('from', displayValue);
         }
       } else if (target.startsWith('flight-to-') || target === 'flight-to') {
-        const routeIndex = target.includes('-') && target.split('-').length > 2 
-          ? parseInt(target.split('-')[2]) 
+        const routeIndex = target.includes('-') && target.split('-').length > 2
+          ? parseInt(target.split('-')[2])
           : 0;
         if (this.flightRoutes[routeIndex]) {
           this.flightRoutes[routeIndex].to = displayValue;
@@ -4287,7 +4287,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // When selecting 'to' for a route, auto-populate the next route's 'from'
       const oldDestination = this.flightRoutes[routeIndex].to;
       this.flightRoutes[routeIndex].to = displayValue;
-      
+
       // Auto-populate next route's 'from' if it exists and is empty or matches old destination
       if (routeIndex < this.flightRoutes.length - 1) {
         const nextRoute = this.flightRoutes[routeIndex + 1];
@@ -4295,7 +4295,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           nextRoute.from = displayValue;
         }
       }
-      
+
       // Trigger calendar fare fetching for first route
       if (routeIndex === 0) {
         this.onAirportSelected('to', displayValue);
@@ -4310,7 +4310,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // Auto-populate 'from' with the previous route's 'to' value
       const previousRoute = this.flightRoutes[this.flightRoutes.length - 1];
       const autoFrom = previousRoute?.to || '';
-      
+
       this.flightRoutes.push({
         from: autoFrom,
         to: '',
@@ -4332,12 +4332,12 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     const temp = route.from;
     route.from = route.to;
     route.to = temp;
-    
+
     // Also swap formValues for flights
     const tempFrom = this.formValues.flightFrom;
     this.formValues.flightFrom = this.formValues.flightTo;
     this.formValues.flightTo = tempFrom;
-    
+
     // Swap selected cities if they exist
     if (this.selectedCities.flights) {
       const tempCity = this.selectedCities.flights.from;
@@ -4451,14 +4451,14 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       this.closeAllOtherDropdowns('');
     }
     this.isTravelersOpen = !this.isTravelersOpen;
-    
+
     // Toggle dropdown-active class on tabs-container
     this.toggleDropdownActiveClass();
   }
 
   closeTravelersPanel() {
     this.isTravelersOpen = false;
-    
+
     // Toggle dropdown-active class on tabs-container
     this.toggleDropdownActiveClass();
   }
@@ -4798,7 +4798,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       // But since searchCabs is called from desktop, we'll keep the popup for desktop
       this.openPhonePopup(type);
     } else {
-    this.openPhonePopup(type);
+      this.openPhonePopup(type);
     }
   }
 
@@ -5016,26 +5016,26 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
 
   isCalendarOpen: boolean = false;
   private currentCalendarType: 'departure' | 'return' = 'departure';
-  
+
   onCalendarOpened(type: 'departure' | 'return' = 'departure') {
     this.isCalendarOpen = true;
     this.currentCalendarType = type;
     this.toggleDropdownActiveClass();
-    
+
     // Get the selected from and to cities
     const fromCity = this.flightRoutes[0]?.from;
     const toCity = this.flightRoutes[0]?.to;
-    
+
     if (fromCity && toCity) {
       // Extract airport codes from city strings
       const fromCode = this.extractAirportCode(fromCity);
       const toCode = this.extractAirportCode(toCity);
-      
+
       if (fromCode && toCode) {
         // Fetch departure fares (from -> to)
         if (type === 'departure') {
           this.fetchCalendarFare(fromCode, toCode, this.calendarFareMap);
-        } 
+        }
         // Fetch return fares (to -> from)
         else if (type === 'return') {
           this.fetchCalendarFare(toCode, fromCode, this.calendarFareMapReturn);
@@ -5500,7 +5500,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       next: (response: any) => {
         if (response.success && response.image) {
           this.homepagePopupData = response;
-          
+
           // Check if popup should be shown only once
           if (response.show_once) {
             const popupShown = localStorage.getItem('homepage_popup_shown');
@@ -5514,7 +5514,7 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
           const delay = (response.delay_seconds || 2) * 1000;
           setTimeout(() => {
             this.showHomepagePopup = true;
-            
+
             // Mark as shown if show_once is true
             if (response.show_once) {
               localStorage.setItem('homepage_popup_shown', 'true');
@@ -5567,29 +5567,29 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
     }
 
     // Try to find Delhi (DEL) and Mumbai (BOM) by code or name
-    const delhiAirport = this.flightAirports.find(airport =>
-      airport.code === 'DEL' ||
-      airport.name.toLowerCase().includes('delhi') ||
-      airport.name.toLowerCase().includes('indira gandhi')
-    );
+    // const delhiAirport = this.flightAirports.find(airport =>
+    //   airport.code === 'DEL' ||
+    //   airport.name.toLowerCase().includes('delhi') ||
+    //   airport.name.toLowerCase().includes('indira gandhi')
+    // );
 
-    const mumbaiAirport = this.flightAirports.find(airport =>
-      airport.code === 'BOM' ||
-      airport.name.toLowerCase().includes('mumbai') ||
-      airport.name.toLowerCase().includes('chhatrapati')
-    );
+    // const mumbaiAirport = this.flightAirports.find(airport =>
+    //   airport.code === 'BOM' ||
+    //   airport.name.toLowerCase().includes('mumbai') ||
+    //   airport.name.toLowerCase().includes('chhatrapati')
+    // );
 
     // Use found airports or fallback to first two airports
-    const defaultFrom = delhiAirport || this.flightAirports[0];
-    const defaultTo = mumbaiAirport || (this.flightAirports.length > 1 ? this.flightAirports[1] : this.flightAirports[0]);
+    // const defaultFrom = delhiAirport || this.flightAirports[0];
+    // const defaultTo = mumbaiAirport || (this.flightAirports.length > 1 ? this.flightAirports[1] : this.flightAirports[0]);
 
     // Format: "CityName (CODE)"
-    const defaultFromDisplay = defaultFrom.code
-      ? `${defaultFrom.name} (${defaultFrom.code})`
-      : defaultFrom.name;
-    const defaultToDisplay = defaultTo.code
-      ? `${defaultTo.name} (${defaultTo.code})`
-      : defaultTo.name;
+    // const defaultFromDisplay = defaultFrom.code
+    //   ? `${defaultFrom.name} (${defaultFrom.code})`
+    //   : defaultFrom.name;
+    // const defaultToDisplay = defaultTo.code
+    //   ? `${defaultTo.name} (${defaultTo.code})`
+    //   : defaultTo.name;
 
     // Always update flightRoutes with dynamic defaults
     if (this.flightRoutes.length > 0) {
@@ -5598,8 +5598,8 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
         this.flightRoutes[0].from === 'Mumbai' ||
         !this.flightRoutes[0].to || this.flightRoutes[0].to === 'Delhi' ||
         this.flightRoutes[0].to === 'Mumbai') {
-        this.flightRoutes[0].from = defaultFromDisplay;
-        this.flightRoutes[0].to = defaultToDisplay;
+        // this.flightRoutes[0].from = defaultFromDisplay;
+        // this.flightRoutes[0].to = defaultToDisplay;
       }
     }
 
@@ -5608,8 +5608,8 @@ calendarFareMapReturn: Map<string, FareData> = new Map();
       this.formValues.flightFrom === 'Mumbai' ||
       !this.formValues.flightTo || this.formValues.flightTo === 'Delhi' ||
       this.formValues.flightTo === 'Mumbai') {
-      this.formValues.flightFrom = defaultFromDisplay;
-      this.formValues.flightTo = defaultToDisplay;
+      // this.formValues.flightFrom = defaultFromDisplay;
+      // this.formValues.flightTo = defaultToDisplay;
     }
 
     // console.log('Default airports set:', { from: defaultFromDisplay, to: defaultToDisplay });

@@ -877,13 +877,13 @@ img {
 }
 
 /* Date Hanger Design */
-.date-hanger {
+/* .date-hanger {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%) translateY(-100%);
   z-index: 5;
-}
+} */
 
 
 .date-content {
@@ -1761,14 +1761,14 @@ img {
     min-width: 0;
   }
 
-  .date-hanger {
+  /* .date-hanger {
     position: relative;
     left: auto;
     transform: none;
     margin-bottom: -10px;
     text-align: center;
     top: 0;
-  }
+  } */
 
   .date-content {
     padding: 8px 24px !important;
@@ -2170,9 +2170,9 @@ img {
     min-width: 0;
   }
 
-  .date-hanger {
+  /* .date-hanger {
     margin-bottom: -14px;
-  }
+  } */
 
   .date-content {
     padding: 5px 16px !important;
@@ -4273,7 +4273,7 @@ img.mobile-seat-icon {
 }
 
 @media(max-width:767px) {
-  .date-hanger {
+  /* .date-hanger {
     position: absolute !important;
     display: flex !important;
     top: -11px !important;
@@ -4282,7 +4282,7 @@ img.mobile-seat-icon {
     transform: none;
     left: 0 !important;
 
-  }
+  } */
 
   .date-content {
     border-radius: 20px !important;
@@ -4425,6 +4425,10 @@ img.mobile-seat-icon {
     max-width: 85vw !important;
     white-space: normal;
   }
+
+  .vehicle p {
+    display: none;
+  }
 }
 
 @media(min-width:767px) {
@@ -4440,5 +4444,15 @@ img.mobile-seat-icon {
 
   .route-details.timec {
     justify-content: center;
+  }
+}
+
+.date-hanger {
+  display: none !important;
+}
+
+@media(max-width:767px) {
+  .date-hanger {
+    display: none !important;
   }
 }
