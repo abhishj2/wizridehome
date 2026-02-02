@@ -61,11 +61,11 @@ interface CarAdditionFormData {
 })
 export class BookingResultsComponent implements OnInit, OnDestroy {
   @Input() searchParams: BookingSearchParams | null = null;
-  
+
   vehicleOptions: VehicleOption[] = [];
   isLoading = true;
   expandedSections: { [key: string]: boolean } = {};
-  
+
   // Seat selection popup properties
   showSeatPopup = false;
   selectedSeats: Seat[] = [];
@@ -107,7 +107,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     passengers: 1,
     phoneNumber: ''
   };
-  
+
   // Location data for modify form
   sourceCities: any[] = [];
   reservedCities: any[] = [];
@@ -117,11 +117,11 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   modifyFormLocationDetailsVisible = false;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private route: ActivatedRoute,
     private apiService: ApiserviceService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
@@ -132,20 +132,20 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('BookingResultsComponent initialized');
-    
+
     // Get search parameters from router state
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.searchParams = navigation.extras.state['searchParams'];
       console.log('Received search params from navigation:', this.searchParams);
     }
-    
+
     // Fallback: try to get from history state (only in browser)
     if (!this.searchParams && isPlatformBrowser(this.platformId) && (window as any).history?.state) {
       this.searchParams = (window as any).history.state['searchParams'];
       console.log('Received search params from history:', this.searchParams);
     }
-    
+
     // Fallback: try to get from localStorage (only in browser)
     if (!this.searchParams && isPlatformBrowser(this.platformId)) {
       const storedParams = localStorage.getItem('bookingSearchParams');
@@ -155,7 +155,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         // Don't clear localStorage immediately to persist across refreshes
       }
     }
-    
+
     // If still no search params, create dummy data for testing
     if (!this.searchParams) {
       console.log('No search params found, using dummy data');
@@ -171,12 +171,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         pickupTime: '14:30'
       };
     }
-    
+
     console.log('Final search params:', this.searchParams);
-    
+
     // Load vehicle options
     this.loadVehicleOptions();
-    
+
     // Show attention alert on page load
     this.showAttentionAlert();
   }
@@ -236,20 +236,20 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.log('Response type:', typeof data);
         console.log('Is array:', Array.isArray(data));
         console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
-        
+
         if (Array.isArray(data) && data.length > 0) {
           console.log('Number of vehicles:', data.length);
           data.forEach((vehicle, index) => {
             console.log(`Vehicle ${index + 1}:`, vehicle);
           });
-          
+
           // Map API response to vehicleOptions format
           this.mapApiResponseToVehicleOptions(data);
         } else {
           console.warn('API returned empty or invalid response');
           this.vehicleOptions = [];
         }
-        
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -257,7 +257,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.error('Error details:', error);
         console.error('Error message:', error.message);
         console.error('Error status:', error.status);
-        
+
         // Fallback to dummy data on error
         this.loadDummySharedCarOptions();
         this.isLoading = false;
@@ -269,13 +269,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     if (!this.searchParams) return;
 
     const baseRoute = {
-      from: { 
-        code: this.getLocationCode(this.searchParams.from), 
+      from: {
+        code: this.getLocationCode(this.searchParams.from),
         name: this.searchParams.from,
         location: this.searchParams.pickupLocation || ''
       },
-      to: { 
-        code: this.getLocationCode(this.searchParams.to), 
+      to: {
+        code: this.getLocationCode(this.searchParams.to),
         name: this.searchParams.to,
         location: this.searchParams.dropLocation || ''
       }
@@ -344,13 +344,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     if (!this.searchParams) return;
 
     const baseRoute = {
-      from: { 
-        code: this.getLocationCode(this.searchParams.from), 
+      from: {
+        code: this.getLocationCode(this.searchParams.from),
         name: this.searchParams.from.split('(')[0].trim(),
         location: this.searchParams.from.split('(')[1]?.replace(')', '').trim() || ''
       },
-      to: { 
-        code: this.getLocationCode(this.searchParams.to), 
+      to: {
+        code: this.getLocationCode(this.searchParams.to),
         name: this.searchParams.to.split('(')[0].trim(),
         location: this.searchParams.to.split('(')[1]?.replace(')', '').trim() || ''
       }
@@ -399,6 +399,21 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     ];
   }
 
+  getFormattedAmenities(vehicle: VehicleOption): string {
+    if (!vehicle || !vehicle.amenities) return '';
+
+    const formatted = vehicle.amenities.map(amenity => {
+      if (amenity === 'AC') {
+        // Check if vehicle name implies Non-AC
+        const isNonAc = vehicle.name.toLowerCase().includes('non-ac');
+        return isNonAc ? 'A/C charges NOT included' : 'A/C charges included';
+      }
+      return amenity;
+    });
+
+    return formatted.join(', ') + '.';
+  }
+
   // Helper method to format date to "Nov 21, 2025" format
   private formatDateForAPI(dateString: string): string {
     if (!dateString) return '';
@@ -416,10 +431,10 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     const [hours, minutes] = timeString.split(':');
     const hour24 = parseInt(hours, 10);
     const minute = minutes || '00';
-    
+
     let hour12 = hour24;
     let period = 'A.M.';
-    
+
     if (hour24 === 0) {
       hour12 = 12;
       period = 'A.M.';
@@ -433,7 +448,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       hour12 = hour24 - 12;
       period = 'P.M.';
     }
-    
+
     return `${hour12.toString().padStart(2, '0')}:${minute.padStart(2, '0')} ${period}`;
   }
 
@@ -477,11 +492,11 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.log('Full response:', JSON.stringify(data, null, 2));
         console.log('Response type:', typeof data);
         console.log('Is array:', Array.isArray(data));
-        
+
         if (Array.isArray(data) && data.length > 0) {
           // Handle nested array structure: [[{...}]]
           let cabData: any[] = [];
-          
+
           if (Array.isArray(data[0]) && data[0].length > 0) {
             // Nested array structure - extract the inner array
             cabData = data[0];
@@ -491,7 +506,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
             cabData = data;
             console.log('Found flat array structure with', cabData.length, 'vehicles');
           }
-          
+
           if (cabData.length > 0) {
             // Map API response to vehicleOptions format
             this.mapReservedApiResponseToVehicleOptions(cabData);
@@ -503,7 +518,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           console.warn('API returned empty or invalid response');
           this.vehicleOptions = [];
         }
-        
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -511,7 +526,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.error('Error details:', error);
         console.error('Error message:', error.message);
         console.error('Error status:', error.status);
-        
+
         // Fallback to empty array on error
         this.vehicleOptions = [];
         this.isLoading = false;
@@ -523,13 +538,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     if (!this.searchParams) return;
 
     const baseRoute = {
-      from: { 
-        code: this.getLocationCode(this.searchParams.from), 
+      from: {
+        code: this.getLocationCode(this.searchParams.from),
         name: this.searchParams.from,
         location: this.searchParams.pickupLocation || ''
       },
-      to: { 
-        code: this.getLocationCode(this.searchParams.to), 
+      to: {
+        code: this.getLocationCode(this.searchParams.to),
         name: this.searchParams.to,
         location: this.searchParams.dropLocation || ''
       }
@@ -539,16 +554,16 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     this.vehicleOptions = apiData.map((vehicle: any, index: number) => {
       // Get car type/name from CTD
       const carType = vehicle.CTD || 'Car';
-      
+
       // Get image from CARIMAGE
       const imagePath = vehicle.CARIMAGE || '../../assets/images/reversed-removebg-preview.png';
-      
+
       // Get price from PRICE
       const price = parseFloat(vehicle.PRICE || '0');
-      
+
       // Get capacity from CAPACITY
       const capacity = parseInt(vehicle.CAPACITY || '4', 10);
-      
+
       // Get request time from REQUESTTIME
       let departureTime = vehicle.REQUESTTIME || '';
       if (departureTime) {
@@ -557,20 +572,20 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         // Remove seconds if present
         if (departureTime.includes(':') && departureTime.split(':').length === 3) {
           const [hours, minutes] = departureTime.split(':');
-          const period = minutes.includes('am') || minutes.includes('pm') ? 
-            (minutes.includes('am') ? 'am' : 'pm') : 
+          const period = minutes.includes('am') || minutes.includes('pm') ?
+            (minutes.includes('am') ? 'am' : 'pm') :
             (departureTime.includes('am') ? 'am' : 'pm');
           const min = minutes.replace(/[amp]/gi, '');
           departureTime = `${hours}:${min}${period}`;
         }
       }
-      
+
       // Get rating from RATING
       const rating = parseFloat(vehicle.RATING || '0');
-      
+
       // Get travel name from TRAVELSNAME
       const travelName = vehicle.TRAVELSNAME || '';
-      
+
       // Get owner TD from OWNERTD (for future use)
       const ownerTD = vehicle.OWNERTD || '';
 
@@ -585,7 +600,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         duration: '', // Duration not available in API response
         price: price,
         seatsLeft: capacity,
-        amenities: ['AC', 'Luggage', 'Personal Driver','Door Pick & Door Drop within City.'], // Default amenities
+        amenities: ['AC', 'Luggage', 'Personal Driver', 'Door Pick & Door Drop within City.'], // Default amenities
         route: baseRoute,
         pickupLocation: this.searchParams?.pickupLocation || '',
         dropLocation: this.searchParams?.dropLocation || '',
@@ -606,7 +621,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       'Delhi': 'DEL',
       'Mumbai': 'BOM'
     };
-    
+
     const locationName = location.split('(')[0].trim();
     return codes[locationName] || locationName.substring(0, 3).toUpperCase();
   }
@@ -615,7 +630,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   modifySearch() {
     // Toggle modify form visibility
     this.showModifyForm = !this.showModifyForm;
-    
+
     if (this.showModifyForm && this.searchParams) {
       // Initialize form with current search params
       this.modifyFormValues = {
@@ -628,7 +643,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         passengers: this.searchParams.passengers || 1,
         phoneNumber: this.searchParams.phoneNumber || ''
       };
-      
+
       // Load location data based on cab type
       this.loadModifyFormLocationData();
     }
@@ -732,17 +747,17 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     const oldFrom = this.modifyFormValues.from || '';
     const oldTo = this.modifyFormValues.to || '';
     const newCityName = cityName || '';
-    
+
     // Check if city actually changed (trim and compare)
     const fromChanged = field === 'from' && oldFrom.trim() !== newCityName.trim();
     const toChanged = field === 'to' && oldTo.trim() !== newCityName.trim();
-    
+
     // Update the selected city
     this.modifyFormValues[field] = cityName;
-    
+
     // Clear suggestions
     delete this.modifyFormSuggestions[`modify-${field}`];
-    
+
     // For shared cabs, handle location clearing and loading
     if (this.searchParams?.type === 'shared') {
       // Clear the corresponding location immediately when city changes
@@ -753,7 +768,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         // Also clear the suggestion dropdown for pickup location
         delete this.modifyFormSuggestions['modify-pickupLocation'];
       }
-      
+
       if (toChanged) {
         // To city changed - clear only drop location
         this.modifyFormValues.dropLocation = '';
@@ -761,7 +776,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         // Also clear the suggestion dropdown for drop location
         delete this.modifyFormSuggestions['modify-dropLocation'];
       }
-      
+
       // Load pickup/drop locations when both cities are selected
       if (this.modifyFormValues.from && this.modifyFormValues.to) {
         // Reload locations for the new city pair
@@ -796,16 +811,16 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   showModifyCitySuggestions(query: string, field: 'from' | 'to') {
     const cities = this.searchParams?.type === 'shared' ? this.sourceCities : this.reservedCities;
     const normalizedQuery = query.toLowerCase().trim();
-    
+
     if (!normalizedQuery) {
       this.modifyFormSuggestions[`modify-${field}`] = cities.slice(0, 10);
       return;
     }
-    
-    const filtered = cities.filter(city => 
+
+    const filtered = cities.filter(city =>
       city.name.toLowerCase().includes(normalizedQuery)
     ).slice(0, 10);
-    
+
     this.modifyFormSuggestions[`modify-${field}`] = filtered;
   }
 
@@ -816,20 +831,20 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   showModifyLocationSuggestions(query: string, field: 'pickupLocation' | 'dropLocation') {
-    const locations = field === 'pickupLocation' 
-      ? this.sharedPickupLocations 
+    const locations = field === 'pickupLocation'
+      ? this.sharedPickupLocations
       : this.sharedDropoffLocations;
     const normalizedQuery = query.toLowerCase().trim();
-    
+
     if (!normalizedQuery) {
       this.modifyFormSuggestions[`modify-${field}`] = locations.slice(0, 10);
       return;
     }
-    
-    const filtered = locations.filter((loc: string) => 
+
+    const filtered = locations.filter((loc: string) =>
       loc.toLowerCase().includes(normalizedQuery)
     ).slice(0, 10);
-    
+
     this.modifyFormSuggestions[`modify-${field}`] = filtered;
   }
 
@@ -881,7 +896,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     if (this.searchParams.type === 'reserved') {
       const fromCity = this.reservedCities.find(c => c.name === this.modifyFormValues.from);
       const toCity = this.reservedCities.find(c => c.name === this.modifyFormValues.to);
-      
+
       if (!fromCity || !toCity) {
         Swal.fire({
           icon: 'warning',
@@ -1044,11 +1059,11 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   submitCarAdditionRequest() {
-    if (this.carAdditionFormData.fullName && 
-        this.carAdditionFormData.contactNo && 
-        this.carAdditionFormData.emailId && 
-        this.carAdditionFormData.preferredTime) {
-      
+    if (this.carAdditionFormData.fullName &&
+      this.carAdditionFormData.contactNo &&
+      this.carAdditionFormData.emailId &&
+      this.carAdditionFormData.preferredTime) {
+
       // Prepare API request parameters
       const fullName = this.carAdditionFormData.fullName;
       const contactNumber = this.carAdditionFormData.contactNo;
@@ -1060,7 +1075,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       const destination = this.searchParams?.to || '';
       const drop = this.searchParams?.dropLocation || '';
       const seats = this.searchParams?.passengers || 1;
-      
+
       console.log('========== CALLING caraddditionrequest API ==========');
       console.log('Request Parameters:');
       console.log('  Full Name:', fullName);
@@ -1074,7 +1089,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       console.log('  Drop:', drop);
       console.log('  Seats:', seats);
       console.log('====================================================');
-      
+
       // Call API to submit car addition request
       this.apiService.caraddditionrequest(
         fullName,
@@ -1094,10 +1109,10 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           console.log('Response Type:', typeof response);
           console.log('Response String:', JSON.stringify(response));
           console.log('=====================================================');
-          
+
           // Close the modal
           this.closeCarAdditionModal();
-          
+
           // Prepare form data for thank you page
           const thankYouData = {
             formType: 'caraddition',
@@ -1108,14 +1123,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
             redirectText: 'Back to Home',
             additionalInfo: `Route: ${this.searchParams?.from} → ${this.searchParams?.to} | Date: ${this.searchParams?.date} | Preferred Time: ${this.formatTimeDisplay(preferredTime)}`
           };
-          
+
           // Store in localStorage as fallback
           if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem('thankyouFormData', JSON.stringify(thankYouData));
           }
-          
+
           // Navigate to thank you page
-          this.router.navigate(['/thankyou-form'], { 
+          this.router.navigate(['/thankyou-form'], {
             state: { formData: thankYouData }
           });
         },
@@ -1123,7 +1138,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           console.error('========== caraddditionrequest API ERROR ==========');
           console.error('Error:', error);
           console.error('===================================================');
-          
+
           Swal.fire({
             title: 'Error',
             text: 'Error submitting car addition request. Please try again.',
@@ -1149,9 +1164,9 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   //     alert('No car addition requests found.');
   //     return;
   //   }
-    
+
   //   console.log('All Car Addition Requests:', this.carAdditionRequests);
-    
+
   //   let requestList = `Total Car Addition Requests: ${this.carAdditionRequests.length}\n\n`;
   //   this.carAdditionRequests.forEach((request, index) => {
   //     requestList += `Request ${index + 1}:\n`;
@@ -1170,29 +1185,29 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   //     requestList += `Status: ${request.status}\n`;
   //     requestList += `Submitted: ${new Date(request.timestamp).toLocaleString()}\n\n`;
   //   });
-    
+
   //   alert(requestList);
   // }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      day: '2-digit', 
-      month: 'short' 
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short'
     });
   }
 
   formatPickupTime(timeString: string): string {
     if (!timeString) return '';
-    
+
     const [hour, minute] = timeString.split(':');
     const hourNum = parseInt(hour);
     const minuteNum = parseInt(minute);
-    
+
     let displayHour = hourNum;
     let period = 'AM';
-    
+
     if (hourNum === 0) {
       displayHour = 12;
       period = 'AM';
@@ -1206,7 +1221,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       displayHour = hourNum - 12;
       period = 'PM';
     }
-    
+
     return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
   }
 
@@ -1221,10 +1236,10 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       event.stopPropagation();
       event.preventDefault();
     }
-    
+
     const key = `${vehicleId}-${sectionType}`;
     this.expandedSections[key] = !this.expandedSections[key];
-    
+
     console.log(`Toggled ${key}: ${this.expandedSections[key]}`);
   }
 
@@ -1241,7 +1256,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         return;
       }
     }
-    
+
     this.expandedSections[vehicleId] = !this.expandedSections[vehicleId];
     console.log(`Toggled card ${vehicleId}: ${this.expandedSections[vehicleId]}`);
   }
@@ -1250,18 +1265,18 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   selectSeat(vehicle: VehicleOption) {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
     this.currentSelectedVehicle = vehicle;
-    
+
     // Calculate price excluding GST (for shared cabs, remove 5% GST from API price)
     const seatPrice = this.getPriceExcludingGST(vehicle.price);
-    
+
     // Initialize seats with default status first
     this.initializeSeats(seatPrice);
-    
+
     // Fetch actual seat availability from API
     if (vehicle.tid) {
       this.fetchSeatDetails(vehicle.tid, seatPrice);
     }
-    
+
     this.showSeatPopup = true;
     console.log('showSeatPopup set to:', this.showSeatPopup);
   }
@@ -1273,7 +1288,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   fetchSeatDetails(tid: string, price: number) {
     console.log('========== CALLING getSeatDetails API ==========');
     console.log('TID:', tid);
-    
+
     this.apiService.getSeatDetails(tid).subscribe({
       next: (data: any) => {
         console.log('========== getSeatDetails API RESPONSE ==========');
@@ -1281,7 +1296,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         console.log('Response Type:', typeof data);
         console.log('Response String:', JSON.stringify(data));
         console.log('================================================');
-        
+
         // Update seat statuses based on API response
         this.updateSeatStatusFromAPI(data, price);
       },
@@ -1297,7 +1312,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   updateSeatStatusFromAPI(apiData: any, price: number) {
     // Create a map of seat numbers to their booked status from API
     const seatStatusMap: { [key: number]: boolean } = {};
-    
+
     if (Array.isArray(apiData)) {
       apiData.forEach((seat: any) => {
         const seatNumber = parseInt(seat.seatNumber || seat.seatnumber || seat.seat_number, 10);
@@ -1307,34 +1322,34 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
         }
       });
     }
-    
+
     console.log('Seat Status Map from API:', seatStatusMap);
-    
+
     // Update front seats
     this.frontSeats = this.frontSeats.map(seat => ({
       ...seat,
       status: seatStatusMap[seat.number] ? 'booked' : 'available'
     }));
-    
+
     // Update middle seats
     this.middleSeats = this.middleSeats.map(seat => ({
       ...seat,
       status: seatStatusMap[seat.number] ? 'booked' : 'available'
     }));
-    
+
     // Update back seats
     this.backSeats = this.backSeats.map(seat => ({
       ...seat,
       status: seatStatusMap[seat.number] ? 'booked' : 'available'
     }));
-    
+
     console.log('Updated Front Seats:', this.frontSeats);
     console.log('Updated Middle Seats:', this.middleSeats);
     console.log('Updated Back Seats:', this.backSeats);
   }
 
   initializeSeats(price: number) {
-  
+
     this.frontSeats = [
       { id: '1', number: 1, status: 'available', price: price }
     ];
@@ -1401,23 +1416,23 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   proceedToBooking() {
     if (this.selectedSeats.length > 0 && this.currentSelectedVehicle) {
       console.log('Proceeding to booking with seats:', this.selectedSeats);
-      
+
       // Get TID, selected seats, and phone number
       const tid = this.currentSelectedVehicle.tid;
       const phoneNumber = this.searchParams?.phoneNumber || '';
-      
+
       // Sort selected seat numbers and convert to string (as per reference image)
       const sortedSeatNumbers = this.selectedSeats
         .map(seat => seat.number)
         .sort((a, b) => a < b ? -1 : a > b ? 1 : 0)
         .toString();
-      
+
       console.log('========== CALLING shareSeatBlock API ==========');
       console.log('TID:', tid);
       console.log('Selected Seats (sorted):', sortedSeatNumbers);
       console.log('Phone Number:', phoneNumber);
       console.log('================================================');
-      
+
       // Call shareSeatBlock API to check if seats are blocked
       this.apiService.shareSeatBlock(tid, sortedSeatNumbers, phoneNumber).subscribe({
         next: (val: any) => {
@@ -1426,15 +1441,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           console.log('Response Type:', typeof val);
           console.log('Response String:', JSON.stringify(val));
           console.log('================================================');
-          
+
           // Check if response includes 'NO BLOCKING' (as per reference image)
           const responseString = JSON.stringify(val);
           if (responseString.includes('NO BLOCKING')) {
             console.log('✅ NO BLOCKING - Seats are available, proceeding to checkout');
-            
+
             // Calculate total price
             const totalPrice = this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
-            
+
             // Create selection details
             const selectionDetails = {
               selectedSeats: this.selectedSeats.map(seat => ({
@@ -1445,7 +1460,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
               totalPrice: totalPrice,
               perSeatPrice: this.selectedSeats[0]?.price || 0
             };
-            
+
             // Create booking data for checkout
             const bookingData = {
               searchParams: this.searchParams,
@@ -1457,15 +1472,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
               bookingType: 'shared' as const,
               totalPrice: totalPrice
             };
-            
+
             // Store booking data
             localStorage.setItem('bookingData', JSON.stringify(bookingData));
-            
+
             // Navigate to checkout
-            this.router.navigate(['/checkout'], { 
+            this.router.navigate(['/checkout'], {
               state: { bookingData: bookingData }
             });
-            
+
             this.closeSeatPopup();
           } else {
             console.log('❌ SEATS ARE BLOCKED - Cannot proceed to checkout');
@@ -1501,15 +1516,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   bookCab(vehicle: VehicleOption) {
     console.log('Booking cab:', vehicle);
-    
+
     // Get the correct departure time (user's pickup time for reserved cabs)
-    const departureTime = this.searchParams && this.searchParams.type === 'reserved' && this.searchParams.pickupTime 
-      ? this.formatPickupTime(this.searchParams.pickupTime) 
+    const departureTime = this.searchParams && this.searchParams.type === 'reserved' && this.searchParams.pickupTime
+      ? this.formatPickupTime(this.searchParams.pickupTime)
       : vehicle.departureTime;
-    
+
     // Calculate price excluding GST
     const vehiclePrice = this.getPriceExcludingGST(vehicle.price);
-    
+
     // Create booking details
     const bookingDetails = {
       vehicle: {
@@ -1529,7 +1544,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       bookingTime: new Date().toISOString(),
       totalPrice: vehiclePrice
     };
-    
+
     // Create booking data for checkout
     const bookingData = {
       searchParams: this.searchParams,
@@ -1540,12 +1555,12 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       bookingType: 'reserved' as const,
       totalPrice: vehiclePrice
     };
-    
+
     // Store booking data
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
-    
+
     // Navigate to checkout
-    this.router.navigate(['/checkout'], { 
+    this.router.navigate(['/checkout'], {
       state: { bookingData: bookingData }
     });
   }
@@ -1625,7 +1640,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     const [hourStr, minuteStr] = currentTime.split(':');
     const hour = parseInt(hourStr);
     const minute = parseInt(minuteStr);
-    
+
     // Convert 24-hour to 12-hour format
     if (hour === 0) {
       this.selectedHour = 12;
@@ -1640,11 +1655,11 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       this.selectedHour = hour - 12;
       this.selectedPeriod = 'PM';
     }
-    
+
     // Set closest minute
     const closestMinute = Math.round(minute / 15) * 15;
     this.selectedMinute = closestMinute.toString().padStart(2, '0');
-    
+
     // Scroll to selected hour
     setTimeout(() => {
       this.scrollToSelectedHour();
@@ -1677,30 +1692,30 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   confirmTimeSelection() {
     // Convert 12-hour to 24-hour format
     let hour24 = this.selectedHour;
-    
+
     if (this.selectedPeriod === 'AM' && this.selectedHour === 12) {
       hour24 = 0;
     } else if (this.selectedPeriod === 'PM' && this.selectedHour !== 12) {
       hour24 = this.selectedHour + 12;
     }
-    
+
     // Format time as HH:mm
     const time24 = `${hour24.toString().padStart(2, '0')}:${this.selectedMinute}`;
-    
+
     this.carAdditionFormData.preferredTime = time24;
     this.closeTimePicker();
   }
 
   formatTimeDisplay(time: string): string {
     if (!time) return '12:00 PM';
-    
+
     const [hourStr, minuteStr] = time.split(':');
     const hour = parseInt(hourStr);
     const minute = parseInt(minuteStr);
-    
+
     let displayHour = hour;
     let period = 'AM';
-    
+
     if (hour === 0) {
       displayHour = 12;
       period = 'AM';
@@ -1714,13 +1729,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       displayHour = hour - 12;
       period = 'PM';
     }
-    
+
     return `${displayHour}:${minuteStr} ${period}`;
   }
 
   showAttentionAlert() {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     Swal.fire({
       html: `
         <div class="swal-attention-content">
