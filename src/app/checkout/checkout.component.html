@@ -7,19 +7,26 @@
           <div class="route-locations">
             <div class="location-group">
               <span class="from">{{ bookingData.searchParams.from }}</span>
-              <span class="location-detail" *ngIf="bookingData.searchParams.pickupLocation">{{ bookingData.searchParams.pickupLocation }}</span>
+              <span class="location-detail" *ngIf="bookingData.searchParams.pickupLocation">{{
+                bookingData.searchParams.pickupLocation }}</span>
             </div>
             <i class="fas fa-arrow-right"></i>
             <div class="location-group">
               <span class="to">{{ bookingData.searchParams.to }}</span>
-              <span class="location-detail" *ngIf="bookingData.searchParams.dropLocation">{{ bookingData.searchParams.dropLocation }}</span>
+              <span class="location-detail" *ngIf="bookingData.searchParams.dropLocation">{{
+                bookingData.searchParams.dropLocation }}</span>
             </div>
           </div>
           <div class="journey-details">
             <span class="date">{{ formatDate(bookingData.searchParams.date) }}</span>
-            <span class="pickup-time" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">{{ formatPickupTime(bookingData.searchParams.pickupTime) }}</span>
-            <span class="pickup-time" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">{{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}</span>
-            <span class="passengers" *ngIf="bookingData.bookingType === 'shared'">{{ getTotalSeatsCount() }} seats</span>
+            <span class="pickup-time"
+              *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">{{
+              formatPickupTime(bookingData.searchParams.pickupTime) }}</span>
+            <span class="pickup-time"
+              *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">{{
+              formatPickupTime(bookingData.vehicleDetails.departureTime) }}</span>
+            <span class="passengers" *ngIf="bookingData.bookingType === 'shared'">{{ getTotalSeatsCount() }}
+              seats</span>
             <!-- <span class="passengers" *ngIf="bookingData.bookingType === 'reserved'">Entire Cab</span> -->
             <span class="passengers" *ngIf="bookingData?.selectedSeats?.length">Seat No: {{ getSelectedSeats() }}</span>
           </div>
@@ -39,9 +46,11 @@
           <!-- Top Row: Route Codes and Line -->
           <div class="route-top-mobile">
             <div class="route-location-group">
-              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.from?.code || getLocationCode(bookingData.searchParams.from) }}</div>
+              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.from?.code ||
+                getLocationCode(bookingData.searchParams.from) }}</div>
               <div class="route-location-name">{{ bookingData.searchParams.from }}</div>
-              <div class="route-location-sub" *ngIf="bookingData.searchParams.pickupLocation">{{ bookingData.searchParams.pickupLocation }}</div>
+              <div class="route-location-sub" *ngIf="bookingData.searchParams.pickupLocation">{{
+                bookingData.searchParams.pickupLocation }}</div>
             </div>
 
             <div class="route-line-container">
@@ -55,9 +64,11 @@
             </div>
 
             <div class="route-location-group">
-              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.to?.code || getLocationCode(bookingData.searchParams.to) }}</div>
+              <div class="route-code-badge">{{ bookingData.vehicleDetails?.route?.to?.code ||
+                getLocationCode(bookingData.searchParams.to) }}</div>
               <div class="route-location-name">{{ bookingData.searchParams.to }}</div>
-              <div class="route-location-sub" *ngIf="bookingData.searchParams.dropLocation">{{ bookingData.searchParams.dropLocation }}</div>
+              <div class="route-location-sub" *ngIf="bookingData.searchParams.dropLocation">{{
+                bookingData.searchParams.dropLocation }}</div>
             </div>
           </div>
         </div>
@@ -65,18 +76,34 @@
         <!-- Journey Timing Section -->
         <div class="journey-timing-mobile">
           <div class="timing-left-mobile">
-            <span class="date-display-mobile">{{ formatDate(bookingData.searchParams.date) }}</span>
-            <span class="time-badge-mobile" *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">
-              {{ formatPickupTime(bookingData.searchParams.pickupTime) }}
-            </span>
-            <span class="time-badge-mobile" *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">
+            <span class="duration-label-mobile" *ngIf="bookingData.bookingType === 'reserved'
+            ">
+              Travel Date: </span>
+
+            <span class="time-badge-mobile" *ngIf="bookingData.bookingType === 'reserved'
+            ">{{ formatDate(bookingData.searchParams.date) }}</span>
+
+            <span class="duration-label-mobile" *ngIf="bookingData.bookingType === 'shared'
+            ">
+              {{ formatDate(bookingData.searchParams.date) }} </span>
+
+
+            <span class="time-badge-mobile"
+              *ngIf="bookingData.bookingType === 'shared' && bookingData.vehicleDetails?.departureTime">
               {{ formatPickupTime(bookingData.vehicleDetails.departureTime) }}
             </span>
           </div>
           <div class="timing-right-mobile">
-            <span class="duration-label-mobile">Duration</span>
-            <span class="duration-badge-mobile" *ngIf="bookingData.vehicleDetails?.duration">
+            <span class="duration-label-mobile" *ngIf="bookingData.bookingType === 'shared'">Duration</span>
+            <span class="duration-badge-mobile"
+              *ngIf="bookingData.vehicleDetails?.duration || bookingData.bookingType === 'shared'">
               {{ formatDuration(bookingData.vehicleDetails.duration).replace(' ', '') }}
+            </span>
+            <span class="duration-label-mobile" *ngIf="bookingData.bookingType === 'reserved'
+            ">
+              Pickup: </span> <span class="time-badge-mobile"
+              *ngIf="bookingData.bookingType === 'reserved' && bookingData.searchParams.pickupTime">
+              {{ formatPickupTime(bookingData.searchParams.pickupTime) }}
             </span>
           </div>
         </div>
@@ -84,8 +111,9 @@
         <!-- Vehicle and Seat Details Section -->
         <div class="vehicle-seat-mobile">
           <div class="vehicle-info-mobile">
-            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'shared'">Total Seats: {{ getTotalSeatsCount() }}</span>
-            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'reserved'">Booking Type: Entire Cab</span>
+            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'shared'">Total Seats: {{
+              getTotalSeatsCount() }}</span>
+            <span class="total-seats-mobile" *ngIf="bookingData.bookingType === 'reserved'">Booking Type :</span>
           </div>
           <div class="seat-info-mobile">
             <span *ngIf="bookingData.bookingType === 'shared'">Seat No. Selected: {{ getSelectedSeats() }}</span>
@@ -101,118 +129,87 @@
 <div class="checkout-container">
   <div class="container">
     <div class="checkout-content">
-      
+
       <!-- Left Column: Passenger Details Form -->
       <div class="left-column">
         <div class="form-card" #formTop>
           <h2 class="form-title"> Primary Passenger Details</h2>
-          
+
           <form (ngSubmit)="onSubmit(checkoutForm, $event)" #checkoutForm="ngForm">
             <div class="form-row">
               <div class="form-field">
                 <label class="field-label">First Name</label>
-                <input 
-                  type="text" 
-                  class="field-input" 
-                  placeholder="Enter First Name of Primary Passenger."
-                  [(ngModel)]="passengerDetails.firstName"
-                  name="firstName"
-                  #firstNameCtrl="ngModel"
-                  required>
+                <input type="text" class="field-input" placeholder="Enter First Name of Primary Passenger."
+                  [(ngModel)]="passengerDetails.firstName" name="firstName" #firstNameCtrl="ngModel" required>
                 <div class="field-error" *ngIf="(formSubmitted || firstNameCtrl.touched) && firstNameCtrl.invalid">
                   <span *ngIf="firstNameCtrl.errors?.['required']">First name is required.</span>
                 </div>
               </div>
-              
+
               <div class="form-field">
                 <label class="field-label">Last Name</label>
-                <input 
-                  type="text" 
-                  class="field-input" 
-                  placeholder="Enter Last Name of Primary Passenger."
-                  [(ngModel)]="passengerDetails.lastName"
-                  name="lastName"
-                  #lastNameCtrl="ngModel"
-                  required>
+                <input type="text" class="field-input" placeholder="Enter Last Name of Primary Passenger."
+                  [(ngModel)]="passengerDetails.lastName" name="lastName" #lastNameCtrl="ngModel" required>
                 <div class="field-error" *ngIf="(formSubmitted || lastNameCtrl.touched) && lastNameCtrl.invalid">
                   <span *ngIf="lastNameCtrl.errors?.['required']">Last name is required.</span>
                 </div>
               </div>
             </div>
-            
+
             <div class="form-field">
               <label class="field-label">Email ID</label>
-              <input 
-                type="email" 
-                class="field-input" 
-                placeholder="Enter Email ID of Primary Passenger (for e-ticket)."
-                [(ngModel)]="passengerDetails.emailId"
-                name="emailId"
-                #emailCtrl="ngModel"
-                required>
+              <input type="email" class="field-input" placeholder="Enter Email ID of Primary Passenger (for e-ticket)."
+                [(ngModel)]="passengerDetails.emailId" name="emailId" #emailCtrl="ngModel" required>
               <div class="field-error" *ngIf="(formSubmitted || emailCtrl.touched) && emailCtrl.invalid">
                 <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
                 <span *ngIf="emailCtrl.errors?.['email']">Please enter a valid email.</span>
               </div>
             </div>
-            
+
             <div class="form-field">
               <label class="field-label">Primary Contact No</label>
               <div class="contact-input-group">
-                <select class="country-code-select" [(ngModel)]="passengerDetails.primaryCountryCode" name="primaryCountryCode">
+                <select class="country-code-select" [(ngModel)]="passengerDetails.primaryCountryCode"
+                  name="primaryCountryCode">
                   <option *ngFor="let country of countryList" [value]="country.code">
                     {{ country.code }} - {{ country.name }}
                   </option>
                 </select>
-                <input 
-                  type="tel" 
-                  class="field-input phone-input" 
-                  placeholder="Enter Primary Phone No."
-                  [(ngModel)]="passengerDetails.primaryContactNo"
-                  name="primaryContactNo"
-                  #primaryPhoneCtrl="ngModel"
-                  maxlength="10"
-                  minlength="10"
-                  pattern="[0-9]{10}"
-                  [readonly]="isMobileView()"
-                  (click)="openPhoneDialer('primary', $event)"
-                  (focus)="openPhoneDialer('primary', $event)"
-                  (input)="validatePhoneNumbers()"
-                  required>
+                <input type="tel" class="field-input phone-input" placeholder="Enter Primary Phone No."
+                  [(ngModel)]="passengerDetails.primaryContactNo" name="primaryContactNo" #primaryPhoneCtrl="ngModel"
+                  maxlength="10" minlength="10" pattern="[0-9]{10}" [readonly]="isMobileView()"
+                  (click)="openPhoneDialer('primary', $event)" (focus)="openPhoneDialer('primary', $event)"
+                  (input)="validatePhoneNumbers()" required>
               </div>
               <div class="field-error" *ngIf="(formSubmitted || primaryPhoneCtrl.touched) && primaryPhoneCtrl.invalid">
                 <span *ngIf="primaryPhoneCtrl.errors?.['required']">Primary phone is required.</span>
-                <span *ngIf="primaryPhoneCtrl.errors?.['minlength'] || primaryPhoneCtrl.errors?.['maxlength'] || primaryPhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
+                <span
+                  *ngIf="primaryPhoneCtrl.errors?.['minlength'] || primaryPhoneCtrl.errors?.['maxlength'] || primaryPhoneCtrl.errors?.['pattern']">Enter
+                  a valid 10-digit number.</span>
               </div>
             </div>
-            
+
             <div class="form-field">
               <label class="field-label">Alternate Contact No</label>
               <div class="contact-input-group">
-                <select class="country-code-select" [(ngModel)]="passengerDetails.alternateCountryCode" name="alternateCountryCode">
+                <select class="country-code-select" [(ngModel)]="passengerDetails.alternateCountryCode"
+                  name="alternateCountryCode">
                   <option *ngFor="let country of countryList" [value]="country.code">
                     {{ country.code }} - {{ country.name }}
                   </option>
                 </select>
-                <input 
-                  type="tel" 
-                  class="field-input phone-input" 
-                  placeholder="Enter Alternate Phone No."
-                  [(ngModel)]="passengerDetails.alternateContactNo"
-                  name="alternateContactNo"
-                  #alternatePhoneCtrl="ngModel"
-                  maxlength="10"
-                  minlength="10"
-                  pattern="[0-9]{10}"
-                  [readonly]="isMobileView()"
-                  (click)="openPhoneDialer('alternate', $event)"
-                  (focus)="openPhoneDialer('alternate', $event)"
-                  (input)="validatePhoneNumbers()"
-                  required>
+                <input type="tel" class="field-input phone-input" placeholder="Enter Alternate Phone No."
+                  [(ngModel)]="passengerDetails.alternateContactNo" name="alternateContactNo"
+                  #alternatePhoneCtrl="ngModel" maxlength="10" minlength="10" pattern="[0-9]{10}"
+                  [readonly]="isMobileView()" (click)="openPhoneDialer('alternate', $event)"
+                  (focus)="openPhoneDialer('alternate', $event)" (input)="validatePhoneNumbers()" required>
               </div>
-              <div class="field-error" *ngIf="(formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
+              <div class="field-error"
+                *ngIf="(formSubmitted || alternatePhoneCtrl.touched) && alternatePhoneCtrl.invalid">
                 <span *ngIf="alternatePhoneCtrl.errors?.['required']">Alternate phone is required.</span>
-                <span *ngIf="alternatePhoneCtrl.errors?.['minlength'] || alternatePhoneCtrl.errors?.['maxlength'] || alternatePhoneCtrl.errors?.['pattern']">Enter a valid 10-digit number.</span>
+                <span
+                  *ngIf="alternatePhoneCtrl.errors?.['minlength'] || alternatePhoneCtrl.errors?.['maxlength'] || alternatePhoneCtrl.errors?.['pattern']">Enter
+                  a valid 10-digit number.</span>
               </div>
               <div class="field-error" *ngIf="phoneNumbersAreSame">
                 <span>Primary and Alternate contact numbers cannot be the same. Please provide different numbers.</span>
@@ -221,35 +218,28 @@
           </form>
         </div>
       </div>
-      
+
       <!-- Right Column -->
       <div class="right-column">
-        
+
         <!-- Options Card -->
         <div class="options-card">
           <div class="checkbox-group">
             <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="passengerDetails.isBusinessTravel"
-                name="isBusinessTravel">
+              <input type="checkbox" [(ngModel)]="passengerDetails.isBusinessTravel" name="isBusinessTravel">
               <span class="checkmark"></span>
               Yes, I am travelling for Business.
             </label>
-            
+
             <!-- GST Number Input Field (Conditional - shows when business travel is checked) -->
             <div class="gst-section" *ngIf="passengerDetails.isBusinessTravel">
               <div class="form-field">
                 <label class="field-label">GST Number (Optional)</label>
-                <input 
-                  type="text" 
-                  class="field-input" 
-                  placeholder="Enter GST Number"
-                  [(ngModel)]="gstNumber"
+                <input type="text" class="field-input" placeholder="Enter GST Number" [(ngModel)]="gstNumber"
                   name="gstNumber">
               </div>
             </div>
-            
+
             <!-- <label class="checkbox-label">
               <input 
                 type="checkbox" 
@@ -258,7 +248,7 @@
               <span class="checkmark"></span>
               Yes, I have a Discount Coupon.
             </label> -->
-            
+
             <!-- Coupon Code Input Field (Conditional) -->
             <!-- <div class="coupon-section" *ngIf="passengerDetails.hasDiscountCoupon">
               <div class="coupon-input-group">
@@ -276,7 +266,7 @@
                 </button>
               </div>
             </div> -->
-            
+
             <!-- <label class="checkbox-label">
               <input 
                 type="checkbox" 
@@ -288,33 +278,33 @@
             </label> -->
           </div>
         </div>
-        
+
         <!-- Fare Details Card -->
         <div class="fare-card">
           <h3 class="fare-title">Fare Details</h3>
-          
+
           <div class="fare-breakdown">
             <div class="fare-item">
               <span class="fare-label">Ride Fare (in Rs.):</span>
               <span class="fare-amount">₹ {{ rideFare }}</span>
             </div>
-            
+
             <div class="fare-item">
               <span class="fare-label">Goods & Services Tax (in Rs.):</span>
               <span class="fare-amount">₹ {{ gstAmount }}</span>
             </div>
-            
+
             <div class="fare-item" *ngIf="travelInsuranceCost > 0">
               <span class="fare-label">Travel Insurance (in Rs.):</span>
               <span class="fare-amount">₹ {{ travelInsuranceCost }}</span>
             </div>
-            
+
             <div class="fare-item" *ngIf="deficitAmount > 0">
               <span class="fare-label">Deficit Amount (Previous Due) (in Rs.):</span>
               <span class="fare-amount">₹ {{ getRoundedDeficitAmount() }}</span>
             </div>
           </div>
-          
+
           <div class="total-fare">
             <span class="total-label">Total Fare (in Rs.):</span>
             <span class="total-amount">₹ {{ getDisplayTotalFare() }}</span>
@@ -322,22 +312,22 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Legal Text and Payment Button -->
     <div class="legal-section">
       <p class="legal-text">
-        By clicking on the PROCEED TO PAYMENT Button, you agree to our 
-        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Terms & Conditions</a> and that you have read our 
-        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Privacy Policy</a> and 
-        <a href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank" class="legal-link">User Agreement</a>.  Also, please make sure to check our 
+        By clicking on the PROCEED TO PAYMENT Button, you agree to our
+        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Terms &
+          Conditions</a> and that you have read our
+        <a href="https://wizzride.com/cancellationpolicy/termsandconditions" target="_blank" class="legal-link">Privacy
+          Policy</a> and
+        <a href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank" class="legal-link">User
+          Agreement</a>. Also, please make sure to check our
         <a href="https://wizzride.com/cancellationpolicy" target="_blank" class="legal-link">Cancellation Policy</a>.
       </p>
-   
-      
-      <button 
-        type="button"
-        class="proceed-payment-btn" 
-        (click)="onSubmit(checkoutForm, $event)"
+
+
+      <button type="button" class="proceed-payment-btn" (click)="onSubmit(checkoutForm, $event)"
         [disabled]="isCheckingDeficit">
         <span *ngIf="isCheckingDeficit">Checking...</span>
         <span *ngIf="!isCheckingDeficit">Proceed to Payment</span>
@@ -347,14 +337,7 @@
 </div>
 
 <!-- Phone Dialer Component -->
-<app-phone-dialer
-  [isVisible]="showPhoneDialer"
-  [currentValue]="getCurrentDialerValue()"
-  [maxLength]="10"
-  (numberClick)="onDialerNumberClick($event)"
-  (backspaceClick)="onDialerBackspace()"
-  (doneClick)="onDialerDone()"
+<app-phone-dialer [isVisible]="showPhoneDialer" [currentValue]="getCurrentDialerValue()" [maxLength]="10"
+  (numberClick)="onDialerNumberClick($event)" (backspaceClick)="onDialerBackspace()" (doneClick)="onDialerDone()"
   (closeDialer)="closePhoneDialer()">
 </app-phone-dialer>
-
-
