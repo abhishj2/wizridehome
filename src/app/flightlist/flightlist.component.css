@@ -7102,17 +7102,17 @@ button.scroll-arrow {
   font-weight: bold;
 }
 
-/* Round Trip Selection Bottom Strip */
+/* Round Trip Selection Bottom Strip - below flight list, full viewport width, scrolls with content */
 .roundtrip-selection-strip {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  position: relative;
   width: 100%;
+  margin-top: 24px;
+
+  box-sizing: border-box;
   background: #000;
   color: #fff;
-  z-index: 1000;
   padding: 16px 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -7259,14 +7259,14 @@ button.scroll-arrow {
 }
 
 
-/* Updated Round Trip Strip Styles (Step 77) */
+/* Updated Round Trip Strip Styles (Step 77) - in-flow below flight list */
 
 .roundtrip-selection-strip {
   background: #001120;
   /* Dark navy background */
   padding: 12px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .strip-container {
