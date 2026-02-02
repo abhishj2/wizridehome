@@ -2748,6 +2748,175 @@
                     </div>
                   </div>
                 </div>
+                <div class="flight-details-popup" [class.active]="showFlightDetailsPopup">
+
+                  <!-- Header -->
+                  <div class="popup-header-row">
+                    <!-- Onward Summary -->
+                    <div class="popup-flight-summary" [class.active]="activePopupTab === 'onward'"
+                      (click)="switchPopupTab('onward')">
+                      <div class="summary-label-row">
+                        <span>ONWARD</span>
+                        <span *ngIf="popupFlightOnward">{{ popupFlightOnward.Segments[0][0].Origin.Airport.CityName }} -
+                          {{
+                          popupFlightOnward.Segments[0][popupFlightOnward.Segments[0].length-1].Destination.Airport.CityName
+                          }}</span>
+                      </div>
+                      <div *ngIf="popupFlightOnward">
+                        <div class="summary-airline">{{ popupFlightOnward.Segments[0][0].Airline.AirlineName }}</div>
+                        <div class="summary-route-row">
+                          <div class="summary-times">
+                            {{ popupFlightOnward.Segments[0][0].Origin.DepTime | date:'HH:mm' }} -
+                            {{ popupFlightOnward.Segments[0][popupFlightOnward.Segments[0].length -
+                            1].Destination.ArrTime |
+                            date:'HH:mm' }}
+                          </div>
+                          <div class="summary-price">₹ {{ popupFlightOnward.price | number:'1.0-0' }}</div>
+                        </div>
+                        <a href="javascript:void(0)" class="flight-details-link">Flight Details</a>
+                      </div>
+                      <div *ngIf="!popupFlightOnward" style="color: #ccc; margin-top: 10px;">Select onward flight</div>
+                    </div>
+
+                    <!-- Return Summary -->
+                    <div class="popup-flight-summary" [class.active]="activePopupTab === 'return'"
+                      (click)="switchPopupTab('return')">
+                      <div class="summary-label-row">
+                        <span>RETURN</span>
+                        <span *ngIf="popupFlightReturn">{{ popupFlightReturn.Segments[0][0].Origin.Airport.CityName }} -
+                          {{
+                          popupFlightReturn.Segments[0][popupFlightReturn.Segments[0].length-1].Destination.Airport.CityName
+                          }}</span>
+                      </div>
+                      <div *ngIf="popupFlightReturn">
+                        <div class="summary-airline">{{ popupFlightReturn.Segments[0][0].Airline.AirlineName }}</div>
+                        <div class="summary-route-row">
+                          <div class="summary-times">
+                            {{ popupFlightReturn.Segments[0][0].Origin.DepTime | date:'HH:mm' }} -
+                            {{ popupFlightReturn.Segments[0][popupFlightReturn.Segments[0].length -
+                            1].Destination.ArrTime |
+                            date:'HH:mm' }}
+                          </div>
+                          <div class="summary-price">₹ {{ popupFlightReturn.price | number:'1.0-0' }}</div>
+                        </div>
+                        <a href="javascript:void(0)" class="flight-details-link">Flight Details</a>
+                      </div>
+                      <div *ngIf="!popupFlightReturn" style="color: #ccc; margin-top: 10px;">Select return flight</div>
+                    </div>
+
+                    <button class="popup-close-btn" (click)="closeFlightDetailsPopup()">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+
+                  <!-- Tabs -->
+                  <div class="popup-tabs-row">
+                    <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'flight'"
+                      (click)="switchPopupDetailsTab('flight')">FLIGHT DETAILS</button>
+                    <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'fare'"
+                      (click)="switchPopupDetailsTab('fare')">FARE SUMMARY</button>
+                    <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'cancellation'"
+                      (click)="switchPopupDetailsTab('cancellation')">CANCELLATION</button>
+                    <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'dateChange'"
+                      (click)="switchPopupDetailsTab('dateChange')">DATE CHANGE</button>
+                  </div>
+
+                  <!-- Content -->
+                  <div class="popup-content-body">
+
+                    <!-- FLIGHT DETAILS TAB -->
+                    <div *ngIf="popupDetailsTab === 'flight'" class="popup-tab-content">
+                      <ng-container
+                        *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
+                        <div *ngIf="currentFlight">
+                          <div class="popup-segment-card" *ngFor="let segment of currentFlight.Segments[0]">
+                            <div class="popup-segment-header">
+                              <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                class="popup-airline-logo" onerror="this.src='assets/images/default-airline.png'">
+                              <div class="popup-flight-info">
+                                <h4>{{ segment.Airline.AirlineName }}</h4>
+                                <p>{{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }} | {{
+                                  segment.Craft }}</p>
+                              </div>
+                            </div>
+                            <div class="popup-segment-body">
+                              <div class="popup-time-loc">
+                                <div class="popup-time">{{ segment.Origin.DepTime | date:'HH:mm' }}</div>
+                                <div class="popup-date">{{ segment.Origin.DepTime | date:'dd MMM yy' }}</div>
+                                <div class="popup-airport">{{ segment.Origin.Airport.CityName }} ({{
+                                  segment.Origin.Airport.AirportCode }})</div>
+                              </div>
+                              <div class="popup-duration-center">
+                                <div class="popup-duration-text">{{ formatMinutesToHrMin(segment.Duration) }}</div>
+                                <div class="popup-duration-line"></div>
+                              </div>
+                              <div class="popup-time-loc right">
+                                <div class="popup-time">{{ segment.Destination.ArrTime | date:'HH:mm' }}</div>
+                                <div class="popup-date">{{ segment.Destination.ArrTime | date:'dd MMM yy' }}</div>
+                                <div class="popup-airport">{{ segment.Destination.Airport.CityName }} ({{
+                                  segment.Destination.Airport.AirportCode }})</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="!currentFlight" class="text-center p-4">
+                          <p>No flight selected for this leg.</p>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                    <!-- FARE SUMMARY TAB -->
+                    <div *ngIf="popupDetailsTab === 'fare'" class="popup-tab-content">
+                      <ng-container
+                        *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
+                        <div *ngIf="currentFlight">
+                          <table class="popup-fare-table">
+                            <tr>
+                              <th>Base Fare</th>
+                              <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.BaseFare ||
+                                currentFlight.FareOptions[0]?.Fare?.BaseFare || 0) | number:'1.0-0' }}</td>
+                            </tr>
+                            <tr>
+                              <th>Taxes & Fees</th>
+                              <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.Tax ||
+                                currentFlight.FareOptions[0]?.Fare?.Tax || 0) |
+                                number:'1.0-0' }}</td>
+                            </tr>
+                            <tr>
+                              <th>Total Fare</th>
+                              <td style="font-size: 18px;">₹ {{ (currentFlight.selectedFareOption?.Fare?.PublishedFare
+                                ||
+                                currentFlight.FareOptions[0]?.Fare?.PublishedFare || 0) | number:'1.0-0' }}</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                    <!-- CANCELLATION TAB -->
+                    <div *ngIf="popupDetailsTab === 'cancellation'" class="popup-tab-content">
+                      <ng-container
+                        *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
+                        <div class="policy-content" *ngIf="currentFlight">
+                          <p>{{ getCancellationRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}
+                          </p>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                    <!-- DATE CHANGE TAB -->
+                    <div *ngIf="popupDetailsTab === 'dateChange'" class="popup-tab-content">
+                      <ng-container
+                        *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
+                        <div class="policy-content" *ngIf="currentFlight">
+                          <p>{{ getDateChangeRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}
+                          </p>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                  </div>
+                </div>
               </div>
 
               <!-- No Flights Message for Onward -->
@@ -3928,157 +4097,6 @@
     </div>
   </div>
   <!-- Round Trip Flight Details Slider Popup -->
-  <div class="flight-details-popup-overlay" *ngIf="showFlightDetailsPopup" (click)="closeFlightDetailsPopup()"></div>
-  <div class="flight-details-popup" [class.active]="showFlightDetailsPopup">
+  <!-- <div class="flight-details-popup-overlay" *ngIf="showFlightDetailsPopup" (click)="closeFlightDetailsPopup()"></div>-->
 
-    <!-- Header -->
-    <div class="popup-header-row">
-      <!-- Onward Summary -->
-      <div class="popup-flight-summary" [class.active]="activePopupTab === 'onward'" (click)="switchPopupTab('onward')">
-        <div class="summary-label-row">
-          <span>ONWARD</span>
-          <span *ngIf="popupFlightOnward">{{ popupFlightOnward.Segments[0][0].Origin.Airport.CityName }} - {{
-            popupFlightOnward.Segments[0][popupFlightOnward.Segments[0].length-1].Destination.Airport.CityName }}</span>
-        </div>
-        <div *ngIf="popupFlightOnward">
-          <div class="summary-airline">{{ popupFlightOnward.Segments[0][0].Airline.AirlineName }}</div>
-          <div class="summary-route-row">
-            <div class="summary-times">
-              {{ popupFlightOnward.Segments[0][0].Origin.DepTime | date:'HH:mm' }} -
-              {{ popupFlightOnward.Segments[0][popupFlightOnward.Segments[0].length - 1].Destination.ArrTime |
-              date:'HH:mm' }}
-            </div>
-            <div class="summary-price">₹ {{ popupFlightOnward.price | number:'1.0-0' }}</div>
-          </div>
-          <a href="javascript:void(0)" class="flight-details-link">Flight Details</a>
-        </div>
-        <div *ngIf="!popupFlightOnward" style="color: #ccc; margin-top: 10px;">Select onward flight</div>
-      </div>
-
-      <!-- Return Summary -->
-      <div class="popup-flight-summary" [class.active]="activePopupTab === 'return'" (click)="switchPopupTab('return')">
-        <div class="summary-label-row">
-          <span>RETURN</span>
-          <span *ngIf="popupFlightReturn">{{ popupFlightReturn.Segments[0][0].Origin.Airport.CityName }} - {{
-            popupFlightReturn.Segments[0][popupFlightReturn.Segments[0].length-1].Destination.Airport.CityName }}</span>
-        </div>
-        <div *ngIf="popupFlightReturn">
-          <div class="summary-airline">{{ popupFlightReturn.Segments[0][0].Airline.AirlineName }}</div>
-          <div class="summary-route-row">
-            <div class="summary-times">
-              {{ popupFlightReturn.Segments[0][0].Origin.DepTime | date:'HH:mm' }} -
-              {{ popupFlightReturn.Segments[0][popupFlightReturn.Segments[0].length - 1].Destination.ArrTime |
-              date:'HH:mm' }}
-            </div>
-            <div class="summary-price">₹ {{ popupFlightReturn.price | number:'1.0-0' }}</div>
-          </div>
-          <a href="javascript:void(0)" class="flight-details-link">Flight Details</a>
-        </div>
-        <div *ngIf="!popupFlightReturn" style="color: #ccc; margin-top: 10px;">Select return flight</div>
-      </div>
-
-      <button class="popup-close-btn" (click)="closeFlightDetailsPopup()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <!-- Tabs -->
-    <div class="popup-tabs-row">
-      <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'flight'"
-        (click)="switchPopupDetailsTab('flight')">FLIGHT DETAILS</button>
-      <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'fare'"
-        (click)="switchPopupDetailsTab('fare')">FARE SUMMARY</button>
-      <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'cancellation'"
-        (click)="switchPopupDetailsTab('cancellation')">CANCELLATION</button>
-      <button class="popup-tab-btn" [class.active]="popupDetailsTab === 'dateChange'"
-        (click)="switchPopupDetailsTab('dateChange')">DATE CHANGE</button>
-    </div>
-
-    <!-- Content -->
-    <div class="popup-content-body">
-
-      <!-- FLIGHT DETAILS TAB -->
-      <div *ngIf="popupDetailsTab === 'flight'" class="popup-tab-content">
-        <ng-container *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-          <div *ngIf="currentFlight">
-            <div class="popup-segment-card" *ngFor="let segment of currentFlight.Segments[0]">
-              <div class="popup-segment-header">
-                <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                  class="popup-airline-logo" onerror="this.src='assets/images/default-airline.png'">
-                <div class="popup-flight-info">
-                  <h4>{{ segment.Airline.AirlineName }}</h4>
-                  <p>{{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }} | {{ segment.Craft }}</p>
-                </div>
-              </div>
-              <div class="popup-segment-body">
-                <div class="popup-time-loc">
-                  <div class="popup-time">{{ segment.Origin.DepTime | date:'HH:mm' }}</div>
-                  <div class="popup-date">{{ segment.Origin.DepTime | date:'dd MMM yy' }}</div>
-                  <div class="popup-airport">{{ segment.Origin.Airport.CityName }} ({{
-                    segment.Origin.Airport.AirportCode }})</div>
-                </div>
-                <div class="popup-duration-center">
-                  <div class="popup-duration-text">{{ formatMinutesToHrMin(segment.Duration) }}</div>
-                  <div class="popup-duration-line"></div>
-                </div>
-                <div class="popup-time-loc right">
-                  <div class="popup-time">{{ segment.Destination.ArrTime | date:'HH:mm' }}</div>
-                  <div class="popup-date">{{ segment.Destination.ArrTime | date:'dd MMM yy' }}</div>
-                  <div class="popup-airport">{{ segment.Destination.Airport.CityName }} ({{
-                    segment.Destination.Airport.AirportCode }})</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="!currentFlight" class="text-center p-4">
-            <p>No flight selected for this leg.</p>
-          </div>
-        </ng-container>
-      </div>
-
-      <!-- FARE SUMMARY TAB -->
-      <div *ngIf="popupDetailsTab === 'fare'" class="popup-tab-content">
-        <ng-container *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-          <div *ngIf="currentFlight">
-            <table class="popup-fare-table">
-              <tr>
-                <th>Base Fare</th>
-                <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.BaseFare ||
-                  currentFlight.FareOptions[0]?.Fare?.BaseFare || 0) | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <th>Taxes & Fees</th>
-                <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.Tax || currentFlight.FareOptions[0]?.Fare?.Tax || 0) |
-                  number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <th>Total Fare</th>
-                <td style="font-size: 18px;">₹ {{ (currentFlight.selectedFareOption?.Fare?.PublishedFare ||
-                  currentFlight.FareOptions[0]?.Fare?.PublishedFare || 0) | number:'1.0-0' }}</td>
-              </tr>
-            </table>
-          </div>
-        </ng-container>
-      </div>
-
-      <!-- CANCELLATION TAB -->
-      <div *ngIf="popupDetailsTab === 'cancellation'" class="popup-tab-content">
-        <ng-container *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-          <div class="policy-content" *ngIf="currentFlight">
-            <p>{{ getCancellationRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}</p>
-          </div>
-        </ng-container>
-      </div>
-
-      <!-- DATE CHANGE TAB -->
-      <div *ngIf="popupDetailsTab === 'dateChange'" class="popup-tab-content">
-        <ng-container *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-          <div class="policy-content" *ngIf="currentFlight">
-            <p>{{ getDateChangeRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}</p>
-          </div>
-        </ng-container>
-      </div>
-
-    </div>
-  </div>
 </div>
