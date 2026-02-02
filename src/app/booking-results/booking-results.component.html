@@ -251,12 +251,16 @@
                     </div>
                     <div class="route-node end-node"></div>
                   </div>
-                  <div class="route-details">
-                    <div class="time">{{ depTime }}</div>
+                  <div class="route-details" [ngClass]="{ 'timec': searchParams?.type === 'reserved' }">
+                    <div class="time">
+                      {{ depTime }}
+                    </div>
 
-                    <div class="duration" *ngIf="searchParams?.type === 'shared'">{{
-                      formatDuration(vehicle.duration).replace(' ', '') }}</div>
+                    <div class=" duration" *ngIf="searchParams?.type === 'shared'">
+                      {{ formatDuration(vehicle.duration).replace(' ', '') }}
+                    </div>
                   </div>
+
                 </div>
 
                 <div class="route-column">
