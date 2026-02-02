@@ -3444,6 +3444,14 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return result;
   }
 
+  getCancellationRows(fare: any): any[] {
+    if (!fare?.cancellationPolicy) return [];
+    return fare.cancellationPolicy.map((p: any) => ({
+      range: `${p.From} ${p.Unit?.toLowerCase() || ''} to ${p.To || 'departure'} ${p.Unit?.toLowerCase() || ''}`,
+      price: `₹ ${p.Details}`
+    }));
+  }
+
   // Get date change text (matches reference)
   getDateChangeText(fare: any): string {
     const changePolicies = fare.dateChangePolicy || [];

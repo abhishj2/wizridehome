@@ -8160,3 +8160,51 @@ button.scroll-arrow {
   color: #4b5563;
   font-weight: 400;
 }
+
+/* Cancellation Table Styles */
+.cancellation-table-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.c-row {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.c-row:last-child {
+  border-bottom: none;
+}
+
+.c-cell {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #4b5563;
+  border-right: 1px solid #e5e7eb;
+}
+
+.c-cell:last-child {
+  border-right: none;
+}
+
+.c-cell-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.c-title {
+  font-size: 14px;
+  color: #000;
+  font-weight: 700;
+}
+
+.c-subtitle {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 400;
+}

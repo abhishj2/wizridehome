@@ -1547,9 +1547,35 @@
 
                     <!-- Cancellation Tab -->
                     <div class="tab-content" *ngIf="activeTabs[i] === 'cancellation'">
-                      <div class="policy-content">
-                        <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                      <div class="cancellation-table-container"
+                        *ngIf="getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0]).length > 0; else noCancelPolicy">
+                        <div class="c-row c-header">
+                          <div class="c-cell">
+                            <div class="c-cell-header-content">
+                              <span class="c-title">Time frame</span>
+                              <span class="c-subtitle">(From Scheduled Flight departure)</span>
+                            </div>
+                          </div>
+                          <div class="c-cell">
+                            <div class="c-cell-header-content">
+                              <span class="c-title">Airline Fee </span>
+                              <span class="c-subtitle">(Per passenger)</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="c-row"
+                          *ngFor="let row of getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0])">
+                          <div class="c-cell">{{ row.range }}</div>
+                          <div class="c-cell" style="color: #000; font-weight: 500;">
+                            ADULT : {{ row.price }}
+                          </div>
+                        </div>
                       </div>
+                      <ng-template #noCancelPolicy>
+                        <div class="policy-content">
+                          <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                        </div>
+                      </ng-template>
                     </div>
 
                     <!-- Date Change Tab -->
@@ -2114,9 +2140,35 @@
 
                           <!-- Cancellation Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'cancellation'">
-                            <div class="policy-content">
-                              <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            <div class="cancellation-table-container"
+                              *ngIf="getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0]).length > 0; else noCancelPolicy">
+                              <div class="c-row c-header">
+                                <div class="c-cell">
+                                  <div class="c-cell-header-content">
+                                    <span class="c-title">Time frame</span>
+                                    <span class="c-subtitle">(From Scheduled Flight departure)</span>
+                                  </div>
+                                </div>
+                                <div class="c-cell">
+                                  <div class="c-cell-header-content">
+                                    <span class="c-title">Airline Fee </span>
+                                    <span class="c-subtitle">(Per passenger)</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="c-row"
+                                *ngFor="let row of getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0])">
+                                <div class="c-cell">{{ row.range }}</div>
+                                <div class="c-cell" style="color: #000; font-weight: 500;">
+                                  ADULT : {{ row.price }}
+                                </div>
+                              </div>
                             </div>
+                            <ng-template #noCancelPolicy>
+                              <div class="policy-content">
+                                <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                              </div>
+                            </ng-template>
                           </div>
 
                           <!-- Date Change Tab -->
@@ -2650,9 +2702,35 @@
 
                           <!-- Cancellation Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'cancellation'">
-                            <div class="policy-content">
-                              <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                            <div class="cancellation-table-container"
+                              *ngIf="getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0]).length > 0; else noCancelPolicy">
+                              <div class="c-row c-header">
+                                <div class="c-cell">
+                                  <div class="c-cell-header-content">
+                                    <span class="c-title">Time frame</span>
+                                    <span class="c-subtitle">(From Scheduled Flight departure)</span>
+                                  </div>
+                                </div>
+                                <div class="c-cell">
+                                  <div class="c-cell-header-content">
+                                    <span class="c-title">Airline Fee </span>
+                                    <span class="c-subtitle">(Per passenger)</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="c-row"
+                                *ngFor="let row of getCancellationRows(selectedFareOptions[i] || flight.FareOptions[0])">
+                                <div class="c-cell">{{ row.range }}</div>
+                                <div class="c-cell" style="color: #000; font-weight: 500;">
+                                  ADULT : {{ row.price }}
+                                </div>
+                              </div>
                             </div>
+                            <ng-template #noCancelPolicy>
+                              <div class="policy-content">
+                                <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                              </div>
+                            </ng-template>
                           </div>
 
                           <!-- Date Change Tab -->
