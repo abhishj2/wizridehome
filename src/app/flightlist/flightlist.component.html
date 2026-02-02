@@ -1571,7 +1571,7 @@
                         Cheapest Flights First
                       </h2>
                     </div>
-                    <div class="flight-cards">
+                    <div class="flight-cards roundnospace">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedOutboundIndex === i"
                         *ngFor="let flight of groupedFlights; let i = index">
                         <label class="flight-radio-wrapper" (click)="toggleCardExpansion(i, $event)">
@@ -2103,7 +2103,7 @@
                         Cheapest Flights First
                       </h2>
                     </div>
-                    <div class="flight-cards">
+                    <div class="flight-cards roundnospace">
                       <div class="card mobile-flight-card-new" [class.roundtrip-selected]="selectedReturnIndex === i"
                         *ngFor="let flight of groupedFlightsOutbound; let i = index">
                         <label class="flight-radio-wrapper" (click)="toggleCardExpansion(i, $event)">

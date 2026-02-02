@@ -7775,3 +7775,7 @@ button.scroll-arrow {
     margin-right: 5px;
   }
 }
+
+.flight-cards.roundnospace .fltop {
+  padding-bottom: 16px !Important
+}

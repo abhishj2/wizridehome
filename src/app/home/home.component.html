@@ -365,8 +365,7 @@
                                             <i class="fas fa-plane-departure input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter departure city (e.g., Delhi DEL)"
-                                                [(ngModel)]="route.from"
+                                                placeholder="Source" [(ngModel)]="route.from"
                                                 (focus)="showCitySuggestionsOnFocus('flight-from-' + i)"
                                                 (input)="showCitySuggestions(route.from, 'flight-from-' + i)">
                                         </div>
@@ -408,8 +407,7 @@
                                             <i class="fas fa-plane-arrival input-icon"></i>
                                             <input type="text" class="form-input city-input"
                                                 [class.error]="isSameCitySelected(route.from, route.to)"
-                                                placeholder="Enter destination city (e.g., Mumbai BOM)"
-                                                [(ngModel)]="route.to"
+                                                placeholder="Destination" [(ngModel)]="route.to"
                                                 (focus)="showCitySuggestionsOnFocus('flight-to-' + i)"
                                                 (input)="showCitySuggestions(route.to, 'flight-to-' + i)">
                                         </div>
