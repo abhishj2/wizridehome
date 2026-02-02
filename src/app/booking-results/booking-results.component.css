@@ -4384,3 +4384,7 @@ img.mobile-seat-icon {
   text-align: center;
 
 }
+
+.dropdown-content.amenities-tooltip i {
+  margin-right: 5px !important;
+}

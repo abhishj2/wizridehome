@@ -414,6 +414,38 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     return formatted.join(', ') + '.';
   }
 
+  getFormattedAmenitiesList(vehicle: VehicleOption): { icon: string, text: string }[] {
+    if (!vehicle || !vehicle.amenities) return [];
+
+    return vehicle.amenities.map(amenity => {
+      let icon = 'fas fa-check-circle'; // Default icon
+      let text = amenity;
+
+      // Map icons and transform text
+      const lowerAmenity = amenity.toLowerCase();
+
+      if (lowerAmenity === 'ac' || lowerAmenity === 'air conditioner') {
+        icon = 'fas fa-snowflake';
+        const isNonAc = vehicle.name.toLowerCase().includes('non-ac');
+        text = isNonAc ? 'A/C charges NOT included.' : 'A/C charges included.';
+      } else if (lowerAmenity.includes('luggage')) {
+        icon = 'fas fa-suitcase';
+      } else if (lowerAmenity.includes('music')) {
+        icon = 'fas fa-music';
+      } else if (lowerAmenity.includes('seat')) {
+        icon = 'fas fa-chair';
+      } else if (lowerAmenity.includes('driver')) {
+        icon = 'fas fa-user-tie';
+      } else if (lowerAmenity.includes('door') || lowerAmenity.includes('pick')) {
+        icon = 'fas fa-map-marker-alt';
+      } else if (lowerAmenity.includes('refreshment')) {
+        icon = 'fas fa-coffee';
+      }
+
+      return { icon, text };
+    });
+  }
+
   // Helper method to format date to "Nov 21, 2025" format
   private formatDateForAPI(dateString: string): string {
     if (!dateString) return '';

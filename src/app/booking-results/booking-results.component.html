@@ -350,8 +350,11 @@
                   <div class="dropdown">
                     <i class="fas fa-list-alt"></i>
                     <span>Amenities</span>
-                    <div class="dropdown-content">
-                      {{ getFormattedAmenities(vehicle) }}
+                    <div class="dropdown-content amenities-tooltip">
+                      <div *ngFor="let item of getFormattedAmenitiesList(vehicle)" class="tooltip-item">
+                        <i [class]="item.icon"></i>
+                        <span>{{ item.text }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
