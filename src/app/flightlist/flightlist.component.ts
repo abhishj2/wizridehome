@@ -280,23 +280,78 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
 
   getTotalBaseFare(): number {
-    const outboundFare = this.selectedOutbound?.selectedFareOption?.Fare?.BaseFare || this.selectedOutbound?.Fare?.BaseFare || 0;
-    const returnFare = this.selectedReturn?.selectedFareOption?.Fare?.BaseFare || this.selectedReturn?.Fare?.BaseFare || 0;
+    const outboundFare = this.selectedOutbound?.selectedFareOption?.Fare?.BaseFare ||
+      this.selectedOutbound?.FareOptions?.[0]?.Fare?.BaseFare ||
+      this.selectedOutbound?.Fare?.BaseFare || 0;
+
+    const returnFare = this.selectedReturn?.selectedFareOption?.Fare?.BaseFare ||
+      this.selectedReturn?.FareOptions?.[0]?.Fare?.BaseFare ||
+      this.selectedReturn?.Fare?.BaseFare || 0;
+
     return outboundFare + returnFare;
   }
 
   getTotalSurcharges(): number {
-    const outboundTax = (this.selectedOutbound?.selectedFareOption?.Fare?.Tax || this.selectedOutbound?.Fare?.Tax || 0) +
-      (this.selectedOutbound?.selectedFareOption?.Fare?.OtherCharges || this.selectedOutbound?.Fare?.OtherCharges || 0) +
-      (this.selectedOutbound?.selectedFareOption?.Fare?.ServiceFee || this.selectedOutbound?.Fare?.ServiceFee || 0) +
-      (this.selectedOutbound?.selectedFareOption?.Fare?.AdditionalTxnFeeOfrd || this.selectedOutbound?.Fare?.AdditionalTxnFeeOfrd || 0) +
-      (this.selectedOutbound?.selectedFareOption?.Fare?.AdditionalTxnFeePub || this.selectedOutbound?.Fare?.AdditionalTxnFeePub || 0);
+    let outboundTax = 0;
 
-    const returnTax = (this.selectedReturn?.selectedFareOption?.Fare?.Tax || this.selectedReturn?.Fare?.Tax || 0) +
-      (this.selectedReturn?.selectedFareOption?.Fare?.OtherCharges || this.selectedReturn?.Fare?.OtherCharges || 0) +
-      (this.selectedReturn?.selectedFareOption?.Fare?.ServiceFee || this.selectedReturn?.Fare?.ServiceFee || 0) +
-      (this.selectedReturn?.selectedFareOption?.Fare?.AdditionalTxnFeeOfrd || this.selectedReturn?.Fare?.AdditionalTxnFeeOfrd || 0) +
-      (this.selectedReturn?.selectedFareOption?.Fare?.AdditionalTxnFeePub || this.selectedReturn?.Fare?.AdditionalTxnFeePub || 0);
+    // Try selectedFareOption
+    if (this.selectedOutbound?.selectedFareOption?.Fare) {
+      const f = this.selectedOutbound.selectedFareOption.Fare;
+      outboundTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+    // Try FareOptions[0]
+    else if (this.selectedOutbound?.FareOptions?.[0]?.Fare) {
+      const f = this.selectedOutbound.FareOptions[0].Fare;
+      outboundTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+    // Try direct Fare property
+    else if (this.selectedOutbound?.Fare) {
+      const f = this.selectedOutbound.Fare;
+      outboundTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+
+    let returnTax = 0;
+
+    // Try selectedFareOption
+    if (this.selectedReturn?.selectedFareOption?.Fare) {
+      const f = this.selectedReturn.selectedFareOption.Fare;
+      returnTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+    // Try FareOptions[0]
+    else if (this.selectedReturn?.FareOptions?.[0]?.Fare) {
+      const f = this.selectedReturn.FareOptions[0].Fare;
+      returnTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+    // Try direct Fare property
+    else if (this.selectedReturn?.Fare) {
+      const f = this.selectedReturn.Fare;
+      returnTax = (f.Tax || 0) + (f.OtherCharges || 0) + (f.ServiceFee || 0) + (f.AdditionalTxnFeeOfrd || 0) + (f.AdditionalTxnFeePub || 0);
+    }
+
+    // If tax calculation yields 0, try difference between Total and Base
+    if (outboundTax === 0) {
+      const total = this.selectedOutbound?.selectedFareOption?.Fare?.PublishedFare ||
+        this.selectedOutbound?.FareOptions?.[0]?.Fare?.PublishedFare ||
+        this.selectedOutbound?.price || 0;
+
+      const base = this.selectedOutbound?.selectedFareOption?.Fare?.BaseFare ||
+        this.selectedOutbound?.FareOptions?.[0]?.Fare?.BaseFare ||
+        this.selectedOutbound?.Fare?.BaseFare || 0;
+
+      if (total > 0) outboundTax = total - base;
+    }
+
+    if (returnTax === 0) {
+      const total = this.selectedReturn?.selectedFareOption?.Fare?.PublishedFare ||
+        this.selectedReturn?.FareOptions?.[0]?.Fare?.PublishedFare ||
+        this.selectedReturn?.price || 0;
+
+      const base = this.selectedReturn?.selectedFareOption?.Fare?.BaseFare ||
+        this.selectedReturn?.FareOptions?.[0]?.Fare?.BaseFare ||
+        this.selectedReturn?.Fare?.BaseFare || 0;
+
+      if (total > 0) returnTax = total - base;
+    }
 
     return outboundTax + returnTax;
   }
