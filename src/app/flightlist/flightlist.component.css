@@ -7779,3 +7779,12 @@ button.scroll-arrow {
 .flight-cards.roundnospace .fltop {
   padding-bottom: 16px !Important
 }
+
+@media(min-width:767px) {
+  .roundtrip-selection-strip {
+    position: fixed !important;
+    bottom: 0 !important;
+    width: 1020px !important;
+    z-index: 1000 !important;
+  }
+}

@@ -754,8 +754,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Airlines</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllAirlines('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetAirlines('onward')">Reset</button>
+                  <!--<button class="btn-link" (click)="roundtripSelectAllAirlines('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('onward')">Reset</button> -->
                 </div>
                 <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersOnward.airlines">
                   <input type="checkbox" [value]="airline" (change)="roundtripOnAirlineFilterChange($event, 'onward')"
@@ -780,8 +780,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Number of Stops</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllStops('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetStops('onward')">Reset</button>
+                  <!-- <button class="btn-link" (click)="roundtripSelectAllStops('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('onward')">Reset</button>-->
                 </div>
                 <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersOnward.stops">
                   <input type="checkbox" [value]="stop" (change)="roundtripOnStopFilterChange($event, 'onward')"
@@ -794,8 +794,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Departure from {{ flightInputData['fromCity'] }}</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('onward')">Reset</button>
+                  <!--    <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('onward')">Reset</button>-->
                 </div>
                 <div class="departure-time-filter">
                   <div class="time-slot" *ngFor="let slot of departureTimeSlots"
@@ -811,8 +811,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Refundability</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="selectAllRefundability('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="resetRefundability('onward')">Reset</button>
+                  <!-- <button class="btn-link" (click)="selectAllRefundability('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="resetRefundability('onward')">Reset</button>-->
                 </div>
                 <label class="filter-option">
                   <input type="checkbox" [(ngModel)]="showRefundableOnward" (change)="roundtripApplyAllFilters()" />
@@ -833,8 +833,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Airlines</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllAirlines('return')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetAirlines('return')">Reset</button>
+                  <!-- <button class="btn-link" (click)="roundtripSelectAllAirlines('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('return')">Reset</button>-->
                 </div>
                 <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersReturn.airlines">
                   <input type="checkbox" [value]="airline" (change)="roundtripOnAirlineFilterChange($event, 'return')"
@@ -859,8 +859,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Number of Stops</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllStops('return')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetStops('return')">Reset</button>
+                  <!-- <button class="btn-link" (click)="roundtripSelectAllStops('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('return')">Reset</button>-->
                 </div>
                 <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersReturn.stops">
                   <input type="checkbox" [value]="stop" (change)="roundtripOnStopFilterChange($event, 'return')"
@@ -873,8 +873,9 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Departure from {{ flightInputData['toCity'] }}</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('return')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('return')">Reset</button>
+                  <!----> <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('return')">Select
+                    All</button>
+                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('return')">Reset</button>-->
                 </div>
                 <div class="departure-time-filter">
                   <div class="time-slot" *ngFor="let slot of departureTimeSlots"
@@ -890,8 +891,8 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Refundability</h3>
                 <div class="filter-buttons">
-                  <button class="btn-link" (click)="selectAllRefundability('return')">Select All</button>
-                  <button class="btn-link danger" (click)="resetRefundability('return')">Reset</button>
+                  <!-- <button class="btn-link" (click)="selectAllRefundability('return')">Select All</button>
+                  <button class="btn-link danger" (click)="resetRefundability('return')">Reset</button> -->
                 </div>
                 <label class="filter-option">
                   <input type="checkbox" [(ngModel)]="showRefundableReturn" (change)="roundtripApplyAllFilters()" />
@@ -2668,85 +2669,85 @@
                   </div>
                 </div>
 
-              <!-- Round Trip Selection Bottom Strip (inside scroll area so it appears below flight list) -->
-              <div class="roundtrip-selection-strip"
-                *ngIf="flightType === 'round' && selectedOutbound && selectedReturn">
-                <div class="strip-container">
-                  <!-- Onward Flight Info -->
-                  <div class="flight-info-section">
-                    <div class="section-header">Departure • {{ selectedOutbound.Segments[0][0].Airline.AirlineName }}
-                    </div>
-                    <div class="section-body">
-                      <img
-                        [src]="'assets/images/flightimages/' + selectedOutbound.Segments[0][0].Airline.AirlineCode + '.png'"
-                        class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
-                      <div class="flight-details-mid">
-                        <div class="flight-route-time">
-                          {{ selectedOutbound.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
-                          {{ selectedOutbound.Segments[0][selectedOutbound.Segments[0].length-1].Destination.ArrTime |
-                          date:'HH:mm' }}
+                <!-- Round Trip Selection Bottom Strip (inside scroll area so it appears below flight list) -->
+                <div class="roundtrip-selection-strip"
+                  *ngIf="flightType === 'round' && selectedOutbound && selectedReturn">
+                  <div class="strip-container">
+                    <!-- Onward Flight Info -->
+                    <div class="flight-info-section">
+                      <div class="section-header">Departure • {{ selectedOutbound.Segments[0][0].Airline.AirlineName }}
+                      </div>
+                      <div class="section-body">
+                        <img
+                          [src]="'assets/images/flightimages/' + selectedOutbound.Segments[0][0].Airline.AirlineCode + '.png'"
+                          class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
+                        <div class="flight-details-mid">
+                          <div class="flight-route-time">
+                            {{ selectedOutbound.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
+                            {{ selectedOutbound.Segments[0][selectedOutbound.Segments[0].length-1].Destination.ArrTime |
+                            date:'HH:mm' }}
+                          </div>
+                          <div class="flight-details-link"
+                            (click)="openRoundTripFlightDetails(selectedOutbound, 'onward'); $event.stopPropagation()">
+                            Flight
+                            Details</div>
                         </div>
-                        <div class="flight-details-link"
-                          (click)="openRoundTripFlightDetails(selectedOutbound, 'onward'); $event.stopPropagation()">
-                          Flight
-                          Details</div>
-                      </div>
-                      <div class="section-price">
-                        ₹ {{ (selectedOutbound.selectedFareOption?.Fare?.PublishedFare || selectedOutbound.price) |
-                        number:'1.0-0' }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="divider-vertical"></div>
-
-                  <!-- Return Flight Info -->
-                  <div class="flight-info-section">
-                    <div class="section-header">Return • {{ selectedReturn.Segments[0][0].Airline.AirlineName }}</div>
-                    <div class="section-body">
-                      <img
-                        [src]="'assets/images/flightimages/' + selectedReturn.Segments[0][0].Airline.AirlineCode + '.png'"
-                        class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
-                      <div class="flight-details-mid">
-                        <div class="flight-route-time">
-                          {{ selectedReturn.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
-                          {{ selectedReturn.Segments[0][selectedReturn.Segments[0].length-1].Destination.ArrTime |
-                          date:'HH:mm' }}
+                        <div class="section-price">
+                          ₹ {{ (selectedOutbound.selectedFareOption?.Fare?.PublishedFare || selectedOutbound.price) |
+                          number:'1.0-0' }}
                         </div>
-                        <div class="flight-details-link"
-                          (click)="openRoundTripFlightDetails(selectedReturn, 'return'); $event.stopPropagation()">
-                          Flight
-                          Details</div>
-                      </div>
-                      <div class="section-price">
-                        ₹ {{ (selectedReturn.selectedFareOption?.Fare?.PublishedFare || selectedReturn.price) |
-                        number:'1.0-0' }}
                       </div>
                     </div>
-                  </div>
 
-                  <div class="divider-vertical show-desktop"></div>
+                    <div class="divider-vertical"></div>
 
-                  <!-- Total & Action -->
-                  <div class="strip-actions">
-                    <div class="total-price-block">
-                      <div class="price-row">
-                        <span class="currency">₹</span>
-                        <span class="amount">{{ ((selectedOutbound.selectedFareOption?.Fare?.PublishedFare ||
-                          selectedOutbound.price || 0) + (selectedReturn.selectedFareOption?.Fare?.PublishedFare ||
-                          selectedReturn.price || 0)) | number:'1.0-0' }}</span>
+                    <!-- Return Flight Info -->
+                    <div class="flight-info-section">
+                      <div class="section-header">Return • {{ selectedReturn.Segments[0][0].Airline.AirlineName }}</div>
+                      <div class="section-body">
+                        <img
+                          [src]="'assets/images/flightimages/' + selectedReturn.Segments[0][0].Airline.AirlineCode + '.png'"
+                          class="strip-airline-logo" onerror="this.src='assets/images/default-airline.png'">
+                        <div class="flight-details-mid">
+                          <div class="flight-route-time">
+                            {{ selectedReturn.Segments[0][0].Origin.DepTime | date:'HH:mm' }} &rarr;
+                            {{ selectedReturn.Segments[0][selectedReturn.Segments[0].length-1].Destination.ArrTime |
+                            date:'HH:mm' }}
+                          </div>
+                          <div class="flight-details-link"
+                            (click)="openRoundTripFlightDetails(selectedReturn, 'return'); $event.stopPropagation()">
+                            Flight
+                            Details</div>
+                        </div>
+                        <div class="section-price">
+                          ₹ {{ (selectedReturn.selectedFareOption?.Fare?.PublishedFare || selectedReturn.price) |
+                          number:'1.0-0' }}
+                        </div>
                       </div>
-                      <div class="price-subtitle">/adult</div>
-                      <div class="fare-details-link">Fare Details</div>
                     </div>
-                    <div class="action-buttons">
-                      <button class="book-now-btn" (click)="finalizeRoundTripBooking()">
-                        BOOK NOW
-                      </button>
+
+                    <div class="divider-vertical show-desktop"></div>
+
+                    <!-- Total & Action -->
+                    <div class="strip-actions">
+                      <div class="total-price-block">
+                        <div class="price-row">
+                          <span class="currency">₹</span>
+                          <span class="amount">{{ ((selectedOutbound.selectedFareOption?.Fare?.PublishedFare ||
+                            selectedOutbound.price || 0) + (selectedReturn.selectedFareOption?.Fare?.PublishedFare ||
+                            selectedReturn.price || 0)) | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="price-subtitle">/adult</div>
+                        <div class="fare-details-link">Fare Details</div>
+                      </div>
+                      <div class="action-buttons">
+                        <button class="book-now-btn" (click)="finalizeRoundTripBooking()">
+                          BOOK NOW
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
 
               <!-- No Flights Message for Onward -->
