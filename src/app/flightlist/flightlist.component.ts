@@ -271,6 +271,42 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     { label: 'Infants (<2)', key: 'infants' }
   ];
 
+  showFareDetailsTooltip = false;
+
+  toggleFareDetailsTooltip() {
+    this.showFareDetailsTooltip = !this.showFareDetailsTooltip;
+  }
+
+
+
+  getTotalBaseFare(): number {
+    const outboundFare = this.selectedOutbound?.selectedFareOption?.Fare?.BaseFare || this.selectedOutbound?.Fare?.BaseFare || 0;
+    const returnFare = this.selectedReturn?.selectedFareOption?.Fare?.BaseFare || this.selectedReturn?.Fare?.BaseFare || 0;
+    return outboundFare + returnFare;
+  }
+
+  getTotalSurcharges(): number {
+    const outboundTax = (this.selectedOutbound?.selectedFareOption?.Fare?.Tax || this.selectedOutbound?.Fare?.Tax || 0) +
+      (this.selectedOutbound?.selectedFareOption?.Fare?.OtherCharges || this.selectedOutbound?.Fare?.OtherCharges || 0) +
+      (this.selectedOutbound?.selectedFareOption?.Fare?.ServiceFee || this.selectedOutbound?.Fare?.ServiceFee || 0) +
+      (this.selectedOutbound?.selectedFareOption?.Fare?.AdditionalTxnFeeOfrd || this.selectedOutbound?.Fare?.AdditionalTxnFeeOfrd || 0) +
+      (this.selectedOutbound?.selectedFareOption?.Fare?.AdditionalTxnFeePub || this.selectedOutbound?.Fare?.AdditionalTxnFeePub || 0);
+
+    const returnTax = (this.selectedReturn?.selectedFareOption?.Fare?.Tax || this.selectedReturn?.Fare?.Tax || 0) +
+      (this.selectedReturn?.selectedFareOption?.Fare?.OtherCharges || this.selectedReturn?.Fare?.OtherCharges || 0) +
+      (this.selectedReturn?.selectedFareOption?.Fare?.ServiceFee || this.selectedReturn?.Fare?.ServiceFee || 0) +
+      (this.selectedReturn?.selectedFareOption?.Fare?.AdditionalTxnFeeOfrd || this.selectedReturn?.Fare?.AdditionalTxnFeeOfrd || 0) +
+      (this.selectedReturn?.selectedFareOption?.Fare?.AdditionalTxnFeePub || this.selectedReturn?.Fare?.AdditionalTxnFeePub || 0);
+
+    return outboundTax + returnTax;
+  }
+
+  getTotalAmount(): number {
+    const outboundTotal = this.selectedOutbound?.selectedFareOption?.Fare?.PublishedFare || this.selectedOutbound?.price || 0;
+    const returnTotal = this.selectedReturn?.selectedFareOption?.Fare?.PublishedFare || this.selectedReturn?.price || 0;
+    return outboundTotal + returnTotal;
+  }
+
   constructor(
     public apiService: ApiserviceService,
     public _Activateroute: ActivatedRoute,
@@ -1327,6 +1363,9 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
+    if (this.showFareDetailsTooltip) {
+      this.showFareDetailsTooltip = false;
+    }
     const target = event.target as HTMLElement;
 
     // Close passenger dropdown if clicking outside

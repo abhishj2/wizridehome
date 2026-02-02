@@ -2738,7 +2738,31 @@
                             selectedReturn.price || 0)) | number:'1.0-0' }}</span>
                         </div>
                         <div class="price-subtitle">/adult</div>
-                        <div class="fare-details-link">Fare Details</div>
+                        <div class="fare-details-container" style="position: relative;">
+                          <div class="fare-details-link" (click)="toggleFareDetailsTooltip(); $event.stopPropagation()">
+                            Fare Details</div>
+
+                          <div class="fare-details-tooltip" *ngIf="showFareDetailsTooltip"
+                            (click)="$event.stopPropagation()">
+                            <div class="tooltip-header">Fare Summary</div>
+                            <div class="tooltip-content">
+                              <div class="tooltip-row">
+                                <span class="label">Total base fare</span>
+                                <span class="value">₹ {{ getTotalBaseFare() | number:'1.0-0' }}</span>
+                              </div>
+                              <div class="tooltip-row">
+                                <span class="label">Total Surcharges</span>
+                                <span class="value">₹ {{ getTotalSurcharges() | number:'1.0-0' }}</span>
+                              </div>
+                              <div class="tooltip-divider"></div>
+                              <div class="tooltip-row total-row">
+                                <span class="label">Total Amount</span>
+                                <span class="value">₹ {{ getTotalAmount() | number:'1.0-0' }}</span>
+                              </div>
+                            </div>
+                            <div class="tooltip-arrow"></div>
+                          </div>
+                        </div>
                       </div>
                       <div class="action-buttons">
                         <button class="book-now-btn" (click)="finalizeRoundTripBooking()">
