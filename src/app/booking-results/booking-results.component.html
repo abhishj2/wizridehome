@@ -291,17 +291,9 @@
             <!-- Mobile Amenities + Car Display -->
             <div class="mobile-amenities">
               <div class="amenities-list">
-                <div class="amenity">
-                  <i class="fas fa-snowflake"></i>
-                  <span>Air Conditioned</span>
-                </div>
-                <div class="amenity">
-                  <i class="fas fa-coffee"></i>
-                  <span>On-Board Refreshments</span>
-                </div>
-                <div class="amenity">
-                  <i class="fas fa-suitcase-rolling"></i>
-                  <span>1 Trolley &amp; 1 Hand Bag per seat</span>
+                <div *ngFor="let item of getFormattedAmenitiesList(vehicle)" class="amenity">
+                  <i [class]="item.icon"></i>
+                  <span>{{ item.text }}</span>
                 </div>
               </div>
               <div class="mobile-vehicle-visual">
