@@ -1524,21 +1524,25 @@
 
                     <!-- Fare Summary Tab -->
                     <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
-                      <table class="fare-table">
-                        <tr>
-                          <th>Total</th>
-                          <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0" }}</strong>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Base Fare</th>
-                          <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}</td>
-                        </tr>
-                        <tr>
-                          <th>Taxes & Fees</th>
-                          <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</td>
-                        </tr>
-                      </table>
+                      <div class="fare-summary-card-new">
+                        <div class="fs-header">Fare breakup</div>
+                        <div class="fs-body">
+                          <div class="fs-row total-row">
+                            <span class="fs-label">TOTAL</span>
+                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
+                              }}</span>
+                          </div>
+                          <div class="fs-row">
+                            <span class="fs-label">Base Fare</span>
+                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0"
+                              }}</span>
+                          </div>
+                          <div class="fs-row">
+                            <span class="fs-label">Surcharges</span>
+                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <!-- Cancellation Tab -->
@@ -2086,22 +2090,26 @@
 
                           <!-- Fare Summary Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
-                            <table class="fare-table">
-                              <tr>
-                                <th>Total</th>
-                                <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
-                                    }}</strong>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Base Fare</th>
-                                <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}</td>
-                              </tr>
-                              <tr>
-                                <th>Taxes & Fees</th>
-                                <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</td>
-                              </tr>
-                            </table>
+                            <div class="fare-summary-card-new">
+                              <div class="fs-header">Fare breakup</div>
+                              <div class="fs-body">
+                                <div class="fs-row total-row">
+                                  <span class="fs-label">TOTAL</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number :
+                                    "1.0-0" }}</span>
+                                </div>
+                                <div class="fs-row">
+                                  <span class="fs-label">Base Fare</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0"
+                                    }}</span>
+                                </div>
+                                <div class="fs-row">
+                                  <span class="fs-label">Surcharges</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0"
+                                    }}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
                           <!-- Cancellation Tab -->
@@ -2618,22 +2626,26 @@
 
                           <!-- Fare Summary Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
-                            <table class="fare-table">
-                              <tr>
-                                <th>Total</th>
-                                <td><strong>₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
-                                    }}</strong>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Base Fare</th>
-                                <td>₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}</td>
-                              </tr>
-                              <tr>
-                                <th>Taxes & Fees</th>
-                                <td>₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</td>
-                              </tr>
-                            </table>
+                            <div class="fare-summary-card-new">
+                              <div class="fs-header">Fare breakup</div>
+                              <div class="fs-body">
+                                <div class="fs-row total-row">
+                                  <span class="fs-label">TOTAL</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number :
+                                    "1.0-0" }}</span>
+                                </div>
+                                <div class="fs-row">
+                                  <span class="fs-label">Base Fare</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0"
+                                    }}</span>
+                                </div>
+                                <div class="fs-row">
+                                  <span class="fs-label">Surcharges</span>
+                                  <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0"
+                                    }}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
                           <!-- Cancellation Tab -->

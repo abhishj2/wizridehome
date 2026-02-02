@@ -8099,3 +8099,64 @@ button.scroll-arrow {
     gap: 24px;
   }
 }
+
+/* Fare Summary Card Design */
+.fare-summary-card-new {
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: #fff;
+  margin-top: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.fs-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.fs-body {
+  padding: 20px;
+}
+
+.fs-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.fs-row:last-child {
+  margin-bottom: 0;
+}
+
+.fs-row.total-row {
+  margin-bottom: 20px;
+}
+
+.fs-row.total-row .fs-label {
+  font-weight: 700;
+  color: #374151;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.fs-row.total-row .fs-value {
+  font-weight: 700;
+  color: #111827;
+  font-size: 16px;
+}
+
+.fs-label {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.fs-value {
+  color: #4b5563;
+  font-weight: 400;
+}
