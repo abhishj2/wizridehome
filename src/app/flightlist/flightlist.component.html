@@ -641,8 +641,12 @@
                 <label class="mobile-filter-block-title">Refundable</label>
                 <div class="mobile-checkbox-wrap">
                   <label class="mobile-checkbox-inline">
-                    <input type="checkbox" [(ngModel)]="showRefundableOnly" />
-                    Only Refundable
+                    <input type="checkbox" value="refundable" (change)="onRefundabilityChange($event)" />
+                    Partially Refundable
+                  </label>
+                  <label class="mobile-checkbox-inline">
+                    <input type="checkbox" value="non-refundable" (change)="onRefundabilityChange($event)" />
+                    Non-refundable
                   </label>
                 </div>
               </div>
@@ -1052,7 +1056,10 @@
                     <div class="flbot">
                       <button class="expand-card-btn" (click)="toggleCardExpansion(i, $event)">View Flight
                         Details</button>
-                      <p>{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                      <p *ngIf="false">{{ getCancellationRule(selectedFareOptions[i] || flight.FareOptions[0]) }}</p>
+                      <p [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}</p>
+
                     </div>
                   </div>
 
@@ -1177,6 +1184,10 @@
                           View Prices
                         </button>
                       </div>
+                      <div class="refundability-tag"
+                        [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
+                      </div>
                     </section>
                   </ng-container>
 
@@ -1279,6 +1290,10 @@
                           (click)="openFareOptionsModal(flight); $event.stopPropagation()">
                           View Prices
                         </button>
+                      </div>
+                      <div class="refundability-tag"
+                        [ngClass]="{ 'refundable': flight.isRefundable, 'non-refundable': !flight.isRefundable }">
+                        {{ flight.isRefundable ? "Partially Refundable" : "Non-refundable" }}
                       </div>
                     </section>
                   </ng-template>
