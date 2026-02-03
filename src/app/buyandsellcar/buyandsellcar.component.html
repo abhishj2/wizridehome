@@ -1,173 +1,180 @@
 <div class="buyandsell-page">
-    <!-- Hero Slider -->
-    <div class="slider">
-      <div class="slides">
-        <div class="slide">
-          <div class="bg-image"></div>
-          <div class="overlay-text">
-            <h2>Find Your Perfect Vehicle in Siliguri</h2>
-            <p>Wizzride offers the largest selection of quality used cars, bikes, and commercial vehicles in the region.</p>
-            <button class="cta-button">Browse Inventory</button>
+  <!-- Hero Slider -->
+  <div class="slider">
+    <div class="slides">
+      <div class="slide">
+        <div class="bg-image"></div>
+        <div class="overlay-text">
+          <h2>Find Your Perfect Vehicle in Siliguri</h2>
+          <p>Wizzride offers the largest selection of quality used cars, bikes, and commercial vehicles in the region.
+          </p>
+          <button class="cta-button">Browse Inventory</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="bg-image"></div>
+        <div class="overlay-text">
+          <h2>Sell Your Vehicle Fast & Easy</h2>
+          <p>Get the best price for your vehicle with our hassle-free selling process and expert valuation.</p>
+          <button class="cta-button">Get Valuation</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="bg-image"></div>
+        <div class="overlay-text">
+          <h2>Trusted by Thousands</h2>
+          <p>Join our community of satisfied customers who found their dream vehicle with Wizzride.</p>
+          <a href="#testomonial"><button class="cta-button">Read Testimonials</button></a>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="bg-image"></div>
+        <div class="overlay-text">
+          <h2>Financing Options Available</h2>
+          <p>Flexible payment plans and loan options to make your purchase affordable.</p>
+          <button class="cta-button">Learn More</button>
+        </div>
+      </div>
+      <!-- Duplicate of first slide for seamless loop -->
+      <div class="slide">
+        <div class="bg-image"></div>
+        <div class="overlay-text">
+          <h2>Find Your Perfect Vehicle in Siliguri</h2>
+          <p>Wizzride offers the largest selection of quality used cars, bikes, and commercial vehicles in the region.
+          </p>
+          <button class="cta-button">Browse Inventory</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="formsell">
+      <h3>Find or Sell Your Vehicle</h3>
+      <form id="vehicleForm" (submit)="onSubmit($event)">
+        <div class="form-group">
+          <select id="action" [(ngModel)]="selectedAction" (change)="onActionChange()" name="action" required>
+            <option value="" disabled selected>I want to...</option>
+            <option value="buy">Buy a Vehicle</option>
+            <option value="sell">Sell My Vehicle</option>
+          </select>
+        </div>
+
+        <!-- Buy fields -->
+        <div id="buyFields" class="bffilds" [style.display]="showBuyFields ? 'flex' : 'none'">
+          <div class="form-group">
+            <select [(ngModel)]="selectedCategory" (change)="onFilterChange()" name="vehicleCategory">
+              <option value="">All Categories</option>
+              <option *ngFor="let category of vehicleCategories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select [(ngModel)]="selectedBrand" (change)="onFilterChange()" name="vehicleBrand">
+              <option value="">All Brands</option>
+              <option *ngFor="let brand of vehicleBrands" [value]="brand.id">
+                {{ brand.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select [(ngModel)]="selectedBudget" (change)="onFilterChange()" name="budget">
+              <option value="">All Prices</option>
+              <option value="Under ₹5 Lakh">Under ₹5 Lakh</option>
+              <option value="₹5-10 Lakh">₹5-10 Lakh</option>
+              <option value="₹10-15 Lakh">₹10-15 Lakh</option>
+              <option value="₹15-20 Lakh">₹15-20 Lakh</option>
+              <option value="Over ₹20 Lakh">Over ₹20 Lakh</option>
+            </select>
           </div>
         </div>
-        <div class="slide">
-          <div class="bg-image"></div>
-          <div class="overlay-text">
-            <h2>Sell Your Vehicle Fast & Easy</h2>
-            <p>Get the best price for your vehicle with our hassle-free selling process and expert valuation.</p>
-            <button class="cta-button">Get Valuation</button>
-          </div>
+
+        <button type="submit" class="search-button" id="submitBtn" [disabled]="submitButtonDisabled">
+          <i class="fas fa-search"></i> {{ submitButtonText }}
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Featured Vehicles -->
+  <section class="featured-section">
+    <div class="section-title">
+      <h2>Featured Vehicles</h2>
+      <p>Check out our latest additions to the inventory</p>
+    </div>
+    <!-- Loading State -->
+    <div *ngIf="isLoadingVehicles" style="text-align: center; padding: 40px; color: #666;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
+      <p style="margin-top: 1rem;">Loading vehicles...</p>
+    </div>
+
+    <!-- No Vehicles -->
+    <div *ngIf="!isLoadingVehicles && featuredVehicles.length === 0"
+      style="text-align: center; padding: 40px; color: #666;">
+      <i class="fas fa-car" style="font-size: 3rem; color: #cbd5e1;"></i>
+      <p style="margin-top: 1rem; font-size: 1.1rem;">No approved vehicles available at the moment.</p>
+      <p style="color: #9ca3af;">Check back later for new listings!</p>
+    </div>
+
+    <!-- Vehicles Grid -->
+    <div class="vehicles-grid" id="vehiclesGrid" *ngIf="!isLoadingVehicles && featuredVehicles.length > 0">
+      <div class="vehicle-card" *ngFor="let vehicle of featuredVehicles">
+        <div class="vehicle-image">
+          <img [src]="getVehicleImage(vehicle)" [alt]="getVehicleTitle(vehicle)">
+          <span class="vehicle-badge" *ngIf="getVehicleBadge(vehicle)">{{ getVehicleBadge(vehicle) }}</span>
         </div>
-        <div class="slide">
-          <div class="bg-image"></div>
-          <div class="overlay-text">
-            <h2>Trusted by Thousands</h2>
-            <p>Join our community of satisfied customers who found their dream vehicle with Wizzride.</p>
-            <a href="#testomonial"><button class="cta-button">Read Testimonials</button></a>
+        <div class="vehicle-details">
+          <h3>{{ getVehicleTitle(vehicle) }}</h3>
+          <div class="vehicle-price">₹ {{ getVehiclePrice(vehicle) }}</div>
+          <div class="vehicle-meta">
+            <span><i class="fas fa-tachometer-alt"></i> {{ getVehicleKm(vehicle) }}</span>
+            <span><i class="fas fa-calendar-alt"></i> {{ getVehicleYear(vehicle) }}</span>
+            <span><i class="fas fa-gas-pump"></i> {{ getVehicleFuel(vehicle) }}</span>
           </div>
+          <a (click)="viewVehicleDetails(vehicle.id)" class="view-details" style="cursor: pointer;">View Details</a>
         </div>
-        <div class="slide">
-          <div class="bg-image"></div>
-          <div class="overlay-text">
-            <h2>Financing Options Available</h2>
-            <p>Flexible payment plans and loan options to make your purchase affordable.</p>
-            <button class="cta-button">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section" id="testomonial">
+    <div class="section-title">
+      <h2>What Our Customers Say</h2>
+      <p>Hear from people who found their perfect vehicle with Wizzride</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoadingTestimonials" style="text-align: center; padding: 40px; color: #666;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
+      <p style="margin-top: 1rem;">Loading testimonials...</p>
+    </div>
+
+    <!-- No Testimonials -->
+    <div *ngIf="!isLoadingTestimonials && testimonials.length === 0"
+      style="text-align: center; padding: 40px; color: #666;">
+      <i class="fas fa-comments" style="font-size: 3rem; color: #cbd5e1;"></i>
+      <p style="margin-top: 1rem; font-size: 1.1rem;">No testimonials available yet.</p>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="testimonials-grid" *ngIf="!isLoadingTestimonials && testimonials.length > 0">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="testimonial-content">
+          <p [innerHTML]="getTestimonialContent(testimonial)"></p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <img [src]="getTestimonialImage(testimonial)" [alt]="getTestimonialImageAlt(testimonial)">
+          </div>
+          <div class="author-info">
+            <h4 [innerHTML]="getTestimonialName(testimonial)"></h4>
+            <p>{{ getTestimonialLocation(testimonial) }}</p>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Search Section -->
-    <section class="search-section">
-      <div class="formsell">
-        <h3>Find or Sell Your Vehicle</h3>
-        <form id="vehicleForm" (submit)="onSubmit($event)">
-          <div class="form-group">
-            <select id="action" [(ngModel)]="selectedAction" (change)="onActionChange()" name="action" required>
-              <option value="" disabled selected>I want to...</option>
-              <option value="buy">Buy a Vehicle</option>
-              <option value="sell">Sell My Vehicle</option>
-            </select>
-          </div>
-
-          <!-- Buy fields -->
-          <div id="buyFields" class="bffilds" [style.display]="showBuyFields ? 'flex' : 'none'">
-            <div class="form-group">
-              <select [(ngModel)]="selectedCategory" 
-                      (change)="onFilterChange()" 
-                      name="vehicleCategory">
-                <option value="">All Categories</option>
-                <option *ngFor="let category of vehicleCategories" [value]="category.id">
-                  {{ category.name }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group">
-              <select [(ngModel)]="selectedBrand" 
-                      (change)="onFilterChange()" 
-                      name="vehicleBrand">
-                <option value="">All Brands</option>
-                <option *ngFor="let brand of vehicleBrands" [value]="brand.id">
-                  {{ brand.name }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group">
-              <select [(ngModel)]="selectedBudget" 
-                      (change)="onFilterChange()" 
-                      name="budget">
-                <option value="">All Prices</option>
-                <option value="Under ₹5 Lakh">Under ₹5 Lakh</option>
-                <option value="₹5-10 Lakh">₹5-10 Lakh</option>
-                <option value="₹10-15 Lakh">₹10-15 Lakh</option>
-                <option value="₹15-20 Lakh">₹15-20 Lakh</option>
-                <option value="Over ₹20 Lakh">Over ₹20 Lakh</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" class="search-button" id="submitBtn" [disabled]="submitButtonDisabled">
-            <i class="fas fa-search"></i> {{ submitButtonText }}
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <!-- Featured Vehicles -->
-    <section class="featured-section">
-      <div class="section-title">
-        <h2>Featured Vehicles</h2>
-        <p>Check out our latest additions to the inventory</p>
-      </div>
-      <!-- Loading State -->
-      <div *ngIf="isLoadingVehicles" style="text-align: center; padding: 40px; color: #666;">
-        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
-        <p style="margin-top: 1rem;">Loading vehicles...</p>
-      </div>
-
-      <!-- No Vehicles -->
-      <div *ngIf="!isLoadingVehicles && featuredVehicles.length === 0" style="text-align: center; padding: 40px; color: #666;">
-        <i class="fas fa-car" style="font-size: 3rem; color: #cbd5e1;"></i>
-        <p style="margin-top: 1rem; font-size: 1.1rem;">No approved vehicles available at the moment.</p>
-        <p style="color: #9ca3af;">Check back later for new listings!</p>
-      </div>
-
-      <!-- Vehicles Grid -->
-      <div class="vehicles-grid" id="vehiclesGrid" *ngIf="!isLoadingVehicles && featuredVehicles.length > 0">
-        <div class="vehicle-card" *ngFor="let vehicle of featuredVehicles">
-          <div class="vehicle-image">
-            <img [src]="getVehicleImage(vehicle)" [alt]="getVehicleTitle(vehicle)">
-            <span class="vehicle-badge" *ngIf="getVehicleBadge(vehicle)">{{ getVehicleBadge(vehicle) }}</span>
-          </div>
-          <div class="vehicle-details">
-            <h3>{{ getVehicleTitle(vehicle) }}</h3>
-            <div class="vehicle-price">₹ {{ getVehiclePrice(vehicle) }}</div>
-            <div class="vehicle-meta">
-              <span><i class="fas fa-tachometer-alt"></i> {{ getVehicleKm(vehicle) }}</span>
-              <span><i class="fas fa-calendar-alt"></i> {{ getVehicleYear(vehicle) }}</span>
-              <span><i class="fas fa-gas-pump"></i> {{ getVehicleFuel(vehicle) }}</span>
-            </div>
-            <a (click)="viewVehicleDetails(vehicle.id)" class="view-details" style="cursor: pointer;">View Details</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials-section" id="testomonial">
-      <div class="section-title">
-        <h2>What Our Customers Say</h2>
-        <p>Hear from people who found their perfect vehicle with Wizzride</p>
-      </div>
-
-      <!-- Loading State -->
-      <div *ngIf="isLoadingTestimonials" style="text-align: center; padding: 40px; color: #666;">
-        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #1daaba;"></i>
-        <p style="margin-top: 1rem;">Loading testimonials...</p>
-      </div>
-
-      <!-- No Testimonials -->
-      <div *ngIf="!isLoadingTestimonials && testimonials.length === 0" style="text-align: center; padding: 40px; color: #666;">
-        <i class="fas fa-comments" style="font-size: 3rem; color: #cbd5e1;"></i>
-        <p style="margin-top: 1rem; font-size: 1.1rem;">No testimonials available yet.</p>
-      </div>
-
-      <!-- Testimonials Grid -->
-      <div class="testimonials-grid" *ngIf="!isLoadingTestimonials && testimonials.length > 0">
-        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
-          <div class="testimonial-content">
-            <p [innerHTML]="getTestimonialContent(testimonial)"></p>
-          </div>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img [src]="getTestimonialImage(testimonial)" [alt]="getTestimonialImageAlt(testimonial)">
-            </div>
-            <div class="author-info">
-              <h4 [innerHTML]="getTestimonialName(testimonial)"></h4>
-              <p>{{ getTestimonialLocation(testimonial) }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+  </section>
+</div>
