@@ -2470,6 +2470,16 @@ img {
 
 .tab-content {
   padding: 20px 0;
+  padding: 0 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.tab.active .tab-content {
+  max-height: 500px;
+  /* large enough */
+  padding: 20px 0;
+  opacity: 1;
 }
 
 .segment-details {
@@ -7939,7 +7949,7 @@ button.scroll-arrow {
 
 .fd-body {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.2fr 1.5fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1.2fr 1.2fr;
   gap: 24px;
   align-items: flex-start;
 }
@@ -8218,4 +8228,8 @@ button.scroll-arrow {
 
 .flight-details-card-new {
   border-radius: 0px 0px 8px 8px !important;
+}
+
+.durnew {
+  display: flex;
 }

@@ -1479,12 +1479,12 @@
                             <div class="fd-terminal" *ngIf="segment.Origin.Airport.Terminal">Terminal {{
                               segment.Origin.Airport.Terminal }}</div>
                           </div>
-
-                          <div class="fd-col fd-dur">
-                            <div class="fd-duration-text">{{ getFormattedDuration(segment.Duration) }}</div>
-                            <div class="fd-bar"></div>
+                          <div class="durnew">
+                            <div class="fd-col fd-dur">
+                              <div class="fd-duration-text">{{ getFormattedDuration(segment.Duration) }}</div>
+                              <div class="fd-bar"></div>
+                            </div>
                           </div>
-
                           <div class="fd-col fd-arr">
                             <div class="fd-time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
                             <div class="fd-date">{{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}</div>
