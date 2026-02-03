@@ -4639,8 +4639,17 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   getDayDiff(depTime: string, arrTime: string): number {
     const dep = new Date(depTime);
     const arr = new Date(arrTime);
-    const diffMs = arr.getTime() - dep.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    // Create date objects set to midnight to compare calendar days
+    const depDate = new Date(dep.getFullYear(), dep.getMonth(), dep.getDate());
+    const arrDate = new Date(arr.getFullYear(), arr.getMonth(), arr.getDate());
+
+    // Calculate difference in milliseconds
+    const diffMs = arrDate.getTime() - depDate.getTime();
+
+    // Convert to days
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
     return diffDays;
   }
 
@@ -4657,7 +4666,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   getLayoverDayText(segment1: any, segment2: any): string {
     const arrTime = new Date(segment1.Destination.ArrTime);
     const depTime = new Date(segment2.Origin.DepTime);
-    const diffDays = Math.floor((depTime.getTime() - arrTime.getTime()) / (1000 * 60 * 60 * 24));
+
+    // Create date objects set to midnight to compare calendar days
+    const arrDate = new Date(arrTime.getFullYear(), arrTime.getMonth(), arrTime.getDate());
+    const depDate = new Date(depTime.getFullYear(), depTime.getMonth(), depTime.getDate());
+
+    const diffMs = depDate.getTime() - arrDate.getTime();
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
       return 'Same day';
