@@ -2470,16 +2470,22 @@ img {
 
 .tab-content {
   padding: 20px 0;
-  padding: 0 0;
-  opacity: 0;
-  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  animation: slideDown 1s ease;
 }
 
-.tab.active .tab-content {
-  max-height: 500px;
-  /* large enough */
-  padding: 20px 0;
-  opacity: 1;
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .segment-details {
@@ -8232,4 +8238,11 @@ button.scroll-arrow {
 
 .durnew {
   display: flex;
+}
+
+.flight-details-card-new,
+.fare-summary-card-new,
+.cancellation-table-container,
+.c-row {
+  background: #f7f7f7 !important;
 }
