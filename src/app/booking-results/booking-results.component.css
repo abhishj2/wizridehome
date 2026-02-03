@@ -843,7 +843,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  padding-top: 20px;
+  padding-top: 0px;
   overflow: visible;
   width: 100%;
   max-width: 100%;
@@ -861,7 +861,7 @@ img {
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   /* Make card focusable for touch devices */
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -908,7 +908,7 @@ img {
 /* Route Section */
 .route {
   display: grid;
-  grid-template-columns: 1fr 2fr 3fr 2fr 1fr;
+  grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
   align-items: center;
   padding: 10px 20px;
   background: #f5f7fa;
@@ -963,9 +963,9 @@ img {
 }
 
 .time {
-  font-size: 16px;
+  font-size: 13px;
   color: #009688;
-  font-weight: 600;
+  font-weight: 800;
   background: linear-gradient(293deg, #e94057, #f27121);
   color: #ffffff;
   padding: 4px 8px;
@@ -978,10 +978,10 @@ img {
 }
 
 .duration {
-  font-size: 16px;
+  font-size: 13px;
   background: transparent;
   color: #474747;
-  font-weight: 600;
+  font-weight: 800;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 14px;
@@ -1034,7 +1034,7 @@ img {
   position: absolute;
   left: 5px;
   right: 16px;
-  height: 3px;
+  height: 1px;
   background: #47474770;
   z-index: 1;
   border-radius: 2px;
@@ -1056,8 +1056,8 @@ img {
 .route-car {
   background: transparent;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;

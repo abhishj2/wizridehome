@@ -1204,21 +1204,24 @@ img {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid #e5e7eb;
   margin-top: 0;
-  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px !important;
+
 }
 
 .filter-heading {
   font-size: 18px !important;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 0px 0;
   color: #333;
   border-bottom: 2px solid #000;
   padding-bottom: 10px;
 }
 
 .filter-section {
-  margin-bottom: 24px;
-  padding-bottom: 20px;
+  margin-bottom: 0px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -1231,7 +1234,6 @@ img {
   font-weight: 600;
   margin: 0 0 12px 0;
   color: #666;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -1346,14 +1348,14 @@ img {
 .price-range {
   width: 100%;
   margin: 12px 0;
-  accent-color: #000000;
+  accent-color: darkcyan;
 }
 
 .price-range-label {
   font-size: 13px;
   color: #666;
   text-align: center;
-  margin-top: 8px;
+  margin-top: 0px;
 }
 
 .departure-time-filter {
@@ -6533,76 +6535,188 @@ img {
 }
 
 /* Shimmer Loading Styles */
-.shimmer-wrapper {
-  padding: 40px 20px;
-}
-
-.shimmer-main {
+/* Shimmer Loading Styles */
+.shimmer-container {
+  display: flex;
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 20px 24px;
 }
 
-.shimmer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin-bottom: 24px;
+.shimmer-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  display: none;
 }
 
-.shimmer-circle {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+@media (min-width: 900px) {
+  .shimmer-sidebar {
+    display: block;
+  }
 }
 
-.shimmer-box1 {
-  width: 200px;
-  height: 20px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.shimmer-results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.shimmer-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+.shimmer-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.shimmer-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.shimmer-col.flex-1 {
+  flex: 1;
+}
+
+/* Ensure shimmer keyframes exist or reused. Assuming 'shimmer' keyframe is defined elsewhere. */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer-elem {
+  background: #f0f0f0;
+  background-image: linear-gradient(to right, #f0f0f0 0%, #e0e0e0 20%, #f0f0f0 40%, #f0f0f0 100%);
+  background-repeat: no-repeat;
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite linear forwards;
   border-radius: 4px;
 }
 
-.shimmer-box {
-  width: 100%;
-  height: 100px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
-  margin-top: 12px;
+.shimmer-circle {
+  border-radius: 50%;
 }
 
-.shimmer-box-long1 {
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
+/* Helper sizes */
+.w-20 {
+  width: 20%;
 }
 
-.shimmer-box-long {
-  width: 100%;
-  height: 120px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
+.w-30 {
+  width: 30%;
 }
 
-.shimmer-box-long2 {
+.w-40 {
+  width: 40%;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-60 {
+  width: 60%;
+}
+
+.w-70 {
+  width: 70%;
+}
+
+.w-80 {
+  width: 80%;
+}
+
+.w-100 {
   width: 100%;
-  height: 150px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
+}
+
+.h-10 {
+  height: 10px;
+}
+
+.h-14 {
+  height: 14px;
+}
+
+.h-16 {
+  height: 16px;
+}
+
+.h-20 {
+  height: 20px;
+}
+
+.h-24 {
+  height: 24px;
+}
+
+.h-30 {
+  height: 30px;
+}
+
+.h-40 {
+  height: 40px;
+}
+
+.h-60 {
+  height: 60px;
+}
+
+
+/* Desktop Specifics */
+.desktop-shimmer-layout {
+  display: none;
+}
+
+@media(min-width: 769px) {
+  .desktop-shimmer-layout {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .mobile-shimmer-layout {
+    display: none;
+  }
+}
+
+/* Mobile Specifics */
+.mobile-shimmer-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media(max-width: 768px) {
+  .shimmer-container {
+    padding: 10px 12px;
+  }
+
+  .shimmer-card {
+    padding: 16px;
+    gap: 12px;
+  }
 }
 
 .flex-container-space-between {

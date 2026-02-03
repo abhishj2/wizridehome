@@ -294,7 +294,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
           const hour24 = parseInt(hours, 10);
           const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
           const period = hour24 >= 12 ? 'pm' : 'am';
-          departureTime = `${hour12}:${minutes}${period}`;
+          departureTime = `${hour12}:${minutes} ${period}`;
+
         }
       }
 
@@ -608,7 +609,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
             (minutes.includes('am') ? 'am' : 'pm') :
             (departureTime.includes('am') ? 'am' : 'pm');
           const min = minutes.replace(/[amp]/gi, '');
-          departureTime = `${hours}:${min}${period}`;
+          departureTime = `${hours}:${min} ${period}`;
         }
       }
 
@@ -1254,7 +1255,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       period = 'PM';
     }
 
-    return `${displayHour}:${minute.padStart(2, '0')} ${period}`;
+    return `${displayHour}:${minute.padStart(2, '0')}  ${period}`;
   }
 
   formatDuration(raw: string | undefined | null): string {
