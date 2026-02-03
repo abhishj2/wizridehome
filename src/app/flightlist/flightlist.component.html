@@ -159,7 +159,7 @@
                 <div *ngFor="let city of activeSuggestions['summary-from']" class="city-suggestion"
                   (mousedown)="$event.preventDefault()"
                   (click)="selectCity(city.name, city.code, 'summary-from', $event); $event.stopPropagation()">
-                  <i class="fas fa-plane city-suggestion-icon"></i>
+                  <i class="fas fa-plane-departure city-suggestion-icon"></i>
                   <div class="city-suggestion-content">
                     <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
                     <div class="city-suggestion-airport-name">{{city.airport || city.name}}</div>
@@ -199,7 +199,7 @@
                 <div *ngFor="let city of activeSuggestions['summary-to']" class="city-suggestion"
                   (mousedown)="$event.preventDefault()"
                   (click)="selectCity(city.name, city.code, 'summary-to', $event); $event.stopPropagation()">
-                  <i class="fas fa-plane city-suggestion-icon"></i>
+                  <i class="fas fa-plane-arrival city-suggestion-icon"></i>
                   <div class="city-suggestion-content">
                     <div class="city-suggestion-city-country">{{city.name}}, {{city.country || city.state || ''}}</div>
                     <div class="city-suggestion-airport-name">{{city.airport || city.name}}</div>

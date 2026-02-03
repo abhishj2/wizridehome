@@ -454,11 +454,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
               return {
                 name: cityName,
                 code: airportCode,
-                airport: airportName || cityName
+                airport: airportName || cityName,
+                country: country
               };
             });
-            // Also populate flightAirports for consistency
-            this.flightAirports = [...this.cities];
             // Also populate flightAirports for consistency
             this.flightAirports = [...this.cities];
             console.log('Airports populated in flightlist:', this.cities.length);
@@ -4684,7 +4683,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
         allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
       }
 
-      this.activeSuggestions[target] = allAirports;
+      this.activeSuggestions[target] = allAirports.sort((a, b) => {
+        const aIsIndia = (a.country && (a.country.toLowerCase() === 'india' || a.country.toUpperCase() === 'IN'));
+        const bIsIndia = (b.country && (b.country.toLowerCase() === 'india' || b.country.toUpperCase() === 'IN'));
+        if (aIsIndia && !bIsIndia) return -1;
+        if (!aIsIndia && bIsIndia) return 1;
+        return 0;
+      });
       return;
     }
 
@@ -4707,6 +4712,15 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     } else {
       this.activeSuggestions[target] = filtered;
     }
+
+    // Sort to prioritize India
+    this.activeSuggestions[target].sort((a, b) => {
+      const aIsIndia = (a.country && (a.country.toLowerCase() === 'india' || a.country.toUpperCase() === 'IN'));
+      const bIsIndia = (b.country && (b.country.toLowerCase() === 'india' || b.country.toUpperCase() === 'IN'));
+      if (aIsIndia && !bIsIndia) return -1;
+      if (!aIsIndia && bIsIndia) return 1;
+      return 0;
+    });
   }
 
   showCitySuggestionsOnFocus(target: string) {
@@ -4721,7 +4735,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       allAirports = allAirports.filter(city => city.code.toLowerCase() !== fromCode);
     }
 
-    this.activeSuggestions[target] = allAirports;
+    this.activeSuggestions[target] = allAirports.sort((a, b) => {
+      const aIsIndia = (a.country && (a.country.toLowerCase() === 'india' || a.country.toUpperCase() === 'IN'));
+      const bIsIndia = (b.country && (b.country.toLowerCase() === 'india' || b.country.toUpperCase() === 'IN'));
+      if (aIsIndia && !bIsIndia) return -1;
+      if (!aIsIndia && bIsIndia) return 1;
+      return 0;
+    });
   }
 
   selectCity(cityName: string, cityCode: string, target: string, event?: Event) {
