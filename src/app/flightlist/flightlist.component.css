@@ -2443,10 +2443,10 @@ img {
 }
 
 /* Flight Details Expanded */
-.flight-details-expanded {
+/* .flight-details-expanded {
 
   border-top: 2px solid #eee;
-}
+} */
 
 .flight-tabs {
   display: flex;
@@ -7057,7 +7057,7 @@ h2.flight-count-text {
 }
 
 .card.mobile-flight-card-new {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
   border-radius: 8px !important;
 
 }
@@ -8126,8 +8126,8 @@ button.scroll-arrow {
 
 .fs-header {
   border-bottom: 1px solid #e5e7eb;
-  padding: 16px 20px;
-  font-size: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
   font-weight: 700;
   color: #111827;
 }
@@ -8245,4 +8245,13 @@ button.scroll-arrow {
 .cancellation-table-container,
 .c-row {
   background: #f7f7f7 !important;
+}
+
+.fltop {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.card-expanded .fltop,
+.tab-content {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
 }

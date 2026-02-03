@@ -1529,21 +1529,24 @@
                     <div class="tab-content" *ngIf="activeTabs[i] === 'fare'">
                       <div class="fare-summary-card-new">
                         <div class="fs-header">Fare breakup</div>
-                        <div class="fs-body">
-
-                          <div class="fs-row">
-                            <span class="fs-label">Base Fare</span>
-                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0"
-                              }}</span>
+                        <div class="cancellation-table-container">
+                          <div class="c-row">
+                            <div class="c-cell">Base Fare</div>
+                            <div class="c-cell" style="text-align: right; color: #000; font-weight: 500;">
+                              ₹ {{ selectedFareOptions[i]?.Fare?.BaseFare | number : "1.0-0" }}
+                            </div>
                           </div>
-                          <div class="fs-row">
-                            <span class="fs-label">Surcharges</span>
-                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}</span>
+                          <div class="c-row">
+                            <div class="c-cell">Surcharges</div>
+                            <div class="c-cell" style="text-align: right; color: #000; font-weight: 500;">
+                              ₹ {{ selectedFareOptions[i]?.Fare?.Tax | number : "1.0-0" }}
+                            </div>
                           </div>
-                          <div class="fs-row total-row">
-                            <span class="fs-label">TOTAL</span>
-                            <span class="fs-value">₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0"
-                              }}</span>
+                          <div class="c-row" style="border-bottom: none;">
+                            <div class="c-cell" style="font-weight: 700; color: #000;">TOTAL</div>
+                            <div class="c-cell" style="text-align: right; font-weight: 700; color: #000;">
+                              ₹ {{ selectedFareOptions[i]?.Fare?.PublishedFare | number : "1.0-0" }}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1595,7 +1598,7 @@
                           </div>
                           <div class="c-cell">
                             <div class="c-cell-header-content">
-                              <span class="c-title">Airline Fee + Service Fee + Fare difference</span>
+                              <span class="c-title">Airline Fee + Fare difference</span>
                               <span class="c-subtitle">(Per passenger)</span>
                             </div>
                           </div>
@@ -2214,7 +2217,7 @@
                                 </div>
                                 <div class="c-cell">
                                   <div class="c-cell-header-content">
-                                    <span class="c-title">Airline Fee + Service Fee + Fare difference</span>
+                                    <span class="c-title">Airline Fee + Fare difference</span>
                                     <span class="c-subtitle">(Per passenger)</span>
                                   </div>
                                 </div>
@@ -2802,7 +2805,7 @@
                                 </div>
                                 <div class="c-cell">
                                   <div class="c-cell-header-content">
-                                    <span class="c-title">Airline Fee + Service Fee + Fare difference</span>
+                                    <span class="c-title">Airline Fee + Fare difference</span>
                                     <span class="c-subtitle">(Per passenger)</span>
                                   </div>
                                 </div>
