@@ -809,10 +809,10 @@
               <!-- Stops -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Number of Stops</h3>
-                <div class="filter-buttons">
-                  <!-- <button class="btn-link" (click)="roundtripSelectAllStops('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetStops('onward')">Reset</button>-->
-                </div>
+                <!-- <div class="filter-buttons">
+                 <button class="btn-link" (click)="roundtripSelectAllStops('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('onward')">Reset</button>
+                </div>-->
                 <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersOnward.stops">
                   <input type="checkbox" [value]="stop" (change)="roundtripOnStopFilterChange($event, 'onward')"
                     [checked]="roundtripSelectedStopsOnward.includes(stop)" />
@@ -823,10 +823,10 @@
               <!-- Time -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Departure from {{ flightInputData['fromCity'] }}</h3>
-                <div class="filter-buttons">
-                  <!--    <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('onward')">Reset</button>-->
-                </div>
+                <!-- <div class="filter-buttons">
+                      <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetDepartureSlots('onward')">Reset</button>
+                </div> -->
                 <div class="departure-time-filter">
                   <div class="time-slot" *ngFor="let slot of departureTimeSlots"
                     (click)="roundtripToggleDepartureSlot(slot.label, 'onward')"
@@ -840,10 +840,10 @@
               <!-- Refundability -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Refundability</h3>
-                <div class="filter-buttons">
-                  <!-- <button class="btn-link" (click)="selectAllRefundability('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="resetRefundability('onward')">Reset</button>-->
-                </div>
+                <!-- <div class="filter-buttons">
+                   <button class="btn-link" (click)="selectAllRefundability('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="resetRefundability('onward')">Reset</button>
+                </div>-->
                 <label class="filter-option">
                   <input type="checkbox" [(ngModel)]="showRefundableOnward" (change)="roundtripApplyAllFilters()" />
                   Partially Refundable
@@ -862,10 +862,10 @@
               <!-- Airlines -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Airlines</h3>
-                <div class="filter-buttons">
-                  <!-- <button class="btn-link" (click)="roundtripSelectAllAirlines('return')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetAirlines('return')">Reset</button>-->
-                </div>
+                <!-- <div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllAirlines('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('return')">Reset</button>
+                </div>-->
                 <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersReturn.airlines">
                   <input type="checkbox" [value]="airline" (change)="roundtripOnAirlineFilterChange($event, 'return')"
                     [checked]="roundtripSelectedAirlinesReturn.includes(airline)" />
@@ -888,10 +888,10 @@
               <!-- Stops -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Number of Stops</h3>
-                <div class="filter-buttons">
-                  <!-- <button class="btn-link" (click)="roundtripSelectAllStops('return')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetStops('return')">Reset</button>-->
-                </div>
+                <!-- <div class="filter-buttons">
+                  <button class="btn-link" (click)  ="roundtripSelectAllStops('return')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetStops('return')">Reset</button>
+                </div>-->
                 <label class="filter-option" *ngFor="let stop of roundtripDynamicFiltersReturn.stops">
                   <input type="checkbox" [value]="stop" (change)="roundtripOnStopFilterChange($event, 'return')"
                     [checked]="roundtripSelectedStopsReturn.includes(stop)" />
@@ -903,7 +903,7 @@
               <div class="filter-section">
                 <h3 class="filter-subheading">Departure from {{ flightInputData['toCity'] }}</h3>
                 <div class="filter-buttons">
-                  <!----> <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('return')">Select
+                  <!-- <button class="btn-link" (click)="roundtripSelectAllDepartureSlots('return')">Select
                     All</button>
                   <button class="btn-link danger" (click)="roundtripResetDepartureSlots('return')">Reset</button>-->
                 </div>
