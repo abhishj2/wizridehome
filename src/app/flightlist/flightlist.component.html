@@ -783,10 +783,10 @@
               <!-- Airlines -->
               <div class="filter-section">
                 <h3 class="filter-subheading">Airlines</h3>
-                <div class="filter-buttons">
-                  <!--<button class="btn-link" (click)="roundtripSelectAllAirlines('onward')">Select All</button>
-                  <button class="btn-link danger" (click)="roundtripResetAirlines('onward')">Reset</button> -->
-                </div>
+                <!--<div class="filter-buttons">
+                  <button class="btn-link" (click)="roundtripSelectAllAirlines('onward')">Select All</button>
+                  <button class="btn-link danger" (click)="roundtripResetAirlines('onward')">Reset</button>
+                </div>-->
                 <label class="filter-option" *ngFor="let airline of roundtripDynamicFiltersOnward.airlines">
                   <input type="checkbox" [value]="airline" (change)="roundtripOnAirlineFilterChange($event, 'onward')"
                     [checked]="roundtripSelectedAirlinesOnward.includes(airline)" />
@@ -1499,59 +1499,61 @@
 
                     <!-- Flight Details Tab -->
                     <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
-                      <div class="flight-details-card-new" *ngFor="let segment of flight.Segments[0]">
-                        <div class="fd-header">
-                          <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                            [alt]="segment.Airline.AirlineName" class="fd-logo"
-                            onerror="this.src='assets/images/default-airline.png'" />
-                          <div class="fd-airline-text">
-                            <span class="fd-name">{{ segment.Airline.AirlineName }}</span>
-                            <span class="fd-code">{{ segment.Airline.AirlineCode }} | {{ segment.Airline.FlightNumber
-                              }}</span>
-                            <span class="fd-craft pill">{{ segment.Craft || 'Aircraft' }}</span>
-                          </div>
-                        </div>
-
-                        <div class="fd-body">
-                          <div class="fd-col fd-dep">
-                            <div class="fd-time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
-                            <div class="fd-date">{{ segment.Origin.DepTime | date : "EEE, dd MMM" }}</div>
-                            <div class="fd-place">{{ segment.Origin.Airport.CityName }}</div>
-                            <div class="fd-terminal" *ngIf="segment.Origin.Airport.Terminal">Terminal {{
-                              segment.Origin.Airport.Terminal }}</div>
-                          </div>
-                          <div class="durnew">
-                            <div class="fd-col fd-dur">
-                              <div class="fd-duration-text">{{ getFormattedDuration(segment.Duration) }}</div>
-                              <div class="fd-bar"></div>
+                      <ng-container *ngFor="let segment of flight.Segments[0]; let segIndex = index">
+                        <div class="flight-details-card-new">
+                          <div class="fd-header">
+                            <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                              [alt]="segment.Airline.AirlineName" class="fd-logo"
+                              onerror="this.src='assets/images/default-airline.png'" />
+                            <div class="fd-airline-text">
+                              <span class="fd-name">{{ segment.Airline.AirlineName }}</span>
+                              <span class="fd-code">{{ segment.Airline.AirlineCode }} | {{ segment.Airline.FlightNumber
+                                }}</span>
+                              <span class="fd-craft pill">{{ segment.Craft || 'Aircraft' }}</span>
                             </div>
                           </div>
-                          <div class="fd-col fd-arr">
-                            <div class="fd-time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
-                            <div class="fd-date">{{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}</div>
-                            <div class="fd-place">{{ segment.Destination.Airport.CityName }}</div>
-                            <div class="fd-terminal" *ngIf="segment.Destination.Airport.Terminal">Terminal {{
-                              segment.Destination.Airport.Terminal }}</div>
-                          </div>
 
-                          <div class="fd-col fd-bag">
+                          <div class="fd-body">
+                            <div class="fd-col fd-dep">
+                              <div class="fd-time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                              <div class="fd-date">{{ segment.Origin.DepTime | date : "EEE, dd MMM" }}</div>
+                              <div class="fd-place">{{ segment.Origin.Airport.CityName }}</div>
+                              <div class="fd-terminal" *ngIf="segment.Origin.Airport.Terminal">Terminal {{
+                                segment.Origin.Airport.Terminal }}</div>
+                            </div>
+                            <div class="durnew">
+                              <div class="fd-col fd-dur">
+                                <div class="fd-duration-text">{{ getFormattedDuration(segment.Duration) }}</div>
+                                <div class="fd-bar"></div>
+                              </div>
+                            </div>
+                            <div class="fd-col fd-arr">
+                              <div class="fd-time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                              <div class="fd-date">{{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}</div>
+                              <div class="fd-place">{{ segment.Destination.Airport.CityName }}</div>
+                              <div class="fd-terminal" *ngIf="segment.Destination.Airport.Terminal">Terminal {{
+                                segment.Destination.Airport.Terminal }}</div>
+                            </div>
+
+                            <div class="fd-col fd-bag">
+                              <div class="fd-bag-group">
+                                <span class="fd-label">CHECK-IN</span>
+                                <span class="fd-val">{{ (selectedFareOptions[i]?.Segments?.[0]?.[0]?.Baggage) || '15
+                                  Kgs'
+                                  }} (1 piece)</span>
+                              </div>
+
+
+
+                            </div>
                             <div class="fd-bag-group">
-                              <span class="fd-label">CHECK-IN</span>
-                              <span class="fd-val">{{ (selectedFareOptions[i]?.Segments?.[0]?.[0]?.Baggage) || '15 Kgs'
-                                }} (1 piece)</span>
+                              <span class="fd-label">CABIN</span>
+                              <span class="fd-val">{{ (selectedFareOptions[i]?.Segments?.[0]?.[0]?.CabinBaggage) || '7
+                                Kgs' }} (1 piece)</span>
                             </div>
-
-
-
                           </div>
-                          <div class="fd-bag-group">
-                            <span class="fd-label">CABIN</span>
-                            <span class="fd-val">{{ (selectedFareOptions[i]?.Segments?.[0]?.[0]?.CabinBaggage) || '7
-                              Kgs' }} (1 piece)</span>
-                          </div>
-                        </div>
 
-                        <!-- <div class="fd-footer">
+                          <!-- <div class="fd-footer">
                           <div class="fd-amenity">
                             <i class="fas fa-chair"></i> 3-3 Layout
                           </div>
@@ -1563,7 +1565,18 @@
                           </div>
                         </div>-->
 
-                      </div>
+                        </div>
+
+                        <!-- Layover Separator -->
+                        <div class="layover-container" *ngIf="segIndex < flight.Segments[0].length - 1">
+                          <div class="layover-line"></div>
+                          <div class="layover-badge">
+                            <span class="change-planes">Change of planes</span>
+                            <span class="layover-detail">{{ getLayoverDuration(segment, flight.Segments[0][segIndex +
+                              1]) }} in {{ segment.Destination.Airport.CityName }}</span>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
 
                     <!-- Fare Summary Tab -->
@@ -2160,32 +2173,44 @@
 
                           <!-- Flight Details Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
-                            <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
-                              <div class="flight-segment-layout">
-                                <div class="flight-info-compact">
-                                  <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                                    [alt]="segment.Airline.AirlineName" width="60" height="60"
-                                    onerror="this.src='assets/images/default-airline.png'" />
-                                  <div class="flight-name-number">
-                                    <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
-                                    }}
+                            <ng-container *ngFor="let segment of flight.Segments[0]; let segIndex = index">
+                              <div class="segment-details">
+                                <div class="flight-segment-layout">
+                                  <div class="flight-info-compact">
+                                    <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                      [alt]="segment.Airline.AirlineName" width="60" height="60"
+                                      onerror="this.src='assets/images/default-airline.png'" />
+                                    <div class="flight-name-number">
+                                      <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
+                                      }}
+                                    </div>
                                   </div>
-                                </div>
-                                <div class="timing-info">
-                                  <div class="time-block">
-                                    <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
-                                    <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
-                                      segment.Origin.Airport.AirportCode }})</div>
-                                  </div>
-                                  <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
-                                  <div class="time-block">
-                                    <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
-                                    <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
-                                      segment.Destination.Airport.AirportCode }})</div>
+                                  <div class="timing-info">
+                                    <div class="time-block">
+                                      <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                                      <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
+                                        segment.Origin.Airport.AirportCode }})</div>
+                                    </div>
+                                    <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                                    <div class="time-block">
+                                      <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                                      <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
+                                        segment.Destination.Airport.AirportCode }})</div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                              <!-- Layover Separator -->
+                              <div class="layover-container" *ngIf="segIndex < flight.Segments[0].length - 1">
+                                <div class="layover-line"></div>
+                                <div class="layover-badge">
+                                  <span class="change-planes">Change of planes</span>
+                                  <span class="layover-detail">{{ getLayoverDuration(segment,
+                                    flight.Segments[0][segIndex +
+                                    1]) }} in {{ segment.Destination.Airport.CityName }}</span>
+                                </div>
+                              </div>
+                            </ng-container>
                           </div>
 
                           <!-- Fare Summary Tab -->
@@ -2748,32 +2773,44 @@
 
                           <!-- Flight Details Tab -->
                           <div class="tab-content" *ngIf="activeTabs[i] === 'flight'">
-                            <div class="segment-details" *ngFor="let segment of flight.Segments[0]">
-                              <div class="flight-segment-layout">
-                                <div class="flight-info-compact">
-                                  <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                                    [alt]="segment.Airline.AirlineName" width="60" height="60"
-                                    onerror="this.src='assets/images/default-airline.png'" />
-                                  <div class="flight-name-number">
-                                    <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
-                                    }}
+                            <ng-container *ngFor="let segment of flight.Segments[0]; let segIndex = index">
+                              <div class="segment-details">
+                                <div class="flight-segment-layout">
+                                  <div class="flight-info-compact">
+                                    <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                      [alt]="segment.Airline.AirlineName" width="60" height="60"
+                                      onerror="this.src='assets/images/default-airline.png'" />
+                                    <div class="flight-name-number">
+                                      <strong>{{ segment.Airline.AirlineName }}</strong> {{ segment.Airline.FlightNumber
+                                      }}
+                                    </div>
                                   </div>
-                                </div>
-                                <div class="timing-info">
-                                  <div class="time-block">
-                                    <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
-                                    <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
-                                      segment.Origin.Airport.AirportCode }})</div>
-                                  </div>
-                                  <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
-                                  <div class="time-block">
-                                    <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
-                                    <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
-                                      segment.Destination.Airport.AirportCode }})</div>
+                                  <div class="timing-info">
+                                    <div class="time-block">
+                                      <div class="time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                                      <div class="airport">{{ segment.Origin.Airport.CityName }} ({{
+                                        segment.Origin.Airport.AirportCode }})</div>
+                                    </div>
+                                    <div class="duration">{{ getFormattedDuration(segment.Duration) }}</div>
+                                    <div class="time-block">
+                                      <div class="time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                                      <div class="airport">{{ segment.Destination.Airport.CityName }} ({{
+                                        segment.Destination.Airport.AirportCode }})</div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                              <!-- Layover Separator -->
+                              <div class="layover-container" *ngIf="segIndex < flight.Segments[0].length - 1">
+                                <div class="layover-line"></div>
+                                <div class="layover-badge">
+                                  <span class="change-planes">Change of planes</span>
+                                  <span class="layover-detail">{{ getLayoverDuration(segment,
+                                    flight.Segments[0][segIndex +
+                                    1]) }} in {{ segment.Destination.Airport.CityName }}</span>
+                                </div>
+                              </div>
+                            </ng-container>
                           </div>
 
                           <!-- Fare Summary Tab -->
