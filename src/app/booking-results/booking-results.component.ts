@@ -284,18 +284,28 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     // Map API response to VehicleOption format
     this.vehicleOptions = apiData.map((vehicle: any, index: number) => {
       // Format departure time from SHOWTIME (e.g., "09:00 AM" -> "09:00am")
+      // Format departure time from SHOWTIME (e.g., "09:00 AM" -> "09:00 am")
       let departureTime = vehicle.SHOWTIME || vehicle.TRAVELTIME || '';
       if (departureTime) {
-        // Convert "09:00 AM" to "09:00am" format for display
-        departureTime = departureTime.toLowerCase().replace(/\s+/g, '');
-        // If it's in 24-hour format like "09:00:00", convert to 12-hour format
-        if (departureTime.includes(':') && !departureTime.includes('am') && !departureTime.includes('pm')) {
-          const [hours, minutes] = departureTime.split(':');
-          const hour24 = parseInt(hours, 10);
+        const lowerTime = departureTime.toLowerCase().trim();
+        // Check for "09:00am" or "09:00 am" or "09:00:00 am"
+        const match12 = lowerTime.match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap]m)/);
+
+        if (match12) {
+          // Reformat to ensure space: "09:00 am"
+          departureTime = `${match12[1]}:${match12[2]} ${match12[3]}`;
+        } else if (lowerTime.match(/^\d{1,2}:\d{2}(:\d{2})?$/)) {
+          // 24-hour format: "09:00" or "09:00:00"
+          const parts = lowerTime.split(':');
+          const hour24 = parseInt(parts[0], 10);
+          const minutes = parts[1];
           const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
           const period = hour24 >= 12 ? 'pm' : 'am';
           departureTime = `${hour12}:${minutes} ${period}`;
-
+        } else {
+          // Fallback, just clean up spaces if possible or leave as is
+          // Tries to insert space if sticking together like 9:00am
+          departureTime = lowerTime.replace(/(\d)(am|pm)/, '$1 $2');
         }
       }
 
@@ -600,16 +610,24 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
       // Get request time from REQUESTTIME
       let departureTime = vehicle.REQUESTTIME || '';
       if (departureTime) {
-        // Format time for display (e.g., "01:15:00 PM" -> "01:15pm")
-        departureTime = departureTime.toLowerCase().replace(/\s+/g, '').replace(/:/g, ':');
-        // Remove seconds if present
-        if (departureTime.includes(':') && departureTime.split(':').length === 3) {
-          const [hours, minutes] = departureTime.split(':');
-          const period = minutes.includes('am') || minutes.includes('pm') ?
-            (minutes.includes('am') ? 'am' : 'pm') :
-            (departureTime.includes('am') ? 'am' : 'pm');
-          const min = minutes.replace(/[amp]/gi, '');
-          departureTime = `${hours}:${min} ${period}`;
+        const lowerTime = departureTime.toLowerCase().trim();
+        // Check for "09:00am" or "09:00 am" or "09:00:00 am"
+        const match12 = lowerTime.match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap]m)/);
+
+        if (match12) {
+          // Reformat to ensure space: "09:00 am"
+          departureTime = `${match12[1]}:${match12[2]} ${match12[3]}`;
+        } else if (lowerTime.match(/^\d{1,2}:\d{2}(:\d{2})?$/)) {
+          // 24-hour format
+          const parts = lowerTime.split(':');
+          const hour24 = parseInt(parts[0], 10);
+          const minutes = parts[1];
+          const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+          const period = hour24 >= 12 ? 'pm' : 'am';
+          departureTime = `${hour12}:${minutes} ${period}`;
+        } else {
+          // Fallback cleanup
+          departureTime = lowerTime.replace(/(\d)(am|pm)/, '$1 $2');
         }
       }
 
