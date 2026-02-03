@@ -3475,6 +3475,37 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     return result;
   }
 
+  getDateChangeRows(fare: any): any[] {
+    if (!fare?.dateChangePolicy) return [];
+    return fare.dateChangePolicy
+      .filter((p: any) => !(p.From == '4' && p.Unit?.toUpperCase() === 'DAYS'))
+      .map((p: any) => {
+        const unit = p.Unit?.toLowerCase() || '';
+        let range = `${p.From} ${unit}`;
+        const toVal = p.To ? p.To.toString().trim() : '';
+        if (toVal && toVal.toLowerCase() !== 'departure') {
+          range += ` to ${toVal} ${unit}`;
+        } else {
+          range += ` to departure`;
+        }
+
+        const details = p.Details.replace('INR', '').trim();
+        // Check if price starts with a number (e.g. "2999", "3,100")
+        const isNumeric = /^[\d,.]+$/.test(details);
+
+        let policyText = details;
+        if (isNumeric) {
+          policyText = `₹ ${details} + Fare difference`;
+        }
+        // If not numeric (e.g. 'Unchangeable'), use as is without '₹' or '+ Fare difference'
+
+        return {
+          range: range,
+          policyText: policyText
+        };
+      });
+  }
+
   // Mobile fare popup: Transform FareOptions to mobile format
   get defaultFaresForMobile(): any[] {
     if (!this.selectedFlightForMobile || !this.selectedFlightForMobile.FareOptions) {

@@ -2444,8 +2444,7 @@ img {
 
 /* Flight Details Expanded */
 .flight-details-expanded {
-  margin-top: 15px;
-  padding-top: 15px;
+
   border-top: 2px solid #eee;
 }
 
@@ -7889,8 +7888,7 @@ button.scroll-arrow {
 .flight-details-card-new {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 20px;
+  padding: 20px;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -7905,8 +7903,9 @@ button.scroll-arrow {
 }
 
 .fd-logo {
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   object-fit: contain;
 }
 
@@ -7919,40 +7918,40 @@ button.scroll-arrow {
 
 .fd-name {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 14px;
   color: #111827;
 }
 
 .fd-code {
-  font-size: 15px;
+  font-size: 14px;
   color: #6b7280;
 }
 
 .fd-craft.pill {
-  font-size: 12px;
+  font-size: 11px;
   background: #f3f4f6;
-  color: #4b5563;
+  color: #474747;
   padding: 4px 10px;
-  border-radius: 16px;
+  border-radius: 5px;
   border: 1px solid #e5e7eb;
   font-weight: 500;
 }
 
 .fd-body {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.2fr 1.5fr;
+  grid-template-columns: 1.2fr 1fr 1.2fr 1.5fr 1fr;
   gap: 24px;
   align-items: flex-start;
-  margin-bottom: 24px;
 }
 
 .fd-col {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .fd-time {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 700;
   color: #111827;
   margin-bottom: 4px;
@@ -7960,22 +7959,20 @@ button.scroll-arrow {
 }
 
 .fd-date {
-  font-size: 14px;
+  font-size: 11px;
   color: #4b5563;
-  margin-bottom: 4px;
   font-weight: 500;
 }
 
 .fd-place {
-  font-size: 14px;
+  font-size: 11px;
   color: #6b7280;
   line-height: 1.4;
 }
 
 .fd-terminal {
-  font-size: 13px;
+  font-size: 11px;
   color: #6b7280;
-  margin-top: 2px;
 }
 
 .fd-dur {
@@ -7985,7 +7982,7 @@ button.scroll-arrow {
 }
 
 .fd-duration-text {
-  font-size: 13px;
+  font-size: 11px;
   color: #0d9488;
   /* Teal-ish */
   margin-bottom: 6px;
@@ -8021,6 +8018,9 @@ button.scroll-arrow {
 
 .fd-bag-group {
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .fd-bag-group:last-child {
@@ -8031,15 +8031,14 @@ button.scroll-arrow {
   display: block;
   font-size: 11px;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #474747;
   font-weight: 700;
-  margin-bottom: 4px;
   letter-spacing: 0.5px;
 }
 
 .fd-val {
-  font-size: 14px;
-  color: #374151;
+  font-size: 11px;
+  color: #474747;
   font-weight: 500;
 }
 
@@ -8105,7 +8104,7 @@ button.scroll-arrow {
   border: 1px solid #e5e7eb;
   border-radius: 4px;
   background: #fff;
-  margin-top: 20px;
+  margin-top: 0px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -8166,7 +8165,7 @@ button.scroll-arrow {
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   overflow: hidden;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .c-row {
@@ -8207,4 +8206,16 @@ button.scroll-arrow {
   font-size: 11px;
   color: #6b7280;
   font-weight: 400;
+}
+
+.flight-tabs .tab {
+  font-size: 14px;
+}
+
+.flight-tabs {
+  margin-bottom: 0px !important;
+}
+
+.flight-details-card-new {
+  border-radius: 0px 0px 8px 8px !important;
 }
