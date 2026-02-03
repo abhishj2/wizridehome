@@ -5195,7 +5195,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   formatTimeDisplay(time: string): string {
-    if (!time) return '12:00 PM';
+    if (!time) return 'Select Time';
 
     const [hourStr, minuteStr] = time.split(':');
     const hour = parseInt(hourStr);
