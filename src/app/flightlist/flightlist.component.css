@@ -2452,15 +2452,14 @@ img {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
 }
 
 .tab {
-  padding: 10px 20px;
+  padding: 16px 20px;
   cursor: pointer;
   color: #666;
   border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  /* margin-bottom: -2px; */
 }
 
 .tab.active {
@@ -2478,7 +2477,7 @@ img {
   from {
     max-height: 0;
     opacity: 0;
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
   }
 
   to {
@@ -7907,10 +7906,10 @@ button.scroll-arrow {
 .fd-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 6px;
   gap: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 6px;
+  border-bottom: 2px dotted #eee;
 }
 
 .fd-logo {
@@ -8218,6 +8217,7 @@ button.scroll-arrow {
   color: #6b7280;
   font-weight: 400;
 }
+
 
 .flight-tabs .tab {
   font-size: 14px;
