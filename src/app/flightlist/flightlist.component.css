@@ -7234,7 +7234,8 @@ button.scroll-arrow {
   margin-top: 24px;
 
   box-sizing: border-box;
-  background: #000;
+  /* background: #000; */
+  background: linear-gradient(135deg, #2196F3, #1565C0);
   color: #fff;
   padding: 16px 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -8409,4 +8410,10 @@ button.scroll-arrow {
 .layover-detail {
   color: #6b7280;
   /* Gray 500 */
+}
+
+@media(max-width:767px) {
+  .roundtrip-selection-strip {
+    display: none;
+  }
 }
