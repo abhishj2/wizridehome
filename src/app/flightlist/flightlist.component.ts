@@ -3033,12 +3033,15 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     this.activeFareTab = 'departure';
     this.selectedFlight = this.selectedOutbound; // Initialize data for the modal
 
-    // Reset selected fare indices if not already set
-    if (!this.selectedFareIndex.departure || this.selectedFareIndex.departure < 0) {
-      this.selectedFareIndex.departure = -1;
+    // Initialize default selections (Standard Fare) if not set
+    if ((this.selectedFareIndex.departure === undefined || this.selectedFareIndex.departure < 0) && this.selectedOutbound.FareOptions?.length > 0) {
+      this.selectedFareIndex.departure = 0;
+      this.selectedOutbound.selectedFareOption = this.selectedOutbound.FareOptions[0];
     }
-    if (!this.selectedFareIndex.return || this.selectedFareIndex.return < 0) {
-      this.selectedFareIndex.return = -1;
+
+    if ((this.selectedFareIndex.return === undefined || this.selectedFareIndex.return < 0) && this.selectedReturn.FareOptions?.length > 0) {
+      this.selectedFareIndex.return = 0;
+      this.selectedReturn.selectedFareOption = this.selectedReturn.FareOptions[0];
     }
   }
 

@@ -4223,24 +4223,26 @@
             <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
           </div>
 
-          <div class="fare-modal-footer">
-            <div class="fare-total-block">
-              <span style="font-size: 1.2rem; font-weight: 700;">
+          <div class="fare-modal-footer" style="justify-content: flex-end; gap: 20px;">
+            <div class="fare-total-block" style="text-align: right;">
+              <span style="font-size: 1.5rem; font-weight: 800; color: #000;">
                 ₹ {{ (
                 (selectedOutbound?.selectedFareOption ?
-                getAdultFarePerPerson(selectedOutbound.selectedFareOption.FareBreakdown) : 0) +
+                getAdultFarePerPerson(selectedOutbound.selectedFareOption.FareBreakdown) : (selectedOutbound?.price ||
+                0)) +
                 (selectedReturn?.selectedFareOption ?
-                getAdultFarePerPerson(selectedReturn.selectedFareOption.FareBreakdown) : 0)
+                getAdultFarePerPerson(selectedReturn.selectedFareOption.FareBreakdown) : (selectedReturn?.price || 0))
                 ) | number : "1.0-0" }}
               </span>
               <br />
-              <span>ROUNDTRIP FOR 1 ADULT</span>
+              <span style="font-size: 0.8rem; color: #666; font-weight: 600;">ROUNDTRIP FOR 1 ADULT</span>
             </div>
             <div class="fare-action-buttons">
               <button class="continue-book-btn" [disabled]="!hasFareSelected('departure') || !hasFareSelected('return')"
                 (click)="onFareContinueOrBook()"
+                style="background-color: #0091ff; color: white; border-radius: 25px; font-weight: 700; padding: 10px 30px; border: none; font-size: 1rem;"
                 [style.opacity]="(!hasFareSelected('departure') || !hasFareSelected('return')) ? '0.5' : '1'">
-                BOOK NOW
+                CONTINUE
               </button>
             </div>
           </div>
