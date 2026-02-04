@@ -1024,7 +1024,7 @@
                         <circle cx="12" cy="12" r="7"></circle>
                         <polyline points="12 8 12 12 15 13.5"></polyline>
                     </svg>
-                    <span>{{ getMobileDateDisplay(flightRoutes[0]?.date || formValues.flightDeparture) || 'Select date'
+                    <span>{{ getMobileDateDisplay(flightRoutes[0].date || formValues.flightDeparture) || 'Select date'
                         }}</span>
                 </div>
             </div>
@@ -2046,7 +2046,7 @@
                 </app-custom-calendar>
 
                 <app-custom-calendar *ngIf="mobileDatePickerType === 'flights'" class="flights-calendar"
-                    [selectedDate]="flightRoutes[0]?.date || formValues.flightDeparture" [minDate]="getTodayDate()"
+                    [selectedDate]="flightRoutes[0].date || formValues.flightDeparture" [minDate]="getTodayDate()"
                     [calendarFareMap]="calendarFareMap" [alwaysOpen]="true" placeholder="Select date"
                     (dateSelected)="onMobileDateSelected($event, 'flights')">
                 </app-custom-calendar>

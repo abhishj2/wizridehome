@@ -683,21 +683,21 @@
                 <label class="mobile-filter-block-title">Departure Timings</label>
                 <div class="mobile-departure-time-filter">
                   <div class="mobile-time-slot" *ngFor="let slot of departureTimeSlots"
-                    [class.selected]="slot?.label && selectedDepartureSlots?.has(slot.label)"
-                    (click)="toggleDepartureSlot(slot?.label)">
-                    <i [class]="slot?.iconClass"></i>
-                    <div class="label">{{ slot?.label }}</div>
+                    [class.selected]="slot.label && selectedDepartureSlots.has(slot.label)"
+                    (click)="toggleDepartureSlot(slot.label)">
+                    <i [class]="slot.iconClass"></i>
+                    <div class="label">{{ slot.label }}</div>
                   </div>
                 </div>
               </div>
 
               <!-- Price Range Filter -->
-              <div class="mobile-filter-block" *ngIf="dynamicFilters?.min_price && dynamicFilters?.max_price">
+              <div class="mobile-filter-block" *ngIf="dynamicFilters.min_price && dynamicFilters.max_price">
                 <label class="mobile-filter-block-title">Price Range</label>
                 <input type="range" [min]="dynamicFilters?.min_price || 0" [max]="dynamicFilters?.max_price || 0"
                   [(ngModel)]="priceRange" class="mobile-filter-price-range" (input)="onPriceChange()" />
                 <div class="mobile-filter-price-range-label">
-                  ₹{{ (dynamicFilters?.min_price || 0) | number : "1.0-0" }} - ₹{{ priceRange | number : "1.0-0" }}
+                  ₹{{ (dynamicFilters.min_price || 0) | number : "1.0-0" }} - ₹{{ priceRange | number : "1.0-0" }}
                 </div>
               </div>
 
