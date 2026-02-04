@@ -8421,3 +8421,161 @@ button.scroll-arrow {
 .fare-scroll-container li {
   font-size: 13px !important;
 }
+
+/* Mobile Round Trip Selected Flight Strip */
+.mobile-round-trip-selected-strip {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-round-trip-selected-strip {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 400px;
+    z-index: 999;
+  }
+
+  .mr-selected-card {
+    background: #2a2a2a;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 12px;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+  }
+
+  .mr-header {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #4caf50;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .mr-header i {
+    font-size: 12px;
+  }
+
+  .mr-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mr-left-col {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  .mr-airline-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .mr-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #fff;
+    padding: 2px;
+    object-fit: contain;
+  }
+
+  .mr-flight-texts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mr-airline-code {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .mr-airline-name {
+    font-size: 10px;
+    color: #ccc;
+    display: none;
+    /* Hide on very small screens if needed, or keep */
+  }
+
+  .mr-mid-col {
+    flex: 2;
+    padding: 0 8px;
+  }
+
+  .mr-time-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .mr-time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mr-time {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .mr-airport {
+    font-size: 9px;
+    color: #aaa;
+    font-weight: 600;
+  }
+
+  .mr-icon-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #999;
+  }
+
+  .mr-icon-block i {
+    font-size: 10px;
+    transform: rotate(90deg);
+    margin-bottom: 2px;
+  }
+
+  .mr-dur {
+    font-size: 9px;
+  }
+
+  .mr-right-col {
+    flex: 1;
+    min-width: 70px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .mr-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .mr-per-adult {
+    font-size: 9px;
+    color: #aaa;
+  }
+}

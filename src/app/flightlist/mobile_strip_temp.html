@@ -1,0 +1,102 @@
+<!-- Mobile Round Trip Selected Flight Strip -->
+<div class="mobile-round-trip-selected-strip" *ngIf="flightType === 'round'">
+    <!-- Show Onward when on Return Tab -->
+    <div class="mr-selected-card" *ngIf="activeTab === 'return' && selectedOutbound" (click)="switchTab('onward')">
+        <div class="mr-header">
+            <i class="fas fa-check-square"></i> Selected Onward Flight
+        </div>
+        <div class="mr-body">
+            <div class="mr-left-col">
+                <div class="mr-airline-row">
+                    <img [src]="'assets/images/flightimages/' + selectedOutbound.Segments[0][0].Airline.AirlineCode + '.png'"
+                        class="mr-logo" onerror="this.src='assets/images/default-airline.png'">
+                    <div class="mr-flight-texts">
+                        <span class="mr-airline-code">{{ selectedOutbound.Segments[0][0].Airline.AirlineCode }} {{
+                            selectedOutbound.Segments[0][0].Airline.FlightNumber }}</span>
+                        <span class="mr-airline-name">{{ selectedOutbound.Segments[0][0].Airline.AirlineName
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mr-mid-col">
+                <div class="mr-time-row">
+                    <div class="mr-time-block">
+                        <span class="mr-time">{{ selectedOutbound.Segments[0][0].Origin.DepTime | date:'HH:mm'
+                            }}</span>
+                        <span class="mr-airport">{{ selectedOutbound.Segments[0][0].Origin.Airport.AirportCode
+                            }}</span>
+                    </div>
+                    <div class="mr-icon-block">
+                        <i class="fas fa-plane"></i>
+                        <span class="mr-dur">{{ getTotalDuration(selectedOutbound.Segments[0]) }}</span>
+                    </div>
+                    <div class="mr-time-block">
+                        <span class="mr-time">{{
+                            selectedOutbound.Segments[0][selectedOutbound.Segments[0].length-1].Destination.ArrTime
+                            | date:'HH:mm' }}</span>
+                        <span class="mr-airport">{{
+                            selectedOutbound.Segments[0][selectedOutbound.Segments[0].length-1].Destination.Airport.AirportCode
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mr-right-col">
+                <div class="mr-price">₹ {{ (selectedOutbound.selectedFareOption?.Fare?.PublishedFare ||
+                    selectedOutbound.price) | number:'1.0-0' }}</div>
+                <div class="mr-per-adult">per Adult</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show Return when on Onward Tab (if selected) -->
+    <div class="mr-selected-card" *ngIf="activeTab === 'onward' && selectedReturn" (click)="switchTab('return')">
+        <div class="mr-header">
+            <i class="fas fa-check-square"></i> Selected Return Flight
+        </div>
+        <div class="mr-body">
+            <div class="mr-left-col">
+                <div class="mr-airline-row">
+                    <img [src]="'assets/images/flightimages/' + selectedReturn.Segments[0][0].Airline.AirlineCode + '.png'"
+                        class="mr-logo" onerror="this.src='assets/images/default-airline.png'">
+                    <div class="mr-flight-texts">
+                        <span class="mr-airline-code">{{ selectedReturn.Segments[0][0].Airline.AirlineCode }} {{
+                            selectedReturn.Segments[0][0].Airline.FlightNumber }}</span>
+                        <span class="mr-airline-name">{{ selectedReturn.Segments[0][0].Airline.AirlineName
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mr-mid-col">
+                <div class="mr-time-row">
+                    <div class="mr-time-block">
+                        <span class="mr-time">{{ selectedReturn.Segments[0][0].Origin.DepTime | date:'HH:mm'
+                            }}</span>
+                        <span class="mr-airport">{{ selectedReturn.Segments[0][0].Origin.Airport.AirportCode
+                            }}</span>
+                    </div>
+                    <div class="mr-icon-block">
+                        <i class="fas fa-plane"></i>
+                        <span class="mr-dur">{{ getTotalDuration(selectedReturn.Segments[0]) }}</span>
+                    </div>
+                    <div class="mr-time-block">
+                        <span class="mr-time">{{
+                            selectedReturn.Segments[0][selectedReturn.Segments[0].length-1].Destination.ArrTime |
+                            date:'HH:mm' }}</span>
+                        <span class="mr-airport">{{
+                            selectedReturn.Segments[0][selectedReturn.Segments[0].length-1].Destination.Airport.AirportCode
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mr-right-col">
+                <div class="mr-price">₹ {{ (selectedReturn.selectedFareOption?.Fare?.PublishedFare ||
+                    selectedReturn.price) | number:'1.0-0' }}</div>
+                <div class="mr-per-adult">per Adult</div>
+            </div>
+        </div>
+    </div>
+</div>
