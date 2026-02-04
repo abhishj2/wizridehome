@@ -8417,3 +8417,7 @@ button.scroll-arrow {
     display: none;
   }
 }
+
+.fare-scroll-container li {
+  font-size: 13px !important;
+}

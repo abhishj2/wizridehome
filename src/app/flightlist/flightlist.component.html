@@ -4234,13 +4234,13 @@
             <div class="flight-tabs round-trip-tabs" style="margin-top: 15px; border-bottom: 2px solid #e0e0e0;">
               <div class="tab" [class.active]="activeFareTab === 'departure'" (click)="selectFareTab('departure')"
                 style="padding: 10px 20px; cursor: pointer; font-weight: 600; color: #777;">
-                DEPART: {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
+                Depart: {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
                 selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length -
                 1]?.Destination?.Airport?.CityName }}
               </div>
               <div class="tab" [class.active]="activeFareTab === 'return'" (click)="selectFareTab('return')"
                 style="padding: 10px 20px; cursor: pointer; font-weight: 600; color: #777;">
-                RETURN: {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
+                Return: {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
                 selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length -
                 1]?.Destination?.Airport?.CityName }}
               </div>
@@ -4333,7 +4333,7 @@
                 getAdultFarePerPerson(selectedReturn.selectedFareOption.FareBreakdown) : (selectedReturn?.price || 0))
                 ) | number : "1.0-0" }}
               </span>
-              <br />
+
               <span style="font-size: 0.8rem; color: #666; font-weight: 600;">ROUNDTRIP FOR 1 ADULT</span>
             </div>
             <div class="fare-action-buttons">
