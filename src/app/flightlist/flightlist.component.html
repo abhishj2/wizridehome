@@ -3878,8 +3878,29 @@
                             <!-- Duration & Stops Section -->
                             <div class="desktop-duration-section">
                               <div class="desktop-duration-text">{{ getTotalDuration(segmentGroup) }}</div>
-                              <div class="desktop-stops-text">{{ (segmentGroup.length - 1) === 0 ? 'Non Stop' :
+                              <div class="desktop-stops-text" (mouseenter)="hoveredMultiCityIndex = i + '-' + segIndex"
+                                (mouseleave)="hoveredMultiCityIndex = ''">
+                                {{ (segmentGroup.length - 1) === 0 ? 'Non Stop' :
                                 (segmentGroup.length - 1) + ' Stop' + ((segmentGroup.length - 1) > 1 ? 's' : '') }}
+                                <ng-container *ngIf="(segmentGroup.length - 1) > 0">
+                                  via {{ getProductiveLayoverCity(segmentGroup) }}
+                                </ng-container>
+
+                                <div class="layover-tooltip"
+                                  *ngIf="hoveredMultiCityIndex === (i + '-' + segIndex) && (segmentGroup.length - 1) > 0">
+                                  <div *ngFor="let info of getLayoverInfosForGroup(segmentGroup)" class="layover-item">
+                                    <div class="layover-header">Plane change</div>
+                                    <div class="layover-details">
+                                      {{ info.city }} ({{ info.code }}) | {{ info.duration }} Layover
+                                    </div>
+                                    <div class="layover-timeline">
+                                      <div class="dot"></div>
+                                    </div>
+                                    <div class="layover-timeline-text">
+                                      {{ (segmentGroup.length - 1) === 1 ? '1 stop' : 'Stop' }} via {{ info.city }}
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
 

@@ -8579,3 +8579,7 @@ button.scroll-arrow {
     color: #aaa;
   }
 }
+
+.multicity-summary-footer {
+  display: none !important;
+}
