@@ -7652,7 +7652,7 @@ button.scroll-arrow {
 }
 
 .flight-details-popup.active {
-  bottom: 0;
+  bottom: 10px;
 }
 
 /* Header */
