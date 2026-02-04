@@ -3160,35 +3160,73 @@
                       <ng-container
                         *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
                         <div *ngIf="currentFlight">
-                          <div class="popup-segment-card" *ngFor="let segment of currentFlight.Segments[0]">
-                            <div class="popup-segment-header">
-                              <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
-                                class="popup-airline-logo" onerror="this.src='assets/images/default-airline.png'">
-                              <div class="popup-flight-info">
-                                <h4>{{ segment.Airline.AirlineName }}</h4>
-                                <p>{{ segment.Airline.AirlineCode }} {{ segment.Airline.FlightNumber }} | {{
-                                  segment.Craft }}</p>
+                          <ng-container *ngFor="let segment of currentFlight.Segments[0]; let segIndex = index">
+                            <div class="flight-details-card-new">
+                              <div class="fd-header">
+                                <img [src]="'assets/images/flightimages/' + segment.Airline.AirlineCode + '.png'"
+                                  [alt]="segment.Airline.AirlineName" class="fd-logo"
+                                  onerror="this.src='assets/images/default-airline.png'" />
+                                <div class="fd-airline-text">
+                                  <span class="fd-name">{{ segment.Airline.AirlineName }}</span>
+                                  <span class="fd-code">{{ segment.Airline.AirlineCode }} | {{
+                                    segment.Airline.FlightNumber
+                                    }}</span>
+                                  <span class="fd-craft pill">{{ segment.Craft || 'Aircraft' }}</span>
+                                </div>
+                              </div>
+
+                              <div class="fd-body">
+                                <div class="fd-col fd-dep">
+                                  <div class="fd-time">{{ segment.Origin.DepTime | date : "HH:mm" }}</div>
+                                  <div class="fd-date">{{ segment.Origin.DepTime | date : "EEE, dd MMM" }}</div>
+                                  <div class="fd-place">{{ segment.Origin.Airport.CityName }}</div>
+                                  <div class="fd-terminal" *ngIf="segment.Origin.Airport.Terminal">Terminal {{
+                                    segment.Origin.Airport.Terminal }}</div>
+                                </div>
+                                <div class="durnew">
+                                  <div class="fd-col fd-dur">
+                                    <div class="fd-duration-text">{{ getFormattedDuration(segment.Duration) }}</div>
+                                    <div class="fd-bar"></div>
+                                  </div>
+                                </div>
+                                <div class="fd-col fd-arr">
+                                  <div class="fd-time">{{ segment.Destination.ArrTime | date : "HH:mm" }}</div>
+                                  <div class="fd-date">{{ segment.Destination.ArrTime | date : "EEE, dd MMM" }}</div>
+                                  <div class="fd-place">{{ segment.Destination.Airport.CityName }}</div>
+                                  <div class="fd-terminal" *ngIf="segment.Destination.Airport.Terminal">Terminal {{
+                                    segment.Destination.Airport.Terminal }}</div>
+                                </div>
+
+                                <div class="fd-col fd-bag">
+                                  <div class="fd-bag-group">
+                                    <span class="fd-label">CHECK-IN</span>
+                                    <span class="fd-val">{{
+                                      (currentFlight.selectedFareOption?.Segments?.[0]?.[0]?.Baggage ||
+                                      currentFlight.FareOptions[0]?.Segments?.[0]?.[0]?.Baggage) || '15 Kgs'
+                                      }} (1 piece)</span>
+                                  </div>
+                                </div>
+                                <div class="fd-bag-group">
+                                  <span class="fd-label">CABIN</span>
+                                  <span class="fd-val">{{
+                                    (currentFlight.selectedFareOption?.Segments?.[0]?.[0]?.CabinBaggage ||
+                                    currentFlight.FareOptions[0]?.Segments?.[0]?.[0]?.CabinBaggage) || '7 Kgs' }} (1
+                                    piece)</span>
+                                </div>
                               </div>
                             </div>
-                            <div class="popup-segment-body">
-                              <div class="popup-time-loc">
-                                <div class="popup-time">{{ segment.Origin.DepTime | date:'HH:mm' }}</div>
-                                <div class="popup-date">{{ segment.Origin.DepTime | date:'dd MMM yy' }}</div>
-                                <div class="popup-airport">{{ segment.Origin.Airport.CityName }} ({{
-                                  segment.Origin.Airport.AirportCode }})</div>
-                              </div>
-                              <div class="popup-duration-center">
-                                <div class="popup-duration-text">{{ formatMinutesToHrMin(segment.Duration) }}</div>
-                                <div class="popup-duration-line"></div>
-                              </div>
-                              <div class="popup-time-loc right">
-                                <div class="popup-time">{{ segment.Destination.ArrTime | date:'HH:mm' }}</div>
-                                <div class="popup-date">{{ segment.Destination.ArrTime | date:'dd MMM yy' }}</div>
-                                <div class="popup-airport">{{ segment.Destination.Airport.CityName }} ({{
-                                  segment.Destination.Airport.AirportCode }})</div>
+
+                            <!-- Layover Separator -->
+                            <div class="layover-container" *ngIf="segIndex < currentFlight.Segments[0].length - 1">
+                              <div class="layover-line"></div>
+                              <div class="layover-badge">
+                                <span class="change-planes">Change of planes</span>
+                                <span class="layover-detail">{{ getLayoverDuration(segment,
+                                  currentFlight.Segments[0][segIndex +
+                                  1]) }} in {{ segment.Destination.Airport.CityName }}</span>
                               </div>
                             </div>
-                          </div>
+                          </ng-container>
                         </div>
                         <div *ngIf="!currentFlight" class="text-center p-4">
                           <p>No flight selected for this leg.</p>
@@ -3200,26 +3238,31 @@
                     <div *ngIf="popupDetailsTab === 'fare'" class="popup-tab-content">
                       <ng-container
                         *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-                        <div *ngIf="currentFlight">
-                          <table class="popup-fare-table">
-                            <tr>
-                              <th>Base Fare</th>
-                              <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.BaseFare ||
-                                currentFlight.FareOptions[0]?.Fare?.BaseFare || 0) | number:'1.0-0' }}</td>
-                            </tr>
-                            <tr>
-                              <th>Taxes & Fees</th>
-                              <td>₹ {{ (currentFlight.selectedFareOption?.Fare?.Tax ||
-                                currentFlight.FareOptions[0]?.Fare?.Tax || 0) |
-                                number:'1.0-0' }}</td>
-                            </tr>
-                            <tr>
-                              <th>Total Fare</th>
-                              <td style="font-size: 18px;">₹ {{ (currentFlight.selectedFareOption?.Fare?.PublishedFare
-                                ||
-                                currentFlight.FareOptions[0]?.Fare?.PublishedFare || 0) | number:'1.0-0' }}</td>
-                            </tr>
-                          </table>
+                        <div *ngIf="currentFlight" class="fare-summary-card-new">
+                          <div class="fs-header">Fare breakup</div>
+                          <div class="cancellation-table-container">
+                            <div class="c-row">
+                              <div class="c-cell">Base Fare</div>
+                              <div class="c-cell" style="text-align: right; color: #000; font-weight: 500;">
+                                ₹ {{ (currentFlight.selectedFareOption?.Fare?.BaseFare ||
+                                currentFlight.FareOptions[0]?.Fare?.BaseFare || 0) | number : "1.0-0" }}
+                              </div>
+                            </div>
+                            <div class="c-row">
+                              <div class="c-cell">Surcharges</div>
+                              <div class="c-cell" style="text-align: right; color: #000; font-weight: 500;">
+                                ₹ {{ (currentFlight.selectedFareOption?.Fare?.Tax ||
+                                currentFlight.FareOptions[0]?.Fare?.Tax || 0) | number : "1.0-0" }}
+                              </div>
+                            </div>
+                            <div class="c-row" style="border-bottom: none;">
+                              <div class="c-cell" style="font-weight: 700; color: #000;">TOTAL</div>
+                              <div class="c-cell" style="text-align: right; font-weight: 700; color: #000;">
+                                ₹ {{ (currentFlight.selectedFareOption?.Fare?.PublishedFare ||
+                                currentFlight.FareOptions[0]?.Fare?.PublishedFare || 0) | number : "1.0-0" }}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </ng-container>
                     </div>
@@ -3228,9 +3271,37 @@
                     <div *ngIf="popupDetailsTab === 'cancellation'" class="popup-tab-content">
                       <ng-container
                         *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-                        <div class="policy-content" *ngIf="currentFlight">
-                          <p>{{ getCancellationRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}
-                          </p>
+                        <div *ngIf="currentFlight">
+                          <div class="cancellation-table-container"
+                            *ngIf="getCancellationRows(currentFlight.selectedFareOption || currentFlight.FareOptions[0]).length > 0; else noCancelPolicy">
+                            <div class="c-row c-header">
+                              <div class="c-cell">
+                                <div class="c-cell-header-content">
+                                  <span class="c-title">Time frame</span>
+                                  <span class="c-subtitle">(From Scheduled Flight departure)</span>
+                                </div>
+                              </div>
+                              <div class="c-cell">
+                                <div class="c-cell-header-content">
+                                  <span class="c-title">Airline Fee </span>
+                                  <span class="c-subtitle">(Per passenger)</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="c-row"
+                              *ngFor="let row of getCancellationRows(currentFlight.selectedFareOption || currentFlight.FareOptions[0])">
+                              <div class="c-cell">{{ row.range }}</div>
+                              <div class="c-cell" style="color: #000; font-weight: 500;">
+                                {{ row.price }}
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noCancelPolicy>
+                            <div class="policy-content">
+                              <p>{{ getCancellationRule(currentFlight.selectedFareOption ||
+                                currentFlight.FareOptions[0]) }}</p>
+                            </div>
+                          </ng-template>
                         </div>
                       </ng-container>
                     </div>
@@ -3239,9 +3310,37 @@
                     <div *ngIf="popupDetailsTab === 'dateChange'" class="popup-tab-content">
                       <ng-container
                         *ngIf="activePopupTab === 'onward' ? popupFlightOnward : popupFlightReturn as currentFlight">
-                        <div class="policy-content" *ngIf="currentFlight">
-                          <p>{{ getDateChangeRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0]) }}
-                          </p>
+                        <div *ngIf="currentFlight">
+                          <div class="cancellation-table-container"
+                            *ngIf="getDateChangeRows(currentFlight.selectedFareOption || currentFlight.FareOptions[0]).length > 0; else noDateChangePolicy">
+                            <div class="c-row c-header">
+                              <div class="c-cell">
+                                <div class="c-cell-header-content">
+                                  <span class="c-title">Time frame</span>
+                                  <span class="c-subtitle">(From Scheduled Flight departure)</span>
+                                </div>
+                              </div>
+                              <div class="c-cell">
+                                <div class="c-cell-header-content">
+                                  <span class="c-title">Airline Fee + Fare difference</span>
+                                  <span class="c-subtitle">(Per passenger)</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="c-row"
+                              *ngFor="let row of getDateChangeRows(currentFlight.selectedFareOption || currentFlight.FareOptions[0])">
+                              <div class="c-cell">{{ row.range }}</div>
+                              <div class="c-cell" style="color: #000; font-weight: 500;">
+                                {{ row.policyText }}
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noDateChangePolicy>
+                            <div class="policy-content">
+                              <p>{{ getDateChangeRule(currentFlight.selectedFareOption || currentFlight.FareOptions[0])
+                                }}</p>
+                            </div>
+                          </ng-template>
                         </div>
                       </ng-container>
                     </div>
