@@ -1,80 +1,62 @@
-<div *ngIf="loader">
-  <main class="shimmer-main">
-    <div class="shimmer-box-long"></div>
-    <p></p>
-    <div class="shimmer-box-long1"></div>
-    <br />
-    <div>
-      <div class="shimmer-grid">
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-circle"></div>
-            <div class="shimmer-box1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
-
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-circle"></div>
-            <div class="shimmer-box1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
+<div class="scroll-wrapper" *ngIf="loader">
+  <div class="flight-final-page">
+    <!-- Flight Summary Card Shimmer -->
+    <div class="card">
+      <div style="display: flex; gap: 16px; margin-bottom: 24px; border-left: 3px solid #e0e0e0; padding-left: 16px;">
+        <div class="shimmer-box1" style="width: 200px;"></div>
+        <div class="shimmer-box1" style="width: 150px;"></div>
       </div>
-      <br />
-      <div class="shimmer-box-long2"></div>
-      <br />
-      <div class="shimmer-grid">
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
-
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
+      <div class="shimmer-box-long" style="height: 150px;"></div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div class="shimmer-box1" style="width: 100%;"></div>
+        <div class="shimmer-box1" style="width: 100%;"></div>
       </div>
-      <br />
-      <div class="shimmer-box-long1"></div>
-      <div class="shimmer-grid">
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long"></div>
-          </div>
-        </div>
-
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long"></div>
-          </div>
-        </div>
-      </div>
-      <div class="shimmer-box-long2"></div>
-      <div class="shimmer-grid">
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
-
-        <div class="container">
-          <div class="flex-container-space-between">
-            <div class="shimmer-box-long1"></div>
-          </div>
-          <div class="shimmer-box"></div>
-        </div>
-      </div>
-      <br />
-      <div class="shimmer-box-long"></div>
     </div>
-  </main>
+
+    <!-- Passenger Details Card Shimmer -->
+    <div class="card">
+      <div class="shimmer-box1" style="width: 250px; margin-bottom: 24px;"></div>
+      <div class="shimmer-box" style="height: 70px; margin-bottom: 16px;"></div>
+      <div class="shimmer-box" style="height: 70px;"></div>
+    </div>
+
+    <!-- Addon Services Card Shimmer -->
+    <div class="card">
+      <div class="shimmer-box1" style="width: 200px; margin-bottom: 24px;"></div>
+      <div class="shimmer-box-long1" style="height: 250px;"></div>
+    </div>
+
+    <!-- Fare Summary/Footer Shimmer -->
+    <div class="footer-bar">
+      <!-- Title -->
+      <div class="shimmer-box1" style="width: 120px; height: 24px; margin-bottom: 20px;"></div>
+
+      <!-- Fare Lines -->
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+        <div class="shimmer-box1" style="width: 100px; height: 16px;"></div>
+        <div class="shimmer-box1" style="width: 60px; height: 16px;"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+        <div class="shimmer-box1" style="width: 140px; height: 16px;"></div>
+        <div class="shimmer-box1" style="width: 60px; height: 16px;"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
+        <div class="shimmer-box1" style="width: 110px; height: 16px;"></div>
+        <div class="shimmer-box1" style="width: 60px; height: 16px;"></div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 0 0 20px 0;" />
+
+      <!-- Total -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div class="shimmer-box1" style="width: 100px; height: 20px;"></div>
+        <div class="shimmer-box1" style="width: 80px; height: 24px;"></div>
+      </div>
+
+      <!-- Proceed Button -->
+      <div class="shimmer-box" style="height: 50px; border-radius: 8px;"></div>
+    </div>
+  </div>
 </div>
 
 <div class="scroll-wrapper" *ngIf="!loader">
