@@ -2997,27 +2997,84 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
     }
   }
 
+  selectFlightForRoundTrip(flight: any, index: number, type: 'onward' | 'return'): void {
+    if (type === 'onward') {
+      this.selectedOutbound = flight;
+      this.selectedOutboundIndex = index;
+      // Auto-switch to return tab after a short delay for better UX
+      setTimeout(() => {
+        this.switchTab('return');
+        // Scroll to top of flight list
+        if (this.scrollContainer && this.scrollContainer.nativeElement) {
+          this.scrollContainer.nativeElement.scrollTop = 0;
+        }
+      }, 200);
+    } else {
+      this.selectedReturn = flight;
+      this.selectedReturnIndex = index;
+      // Scroll to bottom to show the selection strip? Or just stay.
+      // The strip appears automatically.
+    }
+  }
+
+  finalizeRoundTripBooking(): void {
+    if (!this.selectedOutbound || !this.selectedReturn) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Selection Incomplete',
+        text: 'Please select both onward and return flights.',
+        timer: 3000
+      });
+      return;
+    }
+
+    // Open the Both-Way Fare Modal
+    this.showFareModalBoth = true;
+    this.activeFareTab = 'departure';
+    this.selectedFlight = this.selectedOutbound; // Initialize data for the modal
+
+    // Reset selected fare indices if not already set
+    if (!this.selectedFareIndex.departure || this.selectedFareIndex.departure < 0) {
+      this.selectedFareIndex.departure = -1;
+    }
+    if (!this.selectedFareIndex.return || this.selectedFareIndex.return < 0) {
+      this.selectedFareIndex.return = -1;
+    }
+  }
+
   openFareOptionsModalBothway(): void {
-    // This is for the old round trip modal - keeping for backward compatibility
     this.showFareModalBoth = true;
     this.activeFareTab = 'departure';
   }
 
   closeFareOptionsModalBothWay(): void {
     this.showFareModalBoth = false;
-    this.selectedFlight = null;
   }
 
   selectFareTab(tab: 'departure' | 'return'): void {
     this.activeFareTab = tab;
+    this.selectedFlight = tab === 'departure' ? this.selectedOutbound : this.selectedReturn;
   }
 
   selectFare(type: 'departure' | 'return', index: number): void {
     this.selectedFareIndex[type] = index;
-    if (type === 'departure') {
-      this.selectFareTab('return');
+
+    // Temporarily store the selected fare in the flight object for display/logic
+    if (type === 'departure' && this.selectedOutbound) {
+      const fare = this.selectedOutbound.FareOptions[index];
+      // We don't want to mutate the object permanently if we cancel, but for now this is the pattern used
+      this.selectedOutbound.selectedFareOption = fare;
+
+      // Auto-switch to return tab
+      setTimeout(() => {
+        this.activeFareTab = 'return';
+      }, 200);
+    } else if (type === 'return' && this.selectedReturn) {
+      const fare = this.selectedReturn.FareOptions[index];
+      this.selectedReturn.selectedFareOption = fare;
     }
   }
+
 
   // Get defaultFares for modal (matches reference)
   get defaultFares(): any[] {
@@ -3242,41 +3299,7 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   // New method for the "Book Now" button in the bottom strip
-  finalizeRoundTripBooking(): void {
-    if (!this.selectedOutbound || !this.selectedReturn) {
-      return;
-    }
 
-    // Get departure fare from selectedOutbound - check multiple sources
-    let departureFare = this.selectedOutbound?.selectedFareOption;
-    if (!departureFare) {
-      if (this.selectedOutbound?.FareOptions?.length > 0) {
-        departureFare = this.selectedOutbound.FareOptions[0];
-      }
-    }
-
-    // Get return fare from selectedReturn - check multiple sources
-    let returnFare = this.selectedReturn?.selectedFareOption;
-    if (!returnFare) {
-      if (this.selectedReturn?.FareOptions?.length > 0) {
-        returnFare = this.selectedReturn.FareOptions[0];
-      }
-    }
-
-    if (departureFare && returnFare) {
-      this.finalizeSelection({
-        departureFare: departureFare,
-        returnFare: returnFare
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Unable to proceed. Please re-select your flights.',
-        timer: 3000
-      });
-    }
-  }
 
   isSelectedFare(type: 'departure' | 'return', index: number): boolean {
     return this.selectedFareIndex[type] === index;

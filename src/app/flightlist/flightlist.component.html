@@ -1806,8 +1806,14 @@
                                 <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
                                 <div class="desktop-price-label">per Adult</div>
                                 <button class="desktop-view-prices-btn"
-                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'onward'); $event.stopPropagation()">
-                                  View Prices
+                                  (click)="selectFlightForRoundTrip(flight, i, 'onward'); $event.stopPropagation()"
+                                  *ngIf="selectedOutboundIndex !== i">
+                                  SELECT
+                                </button>
+                                <button class="desktop-view-prices-btn" (click)="$event.stopPropagation()"
+                                  *ngIf="selectedOutboundIndex === i"
+                                  style="background-color: #2e7d32; border-color: #2e7d32; cursor: default;">
+                                  SELECTED
                                 </button>
                               </div>
 
@@ -2407,8 +2413,14 @@
                                 <div class="desktop-price-amount">₹ {{ flight.price | number : "1.0-0" }}</div>
                                 <div class="desktop-price-label">per Adult</div>
                                 <button class="desktop-view-prices-btn"
-                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
-                                  View Prices
+                                  (click)="selectFlightForRoundTrip(flight, i, 'return'); $event.stopPropagation()"
+                                  *ngIf="selectedReturnIndex !== i">
+                                  SELECT
+                                </button>
+                                <button class="desktop-view-prices-btn" (click)="$event.stopPropagation()"
+                                  *ngIf="selectedReturnIndex === i"
+                                  style="background-color: #2e7d32; border-color: #2e7d32; cursor: default;">
+                                  SELECTED
                                 </button>
                               </div>
                             </div>
@@ -2502,9 +2514,14 @@
                                   </div>
                                   <div class="flight-card-component__per">per Adult</div>
                                 </div>
-                                <button class="flight-card-component__view-prices-btn desktop-only"
-                                  (click)="openFareOptionsModalForRoundTrip(flight, i, 'return'); $event.stopPropagation()">
-                                  View Prices
+                                <button class="desktop-select-btn desktop-only"
+                                  (click)="selectFlightForRoundTrip(flight, i, 'return'); $event.stopPropagation()"
+                                  *ngIf="selectedReturnIndex !== i">
+                                  SELECT
+                                </button>
+                                <button class="desktop-select-btn desktop-only selected"
+                                  (click)="$event.stopPropagation()" *ngIf="selectedReturnIndex === i">
+                                  SELECTED
                                 </button>
                               </div>
                             </section>
@@ -4106,112 +4123,126 @@
       </div>
     </div>
 
-    <!-- Old Round Trip Modal (keeping for backward compatibility) -->
+    <!-- New Round Trip Modal (MakeMyTrip Style) -->
     <div class="custom-modal-overlay" *ngIf="showFareModalBoth" (click)="closeFareOptionsModalBothWay()">
-      <div class="custom-modal" (click)="$event.stopPropagation()">
-        <button class="modal-close" (click)="closeFareOptionsModalBothWay()">×</button>
+      <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeFareOptionsModalBothWay()">&times;</button>
         <div class="fare-options-box">
           <div class="fare-options-header">
-            <div class="fare-options-title"><strong>MORE FARE OPTIONS</strong> available for your round trip.</div>
-            <!-- Tabs for ONWARD and RETURN -->
-            <div class="flight-tabs">
-              <div class="tab" [class.active]="activeFareTab === 'departure'" (click)="selectFareTab('departure')">
-                ONWARD</div>
-              <div class="tab" [class.active]="activeFareTab === 'return'" (click)="selectFareTab('return')">RETURN
+            <div class="fare-options-title">Flight Details and Fare Options available for you!</div>
+
+            <!-- Tabs -->
+            <div class="flight-tabs round-trip-tabs" style="margin-top: 15px; border-bottom: 2px solid #e0e0e0;">
+              <div class="tab" [class.active]="activeFareTab === 'departure'" (click)="selectFareTab('departure')"
+                style="padding: 10px 20px; cursor: pointer; font-weight: 600; color: #777;">
+                DEPART: {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
+                selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length -
+                1]?.Destination?.Airport?.CityName }}
+              </div>
+              <div class="tab" [class.active]="activeFareTab === 'return'" (click)="selectFareTab('return')"
+                style="padding: 10px 20px; cursor: pointer; font-weight: 600; color: #777;">
+                RETURN: {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} - {{
+                selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length -
+                1]?.Destination?.Airport?.CityName }}
               </div>
             </div>
-            <!-- Fare Subtitle -->
-            <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'departure' && selectedOutbound">
+
+            <div class="fare-options-subtitle-line" *ngIf="selectedFlight" style="margin-top: 10px;">
               <span class="fare-trip-details-text">
-                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
-                {{ selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length -
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
+                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
                 1]?.Destination?.Airport?.CityName }} ·
-                {{ selectedOutbound?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
-                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
-                {{ selectedOutbound?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
-                {{ selectedOutbound?.Segments?.[0]?.[selectedOutbound?.Segments?.[0]?.length - 1]?.Destination?.ArrTime
-                | date : "HH:mm" }}
-              </span>
-              <button class="fare-modify-btn"
-                (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()"
-                title="Modify">
-                <i class="fas fa-edit"></i>
-              </button>
-            </div>
-            <div class="fare-options-subtitle-line" *ngIf="activeFareTab === 'return' && selectedReturn">
-              <span class="fare-trip-details-text">
-                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
-                {{ selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length -
-                1]?.Destination?.Airport?.CityName }} ·
-                {{ selectedReturn?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
-                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
-                {{ selectedReturn?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
-                {{ selectedReturn?.Segments?.[0]?.[selectedReturn?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
+                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
+                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
                 date : "HH:mm" }}
               </span>
-              <button class="fare-modify-btn"
-                (click)="showModifyForm = !showModifyForm; closeFareOptionsModalBothWay(); $event.stopPropagation()"
-                title="Modify">
-                <i class="fas fa-edit"></i>
-              </button>
             </div>
           </div>
-          <!-- Scrollable Fare Options -->
+
           <div class="fare-scroll-wrapper">
             <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
             <div class="fare-scroll-container" #fareScrollContainer>
-              <div class="fare-card"
-                *ngFor="let fare of activeFareTab === 'departure' ? selectedOutbound?.FareOptions : selectedReturn?.FareOptions; let i = index">
+              <div class="fare-card makemytrip-fare-card" *ngFor="let fare of defaultFares; let i = index">
                 <div class="fare-price-oneway">
-                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }}
-                  <span class="per-adult">per adult</span>
+                  ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
                 </div>
-                <div class="fare-type">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+                <div class="fare-type-badge">{{ fare.type }}</div>
+
                 <div class="fare-section">
                   <strong>Baggage</strong>
-                  <ul>
-                    <li>✅ Cabin: {{ fare.Segments[0][0].CabinBaggage }}</li>
-                    <li>✅ Check-in: {{ fare.Segments[0][0].Baggage }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Cabin: {{ fare.cabin }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-check-circle fare-check-icon"></i>
+                      <span>Check-in: {{ fare.checkIn }}</span>
+                    </li>
                   </ul>
                 </div>
+
                 <div class="fare-section">
                   <strong>Flexibility</strong>
-                  <ul>
-                    <li>⚠️ Cancel: {{ getCancellationRule(fare) }}</li>
-                    <li>⚠️ Change: {{ getDateChangeRule(fare) }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Cancel: {{ fare.cancel }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-exclamation-triangle fare-warning-icon"></i>
+                      <span>Change: {{ fare.dateChange }}</span>
+                    </li>
                   </ul>
                 </div>
+
                 <div class="fare-section">
                   <strong>Seats, Meals & More</strong>
-                  <ul>
-                    <li>🍽️ Meals: {{ fare.IsFreeMealAvailable ? "Free meal available" : "Meal not included" }}</li>
-                    <li>💺 Seats: {{ fare.AirlineRemark?.toLowerCase().includes('standard seats are free') ? "Standard
-                      seats free" : "Chargeable seats" }}</li>
-                    <li>{{ fare.FareRules[0]?.Details || "Check with airline" }}</li>
+                  <ul class="fare-list">
+                    <li>
+                      <i class="fas fa-utensils fare-icon"></i>
+                      <span>Meals: {{ fare.meal === 'Included' ? "Meal included" : "Meal not included" }}</span>
+                    </li>
+                    <li>
+                      <i class="fas fa-chair fare-icon"></i>
+                      <span>Seats: {{ fare.seat === 'Free' ? "Standard seats free" : "Chargeable seats" }}</span>
+                    </li>
+                    <li class="check-airline">Check with airline</li>
                   </ul>
                 </div>
-                <button class="book-btn" (click)="selectFare(activeFareTab, i)"
-                  [disabled]="isSelectedFare(activeFareTab, i)">
+
+                <button class="book-btn makemytrip-book-btn" (click)="selectFare(activeFareTab, i)"
+                  [disabled]="isSelectedFare(activeFareTab, i)" [class.selected-btn]="isSelectedFare(activeFareTab, i)"
+                  style="cursor: pointer;">
                   {{ isSelectedFare(activeFareTab, i) ? "SELECTED" : "SELECT" }}
                 </button>
               </div>
             </div>
             <button class="scroll-arrow right" (click)="scrollFareCards('right')">›</button>
           </div>
-        </div>
-        <!-- Footer Summary -->
-        <div class="fare-modal-footer">
-          <div class="fare-total-block">
-            ₹ {{ (selectedOutbound?.price + selectedReturn?.price) | number : "1.0-0" }}<br />
-            <span>ROUNDTRIP FOR 1 ADULT</span>
-          </div>
-          <div class="fare-action-buttons">
-            <button class="lock-now-btn">LOCK NOW</button>
-            <button class="continue-book-btn"
-              [disabled]="(activeFareTab === 'departure' && !hasFareSelected('departure')) || (activeFareTab === 'return' && (!hasFareSelected('departure') || !hasFareSelected('return')))"
-              (click)="onFareContinueOrBook()">
-              {{ activeFareTab === "departure" ? "CONTINUE" : "BOOK NOW" }}
-            </button>
+
+          <div class="fare-modal-footer">
+            <div class="fare-total-block">
+              <span style="font-size: 1.2rem; font-weight: 700;">
+                ₹ {{ (
+                (selectedOutbound?.selectedFareOption ?
+                getAdultFarePerPerson(selectedOutbound.selectedFareOption.FareBreakdown) : 0) +
+                (selectedReturn?.selectedFareOption ?
+                getAdultFarePerPerson(selectedReturn.selectedFareOption.FareBreakdown) : 0)
+                ) | number : "1.0-0" }}
+              </span>
+              <br />
+              <span>ROUNDTRIP FOR 1 ADULT</span>
+            </div>
+            <div class="fare-action-buttons">
+              <button class="continue-book-btn" [disabled]="!hasFareSelected('departure') || !hasFareSelected('return')"
+                (click)="onFareContinueOrBook()"
+                [style.opacity]="(!hasFareSelected('departure') || !hasFareSelected('return')) ? '0.5' : '1'">
+                BOOK NOW
+              </button>
+            </div>
           </div>
         </div>
       </div>
