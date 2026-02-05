@@ -8362,12 +8362,6 @@ body.calendar-open-mobile {
   color: #000;
 }
 
-.view-policy-link {
-  color: #2196F3;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: none;
-}
 
 
 
@@ -8517,34 +8511,8 @@ body.calendar-open-mobile {
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
-  .timeline-wrapper {
-    flex-direction: column;
-    gap: 20px;
-    padding-bottom: 0;
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .timeline-segment {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #eee;
-    border-right: none;
-    padding-bottom: 10px;
-  }
-
-  .timeline-bar {
-    width: 8px;
-    height: 50px;
-    margin: 0 16px;
-  }
-
-  .penalty-label,
-  .cancel-between-label {
-    position: static;
-    width: auto;
-    margin-bottom: 10px;
+  .cancellation-policy-new {
+    display: none !important;
   }
 }
 

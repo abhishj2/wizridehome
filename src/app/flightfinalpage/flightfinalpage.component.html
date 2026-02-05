@@ -220,7 +220,7 @@
         *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header-new">
           <div class="policy-title">Cancellation & Date Change Policy</div>
-          <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
         </div>
 
         <div class="route-info-row">
@@ -1449,7 +1449,7 @@
 
         <div class="cancellation-header-new">
           <div class="policy-title">Cancellation & Date Change Policy</div>
-          <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
         </div>
 
         <!-- Onward Flight Policy -->
@@ -1465,18 +1465,22 @@
           </div>
 
           <!-- Timeline -->
-          <div class="timeline-wrapper"
-            style="margin-bottom: 40px; border-bottom: 1px dashed #eee; padding-bottom: 30px;">
+          <div class="cangrid">
             <div class="penalty-label">Cancellation Penalty :</div>
+            <div class="timeline-wrapper"
+              style="margin-bottom: 40px; border-bottom: 1px dashed #eee; padding-bottom: 30px;">
+
+
+              <ng-container *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
+                <div class="timeline-segment">
+                  <div class="timeline-price">{{ seg.priceDisplay }}</div>
+                  <div class="timeline-bar" [ngClass]="seg.color"></div>
+                  <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+                  <div class="timeline-marker end">{{ seg.endLabel }}</div>
+                </div>
+              </ng-container>
+            </div>
             <div class="cancel-between-label">Cancel Between (IST) :</div>
-            <ng-container *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
-              <div class="timeline-segment">
-                <div class="timeline-price">{{ seg.priceDisplay }}</div>
-                <div class="timeline-bar" [ngClass]="seg.color"></div>
-                <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
-                <div class="timeline-marker end">{{ seg.endLabel }}</div>
-              </div>
-            </ng-container>
           </div>
         </ng-container>
 
@@ -1490,19 +1494,22 @@
               flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1].Destination.Airport.CityCode }}
             </div>
           </div>
-
-          <div class="timeline-wrapper">
+          <div class="cangrid">
             <div class="penalty-label">Cancellation Penalty :</div>
+
+            <div class="timeline-wrapper">
+              <ng-container *ngFor="let seg of getCancellationTimeline(flightDataReturn); let i=index">
+                <div class="timeline-segment">
+                  <div class="timeline-price">{{ seg.priceDisplay }}</div>
+                  <div class="timeline-bar" [ngClass]="seg.color"></div>
+                  <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+                  <div class="timeline-marker end">{{ seg.endLabel }}</div>
+                </div>
+              </ng-container>
+            </div>
             <div class="cancel-between-label">Cancel Between (IST) :</div>
-            <ng-container *ngFor="let seg of getCancellationTimeline(flightDataReturn); let i=index">
-              <div class="timeline-segment">
-                <div class="timeline-price">{{ seg.priceDisplay }}</div>
-                <div class="timeline-bar" [ngClass]="seg.color"></div>
-                <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
-                <div class="timeline-marker end">{{ seg.endLabel }}</div>
-              </div>
-            </ng-container>
           </div>
+
         </ng-container>
       </div>
     </div>
@@ -2666,7 +2673,7 @@
 
       <div class="cancellation-header-new">
         <div class="policy-title">Cancellation & Date Change Policy</div>
-        <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+        <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
       </div>
 
       <!-- Loop through each segment group -->
@@ -2681,20 +2688,24 @@
               {{ group[0]?.from }}-{{ group[group.length - 1]?.to }}
             </div>
           </div>
-
-          <!-- Timeline -->
-          <div class="timeline-wrapper"
-            [style.margin-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '40px' : '0'"
-            [style.border-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '1px dashed #eee' : 'none'"
-            [style.padding-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '30px' : '0'">
+          <div class="cangrid">
             <div class="penalty-label">Cancellation Penalty :</div>
-            <div class="cancel-between-label">Cancel Between (IST) :</div>
-            <div class="timeline-segment" *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
-              <div class="timeline-price">{{ seg.priceDisplay }}</div>
-              <div class="timeline-bar" [ngClass]="seg.color"></div>
-              <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
-              <div class="timeline-marker end">{{ seg.endLabel }}</div>
+            <!-- Timeline -->
+            <div class="timeline-wrapper"
+              [style.margin-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '40px' : '0'"
+              [style.border-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '1px dashed #eee' : 'none'"
+              [style.padding-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '30px' : '0'">
+
+
+              <div class="timeline-segment"
+                *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
+                <div class="timeline-price">{{ seg.priceDisplay }}</div>
+                <div class="timeline-bar" [ngClass]="seg.color"></div>
+                <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+                <div class="timeline-marker end">{{ seg.endLabel }}</div>
+              </div>
             </div>
+            <div class="cancel-between-label">Cancel Between (IST) :</div>
           </div>
         </ng-container>
       </ng-container>
