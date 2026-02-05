@@ -8584,3 +8584,33 @@ button.scroll-arrow {
 .multicity-summary-footer {
   display: none !important;
 }
+
+@media(min-width:767px) {
+  .fare-options-title {
+    padding: 20px 40px;
+    font-size: 20px !important;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  .flghtfaredestdet {
+    padding-left: 40px;
+    font-weight: bold;
+  }
+
+  .fare-options-header {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .fare-options-header {
+    border: none !important;
+  }
+
+  .fare-options-box {
+    border-top: 1px solid #eee;
+  }
+
+  .fare-trip-details-text {
+    padding-bottom: 10px;
+  }
+}

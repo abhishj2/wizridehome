@@ -4201,16 +4201,20 @@
     <!-- Fare Options Modal - One Way -->
     <div class="custom-modal-overlay" *ngIf="showFareModal" (click)="closeFareOptionsModal()">
       <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
+        <div class="fare-options-title">Fare Options available for your trip</div>
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
+        <div class="flghtfaredestdet">
+          <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
+            <span class="fare-trip-details-text">{{ selectedFlight.Origin?.Airport?.CityName }} → {{
+              selectedFlight.Destination?.Airport?.CityName }} · {{ selectedFlight.Airline?.AirlineName }} · {{
+              selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} · {{ selectedFlight.Origin?.DepTime | date :
+              "HH:mm" }} - {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}</span>
+          </div>
+        </div>
         <div class="fare-options-box">
           <div class="fare-options-header">
-            <div class="fare-options-title">Fare Options available for your trip</div>
-            <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
-              <span class="fare-trip-details-text">{{ selectedFlight.Origin?.Airport?.CityName }} → {{
-                selectedFlight.Destination?.Airport?.CityName }} · {{ selectedFlight.Airline?.AirlineName }} · {{
-                selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} · {{ selectedFlight.Origin?.DepTime | date :
-                "HH:mm" }} - {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}</span>
-            </div>
+
+
           </div>
           <div class="fare-scroll-wrapper">
             <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
@@ -4274,22 +4278,26 @@
     <!-- Fare Options Modal - Round Trip (using same structure as one-way) -->
     <div class="custom-modal-overlay" *ngIf="showFareModal && flightType === 'round'" (click)="closeFareOptionsModal()">
       <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
+        <div class="fare-options-title">Fare Options available for your trip</div>
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
+        <div class="flghtfaredestdet">
+          <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
+            <span class="fare-trip-details-text">
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
+              {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
+              1]?.Destination?.Airport?.CityName }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
+              {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
+              date : "HH:mm" }}
+            </span>
+          </div>
+        </div>
         <div class="fare-options-box">
           <div class="fare-options-header">
-            <div class="fare-options-title">Fare Options available for your trip</div>
-            <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
-              <span class="fare-trip-details-text">
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
-                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
-                1]?.Destination?.Airport?.CityName }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
-                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
-                date : "HH:mm" }}
-              </span>
-            </div>
+
+
           </div>
           <div class="fare-scroll-wrapper">
             <button class="scroll-arrow left" (click)="scrollFareCards('left')">‹</button>
@@ -4354,10 +4362,25 @@
     <!-- New Round Trip Modal (MakeMyTrip Style) -->
     <div class="custom-modal-overlay" *ngIf="showFareModalBoth" (click)="closeFareOptionsModalBothWay()">
       <div class="custom-modal makemytrip-style" (click)="$event.stopPropagation()">
+        <div class="fare-options-title">Flight Details and Fare Options available for you!</div>
+
         <button class="modal-close" (click)="closeFareOptionsModalBothWay()">&times;</button>
+        <div class="flghtfaredestdet">
+          <div class="fare-options-subtitle-line" *ngIf="selectedFlight" style="margin-top: 10px;">
+            <span class="fare-trip-details-text">
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
+              {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
+              1]?.Destination?.Airport?.CityName }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
+              {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
+              {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
+              date : "HH:mm" }}
+            </span>
+          </div>
+        </div>
         <div class="fare-options-box">
           <div class="fare-options-header">
-            <div class="fare-options-title">Flight Details and Fare Options available for you!</div>
 
             <!-- Tabs -->
             <div class="flight-tabs round-trip-tabs" style="margin-top: 15px; border-bottom: 2px solid #e0e0e0;">
@@ -4375,18 +4398,7 @@
               </div>
             </div>
 
-            <div class="fare-options-subtitle-line" *ngIf="selectedFlight" style="margin-top: 10px;">
-              <span class="fare-trip-details-text">
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
-                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
-                1]?.Destination?.Airport?.CityName }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
-                {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.DepTime | date : "HH:mm" }} -
-                {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length - 1]?.Destination?.ArrTime |
-                date : "HH:mm" }}
-              </span>
-            </div>
+
           </div>
 
           <div class="fare-scroll-wrapper">
@@ -4483,16 +4495,18 @@
       (click)="closeFareOptionsModalMultiCity()">
       <div class="custom-modal" (click)="$event.stopPropagation()">
         <button class="modal-close" (click)="closeFareOptionsModalMultiCity()">×</button>
+        <div class="flghtfaredestdet">
+          <div class="fare-options-subtitle-line" *ngIf="selectedMultiCityFlight">
+            <span class="fare-trip-details-text">{{ selectedMultiCityFlight.Origin.Airport.CityName }} → {{
+              selectedMultiCityFlight.Destination.Airport.CityName }} · {{ selectedMultiCityFlight.airline }} · {{
+              selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y" }} · {{
+              selectedMultiCityFlight.Origin.DepTime | date : "HH:mm" }} - {{
+              selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm" }}</span>
+          </div>
+        </div>
         <div class="fare-options-box">
           <div class="fare-options-header">
-            <div class="fare-options-title">Select Package</div>
-            <div class="fare-options-subtitle-line" *ngIf="selectedMultiCityFlight">
-              <span class="fare-trip-details-text">{{ selectedMultiCityFlight.Origin.Airport.CityName }} → {{
-                selectedMultiCityFlight.Destination.Airport.CityName }} · {{ selectedMultiCityFlight.airline }} · {{
-                selectedMultiCityFlight.Origin.DepTime | date : "EEE, dd MMM y" }} · {{
-                selectedMultiCityFlight.Origin.DepTime | date : "HH:mm" }} - {{
-                selectedMultiCityFlight.Destination.ArrTime | date : "HH:mm" }}</span>
-            </div>
+
           </div>
           <!-- Scrollable Fare Options -->
           <div class="fare-scroll-wrapper">
