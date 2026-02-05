@@ -6409,9 +6409,8 @@ i.fas.fa-plane-departure {
 
 /* Icon Circle */
 .info-item-compact .icon-circle {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
+  width: 30px;
+  height: 30px;
   background: linear-gradient(135deg, #2196F3, #1565C0) !important;
   border-radius: 50%;
   display: flex;
@@ -6422,7 +6421,7 @@ i.fas.fa-plane-departure {
 
 .info-item-compact .icon-circle i {
   color: #FFF;
-  font-size: 20px;
+  font-size: 14px;
 }
 
 
@@ -6473,7 +6472,7 @@ i.fas.fa-plane-departure {
 }
 
 /* Responsive Design for Important Information */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .info-card {
     padding: 24px 20px;
   }
@@ -6510,7 +6509,7 @@ i.fas.fa-plane-departure {
   .info-item-compact .item-content {
     font-size: 14px;
   }
-}
+} */
 
 /* ========================================
    Addon Services Section Styles
@@ -8512,6 +8511,10 @@ body.calendar-open-mobile {
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   .cancellation-policy-new {
+    display: none !important;
+  }
+
+  .card.info-card {
     display: none !important;
   }
 }
