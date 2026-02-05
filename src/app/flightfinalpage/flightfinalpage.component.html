@@ -983,6 +983,13 @@
             </div>
           </ng-template>
         </div>
+
+        <!-- Proceed to Payment Button - Desktop Only -->
+        <div class="addon-continue-footer desktop-only" *ngIf="isAddonsExpanded">
+          <button class="addon-proceed-btn" (click)="finalProceed()">
+            <i class="fas fa-lock"></i> PROCEED TO PAYMENT
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1226,7 +1233,7 @@
         </div>
       </div>
 
-      <button class="proceed-btn" (click)="finalProceed()">
+      <button class="proceed-btn mobile-only" (click)="finalProceed()">
         Proceed
       </button>
     </div>
@@ -2280,6 +2287,13 @@
             </div>
           </ng-template>
         </div>
+
+        <!-- Proceed to Payment Button - Desktop Only -->
+        <div class="addon-continue-footer desktop-only" *ngIf="isAddonsExpanded">
+          <button class="addon-proceed-btn" (click)="finalProceed()">
+            <i class="fas fa-lock"></i> PROCEED TO PAYMENT
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2569,7 +2583,7 @@
         </div>
       </div>
 
-      <button class="proceed-btn" (click)="finalProceed()">
+      <button class="proceed-btn mobile-only" (click)="finalProceed()">
         Proceed
       </button>
     </div>
