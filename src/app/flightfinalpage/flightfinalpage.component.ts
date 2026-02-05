@@ -2748,6 +2748,122 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }));
   }
 
+  getCancellationTimeline(flightData: any): any[] {
+    // If no policy or no departure time, fallback to empty
+    if (!flightData?.cancellationPolicy) return [];
+
+    // Attempt to find departure time from segments
+    // flightData might be flightDataDeparture (which contains Segments[][])
+    // Structure: flightData.Segments[0][0].Origin.DepTime
+    let depTimeStr = flightData.Segments?.[0]?.[0]?.Origin?.DepTime;
+
+    // If flightData is just the policy object (unlikely based on usage), we can't calculate dates.
+    // Assuming flightData is the 'flightDataDeparture' object.
+
+    if (!depTimeStr) return [];
+
+    const depTime = new Date(depTimeStr);
+    const now = new Date();
+
+    // Clone policy to avoid mutation
+    const policy = [...flightData.cancellationPolicy];
+
+    const getMinutes = (val: string, unit: string) => {
+      const v = parseFloat(val);
+      if (unit?.toLowerCase() === 'days') return v * 24 * 60;
+      return v * 60; // default to hours
+    };
+
+    // Map policy to segments [StartWindow, EndWindow] relative to Departure
+    let timeline = policy.map((p: any) => {
+      // "From 4 Hours to 365 Days" means:
+      // Window starts at Dep - 365 Days
+      // Window ends at Dep - 4 Hours
+      // We want absolute dates.
+
+      const val1 = getMinutes(p.From, p.Unit);
+      const val2 = getMinutes(p.To || '0', p.Unit || 'hours'); // '0' if To is missing (upto departure)
+
+      const startOffset = Math.max(val1, val2); // Larger offset = Earlier time
+      const endOffset = Math.min(val1, val2);   // Smaller offset = Later time
+
+      const startDate = new Date(depTime.getTime() - startOffset * 60000);
+      const endDate = new Date(depTime.getTime() - endOffset * 60000);
+
+      const priceRaw = parseFloat(p.Details);
+
+      return {
+        priceRaw,
+        priceDisplay: `₹ ${p.Details}`,
+        start: startDate,
+        end: endDate,
+        startLabel: this.formatDate(startDate),
+        endLabel: this.formatDate(endDate),
+        color: 'yellow' // default
+      };
+    });
+
+    // Sort by time
+    timeline.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+    // Filter out segments entirely in the past??
+    // User wants "Now" -> ...
+    // If a segment ended yesterday, we shouldn't show it for cancellation option??
+    // For visual completeness, we might show it but maybe not relevant.
+    // Let's filter segments that end after Now.
+    timeline = timeline.filter(t => t.end > now);
+
+    if (timeline.length === 0) return [];
+
+    // Clamp first segment start to Now if it started in the past
+    if (timeline[0].start < now) {
+      timeline[0].start = now;
+      timeline[0].startLabel = 'Now';
+    }
+
+    // Assign colors based on price gradient and position
+    const prices = timeline.map(t => t.priceRaw);
+    const minP = Math.min(...prices);
+    const maxP = Math.max(...prices);
+    const priceRange = maxP - minP;
+
+    if (prices.length === 1) {
+      timeline[0].color = 'green';
+    } else if (prices.length === 2) {
+      timeline[0].color = 'green';
+      timeline[1].color = 'red';
+    } else {
+      // For 3+ segments, use gradient based on normalized price
+      timeline.forEach((t, idx) => {
+        if (priceRange === 0) {
+          t.color = 'green'; // All same price
+        } else {
+          const normalized = (t.priceRaw - minP) / priceRange;
+          // Green: 0-0.33, Yellow: 0.33-0.67, Red: 0.67-1.0
+          if (normalized < 0.33) {
+            t.color = 'green';
+          } else if (normalized < 0.67) {
+            t.color = 'yellow';
+          } else {
+            t.color = 'red';
+          }
+        }
+      });
+    }
+
+    return timeline;
+  }
+
+  formatDate(date: Date): string {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const d = date.getDate();
+    const m = months[date.getMonth()];
+    const h = date.getHours().toString().padStart(2, '0');
+    const min = date.getMinutes().toString().padStart(2, '0');
+    return `${d} ${m}\n${h}:${min}`;
+  }
+
+
   getDateChangeRows(flightData: any): any[] {
     if (!flightData?.dateChangePolicy) return [];
     return flightData.dateChangePolicy.map((p: any) => ({

@@ -215,26 +215,32 @@
       </div>
 
       <!-- Cancellation Policy Section - Desktop Only -->
-      <div class="cancellation-policy-section"
+      <!-- Cancellation Policy Section - Timeline Design -->
+      <div class="cancellation-policy-new"
         *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
-        <div class="cancellation-header">
-          <div class="cancellation-title">Cancellation & Date Change Policy</div>
+        <div class="cancellation-header-new">
+          <div class="policy-title">Cancellation & Date Change Policy</div>
+          <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
         </div>
-        <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
-          <img [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'"
-            class="logo" />
-          <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{
-            flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1]?.Destination?.Airport?.CityCode
-            }}</span>
+
+        <div class="route-info-row">
+          <div class="route-icon"><i class="fas fa-plane"></i></div>
+          <div class="route-text">
+            {{ flightDataDeparture.Segments[0][0].Origin.Airport.CityCode }}-{{
+            flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1].Destination.Airport.CityCode
+            }}
+          </div>
         </div>
-        <div class="cancellation-criteria-header">
-          <div class="criteria-left">Cancellation Criteria</div>
-          <div class="criteria-right">Charges</div>
-        </div>
-        <div class="cancellation-rows">
-          <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-            <div class="criteria-left">{{ row.range }}</div>
-            <div class="criteria-right">{{ row.price }}</div>
+
+        <div class="timeline-wrapper">
+          <div class="penalty-label">Cancellation Penalty :</div>
+          <div class="cancel-between-label">Cancel Between (IST) :</div>
+          <div class="timeline-segment" *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
+            <div class="timeline-price">{{ seg.priceDisplay }}</div>
+            <div class="timeline-bar" [ngClass]="seg.color"></div>
+            <!-- Markers -->
+            <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+            <div class="timeline-marker end">{{ seg.endLabel }}</div>
           </div>
         </div>
       </div>
@@ -1434,67 +1440,63 @@
         </button>
       </div>
 
-      <!-- Cancellation Policy Section with Tabs - Desktop Only -->
-      <div class="makemytrip-cancellation-section roundtrip-cancellation-tabs"
+      <!-- Cancellation Policy Section - Timeline Design (Stacked for RT) -->
+      <div class="cancellation-policy-new"
         *ngIf="(flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0) || (flightDataReturn && getCancellationRows(flightDataReturn).length > 0)">
-        <div class="cancellation-header">
-          <div class="cancellation-title">Cancellation & Date Change Policy</div>
+
+        <div class="cancellation-header-new">
+          <div class="policy-title">Cancellation & Date Change Policy</div>
+          <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
         </div>
 
-        <!-- Onward / Return Tabs -->
-        <div class="cancellation-tab-headers">
-          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'onward'"
-            (click)="activePolicyTab = 'onward'">
-            Onward
-          </div>
-          <div class="cancellation-tab-header" [class.active]="activePolicyTab === 'return'"
-            (click)="activePolicyTab = 'return'">
-            Return
-          </div>
-        </div>
-
-        <!-- Onward Tab Content -->
-        <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'onward' && flightDataDeparture">
-          <div class="cancellation-airline" *ngIf="flightDataDeparture?.Segments?.[0]?.[0]">
-            <img
-              [src]="'assets/images/flightimages/' + flightDataDeparture.Segments[0][0].Airline?.AirlineCode + '.png'"
-              class="logo" />
-            <span class="airline-route">{{ flightDataDeparture.Segments[0][0].Origin?.Airport?.CityCode }}-{{
-              flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length -
-              1]?.Destination?.Airport?.CityCode }}</span>
-          </div>
-          <div class="cancellation-criteria-header">
-            <div class="criteria-left">Cancellation Criteria</div>
-            <div class="criteria-right">Charges</div>
-          </div>
-          <div class="cancellation-rows">
-            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-              <div class="criteria-left">{{ row.range }}</div>
-              <div class="criteria-right">{{ row.price }}</div>
+        <!-- Onward Flight Policy -->
+        <ng-container *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+          <!-- Route Icon Header -->
+          <div class="route-info-row">
+            <div class="route-icon" style="background: #e65100;"><i class="fas fa-plane"></i></div>
+            <div class="route-text">
+              {{ flightDataDeparture.Segments[0][0].Origin.Airport.CityCode }}-{{
+              flightDataDeparture.Segments[0][flightDataDeparture.Segments[0].length - 1].Destination.Airport.CityCode
+              }}
             </div>
           </div>
-        </div>
 
-        <!-- Return Tab Content -->
-        <div class="cancellation-tab-content" *ngIf="activePolicyTab === 'return' && flightDataReturn">
-          <div class="cancellation-airline" *ngIf="flightDataReturn?.Segments?.[0]?.[0]">
-            <img [src]="'assets/images/flightimages/' + flightDataReturn.Segments[0][0].Airline?.AirlineCode + '.png'"
-              class="logo" />
-            <span class="airline-route">{{ flightDataReturn.Segments[0][0].Origin?.Airport?.CityCode }}-{{
-              flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1]?.Destination?.Airport?.CityCode
-              }}</span>
-          </div>
-          <div class="cancellation-criteria-header">
-            <div class="criteria-left">Cancellation Criteria</div>
-            <div class="criteria-right">Charges</div>
-          </div>
-          <div class="cancellation-rows">
-            <div class="cancellation-row-item" *ngFor="let row of getCancellationRows(flightDataReturn)">
-              <div class="criteria-left">{{ row.range }}</div>
-              <div class="criteria-right">{{ row.price }}</div>
+          <!-- Timeline -->
+          <div class="timeline-wrapper"
+            style="margin-bottom: 40px; border-bottom: 1px dashed #eee; padding-bottom: 30px;">
+            <div class="penalty-label">Cancellation Penalty :</div>
+            <div class="cancel-between-label">Cancel Between (IST) :</div>
+            <div class="timeline-segment" *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
+              <div class="timeline-price">{{ seg.priceDisplay }}</div>
+              <div class="timeline-bar" [ngClass]="seg.color"></div>
+              <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+              <div class="timeline-marker end">{{ seg.endLabel }}</div>
             </div>
           </div>
-        </div>
+        </ng-container>
+
+        <!-- Return Flight Policy -->
+        <ng-container *ngIf="flightDataReturn && getCancellationRows(flightDataReturn).length > 0">
+          <div class="route-info-row">
+            <div class="route-icon" style="background: #1a237e;"><i class="fas fa-plane"
+                style="transform: rotate(180deg);"></i></div>
+            <div class="route-text">
+              {{ flightDataReturn.Segments[0][0].Origin.Airport.CityCode }}-{{
+              flightDataReturn.Segments[0][flightDataReturn.Segments[0].length - 1].Destination.Airport.CityCode }}
+            </div>
+          </div>
+
+          <div class="timeline-wrapper">
+            <div class="penalty-label">Cancellation Penalty :</div>
+            <div class="cancel-between-label">Cancel Between (IST) :</div>
+            <div class="timeline-segment" *ngFor="let seg of getCancellationTimeline(flightDataReturn); let i=index">
+              <div class="timeline-price">{{ seg.priceDisplay }}</div>
+              <div class="timeline-bar" [ngClass]="seg.color"></div>
+              <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+              <div class="timeline-marker end">{{ seg.endLabel }}</div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
 
@@ -2650,6 +2652,46 @@
       </div>
 
     </ng-container>
+
+    <!-- Cancellation Policy Section - Desktop Timeline for Multicity -->
+    <div class="cancellation-policy-new"
+      *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
+
+      <div class="cancellation-header-new">
+        <div class="policy-title">Cancellation & Date Change Policy</div>
+        <a href="#" class="view-policy-link" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+      </div>
+
+      <!-- Loop through each segment group -->
+      <ng-container *ngFor="let group of flightSegmentGroups; let groupIndex = index">
+        <ng-container *ngIf="group?.length > 0">
+          <!-- Route Icon Header -->
+          <div class="route-info-row">
+            <div class="route-icon" [style.background]="groupIndex % 2 === 0 ? '#e65100' : '#1a237e'">
+              <i class="fas fa-plane"></i>
+            </div>
+            <div class="route-text">
+              {{ group[0]?.from }}-{{ group[group.length - 1]?.to }}
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="timeline-wrapper"
+            [style.margin-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '40px' : '0'"
+            [style.border-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '1px dashed #eee' : 'none'"
+            [style.padding-bottom]="groupIndex < flightSegmentGroups.length - 1 ? '30px' : '0'">
+            <div class="penalty-label">Cancellation Penalty :</div>
+            <div class="cancel-between-label">Cancel Between (IST) :</div>
+            <div class="timeline-segment" *ngFor="let seg of getCancellationTimeline(flightDataDeparture); let i=index">
+              <div class="timeline-price">{{ seg.priceDisplay }}</div>
+              <div class="timeline-bar" [ngClass]="seg.color"></div>
+              <div class="timeline-marker start" *ngIf="i === 0">{{ seg.startLabel }}</div>
+              <div class="timeline-marker end">{{ seg.endLabel }}</div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
 
     <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
     <div class="card cancellation-policy-card-mobile">
