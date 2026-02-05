@@ -194,9 +194,7 @@ body {
 /* MMT Style - Blue Route Pill */
 .baggage-route-pill {
   background: linear-gradient(135deg, #2196F3, #1565C0);
-  border-radius: 24px;
   padding: 12px 20px;
-  margin-bottom: 20px;
   display: inline-block;
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
@@ -208,11 +206,7 @@ body {
   margin-bottom: 4px;
 }
 
-.baggage-route-pill .route-status {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 13px;
-  font-weight: 400;
-}
+
 
 /* Included Baggage Info */
 .included-baggage-info {
@@ -5580,9 +5574,7 @@ body {
     font-size: 14px;
   }
 
-  .baggage-route-pill .route-status {
-    font-size: 12px;
-  }
+
 
   .included-baggage-info {
     font-size: 13px;
@@ -8573,6 +8565,9 @@ img.seaticon {
     padding: 10px !important;
     border-radius: 10px;
   }
+
+
+
 }
 
 .terms-section.desktop-only {
@@ -8813,4 +8808,20 @@ div#oneway-section .route-info {
   border-radius: 4px;
   font-size: 12px;
   color: #856404;
+}
+
+
+@media(max-width:767px) {
+  .foobag {
+    display: flex;
+
+  }
+
+  .fare-details {
+    align-items: flex-end !important;
+  }
+
+  .trip-body {
+    padding: 20px !important;
+  }
 }

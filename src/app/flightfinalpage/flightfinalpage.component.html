@@ -3595,7 +3595,6 @@
       <div class="route-text">
         {{ flightSegments[0]?.from }}-{{ flightSegments[flightSegments.length - 1]?.to }}
       </div>
-      <div class="route-status">Selection pending</div>
     </div>
 
     <!-- Included Baggage Info -->
@@ -3635,13 +3634,16 @@
     </ng-container>
   </div>
   <div class="baggage-footer">
-    <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected
-    </div>
-    <div class="footer-right">
+    <div class="foobag">
+      <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected
+      </div>
       <div class="fare-details">
         <div class="added-to-fare">Added to fare</div>
         <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
       </div>
+    </div>
+    <div class="footer-right">
+
       <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">DONE</button>
     </div>
   </div>
