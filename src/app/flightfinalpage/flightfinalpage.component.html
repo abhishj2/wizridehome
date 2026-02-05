@@ -1337,6 +1337,24 @@
                       </div>
                     </div>
                   </div>
+
+                  <!-- Baggage Info -->
+                  <div class="baggage-info-grid">
+                    <div class="baggage-item">
+                      <span class="baggage-icon">💼</span>
+                      <div>
+                        <span class="baggage-label">Cabin Baggage:</span> {{ segment.cabin || '7 KG' }} / Adult
+                      </div>
+                    </div>
+                    <div class="baggage-item">
+                      <span class="baggage-icon">🧳</span>
+                      <div>
+                        <span class="baggage-label">Check-In Baggage:</span> {{ segment.checkIn || '15 Kilograms (1
+                        piece only)'
+                        }} / Adult
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Layover if applicable -->
@@ -1424,6 +1442,24 @@
                       </div>
                     </div>
                   </div>
+
+                  <!-- Baggage Info -->
+                  <div class="baggage-info-grid">
+                    <div class="baggage-item">
+                      <span class="baggage-icon">💼</span>
+                      <div>
+                        <span class="baggage-label">Cabin Baggage:</span> {{ segment.cabin || '7 KG' }} / Adult
+                      </div>
+                    </div>
+                    <div class="baggage-item">
+                      <span class="baggage-icon">🧳</span>
+                      <div>
+                        <span class="baggage-label">Check-In Baggage:</span> {{ segment.checkIn || '15 Kilograms (1
+                        piece only)'
+                        }} / Adult
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Layover if applicable -->
@@ -1441,35 +1477,21 @@
         </div>
       </div>
 
-      <!-- Baggage Allowance Section - Desktop Only (Onward) -->
-      <div class="makemytrip-baggage-section roundtrip-baggage-section roundtrip-desktop-baggage baggage-info"
-        *ngIf="flightSegments?.length">
-        <div class="baggage-allowance-item baggage-item">
-          <span class="baggage-icon">💼</span>
-          <div class="baggage-label baggage-text">
-            <span>Cabin Baggage: </span>
-            <span class="baggage-weight">{{ flightSegments[0]?.cabin || '7 KG' }}</span>
-            <span> / Adult</span>
-          </div>
-        </div>
-        <div class="baggage-allowance-item baggage-item">
-          <span class="baggage-icon">🧳</span>
-          <div class="baggage-label baggage-text">
-            <span>Check-In Baggage: </span>
-            <span class="baggage-weight">{{ flightSegments[0]?.checkIn || '15 Kilograms (1 piece only)' }}</span>
-            <span> / Adult</span>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Add Baggage CTA - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
           <span class="baggage-emoji">🎒</span>
-          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+          <span *ngIf="getTotalBaggagePrice() === 0">Got excess baggage? Don't stress, buy extra check-in baggage
+            allowance at fab rates!</span>
+          <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
+            for
+            ₹ {{ getTotalBaggagePrice() | number : '1.0-0' }}! Total check-in baggage is now {{ 15 +
+            getTotalBaggageWeight() }} KGs.</span>
         </div>
         <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-          ADD BAGGAGE
+          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
         </button>
       </div>
 
