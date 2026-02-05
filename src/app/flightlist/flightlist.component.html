@@ -110,58 +110,110 @@
     <!-- Search Summary Bar (matching booking-results design) -->
     <div class="search-summary" [class.sticky]="isHeaderSticky" *ngIf="flightInputData">
       <div class="container">
-        <!-- Mobile Summary (existing design) -->
+        <!-- Mobile Summary (new design) -->
         <div class="summary-content mobile-summary" [class.multicitysumm]="flightType === 'multi'">
-          <div class="summary-info">
-            <div class="route-summary">
-              <!-- Multi-City Route Display -->
-              <div class="route-locations multicity-route-display"
-                *ngIf="flightType === 'multi' && multicityTabData && multicityTabData.length > 0">
-                <div class="multicity-segment-item" *ngFor="let segment of multicityTabData; let i = index">
-                  <div class="location-group">
-                    <span class="from">{{ getMultiCityRouteOrigin(i) }}</span>
-                  </div>
-                  <i class="fas fa-plane-departure"></i>
-                  <div class="location-group">
-                    <span class="to">{{ getMultiCityRouteDestination(i) }}</span>
-                  </div>
-                  <span class="segment-separator" *ngIf="i < multicityTabData.length - 1">
-                    <span class="segment-separator-pipe">|</span>
+          <section class="m-flight-summary">
+            <!-- ROUTE BOX -->
+            <div class="m-flight-box">
+              <div class="m-flight-route-main">
+                <!-- Multi-City Route Display -->
+                <div class="m-flight-route"
+                  *ngIf="flightType === 'multi' && multicityTabData && multicityTabData.length > 0">
+                  <ng-container *ngFor="let segment of multicityTabData; let i = index">
+                    <span>{{ getMultiCityRouteOrigin(i) }}</span>
+                    ✈
+                    <span>{{ getMultiCityRouteDestination(i) }}</span>
+                    <span *ngIf="i < multicityTabData.length - 1" style="margin: 0 4px; color: #cbd5e1;">|</span>
+                  </ng-container>
+                </div>
+                <!-- One-Way / Round-Trip Route Display -->
+                <div class="m-flight-route" *ngIf="flightType !== 'multi'">
+                  <span>
+                    {{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}
+                    <small *ngIf="flightInputData['fromAirportCode']">({{ flightInputData['fromAirportCode'] }})</small>
+                  </span>
+                  ✈
+                  <span>
+                    {{ flightInputData['toCity'] || flightInputData['toAirport'] }}
+                    <small *ngIf="flightInputData['toAirportCode']">({{ flightInputData['toAirportCode'] }})</small>
                   </span>
                 </div>
+                <button class="modify-btn" *ngIf="flightType !== 'multi'" (click)="showModifyForm = !showModifyForm"
+                  title="Modify">
+                  <i class="fas fa-edit"></i>
+                </button>
               </div>
-              <!-- One-Way / Round-Trip Route Display -->
-              <div class="route-locations" *ngIf="flightType !== 'multi'">
-                <div class="location-group">
-                  <span class="from">{{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}</span>
-                  <span class="location-detail" *ngIf="flightInputData['fromAirportCode']">({{
-                    flightInputData['fromAirportCode'] }})</span>
-                </div>
-                <i class="fas fa-plane-departure"></i>
-                <div class="location-group">
-                  <span class="to">{{ flightInputData['toCity'] || flightInputData['toAirport'] }}</span>
-                  <span class="location-detail" *ngIf="flightInputData['toAirportCode']">({{
-                    flightInputData['toAirportCode'] }})</span>
-                </div>
-              </div>
-              <div class="journey-details">
-                <span class="date" *ngIf="flightType !== 'multi'">{{ flightInputData['departureDate'] | date : "d MMM,
-                  yyyy" }}</span>
-                <span class="date" *ngIf="flightType === 'round' && flightInputData['returnDate']">{{
+
+              <!-- Meta Pills -->
+              <div class="m-flight-route-meta">
+                <span class="m-flight-pill" *ngIf="flightType !== 'multi'">{{ flightInputData['departureDate'] | date :
+                  "d MMM, yyyy" }}</span>
+                <span class="m-flight-pill" *ngIf="flightType === 'round' && flightInputData['returnDate']">{{
                   flightInputData['returnDate'] | date : "d MMM, yyyy" }}</span>
-                <span class="passengers">{{ totalPassengers }} {{ totalPassengers > 1 ? 'Passengers' : 'Passenger'
+                <span class="m-flight-pill">{{ totalPassengers }} {{ totalPassengers > 1 ? 'Passenger' : 'Passenger'
                   }}</span>
-                <span class="passengers" *ngIf="modifySearchForm.get('travelClass')?.value">{{
+                <span class="m-flight-pill" *ngIf="modifySearchForm.get('travelClass')?.value">{{
                   modifySearchForm.get('travelClass')?.value }}</span>
               </div>
             </div>
-          </div>
-          <div class="summary-actions">
-            <button class="modify-btn" *ngIf="flightType !== 'multi'" (click)="showModifyForm = !showModifyForm"
-              title="Modify">
-              <i class="fas fa-edit"></i>
-            </button>
-          </div>
+
+            <!-- FILTERS BOX - Only for non-multi-city flights -->
+            <div class="m-flight-box m-flight-filter-box" *ngIf="flightType !== 'multi'">
+              <span class="m-flight-filter-chip" [class.active]="selectedStops.includes(0)"
+                (click)="toggleNonStopFilter()">Non Stop</span>
+              <span class="m-flight-filter-chip" [class.active]="showRefundableOnly"
+                (click)="toggleRefundableFilter()">Refundable</span>
+              <span class="m-flight-filter-chip" [class.active]="selectedAirlines.length > 0"
+                (click)="showMobileFilter = true; mobileFilterActiveTab = 'filter'">Airlines</span>
+              <button class="mobile-filter-icon-btn" (click)="showMobileFilter = !showMobileFilter">
+                <i class="fas fa-sliders-h"></i>
+              </button>
+            </div>
+
+            <!-- DATE STRIP - Only for one-way flights -->
+            <div class="m-flight-box m-flight-date-box"
+              *ngIf="flightType === 'oneway' && datePrices && datePrices.length > 0">
+              <div class="m-flight-date-strip-wrapper">
+                <div class="m-flight-date-strip">
+                  <!-- Month pill at the start -->
+                  <div class="m-flight-month-pill">
+                    {{ flightInputData['departureDate'] | date : "MMM" | uppercase }}
+                  </div>
+
+                  <!-- Date chips -->
+                  <button class="m-flight-date-chip" *ngFor="let item of datePrices?.slice(0, 7); let i = index"
+                    [class.active]="item.date === highlightedDate" (click)="selectDateFromSlider(item.date, i)">
+                    <span class="m-flight-date-text">{{ item.date | date : "EEE, MMM d" }}</span>
+                    <span class="m-flight-price" [ngClass]="item.date === highlightedDate ? 'blue' : 'green'">₹ {{
+                      item.price | number : "1.0-0"
+                      }}</span>
+                  </button>
+
+                  <!-- Calendar icon button -->
+                  <!-- <button class="m-flight-calendar-chip" title="Open Calendar">
+                    <div class="m-flight-calendar-grid">
+                      <span></span><span></span><span></span><span></span>
+                      <span></span><span></span><span></span><span></span>
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+            <!-- INFO BOX - Only for non-multi-city flights -->
+            <div class="m-flight-box m-flight-info-box" *ngIf="flightType !== 'multi'">
+              <span class="m-flight-sort-pill">{{ getMobileVisibleFlightsCount() }} Flights Found</span>
+              <span class="m-flight-sort-pill" (click)="showMobileFilter = true; mobileFilterActiveTab = 'sort'">
+                {{ selectedSort || 'Cheapest First' }}
+              </span>
+            </div>
+
+            <!-- NOTE -->
+            <!-- <p class="m-flight-note" *ngIf="flightType !== 'multi'">
+              🔔 Wizzride doesn't charge any convenience fee or service charge.
+            </p> -->
+          </section>
         </div>
 
         <!-- Desktop Neomorphism Summary (new design) -->

@@ -189,6 +189,275 @@ img {
   .modify-btn i {
     font-size: 14px;
   }
+
+  /* ============================= */
+  /* NEW MOBILE FLIGHT SUMMARY */
+  /* ============================= */
+  .m-flight-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  /* Shared box style */
+  .m-flight-box {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px 14px;
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  /* ============================= */
+  /* ROUTE BOX */
+  /* ============================= */
+  .m-flight-route-main {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .m-flight-route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    flex-wrap: wrap;
+  }
+
+  .m-flight-route small {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  /* Meta pills below route */
+  .m-flight-route-meta {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .m-flight-pill {
+    height: 20px;
+    padding: 0 12px;
+    background: #f1f5f9;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+  }
+
+  /* ============================= */
+  /* FILTERS BOX */
+  /* ============================= */
+  .m-flight-filter-box {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .m-flight-filter-box::-webkit-scrollbar {
+    display: none;
+  }
+
+  .m-flight-filter-chip {
+    height: 20px;
+    padding: 0 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    color: #64748b;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .m-flight-filter-chip.active {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+  }
+
+  .m-flight-filter-chip:hover {
+    border-color: #0f172a;
+    color: #0f172a;
+  }
+
+  /* Filter icon button */
+  .mobile-filter-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: none;
+    background: #eef6f5;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: #0f172a;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-filter-icon-btn:hover {
+    background: #d6ebe9;
+  }
+
+  /* ============================= */
+  /* DATE STRIP (commented out in HTML) */
+  /* ============================= */
+  .m-flight-date-box {
+    background: #f0fdfa;
+    border: 1px solid #ccfbf1;
+  }
+
+  .m-flight-date-strip-wrapper {
+    overflow-x: auto;
+  }
+
+  .m-flight-date-strip-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .m-flight-date-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: max-content;
+  }
+
+  /* Month pill (vertical text) */
+  .m-flight-month-pill {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 5px;
+    border-radius: 8px;
+  }
+
+  /* Date chip */
+  .m-flight-date-chip {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 6px 10px;
+    min-width: 100px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .m-flight-date-chip.active {
+    border-color: #2f80ff;
+    background: #f1f6ff;
+  }
+
+  .m-flight-date-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .m-flight-price {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .m-flight-price.green {
+    color: #0f766e;
+  }
+
+  .m-flight-price.blue {
+    color: #2f80ff;
+  }
+
+  /* Calendar chip */
+  .m-flight-calendar-chip {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 10px;
+    border: none;
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+  }
+
+  .m-flight-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 6px);
+    grid-template-rows: repeat(3, 6px);
+    gap: 3px;
+  }
+
+  .m-flight-calendar-grid span {
+    width: 6px;
+    height: 6px;
+    background: #38bdf8;
+    border-radius: 2px;
+  }
+
+  .m-flight-calendar-grid span:nth-child(odd) {
+    background: #67e8f9;
+  }
+
+  /* ============================= */
+  /* INFO BOX */
+  /* ============================= */
+  .m-flight-info-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #64748b;
+    gap: 12px;
+  }
+
+  .m-flight-sort-pill {
+    background: #ffffff;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .m-flight-sort-pill:hover {
+    background: #f1f5f9;
+  }
+
+  /* ============================= */
+  /* NOTE */
+  /* ============================= */
+  .m-flight-note {
+    font-size: 10px;
+    color: #0f766e;
+    margin: 0;
+    text-align: center;
+  }
 }
 
 /* Desktop container fixes */
@@ -1791,6 +2060,10 @@ img {
 
   .date-slider-scroll-wrapper::-webkit-scrollbar-thumb:hover {
     background: #006666;
+  }
+
+  .date-slider-container {
+    display: none !important;
   }
 }
 
@@ -4601,6 +4874,18 @@ img {
     display: none;
   }
 }
+
+/* Hide old mobile filter sections - now integrated into m-flight-summary */
+@media (max-width: 768px) {
+  .mobile-filter-chips-wrapper {
+    display: none;
+  }
+
+  .mobile-results-summary {
+    display: none;
+  }
+}
+
 
 /* ================= MOBILE FILTER POPUP (Matching working design) ================= */
 @media (max-width: 768px) {
@@ -8579,6 +8864,18 @@ button.scroll-arrow {
     font-size: 9px;
     color: #aaa;
   }
+
+  .m-flight-box.m-flight-filter-box {
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .m-flight-box.m-flight-info-box {
+    background: none !important;
+    padding: 0 !Important;
+    box-shadow: none;
+  }
 }
 
 .multicity-summary-footer {
@@ -8613,4 +8910,5 @@ button.scroll-arrow {
   .fare-trip-details-text {
     padding-bottom: 10px;
   }
+
 }
