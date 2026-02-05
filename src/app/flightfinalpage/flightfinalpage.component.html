@@ -220,7 +220,7 @@
         *ngIf="flightDataDeparture && getCancellationRows(flightDataDeparture).length > 0">
         <div class="cancellation-header-new">
           <div class="policy-title">Cancellation & Date Change Policy</div>
-          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+          <a href="#" class="view-policy-btn" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
         </div>
 
         <div class="route-info-row">
@@ -1030,6 +1030,22 @@
 
         <!-- Proceed to Payment Button - Desktop Only -->
         <div class="addon-continue-footer desktop-only" *ngIf="isAddonsExpanded">
+          <!-- Terms Checkbox -->
+          <div class="terms-section desktop-only" style="margin-bottom: 15px; text-align: left;">
+            <label class="terms-checkbox">
+              <input type="checkbox" [(ngModel)]="termsAgreed" />
+              <span class="checkmark"></span>
+              <span class="terms-text">
+                I understand and agree with the
+                <span class="link-text" (click)="showFareRules = true">Fare Rules</span>, the
+                <a class="link-text" href="https://wizzride.com/cancellationpolicy/privacypolicy" target="_blank"
+                  rel="noopener noreferrer">Privacy Policy</a>, the
+                <a class="link-text" href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank"
+                  rel="noopener noreferrer">User Agreement</a>
+                & the Terms of Service of Wizzride.
+              </span>
+            </label>
+          </div>
           <button class="addon-proceed-btn" (click)="finalProceed()">
             <i class="fas fa-lock"></i> PROCEED TO PAYMENT
           </button>
@@ -1119,7 +1135,7 @@
     </div>
 
     <!-- Terms and Conditions Card -->
-    <div class="card">
+    <div class="card mobile-only">
       <div class="terms-section">
         <label class="terms-checkbox">
           <input type="checkbox" [(ngModel)]="termsAgreed" />
@@ -1461,7 +1477,7 @@
 
         <div class="cancellation-header-new">
           <div class="policy-title">Cancellation & Date Change Policy</div>
-          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+          <a href="#" class="view-policy-btn" (click)=" showFareRules=true; $event.preventDefault()">View Policy</a>
         </div>
 
         <!-- Onward Flight Policy -->
@@ -2339,6 +2355,22 @@
 
         <!-- Proceed to Payment Button - Desktop Only -->
         <div class="addon-continue-footer desktop-only" *ngIf="isAddonsExpanded">
+          <!-- Terms Checkbox -->
+          <div class="terms-section desktop-only" style="margin-bottom: 15px; text-align: left;">
+            <label class="terms-checkbox">
+              <input type="checkbox" [(ngModel)]="termsAgreed" />
+              <span class="checkmark"></span>
+              <span class="terms-text">
+                I understand and agree with the
+                <span class="link-text" (click)="showFareRules = true">Fare Rules</span>, the
+                <a class="link-text" href="https://wizzride.com/cancellationpolicy/privacypolicy" target="_blank"
+                  rel="noopener noreferrer">Privacy Policy</a>, the
+                <a class="link-text" href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank"
+                  rel="noopener noreferrer">User Agreement</a>
+                & the Terms of Service of Wizzride.
+              </span>
+            </label>
+          </div>
           <button class="addon-proceed-btn" (click)="finalProceed()">
             <i class="fas fa-lock"></i> PROCEED TO PAYMENT
           </button>
@@ -2518,7 +2550,7 @@
     </div>
 
     <!-- Terms and Conditions Card -->
-    <div class="card">
+    <div class="card mobile-only">
       <div class="terms-section">
         <label class="terms-checkbox">
           <input type="checkbox" [(ngModel)]="termsAgreed" />
@@ -2736,7 +2768,7 @@
 
       <div class="cancellation-header-new">
         <div class="policy-title">Cancellation & Date Change Policy</div>
-        <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
+        <a href="#" class="view-policy-btn" (click)="showFareRules = true; $event.preventDefault()">View Policy</a>
       </div>
 
       <!-- Loop through each segment group -->
@@ -3381,7 +3413,7 @@
     </div>
 
     <!-- Terms and Conditions Card (New) -->
-    <div class="card" id="terms-card">
+    <div class="card mobile-only" id="terms-card">
       <div class="terms-section">
         <label class="terms-checkbox">
           <input type="checkbox" [(ngModel)]="termsAgreed" />
@@ -3484,6 +3516,22 @@
           <span class="fare-total-label">Total Amount</span>
           <span class="fare-total-value">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
         </div>
+      </div>
+      <!-- Terms Checkbox -->
+      <div class="terms-section desktop-only" style="margin-bottom: 15px; text-align: left;">
+        <label class="terms-checkbox">
+          <input type="checkbox" [(ngModel)]="termsAgreed" />
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            I understand and agree with the
+            <span class="link-text" (click)="showFareRules = true">Fare Rules</span>, the
+            <a class="link-text" href="https://wizzride.com/cancellationpolicy/privacypolicy" target="_blank"
+              rel="noopener noreferrer">Privacy Policy</a>, the
+            <a class="link-text" href="https://wizzride.com/cancellationpolicy/useragreement" target="_blank"
+              rel="noopener noreferrer">User Agreement</a>
+            & the Terms of Service of Wizzride.
+          </span>
+        </label>
       </div>
       <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
         Proceed

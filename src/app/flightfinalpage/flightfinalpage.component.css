@@ -96,7 +96,8 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 20px auto;
+  margin: 0px 0 10px !important;
+
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -492,7 +493,8 @@ body {
   font-size: 13px;
 }
 
-.view-rules {
+.view-rules,
+.view-policy-btn {
   color: #10b981;
   text-decoration: none;
   font-size: 13px !important;
@@ -1619,14 +1621,14 @@ body {
 .terms-checkbox {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 5px;
   cursor: pointer;
+  align-items: center
 }
 
 .terms-checkbox input[type="checkbox"] {
-  margin-top: 4px;
-  width: 18px;
-  height: 18px;
+  width: 10px;
+  height: 10px;
   cursor: pointer;
 }
 
@@ -6514,7 +6516,6 @@ i.fas.fa-plane-departure {
 .info-item-compact .item-content li {
   position: relative;
   padding-left: 28px;
-  margin-bottom: 8px;
   line-height: 1.7;
 }
 
@@ -8167,6 +8168,9 @@ body.calendar-open-mobile {
 .addon-continue-footer {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
 
 .addon-continue-btn {
@@ -8560,4 +8564,18 @@ body.calendar-open-mobile {
 img.seaticon {
   width: 30px;
   height: 30px;
+}
+
+@media(min-width:767px) {
+  .fare-total-amount {
+    background: #f7f8f9 !important;
+    margin-top: 0 !important;
+    padding: 10px !important;
+    border-radius: 10px;
+  }
+}
+
+.terms-section.desktop-only {
+  padding: 0 !important;
+  margin-bottom: 0px !important;
 }
