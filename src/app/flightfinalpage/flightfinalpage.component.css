@@ -8579,3 +8579,49 @@ img.seaticon {
   padding: 0 !important;
   margin-bottom: 0px !important;
 }
+
+/* Seats/Meals Step Footer with Skip Option */
+.seats-action-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 15px 0 !important;
+  width: 100% !important;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 15px;
+  flex-direction: row !important;
+}
+
+.primary-continue-btn {
+  background: #3b82f6 !important;
+  /* Bright Blue */
+  color: white !important;
+  border: none !important;
+  padding: 12px 35px !important;
+  border-radius: 25px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5) !important;
+}
+
+.primary-continue-btn:hover {
+  background: #2563eb !important;
+}
+
+.skip-link {
+  color: #3b82f6 !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+}
+
+.skip-link:hover {
+  text-decoration: underline !important;
+}
+
+div#oneway-section .route-info {
+  margin-bottom: 20px;
+}
