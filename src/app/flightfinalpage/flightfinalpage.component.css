@@ -5188,7 +5188,7 @@ body {
   /* Premium Modal Body */
   .trip-body,
   .gst-body {
-    padding: 32px;
+    padding: 10px;
   }
 
   /* Enhanced Flight Cards Container */
@@ -8585,9 +8585,8 @@ img.seaticon {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  width: 100% !important;
   border-top: 1px solid #f1f5f9;
-  margin-top: 0px 40px;
+  margin: 0px 40px;
   flex-direction: row !important;
 }
 

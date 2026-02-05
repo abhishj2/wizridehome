@@ -2798,18 +2798,32 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   getCancellationRows(flightData: any): any[] {
     if (!flightData?.cancellationPolicy) return [];
-    return flightData.cancellationPolicy.map((p: any) => ({
-      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
-      price: `₹ ${p.Details}`
-    }));
+    return flightData.cancellationPolicy.map((p: any) => {
+      const unit = p.Unit ? p.Unit.toLowerCase() : '';
+      const from = p.From !== undefined && p.From !== null ? p.From : '0';
+      const to = p.To !== undefined && p.To !== null ? p.To : 'departure';
+      const timeFrame = `${from} ${unit} to ${to} ${unit}`.trim();
+
+      return {
+        range: timeFrame,
+        price: `₹ ${p.Details}`
+      };
+    });
   }
 
   getDateChangeRows(flightData: any): any[] {
     if (!flightData?.dateChangePolicy) return [];
-    return flightData.dateChangePolicy.map((p: any) => ({
-      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
-      price: `₹ ${p.Details}`
-    }));
+    return flightData.dateChangePolicy.map((p: any) => {
+      const unit = p.Unit ? p.Unit.toLowerCase() : '';
+      const from = p.From !== undefined && p.From !== null ? p.From : '0';
+      const to = p.To !== undefined && p.To !== null ? p.To : 'departure';
+      const timeFrame = `${from} ${unit} to ${to} ${unit}`.trim();
+
+      return {
+        range: timeFrame,
+        price: `₹ ${p.Details}`
+      };
+    });
   }
 
   toggleFareRuleLeg(index: number): void {
