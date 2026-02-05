@@ -719,7 +719,7 @@
       <div class="addon-services-header">
         <div class="addon-header-left">
           <div class="addon-title">Addon Services</div>
-          <div class="addon-subtext">Seats & Meals · Cabs · Add ons</div>
+          <div class="addon-subtext">Seats & Meals · Add ons</div>
         </div>
       </div>
 
@@ -727,7 +727,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <img src="assets/images/seat.png" class="seaticon" alt="seaticon">
+            <img src="assets/images/addon.png" class="seaticon" alt="seaticon">
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -958,34 +958,15 @@
 
           <!-- Inline continue inside Seats & Meals -->
           <div class="addon-continue-footer">
-            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO CABS</button>
+            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
           </div>
         </div>
       </div>
 
-      <!-- Cabs Section -->
-      <div class="addon-section cabs-section" [class.expanded]="isCabsExpanded" [class.locked]="addonUnlockStep < 2">
-        <div class="addon-section-header" (click)="toggleCabsSection()">
-          <div class="addon-section-title">
-            <img src="assets/images/seat.png" alt="seaticon" class="seaticon" />
-            <span>Cabs</span>
-          </div>
-          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isCabsExpanded"></i>
-        </div>
-        <div class="addon-section-content" *ngIf="isCabsExpanded">
-          <div class="addon-placeholder">
-            <p>Cab services are not available for this journey.</p>
-          </div>
-        </div>
-
-        <div class="addon-continue-footer" *ngIf="isCabsExpanded">
-          <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
-        </div>
-      </div>
 
       <!-- Add-ons Section (Special Services) -->
       <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded"
-        [class.locked]="addonUnlockStep < 3">
+        [class.locked]="addonUnlockStep < 2">
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
             <img src="assets/images/addon.png" class="seaticon" alt="addonicon" />
@@ -2015,7 +1996,7 @@
       <div class="addon-services-header">
         <div class="addon-header-left">
           <div class="addon-title">Addon Services</div>
-          <div class="addon-subtext">Seats & Meals · Cabs · Add ons</div>
+          <div class="addon-subtext">Seats & Meals · Add ons</div>
         </div>
       </div>
 
@@ -2023,7 +2004,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <img src="assets/images/seat.png" alt="seaticon" class="seaticon" />
+            <img src="assets/images/addon.png" alt="addonicon" class="seaticon" />
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -2286,37 +2267,18 @@
 
           <!-- Inline continue inside Seats & Meals -->
           <div class="addon-continue-footer">
-            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO CABS</button>
+            <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
           </div>
         </div>
       </div>
 
-      <!-- Cabs Section -->
-      <div class="addon-section cabs-section" [class.expanded]="isCabsExpanded" [class.locked]="addonUnlockStep < 2">
-        <div class="addon-section-header" (click)="toggleCabsSection()">
-          <div class="addon-section-title">
-            <i class="fas fa-car"></i>
-            <span>Cabs</span>
-          </div>
-          <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isCabsExpanded"></i>
-        </div>
-        <div class="addon-section-content" *ngIf="isCabsExpanded">
-          <div class="addon-placeholder">
-            <p>Cab services are not available for this journey.</p>
-          </div>
-        </div>
-
-        <div class="addon-continue-footer" *ngIf="isCabsExpanded">
-          <button class="addon-continue-btn" (click)="onAddonContinue()">CONTINUE TO ADD ONS</button>
-        </div>
-      </div>
 
       <!-- Add-ons Section (Special Services) -->
       <div class="addon-section addons-section" [class.expanded]="isAddonsExpanded"
-        [class.locked]="addonUnlockStep < 3">
+        [class.locked]="addonUnlockStep < 2">
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
-            <i class="fas fa-plus-circle"></i>
+            <img src="assets/images/addon.png" alt="addonicon" class="seaticon" />
             <span>Add ons</span>
             <span class="addon-subtitle">Flight Delay Insurance, Baggage Courier Service</span>
           </div>
