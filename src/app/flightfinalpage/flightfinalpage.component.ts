@@ -2750,7 +2750,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
 
   getCancellationTimeline(flightData: any): any[] {
     // If no policy or no departure time, fallback to empty
-    if (!flightData?.cancellationPolicy) return [];
+    if (!flightData?.cancellationPolicy) {
+      console.log('No cancellation policy found in flightData');
+      return [];
+    }
 
     // Attempt to find departure time from segments
     // flightData might be flightDataDeparture (which contains Segments[][])
@@ -2760,7 +2763,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // If flightData is just the policy object (unlikely based on usage), we can't calculate dates.
     // Assuming flightData is the 'flightDataDeparture' object.
 
-    if (!depTimeStr) return [];
+    if (!depTimeStr) {
+      console.log('No departure time found in flightData.Segments');
+      return [];
+    }
 
     const depTime = new Date(depTimeStr);
     const now = new Date();
@@ -2806,14 +2812,16 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     // Sort by time
     timeline.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-    // Filter out segments entirely in the past??
-    // User wants "Now" -> ...
-    // If a segment ended yesterday, we shouldn't show it for cancellation option??
-    // For visual completeness, we might show it but maybe not relevant.
-    // Let's filter segments that end after Now.
+    // Filter out segments entirely in the past
+    // Only filter if the segment ended BEFORE now
+    // Keep segments that are ongoing or in the future
     timeline = timeline.filter(t => t.end > now);
 
-    if (timeline.length === 0) return [];
+    if (timeline.length === 0) {
+      console.log('No valid timeline segments after filtering (all segments may be in the past)');
+      console.log('Departure time:', depTime, 'Current time:', now);
+      return [];
+    }
 
     // Clamp first segment start to Now if it started in the past
     if (timeline[0].start < now) {

@@ -189,6 +189,7 @@ h2 {
 
 .city-suggestions.active {
     overflow-x: hidden;
+    width: max-content !important;
 }
 
 /* Booking Form */
@@ -659,6 +660,7 @@ h2 {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     min-height: 50px;
     max-width: max-content;
+
 }
 
 .city-suggestions.active {
@@ -675,6 +677,7 @@ h2 {
     display: flex;
     gap: 12px;
     align-items: flex-start;
+    justify-content: space-between;
 }
 
 .city-suggestion:hover {
