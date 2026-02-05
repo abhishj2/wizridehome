@@ -7466,9 +7466,8 @@ button.continue-btn-main,
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 20px;
+
   padding-top: 16px;
-  border-top: 1px solid #e9ecef;
 }
 
 .passenger-continue-wrapper .continue-btn-main {
@@ -8543,4 +8542,22 @@ body.calendar-open-mobile {
 
 .cangrid {
   display: grid;
+}
+
+/* GST Section Inside Passenger Card */
+.gst-section-desktop {
+  margin-top: 30px;
+}
+
+
+.gst-section-title {
+  font-size: 20px !important;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 20px !important;
+}
+
+img.seaticon {
+  width: 30px;
+  height: 30px;
 }
