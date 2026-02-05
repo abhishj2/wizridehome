@@ -727,7 +727,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <img src="assets/images/addon.png" class="seaticon" alt="seaticon">
+            <img src="assets/images/seat.png" class="seaticon" alt="seaticon">
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -737,12 +737,12 @@
           <div class="seats-meals-tabs">
             <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
               (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
-              <img src="assets/images/seat.png" alt="seaticon" class="seaticon" />
+              <img src="assets/images/seatwithoutfood.png" alt="seaticon" class="seaticon" />
               <span>Seats</span>
             </div>
             <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
               (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
-              <i class="fas fa-utensils"></i>
+              <img src="assets/images/flightmeals.png" alt="mealicon" class="seaticon">
               <span>Meals</span>
             </div>
           </div>
@@ -2004,7 +2004,7 @@
       <div class="addon-section" [class.expanded]="isSeatsExpanded" [class.locked]="addonUnlockStep < 1">
         <div class="addon-section-header" (click)="toggleSeatsSection()">
           <div class="addon-section-title">
-            <img src="assets/images/addon.png" alt="addonicon" class="seaticon" />
+            <img src="assets/images/seat.png" alt="addonicon" class="seaticon" />
             <span>Seats & Meals</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isSeatsExpanded"></i>
@@ -2014,12 +2014,12 @@
           <div class="seats-meals-tabs">
             <div class="tab-header" [class.active]="activeSeatsTab === 'seats'"
               (click)="activeSeatsTab = 'seats'; $event.stopPropagation()">
-              <img src="assets/images/seat.png" alt="seaticon" class="seaticon">
+              <img src="assets/images/seatwithoutfood.png" alt="seaticon" class="seaticon">
               <span>Seats</span>
             </div>
             <div class="tab-header" [class.active]="activeSeatsTab === 'meals'"
               (click)="activeSeatsTab = 'meals'; $event.stopPropagation()">
-              <img src="assets/images/meal.png" alt="mealicon" class="seaticon">
+              <img src="assets/images/flightmeals.png" alt="mealicon" class="seaticon">
               <span>Meals</span>
             </div>
           </div>
