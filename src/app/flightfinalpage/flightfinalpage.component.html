@@ -203,14 +203,15 @@
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
           <span class="baggage-emoji">🎒</span>
-          <span *ngIf="baggageTotal === 0">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab
-            rates!</span>
-          <span *ngIf="baggageTotal > 0">{{ getTotalOneWayBaggageCount() }} KGs of extra baggage added on your trip for
-            ₹ {{ baggageTotal | number : '1.0-0' }}! Total check-in baggage is now {{ 15 + getTotalOneWayBaggageCount()
-            }} KGs.</span>
+          <span *ngIf="getTotalBaggagePrice() === 0">Got excess baggage? Don't stress, buy extra check-in baggage
+            allowance at fab rates!</span>
+          <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
+            for
+            ₹ {{ getTotalBaggagePrice() | number : '1.0-0' }}! Total check-in baggage is now {{ 15 +
+            getTotalBaggageWeight() }} KGs.</span>
         </div>
         <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-          {{ baggageTotal > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
+          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
         </button>
       </div>
 

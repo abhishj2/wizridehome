@@ -2627,10 +2627,63 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     return Object.values(this.baggageCounts).reduce((a: number, b: number) => a + b, 0);
   }
 
+  getTotalOneWayBaggageWeight(): number {
+    let totalWeight = 0;
+    if (this.baggageOptions) {
+      this.baggageOptions.forEach((option: any) => {
+        const key = option.kgs || option.Code;
+        const count = this.baggageCounts[key] || 0;
+        if (count > 0) {
+          const weight = option.kgs || option.Weight || 0;
+          totalWeight += (weight * count);
+        }
+      });
+    }
+    return totalWeight;
+  }
+
   getTotalRoundTripBaggageCount(): number {
     const onwardTotal = Object.values(this.onwardBaggageCounts).reduce((a: number, b: number) => a + b, 0);
     const returnTotal = Object.values(this.returnBaggageCounts).reduce((a: number, b: number) => a + b, 0);
     return onwardTotal + returnTotal;
+  }
+
+  getTotalRoundTripBaggageWeight(): number {
+    let totalWeight = 0;
+
+    // Onward
+    if (this.baggageOptions) {
+      this.baggageOptions.forEach((option: any) => {
+        const key = option.kgs || option.Code;
+        const count = this.onwardBaggageCounts[key] || 0;
+        if (count > 0) {
+          const weight = option.kgs || option.Weight || 0;
+          totalWeight += (weight * count);
+        }
+      });
+    }
+
+    // Return
+    if (this.baggageOptionsReturn) {
+      this.baggageOptionsReturn.forEach((option: any) => {
+        const key = option.kgs || option.Code;
+        const count = this.returnBaggageCounts[key] || 0;
+        if (count > 0) {
+          const weight = option.kgs || option.Weight || 0;
+          totalWeight += (weight * count);
+        }
+      });
+    }
+
+    return totalWeight;
+  }
+
+  getTotalBaggageWeight(): number {
+    return this.tripType === 'roundtrip' ? this.getTotalRoundTripBaggageWeight() : this.getTotalOneWayBaggageWeight();
+  }
+
+  getTotalBaggagePrice(): number {
+    return this.tripType === 'roundtrip' ? (this.baggageTotal + this.baggageTotalReturn) : this.baggageTotal;
   }
 
   canAddMoreBaggage(): boolean {
