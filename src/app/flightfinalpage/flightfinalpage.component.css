@@ -2023,7 +2023,7 @@ body {
 }
 
 .trip-body {
-  padding: 24px;
+  padding: 10px;
   padding-bottom: 32px;
 }
 
@@ -4540,7 +4540,7 @@ body {
 
   /* Trip Body - Better spacing on desktop */
   .trip-body {
-    padding: 24px 32px;
+    padding: 10px;
   }
 
   /* Trip Flight - Enhanced styling for desktop */
@@ -8623,4 +8623,195 @@ img.seaticon {
 
 div#oneway-section .route-info {
   margin-bottom: 20px;
+}
+
+/* Fare Rules Table Styles */
+.fare-rules-content {
+  padding: 20px;
+}
+
+.fare-rules-section {
+  margin-bottom: 30px;
+}
+
+.fare-rules-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fare-rules-title i {
+  color: #2196F3;
+}
+
+.fare-table-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fare-rules-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.fare-rules-table th {
+  background-color: #f8f9fa;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.fare-rules-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #212529;
+}
+
+.fare-rules-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fare-rules-table .sub-header {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #868e96;
+  margin-top: 4px;
+  text-transform: none;
+}
+
+
+/* New Fare Rules Tab Structure */
+.fare-rule-tabs {
+  display: flex;
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 20px;
+}
+
+.fare-rule-tab {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.fare-rule-tab.active {
+  color: #2196F3;
+}
+
+.fare-rule-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #2196F3;
+}
+
+/* Fare Rule Accordion Card */
+.fare-rule-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.fare-rule-card.expanded {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #ced4da;
+}
+
+.fare-rule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.fare-rule-header:hover {
+  background: #f8f9fa;
+}
+
+.fare-rule-airline-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fare-rule-airline-info img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.fare-rule-route {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.fare-rule-toggle-btn {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2196F3;
+  background: transparent;
+  border: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.fare-rule-body {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  background: #ffffff;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table overrides for this specific view */
+.fare-rules-table th {
+  background-color: #f1f3f5;
+  color: #495057;
+  font-size: 13px;
+}
+
+.fare-rules-table td {
+  font-size: 14px;
+}
+
+.fare-rule-footer-note {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #856404;
 }

@@ -222,6 +222,10 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   activeRoundBaggageTab: 'onward' | 'return' = 'onward';
   fareTab: 'onward' | 'return' = 'onward';
 
+  // Fare Rules Modal state (New Design)
+  activeFareRuleTab: 'cancellation' | 'datechange' = 'cancellation';
+  expandedFareRuleLeg: number = 0; // Index of the expanded leg
+
   // Passenger Arrays (aliases for mobile template compatibility)
   get adults() { return this.travellers; }
   // Note: children and infants are already defined as properties above
@@ -2800,6 +2804,72 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
     }));
   }
 
+  getDateChangeRows(flightData: any): any[] {
+    if (!flightData?.dateChangePolicy) return [];
+    return flightData.dateChangePolicy.map((p: any) => ({
+      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
+      price: `₹ ${p.Details}`
+    }));
+  }
+
+  toggleFareRuleLeg(index: number): void {
+    if (this.expandedFareRuleLeg === index) {
+      // Optional: allow collapsing. For now, keep somewhat accordion style.
+      // this.expandedFareRuleLeg = -1; 
+    } else {
+      this.expandedFareRuleLeg = index;
+    }
+  }
+
+  getFareRuleLegs(): any[] {
+    const legs = [];
+
+    // helper to get route string and airline info
+    const getLegInfo = (segments: any[]) => {
+      if (!segments || segments.length === 0) return { label: '', logo: '', airline: '' };
+      const first = segments[0];
+      const last = segments[segments.length - 1];
+      return {
+        label: `${first.originCode}-${last.destinationCode}`,
+        logo: first.logo || 'assets/images/flightimages/default.png',
+        airline: first.airline || ''
+      };
+    };
+
+    // 1. Onward Leg
+    if (this.flightDataDeparture) {
+      const info = getLegInfo(this.flightSegments);
+      const rows = this.activeFareRuleTab === 'cancellation'
+        ? this.getCancellationRows(this.flightDataDeparture)
+        : this.getDateChangeRows(this.flightDataDeparture);
+
+      // Push if we have a valid policy or at least fallback text
+      legs.push({
+        ...info,
+        rows: rows,
+        htmlText: this.fareRuleText,
+        isReturn: false
+      });
+    }
+
+    // 2. Return Leg (if roundtrip)
+    if (this.tripType === 'roundtrip' && this.flightDataReturn) {
+      const info = getLegInfo(this.flightSegmentsReturn);
+      const rows = this.activeFareRuleTab === 'cancellation'
+        ? this.getCancellationRows(this.flightDataReturn)
+        : this.getDateChangeRows(this.flightDataReturn);
+
+      legs.push({
+        ...info,
+        rows: rows,
+        htmlText: this.fareRuleTextReturn,
+        isReturn: true
+      });
+    }
+
+    return legs;
+  }
+
   getCancellationTimeline(flightData: any): any[] {
     // If no policy or no departure time, fallback to empty
     if (!flightData?.cancellationPolicy) {
@@ -2924,13 +2994,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   }
 
 
-  getDateChangeRows(flightData: any): any[] {
-    if (!flightData?.dateChangePolicy) return [];
-    return flightData.dateChangePolicy.map((p: any) => ({
-      range: `${p.From} ${p.Unit?.toLowerCase()} to ${p.To || 'departure'} ${p.Unit?.toLowerCase()}`,
-      price: `₹ ${p.Details}`
-    }));
-  }
+
 
   calculateDayChange(arrDate: Date, depDate: Date): string {
     if (!arrDate || !depDate) return '';

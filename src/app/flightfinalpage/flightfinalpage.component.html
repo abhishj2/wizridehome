@@ -4106,27 +4106,63 @@
     <button class="modal-close-btn" (click)="showFareRules = false">×</button>
   </div>
   <div class="trip-body">
-    <div class="fare-tabs" *ngIf="tripType === 'roundtrip'">
-      <div class="fare-tab" [class.fare-tab-active]="fareTab === 'onward'" (click)="fareTab = 'onward'">
-        Onward
+    <!-- Top Tabs: Cancellation vs Date Change -->
+    <div class="fare-rule-tabs">
+      <div class="fare-rule-tab" [class.active]="activeFareRuleTab === 'cancellation'"
+        (click)="activeFareRuleTab = 'cancellation'">
+        Cancellation Charges
       </div>
-      <div class="fare-tab" [class.fare-tab-active]="fareTab === 'return'" (click)="fareTab = 'return'">
-        Return
-      </div>
-    </div>
-    <div *ngIf="tripType === 'roundtrip'" class="fare-tab-panels">
-      <div *ngIf="fareTab === 'onward'" class="fare-tab-panel">
-        <div class="fare-info-text" *ngIf="fareRuleText" [innerHTML]="fareRuleText"></div>
-        <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
-      </div>
-      <div *ngIf="fareTab === 'return'" class="fare-tab-panel">
-        <div class="fare-info-text" *ngIf="fareRuleTextReturn" [innerHTML]="fareRuleTextReturn"></div>
-        <div class="fare-info-text" *ngIf="!fareRuleTextReturn">Fare rules not available.</div>
+      <div class="fare-rule-tab" [class.active]="activeFareRuleTab === 'datechange'"
+        (click)="activeFareRuleTab = 'datechange'">
+        Date change charges
       </div>
     </div>
-    <div *ngIf="tripType !== 'roundtrip'">
-      <div class="fare-info-text" *ngIf="fareRuleText" [innerHTML]="fareRuleText"></div>
-      <div class="fare-info-text" *ngIf="!fareRuleText">Fare rules not available.</div>
+
+    <!-- Accordion Cards for each Leg -->
+    <div *ngFor="let leg of getFareRuleLegs(); let i = index" class="fare-rule-card"
+      [class.expanded]="expandedFareRuleLeg === i">
+      <!-- Header -->
+      <div class="fare-rule-header" (click)="toggleFareRuleLeg(i)">
+        <div class="fare-rule-airline-info">
+          <img [src]="leg.logo" alt="Airline Logo">
+          <div class="fare-rule-route">{{ leg.label }}</div>
+        </div>
+        <button class="fare-rule-toggle-btn">
+          {{ expandedFareRuleLeg === i ? 'Hide' : 'Show' }}
+        </button>
+      </div>
+
+      <!-- Body (Table) -->
+      <div class="fare-rule-body" *ngIf="expandedFareRuleLeg === i">
+        <div class="fare-table-container" *ngIf="leg.rows && leg.rows.length > 0">
+          <table class="fare-rules-table">
+            <thead>
+              <tr>
+                <th>Time frame<br><span class="sub-header">(From Scheduled Flight departure)</span></th>
+                <th>Airline Fee<br><span class="sub-header">(Per passenger)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of leg.rows">
+                <td>{{ row.range }}</td>
+                <td>{{ row.price }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Fallback Text -->
+        <div *ngIf="!leg.rows || leg.rows.length === 0">
+          <div class="fare-info-text" *ngIf="leg.htmlText" [innerHTML]="leg.htmlText"></div>
+          <div class="fare-info-text" *ngIf="!leg.htmlText">Fare rules not available.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fare-rule-footer-note">
+      *Important: The Airline fee is indicative. Wizzride does not guarantee the accuracy of this information. All
+      fees
+      mentioned are per passenger. All refunds are subject to Airline approval.
     </div>
   </div>
   <div class="trip-footer">
