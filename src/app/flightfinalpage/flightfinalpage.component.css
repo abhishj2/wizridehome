@@ -9,36 +9,6 @@ body {
   width: 100%;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 32px;
-  color: #6c757d;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-.close-btn:hover {
-  background: #f8f9fa;
-  color: #212529;
-}
-
-
-
-.note-text {
-  font-size: 12px;
-  color: #6c757d;
-  margin-top: 16px;
-  font-style: italic;
-}
-
 /* Proceed Button */
 .proceed-btn {
   width: 100%;
@@ -1434,6 +1404,8 @@ body {
   font-size: 13px;
   color: #1e3a8a;
   line-height: 1.5;
+  margin-top: 16px;
+  font-style: italic;
 }
 
 .gst-inline-form .form-actions {
@@ -1999,11 +1971,7 @@ body {
   color: #856404;
 }
 
-.note-text {
-  font-size: 12px;
-  color: #856404;
-  font-style: italic;
-}
+
 
 
 
@@ -8054,4 +8022,9 @@ div#oneway-section .route-info {
   .policy-tabs {
     margin-bottom: 0 !important;
   }
+
+.flight-airline img.logo {
+    width:30px !important;
+    height:30px !important;
+}
 }
