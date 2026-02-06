@@ -104,11 +104,18 @@
               </div>
             </div>
             <div class="fare-info">
-              <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+              <div class="faredivmob">
+                <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass }}</span>
+              </div>
+              <div class="deskhid">
+                <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                  Rules</a>
+              </div>
             </div>
           </div>
 
-          <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
+          <a href="#" class="view-rules deskshow" (click)="showFareRules = true; $event.preventDefault()">View Fare
+            Rules</a>
 
           <!-- Flight Timeline -->
           <div class="flight-timeline-grid">
@@ -202,8 +209,13 @@
       <!-- Extra Baggage Banner - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i>  <strong>Got Extra Baggage? </strong>Buy extra check-in
-            baggage allowance
+          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage?
+            </strong>
+            <span class="deskshow">Buy extra check-in
+              baggage allowance</span>
+            <div class="deskhid">
+              Buy extra check-in baggage allowance
+            </div>
           </span>
           <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
             for
@@ -1074,7 +1086,8 @@
       <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage desktop-only"
         *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
-          <span class="add-baggage-text"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span class="add-baggage-text"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy
+            extra check-in
             baggage allowance
           </span>
         </div>
@@ -1303,12 +1316,19 @@
                       </div>
                     </div>
                     <div class="fare-info">
-                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
-                        }}</span>
+                      <div class="faredivmob">
+                        <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                          }}</span>
+                      </div>
+                      <div class="deskhid">
+                        <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                          Rules</a>
+                      </div>
                     </div>
                   </div>
 
-                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                  <a href="#" class="view-rules deskshow" (click)="showFareRules = true; $event.preventDefault()">View
+                    Fare
                     Rules</a>
 
                   <!-- Flight Timeline -->
@@ -1408,12 +1428,19 @@
                       </div>
                     </div>
                     <div class="fare-info">
-                      <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
-                        }}</span>
+                      <div class="faredivmob">
+                        <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                          }}</span>
+                      </div>
+                      <div class="deskhid">
+                        <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                          Rules</a>
+                      </div>
                     </div>
                   </div>
 
-                  <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                  <a href="#" class="view-rules deskshow" (click)="showFareRules = true; $event.preventDefault()">View
+                    Fare
                     Rules</a>
 
                   <!-- Flight Timeline -->
@@ -1482,7 +1509,8 @@
       <!-- Add Baggage CTA - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage?
+            </strong>Buy extra check-in
             baggage allowance
           </span>
 
@@ -2738,12 +2766,19 @@
                   </div>
                 </div>
                 <div class="fare-info">
-                  <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
-                    }}</span>
+                  <div class="faredivmob">
+                    <span>Economy ></span> <span class="fare-type" *ngIf="segment.fareClass">{{ segment.fareClass
+                      }}</span>
+                  </div>
+                  <div class="deskhid">
+                    <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                      Rules</a>
+                  </div>
                 </div>
               </div>
 
-              <a href="#" class="view-rules" (click)="showFareRules = true; $event.preventDefault()">View Fare Rules</a>
+              <a href="#" class="view-rules deskshow" (click)="showFareRules = true; $event.preventDefault()">View Fare
+                Rules</a>
 
               <!-- Flight Timeline -->
               <div class="flight-timeline-grid">

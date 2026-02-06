@@ -495,11 +495,7 @@ body {
 }
 
 /* Flight Timeline Grid */
-.flight-timeline-grid {
-  display: grid;
-  gap: 20px;
 
-}
 
 .timeline-item {
   display: grid;
@@ -666,9 +662,7 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .cancellation-badge {
-    justify-self: start;
-  }
+
 
   .mobile-baggage-section {
     display: none !important;
@@ -719,9 +713,7 @@ body {
     font-size: 13px;
   }
 
-  .extra-baggage-banner {
-    padding: 15px;
-  }
+
 
   .baggage-banner-text {
     font-size: 13px;
@@ -6296,7 +6288,7 @@ i.fas.fa-plane-departure {
 .flight-timeline-grid {
   display: grid !important;
   gap: 20px !important;
-  margin-bottom: 25px !important;
+  margin-bottom: 25px;
 }
 
 .timeline-item {
@@ -7716,7 +7708,12 @@ button.continue-btn-main,
   }
 
   .extra-baggage-banner {
-    flex-direction: column !important
+    flex-direction: row;
+    margin: 0;
+  }
+
+  .flight-timeline-grid {
+    margin-bottom: 0;
   }
 }
 
@@ -7846,11 +7843,6 @@ button.continue-btn-main,
     top: 18% !important;
   }
 
-  a.view-rules {
-    position: absolute;
-    right: 10px;
-    top: 215px;
-  }
 
   .option-right {
     flex-wrap: nowrap !important;
@@ -8772,6 +8764,14 @@ div#oneway-section .route-info {
   .trip-body {
     padding: 20px !important;
   }
+
+  .cancellation-badge {
+    display: none;
+  }
+
+  .baggage-banner-text {
+    padding-left: 0;
+  }
 }
 
 .baggage-banner-text {
@@ -8784,4 +8784,23 @@ div#oneway-section .route-info {
   font-size: 15px;
   color: #1e8ae6;
 
+}
+
+@media(min-width:767px) {
+  .deskhid {
+    display: none;
+  }
+
+
+}
+
+@media(max-width:767px) {
+  .deskshow {
+    display: none;
+  }
+
+  .fare-info {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
