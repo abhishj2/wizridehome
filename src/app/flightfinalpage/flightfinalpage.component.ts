@@ -244,6 +244,7 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   currentPassengerIndex: number = 0;
   currentPassengerDetails: any = null;
   passengerValidationErrors: any = {};
+  showGenderDropdown: boolean = false; // Custom gender dropdown state
   get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
 
   // Desktop inline form expansion
@@ -3905,5 +3906,23 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   getCompletedCount(passengers: any[]): number {
     if (!passengers || passengers.length === 0) return 0;
     return passengers.filter(p => p.firstName && p.firstName.trim() !== '').length;
+  }
+
+  /**
+   * Toggle the custom gender dropdown visibility (mobile only)
+   */
+  toggleGenderDropdown(): void {
+    if (!this.isMobileView()) return;
+    this.showGenderDropdown = !this.showGenderDropdown;
+  }
+
+  /**
+   * Select a gender from the custom dropdown and close it
+   */
+  selectGender(gender: 'Male' | 'Female'): void {
+    if (this.currentPassengerDetails) {
+      this.currentPassengerDetails.gender = gender;
+    }
+    this.showGenderDropdown = false;
   }
 }

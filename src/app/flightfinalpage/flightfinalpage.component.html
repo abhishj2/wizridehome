@@ -4008,11 +4008,27 @@
     </div>
     <div class="form-group">
       <label>Gender</label>
-      <select [(ngModel)]="currentPassengerDetails.gender" required [class.error]="passengerValidationErrors.gender">
-        <option value="" disabled selected>Select gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </select>
+      <div class="custom-dropdown-wrapper">
+        <div class="custom-select-display" [class.error]="passengerValidationErrors.gender"
+          [class.active]="showGenderDropdown" (click)="toggleGenderDropdown()">
+          <span class="custom-select-value" [class.placeholder]="!currentPassengerDetails.gender">
+            {{ currentPassengerDetails.gender || 'Select gender' }}
+          </span>
+          <i class="fas fa-chevron-down custom-select-arrow" [class.rotated]="showGenderDropdown"></i>
+        </div>
+        <div class="custom-dropdown-menu" *ngIf="showGenderDropdown">
+          <div class="custom-dropdown-item" [class.selected]="currentPassengerDetails.gender === 'Male'"
+            (click)="selectGender('Male')">
+            <span>Male</span>
+            <i class="fas fa-check" *ngIf="currentPassengerDetails.gender === 'Male'"></i>
+          </div>
+          <div class="custom-dropdown-item" [class.selected]="currentPassengerDetails.gender === 'Female'"
+            (click)="selectGender('Female')">
+            <span>Female</span>
+            <i class="fas fa-check" *ngIf="currentPassengerDetails.gender === 'Female'"></i>
+          </div>
+        </div>
+      </div>
       <div class="error-message" *ngIf="passengerValidationErrors.gender">{{ passengerValidationErrors.gender }}</div>
     </div>
     <div class="form-group" id="finalpagecal">

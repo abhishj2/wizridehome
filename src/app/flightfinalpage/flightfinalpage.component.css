@@ -2963,7 +2963,7 @@ body {
     }
 
     /* Header */
-   
+
 
     .cancellation-badge {
       background: linear-gradient(135deg, #2196F3, #1565C0);
@@ -2977,7 +2977,7 @@ body {
     }
 
     /* Flight Details */
-  
+
 
 
     .duration {
@@ -3121,13 +3121,13 @@ body {
       z-index: 2;
     }
 
-   
+
     .location-info {
       min-width: 0;
       padding-left: 0px;
     }
 
-    
+
 
     .baggage-item {
       display: flex;
@@ -3150,7 +3150,7 @@ body {
       font-weight: 700;
     }
 
-  
+
 
     .baggage-promo {
       display: flex;
@@ -3343,7 +3343,7 @@ body {
   }
 
   /* Add Baggage Banner - Desktop Only */
- 
+
 
   .add-baggage-text {
     font-size: 14px;
@@ -3809,7 +3809,7 @@ body {
   }
 
   /* Trip Meta - Enhanced with route line for desktop */
- 
+
 
   .trip-footer {
     padding: 20px 32px;
@@ -8023,8 +8023,115 @@ div#oneway-section .route-info {
     margin-bottom: 0 !important;
   }
 
-.flight-airline img.logo {
-    width:30px !important;
-    height:30px !important;
+  .flight-airline img.logo {
+    width: 30px !important;
+    height: 30px !important;
+  }
 }
+
+/* Custom Gender Dropdown Styling */
+.custom-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-display {
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 48px;
+  /* Match standard input height */
+}
+
+.custom-select-display.active {
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.custom-select-display.error {
+  border-color: #dc3545;
+}
+
+.custom-select-value {
+  font-size: 16px;
+  color: #212529;
+}
+
+.custom-select-value.placeholder {
+  color: #6c757d;
+}
+
+.custom-select-arrow {
+  color: #6c757d;
+  transition: transform 0.2s ease;
+  font-size: 14px;
+}
+
+.custom-select-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.custom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  margin-top: 4px;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-dropdown-item {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 15px;
+  color: #333;
+}
+
+.custom-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.custom-dropdown-item:active {
+  background: #f0f0f0;
+}
+
+.custom-dropdown-item.selected {
+  background: #e3f2fd;
+  color: #1565C0;
+  font-weight: 500;
+}
+
+.custom-dropdown-item i {
+  color: #1565C0;
+  font-size: 14px;
 }
