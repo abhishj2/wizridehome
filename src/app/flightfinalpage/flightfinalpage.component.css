@@ -3892,7 +3892,7 @@ body {
 
   /* Baggage Modal - Enhanced styling (MMT Style) */
   .baggage-popup .trip-header {
-    padding: 28px 32px;
+    padding: 20px;
     border-bottom: 1px solid #e9ecef;
   }
 
@@ -4330,7 +4330,7 @@ body {
 
   .trip-header>div:first-child,
   .gst-header>div:first-child {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 700;
     color: #212529;
   }
@@ -8134,4 +8134,26 @@ div#oneway-section .route-info {
 .custom-dropdown-item i {
   color: #1565C0;
   font-size: 14px;
+}
+
+
+@media(max-width:767x) {
+
+  .gst-header {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 10px 20px !important;
+
+  }
+
+  .gst-body {
+    padding: 20px !important;
+
+  }
+
+  .gst-note {
+    margin-bottom: 10px !important;
+    font-size: 12px !important;
+  }
 }
