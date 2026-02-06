@@ -8985,3 +8985,47 @@ button.scroll-arrow {
 .padultpricing {
   display: flex;
 }
+
+/* Airline logo in fare modal header */
+.fare-modal-airline-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+.fare-options-subtitle-line {
+  display: flex;
+  align-items: center;
+}
+
+/* Flight icons in fare modal header */
+.fare-trip-details-text .fa-plane-departure,
+.fare-trip-details-text .fa-plane-arrival {
+  color: #008b8b;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.fare-trip-details-text .fa-plane-departure {
+  margin-left: 0;
+}
+
+.fare-trip-details-text .fa-plane-arrival {
+  margin-left: 8px;
+}
+
+
+.fare-options-subtitle-line {
+  gap: 0px !important;
+}
+
+
+.fare-trip-details-text {
+  padding-bottom: 0 !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+  letter-spacing: 1px;
+}

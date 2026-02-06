@@ -4274,10 +4274,17 @@
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
         <div class="flghtfaredestdet">
           <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
-            <span class="fare-trip-details-text">{{ selectedFlight.Origin?.Airport?.CityName }} → {{
-              selectedFlight.Destination?.Airport?.CityName }} · {{ selectedFlight.Airline?.AirlineName }} · {{
-              selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} · {{ selectedFlight.Origin?.DepTime | date :
-              "HH:mm" }} - {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}</span>
+            <img class="fare-modal-airline-logo"
+              [src]="'assets/images/flightimages/' + selectedFlight.Airline?.AirlineCode + '.png'"
+              [alt]="selectedFlight.Airline?.AirlineName" onerror="this.src='assets/images/default-airline.png'" />
+            <span class="fare-trip-details-text">
+              <i class="fas fa-plane-departure"></i> {{ selectedFlight.Origin?.Airport?.CityName }} →
+              <i class="fas fa-plane-arrival"></i> {{ selectedFlight.Destination?.Airport?.CityName }} ·
+              {{ selectedFlight.Airline?.AirlineName }} ·
+              {{ selectedFlight.Origin?.DepTime | date : "EEE, dd MMM y" }} ·
+              {{ selectedFlight.Origin?.DepTime | date : "HH:mm" }} -
+              {{ selectedFlight.Destination?.ArrTime | date : "HH:mm" }}
+            </span>
           </div>
         </div>
         <div class="fare-options-box">
@@ -4354,8 +4361,14 @@
         <button class="modal-close" (click)="closeFareOptionsModal()">&times;</button>
         <div class="flghtfaredestdet">
           <div class="fare-options-subtitle-line" *ngIf="selectedFlight">
+            <img class="fare-modal-airline-logo"
+              [src]="'assets/images/flightimages/' + selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineCode + '.png'"
+              [alt]="selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName"
+              onerror="this.src='assets/images/default-airline.png'" />
             <span class="fare-trip-details-text">
+              <i class="fas fa-plane-departure"></i>
               {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
+              <i class="fas fa-plane-arrival"></i>
               {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
               1]?.Destination?.Airport?.CityName }} ·
               {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
@@ -4442,8 +4455,14 @@
         <button class="modal-close" (click)="closeFareOptionsModalBothWay()">&times;</button>
         <div class="flghtfaredestdet">
           <div class="fare-options-subtitle-line" *ngIf="selectedFlight" style="margin-top: 10px;">
+            <img class="fare-modal-airline-logo"
+              [src]="'assets/images/flightimages/' + selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineCode + '.png'"
+              [alt]="selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName"
+              onerror="this.src='assets/images/default-airline.png'" />
             <span class="fare-trip-details-text">
+              <i class="fas fa-plane-departure"></i>
               {{ selectedFlight?.Segments?.[0]?.[0]?.Origin?.Airport?.CityName }} →
+              <i class="fas fa-plane-arrival"></i>
               {{ selectedFlight?.Segments?.[0]?.[selectedFlight?.Segments?.[0]?.length -
               1]?.Destination?.Airport?.CityName }} ·
               {{ selectedFlight?.Segments?.[0]?.[0]?.Airline?.AirlineName }} ·
