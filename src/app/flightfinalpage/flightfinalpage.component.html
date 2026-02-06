@@ -202,7 +202,7 @@
       <!-- Extra Baggage Banner - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span *ngIf="getTotalBaggagePrice() === 0"> <strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i>  <strong>Got Extra Baggage? </strong>Buy extra check-in
             baggage allowance
           </span>
           <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
@@ -972,8 +972,8 @@
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
             <img src="assets/images/addon.png" class="seaticon" alt="addonicon" />
-         
-            <span class="addon-subtitle">Add ons: Flight Delay Insurance, Baggage Courier Service</span>
+
+            <span class="addon-subtitle">Add-Ons: Flight Delay Insurance, Baggage Courier Service</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
         </div>
@@ -1074,7 +1074,7 @@
       <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage desktop-only"
         *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
-          <span class="add-baggage-text"><strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span class="add-baggage-text"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy extra check-in
             baggage allowance
           </span>
         </div>
@@ -1482,7 +1482,7 @@
       <!-- Add Baggage CTA - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span *ngIf="getTotalBaggagePrice() === 0"><strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span *ngIf="getTotalBaggagePrice() === 0"><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy extra check-in
             baggage allowance
           </span>
 
@@ -2423,7 +2423,7 @@
         *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
 
-          <span><strong>Got Extra Baggage? </strong>Buy extra check-in
+          <span><i class="fas fa-suitcase-rolling"></i> <strong>Got Extra Baggage? </strong>Buy extra check-in
             baggage allowance
           </span>
         </div>

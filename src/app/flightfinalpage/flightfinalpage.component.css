@@ -8773,3 +8773,15 @@ div#oneway-section .route-info {
     padding: 20px !important;
   }
 }
+
+.baggage-banner-text {
+  padding-left: 20px;
+}
+
+.baggage-banner-text i {
+
+  margin-right: 10px;
+  font-size: 15px;
+  color: #1e8ae6;
+
+}
