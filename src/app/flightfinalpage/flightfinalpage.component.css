@@ -4356,7 +4356,7 @@ body {
 
   /* GST Box - Better spacing */
   .gst-box {
-    padding: 20px;
+    padding: 10px;
   }
 
   .gst-box .icon {
@@ -5923,9 +5923,10 @@ i.fas.fa-plane-departure {
     margin-top: 10px;
   }
 
-  .terms-text a {
-    font-size: 13px !important;
+  .mobile-price-bar {
+    padding: 10px !important;
   }
+
 }
 
 .terms-text a {
@@ -7745,16 +7746,20 @@ button.continue-btn-main,
   .passenger-category-title,
   .passenger-count,
   .gst-label-text,
-  .terms-text,
-  .trip-popup .form-group.checkbox-group span {
-    font-size: 12px !important;
-  }
 
+  .trip-popup .form-group.checkbox-group span,
   .city-name,
   .duration,
   .info-content .item-header {
     font-size: 12px !important;
   }
+
+  .terms-text,
+  .link-text {
+    font-size: 10px !important;
+  }
+
+
 
   .time {
     font-size: 14px !important;
