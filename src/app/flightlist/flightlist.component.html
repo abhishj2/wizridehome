@@ -4290,10 +4290,13 @@
             <div class="fare-scroll-container" #fareScrollContainer>
               <div class="fare-card makemytrip-fare-card" *ngFor="let fare of selectedFlight?.FareOptions">
                 <div class="fare-price-oneway">
-                  ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }} <span class="per-adult">per
-                    adult</span>
+                  <div class="padultpricing">
+                    ₹ {{ getAdultFarePerPerson(fare.FareBreakdown) | number : "1.0-0" }} <span class="per-adult">per
+                      adult</span>
+                  </div>
+                  <div class="fare-type-badge">{{ fare.Segments[0][0].SupplierFareClass }}</div>
                 </div>
-                <div class="fare-type-badge">{{ fare.Segments[0][0].SupplierFareClass }}</div>
+
                 <div class="fare-section">
                   <strong>Baggage</strong>
                   <ul class="fare-list">
@@ -4373,9 +4376,12 @@
             <div class="fare-scroll-container" #fareScrollContainer>
               <div class="fare-card makemytrip-fare-card" *ngFor="let fare of defaultFares">
                 <div class="fare-price-oneway">
-                  ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
+                  <div class="padultpricing">
+                    ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
+                  </div>
+                  <div class="fare-type-badge">{{ fare.type }}</div>
                 </div>
-                <div class="fare-type-badge">{{ fare.type }}</div>
+
                 <div class="fare-section">
                   <strong>Baggage</strong>
                   <ul class="fare-list">
@@ -4475,9 +4481,13 @@
             <div class="fare-scroll-container" #fareScrollContainer>
               <div class="fare-card makemytrip-fare-card" *ngFor="let fare of defaultFares; let i = index">
                 <div class="fare-price-oneway">
-                  ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
+                  <div class="padultpricing">
+
+                    ₹ {{ fare.price | number : "1.0-0" }} <span class="per-adult">per adult</span>
+                  </div>
+                  <div class="fare-type-badge">{{ fare.type }}</div>
                 </div>
-                <div class="fare-type-badge">{{ fare.type }}</div>
+
 
                 <div class="fare-section">
                   <strong>Baggage</strong>

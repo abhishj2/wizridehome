@@ -3459,14 +3459,14 @@ img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #008b8b;
   background: white;
   cursor: pointer;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: #008b8b;
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
@@ -3514,14 +3514,15 @@ img {
 
   /* Reduce card size for desktop */
   .custom-modal.makemytrip-style .makemytrip-fare-card {
-    min-width: 230px;
-    padding: 12px;
+    min-width: 280px;
+    gap: 15px;
+    padding: 20px;
+
   }
 
   /* Reduce font sizes */
   .custom-modal.makemytrip-style .fare-price-oneway {
     font-size: 18px;
-    margin-bottom: 8px;
     padding-bottom: 8px;
     border-bottom: 1px solid #e5e7eb;
     text-align: center;
@@ -3537,7 +3538,7 @@ img {
 
   .custom-modal.makemytrip-style .fare-type-badge {
     font-size: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
     padding: 2px 8px;
   }
 
@@ -3568,7 +3569,7 @@ img {
   }
 
   .custom-modal.makemytrip-style .makemytrip-book-btn {
-    padding: 6px 14px;
+    padding: 10px 20px;
     font-size: 12px;
   }
 
@@ -3615,6 +3616,7 @@ img {
   flex-direction: column;
   transition: all 0.2s ease;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
 }
 
 .makemytrip-fare-card:hover {
@@ -3631,10 +3633,14 @@ img {
   font-size: 28px;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e7eb;
   line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0 !important;
+
 }
 
 .per-adult {
@@ -3661,7 +3667,6 @@ img {
   font-size: 13px;
   font-weight: 600;
   color: #059669;
-  margin-bottom: 20px;
   padding: 6px 14px;
   background: #d1fae5;
   border-radius: 20px;
@@ -3670,15 +3675,20 @@ img {
 }
 
 .fare-section {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 !important;
+  gap: 10px;
+
 }
 
 .fare-section strong {
   display: block;
-  font-size: 14px;
+  font-size: 13px !important;
+  margin-bottom: 0;
+
   font-weight: 600;
   color: #1f2937;
-  margin-bottom: 12px;
 }
 
 .fare-section ul {
@@ -8970,4 +8980,8 @@ button.scroll-arrow {
     padding-bottom: 10px;
   }
 
+}
+
+.padultpricing {
+  display: flex;
 }
