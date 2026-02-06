@@ -1055,6 +1055,22 @@ small {
     background: linear-gradient(135deg, #006666, darkcyan);
 }
 
+/* Search Button Below Locations (Desktop Only) */
+.search-btn-below-locations {
+    width: auto;
+    margin: 20px 0 0px;
+    justify-self: center;
+    align-self: center;
+}
+
+/* Hide search button below locations on mobile */
+@media (max-width: 768px) {
+    .search-btn-below-locations {
+        display: none !important;
+    }
+}
+
+
 /* Banner Image */
 
 

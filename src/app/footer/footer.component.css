@@ -4,7 +4,7 @@
 /* Wizzride Routes Section - Timeline Design */
 .wizzride-routes {
   background: #ffffff;
-  padding:  0;
+  padding: 0;
   font-family: "Quicksand", sans-serif;
 }
 
@@ -49,9 +49,9 @@
   width: 3px;
   border-radius: 999px;
   background: linear-gradient(to bottom,
-    rgba(24, 176, 168, 0.25),
-    rgba(24, 176, 168, 0.45),
-    rgba(24, 176, 168, 0.25));
+      rgba(24, 176, 168, 0.25),
+      rgba(24, 176, 168, 0.45),
+      rgba(24, 176, 168, 0.25));
   box-shadow: 0 0 10px rgba(24, 176, 168, 0.2);
 }
 
@@ -70,14 +70,14 @@
 /* Icon container with circle background */
 .route-timeline-icon {
   position: absolute;
-  left: -80px;
-  width: 60px;
-  height: 60px;
+  left: -65px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background: linear-gradient(135deg, #18b0a8, #1ec3b9);
   box-shadow: 0 4px 20px rgba(24, 176, 168, 0.3),
-              0 0 0 4px #ffffff,
-              0 0 0 6px rgba(24, 176, 168, 0.2);
+    0 0 0 4px #ffffff,
+    0 0 0 6px rgba(24, 176, 168, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,14 +86,14 @@
 }
 
 .route-timeline-item:hover .route-timeline-icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.1);
   box-shadow: 0 6px 25px rgba(24, 176, 168, 0.4),
-              0 0 0 4px #ffffff,
-              0 0 0 8px rgba(24, 176, 168, 0.3);
+    0 0 0 4px #ffffff,
+    0 0 0 8px rgba(24, 176, 168, 0.3);
 }
 
 .route-timeline-icon i {
-  font-size: 28px;
+  font-size: 16px;
   color: #ffffff;
   transition: all 0.3s ease;
 }
@@ -186,21 +186,21 @@
   .routes-container {
     padding: 0 30px;
   }
-  
+
   .routes-timeline-track {
     padding-left: 70px;
   }
-  
+
   .route-timeline-icon {
     left: -70px;
     width: 55px;
     height: 55px;
   }
-  
+
   .route-timeline-icon i {
     font-size: 24px;
   }
-  
+
   .routes-timeline-track::before {
     left: 26px;
   }
@@ -210,24 +210,24 @@
   .routes-header h2 {
     font-size: 2rem;
   }
-  
+
   .routes-header p {
     font-size: 1rem;
   }
-  
+
   .route-title {
     font-size: 1.3rem;
   }
-  
+
   .route-links-wrapper {
     gap: 8px;
   }
-  
+
   .route-pill {
     font-size: 13px;
     padding: 7px 14px;
   }
-  
+
   .route-timeline-content {
     padding: 20px 25px;
   }
@@ -237,62 +237,62 @@
   .wizzride-routes {
     padding: 40px 0;
   }
-  
+
   .routes-container {
     padding: 0 20px;
   }
-  
+
   .routes-header {
     margin-bottom: 2rem;
   }
-  
+
   .routes-header h2 {
     font-size: 1.75rem;
   }
-  
+
   .routes-header p {
     font-size: 0.95rem;
   }
-  
+
   .routes-timeline-track {
     padding-left: 60px;
   }
-  
+
   .routes-timeline-track::before {
     left: 21px;
   }
-  
+
   .route-timeline-icon {
     left: -60px;
     width: 45px;
     height: 45px;
   }
-  
+
   .route-timeline-icon i {
     font-size: 20px;
   }
-  
+
   .route-timeline-item {
     padding: 1.2rem 0;
   }
-  
+
   .route-timeline-content {
     padding: 18px 20px;
   }
-  
+
   .route-title {
     font-size: 1.1rem;
   }
-  
+
   .route-label {
     font-size: 0.75rem;
     padding: 0.3rem 0.8rem;
   }
-  
+
   .route-links-wrapper {
     gap: 7px;
   }
-  
+
   .route-pill {
     font-size: 12px;
     padding: 6px 12px;
@@ -303,59 +303,59 @@
   .routes-container {
     padding: 0 15px;
   }
-  
+
   .routes-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .routes-header p {
     font-size: 0.9rem;
   }
-  
+
   .routes-timeline-track {
     padding-left: 50px;
   }
-  
+
   .routes-timeline-track::before {
     left: 18px;
     width: 2px;
   }
-  
+
   .route-timeline-icon {
     left: -50px;
     width: 38px;
     height: 38px;
     box-shadow: 0 3px 15px rgba(24, 176, 168, 0.3),
-                0 0 0 3px #ffffff,
-                0 0 0 5px rgba(24, 176, 168, 0.2);
+      0 0 0 3px #ffffff,
+      0 0 0 5px rgba(24, 176, 168, 0.2);
   }
-  
+
   .route-timeline-icon i {
     font-size: 18px;
   }
-  
+
   .route-timeline-item {
     padding: 1rem 0;
     gap: 1rem;
   }
-  
+
   .route-timeline-content {
     padding: 15px 18px;
   }
-  
+
   .route-title {
     font-size: 1rem;
   }
-  
+
   .route-label {
     font-size: 0.7rem;
     padding: 0.25rem 0.7rem;
   }
-  
+
   .route-links-wrapper {
     gap: 6px;
   }
-  
+
   .route-pill {
     font-size: 11px;
     padding: 5px 10px;
@@ -400,7 +400,7 @@
   line-height: 1.2;
   margin-bottom: 10px;
   text-align: center;
-  
+
 }
 
 .destinations-illustration {
@@ -555,23 +555,23 @@
   .destinations-container {
     padding: 0 25px;
   }
-  
+
   .destinations-top {
     gap: 30px;
   }
-  
+
   .destinations-bottom {
     gap: 25px;
   }
-  
+
   .destinations-left {
     min-width: 350px;
   }
-  
+
   .destinations-title {
     font-size: 36px;
   }
-  
+
   .destinations-illustration {
     width: 320px;
     height: 240px;
@@ -584,17 +584,17 @@
     gap: 30px;
     margin-bottom: 30px;
   }
-  
+
   .destinations-left {
     text-align: center;
     min-width: auto;
   }
-  
+
   .destinations-bottom {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-  
+
   .destinations-illustration {
     width: 280px;
     height: 200px;
@@ -606,25 +606,25 @@
   .popular-destinations {
     padding: 40px 0;
   }
-  
+
   .destinations-container {
     padding: 0 20px;
   }
-  
+
   .destinations-title {
     font-size: 32px;
   }
-  
+
   .destination-card {
     padding: 25px;
     min-height: 240px;
   }
-  
+
   .destination-title {
     font-size: 18px;
     margin-bottom: 20px;
   }
-  
+
   .destination-list li {
     font-size: 14px;
     padding: 10px 0;
@@ -636,16 +636,16 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .destinations-illustration {
     width: 240px;
     height: 180px;
   }
-  
+
   .destinations-title {
     font-size: 28px;
   }
-  
+
   .destination-card {
     padding: 20px;
     min-height: 200px;
@@ -689,8 +689,8 @@
 }
 
 .footer-logo-image {
-  width:150px !important;
-  height:auto !important;
+  width: 150px !important;
+  height: auto !important;
   object-fit: contain;
   margin-bottom: 8px;
 }
@@ -834,7 +834,7 @@
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
-  gap:10px;
+  gap: 10px;
   flex-direction: column;
 }
 
@@ -863,7 +863,7 @@
     gap: 40px;
     padding: 40px 25px 25px;
   }
-  
+
   .footer-middle {
     gap: 30px;
   }
@@ -875,20 +875,20 @@
     gap: 40px;
     padding: 40px 20px 25px;
   }
-  
+
   .footer-middle {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
   }
-  
+
   .footer-right {
     align-items: flex-start;
   }
-  
+
   .contact-info {
     align-items: flex-start;
   }
-  
+
   .footer-bottom-content {
     flex-direction: column;
     gap: 15px;
@@ -900,30 +900,30 @@
   .footer-top {
     padding: 30px 15px 20px;
   }
-  
+
   .footer-middle {
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
   }
-  
+
   .footer-column {
     gap: 15px;
   }
-  
+
   .social-links {
     gap: 12px;
   }
-  
+
   .social-link {
     width: 35px;
     height: 35px;
     font-size: 14px;
   }
-  
+
   .footer-bottom {
     padding: 15px;
   }
-  
+
   .footer-bottom-content {
     gap: 10px;
   }
@@ -934,48 +934,49 @@
     padding: 25px 15px 20px;
     gap: 30px;
   }
-  
+
   .footer-left {
     gap: 20px;
   }
-  
+
   .footer-logo-image {
     height: 35px;
   }
-  
+
   .footer-tagline {
     font-size: 12px;
   }
-  
+
   .footer-column h3 {
     font-size: 14px;
   }
-  
+
   .footer-links a {
     font-size: 13px;
   }
-  
+
   .contact-item {
     font-size: 13px;
   }
-  
+
   .copyright,
   .proudly-made {
     font-size: 11px;
   }
 }
+
 a.headinga {
-    font-size: 16px !important;
-font-weight: 600 !important;
-color: #ffffff !important;
-margin: 0 !important;
-text-decoration:none;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  text-decoration: none;
 }
 
-ul.footer-links li{
-  display:flex !important;
-  align-items:center;
-  gap:10px;
+ul.footer-links li {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
 }
 
 h3.destinations-title a {
@@ -997,6 +998,7 @@ h3.destinations-title a {
 
 /* Hide desktop footer on mobile, show mobile footer */
 @media (max-width: 768px) {
+
   /* Hide desktop footer sections on mobile */
   .wizzride-routes,
   .popular-destinations,
@@ -1030,7 +1032,7 @@ h3.destinations-title a {
   .wr-route-timeline-head p {
     margin: 0;
     color: #6b7280;
-    font-size: 12px  !important
+    font-size: 12px !important
   }
 
   .wr-route-timeline-track {
@@ -1048,8 +1050,8 @@ h3.destinations-title a {
     width: 2px;
     border-radius: 999px;
     background: linear-gradient(to bottom,
-      rgba(24, 176, 168, 0.18),
-      rgba(148, 163, 184, 0.35));
+        rgba(24, 176, 168, 0.18),
+        rgba(148, 163, 184, 0.35));
   }
 
   .wr-route-item {
@@ -1173,7 +1175,7 @@ h3.destinations-title a {
     color: #374151;
     text-decoration: none;
     transition: color 0.2s ease;
-    margin:auto;
+    margin: auto;
   }
 
   .wr-footer-links a:hover {

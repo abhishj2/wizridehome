@@ -216,6 +216,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   sharedCabsStats: Array<{ number: string, label: string }> = [];
   reservedCabsStats: Array<{ number: string, label: string }> = [];
   numbersSectionStats: Array<{ number: string, label: string, description: string, icon: string }> = [];
+  specialOffersSection: { heading: string, description: string } = { heading: 'Special Offers', description: 'Grab the best deals and discounts on flights, hotels, and cab bookings' };
   isLoadingStats = false;
 
   // Track home schema IDs for cleanup
@@ -5437,6 +5438,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               { number: '180,801+', label: 'Trips Completed', description: 'Successful journeys across destinations', icon: 'assets/images/icon3.png' },
               { number: '23,401,092+', label: 'Kilometers Covered', description: 'Miles of safe and comfortable travel', icon: 'assets/images/icon4.png' }
             ];
+          }
+
+          // Load special offers section if available
+          if (data.special_offers_section) {
+            this.specialOffersSection = {
+              heading: data.special_offers_section.heading || 'Special Offers',
+              description: data.special_offers_section.description || 'Grab the best deals and discounts on flights, hotels, and cab bookings'
+            };
           }
         } else {
           // Fallback to default values if API fails

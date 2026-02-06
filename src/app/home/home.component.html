@@ -165,10 +165,9 @@
                                         </div>
                                     </div>
 
+                                    <!-- Search button moved below based on location details visibility -->
                                     <button class="search-btn" (click)="searchCabs('shared')"
-                                        aria-label="Search shared cabs">
-
-
+                                        *ngIf="!locationDetailsVisible['shared']" aria-label="Search shared cabs">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -236,6 +235,12 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Search button appears here when location details are visible (desktop only) -->
+                                <button class="search-btn search-btn-below-locations" (click)="searchCabs('shared')"
+                                    *ngIf="locationDetailsVisible['shared']" aria-label="Search shared cabs">
+                                    <span>Search</span>
+                                </button>
 
                                 <div class="features">
                                     <div class="feature">
@@ -679,8 +684,9 @@
                                         </div>
                                     </div>
 
+                                    <!-- Search button moved below based on location details visibility -->
                                     <button class="search-btn" (click)="searchCabs('reserved')"
-                                        aria-label="Search reserved cabs">
+                                        *ngIf="!locationDetailsVisible['reserved']" aria-label="Search reserved cabs">
                                         <span><i class="fas fa-search"></i></span>
                                     </button>
                                 </div>
@@ -713,6 +719,12 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Search button appears here when location details are visible (desktop only) -->
+                                <button class="search-btn search-btn-below-locations" (click)="searchCabs('reserved')"
+                                    *ngIf="locationDetailsVisible['reserved']" aria-label="Search reserved cabs">
+                                    <span>Search</span>
+                                </button>
 
                                 <div class="features">
                                     <div class="feature">
@@ -1106,7 +1118,7 @@
 
     <section class="wr-offer-section">
         <div class="wr-offer-header">
-            <div class="wr-section-title">Special Offers</div>
+            <div class="wr-section-title">{{ specialOffersSection.heading }}</div>
         </div>
         <div class="wr-offer-scroller">
             <button class="wr-offer-card" *ngFor="let offer of infiniteOffers">
@@ -1252,8 +1264,8 @@
     <section class="special-offers-section" *ngIf="currentTab === 'shared-cabs'">
         <div class="special-offers-content">
             <div class="offers-header">
-                <h2>Special Offers</h2>
-                <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+                <h2>{{ specialOffersSection.heading }}</h2>
+                <p>{{ specialOffersSection.description }}</p>
             </div>
 
             <div class="offers-slider-container">
@@ -1324,8 +1336,8 @@
     <!-- Flights Special Offers -->
     <section class="special-offers-section" *ngIf="currentTab === 'flights'">
         <div class="offers-header">
-            <h2>Special Offers</h2>
-            <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+            <h2>{{ specialOffersSection.heading }}</h2>
+            <p>{{ specialOffersSection.description }}</p>
         </div>
 
         <div class="offers-slider-container">
@@ -1409,8 +1421,8 @@
     <!-- Reserved Cabs Special Offers -->
     <section class="special-offers-section" *ngIf="currentTab === 'reserved-cabs'">
         <div class="offers-header">
-            <h2>Special Offers</h2>
-            <p>Grab the best deals and discounts on flights, hotels, and cab bookings</p>
+            <h2>{{ specialOffersSection.heading }}</h2>
+            <p>{{ specialOffersSection.description }}</p>
         </div>
 
         <div class="offers-slider-container">

@@ -3371,48 +3371,6 @@
       </div>
     </div>
 
-    <!-- Cancellation & Rescheduling Policy Card - Mobile Only -->
-    <div class="card cancellation-policy-card-mobile">
-      <div class="section-title-row" (click)="showPolicyModal = true; activeTab = 'cancel'">
-        <div class="section-title canc">Cancellation & Rescheduling Policy</div>
-        <div class="section-arrow">›</div>
-      </div>
-
-      <!-- Tab Headers -->
-      <div class="tab-header-scroll">
-        <div *ngFor="let group of groupedFlightSegments; let i = index" class="tab-header"
-          [class.active]="i === activeCancelTabIndex" (click)="activeCancelTabIndex = i">
-          {{ group[0]?.originCode }} -
-          {{ group[group.length - 1]?.destinationCode }}
-        </div>
-      </div>
-
-      <!-- Tab Body -->
-      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeCancelTabIndex]">
-        <ng-container *ngFor="let segment of groupedFlightSegments[activeCancelTabIndex]">
-          <div class="cancellation-row">
-            <div class="flight-airline">
-              <img [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-
-            <div class="criteria">
-              <div class="left">Cancellation Criteria</div>
-              <div class="right">Charges</div>
-            </div>
-
-            <div class="criteria-detail" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-              <div class="left">{{ row.range }}</div>
-              <div class="right">{{ row.price }}</div>
-            </div>
-          </div>
-
-          <hr class="baggage-divider" />
-        </ng-container>
-      </div>
-    </div>
-
     <!-- GST Details Card - Mobile Only -->
     <div class="card mobile-only">
       <div class="section-title">GST - (Optional)</div>
