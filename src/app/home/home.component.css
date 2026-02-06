@@ -6071,6 +6071,11 @@ button.nav-tab.active img {
     .wr-input {
         font-size: 16px !important;
     }
+
+    .wr-route-col {
+        height: 100px;
+        justify-content: center;
+    }
 }
 
 .form-row.multrow {
