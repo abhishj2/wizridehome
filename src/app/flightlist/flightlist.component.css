@@ -1941,7 +1941,7 @@ img {
 /* Date Slider */
 .date-slider-bar {
   background: white !important;
-  padding: 20px 24px !important;
+  padding: 10px 20px !important;
   border-radius: 12px;
   margin-bottom: 24px !important;
   margin-top: 0 !important;
@@ -2111,9 +2111,8 @@ img {
 }
 
 .date-card {
-  min-width: 110px;
-  padding: 8px 16px;
-  border: 1px solid rgba(0, 139, 139, 0.25) !important;
+  min-width: 100px;
+  border: 1.5px solid #e5e7eb !important;
   border-radius: 15px !important;
   text-align: center;
   cursor: pointer;
@@ -2129,19 +2128,78 @@ img {
 }
 
 .date-card:hover {
-  border-color: rgba(0, 139, 139, 0.4) !important;
+  border-color: #2f80ff !important;
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.15);
+  box-shadow: 0 4px 12px rgba(47, 128, 255, 0.15);
 }
 
 .date-card.selected {
-  border: 1px solid rgba(0, 139, 139, .25) !important;
-  background: #f1f9f9 !important;
-  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
+  border: 2px solid #2f80ff !important;
+  background: #f1f6ff !important;
+  box-shadow: 0 4px 12px rgba(47, 128, 255, 0.2);
   transform: translateY(-2px);
-
 }
 
+/* Desktop month pill (vertical text like mobile) */
+.desktop-flight-month-pill {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 12px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Date text - single line format "Fri, Feb 6" */
+.date-text {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.date-card.selected .date-text {
+  color: #2f80ff !important;
+}
+
+/* Date components - for backward compatibility */
+.date-day {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.date-weekday {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.date-card.selected .date-day {
+  color: #2f80ff !important;
+}
+
+.date-card.selected .date-weekday {
+  color: #2f80ff !important;
+}
+
+/* Keep old date-label for backward compatibility */
 .date-label {
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -2158,17 +2216,19 @@ img {
 }
 
 .date-price {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #000 !important;
-  line-height: 1.2;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f766e !important;
+  line-height: 1;
+  margin-top: 2px;
 }
 
 .date-card.selected .date-price {
-  color: #474747 !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
+  color: #2f80ff !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
 }
+
 
 /* No price styles removed - only dates with prices are shown (REQUIREMENT 1) */
 
@@ -2268,7 +2328,6 @@ img {
 .date-text {
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   color: gray;
   opacity: 0.7;

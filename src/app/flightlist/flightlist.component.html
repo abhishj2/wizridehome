@@ -1000,11 +1000,16 @@
 
                 <div class="date-slider-scroll-wrapper" #scrollContainer (scroll)="onDateSliderScroll()">
                   <div class="date-slider-container">
+                    <!-- Month pill at the start -->
+                    <div class="desktop-flight-month-pill">
+                      {{ flightInputData['departureDate'] | date : "MMM" | uppercase }}
+                    </div>
 
+                    <!-- Date chips -->
                     <div class="date-card" *ngFor="let item of datePrices; let i = index"
                       [class.selected]="item.date === highlightedDate" (click)="selectDateFromSlider(item.date, i)"
                       [title]="item.date | date : 'fullDate'">
-                      <div class="date-label">{{ item.date | date : "d MMM" }}</div>
+                      <div class="date-text">{{ item.date | date : "EEE, MMM d" }}</div>
                       <div class="date-price">₹ {{ item.price | number : "1.0-0" }}</div>
                     </div>
                     <div *ngIf="datePrices.length === 0 && !isLoadingMore" class="date-slider-empty">
