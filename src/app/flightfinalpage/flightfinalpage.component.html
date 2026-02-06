@@ -202,16 +202,16 @@
       <!-- Extra Baggage Banner - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span class="baggage-emoji">🎒</span>
-          <span *ngIf="getTotalBaggagePrice() === 0">Got excess baggage? Don't stress, buy extra check-in baggage
-            allowance at fab rates!</span>
+          <span *ngIf="getTotalBaggagePrice() === 0"> <strong>Got Extra Baggage? </strong>Buy extra check-in
+            baggage allowance
+          </span>
           <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
             for
             ₹ {{ getTotalBaggagePrice() | number : '1.0-0' }}! Total check-in baggage is now {{ 15 +
             getTotalBaggageWeight() }} KGs.</span>
         </div>
         <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
+          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : '+ ADD' }}
         </button>
       </div>
 
@@ -253,7 +253,7 @@
     <!-- Important Information Card -->
     <div class="card info-card">
       <div class="section-title">
-        <i class="fas fa-info-circle"></i>
+
         Important Information
       </div>
 
@@ -326,8 +326,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="adult.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
-                <i class="fas fa-check" *ngIf="adult.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!adult.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="adult.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -455,8 +455,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="child.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-                <i class="fas fa-check" *ngIf="child.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!child.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="child.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -559,8 +559,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="infant.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="infant.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -972,8 +972,8 @@
         <div class="addon-section-header" (click)="toggleAddonsSection()">
           <div class="addon-section-title">
             <img src="assets/images/addon.png" class="seaticon" alt="addonicon" />
-            <span>Add ons</span>
-            <span class="addon-subtitle">Flight Delay Insurance, Baggage Courier Service</span>
+         
+            <span class="addon-subtitle">Add ons: Flight Delay Insurance, Baggage Courier Service</span>
           </div>
           <i class="fas fa-chevron-down addon-chevron" [class.rotated]="isAddonsExpanded"></i>
         </div>
@@ -1074,12 +1074,12 @@
       <div class="mobile-add-baggage oneway-add-baggage oneway-mobile-add-baggage desktop-only"
         *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="mobile-add-baggage-content">
-          <span class="add-baggage-icon">🎒</span>
-          <span class="add-baggage-text">Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab
-            rates!</span>
+          <span class="add-baggage-text"><strong>Got Extra Baggage? </strong>Buy extra check-in
+            baggage allowance
+          </span>
         </div>
         <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
-          ADD BAGGAGE
+          + ADD
         </button>
       </div>
     </div>
@@ -1482,16 +1482,18 @@
       <!-- Add Baggage CTA - Desktop Only -->
       <div class="extra-baggage-banner" *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span class="baggage-emoji">🎒</span>
-          <span *ngIf="getTotalBaggagePrice() === 0">Got excess baggage? Don't stress, buy extra check-in baggage
-            allowance at fab rates!</span>
+          <span *ngIf="getTotalBaggagePrice() === 0"><strong>Got Extra Baggage? </strong>Buy extra check-in
+            baggage allowance
+          </span>
+
+
           <span *ngIf="getTotalBaggagePrice() > 0">{{ getTotalBaggageWeight() }} KGs of extra baggage added on your trip
             for
             ₹ {{ getTotalBaggagePrice() | number : '1.0-0' }}! Total check-in baggage is now {{ 15 +
             getTotalBaggageWeight() }} KGs.</span>
         </div>
         <button class="change-baggage-btn" (click)="showAddBaggageModal = true">
-          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : 'ADD BAGGAGE' }}
+          {{ getTotalBaggagePrice() > 0 ? 'CHANGE' : '+ ADD' }}
         </button>
       </div>
 
@@ -1569,7 +1571,6 @@
     <!-- Important Information Card -->
     <div class="card info-card">
       <div class="section-title">
-        <i class="fas fa-info-circle"></i>
         Important Information
       </div>
 
@@ -1642,8 +1643,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="adult.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
-                <i class="fas fa-check" *ngIf="adult.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!adult.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="adult.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -1771,8 +1772,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="child.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-                <i class="fas fa-check" *ngIf="child.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf=" !child.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="child.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -1875,8 +1876,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="infant.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="infant.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -2421,11 +2422,13 @@
       <div class="mobile-add-baggage roundtrip-add-baggage roundtrip-mobile-add-baggage"
         *ngIf="extraBaggageAvailable || extraBaggageAvailableReturn">
         <div class="baggage-banner-text">
-          <span class="baggage-emoji">🎒</span>
-          <span>Got excess baggage? Don't stress, buy extra check-in baggage allowance at fab rates!</span>
+
+          <span><strong>Got Extra Baggage? </strong>Buy extra check-in
+            baggage allowance
+          </span>
         </div>
         <button class="mobile-add-baggage-btn" (click)="showAddBaggageModal = true">
-          ADD BAGGAGE
+          + ADD
         </button>
       </div>
     </div>
@@ -2876,7 +2879,6 @@
     <!-- Important Information Card -->
     <div class="card info-card">
       <div class="section-title">
-        <i class="fas fa-info-circle"></i>
         Important Information
       </div>
 
@@ -2949,8 +2951,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="adult.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!adult.firstName"></i>
-                <i class="fas fa-check" *ngIf="adult.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!adult.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="adult.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -3079,8 +3081,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="child.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!child.firstName"></i>
-                <i class="fas fa-check" *ngIf="child.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!child.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="child.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{
@@ -3184,8 +3186,8 @@
           <div class="passenger-item-wrapper">
             <div class="passenger-box" [class.completed]="infant.firstName">
               <div class="passenger-icon-circle">
-                <i class="fas fa-plus" *ngIf="!infant.firstName"></i>
-                <i class="fas fa-check" *ngIf="infant.firstName"></i>
+                <i class="fas fa-circle-user" *ngIf="!infant.firstName"></i>
+                <i class="fas fa-circle-user green" *ngIf="infant.firstName"></i>
               </div>
               <div class="passenger-label">
                 {{

@@ -40,13 +40,6 @@ body {
 }
 
 
-.section-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #212529;
-  margin: 0 0 24px 0;
-}
-
 
 .input-group-row {
   display: grid;
@@ -617,10 +610,7 @@ body {
   line-height: 1.5;
 }
 
-.baggage-emoji {
-  font-size: 14px;
-  flex-shrink: 0;
-}
+
 
 .change-baggage-btn {
   background: transparent;
@@ -737,9 +727,7 @@ body {
     font-size: 13px;
   }
 
-  .baggage-emoji {
-    font-size: 24px;
-  }
+
 }
 
 
@@ -866,13 +854,6 @@ body {
   width: auto;
 }
 
-/* Section Title */
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #212529;
-  margin-bottom: 12px;
-}
 
 @media (min-width: 769px) {
   .footer-bar {
@@ -891,10 +872,6 @@ body {
   /* Hide cancellation policy card on desktop (already shown at top) */
   .cancellation-policy-card-mobile {
     display: none;
-  }
-
-  .section-title {
-    margin-bottom: 14px;
   }
 }
 
@@ -1212,7 +1189,7 @@ body {
 }
 
 .passenger-box.completed .passenger-icon-circle {
-  background: #10b981;
+  background: linear-gradient(135deg, #2196f3, #1565c0);
   color: #ffffff;
 }
 
@@ -1409,8 +1386,8 @@ body {
 }
 
 .gender-btn.active {
-  background: #0d9488;
-  border-color: #0d9488;
+  background: linear-gradient(135deg, #2196f3, #1565c0);
+  border-color: #2196f3;
   color: #ffffff;
 }
 
@@ -1601,10 +1578,7 @@ body {
 }
 
 /* Compact GST section title */
-.card:has(.gst-box) .section-title {
-  margin-bottom: 12px;
-  font-size: 18px;
-}
+
 
 /* Terms Section */
 .terms-section {
@@ -5031,11 +5005,7 @@ body {
     padding: 32px 0 !important;
   }
 
-  /* i.fas.fa-plane-departure {
-    margin-top: 0 !important;
-    background: transparent !important;
-    padding: 0 !important;
-  } */
+
 
   /* Journey Tags - Pill-shaped header (add class="journey-tag-onward" or "journey-tag-return" to flight-leg) */
 
@@ -5214,12 +5184,12 @@ body {
   /* Section Titles - Premium Styling */
   .section-title,
   .section-title-roundtrip {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: #212529;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #f8f9fa;
+    margin-bottom: 20px;
+    /* padding-bottom: 16px;
+    border-bottom: 2px solid #f8f9fa; */
   }
 
   /* Details Button - Premium Styling */
@@ -5399,7 +5369,7 @@ body {
 
   /* GST Box - Premium Styling */
   .gst-box {
-    padding: 24px;
+    padding: 10px;
     border-radius: 16px;
     background: #ffffff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -6423,22 +6393,7 @@ i.fas.fa-plane-departure {
   margin-bottom: 24px;
 }
 
-.info-card .section-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 28px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f3f4f6;
-}
 
-.info-card .section-title i {
-  color: #1565C0;
-  font-size: 20px;
-}
 
 /* Info Item Compact Layout */
 .info-item-compact {
@@ -8545,12 +8500,6 @@ body.calendar-open-mobile {
 }
 
 
-.gst-section-title {
-  font-size: 20px !important;
-  font-weight: 700;
-  color: #212529;
-  margin-bottom: 20px !important;
-}
 
 img.seaticon {
   width: 30px;
