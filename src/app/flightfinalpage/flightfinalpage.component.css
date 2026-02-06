@@ -39,17 +39,6 @@ body {
   font-style: italic;
 }
 
-
-
-.input-group-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-
-
 /* Proceed Button */
 .proceed-btn {
   width: 100%;
@@ -163,20 +152,7 @@ body {
   margin-bottom: 16px;
 }
 
-.trip-fare-summary .fare-line {
-  padding: 12px 0;
-  font-size: 14px;
-  color: #495057;
-}
 
-.trip-fare-summary .fare-line.total-line {
-  border-top: 1px solid #e9ecef;
-  padding-top: 16px;
-  margin-top: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #212529;
-}
 
 
 /* Baggage Modal */
@@ -867,12 +843,7 @@ body {
   }
 }
 
-.section-title-roundtrip {
-  font-size: 18px;
-  font-weight: 700;
-  color: #212529;
-  margin-bottom: 12px;
-}
+
 
 .section-title-row {
   display: flex;
@@ -888,40 +859,10 @@ body {
 }
 
 /* Baggage Row */
-.baggage-row {
-  margin-bottom: 16px;
-}
 
-.baggage-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
 
-.baggage-header .logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
 
-.baggage-header .name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #212529;
-  flex: 1;
-}
 
-.baggage-header .code {
-  font-size: 13px;
-  color: #6c757d;
-}
-
-.baggage-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
 .baggage-item {
   display: flex;
@@ -936,11 +877,7 @@ body {
   width: 20px;
 }
 
-.baggage-item .value {
-  font-weight: 600;
-  color: #212529;
-  margin-left: auto;
-}
+
 
 .baggage-divider {
   border: none;
@@ -948,54 +885,10 @@ body {
   margin: 16px 0;
 }
 
-.add-baggage {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px;
-  margin-top: 20px;
-  border: 1px solid #dee2e6;
-  transition: all 0.3s ease;
-}
 
-.add-baggage:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
 
-.add-left {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
 
-.add-icon {
-  font-size: 28px;
-  color: #008b8b;
-  flex-shrink: 0;
-}
 
-.add-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.add-left .prompt {
-  font-size: 16px;
-  font-weight: 700;
-  color: #212529;
-  margin-bottom: 0;
-}
-
-.add-left .subtext {
-  font-size: 13px;
-  color: #6c757d;
-  font-weight: 500;
-}
 
 .add-btn {
   padding: 12px 24px;
@@ -2037,143 +1930,7 @@ body {
   color: #6c757d;
 }
 
-.trip-times {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding: 16px 0;
-}
 
-.trip-times>div:first-child,
-.trip-times>div:last-child {
-  font-size: 24px;
-  font-weight: 700;
-  color: #212529;
-}
-
-.trip-duration {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.trip-duration-icon {
-  width: 48px;
-  height: 48px;
-  background: #008b8b;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
-}
-
-.trip-duration-icon i {
-  font-size: 20px;
-  color: #ffffff;
-}
-
-.trip-subtext {
-  font-size: 12px;
-  color: #6c757d;
-  margin-top: 6px;
-  font-weight: 400;
-}
-
-.trip-alignRight {
-  text-align: right;
-}
-
-.trip-meta {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0;
-  padding: 20px 0 0 0;
-  position: relative;
-}
-
-.trip-meta>div:first-child,
-.trip-meta>div:last-child {
-  position: relative;
-  z-index: 2;
-}
-
-.trip-meta>div:first-child {
-  text-align: left;
-}
-
-.trip-meta>div:last-child {
-  text-align: right;
-}
-
-.trip-route-line {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  height: 40px;
-  min-height: 40px;
-}
-
-.trip-route-line::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 2px;
-  border-top: 2px dashed #d1d5db;
-  transform: translateY(-50%);
-  z-index: 1;
-}
-
-.trip-route-line::after {
-  content: '→';
-  position: relative;
-  z-index: 2;
-  color: #474747;
-  font-size: 20px;
-  font-weight: bold;
-  background: #ffffff;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 2px solid #474747;
-  line-height: 1;
-}
-
-.trip-meta strong {
-  font-size: 16px;
-  font-weight: 700;
-  color: #212529;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.trip-done-btn {
-  background: #000 !important;
-  color: #ffffff !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 16px;
-  border-radius: 8px;
-  margin-top: 0;
-}
-
-.trip-done-btn:hover {
-  background: #333 !important;
-  transform: none;
-  box-shadow: none;
-}
 
 /* Policy Table */
 .policy-table {
@@ -2248,32 +2005,7 @@ body {
   font-style: italic;
 }
 
-.no-baggage-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 48px 20px;
-  text-align: center;
-  background: #f8f9fa;
-  border-radius: 12px;
-  margin: 20px 0;
-  border: 2px dashed #dee2e6;
-}
 
-.no-baggage-message i {
-  font-size: 48px;
-  color: #adb5bd;
-}
-
-.no-baggage-message p {
-  font-size: 15px;
-  color: #6c757d;
-  margin: 0;
-  max-width: 400px;
-  line-height: 1.5;
-}
 
 .baggage-option {
   display: flex;
@@ -2744,40 +2476,7 @@ body {
   background: white;
 }
 
-.fare-tab {
-  flex: 1;
-  padding: 14px 20px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-  position: relative;
-}
 
-.fare-tab:hover {
-  color: #0f172a;
-  background: #f8fafc;
-}
-
-.fare-tab.fare-tab-active {
-  color: #0f172a;
-  border-bottom-color: #000000;
-}
-
-.fare-tab-panels {
-  padding: 0;
-}
-
-.fare-tab-panel {
-  display: none;
-}
-
-.fare-tab-panel:first-child {
-  display: block;
-}
 
 /* Fare Info Text Styling */
 .fare-info-text {
@@ -3296,36 +2995,7 @@ body {
     }
 
     /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 24px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .route {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      min-width: 250px;
-    }
-
-    .route h1 {
-      font-size: clamp(20px, 4vw, 32px);
-      font-weight: 700;
-      color: #1a1a1a;
-      letter-spacing: -0.5px;
-      margin: 0;
-    }
-
-    .arrow {
-      color: #666666;
-      font-size: clamp(18px, 3.5vw, 24px);
-      font-weight: 300;
-    }
+   
 
     .cancellation-badge {
       background: linear-gradient(135deg, #2196F3, #1565C0);
@@ -3339,35 +3009,8 @@ body {
     }
 
     /* Flight Details */
-    .flight-details {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+  
 
-    .date-time-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      flex: 1;
-    }
-
-    .date-time {
-      background: #fff4e6;
-      padding: 10px 16px;
-      border-radius: 6px;
-      display: inline-block;
-    }
-
-    .date-time span {
-      font-size: clamp(13px, 2.5vw, 15px);
-      font-weight: 600;
-      color: #1a1a1a;
-    }
 
     .duration {
       color: #666666;
@@ -3510,57 +3153,13 @@ body {
       z-index: 2;
     }
 
-    .timeline-connector {
-      position: absolute;
-      left: clamp(71px, 15vw, 113px);
-      top: clamp(20px, 4vw, 24px);
-      width: 2px;
-      height: clamp(45px, 9vw, 82px);
-      background: #e5e5e5;
-      z-index: 1;
-    }
-
-    .duration-label {
-      position: absolute;
-      left: clamp(84px, 17vw, 122px);
-      top: clamp(32px, 6.5vw, 40px);
-      color: #666666;
-      font-size: clamp(11px, 2.3vw, 14px);
-      font-weight: 500;
-      background: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
+   
     .location-info {
       min-width: 0;
       padding-left: 0px;
     }
 
-    .location-name {
-      font-size: clamp(15px, 3vw, 17px);
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 6px;
-    }
-
-    .location-details {
-      color: #666666;
-      font-size: clamp(12px, 2.4vw, 14px);
-      line-height: 1.5;
-      word-wrap: break-word;
-    }
-
-    /* Baggage Info */
-    .baggage-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      padding: 24px 0;
-      border-top: 1px solid #e5e5e5;
-      border-bottom: 1px solid #e5e5e5;
-    }
+    
 
     .baggage-item {
       display: flex;
@@ -3583,18 +3182,7 @@ body {
       font-weight: 700;
     }
 
-    /* Extra Baggage Promo */
-    .extra-baggage {
-      background: #e3f2fd;
-      padding: clamp(16px, 3.5vw, 20px);
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 24px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+  
 
     .baggage-promo {
       display: flex;
@@ -3774,32 +3362,6 @@ body {
   /* Remove any custom route line styling - use default simple design */
 
   /* Baggage Section - Desktop Only */
-  .baggage-section-desktop {
-    margin-top: 0px;
-    padding: 16px 0;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  @media (min-width: 769px) {
-    .desktop-flight-summary+.baggage-section-desktop {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid #e5e7eb;
-    }
-  }
-
-  .baggage-allowance-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #4b5563;
-  }
-
-  .baggage-allowance-item:last-child {
-    margin-bottom: 0;
-  }
 
   .baggage-icon {
     color: #f59e0b;
@@ -3813,31 +3375,7 @@ body {
   }
 
   /* Add Baggage Banner - Desktop Only */
-  .add-baggage-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #e0f2fe;
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    margin-top: 16px;
-    gap: 16px;
-  }
-
-  .add-baggage-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-  }
-
-  .add-baggage-icon {
-    color: #dc2626;
-    font-size: 20px;
-    flex-shrink: 0;
-    width: 20px;
-  }
+ 
 
   .add-baggage-text {
     font-size: 14px;
@@ -3845,262 +3383,12 @@ body {
     line-height: 1.5;
   }
 
-  .add-baggage-btn {
-    background: linear-gradient(135deg, #2196F3, #1565C0);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-  }
-
-  .add-baggage-btn:hover {
-    background: linear-gradient(135deg, #42A5F5, #1976D2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
-  }
-
-  image.png
-
-  /* Cancellation Policy Section - Desktop Only */
-  .cancellation-policy-section {
-    margin-top: 20px;
-    margin-bottom: 16px;
-    padding-top: 20px;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .cancellation-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  .cancellation-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-  }
-
-  .view-policy-link {
-    font-size: 14px;
-    color: #2563eb;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .view-policy-link:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
-  }
-
-  .cancellation-airline {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .cancellation-airline .logo {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-  }
-
-  .airline-route {
-    font-size: 14px;
-    color: #4b5563;
-    font-weight: 500;
-  }
-
-  .cancellation-criteria-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #6b7280;
-  }
-
-  .cancellation-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .cancellation-row-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    font-size: 13px;
-    color: #4b5563;
-  }
-
-  .criteria-left {
-    flex: 1;
-  }
-
-  .criteria-right {
-    flex: 1;
-    text-align: right;
-    font-weight: 500;
-  }
 }
 
-/* Desktop Baggage Section Styling */
-.makemytrip-baggage-section {
-  padding: 20px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.baggage-allowance-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #4b5563;
-}
-
-.baggage-allowance-item .baggage-icon {
-  color: #008b8b;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.baggage-allowance-item .baggage-text {
-  line-height: 1.5;
-}
 
 /* Desktop Add Baggage CTA */
-.makemytrip-add-baggage {
-  padding: 20px;
-  border-top: 1px solid #e5e7eb;
-  background: #fff7ed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
 
-.add-baggage-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 1;
-}
 
-.add-baggage-left .add-baggage-icon {
-  color: #008b8b;
-  font-size: 32px;
-  flex-shrink: 0;
-}
-
-.add-baggage-left .add-baggage-text {
-  font-size: 14px;
-  color: #4b5563;
-  line-height: 1.5;
-}
-
-.add-baggage-btn {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #2196F3, #1565C0);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-}
-
-.add-baggage-btn:hover {
-  background: linear-gradient(135deg, #42A5F5, #1976D2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
-}
-
-/* Desktop Cancellation Policy Section */
-.makemytrip-cancellation-section {
-  padding: 20px;
-  border-top: 1px solid #e5e7eb;
-  background: white;
-}
-
-.cancellation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.cancellation-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-/* Multi-City Cancellation Tabs */
-.multicity-cancellation-tabs .cancellation-header {
-  margin-bottom: 20px;
-}
-
-.cancellation-tab-headers {
-  display: flex;
-  gap: 8px;
-  border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.cancellation-tab-headers::-webkit-scrollbar {
-  display: none;
-}
-
-.cancellation-tab-header {
-  flex-shrink: 0;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #6c757d;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  background: transparent;
-}
-
-.cancellation-tab-header:hover {
-  color: #008b8b;
-  background: #f8f9fa;
-}
-
-.cancellation-tab-header.active {
-  color: #008b8b;
-  border-bottom-color: #008b8b;
-  background: transparent;
-}
-
-.cancellation-tab-content {
-  animation: fadeIn 0.3s ease;
-}
 
 @keyframes fadeIn {
   from {
@@ -4553,75 +3841,14 @@ body {
   }
 
   /* Trip Meta - Enhanced with route line for desktop */
-  .trip-meta {
-    padding: 20px 0 0 0;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 0;
-  }
-
-  .trip-route-line {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px;
-    height: 40px;
-    min-height: 40px;
-  }
-
-  .trip-route-line::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 2px;
-    border-top: 2px dashed #d1d5db;
-    transform: translateY(-50%);
-    z-index: 1;
-  }
-
-  .trip-route-line::after {
-    content: '→';
-    position: relative;
-    z-index: 2;
-    color: #474747;
-    font-size: 20px;
-    font-weight: bold;
-    background: #ffffff;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 2px solid #474747;
-    line-height: 1;
-    box-shadow: none;
-  }
-
-  .trip-meta strong {
-    font-size: 16px;
-    font-weight: 700;
-    color: #212529;
-  }
+ 
 
   .trip-footer {
     padding: 20px 32px;
     border-top: 1px solid #e9ecef;
   }
 
-  .trip-footer .trip-done-btn {
-    width: 100%;
-    padding: 16px;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+
 
   /* Passenger Modal - Enhanced styling */
   .trip-popup .form-group {
@@ -5453,7 +4680,7 @@ body {
   }
 
   .flight-cards-container .flight-card-item>.card {
-    padding: 24px 16px 20px 16px;
+    padding: 0px;
   }
 
   /* Reset parent card padding on mobile */
@@ -5461,9 +4688,7 @@ body {
     padding: 0;
   }
 
-  .card.flight-summary-wrapper>.flight-cards-container {
-    padding: 16px 16px 0 16px;
-  }
+
 
   .card.flight-summary-wrapper>.flight-cards-container+button.details-btn {
     margin: 16px auto 0 auto;
