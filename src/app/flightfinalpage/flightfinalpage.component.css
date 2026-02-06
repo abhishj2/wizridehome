@@ -8799,8 +8799,29 @@ div#oneway-section .route-info {
     display: none;
   }
 
+  .section-title.canc {
+    margin-bottom: 0 !important;
+  }
+
   .fare-info {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .trip-popup .canc {
+    font-size: 16px !important;
+  }
+
+  .trip-popup .trip-header {
+    padding: 10px 20px;
+  }
+
+  .trip-flight,
+  .trip-body {
+    padding: 10px !important;
+  }
+
+  .policy-tabs {
+    margin-bottom: 0 !important;
   }
 }
