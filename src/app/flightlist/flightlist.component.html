@@ -136,7 +136,8 @@
 
 
                   </div>
-                  ✈
+                  <i class="fas fa-plane-departure" *ngIf="flightType=='oneway'"></i>
+                  <i class="fas fa-repeat" *ngIf="flightType=='round'"></i>
                   <div class="flrouteflex">
                     <small> {{ flightInputData['toCity'] || flightInputData['toAirport'] }}</small>
                     <span *ngIf="flightInputData['toAirportCode']">({{ flightInputData['toAirportCode'] }})</span>
@@ -150,7 +151,7 @@
               </div>
 
               <!-- Meta Pills -->
-              <div class="m-flight-route-meta">
+              <div class="m-flight-route-meta" [class.roundnone]="flightType === 'round'">
                 <span class="m-flight-pill" *ngIf="flightType !== 'multi'">{{ flightInputData['departureDate'] | date :
                   "d MMM, yyyy" }}</span>
                 <span class="m-flight-pill" *ngIf="flightType === 'round' && flightInputData['returnDate']">{{
@@ -214,10 +215,10 @@
               </span>
             </div>
 
-            <!-- NOTE -->
-            <!-- <p class="m-flight-note" *ngIf="flightType !== 'multi'">
-              🔔 Wizzride doesn't charge any convenience fee or service charge.
-            </p> -->
+            <div class="flight-announcement" *ngIf="flightType == 'round'">
+              <div class="announceicobox"><i class="fas fa-bullhorn announcement-icon"></i></div><span>Wizzride doesn't
+                charge any convenience fee or service charge.</span>
+            </div>
           </section>
         </div>
 
@@ -1680,7 +1681,7 @@
                       <h2 class="flight-count-text">
                         {{ groupedFlights.length }} {{ groupedFlights.length === 1 ? 'Flight Found' : 'Flights Found' }}
                       </h2>
-                      <div class="flight-announcement">
+                      <div class="flight-announcement roundtab">
                         <div class="announceicobox">
 
                           <i class="fas fa-bullhorn announcement-icon"></i>
@@ -2214,7 +2215,7 @@
                         {{ groupedFlightsOutbound.length }} {{ groupedFlightsOutbound.length === 1 ? 'Flight found' :
                         'Flights found' }}
                       </h2>
-                      <div class="flight-announcement">
+                      <div class="flight-announcement roundtab">
                         <div class="announceicobox">
 
                           <i class="fas fa-bullhorn announcement-icon"></i>
