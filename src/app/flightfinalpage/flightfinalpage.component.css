@@ -950,6 +950,15 @@ body {
   padding: 0;
 }
 
+/* Multi-City Tabs - Dynamic width based on number of legs */
+.tab-content-wrapper.multicity-tabs {
+  width: auto;
+}
+
+.tab-content-wrapper.multicity-tabs .tab-panel {
+  flex-shrink: 0;
+}
+
 /* Cancellation Row */
 .cancellation-row {
   margin-bottom: 16px;
@@ -8155,5 +8164,9 @@ div#oneway-section .route-info {
   .gst-note {
     margin-bottom: 10px !important;
     font-size: 12px !important;
+  }
+
+  .card.makemytrip-flight-card {
+    padding: 0 !important;
   }
 }

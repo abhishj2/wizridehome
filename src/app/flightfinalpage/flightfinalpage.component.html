@@ -2876,38 +2876,41 @@
         <div class="section-arrow">›</div>
       </div>
 
-      <!-- Tab Headers -->
-      <div class="tab-header-scroll">
-        <div *ngFor="let group of groupedFlightSegments; let i = index" class="tab-header"
-          [class.active]="i === activeCancelTabIndex" (click)="activeCancelTabIndex = i">
-          {{ group[0]?.originCode }} -
-          {{ group[group.length - 1]?.destinationCode }}
+      <!-- Multi-City Leg Tabs -->
+      <div class="policy-tabs" *ngIf="groupedFlightSegments && groupedFlightSegments.length > 0">
+        <div *ngFor="let group of groupedFlightSegments; let i = index" [class.active]="i === activeCancelTabIndex"
+          (click)="activeCancelTabIndex = i" [style.flex]="'1'">
+          {{ group[0]?.from }}-{{ group[group.length - 1]?.to }}
         </div>
       </div>
 
-      <!-- Tab Body -->
-      <div class="tab-body" *ngIf="groupedFlightSegments?.[activeCancelTabIndex]">
-        <ng-container *ngFor="let segment of groupedFlightSegments[activeCancelTabIndex]">
-          <div class="cancellation-row">
-            <div class="flight-airline">
-              <img [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" class="logo" />
-              <div class="name">{{ segment.airline }}</div>
-              <div class="code">{{ segment.code }}</div>
-            </div>
-
-            <div class="criteria">
-              <div class="left">Cancellation Criteria</div>
-              <div class="right">Charges</div>
-            </div>
-
-            <div class="criteria-detail" *ngFor="let row of getCancellationRows(flightDataDeparture)">
-              <div class="left">{{ row.range }}</div>
-              <div class="right">{{ row.price }}</div>
-            </div>
+      <!-- Tab Content with Sliding Animation -->
+      <div class="tab-content-container" *ngIf="groupedFlightSegments && groupedFlightSegments.length > 0">
+        <div class="tab-content-wrapper multicity-tabs"
+          [style.transform]="'translateX(-' + (activeCancelTabIndex * (100 / groupedFlightSegments.length)) + '%)'">
+          <!-- Generate a panel for each leg -->
+          <div class="tab-panel baggage-margin" *ngFor="let group of groupedFlightSegments; let legIndex = index"
+            [style.width]="(100 / groupedFlightSegments.length) + '%'">
+            <ng-container *ngFor="let segment of group; let i = index">
+              <div class="cancellation-row">
+                <div class="flight-airline">
+                  <img [src]="'assets/images/flightimages/' + segment.code.split(' ')[0] + '.png'" class="logo" />
+                  <div class="name">{{ segment.airline }}</div>
+                  <div class="code">{{ segment.code }}</div>
+                </div>
+                <div class="criteria">
+                  <div class="left">Cancellation Criteria</div>
+                  <div class="right">Charges</div>
+                </div>
+                <div class="criteria-detail" *ngFor="let row of getCancellationRows(flightDataDeparture)">
+                  <div class="left">{{ row.range }}</div>
+                  <div class="right">{{ row.price }}</div>
+                </div>
+              </div>
+              <hr class="baggage-divider" *ngIf="i < group.length - 1" />
+            </ng-container>
           </div>
-
-          <hr class="baggage-divider" />
-        </ng-container>
+        </div>
       </div>
     </div>
 
