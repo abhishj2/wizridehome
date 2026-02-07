@@ -531,7 +531,7 @@
 
 .segment-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   font-size: 13px;
   width: 100%;
@@ -891,7 +891,7 @@
   }
 
   .seat-rows-container {
-    max-height: calc(100vh - 500px);
+    max-height: calc(100vh - 400px);
     min-height: 120px;
   }
 
@@ -1272,4 +1272,62 @@ img {
 
 span.flightmobaddon-total {
   justify-content: space-around;
+}
+
+@media(max-width:767px) {
+  button.flightmobaddon-continue {
+    width: auto !important;
+    display: block !important;
+  }
+
+  .flightmobaddon-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: end !important;
+    ;
+  }
+
+  span.flightmobaddon-total {
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .flightmobaddon-footer {
+    justify-content: space-between;
+  }
+
+  .totalp {
+    background: #fff !important;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  button.flightmobaddon-continue {
+    background: #000 !Important;
+    font-weight: bold !important;
+    letter-spacing: 1.2px !important;
+  }
+
+  @media (max-width:480px) {
+    .legend {
+      display: grid;
+      padding: 8px 10px;
+      font-size: 10px;
+      gap: 6px;
+
+      grid-template-columns: 0.6fr 1fr 1fr !important;
+    }
+
+    .legend-item {
+      width: 100% !important;
+    }
+
+    /* Second row first item (High) */
+    .legend-item:nth-child(4) {
+      grid-column: span 2;
+    }
+  }
 }

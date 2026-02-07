@@ -1658,7 +1658,8 @@
   <div class="flightmobaddon-footer" *ngIf="!loader">
     <span class="flightmobaddon-total" (click)="openFareSummary()"
       style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
-      Total Price ₹ {{ totalPrice | number : "1.2-2" }}
+      <div> Total Price </div>
+      <div class="totalp">₹ {{ totalPrice | number : "1.2-2" }}</div>
     </span>
     <button class="flightmobaddon-continue" (click)="handleFooterContinue()">
       {{ isLastStep ? 'Proceed to Pay' : 'Continue' }}
