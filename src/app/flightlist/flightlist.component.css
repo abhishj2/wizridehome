@@ -12,6 +12,12 @@ body {
   box-sizing: border-box;
 }
 
+:host {
+  --color-primary: #008b8b;
+  --color-white: #ffffff;
+  --color-black: #000000;
+}
+
 /* Ensure all images respect container width */
 img {
   max-width: 100%;
@@ -66,111 +72,6 @@ img {
     /* Space for edit button */
   }
 
-  /* Mobile: Route summary - stack vertically */
-  .route-summary {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .route-locations {
-    width: 100%;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    /* Center all items vertically */
-    display: flex;
-  }
-
-  .location-group {
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    align-items: baseline;
-    /* Align text baseline */
-    line-height: 1.3;
-  }
-
-  .route-summary .from,
-  .route-summary .to {
-    font-size: 15px;
-    line-height: 1.3;
-    display: inline-block;
-  }
-
-  /* Multi-city route display - smaller font on mobile */
-  .multicity-route-display {
-    gap: 8px;
-  }
-
-  .multicity-segment-item {
-    gap: 6px;
-  }
-
-  .multicity-segment-item .from,
-  .multicity-segment-item .to {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .multicity-segment-item .location-detail {
-    font-size: 10px;
-  }
-
-  .multicity-segment-item i.fas.fa-plane-departure {
-    font-size: 12px;
-  }
-
-  .multicity-segment-item .segment-separator {
-    margin: 0 8px;
-  }
-
-  .multicity-segment-item .segment-separator-pipe {
-    font-size: 14px;
-  }
-
-  .location-detail {
-    font-size: 11px;
-    line-height: 1.3;
-    display: inline-block;
-  }
-
-  /* Perfect center arrow icon between locations */
-  .route-summary i,
-  .route-locations i {
-    font-size: 14px;
-    margin: 0 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
-    /* Center vertically relative to location groups */
-    line-height: 1;
-    vertical-align: middle;
-    flex-shrink: 0;
-    height: auto;
-  }
-
-  /* Mobile: Journey details - wrap tags properly */
-  .journey-details {
-    width: 100%;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-
-  .route-summary .date,
-  .route-summary .passengers,
-  .route-summary .pickup-time {
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-    border-radius: 12px !important;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
   /* Mobile: Edit button - smaller and positioned */
   .summary-actions {
     position: absolute;
@@ -202,7 +103,7 @@ img {
 
   /* Shared box style */
   .m-flight-box {
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 16px;
     padding: 12px 14px;
     box-shadow:
@@ -274,7 +175,7 @@ img {
   .m-flight-filter-chip {
     height: 20px;
     padding: 0 12px;
-    background: #ffffff;
+    background: var(--color-white);
     border: 1px solid #e5e7eb;
     border-radius: 999px;
     font-size: 12px;
@@ -289,7 +190,7 @@ img {
 
   .m-flight-filter-chip.active {
     background: #0f172a;
-    color: #ffffff;
+    color: var(--color-white);
     border-color: #0f172a;
   }
 
@@ -348,7 +249,7 @@ img {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     background: #0f172a;
-    color: #ffffff;
+    color: var(--color-white);
     font-size: 11px;
     font-weight: 600;
     padding: 8px 5px;
@@ -357,7 +258,7 @@ img {
 
   /* Date chip */
   .m-flight-date-chip {
-    background: #ffffff;
+    background: var(--color-white);
     border: 1.5px solid #e5e7eb;
     border-radius: 12px;
     padding: 6px 10px;
@@ -394,35 +295,7 @@ img {
     color: #2f80ff;
   }
 
-  /* Calendar chip */
-  .m-flight-calendar-chip {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 10px;
-    border: none;
-    box-shadow:
-      0 4px 10px rgba(0, 0, 0, 0.06),
-      0 1px 2px rgba(0, 0, 0, 0.03);
-    cursor: pointer;
-  }
 
-  .m-flight-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 6px);
-    grid-template-rows: repeat(3, 6px);
-    gap: 3px;
-  }
-
-  .m-flight-calendar-grid span {
-    width: 6px;
-    height: 6px;
-    background: #38bdf8;
-    border-radius: 2px;
-  }
-
-  .m-flight-calendar-grid span:nth-child(odd) {
-    background: #67e8f9;
-  }
 
   /* ============================= */
   /* INFO BOX */
@@ -437,7 +310,7 @@ img {
   }
 
   .m-flight-sort-pill {
-    background: #ffffff;
+    background: var(--color-white);
     padding: 2px 10px;
     border-radius: 999px;
     font-weight: 500;
@@ -540,82 +413,9 @@ img {
   flex: 1;
 }
 
-.route-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  font-weight: 600;
-  flex-wrap: wrap;
-  width: 100%;
-}
 
-.route-locations {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-  min-width: 0;
-}
 
-.location-group {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 4px;
-  min-width: 0;
-  flex: 0 1 auto;
-}
 
-.journey-details {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-
-.route-summary .from,
-.route-summary .to {
-  font-size: 17px;
-  font-weight: 700;
-  color: #0f172a;
-  position: relative;
-  line-height: 1.2;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.location-detail {
-  font-size: 12px;
-  font-weight: 500;
-  color: #475569 !important;
-  opacity: 1;
-  line-height: 1.3;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.route-summary .date,
-.route-summary .passengers,
-.route-summary .pickup-time {
-  background: #fff !important;
-  padding: 8px 16px !important;
-  border-radius: 15px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  border: 1px solid rgba(0, 139, 139, 0.25) !important;
-  color: #000 !important;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.route-summary i {
-  font-size: 16px;
-  color: #6b7280;
-}
 
 .summary-actions {
   display: flex;
@@ -686,7 +486,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 16px;
     padding: 20px 24px;
     box-shadow:
@@ -780,7 +580,7 @@ img {
 
   .desktop-summary-card .modify-search-btn {
     background: #000;
-    color: #ffffff;
+    color: var(--color-white);
     border: none;
     padding: 12px 24px;
     border-radius: 12px;
@@ -844,7 +644,7 @@ img {
   }
 
   .summary-input:focus {
-    border-bottom-color: #008b8b;
+    border-bottom-color: var(--color-primary);
     background: rgba(0, 139, 139, 0.02);
   }
 
@@ -913,7 +713,7 @@ img {
     top: 100%;
     left: 0;
     right: 0;
-    background: #ffffff;
+    background: var(--color-white);
     border: 2px solid #e9ecef;
     border-top: none;
     border-radius: 0 0 12px 12px;
@@ -962,7 +762,7 @@ img {
   .city-suggestion:hover {
     background: rgba(0, 139, 139, 0.05);
     transform: translateX(6px);
-    border-left: 3px solid #008b8b;
+    border-left: 3px solid var(--color-primary);
   }
 
   .city-suggestion:last-child {
@@ -1031,7 +831,7 @@ img {
     padding: 12px 16px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
-    background: #ffffff;
+    background: var(--color-white);
     text-align: left;
     cursor: pointer;
     font-size: 16px;
@@ -1041,7 +841,7 @@ img {
   }
 
   .travelers-btn:hover {
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     background: rgba(0, 139, 139, 0.02);
   }
 
@@ -1050,7 +850,7 @@ img {
     top: 100%;
     left: 0;
     right: 0;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 15px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
     z-index: 999999999 !important;
@@ -1112,7 +912,7 @@ img {
     height: 25px;
     border-radius: 50%;
     border: 2px solid #e9ecef;
-    background: #008b8b;
+    background: var(--color-primary);
     color: #fff;
     font-size: 14px;
     font-weight: 600;
@@ -1124,7 +924,7 @@ img {
   }
 
   .counter-btn:hover:not(:disabled) {
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     transform: scale(1.1);
   }
 
@@ -1134,9 +934,9 @@ img {
   }
 
   .counter-btn.active {
-    background: #008b8b;
-    border-color: #008b8b;
-    color: #ffffff !important;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white) !important;
   }
 
   .counter-value {
@@ -1171,7 +971,7 @@ img {
     padding: 12px 22px;
     border: 2px solid #e9ecef;
     border-radius: 10px;
-    background: #ffffff;
+    background: var(--color-white);
     color: #474747;
     font-weight: 600;
     cursor: pointer;
@@ -1180,15 +980,15 @@ img {
   }
 
   .class-option.active {
-    background: #008b8b;
-    border-color: #008b8b;
-    color: #ffffff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
     box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
   }
 
   .class-option:not(.active):hover {
-    border-color: #008b8b;
-    color: #008b8b;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
     background: rgba(0, 139, 139, 0.05);
   }
 
@@ -1202,7 +1002,7 @@ img {
 
   .done-btn {
     background: #fd7e14;
-    color: #ffffff;
+    color: var(--color-white);
     border: none;
     padding: 12px 24px;
     border-radius: 8px;
@@ -1229,16 +1029,6 @@ img {
     }
   }
 
-  /* Passenger and Class Edit Form */
-  .summary-edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 8px;
-    width: 100%;
-    position: relative;
-  }
-
   .passenger-display {
     padding: 12px 16px;
     border: 2px solid #e9ecef;
@@ -1246,7 +1036,7 @@ img {
     font-size: 14px;
     font-weight: 500;
     color: #212529;
-    background: #ffffff;
+    background: var(--color-white);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1256,7 +1046,7 @@ img {
   }
 
   .passenger-display:hover {
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     background: rgba(0, 139, 139, 0.02);
   }
 
@@ -1268,9 +1058,9 @@ img {
     transform: rotate(180deg);
   }
 
-  .summary-edit-form .passenger-dropdown {
-    background: #ffffff;
-    border: 2px solid #008b8b;
+  .passenger-dropdown {
+    background: var(--color-white);
+    border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 12px;
     box-shadow:
@@ -1312,8 +1102,8 @@ img {
     width: 25px;
     height: 25px;
     border: 2px solid #e9ecef;
-    background: #008b8b;
-    color: #ffffff;
+    background: var(--color-primary);
+    color: var(--color-white);
     border-radius: 50%;
     cursor: pointer;
     font-size: 14px;
@@ -1325,7 +1115,7 @@ img {
   }
 
   .passenger-type-row .controls button:hover:not(:disabled) {
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     transform: scale(1.1);
   }
 
@@ -1342,29 +1132,8 @@ img {
     text-align: center;
   }
 
-  .class-select {
-    padding: 12px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #212529;
-    background: #ffffff;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.3s ease;
-    width: 100%;
-  }
 
-  .class-select:hover {
-    border-color: #008b8b;
-    background: rgba(0, 139, 139, 0.02);
-  }
 
-  .class-select:focus {
-    border-color: #008b8b;
-    background: rgba(0, 139, 139, 0.02);
-  }
 }
 
 /* Premium Desktop (1024px+) - Enhanced Neomorphism */
@@ -1547,7 +1316,7 @@ img {
   height: 12px;
   border: 2px solid #cbd5e1;
   border-radius: 4px;
-  background: #ffffff;
+  background: var(--color-white);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -1561,7 +1330,7 @@ img {
   transform: translate(-50%, -50%) scale(0) rotate(45deg);
   width: 4px;
   height: 8px;
-  border: solid #ffffff;
+  border: solid var(--color-white);
   border-width: 0 2px 2px 0;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   opacity: 0;
@@ -1569,8 +1338,8 @@ img {
 
 /* Checked state */
 .filter-option input[type="checkbox"]:checked::before {
-  background: linear-gradient(135deg, #008b8b 0%, #00a8a8 100%);
-  border-color: #008b8b;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #00a8a8 100%);
+  border-color: var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
 }
 
@@ -1581,13 +1350,13 @@ img {
 
 /* Hover effect on checkbox */
 .filter-option input[type="checkbox"]:hover::before {
-  border-color: #008b8b;
+  border-color: var(--color-primary);
   box-shadow: 0 2px 6px rgba(0, 139, 139, 0.15);
 }
 
 /* Focus state for accessibility */
 .filter-option input[type="checkbox"]:focus-visible::before {
-  outline: 2px solid #008b8b;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -1600,7 +1369,7 @@ img {
 .btn-link {
   background: none;
   border: none;
-  color: #008b8b;
+  color: var(--color-primary);
   cursor: pointer;
   font-size: 12px;
   text-decoration: underline;
@@ -1648,14 +1417,14 @@ img {
 }
 
 .time-slot:hover {
-  border-color: #008b8b;
+  border-color: var(--color-primary);
   background: #f0f9f9;
 }
 
 .time-slot.selected {
-  border-color: #008b8b;
+  border-color: var(--color-primary);
   background: #f1f9f9;
-  color: #008b8b;
+  color: var(--color-primary);
 }
 
 .time-slot i {
@@ -1732,7 +1501,7 @@ img {
 .announcement-icon {
   font-size: 14px;
   line-height: 1;
-  color: #008b8b;
+  color: var(--color-primary);
 }
 
 @media (max-width: 768px) {
@@ -2040,7 +1809,7 @@ img {
 @media (max-width: 768px) {
   .date-slider-scroll-wrapper {
     scrollbar-width: thin;
-    scrollbar-color: #008b8b #f0f0f0;
+    scrollbar-color: var(--color-primary) #f0f0f0;
   }
 
   .date-slider-scroll-wrapper::-webkit-scrollbar {
@@ -2054,7 +1823,7 @@ img {
   }
 
   .date-slider-scroll-wrapper::-webkit-scrollbar-thumb {
-    background: #008b8b;
+    background: var(--color-primary);
     border-radius: 3px;
   }
 
@@ -2088,7 +1857,7 @@ img {
 .date-slider-loading {
   padding: 15px 20px;
   text-align: center;
-  color: #008b8b;
+  color: var(--color-primary);
   font-size: 16px;
   min-width: 80px;
   display: flex;
@@ -2117,7 +1886,7 @@ img {
   text-align: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #ffffff !important;
+  background: var(--color-white) !important;
   flex-shrink: 0;
   position: relative;
   display: flex;
@@ -2145,7 +1914,7 @@ img {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   background: #0f172a;
-  color: #ffffff;
+  color: var(--color-white);
   font-size: 12px;
   font-weight: 700;
   padding: 12px 6px;
@@ -2174,46 +1943,12 @@ img {
 }
 
 /* Date components - for backward compatibility */
-.date-day {
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
-  margin-bottom: 0;
-  line-height: 1;
-}
 
-.date-weekday {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  color: #64748b !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1;
-}
-
-.date-card.selected .date-day {
-  color: #2f80ff !important;
-}
-
-.date-card.selected .date-weekday {
-  color: #2f80ff !important;
-}
 
 /* Keep old date-label for backward compatibility */
-.date-label {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #000 !important;
-  margin-bottom: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  line-height: 1.2;
-}
 
-.date-card.selected .date-label {
-  color: #474747 !important;
-  font-weight: 600 !important;
-}
+
+
 
 .date-price {
   font-size: 14px !important;
@@ -2232,40 +1967,6 @@ img {
 
 /* No price styles removed - only dates with prices are shown (REQUIREMENT 1) */
 
-.slider-nav {
-  width: 44px;
-  height: 44px;
-  border: 2px solid #e5e7eb;
-  background: white;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.slider-nav:hover {
-  background: #008b8b;
-  border-color: #008b8b;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 139, 139, 0.25);
-  transform: scale(1.05);
-}
-
-.slider-nav:active {
-  transform: scale(0.95);
-}
-
-.slider-nav:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  pointer-events: none;
-}
 
 /* Flight Cards (matching booking-results design) */
 .flight-cards {
@@ -2305,34 +2006,6 @@ img {
   z-index: 10;
 }
 
-
-/* Date Hanger Design */
-.date-hanger {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(-100%);
-  z-index: 10;
-}
-
-.date-content {
-  background: #f5f7fa !important;
-  color: #333 !important;
-  padding: 2px 20px !important;
-  border-radius: 10px 10px 0 0 !important;
-  border: 1px solid #e5e7eb !important;
-  border-bottom: none !important;
-  position: relative !important;
-}
-
-.date-text {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: gray;
-  opacity: 0.7;
-}
-
 /* Route Section */
 .route {
   display: grid;
@@ -2355,48 +2028,9 @@ img {
     padding: 18px 24px;
   }
 
-  .route-column {
-    min-width: 0;
-    max-width: 100%;
-  }
 
-  .route-visualization {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  .vehicle {
-    display: flex;
-    min-width: 120px;
-    max-width: 120px;
-  }
 }
 
-.route-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-  box-sizing: border-box;
-  margin-top: 15px;
-  position: relative;
-}
-
-.route-code {
-  background-color: #add8e6;
-  font-weight: bolder;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 18px;
-  color: #000;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
 
 .location {
   font-size: 13px;
@@ -2422,102 +2056,17 @@ img {
   color: gray;
 }
 
-.route-visualization {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  margin-top: 15px;
-  align-self: flex-start;
-}
 
-.route-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 70%;
-  max-width: 100%;
-  position: relative;
-  padding-bottom: 0;
-  margin-top: 0;
-  box-sizing: border-box;
-  min-width: 0;
-}
 
-.route-line:before {
-  content: "";
-  position: absolute;
-  left: 5px;
-  right: 16px;
-  height: 3px;
-  background: #47474770;
-  z-index: 1;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px #008b8b4d;
-  max-width: calc(100% - 21px);
-  box-sizing: border-box;
-}
-
-.route-node {
-  width: 12px;
-  height: 12px;
-  border-radius: 60%;
-  background: #47474770;
-  z-index: 2;
-  position: relative;
-  animation: pulse 2s infinite;
-}
-
-.start-node {
-  background: #008b8b;
-}
-
-.end-node {
-  background: #008b8b;
-}
-
-.route-car {
-  background: transparent;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-  position: relative;
-}
-
-.route-car i {
-  font-size: 24px;
-  color: #008b8b;
-}
-
-.route-details {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  min-width: 0;
-  margin-top: 8px;
-}
 
 .time {
   font-size: 14px;
-  color: #ffffff;
+  color: var(--color-white);
   font-weight: 600;
   background: linear-gradient(293deg, #e94057, #f27121);
   padding: 4px 8px;
   border-radius: 4px;
-  box-shadow: 0 1px 4px #008b8b33;
+  box-shadow: 0 1px 4px var(--color-primary)33;
   display: inline-block;
   margin-top: 4px;
   white-space: nowrap;
@@ -2536,87 +2085,9 @@ img {
   white-space: nowrap;
 }
 
-.stops-summary {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #6b7280;
-  text-align: center;
-}
-
-/* Vehicle Section */
-.vehicle {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  max-width: 120px;
-  box-sizing: border-box;
-  min-width: 0;
-  justify-content: center;
-}
-
-.vehicle img {
-  width: 90%;
-  max-width: 100px;
-  height: auto;
-  padding-bottom: 10px;
-  box-sizing: border-box;
-  object-fit: contain;
-}
-
-.vehicle-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.vehicle-info h3 {
-  margin: 0;
-  font-size: 12.8px;
-  color: #1f2937;
-}
-
-.vehicle-info p {
-  margin: 4px 0 0;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.price-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-.price-info p {
-  display: flex;
-  justify-content: center;
-  margin: 0px;
-  font-size: 12.8px;
-  color: #6b7280;
-}
-
-.price {
-  font-size: 26px;
-  font-weight: bold;
-  color: #474747;
-  line-height: 1;
-  text-shadow: 1px -2px 1px #ccc;
-}
 
 /* Mobile sections - hidden on desktop */
-.mobile-amenities,
-.mobile-price-row,
-.mobile-booking-row {
-  display: none;
-}
+
 
 /* Desktop price display - visible on desktop only */
 .desktop-price-display {
@@ -2630,7 +2101,7 @@ img {
   align-items: center;
   padding: 10px 20px;
   border-top: 1px solid #e5e7eb;
-  background: #ffffff;
+  background: var(--color-white);
   gap: 10px;
   overflow: visible;
   width: 100%;
@@ -2772,7 +2243,7 @@ img {
 }
 
 .btn:hover {
-  background: #008b8b;
+  background: var(--color-primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 139, 139, 0.3);
 }
@@ -2939,7 +2410,7 @@ img {
 }
 
 .book-btn:hover {
-  background: #008b8b;
+  background: var(--color-primary);
 }
 
 /* MakeMyTrip Style Book Button */
@@ -3062,8 +2533,8 @@ img {
 }
 
 .footer-expand-tabs .tab.active {
-  color: #008b8b;
-  border-bottom-color: #008b8b;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 
 .footer-tab-content {
@@ -3459,21 +2930,21 @@ img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #008b8b;
+  border: 2px solid var(--color-primary);
   background: white;
   cursor: pointer;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #008b8b;
+  color: var(--color-primary);
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .scroll-arrow:hover {
-  border-color: #008b8b;
-  color: #008b8b;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
   background: #f0f9f9;
 }
 
@@ -3654,7 +3125,7 @@ img {
 .fare-type {
   font-size: 14px;
   font-weight: 600;
-  color: #008b8b;
+  color: var(--color-primary);
   margin-bottom: 16px;
   padding: 8px 12px;
   background: #f0f9f9;
@@ -3802,12 +3273,12 @@ img {
 
 .lock-now-btn {
   background: white;
-  color: #008b8b;
-  border: 2px solid #008b8b;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .continue-book-btn {
-  background: #008b8b;
+  background: var(--color-primary);
   color: white;
 }
 
@@ -4025,7 +3496,7 @@ img {
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
-    background: #ffffff !important;
+    background: var(--color-white) !important;
     flex-shrink: 0;
   }
 
@@ -4035,7 +3506,7 @@ img {
 
   .date-card.selected {
     border-color: rgba(0, 139, 139, 0.5) !important;
-    background: #ffffff !important;
+    background: var(--color-white) !important;
     box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
   }
 
@@ -4084,96 +3555,7 @@ img {
     min-width: 0;
   }
 
-  .vehicle {
-    display: none;
-  }
 
-  .vehicle img {
-    display: none;
-  }
-
-  .vehicle-info {
-    margin-top: 8px;
-  }
-
-  .vehicle-info h3 {
-    font-size: 13px;
-  }
-
-  .route-column {
-    gap: 6px;
-    min-width: 0;
-    box-sizing: border-box;
-    margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-  }
-
-  .route-column:first-child {
-    grid-column: 1;
-    grid-row: 1;
-    width: auto;
-    min-width: 0;
-    max-width: 90px;
-    margin-bottom: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-    /* align-self: center; */
-  }
-
-  .route-column:last-child {
-    grid-column: 3;
-    grid-row: 1;
-    width: auto;
-    min-width: 0;
-    max-width: 90px;
-    margin-top: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-    /* align-self: center; */
-  }
-
-  .route-visualization {
-    grid-column: 2;
-    grid-row: 1;
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-    padding: 0 2px;
-    overflow: visible;
-    box-sizing: border-box;
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .route-visualization>div:first-child:empty {
-    display: none;
-  }
-
-  .route-visualization .route-line {
-    align-self: center;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .route-visualization .route-details {
-    margin-top: 8px;
-    align-self: center;
-    width: 100%;
-  }
-
-  .route-code {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-  }
 
   .location {
     word-wrap: break-word;
@@ -4183,51 +3565,13 @@ img {
     text-overflow: ellipsis;
   }
 
-  .route-line {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    box-sizing: border-box;
-    min-width: 0;
-    position: relative;
-  }
 
-  .route-line:before {
-    right: 8px;
-    max-width: calc(100% - 13px);
-  }
-
-  .route-details {
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    margin-top: 8px;
-  }
 
   .time,
   .duration {
     font-size: 12px;
     padding: 6px 12px;
     display: inline-block;
-  }
-
-  .price-info {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    margin-top: 16px;
-    width: 100%;
-  }
-
-  .price {
-    font-size: 22px;
-  }
-
-  .price-info p {
-    font-size: 11px;
-    margin-top: 8px !important;
   }
 
   /* Hide "per adult" on mobile */
@@ -4240,57 +3584,7 @@ img {
     display: block;
   }
 
-  /* Mobile Amenities Section */
-  .mobile-amenities {
-    display: grid;
-    grid-template-columns: 1fr 0.85fr;
-    gap: 0;
-    align-items: stretch;
-    padding: 16px 18px;
-    background: #ffffff;
-    border-top: 1px solid #f0f4f8;
-  }
 
-  .amenities-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    padding-right: 12px;
-    border-right: 1px solid #e5eaf0;
-  }
-
-  .mobile-amenities .amenity {
-    display: flex;
-    align-items: center;
-    gap: 0px;
-    font-size: 6px !important;
-    color: #4b5563;
-    line-height: 1.3;
-  }
-
-  .mobile-amenities .amenity i {
-    width: 20px;
-    min-width: 20px;
-    text-align: center;
-    color: #3b82f6;
-    font-size: 9px;
-  }
-
-  .mobile-vehicle-visual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding-left: 12px;
-  }
-
-  .mobile-vehicle-visual img {
-    width: 110px;
-    height: 65px !important;
-    object-fit: contain;
-  }
 
   .mobile-vehicle-name {
     font-size: 11px;
@@ -4306,14 +3600,6 @@ img {
     display: none !important;
   }
 
-  .mobile-price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 18px;
-    background: linear-gradient(135deg, #e8f4ff 0%, #d4e8fc 100%);
-    border-top: 1px solid #c1daf8;
-  }
 
   .mobile-seats-left {
     display: flex;
@@ -4345,20 +3631,14 @@ img {
     letter-spacing: -0.5px;
   }
 
-  /* Mobile Booking Button */
-  .mobile-booking-row {
-    display: flex;
-    justify-content: center;
-    padding: 14px 18px 18px;
-    background: #ffffff;
-  }
+
 
   .mobile-book-btn {
     width: 100%;
     max-width: 360px;
     padding: 14px;
     background: linear-gradient(135deg, #e94057 0%, #f27121 100%);
-    color: #ffffff;
+    color: var(--color-white);
     border: none;
     border-radius: 25px;
     font-size: 14px;
@@ -4393,14 +3673,7 @@ img {
     font-size: 15px;
   }
 
-  .sticky-footer {
-    position: relative;
-  }
 
-  .footer-content {
-    flex-direction: column;
-    gap: 15px;
-  }
 
   .search-summary {
     padding: 16px 20px;
@@ -4413,90 +3686,9 @@ img {
     gap: 12px;
   }
 
-  .summary-info {
-    flex: 1;
-    min-width: 0;
-  }
 
-  .route-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-    width: 100%;
-  }
 
-  .route-locations {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-  }
 
-  .location-group {
-    flex: 0 1 auto;
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 4px;
-    min-width: 0;
-  }
-
-  .location-group:first-child {
-    flex: 1;
-  }
-
-  .location-group:last-child {
-    flex: 1;
-  }
-
-  .route-summary .from,
-  .route-summary .to {
-    font-size: 12px;
-    font-weight: 700;
-    color: #0f172a;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .location-detail {
-    font-size: 11px;
-    font-weight: 500;
-    color: #475569 !important;
-    line-height: 1.3;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .route-summary i.fa-arrow-right {
-    font-size: 14px;
-    color: #6b7280;
-    flex-shrink: 0;
-  }
-
-  .journey-details {
-    width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    align-items: center;
-    overflow-x: auto;
-  }
-
-  .journey-details::-webkit-scrollbar {
-    display: none;
-  }
-
-  .route-summary .date,
-  .route-summary .passengers,
-  .route-summary .pickup-time {
-    font-size: 12px !important;
-    padding: 6px 14px !important;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
 
   .summary-actions {
     flex-shrink: 0;
@@ -4670,7 +3862,7 @@ img {
   .mobile-form-group input:focus,
   .mobile-form-group select:focus {
     outline: none;
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(0, 139, 139, 0.1);
   }
 
@@ -4753,7 +3945,7 @@ img {
 
   .mobile-passenger-type-row .controls button:hover {
     background: #f9fafb;
-    border-color: #008b8b;
+    border-color: var(--color-primary);
   }
 
   .mobile-passenger-type-row .controls span {
@@ -4873,7 +4065,7 @@ img {
 
   .mobile-filter-chip.active {
     background: #000;
-    color: #ffffff;
+    color: var(--color-white);
     border-color: #000;
   }
 
@@ -4917,7 +4109,7 @@ img {
     font-weight: 500;
     white-space: nowrap;
     border: 1px solid #e5e7eb;
-    background-color: #ffffff;
+    background-color: var(--color-white);
     color: #374151;
   }
 
@@ -5153,7 +4345,7 @@ img {
     height: 16px;
     border: 2px solid #cbd5e1;
     border-radius: 4px;
-    background: #ffffff;
+    background: var(--color-white);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
@@ -5167,7 +4359,7 @@ img {
     transform: translate(-50%, -50%) scale(0) rotate(45deg);
     width: 4px;
     height: 8px;
-    border: solid #ffffff;
+    border: solid var(--color-white);
     border-width: 0 2px 2px 0;
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     opacity: 0;
@@ -5175,8 +4367,8 @@ img {
 
   /* Mobile checked state */
   .mobile-checkbox-inline input[type="checkbox"]:checked::before {
-    background: linear-gradient(135deg, #008b8b 0%, #00a8a8 100%);
-    border-color: #008b8b;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #00a8a8 100%);
+    border-color: var(--color-primary);
     box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
   }
 
@@ -5187,7 +4379,7 @@ img {
 
   /* Mobile hover effect */
   .mobile-checkbox-inline input[type="checkbox"]:hover::before {
-    border-color: #008b8b;
+    border-color: var(--color-primary);
     box-shadow: 0 2px 6px rgba(0, 139, 139, 0.15);
   }
 
@@ -5334,38 +4526,11 @@ img {
     text-align: left !important;
   }
 
-  .route-column {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 5px !important;
-    margin-top: 15px !important;
-    max-width: 100% !important;
-  }
 
-  .route-column:first-child,
-  .route-column:last-child {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
 
-  .route-visualization {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    width: 100% !important;
-    margin-top: 15px !important;
-    padding: 0 !important;
-    align-self: flex-start !important;
-  }
 
-  .route-details {
-    flex-direction: row !important;
-    gap: 8px !important;
-    margin-top: 8px !important;
-  }
+
+
 
   .time,
   .duration {
@@ -5373,22 +4538,11 @@ img {
     padding: 4px 8px !important;
   }
 
-  .price-info {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    margin-top: 0 !important;
-  }
 
-  .price {
-    font-size: 26px !important;
-  }
 
   /* Hide mobile sections on desktop */
-  .mobile-amenities,
-  .mobile-price-row,
-  .mobile-booking-row {
-    display: none !important;
-  }
+
+
 
   /* Show desktop price display on tablets and larger */
   .desktop-price-display {
@@ -5424,7 +4578,7 @@ img {
 .roundtrip-tab-bar {
   display: flex;
   position: relative;
-  background: #ffffff;
+  background: var(--color-white);
   border-bottom: 2px solid #e5e7eb;
   margin-bottom: 20px;
   width: 100%;
@@ -5446,7 +4600,7 @@ img {
 }
 
 .tab-item.active {
-  color: #008b8b;
+  color: var(--color-primary);
   font-weight: 600;
 }
 
@@ -5467,7 +4621,7 @@ img {
 }
 
 .tab-item.active .tab-sector i {
-  color: #008b8b;
+  color: var(--color-primary);
 }
 
 .tab-date {
@@ -5477,7 +4631,7 @@ img {
 }
 
 .tab-item.active .tab-date {
-  color: #008b8b;
+  color: var(--color-primary);
 }
 
 .tab-underline {
@@ -5486,7 +4640,7 @@ img {
   left: 0;
   width: 50%;
   height: 3px;
-  background: #008b8b;
+  background: var(--color-primary);
   transition: transform 0.3s ease;
   transform: translateX(0%);
 }
@@ -5506,7 +4660,7 @@ img {
 }
 
 .roundtrip-selected {
-  border: 2px solid #008b8b !important;
+  border: 2px solid var(--color-primary) !important;
   box-shadow: 0 0 0 3px rgba(0, 139, 139, 0.1) !important;
 }
 
@@ -5643,7 +4797,7 @@ img {
     align-items: center;
     padding: 16px 20px;
     gap: 20px;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -5783,7 +4937,7 @@ img {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #ffffff;
+    background: var(--color-white);
     padding: 0 10px;
     z-index: 1;
     font-size: 16px;
@@ -5795,7 +4949,7 @@ img {
     font-size: 14px;
     color: #111827;
     font-weight: 600;
-    background: #ffffff;
+    background: var(--color-white);
     padding: 0 12px;
     z-index: 1;
     position: relative;
@@ -5806,7 +4960,7 @@ img {
     font-size: 12px;
     color: #374151;
     font-weight: 500;
-    background: #ffffff;
+    background: var(--color-white);
     padding: 0 12px;
     z-index: 1;
     position: relative;
@@ -5894,7 +5048,7 @@ img {
   /* Text below timeline like '1 stop via Frankfurt' in blue */
   .layover-timeline-text {
     font-size: 11px;
-    color: #008b8b;
+    color: var(--color-primary);
     text-align: center;
     margin-top: 4px;
     font-weight: 500;
@@ -5924,7 +5078,7 @@ img {
 
   .desktop-view-prices-btn {
     background: #000000;
-    color: #ffffff;
+    color: var(--color-white);
     border: none;
     padding: 8px 20px;
     border-radius: 6px;
@@ -5970,12 +5124,9 @@ img {
     display: none !important;
   }
 
-  .card .date-hanger,
+
   .card .route,
-  .card .options,
-  .card .mobile-amenities,
-  .card .mobile-price-row,
-  .card .mobile-booking-row {
+  .card .options {
     display: none !important;
   }
 }
@@ -5992,7 +5143,7 @@ img {
 
   /* Flight Card Component Styles for Mobile */
   .flight-card-component__flight-card {
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 12px;
     overflow: visible;
     box-shadow: 0 4px 14px #0000000a;
@@ -6005,7 +5156,7 @@ img {
 
   /* Clean Mobile Flight Card Design */
   .mobile-flight-card-clean {
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 12px;
@@ -6145,12 +5296,6 @@ img {
     align-items: flex-end;
   }
 
-  .flight-card-component__time {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1.2;
-  }
 
   .mobile-flight-card-clean .flight-card-component__time {
     font-size: 20px;
@@ -6220,7 +5365,7 @@ img {
     font-size: 18px;
     color: #000;
     z-index: 1;
-    background: #ffffff;
+    background: var(--color-white);
     padding: 6px;
     border-radius: 50%;
   }
@@ -6228,7 +5373,7 @@ img {
   .mobile-flight-card-clean .flight-card-component__flight-icon i {
     font-size: 18px;
     color: #000;
-    background: #ffffff;
+    background: var(--color-white);
     padding: 0;
     border-radius: 0;
   }
@@ -6345,7 +5490,7 @@ img {
   }
 
   .flight-card-component__group-separator .flight-card-component__dotted-line {
-    background-image: linear-gradient(to right, #008b8b 50%, transparent 50%);
+    background-image: linear-gradient(to right, var(--color-primary) 50%, transparent 50%);
     height: 2px;
   }
 
@@ -6421,12 +5566,10 @@ img {
   }
 
   /* Hide old mobile sections when new design is shown */
-  .card .mobile-amenities,
-  .card .mobile-price-row,
-  .card .mobile-booking-row,
+
+
   .card .route,
   .card .options,
-  .card .date-hanger,
   .card .refundability-tag {
     display: none !important;
   }
@@ -6456,18 +5599,14 @@ img {
   }
 
   /* Hide old desktop layout */
-  .card .date-hanger,
   .card .route,
   .card .options,
   .card .refundability-tag {
     display: none !important;
   }
 
-  .card .mobile-amenities,
-  .card .mobile-price-row,
-  .card .mobile-booking-row {
-    display: none !important;
-  }
+
+
 
   /* Card styles for desktop */
   .card {
@@ -6491,17 +5630,14 @@ img {
 @media (min-width: 769px) {
 
   /* Hide old desktop layout elements */
-  .card .date-hanger,
+
   .card .route,
   .card .options {
     display: none !important;
   }
 
-  .card .mobile-amenities,
-  .card .mobile-price-row,
-  .card .mobile-booking-row {
-    display: none !important;
-  }
+
+
 
   /* Show new flight card component on desktop */
   .card .flight-card-component__flight-card {
@@ -6522,7 +5658,7 @@ img {
 
   /* Desktop flight card styling */
   .flight-card-component__flight-card {
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 12px;
     overflow: visible;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -6618,12 +5754,7 @@ img {
     align-items: flex-end;
   }
 
-  .flight-card-component__time {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1.2;
-  }
+
 
   .flight-card-component__date {
     font-size: 12px;
@@ -6660,7 +5791,7 @@ img {
     font-size: 20px;
     color: #000;
     z-index: 1;
-    background: #ffffff;
+    background: var(--color-white);
     padding: 6px;
   }
 
@@ -6752,7 +5883,7 @@ img {
   }
 
   .flight-card-component__group-separator .flight-card-component__dotted-line {
-    background-image: linear-gradient(to right, #008b8b 50%, transparent 50%);
+    background-image: linear-gradient(to right, var(--color-primary) 50%, transparent 50%);
     height: 2px;
   }
 
@@ -6800,8 +5931,8 @@ img {
 
   .desktop-only.flight-card-component__view-prices-btn {
     display: inline-block;
-    background: #008b8b;
-    color: #ffffff;
+    background: var(--color-primary);
+    color: var(--color-white);
     border: none;
     border-radius: 6px;
     padding: 10px 20px;
@@ -7076,61 +6207,10 @@ img {
   }
 }
 
-.flex-container-space-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 /* ================= MULTI-CITY ROUTE DISPLAY IN SEARCH SUMMARY ================= */
 /* Multi-City Route Display in Search Summary - Same Line */
-.multicity-route-display {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-}
 
-.multicity-segment-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
 
-.multicity-segment-item .location-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.multicity-segment-item .from,
-.multicity-segment-item .to {
-  font-size: 17px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.multicity-segment-item .segment-date {
-  font-size: 13px;
-  color: #666;
-  margin-left: 4px;
-}
-
-.multicity-segment-item .segment-separator {
-  margin: 0 12px;
-  color: #999;
-  font-size: 16px;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-}
-
-.multicity-segment-item .segment-separator-pipe {
-  font-size: 18px;
-  color: #9ca3af;
-  font-weight: 300;
-}
 
 /* ================= DESKTOP MULTI-CITY CARD - ALL SEGMENTS IN ONE CARD ================= */
 .desktop-multicity-card {
@@ -7147,7 +6227,7 @@ img {
 
 .desktop-multicity-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #008b8b;
+  border-color: var(--color-primary);
 }
 
 .desktop-multicity-segment {
@@ -7160,26 +6240,6 @@ img {
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
-}
-
-.multicity-segment-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.multicity-segment-header .route-label {
-  font-weight: 600;
-  font-size: 14px;
-  color: #111827;
-}
-
-.multicity-segment-header .route-date {
-  font-size: 13px;
-  color: #6b7280;
 }
 
 .desktop-multicity-card .desktop-flight-row {
@@ -7200,16 +6260,8 @@ img {
 
 /* Mobile Responsive for Multi-City */
 @media (max-width: 768px) {
-  .multicity-route-display {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
 
-  .multicity-segment-item {
-    width: 100%;
-    flex-wrap: nowrap;
-  }
+
 
   /* Hide desktop multi-city card on mobile */
   .desktop-multicity-card {
@@ -7221,11 +6273,6 @@ img {
     display: block !important;
   }
 
-  .multicity-segment-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
 }
 
 /* Custom calendar input padding for flightlist page only */
@@ -7286,10 +6333,6 @@ img {
     color: #000 !Important;
   }
 
-  .multicity-segment-item .to,
-  .multicity-segment-item .from {
-    font-size: 15px !important;
-  }
 
 }
 
@@ -7322,7 +6365,7 @@ img {
     /* Position below input with small gap */
     left: 0;
     right: 0;
-    background: #ffffff;
+    background: var(--color-white);
     border: 2px solid #e9ecef;
     border-top: 1px solid #e9ecef;
     border-radius: 0 0 12px 12px;
@@ -7361,7 +6404,7 @@ img {
     top: calc(100% + 10px);
     left: 0;
     right: auto;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 15px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
     z-index: 999999999 !important;
@@ -7459,15 +6502,7 @@ h2.flight-count-text {
 }
 
 @media (max-width: 768px) {
-  .route-locations {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 12px !important;
-    flex: 1 !important;
-    min-width: 0 !important;
-  }
+
 
   main.results-main {
     padding-top: 0 !important;
@@ -7492,18 +6527,9 @@ h2.flight-count-text {
 }
 
 @media(max-width:767px) {
-  .multicitysumm .route-locations {
-    grid-template-columns: 1fr !important;
-    width: 100% !important;
-  }
 
   .multicitysumm .summary-info {
     padding-right: 0 !important
-  }
-
-  .multicitysumm .multicity-segment-item {
-    display: grid !important;
-    grid-template-columns: 1.3fr 0.1fr 1.4fr 0.2fr !important
   }
 }
 
@@ -7606,31 +6632,9 @@ button.scroll-arrow {
   align-items: center;
 }
 
-.selected-flights-info {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
 
-.flight-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
 
-.flight-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #aaa;
-  font-weight: 600;
-}
 
-.flight-detail-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .strip-airline-logo {
   width: 24px;
@@ -7641,13 +6645,6 @@ button.scroll-arrow {
   padding: 2px;
 }
 
-.flight-times {
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
 .divider-vertical {
   width: 1px;
@@ -7661,25 +6658,8 @@ button.scroll-arrow {
   gap: 20px;
 }
 
-.total-price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.total-price .label {
-  font-size: 11px;
-  color: #ccc;
-}
-
-.total-price .amount {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-}
-
 .book-now-btn {
-  background: #008b8b;
+  background: var(--color-primary);
   color: #fff;
   border: none;
   padding: 12px 30px;
@@ -7717,21 +6697,9 @@ button.scroll-arrow {
     gap: 12px;
   }
 
-  .selected-flights-info {
-    width: 100%;
-    justify-content: space-between;
-    gap: 10px;
-  }
 
-  .flight-info-col {
-    flex: 1;
-    min-width: 0;
-  }
 
-  .flight-times {
-    font-size: 12px;
-    flex-wrap: wrap;
-  }
+
 
   .strip-actions {
     width: 100%;
@@ -8125,118 +7093,7 @@ button.scroll-arrow {
 }
 
 /* Segment Details */
-.popup-segment-card {
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
 
-.popup-segment-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 1px dashed #eee;
-  padding-bottom: 10px;
-}
-
-.popup-airline-logo {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  margin-right: 10px;
-}
-
-.popup-flight-info h4 {
-  margin: 0;
-  font-size: 14px;
-  color: #333;
-}
-
-.popup-flight-info p {
-  margin: 0;
-  font-size: 11px;
-  color: #777;
-}
-
-.popup-segment-body {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.popup-time-loc {
-  text-align: left;
-}
-
-.popup-time-loc.right {
-  text-align: right;
-}
-
-.popup-time {
-  font-size: 18px;
-  font-weight: 700;
-  color: #333;
-}
-
-.popup-date {
-  font-size: 12px;
-  color: #666;
-}
-
-.popup-airport {
-  font-size: 11px;
-  color: #888;
-  margin-top: 2px;
-}
-
-.popup-duration-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80px;
-}
-
-.popup-duration-text {
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 4px;
-}
-
-.popup-duration-line {
-  height: 2px;
-  width: 100%;
-  background: #ddd;
-  position: relative;
-}
-
-.popup-duration-line::after {
-  content: '✈';
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%) rotate(90deg);
-  font-size: 12px;
-  color: #ccc;
-}
-
-/* Fare Table */
-.popup-fare-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.popup-fare-table th,
-.popup-fare-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
-}
-
-.popup-fare-table td {
-  text-align: right;
-  font-weight: 600;
-}
 
 .policy-content {
   background: #f9f9f9;
@@ -9004,7 +7861,7 @@ button.scroll-arrow {
 /* Flight icons in fare modal header */
 .fare-trip-details-text .fa-plane-departure,
 .fare-trip-details-text .fa-plane-arrival {
-  color: #008b8b;
+  color: var(--color-primary);
   margin-right: 6px;
   font-size: 14px;
 }
@@ -9028,4 +7885,18 @@ button.scroll-arrow {
   font-size: 13px !important;
   font-weight: bold !important;
   letter-spacing: 1px;
+}
+
+@media(max-width:767px) {
+  .flrouteflex {
+    display: flex;
+    flex-direction: column-reverse;
+
+  }
+
+  .m-flight-route {
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+  }
 }
