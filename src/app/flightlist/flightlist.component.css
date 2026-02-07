@@ -1472,6 +1472,7 @@ img {
 /* Flight Count Header */
 .flight-count-header {
   margin-bottom: 20px;
+  margin-top: 20px;
   padding: 0;
   display: flex;
   align-items: center;

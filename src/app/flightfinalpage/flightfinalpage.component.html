@@ -712,7 +712,7 @@
                 <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
               </div>
               <div class="form-actions">
-                <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+                <button class="save-btn" (click)="saveGSTDetails()">Done</button>
               </div>
             </div>
           </div>
@@ -3366,7 +3366,7 @@
                 <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
               </div>
               <div class="form-actions">
-                <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+                <button class="save-btn" (click)="saveGSTDetails()">Done</button>
               </div>
             </div>
           </div>
@@ -3428,7 +3428,7 @@
               <input type="text" [(ngModel)]="gstDetails.gstNumber" placeholder="Enter GST number" />
             </div>
             <div class="form-actions">
-              <button class="save-btn" (click)="saveGSTDetails()">DONE</button>
+              <button class="save-btn" (click)="saveGSTDetails()">Done</button>
             </div>
           </div>
         </div>
@@ -3655,19 +3655,17 @@
       </div>
     </ng-container>
   </div>
-  <div class="baggage-footer">
-    <div class="foobag">
+  <div class="baggage-footer" style="display: grid; grid-template-columns: 3fr 1fr;">
+    <div style="display: flex; justify-content: space-between; flex-direction: column;">
       <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected
       </div>
-
+      <div class="added-to-fare">Added to fare</div>
       <div class="fare-details">
-        <div class="added-to-fare">Added to fare</div>
         <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
       </div>
     </div>
     <div class="footer-right">
-
-      <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">DONE</button>
+      <button class="baggage-done-btn" (click)="handleOneWayBaggageDone()">Done</button>
     </div>
   </div>
 </div>
@@ -3775,15 +3773,17 @@
       </div>
     </div>
   </div>
-  <div class="baggage-footer">
-    <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s)
-      Selected</div>
-    <div class="footer-right">
+  <div class="baggage-footer" style="display: grid; grid-template-columns: 3fr 1fr;">
+    <div style="display: flex; justify-content: space-between; flex-direction: column;">
+      <div class="baggage-count">{{ getTotalRoundTripBaggageCount() }} of {{ maxAllowedBaggageCount * 2 }} Baggage(s)
+        Selected</div>
+      <div class="added-to-fare">Added to fare</div>
       <div class="fare-details">
-        <div class="added-to-fare">Added to fare</div>
         <div class="total-price">₹ {{ calculateRoundTripBaggageTotal() | number : "1.2-2" }}</div>
       </div>
-      <button class="baggage-done-btn" (click)="handleRoundTripBaggageDone()">DONE</button>
+    </div>
+    <div class="footer-right">
+      <button class="baggage-done-btn" (click)="handleRoundTripBaggageDone()">Done</button>
     </div>
   </div>
 </div>
@@ -3974,7 +3974,7 @@
     </div>
   </div>
   <div class="gst-footer">
-    <button class="proceed-btn" (click)="saveGSTDetails()">DONE</button>
+    <button class="proceed-btn" (click)="saveGSTDetails()">Done</button>
   </div>
 </div>
 
@@ -4192,7 +4192,7 @@
     </div>
   </div>
   <div class="trip-footer">
-    <button class="proceed-btn" (click)="showFareRules = false">DONE</button>
+    <button class="proceed-btn" (click)="showFareRules = false">Done</button>
   </div>
 </div>
 

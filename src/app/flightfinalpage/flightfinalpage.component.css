@@ -205,7 +205,6 @@ body {
 
 .baggage-footer .fare-details {
   display: flex;
-  flex-direction: column;
   align-items: flex-end;
   gap: 4px;
 }
@@ -213,7 +212,7 @@ body {
 .baggage-footer .added-to-fare {
   font-size: 12px;
   color: #6c757d;
-  text-align: right;
+  text-align: left;
 }
 
 .baggage-footer .total-price {
@@ -233,7 +232,6 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
@@ -696,7 +694,6 @@ body {
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -2019,7 +2016,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   color: #212529;
-  margin-bottom: 4px;
+
 }
 
 .pprice {
@@ -2689,10 +2686,8 @@ body {
   }
 
   .flight-final-page>.card {
-    padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    /* transition: box-shadow 0.2s ease, transform 0.2s ease; */
     background: #ffffff;
     margin-bottom: 8px;
   }
@@ -2701,10 +2696,6 @@ body {
     margin-bottom: 0;
   }
 
-  .flight-final-page>.card:hover {
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-  }
 
   /* Flight Cards Container - 2 columns on desktop */
   /* Round Trip & Multi-City - Multi-Row Layout (Vertical Stack) */
@@ -2759,17 +2750,13 @@ body {
   .flight-cards-container .flight-card-item>.card {
     padding: 28px 24px 24px 24px;
     margin-bottom: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+
     background: #ffffff;
     border-radius: 12px;
     position: relative;
   }
 
-  .flight-cards-container .flight-card-item>.card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
-  }
+
 
   /* Multi-City Flight Legs - Vertical Stack */
   .multicity-flight-leg {
@@ -2782,7 +2769,7 @@ body {
   }
 
   .card.flight-summary-wrapper>.flight-cards-container {
-    padding: 20px 20px 0 20px;
+    padding: 0px;
   }
 
   .card.flight-summary-wrapper>.flight-cards-container+button.details-btn {
@@ -4060,7 +4047,7 @@ body {
 
   /* Two-Column Dashboard Layout */
   .scroll-wrapper {
-    background: #f8f9fa;
+
     padding: 40px;
     padding-bottom: 40px;
   }
@@ -4105,10 +4092,8 @@ body {
 
   /* Premium Card Design */
   .flight-final-page>.card {
-    padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
     background: #ffffff;
     margin-bottom: 24px;
     border: none;
@@ -4324,7 +4309,7 @@ body {
   /* Premium Modal Header */
   .trip-header,
   .gst-header {
-    padding: 32px;
+    padding: 20px;
     border-bottom: 1px solid #e9ecef;
     background: #ffffff;
   }
@@ -4350,14 +4335,9 @@ body {
 
   .flight-cards-container .flight-card-item>.card {
     padding: 28px 24px 24px 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     border: 1px solid #f3f4f6;
   }
 
-  .flight-cards-container .flight-card-item>.card:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    border-color: #e5e7eb;
-  }
 
   /* Enhance labels on large screens - Multi-row layout */
   .roundtrip-onward-flight-leg::before,
@@ -4737,7 +4717,7 @@ body {
 
   .baggage-option {
     padding: 14px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .option-right {
@@ -8194,4 +8174,44 @@ div#oneway-section .route-info {
   .note-header {
     margin-bottom: 0;
   }
+
+  .baggage-route-pill {
+    margin: 0 auto;
+    display: block !important;
+    width: fit-content !important;
+  }
+
+  .trip-header {
+    padding: 10px 20px !important
+  }
+}
+
+.route-status {
+  color: #fff;
+  opacity: 0.9;
+}
+
+.baggage-route-pill {
+  display: block !important;
+  margin: 0 auto !important;
+  width: fit-content;
+  background: none !important;
+  border: 2px dashed #ccc;
+  box-shadow: none !important;
+}
+
+.route-text,
+.route-status {
+  color: #000 !important;
+  text-align: center !important;
+}
+
+
+.included-baggage-info {
+  text-align: center;
+}
+
+.baggage-done-btn {
+  background: #000 !important;
+
 }
