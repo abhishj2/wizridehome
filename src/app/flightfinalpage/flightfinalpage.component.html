@@ -3556,6 +3556,14 @@
           </span>
         </label>
       </div>
+      <!-- Mobile Price Display (Clickable) -->
+      <div class="mobile-price-bar" (click)="openMobileFareBreakdown()">
+        <div class="mobile-price-info">
+          <span class="mobile-price-label">Total Price</span>
+          <span class="mobile-price-amount">{{ formatCurrency(getTotalAmountWithAddons()) }}</span>
+        </div>
+      </div>
+
       <button class="proceed-btn" [disabled]="!updateProceedButton()" (click)="finalProceed()">
         Proceed
       </button>
