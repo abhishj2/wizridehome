@@ -1330,4 +1330,30 @@ span.flightmobaddon-total {
       grid-column: span 2;
     }
   }
+
+  .meal-visual {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 20px !important;
+  }
+
+  .meal-price {
+    text-align: center;
+  }
+
+  .meal-visual {
+    margin-bottom: 0 !important;
+  }
+
+  .meal-card {
+    gap: 0px !important;
+  }
+
+  .meal-quantity {
+    margin-top: 0 !important;
+  }
+
+  .flightmobaddon-headercard {
+    padding: 10px 20px !important;
+  }
 }

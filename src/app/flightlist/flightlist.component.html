@@ -131,7 +131,7 @@
                   <div class="flrouteflex">
                     <small>
                       {{ flightInputData['fromCity'] || flightInputData['fromAirport'] }}</small>
-                    <span *ngIf="flightInputData['fromAirportCode']">({{ flightInputData['fromAirportCode'] }})</span>
+                    <span *ngIf="flightInputData['fromAirportCode']">{{ flightInputData['fromAirportCode'] }}</span>
 
 
 
@@ -140,7 +140,7 @@
                   <i class="fas fa-repeat" *ngIf="flightType=='round'"></i>
                   <div class="flrouteflex">
                     <small> {{ flightInputData['toCity'] || flightInputData['toAirport'] }}</small>
-                    <span *ngIf="flightInputData['toAirportCode']">({{ flightInputData['toAirportCode'] }})</span>
+                    <span *ngIf="flightInputData['toAirportCode']">{{ flightInputData['toAirportCode'] }}</span>
                   </div>
 
                 </div>

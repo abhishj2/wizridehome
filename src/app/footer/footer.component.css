@@ -1009,7 +1009,7 @@ h3.destinations-title a {
   /* Show mobile timeline section */
   .wr-route-timeline {
     display: block;
-    padding: 3rem 1.5rem;
+    padding: 20px;
     background: #ffffff;
   }
 
@@ -1190,10 +1190,31 @@ h3.destinations-title a {
   }
 
   /* Responsive adjustments for smaller mobile */
+
+
+  div#contact {
+    background: #333333 !important;
+  }
+
+  .wr-footer-links a {
+    color: #fff !important;
+    font-size: 12px !important;
+
+  }
+
+  .wr-footer-small {
+    color: #fff !important;
+    opacity: 0.7;
+    font-size: 10px !important;
+
+  }
+
+  .wr-footer {
+    padding: 20px 10px !important;
+    margin-top: 0 !important;
+  }
+
   @media (max-width: 640px) {
-    .wr-route-timeline {
-      padding-inline: 1.1rem;
-    }
 
     .wr-route-timeline-head h2 {
       font-size: 18px !important;

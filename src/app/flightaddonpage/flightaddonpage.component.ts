@@ -821,7 +821,7 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
   }
 
   get maxTabIndex(): number {
-    return this.hasSeatsTab ? 3 : 2;
+    return this.hasSeatsTab ? 2 : 1;
   }
 
   get isLastStep(): boolean {

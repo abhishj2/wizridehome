@@ -283,67 +283,9 @@
                         ? 2
                         : 1
                   ">
-                    Cabs
-                  </button>
-                  <button class="flightmobaddon-tab" [class.active]="
-                    selectedSubTabIndex ===
-                    (!passengers.infants.length ||
-                    flightData?.mobFinalPageData?.extraMandatoryFields
-                      .seatMandatoryOnward ||
-                    (tripType === 'roundtrip' &&
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryReturn)
-                      ? 3
-                      : 2)
-                  " (click)="
-                    selectedSubTabIndex =
-                      !passengers.infants.length ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryOnward ||
-                      (tripType === 'roundtrip' &&
-                        flightData?.mobFinalPageData?.extraMandatoryFields
-                          .seatMandatoryReturn)
-                        ? 3
-                        : 2
-                  ">
                     Others
                   </button>
                 </div>
-                <!-- <div
-                class="tab-indicator"
-                [ngStyle]="{
-                  transform: 'translateX(' + selectedSubTabIndex * 100 + '%)'
-                }"
-              ></div> -->
-                <!-- <div
-                class="tab-indicator"
-                [ngStyle]="{
-                  transform:
-                    'translateX(' +
-                    selectedSubTabIndex *
-                      (100 /
-                        (!passengers.infants.length ||
-                        flightData?.mobFinalPageData?.extraMandatoryFields
-                          .seatMandatoryOnward ||
-                        (tripType === 'roundtrip' &&
-                          flightData?.mobFinalPageData?.extraMandatoryFields
-                            .seatMandatoryReturn)
-                          ? 4
-                          : 3)) +
-                    '%)',
-                  width:
-                    100 /
-                      (!passengers.infants.length ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryOnward ||
-                      (tripType === 'roundtrip' &&
-                        flightData?.mobFinalPageData?.extraMandatoryFields
-                          .seatMandatoryReturn)
-                        ? 4
-                        : 3) +
-                      '%'
-                }"
-              ></div> -->
                 <!-- <div
                 class="tab-indicator"
                 [ngStyle]="{
@@ -373,8 +315,8 @@
                         (tripType === 'roundtrip' &&
                           flightData?.mobFinalPageData?.extraMandatoryFields
                             .seatMandatoryReturn)
-                          ? 4
-                          : 3)) +
+                          ? 3
+                          : 2)) +
                     '%)',
                   '--seat-map-length':
                     !passengers.infants.length ||
@@ -383,8 +325,8 @@
                     (tripType === 'roundtrip' &&
                       flightData?.mobFinalPageData?.extraMandatoryFields
                         .seatMandatoryReturn)
-                      ? 4
-                      : 3
+                      ? 3
+                      : 2
                 }">
                   <!-- Seats Tab Panel -->
                   <!-- <div class="tab-panel"> -->
@@ -642,20 +584,22 @@
                               <div class="meal-list">
                                 <div class="meal-card" *ngFor="let meal of segment.mealOptions">
                                   <div class="meal-visual">
-                                    <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
-                                    <div class="meal-price" *ngIf="meal.Price > 0">
-                                      ₹{{ meal.Price | number : "1.2-2" }}
+                                    <div class="meal-price">
+                                      <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
+                                      <div class="meal-price" *ngIf="meal.Price > 0">
+                                        ₹{{ meal.Price | number : "1.2-2" }}
+                                      </div>
+                                      <div class="meal-price" *ngIf="meal.Price == 0">
+                                        Free
+                                      </div>
                                     </div>
-                                    <div class="meal-price" *ngIf="meal.Price == 0">
-                                      Free
-                                    </div>
-                                  </div>
-                                  <div class="meal-details">
-                                    <div class="meal-name">
-                                      {{
-                                      meal.AirlineDescription ||
-                                      meal.Description
-                                      }}
+                                    <div class="meal-details">
+                                      <div class="meal-name">
+                                        {{
+                                        meal.AirlineDescription ||
+                                        meal.Description
+                                        }}
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="meal-quantity">
@@ -685,19 +629,7 @@
                       </div>
                     </div>
                   </div>
-                  <!-- Cabs Tab Panel -->
-                  <div class="tab-panel">
-                    <div style="padding: 16px">
-                      <!-- <h3>Book a Cab</h3> -->
-                      <p>
-                        No Services Available for the
-                        {{
-                        selectedJourneyTab === "return" ? "Return" : "Onward"
-                        }}
-                        journey.
-                      </p>
-                    </div>
-                  </div>
+
 
                   <!-- Others Tab Panel -->
                   <div class="tab-panel">
@@ -885,57 +817,9 @@
                         ? 2
                         : 1
                   ">
-                    Cabs
-                  </button>
-                  <button class="flightmobaddon-tab" [class.active]="
-                    selectedSubTabIndex ===
-                    (!passengers.infants.length ||
-                    flightData?.mobFinalPageData?.extraMandatoryFields
-                      .seatMandatoryOnward ||
-                    flightData?.mobFinalPageData?.extraMandatoryFields
-                      .seatMandatoryReturn
-                      ? 3
-                      : 2)
-                  " (click)="
-                    selectedSubTabIndex =
-                      !passengers.infants.length ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryOnward ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryReturn
-                        ? 3
-                        : 2
-                  ">
                     Others
                   </button>
                 </div>
-                <!-- <div
-                class="tab-indicator"
-                [ngStyle]="{
-                  transform:
-                    'translateX(' +
-                    selectedSubTabIndex *
-                      (100 /
-                        (!passengers.infants.length ||
-                        flightData?.mobFinalPageData?.extraMandatoryFields
-                          .seatMandatoryOnward ||
-                        flightData?.mobFinalPageData?.extraMandatoryFields
-                          .seatMandatoryReturn
-                          ? 4
-                          : 3)) +
-                    '%)',
-                  width:
-                    100 /
-                      (!passengers.infants.length ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryOnward ||
-                      flightData?.mobFinalPageData?.extraMandatoryFields
-                        .seatMandatoryReturn
-                        ? 4
-                        : 3) +
-                      '%'
-                }"
-              ></div> -->
                 <!-- <div
                 class="tab-indicator"
                 [ngStyle]="{
@@ -983,8 +867,8 @@
                           .seatMandatoryOnward ||
                         flightData?.mobFinalPageData?.extraMandatoryFields
                           .seatMandatoryReturn
-                          ? 4
-                          : 3)) +
+                          ? 3
+                          : 2)) +
                     '%)',
                   '--seat-map-length':
                     !passengers.infants.length ||
@@ -992,8 +876,8 @@
                       .seatMandatoryOnward ||
                     flightData?.mobFinalPageData?.extraMandatoryFields
                       .seatMandatoryReturn
-                      ? 4
-                      : 3
+                      ? 3
+                      : 2
                 }">
                   <!-- Seats Tab Panel -->
                   <div class="tab-panel" *ngIf="
@@ -1250,20 +1134,22 @@
                               <div class="meal-list">
                                 <div class="meal-card" *ngFor="let meal of segment.mealOptions">
                                   <div class="meal-visual">
-                                    <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
-                                    <div class="meal-price" *ngIf="meal.Price > 0">
-                                      ₹{{ meal.Price | number : "1.2-2" }}
+                                    <div class="meal-price">
+                                      <img class="meal-image" src="../../assets/images/meals/chicken.png" alt="Meal" />
+                                      <div class="meal-price" *ngIf="meal.Price > 0">
+                                        ₹{{ meal.Price | number : "1.2-2" }}
+                                      </div>
+                                      <div class="meal-price" *ngIf="meal.Price == 0">
+                                        Free
+                                      </div>
                                     </div>
-                                    <div class="meal-price" *ngIf="meal.Price == 0">
-                                      Free
-                                    </div>
-                                  </div>
-                                  <div class="meal-details">
-                                    <div class="meal-name">
-                                      {{
-                                      meal.AirlineDescription ||
-                                      meal.Description
-                                      }}
+                                    <div class="meal-details">
+                                      <div class="meal-name">
+                                        {{
+                                        meal.AirlineDescription ||
+                                        meal.Description
+                                        }}
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="meal-quantity">
@@ -1294,19 +1180,7 @@
                     </div>
                   </div>
 
-                  <!-- Cabs Tab Panel -->
-                  <div class="tab-panel">
-                    <div style="padding: 16px">
-                      <!-- <h3>Book a Cab</h3> -->
-                      <p>
-                        Cab Services not available for the
-                        {{
-                        selectedJourneyTab === "return" ? "Return" : "Onward"
-                        }}
-                        journey.
-                      </p>
-                    </div>
-                  </div>
+
 
                   <!-- Others Tab Panel -->
                   <div class="tab-panel">

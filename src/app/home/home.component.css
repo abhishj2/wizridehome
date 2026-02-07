@@ -1012,7 +1012,6 @@ small {
     justify-content: center;
     gap: 40px;
     padding: 22px 0 10px;
-    border-top: 2px solid #f8f9fa;
     flex-wrap: wrap;
 }
 
@@ -1057,10 +1056,11 @@ small {
 
 /* Search Button Below Locations (Desktop Only) */
 .search-btn-below-locations {
-    width: auto;
+    width: 180px;
     margin: 20px 0 0px;
     justify-self: center;
     align-self: center;
+    justify-content: center;
 }
 
 /* Hide search button below locations on mobile */

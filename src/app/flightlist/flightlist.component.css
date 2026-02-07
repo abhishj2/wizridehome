@@ -210,7 +210,6 @@ img {
     border-radius: 12px;
     border: none;
     background: #eef6f5;
-    margin-left: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3988,7 +3987,7 @@ img {
   }
 
   .flight-announcement {
-    padding: 0 !important;
+    padding: 0px 16px !important;
     margin: 0 !important;
   }
 
@@ -4582,7 +4581,6 @@ img {
   position: relative;
   background: var(--color-white);
   border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 20px;
   width: 100%;
 }
 
@@ -7913,4 +7911,22 @@ button.scroll-arrow {
   .fltop {
     display: none !important;
   }
+
+  .flight-count-header {
+    margin-bottom: 12px;
+  }
+
+  .m-flight-filter-box {
+    border-radius: 0px !important;
+    justify-content: center;
+  }
+
+  .date-slider-bar.mobilehid {
+    display: none !important;
+  }
+
+  .flight-list-wrapper .search-summary {
+    padding: 10px 0 !important;
+  }
+
 }
