@@ -1578,7 +1578,6 @@ body {
   right: 0;
   bottom: 0;
   background: white;
-  border-radius: 20px 20px 0 0;
   z-index: 1101;
   max-height: 80vh;
   transform: translateY(100%);
@@ -1823,7 +1822,7 @@ body {
 }
 
 .trip-header>div:first-child {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   color: #212529;
   letter-spacing: -0.02em;
@@ -1942,7 +1941,7 @@ body {
   left: 0;
   right: 0;
   background: #ffffff;
-  border-radius: 20px 20px 0 0;
+
   max-height: 85vh;
   overflow-y: auto;
   z-index: 1001;
@@ -2143,7 +2142,6 @@ body {
   left: 0;
   right: 0;
   background: #ffffff;
-  border-radius: 20px 20px 0 0;
   max-height: 90vh;
   overflow-y: auto;
   z-index: 1001;
@@ -3697,7 +3695,6 @@ body {
     max-width: 600px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important;
     /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
@@ -3725,7 +3722,6 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important;
     /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
@@ -3755,7 +3751,7 @@ body {
   }
 
   .trip-header>div:first-child {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     color: #212529;
   }
@@ -8189,5 +8185,13 @@ div#oneway-section .route-info {
   .route-status {
     color: #fff;
     opacity: 0.7;
+  }
+
+  .trip-footer .proceed-btn {
+    margin-top: 0;
+  }
+
+  .note-header {
+    margin-bottom: 0;
   }
 }
