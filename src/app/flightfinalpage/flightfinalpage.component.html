@@ -3646,16 +3646,10 @@
               (click)="incrementBaggage(baggage)">
               Add <i class="fas fa-plus"></i>
             </button>
-            <div class="counter-wrapper" *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
-              <button class="counter-btn" (click)="decrementBaggage(baggage)">-</button>
-              <div class="counter-value">
-                {{ baggageCounts[baggage.kgs || baggage.Code] || 0 }}
-              </div>
-              <button class="counter-btn" (click)="incrementBaggage(baggage)"
-                [disabled]="getTotalOneWayBaggageCount() >= maxAllowedBaggageCount">
-                +
-              </button>
-            </div>
+            <button class="add-option-btn" *ngIf="(baggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+              (click)="decrementBaggage(baggage)">
+              Add <i class="fas fa-minus"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -3665,6 +3659,7 @@
     <div class="foobag">
       <div class="baggage-count">{{ getTotalOneWayBaggageCount() }} of {{ maxAllowedBaggageCount }} Baggage(s) Selected
       </div>
+
       <div class="fare-details">
         <div class="added-to-fare">Added to fare</div>
         <div class="total-price">₹ {{ calculateBaggageTotal() | number : "1.2-2" }}</div>
@@ -3726,16 +3721,10 @@
                     (click)="incrementRoundBaggage(baggage)">
                     Add <i class="fas fa-plus"></i>
                   </button>
-                  <div class="counter-wrapper" *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
-                    <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
-                    <div class="counter-value">
-                      {{ onwardBaggageCounts[baggage.kgs || baggage.Code] || 0 }}
-                    </div>
-                    <button class="counter-btn" (click)="incrementRoundBaggage(baggage)"
-                      [disabled]="!canAddMoreBaggage()">
-                      +
-                    </button>
-                  </div>
+                  <button class="add-option-btn" *ngIf="(onwardBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+                    (click)="decrementRoundBaggage(baggage)">
+                    Add <i class="fas fa-minus"></i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -3774,16 +3763,10 @@
                     (click)="incrementRoundBaggage(baggage)">
                     Add <i class="fas fa-plus"></i>
                   </button>
-                  <div class="counter-wrapper" *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0">
-                    <button class="counter-btn" (click)="decrementRoundBaggage(baggage)">-</button>
-                    <div class="counter-value">
-                      {{ returnBaggageCounts[baggage.kgs || baggage.Code] || 0 }}
-                    </div>
-                    <button class="counter-btn" (click)="incrementRoundBaggage(baggage)"
-                      [disabled]="!canAddMoreBaggage()">
-                      +
-                    </button>
-                  </div>
+                  <button class="add-option-btn" *ngIf="(returnBaggageCounts[baggage.kgs || baggage.Code] || 0) > 0"
+                    (click)="decrementRoundBaggage(baggage)">
+                    Add <i class="fas fa-minus"></i>
+                  </button>
                 </div>
               </div>
             </div>
