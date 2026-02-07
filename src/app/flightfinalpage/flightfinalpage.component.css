@@ -1768,7 +1768,6 @@ body {
   left: 0;
   right: 0;
   background: #ffffff;
-  border-radius: 24px 24px 0 0;
   max-height: 90vh;
   overflow-y: auto;
   z-index: 1001;
@@ -3670,7 +3669,6 @@ body {
     max-width: 650px;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px !important;
     /* Ensure uniform border radius on all corners */
     bottom: auto;
     top: 50%;
@@ -3922,13 +3920,12 @@ body {
 
   .baggage-route-pill {
     padding: 14px 24px;
-    margin-bottom: 24px;
   }
 
   .included-baggage-info {
     font-size: 15px;
     padding: 16px 0;
-    margin-bottom: 24px;
+    margin-bottom: 0px;
   }
 
   .baggage-note {
@@ -4728,7 +4725,7 @@ body {
   /* Mobile baggage modal adjustments */
   .baggage-route-pill {
     padding: 10px 16px;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
     font-size: 14px;
   }
 
@@ -4741,7 +4738,6 @@ body {
   .included-baggage-info {
     font-size: 13px;
     padding: 12px 0;
-    margin-bottom: 16px;
   }
 
   .baggage-option {
@@ -5461,6 +5457,10 @@ i.fas.fa-plane-departure {
 ::ng-deep #finalpagecal .calendar-input {
   height: 42px !important;
   padding: 11px 20px 11px 44px !important;
+}
+
+::ng-deep .custom-keypad-overlay {
+  background: none !important;
 }
 
 ::ng-deep #finalpagecal .input-icon {
@@ -8170,20 +8170,20 @@ div#oneway-section .route-info {
   }
 
   span.mobile-price-amount {
-    background:#fff !important;
-    border:1px solid #ccc;
-    border-radius:8px;
-    padding:5px 30px;
+    background: #fff !important;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px 30px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    
-    
-}
 
-.mobile-price-info{
-    gap:6px ;
-}
 
-.mobile-price-bar{
-     border:none !important;   
-}
+  }
+
+  .mobile-price-info {
+    gap: 6px;
+  }
+
+  .mobile-price-bar {
+    border: none !important;
+  }
 }
