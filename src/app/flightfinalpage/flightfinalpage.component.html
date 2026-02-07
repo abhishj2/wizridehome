@@ -2886,7 +2886,7 @@
 
       <!-- Tab Content with Sliding Animation -->
       <div class="tab-content-container" *ngIf="groupedFlightSegments && groupedFlightSegments.length > 0">
-        <div class="tab-content-wrapper multicity-tabs"
+        <div class="tab-content-wrapper multicity-tabs" [style.width.%]="groupedFlightSegments.length * 100"
           [style.transform]="'translateX(-' + (activeCancelTabIndex * (100 / groupedFlightSegments.length)) + '%)'">
           <!-- Generate a panel for each leg -->
           <div class="tab-panel baggage-margin" *ngFor="let group of groupedFlightSegments; let legIndex = index"
