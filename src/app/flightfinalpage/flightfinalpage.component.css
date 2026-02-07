@@ -1532,7 +1532,6 @@ body {
 .mobile-price-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .mobile-price-label {
@@ -8169,4 +8168,22 @@ div#oneway-section .route-info {
   .card.makemytrip-flight-card {
     padding: 0 !important;
   }
+
+  span.mobile-price-amount {
+    background:#fff !important;
+    border:1px solid #ccc;
+    border-radius:8px;
+    padding:5px 30px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    
+    
+}
+
+.mobile-price-info{
+    gap:6px ;
+}
+
+.mobile-price-bar{
+     border:none !important;   
+}
 }
