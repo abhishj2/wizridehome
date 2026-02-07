@@ -4293,7 +4293,6 @@ body {
     max-width: 650px;
     width: 90%;
     max-height: 85vh;
-    border-radius: 20px !important;
     /* Ensure uniform border radius on all corners */
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
     animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -4719,7 +4718,6 @@ body {
     bottom: 0;
     top: auto;
     transform: none;
-    border-radius: 20px 20px 0 0;
   }
 
   /* Mobile baggage modal adjustments */
@@ -4759,8 +4757,8 @@ body {
 
   .baggage-footer {
     flex-direction: column;
-    gap: 16px;
-    padding: 20px;
+    gap: 5px;
+    padding: 10px;
     align-items: stretch;
   }
 
@@ -4986,7 +4984,7 @@ i.fas.fa-plane-departure {
     display: flex !important;
     flex-direction: row !important;
     justify-content: space-between !important;
-    align-items: center !important;
+    align-items: end !important;
     z-index: 1000;
     gap: 12px;
   }
@@ -5121,7 +5119,7 @@ i.fas.fa-plane-departure {
   }
 
   .mobile-price-bar {
-    padding: 10px !important;
+    padding: 0px !important;
   }
 
 }
@@ -8185,5 +8183,10 @@ div#oneway-section .route-info {
 
   .mobile-price-bar {
     border: none !important;
+  }
+
+  .route-status {
+    color: #fff;
+    opacity: 0.7;
   }
 }
