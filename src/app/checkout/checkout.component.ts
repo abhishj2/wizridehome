@@ -918,6 +918,8 @@ export class CheckoutComponent implements OnInit {
 
       if (inputElement) {
         this.scrollToInput(inputElement);
+        // Lock scroll after positioning
+        this.renderer.addClass(this.document.body, 'lock-scroll');
       }
     }, 200);
   }
@@ -932,16 +934,16 @@ export class CheckoutComponent implements OnInit {
     const inputTopPosition = rect.top + currentScrollY;
 
     // Define offset: this is the space from top of viewport where input should appear
-    // Since navbar is hidden, we need less offset (just booking summary + small spacing)
-    const offsetFromTop = 180; // Booking summary height + spacing
+    // Since navbar is hidden but booking summary is sticky, we need enough offset to clear the summary
+    const offsetFromTop = 220; // Increased to clear sticky booking summary
 
     // Calculate the target scroll position
     const targetScrollPosition = inputTopPosition - offsetFromTop;
 
-    // Scroll to position
+    // Scroll to position instantly to avoid conflict with scroll lock
     window.scrollTo({
       top: Math.max(0, targetScrollPosition),
-      behavior: 'smooth'
+      behavior: 'auto'
     });
   }
 
@@ -979,6 +981,10 @@ export class CheckoutComponent implements OnInit {
   onDialerDone(): void {
     this.showPhoneDialer = false;
     this.activePhoneField = null;
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.removeClass(this.document.body, 'lock-scroll');
+      this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+    }
   }
 
   // Close dialer
@@ -988,6 +994,7 @@ export class CheckoutComponent implements OnInit {
     // Show navbar when dialer closes (remove class from body)
     if (isPlatformBrowser(this.platformId)) {
       this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
+      this.renderer.removeClass(this.document.body, 'lock-scroll');
     }
   }
 

@@ -21,6 +21,10 @@ body.hide-navbar-mobile app-navbar {
   }
 }
 
+::ng-deep body.lock-scroll {
+  overflow: hidden !important;
+}
+
 /* Global Styles */
 * {
   box-sizing: border-box;
@@ -1015,7 +1019,7 @@ body {
 
   .field-label {
     font-size: 13px;
-    margin-bottom: 6px;
+    margin-bottom: 16px;
   }
 
   .field-input {
@@ -1159,7 +1163,7 @@ body {
 
   .field-label {
     font-size: 12px;
-    margin-bottom: 5px;
+    margin-bottom: 16px;
   }
 
   .field-input {
