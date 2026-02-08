@@ -4544,13 +4544,14 @@ button.nav-tab.active img {
     .wr-country-dropdown {
         border: none;
         background: transparent;
-        font-size: 14px;
+        font-size: 16px;
         outline: none;
         padding-right: 10px;
         cursor: pointer;
         color: #111827;
         -webkit-appearance: none;
         appearance: none;
+        touch-action: manipulation;
     }
 
     .wr-country-dropdown option {
@@ -4563,9 +4564,10 @@ button.nav-tab.active img {
         caret-color: #0f9d92 !important;
         cursor: text !important;
         background: transparent;
-        font-size: 14px;
+        font-size: 16px;
         width: 100%;
         outline: none;
+        touch-action: manipulation;
     }
 
     /* Swap button styling */
@@ -4736,8 +4738,9 @@ button.nav-tab.active img {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 16px;
     color: #111827;
+    touch-action: manipulation;
 }
 
 .mobile-location-search-input::placeholder {

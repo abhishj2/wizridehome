@@ -335,6 +335,7 @@ input,
 textarea,
 select {
   font-size: 16px !important;
+  touch-action: manipulation;
 }
 
 /* Optional: prevent text scaling */
