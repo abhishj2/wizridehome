@@ -6112,6 +6112,6 @@ button.nav-tab.active img {
 
 @media(min-width:767px) {
     .input-with-icon input::placeholder {
-        padding-left: 50px !important;
+        padding-left: 30px !important;
     }
 }

@@ -63,12 +63,7 @@ img {
     padding: 12px !important;
   }
 
-  /* Mobile: Stack summary content vertically */
-  .summary-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
+
 
   .summary-info {
     width: 100%;
@@ -227,10 +222,7 @@ img {
   /* ============================= */
   /* DATE STRIP (commented out in HTML) */
   /* ============================= */
-  .m-flight-date-box {
-    background: #f0fdfa;
-    border: 1px solid #ccfbf1;
-  }
+
 
   .m-flight-date-strip-wrapper {
     overflow-x: auto;
@@ -1369,24 +1361,6 @@ img {
   margin-bottom: 12px;
 }
 
-.btn-link {
-  background: none;
-  border: none;
-  color: var(--color-primary);
-  cursor: pointer;
-  font-size: 12px;
-  text-decoration: underline;
-  padding: 0;
-}
-
-.btn-link.danger {
-  color: #dc2626;
-}
-
-.btn-link:hover {
-  opacity: 0.8;
-}
-
 .price-range {
   width: 100%;
   margin: 12px 0;
@@ -1480,14 +1454,6 @@ img {
   flex-wrap: wrap;
 }
 
-.flight-count-text {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
-  padding: 0;
-  flex-shrink: 0;
-}
 
 .flight-announcement {
   display: inline-flex;
@@ -1514,31 +1480,7 @@ img {
   }
 }
 
-.flight-cards {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
 
-.sidebar-column {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: sticky;
-  top: 120px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Loader */
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
 
 .spinner {
   border: 4px solid #f3f3f3;
@@ -1779,12 +1721,7 @@ img {
   color: #006666;
 }
 
-/* Hide arrows on mobile */
-@media (max-width: 768px) {
-  .date-slider-arrow {
-    display: none !important;
-  }
-}
+
 
 .date-slider-scroll-wrapper {
   flex: 1;
@@ -1809,36 +1746,6 @@ img {
   }
 }
 
-/* Show scrollbar on mobile */
-@media (max-width: 768px) {
-  .date-slider-scroll-wrapper {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) #f0f0f0;
-  }
-
-  .date-slider-scroll-wrapper::-webkit-scrollbar {
-    height: 6px;
-    display: block;
-  }
-
-  .date-slider-scroll-wrapper::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 3px;
-  }
-
-  .date-slider-scroll-wrapper::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
-    border-radius: 3px;
-  }
-
-  .date-slider-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #006666;
-  }
-
-  .date-slider-container {
-    display: none !important;
-  }
-}
 
 .date-slider-container {
   display: flex;
@@ -1986,14 +1893,10 @@ img {
 }
 
 .card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+
   overflow: visible;
   transition: all 0.3s ease;
-  position: relative;
   z-index: 1;
-  margin-bottom: 50px;
   outline: none;
   -webkit-tap-highlight-color: transparent;
   width: 100%;
@@ -2023,43 +1926,6 @@ img {
   overflow: hidden;
   gap: 16px;
 }
-
-/* Desktop route layout fixes */
-@media (min-width: 769px) {
-  .route {
-    grid-template-columns: auto 2fr 3fr 2fr;
-    gap: 16px;
-    padding: 18px 24px;
-  }
-
-
-}
-
-
-.location {
-  font-size: 13px;
-  color: #2e3137;
-  text-align: center;
-  font-weight: 600;
-  margin-top: 10px;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.sub-location {
-  font-weight: 100;
-  font-size: 12px;
-  color: gray;
-}
-
 
 
 
@@ -2252,11 +2118,6 @@ img {
   box-shadow: 0 4px 8px rgba(0, 139, 139, 0.3);
 }
 
-/* Flight Details Expanded */
-/* .flight-details-expanded {
-
-  border-top: 2px solid #eee;
-} */
 
 .flight-tabs {
   display: flex;
@@ -2361,22 +2222,7 @@ img {
   margin-top: 5px;
 }
 
-.fare-table {
-  width: 100%;
-  border-collapse: collapse;
-}
 
-.fare-table th,
-.fare-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.fare-table th {
-  font-weight: 600;
-  color: #333;
-}
 
 .policy-content {
   padding: 15px;
@@ -2666,11 +2512,6 @@ img {
   color: #1f2937;
 }
 
-.fare-options-subtitle {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
-}
 
 /* Single-line trip details with modify button */
 .fare-options-subtitle-line {
@@ -2690,34 +2531,7 @@ img {
   min-width: 0;
 }
 
-.fare-modify-btn {
-  background: var(--color-black);
-  color: #fff;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  font-size: 16px;
-}
 
-.fare-modify-btn:hover {
-  background: var(--color-slate-700);
-}
-
-.fare-modify-btn:active {
-  background: var(--color-slate-900);
-  transform: scale(0.95);
-}
-
-.fare-modify-btn i {
-  font-size: 14px;
-}
 
 /* Mobile Fare Popup Styles (Mobile Only) */
 @media (max-width: 767px) {
@@ -3454,120 +3268,6 @@ img {
 
 
 @media (max-width: 768px) {
-  .date-slider-container {
-    min-height: auto !important;
-  }
-
-  .date-slider-bar {
-    padding: 0px !important;
-    margin-bottom: 12px;
-    border-radius: 0;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: auto !important;
-  }
-
-  .date-slider-wrapper {
-    width: 100%;
-  }
-
-  .date-slider-scroll-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 4px 0;
-  }
-
-  .date-slider-scroll-wrapper::-webkit-scrollbar {
-    display: none;
-  }
-
-  .date-slider-container {
-    display: flex;
-    gap: 10px;
-    padding: 0;
-  }
-
-  .date-card {
-    min-width: 70px;
-    padding: 8px 10px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--color-white) !important;
-    flex-shrink: 0;
-  }
-
-  .date-card:hover {
-    border-color: rgba(0, 139, 139, 0.4) !important;
-  }
-
-  .date-card.selected {
-    border-color: rgba(0, 139, 139, 0.5) !important;
-    background: var(--color-white) !important;
-    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
-  }
-
-  .date-label {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--color-black) !important;
-    margin-bottom: 0;
-  }
-
-  .date-card.selected .date-label {
-    color: var(--color-black) !important;
-  }
-
-  .date-price {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--color-black) !important;
-  }
-
-  .date-card.selected .date-price {
-    color: var(--color-black) !important;
-    font-size: 11px !important;
-  }
-
-  .date-price.no-price-text {
-    color: var(--color-black) !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-  }
-
-
-
-  /* Mobile Route Layout */
-  .route {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 6px;
-    padding: 12px;
-    align-items: flex-start;
-    text-align: center;
-    overflow: hidden;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    min-width: 0;
-  }
-
-
-
-  .location {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-
 
   .time,
   .duration {
@@ -3584,16 +3284,6 @@ img {
   /* Show mobile-only elements on mobile */
   .mobile-only {
     display: block;
-  }
-
-
-
-  .mobile-vehicle-name {
-    font-size: 11px;
-    color: var(--color-slate-700);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
   }
 
   /* Mobile Price Row */
@@ -3945,9 +3635,6 @@ img {
     border-radius: 18px !important;
   }
 
-  .card {
-    border-radius: 13px !important;
-  }
 
   .card.mobile-flight-card-new {
     margin-bottom: 10px !important;
@@ -4460,19 +4147,6 @@ img {
   .date-slider-bar {
     grid-column: 1 / -1 !important;
   }
-
-  /* Desktop Route Layout - Override Mobile */
-  .route {
-    display: grid !important;
-    grid-template-columns: auto 2fr 3fr 2fr !important;
-    gap: 16px !important;
-    padding: 18px 24px !important;
-    align-items: center !important;
-    text-align: left !important;
-  }
-
-
-
 
 
 
@@ -5438,25 +5112,18 @@ img {
     height: 2px;
   }
 
-  .flight-card-component__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 12px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    background: #f1f4f9 !important;
-  }
 
   .mobile-flight-card-clean .flight-card-component__footer {
     margin: 12px 12px 0 12px;
-    padding: 12px 16px;
-    background: #f5f5f5 !important;
+     background: #d0d7df;
+    padding: 10px;
     border-top: none;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
   }
 
   .flight-card-component__badges {
@@ -5509,19 +5176,11 @@ img {
     margin-top: 3px;
   }
 
-  /* Hide old mobile sections when new design is shown */
 
-
-  .card .route,
-  .card .options,
-  .card .refundability-tag {
-    display: none !important;
-  }
 
   /* Ensure new mobile card is visible */
   .card {
     background: transparent;
-    border-radius: 0;
     box-shadow: none;
     padding: 0;
     margin-bottom: 12px;
@@ -5542,23 +5201,6 @@ img {
     display: block !important;
   }
 
-  /* Hide old desktop layout */
-  .card .route,
-  .card .options,
-  .card .refundability-tag {
-    display: none !important;
-  }
-
-
-
-
-  /* Card styles for desktop */
-  .card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-    margin-bottom: 50px;
-  }
 
   /* Remove click handler on desktop - use button instead */
   .flight-card-component__flight-card.mobile-card-clickable {
@@ -5923,10 +5565,7 @@ img {
     z-index: 10;
   }
 
-  .refundability-tag.refundable {
-    background: #d1fae5;
-    color: #065f46;
-  }
+ 
 
   .refundability-tag.non-refundable {
     background: #fee2e2;
@@ -6063,17 +5702,12 @@ img {
   width: 40%;
 }
 
-.w-50 {
-  width: 50%;
-}
+
 
 .w-60 {
   width: 60%;
 }
 
-.w-70 {
-  width: 70%;
-}
 
 .w-80 {
   width: 80%;
@@ -6248,10 +5882,7 @@ img {
   }
 
 
-  .mobile-flight-card-clean .flight-card-component__footer {
-    background: #d0d7df !important;
-    padding: 10px;
-  }
+ 
 
   span.flight-card-component__pill {
     background: #eff2f5 !Important
@@ -6266,17 +5897,7 @@ img {
     background: #8080801a !Important;
   }
 
-  .date-card.selected {
-    border: 1px solid rgba(0, 139, 139, .25) !important;
-    background: #f1f9f9 !important;
-    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.2);
-  }
-
-  .date-card.selected .date-label,
-  .date-card.selected .date-price {
-    color: var(--color-black) !Important;
-  }
-
+  
 
 }
 
@@ -6415,11 +6036,7 @@ img {
     /* Lower than dropdowns */
   }
 
-  .date-slider-bar {
-    position: relative;
-    z-index: 10;
-    /* Below summary but above results */
-  }
+ 
 }
 
 .search-summary {
@@ -6439,6 +6056,8 @@ h2.flight-count-text {
   padding: 5px 10px !important;
   border-radius: 18px;
   font-weight: 600 !important;
+   margin: 0;
+  flex-shrink: 0;
 }
 
 .city-suggestions {
@@ -6891,16 +6510,7 @@ button.scroll-arrow {
   /* Hide individual prices on very small screens to save space if needed, or keep */
 }
 
-/* Flight Details Sliding Popup Styles */
-.flight-details-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-}
+
 
 .flight-details-popup {
   position: fixed;
@@ -7325,26 +6935,6 @@ button.scroll-arrow {
   font-weight: 500;
 }
 
-.fd-footer {
-  display: flex;
-  gap: 32px;
-  padding-top: 20px;
-  border-top: 1px solid #f3f4f6;
-  flex-wrap: wrap;
-}
-
-.fd-amenity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #4b5563;
-}
-
-.fd-amenity i {
-  color: #9ca3af;
-  font-size: 16px;
-}
 
 @media (max-width: 768px) {
   .flight-details-card-new {
