@@ -3603,63 +3603,6 @@ img {
   }
 
 
-  .mobile-seats-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--color-slate-700);
-    font-weight: 600;
-  }
-
-  .mobile-seats-left i {
-    font-size: 16px;
-    color: #3b82f6;
-  }
-
-  .mobile-start-price {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    font-size: 13px;
-    color: var(--color-slate-500);
-    font-weight: 500;
-  }
-
-  .mobile-price {
-    font-size: 20px;
-    font-weight: 800;
-    color: #0b2f6a;
-    letter-spacing: -0.5px;
-  }
-
-
-
-  .mobile-book-btn {
-    width: 100%;
-    max-width: 360px;
-    padding: 14px;
-    background: linear-gradient(135deg, #e94057 0%, #f27121 100%);
-    color: var(--color-white);
-    border: none;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
-  }
-
-  .mobile-book-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 107, 0, 0.4);
-  }
-
-  .mobile-book-btn:active {
-    transform: translateY(0);
-  }
-
   /* Hide desktop options on mobile */
   .options {
     display: none;

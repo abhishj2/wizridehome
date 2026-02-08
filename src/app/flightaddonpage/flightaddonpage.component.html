@@ -651,17 +651,19 @@
                                     ?.destinationCode
                           ">
                             <div class="meal-visual">
-                              <img class="meal-image" src="../../assets/images/meals/special.jpg" alt="Service" />
                               <div class="meal-price">
-                                ₹{{ service.Price | number : "1.2-2" }}
+                                <img class="meal-image" src="../../assets/images/meals/special.jpg" alt="Service" />
+                                <div class="meal-price">
+                                  ₹{{ service.Price | number : "1.2-2" }}
+                                </div>
                               </div>
-                            </div>
-                            <div class="meal-details">
-                              <div class="meal-name">
-                                {{ service.Description }}
-                              </div>
-                              <div class="meal-route">
-                                {{ service.Origin }} - {{ service.Destination }}
+                              <div class="meal-details">
+                                <div class="meal-name">
+                                  {{ service.Description }}
+                                </div>
+                                <div class="meal-route">
+                                  {{ service.Origin }} - {{ service.Destination }}
+                                </div>
                               </div>
                             </div>
 
@@ -1202,17 +1204,19 @@
                                     ?.destinationCode
                           ">
                             <div class="meal-visual">
-                              <img class="meal-image" src="../../assets/images/meals/special.jpg" alt="Service" />
                               <div class="meal-price">
-                                ₹{{ service.Price | number : "1.2-2" }}
+                                <img class="meal-image" src="../../assets/images/meals/special.jpg" alt="Service" />
+                                <div class="meal-price">
+                                  ₹{{ service.Price | number : "1.2-2" }}
+                                </div>
                               </div>
-                            </div>
-                            <div class="meal-details">
-                              <div class="meal-name">
-                                {{ service.Description }}
-                              </div>
-                              <div class="meal-route">
-                                {{ service.Origin }} - {{ service.Destination }}
+                              <div class="meal-details">
+                                <div class="meal-name">
+                                  {{ service.Description }}
+                                </div>
+                                <div class="meal-route">
+                                  {{ service.Origin }} - {{ service.Destination }}
+                                </div>
                               </div>
                             </div>
                             <!-- Inside the ng-container *ngFor="let service of services" -->
