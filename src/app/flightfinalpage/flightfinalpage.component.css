@@ -7955,9 +7955,9 @@ div#oneway-section .route-info {
   }
 }
 
-.baggage-banner-text {
+/* .baggage-banner-text {
   padding-left: 20px;
-}
+} */
 
 .baggage-banner-text i {
 
@@ -8214,4 +8214,8 @@ div#oneway-section .route-info {
 .baggage-done-btn {
   background: #000 !important;
 
+}
+
+.dflexi {
+  display: flex;
 }
