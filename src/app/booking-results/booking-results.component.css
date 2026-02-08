@@ -3343,10 +3343,11 @@ img {
   .seat-modal-body {
     padding: 8px 12px;
     flex: 1;
-    overflow-y: visible;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .seat-legend-strip {
@@ -3450,36 +3451,68 @@ img {
 }
 
 @media (max-width: 480px) {
+  .seat-modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .street-view-btn {
+    display: none;
+  }
+
   .seat-car-bg {
-    max-width: 240px;
+    max-width: 220px;
     max-height: 50vh;
   }
 
   .seat-layout-card {
     max-height: 50vh;
+    padding: 0;
+    margin: 10px 0;
   }
 
   .seat-item {
-    width: clamp(40px, 11vw, 48px);
-    height: clamp(40px, 11vw, 48px);
+    width: 40px;
+    height: 40px;
     min-width: 40px;
     min-height: 40px;
   }
 
   .seat-number-big {
-    font-size: clamp(13px, 3.5vw, 16px);
+    font-size: 13px;
   }
 
-
+  .steering-icon img {
+    width: 24px !important;
+  }
 
   .front-row-modern,
   .seat-row-modern {
-    gap: 5px;
+    gap: 4px;
   }
 
   .seats-grid {
-    gap: 3px;
-    top: 65%;
+    gap: 4px;
+    top: 60%;
+  }
+
+  /* Compact header/footer */
+  .seat-modal-header {
+    padding: 10px 14px 6px;
+  }
+
+  .seat-modal-header h2 {
+    font-size: 16px !important;
+  }
+
+  .seat-modal-footer {
+    padding: 8px 14px;
+  }
+
+  .height-recommendation {
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    font-size: 10px;
   }
 }
 
@@ -4527,5 +4560,31 @@ img.mobile-seat-icon {
 
   .seat-selection-summary {
     margin-top: 10px !important;
+  }
+
+  img.seat-watermark-img,
+  .steering-icon img {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .seats-grid {
+    gap: 0px !important;
+    top: 65% !important;
+  }
+
+  .height-recommendation {
+    font-size: 8px !important;
+    gap: 2px !important;
+    text-align: left !important;
+    margin-bottom: 0 !important;
+  }
+
+  .height-recommendation i {
+    font-size: 8px !important;
+  }
+
+  .seat-layout-card {
+    margin: 0 !Important;
   }
 }
