@@ -3463,12 +3463,15 @@ img {
   .seat-car-bg {
     max-width: 220px;
     max-height: 50vh;
+    min-height: 250px;
+    width: 220px;
   }
 
   .seat-layout-card {
     max-height: 50vh;
     padding: 0;
     margin: 10px 0;
+    min-height: 380px;
   }
 
   .seat-item {
