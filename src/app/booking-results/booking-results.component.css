@@ -795,31 +795,28 @@ img {
   padding: 100px 20px;
 }
 
+/* Spinner Loader */
 .loading-spinner {
-  width: 64px;
-  height: 64px;
-  border: 4px solid transparent;
-  border-top: 4px solid #008b8b;
-  border-right: 4px solid #20b2aa;
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #0d9488;
   border-radius: 50%;
-  animation: spinGradient 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  margin: 0 auto 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
   position: relative;
 }
 
-.loading-spinner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 48px;
-  height: 48px;
-  border: 4px solid transparent;
-  border-bottom: 4px solid #48d1cc;
-  border-left: 4px solid #5fd9d9;
-  border-radius: 50%;
-  animation: spinGradient 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spinGradient {
@@ -2600,10 +2597,30 @@ img {
   opacity: 0.7;
 }
 
+/* Seat Loading Overlay */
+.seat-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  /* More transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  /* Higher than other elements */
+  border-radius: 12px;
+}
+
 .seat-modal-body {
   padding: 16px;
-  max-height: 70vh;
   overflow-y: auto;
+  flex: 1;
+  position: relative;
+  /* Ensure relative positioning for overlay */
+  max-height: 70vh;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -3004,6 +3021,7 @@ img {
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
+  will-change: transform, opacity;
 }
 
 .popup-header {
@@ -3931,7 +3949,10 @@ img {
   max-width: 400px;
   max-height: 90vh;
   overflow: hidden;
-  transform: scale(0.9) translateY(20px);
+  transform: scale(0.9) translateY(20px) translateZ(0);
+  /* Added translateZ(0) */
+  will-change: transform;
+  /* Added will-change */
   transition: all 0.3s ease;
 }
 

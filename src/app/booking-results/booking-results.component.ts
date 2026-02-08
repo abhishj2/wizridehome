@@ -1337,7 +1337,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
     // Fetch actual seat availability from API
     if (vehicle.tid) {
-      this.fetchSeatDetails(vehicle.tid, seatPrice);
+      if (!this.searchParams?.phoneNumber) {
+        // Optimization: If no phone number, just get seat details
+        this.fetchSeatDetails(vehicle.tid, seatPrice);
+      } else {
+        // If we have phone number, we could potentially check for pre-blocked seats by this user
+        // For now, just fetching seat details is standard
+        this.fetchSeatDetails(vehicle.tid, seatPrice);
+      }
     } else {
       this.isSeatLoading = false;
     }
