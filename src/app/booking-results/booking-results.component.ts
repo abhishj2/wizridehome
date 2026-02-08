@@ -73,6 +73,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   middleSeats: Seat[] = [];
   backSeats: Seat[] = [];
   currentSelectedVehicle: VehicleOption | null = null;
+  isSeatLoading = false;
 
   // Car addition modal properties
   showCarAdditionModal = false;
@@ -1316,6 +1317,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   selectSeat(vehicle: VehicleOption) {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
     this.currentSelectedVehicle = vehicle;
+    this.showSeatPopup = true;
+    this.isSeatLoading = true;
 
     // Calculate price excluding GST (for shared cabs, remove 5% GST from API price)
     const seatPrice = this.getPriceExcludingGST(vehicle.price);
@@ -1326,9 +1329,9 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     // Fetch actual seat availability from API
     if (vehicle.tid) {
       this.fetchSeatDetails(vehicle.tid, seatPrice);
+    } else {
+      this.isSeatLoading = false;
     }
-
-    this.showSeatPopup = true;
     console.log('showSeatPopup set to:', this.showSeatPopup);
   }
 
@@ -1350,12 +1353,14 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
         // Update seat statuses based on API response
         this.updateSeatStatusFromAPI(data, price);
+        this.isSeatLoading = false;
       },
       error: (error) => {
         console.error('========== getSeatDetails API ERROR ==========');
         console.error('Error:', error);
         console.error('===============================================');
         // Keep default seat statuses if API fails
+        this.isSeatLoading = false;
       }
     });
   }
