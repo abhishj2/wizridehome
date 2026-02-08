@@ -2620,6 +2620,71 @@ img {
   margin-bottom: 16px;
 }
 
+.height-recommendation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 16px;
+  background-color: #fffbeb;
+  border: 1px dashed #fcd34d;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.height-recommendation i {
+  color: #f59e0b;
+  font-size: 11px;
+}
+
+.empty-selection-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+.empty-selection-state i {
+  font-size: 24px;
+  color: #0d9488;
+  animation: bounce 2s infinite;
+  opacity: 0.8;
+}
+
+.empty-selection-state span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-6px);
+  }
+
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
 .legend-chip {
   display: flex;
   align-items: center;
@@ -4454,5 +4519,13 @@ img.mobile-seat-icon {
 @media(max-width:767px) {
   .date-hanger {
     display: none !important;
+  }
+
+  .empty-selection-state {
+    flex-direction: row !important;
+  }
+
+  .seat-selection-summary {
+    margin-top: 10px !important;
   }
 }

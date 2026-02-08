@@ -132,6 +132,15 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo(0, 0);
+      // Ensure scroll to top on mobile devices with a slight delay
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 100);
+    }
     console.log('BookingResultsComponent initialized');
 
     // Get search parameters from router state

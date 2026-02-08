@@ -238,6 +238,12 @@ export class CheckoutComponent implements OnInit {
     // Ensure page starts at top
     if (isPlatformBrowser(this.platformId)) {
       window.scrollTo(0, 0);
+      // Ensure scroll to top on mobile devices with a slight delay
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 100);
     }
 
     // Get booking data from navigation state or localStorage
