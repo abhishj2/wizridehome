@@ -6087,7 +6087,7 @@ button.nav-tab.active img {
 @media(min-width:767px) {
     .booking-form.tab-2 .city-suggestions.active {
         width: 300px !important;
-        margin-top: -20px;
+        margin-top: -20px !important;
         margin-top: 10px;
         overflow-y: auto !important;
         border-radius: 10px !important;
@@ -6319,6 +6319,10 @@ button.nav-tab.active img {
 
 .grid-cell:last-child {
     border-right: none;
+}
+
+.grid-cell:hover {
+    background-color: rgba(0, 139, 139, 0.05);
 }
 
 .cell-label {
