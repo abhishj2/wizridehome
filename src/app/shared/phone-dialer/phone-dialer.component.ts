@@ -22,13 +22,16 @@ export class PhoneDialerComponent implements OnDestroy {
   private isPointerDown = false;
   private activeElement: HTMLElement | null = null;
   private animationFrameId: number | null = null;
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  private backspaceInterval: any = null;
+  private backspaceDelayTimeout: any = null;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnDestroy(): void {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
     }
+    this.stopBackspace();
+
   }
 
   @HostListener('document:touchmove', ['$event'])
@@ -49,19 +52,51 @@ export class PhoneDialerComponent implements OnDestroy {
 
   onNumberClick(number: string, event: Event): void {
     if (!this.canTriggerClick()) return;
-    
+
     if (this.currentValue.length >= this.maxLength) {
       return;
     }
-    
+
     this.triggerHapticFeedback(5);
     this.numberClick.emit(number);
     this.animateButton(event.target as HTMLElement);
   }
+  startBackspace(event: PointerEvent): void {
+    this.onPointerDown(event); // keep your active animation
+
+    // First delete immediately
+    this.onBackspace(event);
+
+    // Start continuous delete after small delay (like mobile keyboard)
+    this.backspaceDelayTimeout = setTimeout(() => {
+      this.backspaceInterval = setInterval(() => {
+        this.backspaceClick.emit();
+        this.triggerHapticFeedback(3);
+      }, 80); // speed of continuous delete
+    }, 400); // long press delay
+  }
+  stopBackspace(): void {
+    this.isPointerDown = false;
+
+    if (this.activeElement) {
+      this.activeElement.classList.remove('active');
+      this.activeElement = null;
+    }
+
+    if (this.backspaceDelayTimeout) {
+      clearTimeout(this.backspaceDelayTimeout);
+      this.backspaceDelayTimeout = null;
+    }
+
+    if (this.backspaceInterval) {
+      clearInterval(this.backspaceInterval);
+      this.backspaceInterval = null;
+    }
+  }
 
   onBackspace(event: Event): void {
     if (!this.canTriggerClick()) return;
-    
+
     this.triggerHapticFeedback(8);
     this.backspaceClick.emit();
     this.animateButton(event.target as HTMLElement);
@@ -69,40 +104,35 @@ export class PhoneDialerComponent implements OnDestroy {
 
   onDone(event: Event): void {
     if (!this.canTriggerClick()) return;
-    
+
     this.triggerHapticFeedback(15);
     this.doneClick.emit();
     this.animateButton(event.target as HTMLElement);
   }
 
   onPointerDown(event: PointerEvent): void {
-    if (event.pointerType === 'touch' || event.pointerType === 'pen') {
-      this.isPointerDown = true;
-      this.activeElement = event.target as HTMLElement;
-      
-      // Add active class immediately for visual feedback
-      if (this.activeElement.classList.contains('keypad-btn') || 
-          this.activeElement.classList.contains('keypad-btn-done')) {
-        this.activeElement.classList.add('active');
-      }
-      
-      // Prevent default to avoid browser handling
-      if (event.cancelable) {
-        event.preventDefault();
-      }
+    this.isPointerDown = true;
+    this.activeElement = event.target as HTMLElement;
+
+    if (this.activeElement.classList.contains('keypad-btn') ||
+      this.activeElement.classList.contains('keypad-btn-done')) {
+      this.activeElement.classList.add('active');
+    }
+
+    if (event.cancelable) {
+      event.preventDefault();
     }
   }
 
-  onPointerUp(event: PointerEvent): void {
-    if (event.pointerType === 'touch' || event.pointerType === 'pen') {
-      this.isPointerDown = false;
-      
-      // Remove active class
-      if (this.activeElement) {
-        this.activeElement.classList.remove('active');
-        this.activeElement = null;
-      }
+  onPointerUp(event?: PointerEvent): void {
+    this.isPointerDown = false;
+
+    if (this.activeElement) {
+      this.activeElement.classList.remove('active');
+      this.activeElement = null;
     }
+
+    this.stopBackspace(); // important
   }
 
   private canTriggerClick(): boolean {
@@ -116,11 +146,11 @@ export class PhoneDialerComponent implements OnDestroy {
 
   private animateButton(element: HTMLElement): void {
     if (!element) return;
-    
+
     // Use animation frame for smooth animation
     this.animationFrameId = requestAnimationFrame(() => {
       element.classList.add('click-animation');
-      
+
       // Remove animation class after animation completes
       setTimeout(() => {
         element.classList.remove('click-animation');
