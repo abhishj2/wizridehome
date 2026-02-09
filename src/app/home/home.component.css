@@ -6473,20 +6473,22 @@ button.nav-tab.active img {
     position: absolute;
     top: 100%;
     right: 0;
-    width: 320px;
+    left: auto;
     background: #ffffff;
     border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    padding: 24px;
-    z-index: 100;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    padding: 28px;
+    z-index: 1000;
     margin-top: 10px;
     display: none;
-    border: 1px solid #f1f1f1;
+    min-width: 380px;
+    max-width: 420px;
+    border: 1px solid #e9ecef;
 }
 
 .grid-travelers-panel.active {
     display: block;
-    animation: slideDown 0.3s ease;
+    animation: slideDown 0.3s ease-out;
 }
 
 /* Suggestions Dropdown Position in Grid */
@@ -6550,5 +6552,21 @@ button.nav-tab.active img {
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+
+    .grid-travelers-panel.active {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !Important;
+    }
+
+    .multi-city-container .class-selection h3 {
+        margin-bottom: 0 !important;
+    }
+
+
+
+    .grid-travelers-panel.active {
+        z-index: 99999 !important;
     }
 }
