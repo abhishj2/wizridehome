@@ -2047,8 +2047,12 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <div class="mobile-location-suggestion-content">
                         <div class="mobile-location-suggestion-name">{{ location }}</div>
-                        <div class="mobile-location-suggestion-state" *ngIf="mobileTab === 'shared'">{{
-                            selectedCities.shared.pickup || selectedCities.shared.dropoff }}</div>
+                        <div class="mobile-location-suggestion-state"
+                            *ngIf="mobileTab === 'shared' || mobileTab === 'reserved'">
+                            {{ mobileTab === 'shared' ? (mobilePopupType === 'pickup' ? selectedCities.shared.pickup :
+                            selectedCities.shared.dropoff) : (mobilePopupType === 'pickup' ?
+                            selectedCities.reserved.pickup : selectedCities.reserved.dropoff) }}
+                        </div>
                     </div>
                 </div>
             </ng-container>

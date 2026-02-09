@@ -1200,12 +1200,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Validate phone number format
-    const phoneRegex = /^\d{7,15}$/;
+    const phoneRegex = /^\d{10,15}$/;
     if (!phoneRegex.test(this.phoneNumber)) {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Phone Number',
-        text: 'Please enter a valid phone number (7-15 digits)',
+        text: 'Please enter a valid phone number (10-15 digits)',
         timer: 3000,
         timerProgressBar: true,
         showConfirmButton: false
@@ -3391,9 +3391,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const fullPhoneNumber = this.selectedCountryCode + this.phoneNumber;
 
     // Basic validation - at least 7 digits after country code
-    const phoneRegex = /^\d{7,15}$/;
+    const phoneRegex = /^\d{10,15}$/;
     if (!phoneRegex.test(this.phoneNumber)) {
-      this.phoneError = 'Please enter a valid phone number (7-15 digits)';
+      this.phoneError = 'Please enter a valid phone number (10-15 digits)';
       return;
     }
 
