@@ -2025,7 +2025,7 @@
                     (click)="selectMobileCity(city.name, city.code)">
                     <div class="mobile-location-icon">
                         <i class="fas"
-                            [ngClass]="mobilePopupType === 'to' ? 'fa-plane-arrival' : 'fa-plane-departure'"></i>
+                            [ngClass]="mobileTab === 'flights' ? (mobilePopupType === 'to' ? 'fa-plane-arrival' : 'fa-plane-departure') : 'fa-map-marker-alt'"></i>
                     </div>
                     <div class="mobile-location-suggestion-content">
                         <div class="mobile-location-city-country">{{ city.name }}{{ city.country ? ', ' + city.country :
