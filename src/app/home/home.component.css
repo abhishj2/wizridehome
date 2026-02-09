@@ -6282,7 +6282,8 @@ button.nav-tab.active img {
 }
 
 /* Main Grid Row */
-.multi-city-row-grid {
+.multi-city-row-grid,
+.standard-row-grid {
     display: grid;
     grid-template-columns: 2fr 2fr 1.5fr 1.5fr;
     background: #fff;
@@ -6293,8 +6294,14 @@ button.nav-tab.active img {
     align-items: flex-start;
 }
 
+.standard-row-grid.round-trip {
+    grid-template-columns: 1.8fr 1.8fr 1.2fr 1.2fr 1.5fr;
+}
+
 .multi-city-row-grid:hover,
-.multi-city-row-grid:focus-within {
+.multi-city-row-grid:focus-within,
+.standard-row-grid:hover,
+.standard-row-grid:focus-within {
     border-color: #008b8b;
     box-shadow: 0 5px 15px rgba(0, 139, 139, 0.1);
     z-index: 20;
@@ -6349,16 +6356,18 @@ button.nav-tab.active img {
     text-overflow: ellipsis;
 }
 
-.input-icon {
+/* Hide icons for grid layouts only */
+.multi-city-row-grid .input-icon,
+.standard-row-grid .input-icon {
     display: none;
-    /* Hide icons for cleaner look as per reference */
 }
+
 
 /* Swap Button Positioned Absolute */
 .grid-swap-btn {
     position: absolute;
-    left: 25%;
-    /* Roughly between col 1 and 2 but this depends on width */
+    left: 28.5%;
+    /* Correct for 2:2:1.5:1.5 grid (2/7 = ~28.5%) */
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
@@ -6374,6 +6383,11 @@ button.nav-tab.active img {
     cursor: pointer;
     font-size: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.standard-row-grid.round-trip .grid-swap-btn {
+    left: 24%;
+    /* Correct for 1.8:1.8:1.2:1.2:1.5 grid (1.8/7.5 = 24%) */
 }
 
 .grid-swap-btn:hover {
@@ -6568,5 +6582,9 @@ button.nav-tab.active img {
 
     .grid-travelers-panel.active {
         z-index: 99999 !important;
+    }
+
+    .special-fares-section {
+        justify-content: center;
     }
 }

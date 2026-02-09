@@ -272,205 +272,207 @@
 
 
 
-                                <!-- STANDARD VIEW (One Way / Round Trip) -->
+                                <!-- STANDARD VIEW (One Way / Round Trip Grid) -->
                                 <ng-container *ngIf="tripType !== 'multi-city'">
-                                    <div *ngFor="let route of flightRoutes; let i = index" class="form-row multrow">
-                                        <div class="route-header" *ngIf="tripType === 'multi-city'">
-                                            <span class="route-number">Route {{i + 1}}</span>
-                                            <button class="remove-route-btn" (click)="removeFlightRoute(i)"
-                                                [disabled]="flightRoutes.length <= 1" aria-label="Remove this route">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
+                                    <div class="multi-city-rows-wrapper" style="margin-top: 20px;">
+                                        <div *ngFor="let route of flightRoutes; let i = index" class="standard-row-grid"
+                                            [class.round-trip]="tripType === 'round-trip'"
+                                            [class.one-way]="tripType === 'one-way'">
 
-                                        <div class="form-group city-select">
-                                            <label>From</label>
-                                            <div class="input-with-icon">
-                                                <i class="fas fa-plane-departure input-icon"></i>
-                                                <input type="text" class="form-input city-input"
+                                            <!-- COL 1: FROM -->
+                                            <div class="grid-cell city-select">
+                                                <label class="cell-label">FROM</label>
+                                                <input type="text" class="grid-input-field"
                                                     [class.error]="isSameCitySelected(route.from, route.to)"
-                                                    placeholder="Source" [(ngModel)]="route.from"
+                                                    placeholder="Select City" [(ngModel)]="route.from"
                                                     (focus)="showCitySuggestionsOnFocus('flight-from-' + i)"
                                                     (input)="showCitySuggestions(route.from, 'flight-from-' + i)">
-                                            </div>
-                                            <div class="city-suggestions"
-                                                [class.active]="getMultiCitySuggestions('flight-from-' + i).length > 0">
-                                                <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
-                                                    class="city-suggestion"
-                                                    (click)="selectMultiCity(city.name, city.code, 'flight-from-' + i)">
-                                                    <div class="city-suggestion-icon">
-                                                        <i class="fas fa-plane-departure"></i>
-                                                    </div>
-                                                    <div class="city-suggestion-content">
-                                                        <div class="city-suggestion-city-country">{{ city.name }}{{
-                                                            city.country ? ', ' + city.country : (city.state ? ', ' +
-                                                            city.state : '') }}</div>
-                                                        <div class="city-suggestion-airport-name"
-                                                            *ngIf="city.airportName">
-                                                            {{ city.airportName }}</div>
-                                                        <div class="city-suggestion-airport-name"
-                                                            *ngIf="!city.airportName && city.state">{{ city.state }}
+
+                                                <div class="input-subtext" *ngIf="route.from">{{route.from}}</div>
+                                                <div class="input-subtext" *ngIf="!route.from">Start your journey</div>
+
+                                                <!-- Suggestions -->
+                                                <div class="city-suggestions"
+                                                    [class.active]="getMultiCitySuggestions('flight-from-' + i).length > 0">
+                                                    <div *ngFor="let city of getMultiCitySuggestions('flight-from-' + i)"
+                                                        class="city-suggestion"
+                                                        (click)="selectMultiCity(city.name, city.code, 'flight-from-' + i)">
+                                                        <div class="city-suggestion-icon"><i
+                                                                class="fas fa-plane-departure"></i></div>
+                                                        <div class="city-suggestion-content">
+                                                            <div class="city-suggestion-city-country">{{ city.name }}{{
+                                                                city.country ? ', ' + city.country : '' }}</div>
+                                                            <div class="city-suggestion-airport-name">{{
+                                                                city.airportName }}</div>
                                                         </div>
-                                                    </div>
-                                                    <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code
-                                                        }} ]
+                                                        <div class="city-suggestion-code" *ngIf="city.code">[ {{
+                                                            city.code }} ]</div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="validation-error"
-                                                *ngIf="isSameCitySelected(route.from, route.to)">
-                                                {{getValidationMessage(route.from, route.to)}}
-                                            </div>
-                                        </div>
 
-                                        <button class="swap-btn" (click)="swapFlightLocations(i)"
-                                            [ngClass]="tripType === 'multi-city' ? 'nesap swap-btn' : ''"
-                                            aria-label="Swap departure and arrival cities">
-                                            <span>⇄</span>
-                                        </button>
+                                            <!-- SWAP BUTTON (Absolute) -->
+                                            <button class="grid-swap-btn" (click)="swapFlightLocations(i)" title="Swap">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
 
-                                        <div class="form-group city-select">
-                                            <label>To</label>
-                                            <div class="input-with-icon">
-                                                <i class="fas fa-plane-arrival input-icon"></i>
-                                                <input type="text" class="form-input city-input"
+                                            <!-- COL 2: TO -->
+                                            <div class="grid-cell city-select">
+                                                <label class="cell-label">TO</label>
+                                                <input type="text" class="grid-input-field"
                                                     [class.error]="isSameCitySelected(route.from, route.to)"
-                                                    placeholder="Destination" [(ngModel)]="route.to"
+                                                    placeholder="Select City" [(ngModel)]="route.to"
                                                     (focus)="showCitySuggestionsOnFocus('flight-to-' + i)"
                                                     (input)="showCitySuggestions(route.to, 'flight-to-' + i)">
-                                            </div>
-                                            <div class="city-suggestions"
-                                                [class.active]="getMultiCitySuggestions('flight-to-' + i).length > 0">
-                                                <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
-                                                    class="city-suggestion"
-                                                    (click)="selectMultiCity(city.name, city.code, 'flight-to-' + i)">
-                                                    <div class="city-suggestion-icon">
-                                                        <i class="fas fa-plane-arrival"></i>
+
+                                                <div class="input-subtext" *ngIf="route.to">{{route.to}}</div>
+                                                <div class="input-subtext" *ngIf="!route.to">Choose destination</div>
+
+                                                <!-- Suggestions -->
+                                                <div class="city-suggestions"
+                                                    [class.active]="getMultiCitySuggestions('flight-to-' + i).length > 0">
+                                                    <div *ngFor="let city of getMultiCitySuggestions('flight-to-' + i)"
+                                                        class="city-suggestion"
+                                                        (click)="selectMultiCity(city.name, city.code, 'flight-to-' + i)">
+                                                        <div class="city-suggestion-icon"><i
+                                                                class="fas fa-plane-arrival"></i></div>
+                                                        <div class="city-suggestion-content">
+                                                            <div class="city-suggestion-city-country">{{ city.name }}{{
+                                                                city.country ? ', ' + city.country : '' }}</div>
+                                                            <div class="city-suggestion-airport-name">{{
+                                                                city.airportName }}</div>
+                                                        </div>
+                                                        <div class="city-suggestion-code" *ngIf="city.code">[ {{
+                                                            city.code }} ]</div>
                                                     </div>
-                                                    <div class="city-suggestion-content">
-                                                        <div class="city-suggestion-city-country">{{ city.name }}{{
-                                                            city.country ? ', ' + city.country : (city.state ? ', ' +
-                                                            city.state : '') }}</div>
-                                                        <div class="city-suggestion-airport-name"
-                                                            *ngIf="city.airportName">
-                                                            {{ city.airportName }}</div>
-                                                        <div class="city-suggestion-airport-name"
-                                                            *ngIf="!city.airportName && city.state">{{ city.state }}
+                                                </div>
+                                            </div>
+
+                                            <!-- COL 3: DEPARTURE -->
+                                            <div class="grid-cell">
+                                                <label class="cell-label">DEPARTURE</label>
+                                                <app-custom-calendar class="flights-calendar"
+                                                    [selectedDate]="route.date" [minDate]="getTodayDate()"
+                                                    [calendarFareMap]="calendarFareMap" placeholder="Date"
+                                                    (dateSelected)="onFlightDepartureDateSelected($event, i)"
+                                                    (calendarOpened)="onCalendarOpened('departure')"
+                                                    (calendarClosed)="onCalendarClosed()">
+                                                </app-custom-calendar>
+                                                <div class="input-subtext">{{ route.date ? (route.date | date:'EEEE') :
+                                                    'Select Date' }}</div>
+                                            </div>
+
+                                            <!-- COL 4: RETURN (Only for Round Trip) -->
+                                            <div class="grid-cell" *ngIf="tripType === 'round-trip'">
+                                                <label class="cell-label">RETURN</label>
+                                                <app-custom-calendar class="flights-calendar"
+                                                    [selectedDate]="formValues.flightReturn"
+                                                    [minDate]="getReturnMinDate()"
+                                                    [calendarFareMap]="calendarFareMapReturn" placeholder="Date"
+                                                    (dateSelected)="onFlightReturnDateSelected($event)"
+                                                    (calendarOpened)="onCalendarOpened('return')"
+                                                    (calendarClosed)="onCalendarClosed()">
+                                                </app-custom-calendar>
+                                                <div class="input-subtext">{{ formValues.flightReturn ?
+                                                    (formValues.flightReturn | date:'EEEE') : 'Select Date' }}</div>
+                                                <div class="validation-error" *ngIf="returnDateError"
+                                                    style="position:absolute; bottom:-18px; left:10px; font-size:10px; color:red;">
+                                                    {{ returnDateError }}
+                                                </div>
+                                            </div>
+
+                                            <!-- COL 5 (or 4): TRAVELLERS -->
+                                            <div class="grid-cell travelers-dropdown">
+                                                <label class="cell-label">TRAVELLERS & CLASS</label>
+                                                <button class="grid-travelers-trigger" (click)="toggleTravelersPanel()">
+                                                    <span class="travelers-main-text">{{counts.adults + counts.children
+                                                        + counts.infants}} Traveller</span>
+                                                    <span class="travelers-sub-text">{{selectedClass |
+                                                        titlecase}}</span>
+                                                </button>
+
+                                                <!-- Travelers Panel Reuse -->
+                                                <div class="grid-travelers-panel" [class.active]="isTravelersOpen"
+                                                    (click)="$event.stopPropagation()">
+                                                    <h3>Travellers</h3>
+                                                    <!-- Adults -->
+                                                    <div class="traveler-row">
+                                                        <div class="traveler-info">
+                                                            <h4>Adults</h4>
+                                                            <p>12 yrs or above</p>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter-btn"
+                                                                [disabled]="!canDecrease('adults')"
+                                                                [class.active]="counts.adults > 1"
+                                                                (click)="updateCount('adults', -1)">-</button>
+                                                            <span class="counter-value">{{counts.adults}}</span>
+                                                            <button class="counter-btn"
+                                                                (click)="updateCount('adults', 1)">+</button>
                                                         </div>
                                                     </div>
-                                                    <div class="city-suggestion-code" *ngIf="city.code">[ {{ city.code
-                                                        }} ]
+                                                    <!-- Children -->
+                                                    <div class="traveler-row">
+                                                        <div class="traveler-info">
+                                                            <h4>Children</h4>
+                                                            <p>2 - 12 yrs</p>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter-btn"
+                                                                [disabled]="!canDecrease('children')"
+                                                                [class.active]="counts.children > 0"
+                                                                (click)="updateCount('children', -1)">-</button>
+                                                            <span class="counter-value">{{counts.children}}</span>
+                                                            <button class="counter-btn"
+                                                                (click)="updateCount('children', 1)">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Infants -->
+                                                    <div class="traveler-row">
+                                                        <div class="traveler-info">
+                                                            <h4>Infants</h4>
+                                                            <p>0 - 2 yrs</p>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter-btn"
+                                                                [disabled]="!canDecrease('infants')"
+                                                                [class.active]="counts.infants > 0"
+                                                                (click)="updateCount('infants', -1)">-</button>
+                                                            <span class="counter-value">{{counts.infants}}</span>
+                                                            <button class="counter-btn"
+                                                                (click)="updateCount('infants', 1)">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Class -->
+                                                    <div class="class-selection">
+                                                        <h3>Class</h3>
+                                                        <div class="class-options">
+                                                            <button class="class-option"
+                                                                [class.active]="selectedClass === 'economy'"
+                                                                (click)="updateClass('economy')">Economy</button>
+                                                            <button class="class-option"
+                                                                [class.active]="selectedClass === 'business'"
+                                                                (click)="updateClass('business')">Business</button>
+                                                            <button class="class-option"
+                                                                [class.active]="selectedClass === 'first'"
+                                                                (click)="updateClass('first')">First</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Done -->
+                                                    <div class="panel-actions">
+                                                        <button class="done-btn"
+                                                            (click)="closeTravelersPanel()">Done</button>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label>Departure</label>
-                                            <app-custom-calendar class="flights-calendar" [selectedDate]="route.date"
-                                                [minDate]="getTodayDate()" [calendarFareMap]="calendarFareMap"
-                                                placeholder="Select Date"
-                                                (dateSelected)="onFlightDepartureDateSelected($event, i)"
-                                                (calendarOpened)="onCalendarOpened('departure')"
-                                                (calendarClosed)="onCalendarClosed()">
-                                            </app-custom-calendar>
-                                        </div>
-
-                                        <div class="form-group return-field"
-                                            [style.display]="tripType === 'round-trip' && i === 0 ? 'block' : 'none'">
-                                            <label>Return</label>
-                                            <app-custom-calendar class="flights-calendar"
-                                                [selectedDate]="formValues.flightReturn" [minDate]="getReturnMinDate()"
-                                                [calendarFareMap]="calendarFareMapReturn"
-                                                placeholder="Select Return Date"
-                                                (dateSelected)="onFlightReturnDateSelected($event)"
-                                                (calendarOpened)="onCalendarOpened('return')"
-                                                (calendarClosed)="onCalendarClosed()">
-                                            </app-custom-calendar>
-                                            <div class="validation-error" *ngIf="returnDateError">
-                                                {{ returnDateError }}
-                                            </div>
-                                        </div>
-
-                                        <div class="travelers-dropdown form-group" *ngIf="tripType !== 'multi-city'">
-                                            <label>Travellers & Class</label>
-                                            <button class="travelers-btn" (click)="toggleTravelersPanel()">
-                                                <span>{{getTravelersText()}}</span>
-                                            </button>
-                                            <div class="travelers-panel" [class.active]="isTravelersOpen">
-                                                <h3>Travellers</h3>
-
-                                                <div class="traveler-row">
-                                                    <div class="traveler-info">
-                                                        <h4>Adults</h4>
-                                                        <p>12 yrs or above</p>
-                                                    </div>
-                                                    <div class="counter">
-                                                        <button class="counter-btn" [disabled]="!canDecrease('adults')"
-                                                            [class.active]="counts.adults > 1"
-                                                            (click)="updateCount('adults', -1)">-</button>
-                                                        <span class="counter-value">{{counts.adults}}</span>
-                                                        <button class="counter-btn"
-                                                            (click)="updateCount('adults', 1)">+</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="traveler-row">
-                                                    <div class="traveler-info">
-                                                        <h4>Children</h4>
-                                                        <p>2 - 12 yrs</p>
-                                                    </div>
-                                                    <div class="counter">
-                                                        <button class="counter-btn"
-                                                            [disabled]="!canDecrease('children')"
-                                                            [class.active]="counts.children > 0"
-                                                            (click)="updateCount('children', -1)">-</button>
-                                                        <span class="counter-value">{{counts.children}}</span>
-                                                        <button class="counter-btn"
-                                                            (click)="updateCount('children', 1)">+</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="traveler-row">
-                                                    <div class="traveler-info">
-                                                        <h4>Infants</h4>
-                                                        <p>0 - 2 yrs</p>
-                                                    </div>
-                                                    <div class="counter">
-                                                        <button class="counter-btn" [disabled]="!canDecrease('infants')"
-                                                            [class.active]="counts.infants > 0"
-                                                            (click)="updateCount('infants', -1)">-</button>
-                                                        <span class="counter-value">{{counts.infants}}</span>
-                                                        <button class="counter-btn"
-                                                            (click)="updateCount('infants', 1)">+</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="class-selection">
-                                                    <h3>Class</h3>
-                                                    <div class="class-options">
-                                                        <button class="class-option"
-                                                            [class.active]="selectedClass === 'economy'"
-                                                            (click)="updateClass('economy')">Economy</button>
-                                                        <button class="class-option"
-                                                            [class.active]="selectedClass === 'business'"
-                                                            (click)="updateClass('business')">Business</button>
-                                                        <button class="class-option"
-                                                            [class.active]="selectedClass === 'first'"
-                                                            (click)="updateClass('first')">First</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-actions">
-                                                    <button class="done-btn"
-                                                        (click)="closeTravelersPanel()">Done</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Add Route Button for Multi City -->
-                                        <button class="search-btn" (click)="searchFlights()"
-                                            *ngIf="tripType !== 'multi-city'" aria-label="Search flights">
-                                            <span><i class="fas fa-search"></i></span>
+                                    <div class="multi-city-compact-actions"
+                                        style="justify-content: center; margin-top: 30px;">
+                                        <button class="search-btn-compact" (click)="searchFlights()">
+                                            SEARCH
                                         </button>
                                     </div>
                                 </ng-container>
