@@ -149,6 +149,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mobileLocationTab: 'popular' | 'seeall' = 'popular';
   expandedStates: Set<string> = new Set();
   showMobileTravelersPopup = false;
+  showMobileCountryPopup = false;
+  mobileCountrySearchQuery = '';
   showMobileMultiCityModal = false;
   currentMultiCityRouteIndex: number = 0;
   currentMultiCityField: 'from' | 'to' = 'from';
@@ -572,6 +574,31 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mobilePopupTarget) {
       delete this.activeSuggestions[this.mobilePopupTarget];
     }
+  }
+
+  openMobileCountryPopup(): void {
+    this.showMobileCountryPopup = true;
+    this.mobileCountrySearchQuery = '';
+  }
+
+  closeMobileCountryPopup(): void {
+    this.showMobileCountryPopup = false;
+  }
+
+  selectMobileCountry(country: any): void {
+    this.selectedCountryCode = country.code;
+    this.closeMobileCountryPopup();
+  }
+
+  getFilteredCountries(): any[] {
+    if (!this.mobileCountrySearchQuery.trim()) {
+      return this.countryList;
+    }
+    const query = this.mobileCountrySearchQuery.toLowerCase().trim();
+    return this.countryList.filter(c =>
+      c.name.toLowerCase().includes(query) ||
+      c.code.includes(query)
+    );
   }
 
   onMobileLocationInput(query: string): void {
@@ -1429,6 +1456,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getMobileFlagCode(): string {
+    return this.getFlagCode(this.selectedCountryCode);
+  }
+
+  getFlagCode(code: string): string {
     const flagMap: { [key: string]: string } = {
       '+1': 'us', '+7': 'ru', '+20': 'eg', '+27': 'za', '+30': 'gr',
       '+31': 'nl', '+32': 'be', '+33': 'fr', '+34': 'es', '+36': 'hu',
@@ -1472,7 +1503,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       '+975': 'bt', '+976': 'mn', '+977': 'np', '+992': 'tj', '+993': 'tm',
       '+994': 'az', '+995': 'ge', '+996': 'kg', '+998': 'uz'
     };
-    return flagMap[this.selectedCountryCode] || 'in';
+    return flagMap[code] || 'in';
   }
 
   onMobileCountryCodeChange(event: Event): void {

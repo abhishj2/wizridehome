@@ -881,19 +881,19 @@
     <div class="wr-tabs-modern">
         <div class="wr-tab-indicator" [style.transform]="'translateX(' + (getMobileTabIndex(mobileTab) * 100) + '%)'">
         </div>
-        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'shared'"
+        <button class="wr-tab-modern" type="button" [class.wr-tab-modern--active]="mobileTab === 'shared'"
             (click)="setMobileTab('shared')">
             <span class="wr-tab-icon"><img src="assets/images/shared-removebg-preview.png" width="23"
                     alt="Wizzride shared cab service" /></span>
             <span>Shared</span>
         </button>
-        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'reserved'"
+        <button class="wr-tab-modern" type="button" [class.wr-tab-modern--active]="mobileTab === 'reserved'"
             (click)="setMobileTab('reserved')">
             <span class="wr-tab-icon"><img src="assets/images/reserved.png" width="23"
                     alt="Wizzride reserved cab service" /></span>
             <span>Reserved</span>
         </button>
-        <button class="wr-tab-modern" [class.wr-tab-modern--active]="mobileTab === 'flights'"
+        <button class="wr-tab-modern" type="button" [class.wr-tab-modern--active]="mobileTab === 'flights'"
             (click)="setMobileTab('flights')">
             <span class="wr-tab-icon"><img src="assets/images/flight.png" width="23" alt="flight" /></span>
             <span>Flights</span>
@@ -971,15 +971,11 @@
             <div class="wr-field-block wr-field-block--reserved-mobile">
                 <div class="wr-field-label">Your Mobile Number</div>
                 <div class="wr-field-pill wr-phone-wrapper">
-                    <div class="wr-country-select">
+                    <div class="wr-country-select" (click)="openMobileCountryPopup()">
                         <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
                             alt="Selected country flag">
-                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
-                            (change)="onMobileCountryCodeChange($event)" aria-label="Mobile country code">
-                            <option *ngFor="let country of countryList" [value]="country.code">
-                                {{ country.code }}
-                            </option>
-                        </select>
+                        <span class="wr-country-code">{{ selectedCountryCode }}</span>
+                        <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 2px; color: #6b7280;"></i>
                     </div>
                     <input #phoneInputShared type="tel" class="wr-input" placeholder="Enter phone number"
                         [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
@@ -1027,15 +1023,11 @@
             <div class="wr-field-block">
                 <div class="wr-field-label">Your Mobile Number</div>
                 <div class="wr-field-pill wr-phone-wrapper">
-                    <div class="wr-country-select">
+                    <div class="wr-country-select" (click)="openMobileCountryPopup()">
                         <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
                             alt="Selected country flag">
-                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
-                            (change)="onMobileCountryCodeChange($event)">
-                            <option *ngFor="let country of countryList" [value]="country.code">
-                                {{ country.code }}
-                            </option>
-                        </select>
+                        <span class="wr-country-code">{{ selectedCountryCode }}</span>
+                        <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 2px; color: #6b7280;"></i>
                     </div>
                     <input #phoneInputReserved type="tel" class="wr-input" placeholder="Enter phone number"
                         [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
@@ -1190,15 +1182,11 @@
             <div class="wr-field-block">
                 <div class="wr-field-label">Your Mobile Number</div>
                 <div class="wr-field-pill wr-phone-wrapper">
-                    <div class="wr-country-select">
+                    <div class="wr-country-select" (click)="openMobileCountryPopup()">
                         <img [src]="'https://flagcdn.com/w20/' + getMobileFlagCode() + '.png'" class="wr-flag"
                             alt="Selected country flag">
-                        <select class="wr-country-dropdown" [(ngModel)]="selectedCountryCode"
-                            (change)="onMobileCountryCodeChange($event)">
-                            <option *ngFor="let country of countryList" [value]="country.code">
-                                {{ country.code }}
-                            </option>
-                        </select>
+                        <span class="wr-country-code">{{ selectedCountryCode }}</span>
+                        <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 2px; color: #6b7280;"></i>
                     </div>
                     <input #phoneInputFlights type="tel" class="wr-input" placeholder="Enter phone number"
                         [(ngModel)]="phoneNumber" maxlength="10" pattern="[0-9]{6,15}"
@@ -2201,6 +2189,42 @@
     </div>
 </div>
 
+
+<!-- Mobile Country Selection Sliding Popup -->
+<div class="mobile-location-popup" [class.active]="showMobileCountryPopup" (click)="closeMobileCountryPopup()">
+    <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
+        <div class="mobile-location-popup-header">
+            <button class="mobile-location-popup-back" (click)="closeMobileCountryPopup()"
+                aria-label="Country Popup Back">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3>Select Country</h3>
+            <button class="mobile-location-popup-close" aria-label="Close Country Popup"
+                (click)="closeMobileCountryPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-location-popup-search">
+            <i class="fas fa-search"></i>
+            <input type="text" class="mobile-location-search-input" [(ngModel)]="mobileCountrySearchQuery"
+                placeholder="Search country or code">
+        </div>
+
+        <div class="mobile-location-popup-suggestions">
+            <div *ngFor="let country of getFilteredCountries()" class="mobile-location-suggestion"
+                (click)="selectMobileCountry(country)">
+                <div class="mobile-location-icon">
+                    <img [src]="'https://flagcdn.com/w40/' + getFlagCode(country.code) + '.png'"
+                        style="width: 24px; border-radius: 2px;" [alt]="country.name">
+                </div>
+                <div class="mobile-location-suggestion-content">
+                    <div class="mobile-location-city-country">{{ country.name }}</div>
+                </div>
+                <div class="mobile-location-airport-code">{{ country.code }}</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Custom Phone Number Keypad (Mobile Only) -->
 <app-phone-dialer [isVisible]="showCustomKeypad && isMobileView()" [currentValue]="phoneNumber" [maxLength]="10"

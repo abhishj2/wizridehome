@@ -3725,6 +3725,8 @@ button.nav-tab.active img {
         gap: 6px;
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
+        z-index: 20;
+        /* Ensure it stays above other elements */
     }
 
     .wr-tab-indicator {
@@ -3738,6 +3740,8 @@ button.nav-tab.active img {
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
         transition: transform 0.28s cubic-bezier(.28, .11, .32, 1.25);
         z-index: 0;
+        pointer-events: none;
+        /* Prevent blocking clicks */
     }
 
     .wr-tab-modern {
@@ -3755,7 +3759,10 @@ button.nav-tab.active img {
         cursor: pointer;
         color: #5c6678;
         transition: color 0.25s ease;
-        z-index: 2;
+        z-index: 5;
+        /* Ensure above indicator */
+        -webkit-tap-highlight-color: transparent;
+        /* Remove highlight on tap */
     }
 
     .wr-tab-modern--active {
@@ -3767,6 +3774,8 @@ button.nav-tab.active img {
         height: 16px;
         opacity: .78;
         transition: transform 0.28s ease, filter 0.28s ease;
+        pointer-events: none;
+        /* Ensure click passes to button */
     }
 
     .wr-tab-modern--active .wr-tab-icon img {
@@ -4529,6 +4538,16 @@ button.nav-tab.active img {
         display: flex;
         align-items: center;
         gap: 6px;
+        cursor: pointer;
+        padding: 4px 10px 4px 0;
+        border-right: 1px solid #e5e7eb;
+        margin-right: 8px;
+    }
+
+    .wr-country-code {
+        font-size: 16px;
+        color: #111827;
+        font-weight: 500;
     }
 
     .wr-flag {
@@ -4549,114 +4568,118 @@ button.nav-tab.active img {
         -webkit-appearance: none;
         appearance: none;
         touch-action: manipulation;
-    }
-
-    .wr-country-dropdown option {
-        color: #111827;
-        background: #ffffff;
-    }
-
-    .wr-input {
-        border: none;
-        caret-color: #0f9d92 !important;
-        cursor: text !important;
-        background: transparent;
-        font-size: 16px;
-        width: 100%;
-        outline: none;
-        touch-action: manipulation;
-    }
-
-    /* Swap button styling */
-    .wr-swap-btn {
-        width: 34px;
-        height: 34px;
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .wr-swap-btn:hover {
-        background: #f9fafb;
-        border-color: #18b0a8;
-        transform: rotate(180deg);
-    }
-
-    .wr-swap-btn:active {
-        transform: rotate(180deg) scale(0.95);
-    }
-
-    .wr-swap-btn .wr-icon {
-        width: 16px;
-        height: 16px;
-        stroke-width: 2;
-    }
-
-
-
-    .wr-field-block+.wr-field-block {
-        margin-top: 10px;
-    }
-
-    /* Extra spacing between form blocks on mobile */
-    .wr-panel .wr-field-block {
-        margin-bottom: 20px;
-    }
-
-    /* Mobile Special Fares Section */
-    .wr-special-fares-mobile {
-        margin-top: 16px;
-    }
-
-    .wr-special-fares-buttons {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-top: 8px;
-    }
-
-    .wr-special-fare-btn {
-        flex: 1 1 calc(33.333% - 4px);
-        min-width: 0;
-        padding: 10px 8px;
-        border: 1px solid #e9ecef;
-        background: #ffffff;
-        color: #474747;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        font-size: 12px;
-        white-space: normal;
-        word-wrap: break-word;
-        text-align: center;
-        line-height: 1.3;
-    }
-
-    .wr-special-fare-btn.active {
-        background: darkcyan;
-        color: #ffffff;
-        border-color: darkcyan;
-        box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
-    }
-
-    .wr-special-fare-btn:not(.active):hover {
-        background: rgba(0, 139, 139, 0.1);
-        color: darkcyan;
-        border-color: rgba(0, 139, 139, 0.3);
-    }
-
-    .wr-special-fare-btn:not(.active):active {
-        background: rgba(0, 139, 139, 0.15);
+        -webkit-touch-callout: none;
     }
 }
+
+.wr-country-dropdown option {
+    color: #111827;
+    background: #ffffff;
+}
+
+.wr-input {
+    border: none;
+    caret-color: #0f9d92 !important;
+    cursor: text !important;
+    background: transparent;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+}
+
+
+/* Swap button styling */
+.wr-swap-btn {
+    width: 34px;
+    height: 34px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.wr-swap-btn:hover {
+    background: #f9fafb;
+    border-color: #18b0a8;
+    transform: rotate(180deg);
+}
+
+.wr-swap-btn:active {
+    transform: rotate(180deg) scale(0.95);
+}
+
+.wr-swap-btn .wr-icon {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+
+
+.wr-field-block+.wr-field-block {
+    margin-top: 10px;
+}
+
+/* Extra spacing between form blocks on mobile */
+.wr-panel .wr-field-block {
+    margin-bottom: 20px;
+}
+
+/* Mobile Special Fares Section */
+.wr-special-fares-mobile {
+    margin-top: 16px;
+}
+
+.wr-special-fares-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.wr-special-fare-btn {
+    flex: 1 1 calc(33.333% - 4px);
+    min-width: 0;
+    padding: 10px 8px;
+    border: 1px solid #e9ecef;
+    background: #ffffff;
+    color: #474747;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.wr-special-fare-btn.active {
+    background: darkcyan;
+    color: #ffffff;
+    border-color: darkcyan;
+    box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
+}
+
+.wr-special-fare-btn:not(.active):hover {
+    background: rgba(0, 139, 139, 0.1);
+    color: darkcyan;
+    border-color: rgba(0, 139, 139, 0.3);
+}
+
+.wr-special-fare-btn:not(.active):active {
+    background: rgba(0, 139, 139, 0.15);
+}
+
 
 /* Mobile location popup */
 .mobile-location-popup {
@@ -4738,6 +4761,8 @@ button.nav-tab.active img {
     font-size: 16px;
     color: #111827;
     touch-action: manipulation;
+    -webkit-touch-callout: none;
+
 }
 
 .mobile-location-search-input::placeholder {
@@ -4779,7 +4804,7 @@ button.nav-tab.active img {
 
 .mobile-location-state-header {
     padding: 16px 16px 10px;
-    font-size: 13px;
+    font-size: 13px !important;
     font-weight: 700;
     color: #374151;
     text-transform: capitalize;
@@ -4912,13 +4937,23 @@ button.nav-tab.active img {
 }
 
 .mobile-location-airport-code {
-    color: #474747;
-    font-size: 12px;
-    font-weight: 500;
-    flex-shrink: 0;
-    margin-left: auto;
-    padding-left: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    padding: 4px 8px;
+    background: #f3f4f6;
+    border-radius: 6px;
+    min-width: 45px;
+    text-align: center;
 }
+
+/* Country flag in suggestions */
+.mobile-country-popup .mobile-location-icon img {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+}
+
+
 
 .mobile-location-suggestion-name {
     font-weight: 600;
@@ -6307,7 +6342,14 @@ button.nav-tab.active img {
     }
 }
 
-button {
+/* button {
     touch-action: manipulation;
     -webkit-touch-callout: none;
+} */
+
+@media(max-width:767px) {
+    .wr-card .wr-route-code:nth-child(2) {
+        font-weight: 500;
+        color: #000;
+    }
 }
