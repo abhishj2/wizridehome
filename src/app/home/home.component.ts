@@ -2012,6 +2012,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.route.data.subscribe(data => {
         if (data['tab']) {
           this.mobileTab = data['tab'];
+
+          // Sync desktop tab based on route data
+          let targetDesktopTab = '';
+          if (data['tab'] === 'shared') targetDesktopTab = 'shared-cabs';
+          else if (data['tab'] === 'reserved') targetDesktopTab = 'reserved-cabs';
+          else if (data['tab'] === 'flights') targetDesktopTab = 'flights';
+
+          if (targetDesktopTab && this.currentTab !== targetDesktopTab && !this.isSliding) {
+            this.currentTab = targetDesktopTab;
+            this.loadOffers(targetDesktopTab);
+          }
         }
       })
     );
@@ -2486,6 +2497,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (tabName !== this.currentTab && !this.isSliding) {
       this.previousTab = this.currentTab;
       this.isSliding = true;
+
+      // Update URL to match tab
+      const urlMap: { [key: string]: string } = {
+        'shared-cabs': '/shared',
+        'reserved-cabs': '/reserved',
+        'flights': '/flight',
+      };
+
+      if (urlMap[tabName] && isPlatformBrowser(this.platformId)) {
+        this.router.navigate([urlMap[tabName]], { replaceUrl: true });
+      }
 
       // Determine slide direction based on tab indices
       const currentIndex = this.tabs.indexOf(this.currentTab);
