@@ -407,7 +407,7 @@ h2 {
     border-radius: 12px;
     padding: 8px;
     width: fit-content;
-    margin-bottom: 32px;
+    margin-bottom: 10px;
     border: 1px solid #e9ecef;
 }
 
@@ -481,7 +481,7 @@ h2 {
 /* Form Layout */
 .cab-form-row,
 .form-row {
-    margin-bottom: 32px;
+    margin-bottom: 10px;
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
@@ -743,7 +743,6 @@ h2 {
     background: #f8f9fa;
     border-radius: 15px;
     padding: 24px;
-    margin-top: 20px;
     border: 2px solid #e9ecef;
     display: none;
     animation: slideDown 0.4s ease-out;
@@ -1011,7 +1010,6 @@ small {
     align-items: center;
     justify-content: center;
     gap: 40px;
-    padding: 22px 0 10px;
     flex-wrap: wrap;
 }
 
@@ -1057,7 +1055,6 @@ small {
 /* Search Button Below Locations (Desktop Only) */
 .search-btn-below-locations {
     width: 180px;
-    margin: 20px 0 0px;
     justify-self: center;
     align-self: center;
     justify-content: center;
@@ -1186,7 +1183,7 @@ small {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 15px;
     padding: 9px 20px;
     border: 2px solid #e9ecef;
     border-radius: 12px;
@@ -3628,11 +3625,11 @@ button.nav-tab img {
 }
 
 .features {
-    padding: 50px 0 0px !important;
+    padding: 10px 0 0 !important;
 }
 
 .tab-2 .features {
-    padding: 30px 0 0px !important;
+    padding: 10px 0 0px !important;
 }
 
 button.nav-tab img {
@@ -6116,5 +6113,41 @@ button.nav-tab.active img {
 @media(min-width:767px) {
     .input-with-icon input::placeholder {
         padding-left: 30px !important;
+    }
+
+    .shared-form {
+        display: grid !important;
+        grid-template-columns: 2.5fr .2fr 2.5fr 2fr 1fr 1fr !important;
+        gap: 20px !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .shared-form-box {
+        display: flex !important;
+        flex-direction: column;
+        gap: 20px !important;
+        padding: 40px !important;
+        padding-bottom: 15px !important;
+    }
+
+    small {
+        font-size: 6px !important;
+    }
+
+    .booking-form:has(.location-details.active) .cab-form-row.shared-form {
+
+        grid-template-columns: 2fr 0.2fr 2fr 2fr 1fr !important;
+    }
+
+    div#reserved-cabs .cab-form-row {
+        margin-bottom: 0px !important;
+    }
+
+    .reserved-form {
+        display: grid !important;
+        grid-template-columns: 1.5fr .2fr 1.5fr 1.2fr 1.2fr 0.2fr 0.4fr !important;
+        gap: 20px !important;
+
     }
 }

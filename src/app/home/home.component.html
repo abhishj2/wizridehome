@@ -89,8 +89,8 @@
                     <ng-container [ngSwitch]="tab">
                         <ng-container *ngSwitchCase="'shared-cabs'">
                             <!-- Shared Cabs tab content -->
-                            <div class="booking-form tab-1">
-                                <div class="cab-form-row">
+                            <div class="booking-form tab-1 shared-form-box">
+                                <div class="cab-form-row shared-form">
                                     <div class="form-group city-select">
                                         <label>From</label>
                                         <div class="input-with-icon">
@@ -168,7 +168,7 @@
                                     <!-- Search button moved below based on location details visibility -->
                                     <button class="search-btn" (click)="searchCabs('shared')"
                                         *ngIf="!locationDetailsVisible['shared']" aria-label="Search shared cabs">
-                                        <span><i class="fas fa-search"></i></span>
+                                        <span>Search</span>
                                     </button>
                                 </div>
                                 <div class="validation-error"
@@ -260,7 +260,7 @@
                         </ng-container>
                         <ng-container *ngSwitchCase="'flights'">
                             <!-- Flights tab content -->
-                            <div class="booking-form tab-2">
+                            <div class="booking-form tab-2 ">
                                 <div class="trip-type">
                                     <button [class.active]="tripType === 'one-way'" (click)="setTripType('one-way')">One
                                         Way</button>
@@ -606,8 +606,8 @@
 
                         <ng-container *ngSwitchCase="'reserved-cabs'">
                             <!-- Reserved Cabs tab content -->
-                            <div class="booking-form tab-3">
-                                <div class="cab-form-row">
+                            <div class="booking-form tab-3 shared-form-box">
+                                <div class="cab-form-row reserved-form">
                                     <div class="form-group city-select">
                                         <label>From</label>
                                         <div class="input-with-icon">
@@ -687,7 +687,7 @@
                                     <!-- Search button moved below based on location details visibility -->
                                     <button class="search-btn" (click)="searchCabs('reserved')"
                                         *ngIf="!locationDetailsVisible['reserved']" aria-label="Search reserved cabs">
-                                        <span><i class="fas fa-search"></i></span>
+                                        <span>Search</span>
                                     </button>
                                 </div>
 

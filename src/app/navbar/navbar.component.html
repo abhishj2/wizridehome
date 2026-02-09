@@ -3,20 +3,17 @@
   <!-- Mobile Header Wrapper (only visible on mobile) -->
   <div class="mobile-header-wrapper" [class.navbar-hidden]="!isNavbarVisible && isMobileView()">
     <div class="mobile-header-inner">
-      <button 
-        class="mobile-menu-btn"
-        (click)="toggleMobileMenu()"
-        [class.active]="isMobileMenuOpen"
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen"
         aria-label="Open Mobile Menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
-      
+
       <div class="mobile-logo">
-        <a href="/"><img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide"></a>
+        <a href="/"><img src="assets/images/logo.webp" alt="WizzRide" height="40px" width="auto"></a>
       </div>
-      
+
       <div></div>
       <div></div>
     </div>
@@ -25,34 +22,23 @@
   <div class="navbar-container">
     <!-- Logo Section -->
     <div class="logo-section">
-      <a href="/"><img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide" class="logo-image"></a>
+      <a href="/"><img src="assets/images/logo.webp" alt="WizzRide" height="40px" width="auto" class="logo-image"></a>
     </div>
 
     <!-- Desktop Navigation Links -->
     <div class="nav-links desktop-nav">
-      <div 
-        *ngFor="let item of desktopNavigationItems" 
-        class="nav-item"
-        [class.has-dropdown]="item.hasDropdown"
+      <div *ngFor="let item of desktopNavigationItems" class="nav-item" [class.has-dropdown]="item.hasDropdown"
         (mouseenter)="item.hasDropdown ? toggleDropdown(item.name) : null"
         (mouseleave)="item.hasDropdown ? closeDropdown() : null">
-        
-        <a 
-          [href]="item.link || '#'" 
-          class="nav-link"
-          (click)="handleDesktopClick(item, $event)">
+
+        <a [href]="item.link || '#'" class="nav-link" (click)="handleDesktopClick(item, $event)">
           {{ item.name }}
           <i *ngIf="item.hasDropdown" class="fas fa-chevron-down dropdown-icon"></i>
         </a>
 
         <!-- Desktop Dropdown Menu -->
-        <div 
-          *ngIf="item.hasDropdown && activeDropdown === item.name" 
-          class="dropdown-menu">
-          <a 
-            *ngFor="let dropdownItem of item.dropdownItems" 
-            [href]="dropdownItem.link" 
-            class="dropdown-item">
+        <div *ngIf="item.hasDropdown && activeDropdown === item.name" class="dropdown-menu">
+          <a *ngFor="let dropdownItem of item.dropdownItems" [href]="dropdownItem.link" class="dropdown-item">
             {{ dropdownItem.name }}
           </a>
         </div>
@@ -68,10 +54,7 @@
 
     <!-- Mobile Menu Toggle -->
     <div class="mobile-menu-toggle">
-      <button 
-        class="hamburger-btn"
-        (click)="toggleMobileMenu()"
-        [class.active]="isMobileMenuOpen">
+      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
         <span></span>
         <span></span>
         <span></span>
@@ -85,23 +68,18 @@
       <!-- Mobile Drawer Header -->
       <div class="mobile-drawer-header">
         <div class="mobile-drawer-logo">
-          <img src="https://wizzride.com/assets/images/icons/logo2.webp" alt="WizzRide">
+          <img src="assets/images/logo.webp" alt="WizzRide" height="40px" width="auto">
         </div>
         <button class="mobile-nav-drawer-close" (click)="toggleMobileMenu()" aria-label="Close menu">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      
+
       <div class="mobile-nav-drawer-items">
-        <div 
-          *ngFor="let item of mobileNavigationItems" 
-          class="mobile-nav-drawer-item">
-          
+        <div *ngFor="let item of mobileNavigationItems" class="mobile-nav-drawer-item">
+
           <!-- Item without dropdown -->
-          <a 
-            *ngIf="!item.hasDropdown"
-            [href]="item.link || '#'" 
-            class="mobile-nav-drawer-link"
+          <a *ngIf="!item.hasDropdown" [href]="item.link || '#'" class="mobile-nav-drawer-link"
             (click)="handleMobileItemClick(item, $event)">
             <div class="mobile-nav-icon-wrapper">
               <i [class]="item.icon" class="mobile-nav-icon"></i>
@@ -112,27 +90,20 @@
 
           <!-- Item with dropdown (accordion) -->
           <div *ngIf="item.hasDropdown" class="mobile-nav-drawer-accordion">
-            <div 
-              class="mobile-nav-drawer-link mobile-nav-drawer-accordion-header"
-              [class.active]="isMobileAccordionOpen(item.name)"
-              (click)="toggleMobileAccordion(item.name, $event)">
+            <div class="mobile-nav-drawer-link mobile-nav-drawer-accordion-header"
+              [class.active]="isMobileAccordionOpen(item.name)" (click)="toggleMobileAccordion(item.name, $event)">
               <div class="mobile-nav-icon-wrapper">
                 <i [class]="item.icon" class="mobile-nav-icon"></i>
               </div>
               <span class="mobile-nav-text">{{ item.name }}</span>
-              <i class="fas fa-chevron-down mobile-accordion-icon" 
-                 [class.rotated]="isMobileAccordionOpen(item.name)"></i>
+              <i class="fas fa-chevron-down mobile-accordion-icon"
+                [class.rotated]="isMobileAccordionOpen(item.name)"></i>
             </div>
 
             <!-- Accordion Dropdown -->
-            <div 
-              class="mobile-nav-drawer-accordion-content"
-              [class.open]="isMobileAccordionOpen(item.name)">
-              <a 
-                *ngFor="let dropdownItem of item.dropdownItems" 
-                [routerLink]="dropdownItem.link" 
-                class="mobile-nav-drawer-dropdown-item"
-                (click)="handleMobileDropdownItemClick(dropdownItem.link)">
+            <div class="mobile-nav-drawer-accordion-content" [class.open]="isMobileAccordionOpen(item.name)">
+              <a *ngFor="let dropdownItem of item.dropdownItems" [routerLink]="dropdownItem.link"
+                class="mobile-nav-drawer-dropdown-item" (click)="handleMobileDropdownItemClick(dropdownItem.link)">
                 <div class="mobile-nav-dropdown-icon-wrapper">
                   <i [class]="dropdownItem.icon" class="mobile-nav-dropdown-icon"></i>
                 </div>
