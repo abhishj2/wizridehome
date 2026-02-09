@@ -6244,3 +6244,311 @@ button.nav-tab.active img {
         color: #474747 !important;
     }
 }
+
+/* --- New Compact Multi-City Styles --- */
+
+.multi-city-container {
+    width: 100%;
+    margin-top: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Data-Dense Multi-City Grid Styles --- */
+
+.multi-city-container {
+    width: 100%;
+    margin-top: 20px;
+    animation: fadeIn 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.multi-city-header-row {
+    display: none;
+    /* Hidden as per new design */
+}
+
+/* Main Grid Row */
+.multi-city-row-grid {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1.5fr;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.2s ease;
+    align-items: flex-start;
+}
+
+.multi-city-row-grid:hover,
+.multi-city-row-grid:focus-within {
+    border-color: #008b8b;
+    box-shadow: 0 5px 15px rgba(0, 139, 139, 0.1);
+    z-index: 20;
+}
+
+/* Grid Cells */
+.grid-cell {
+    padding: 15px;
+    border-right: 1px solid #f0f0f0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 80px;
+}
+
+.grid-cell:last-child {
+    border-right: none;
+}
+
+.cell-label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Custom Input Styling for Grid */
+.grid-input-field {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.grid-input-field::placeholder {
+    color: #ccc;
+    font-weight: 500;
+}
+
+.input-subtext {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.input-icon {
+    display: none;
+    /* Hide icons for cleaner look as per reference */
+}
+
+/* Swap Button Positioned Absolute */
+.grid-swap-btn {
+    position: absolute;
+    left: 25%;
+    /* Roughly between col 1 and 2 but this depends on width */
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #008b8b;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.grid-swap-btn:hover {
+    background: #f0f8f8;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Add City Button Cell */
+.add-city-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    height: 100%;
+}
+
+.add-city-btn {
+    border: 1px solid #008b8b;
+    background: #fff;
+    color: #008b8b;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.add-city-btn:hover {
+    background: #e6ffff;
+}
+
+/* Remove Button */
+.remove-row-btn {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    background: #fff;
+    border: 1px solid #eee;
+    color: #dc3545;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 25;
+}
+
+.remove-row-btn:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* Calendar Overrides for Grid */
+::ng-deep .multi-city-row-grid app-custom-calendar .custom-calendar-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: auto !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+}
+
+/* Travelers Dropdown in Grid */
+.grid-travelers-trigger {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+}
+
+.travelers-main-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    display: block;
+}
+
+.travelers-sub-text {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+    display: block;
+}
+
+/* New Grid Panel for Travelers */
+.grid-travelers-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 24px;
+    z-index: 100;
+    margin-top: 10px;
+    display: none;
+    border: 1px solid #f1f1f1;
+}
+
+.grid-travelers-panel.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+/* Suggestions Dropdown Position in Grid */
+.multi-city-row-grid .city-suggestions {
+    top: 70px;
+    left: 0;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.multi-city-compact-actions {
+    display: flex;
+    justify-content: flex-end;
+    /* Align search button to right as in design or center? Design was center. */
+    align-items: center;
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+/* Override compact actions for cleaner look */
+.search-btn-compact {
+    background: #008b8b;
+    color: white;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 25px;
+    /* Rounded pill adjustment */
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 139, 139, 0.25);
+    transition: all 0.2s;
+    margin: 0 auto;
+    /* Center button */
+    display: block;
+}
+
+.search-btn-compact:hover {
+    background: #007575;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 139, 139, 0.3);
+}
+
+/* Validation error positioning */
+.multi-city-row-compact .validation-error {
+    position: absolute;
+    bottom: -16px;
+    left: 10px;
+    font-size: 10px;
+    background: #ffecec;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #d32f2f;
+    z-index: 2;
+}
+
+@media(min-width:767px) {
+    .multi-city-rows-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
