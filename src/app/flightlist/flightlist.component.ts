@@ -3698,6 +3698,10 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       this.tempFlightForModal = null;
       this.tempFlightIndex = -1;
       this.tempFlightType = null;
+    } else if (this.flightType === 'multicity') {
+      // Handle multi-city - uses same logic as desktop but with mobile close
+      this.finalizeMultiCityBooking(flight, fare);
+      this.closeMobileFarePopup();
     } else {
       // Use the original fare option for booking (one-way)
       const selectedFareOption = fare.originalFareOption || this.selectedFlightForMobile.FareOptions[fare.fareIndex];
@@ -4105,7 +4109,13 @@ export class FlightlistComponent implements OnInit, AfterViewInit, AfterContentC
       console.log('Pre-selected flight for segment', segmentIndex, ':', this.multicitySelectedFares[segmentIndex]);
     }
 
-    this.showFareModalMultiCity = true;
+    // Use mobile popup for mobile devices
+    if (this.isBrowser && window.innerWidth <= 767) {
+      this.selectedFlightForMobile = flight;
+      this.showMobileFarePopup = true;
+    } else {
+      this.showFareModalMultiCity = true;
+    }
   }
   closeFareOptionsModalMultiCity(): void {
     this.showFareModalMultiCity = false;

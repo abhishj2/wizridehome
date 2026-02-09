@@ -6141,6 +6141,10 @@ button.nav-tab.active img {
         grid-template-columns: 2fr 0.2fr 2fr 2fr 1fr !important;
     }
 
+    .booking-form:has(.location-details.active) .cab-form-row.reserved-form {
+
+        grid-template-columns: 2fr .2fr 2fr 2fr 1.2fr 0.2fr !important;
+    }
 
 
     div#reserved-cabs .cab-form-row {
