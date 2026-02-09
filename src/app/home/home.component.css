@@ -3348,7 +3348,7 @@ button.nav-tab img {
 
 .special-offers-content {
     position: relative;
-    z-index: 2;
+    z-index: -2;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
@@ -3358,7 +3358,7 @@ button.nav-tab img {
     text-align: center;
     margin-bottom: 50px;
     position: relative;
-    z-index: 2;
+    z-index: -2;
     padding: 0 40px;
 }
 
@@ -6172,5 +6172,75 @@ button.nav-tab.active img {
 
     .special-fares-label {
         font-size: 12px !important;
+    }
+
+    .travelers-panel.active {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 20px !important;
+    }
+
+    .traveler-row {
+        padding: 0 !important;
+    }
+
+    .traveler-info {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .traveler-info p {
+        font-size: 12px !important;
+        color: #ccc !important;
+    }
+
+    .travelers-panel h3 {
+        margin-bottom: 0 !Important;
+    }
+
+    .traveler-info h4 {
+        font-size: 16px !important;
+        font-weight: 400 !Important;
+    }
+
+    .class-selection,
+    .panel-actions {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .class-options {
+        justify-content: flex-end !Important;
+
+    }
+
+    .class-options .class-option {
+        font-size: 12px !important;
+        padding: 5px 15px !important;
+        border-radius: 25px !important;
+
+    }
+
+    .class-selection {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        width: 100%;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between !important;
+    }
+
+    .panel-actions .done-btn {
+        padding: 10px 15px !important;
+        font-size: 12px !important;
+        border-radius: 25px !important;
+    }
+
+    .class-option.active {
+        background: none !Important;
+        color: #474747 !important;
     }
 }
