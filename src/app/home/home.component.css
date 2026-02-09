@@ -466,8 +466,8 @@ h2 {
 }
 
 .special-fare-btn.active {
-    background: darkcyan;
-    color: #ffffff;
+    background: rgba(0, 139, 139, 0.1);
+    color: darkcyan;
     border-color: darkcyan;
     box-shadow: 0 2px 8px rgba(0, 139, 139, 0.3);
 }
@@ -6087,6 +6087,7 @@ button.nav-tab.active img {
 @media(min-width:767px) {
     .booking-form.tab-2 .city-suggestions.active {
         width: 300px !important;
+        margin-top: -20px;
         margin-top: 10px;
         overflow-y: auto !important;
         border-radius: 10px !important;
@@ -6302,7 +6303,6 @@ button.nav-tab.active img {
 .multi-city-row-grid:focus-within,
 .standard-row-grid:hover,
 .standard-row-grid:focus-within {
-    border-color: #008b8b;
     box-shadow: 0 5px 15px rgba(0, 139, 139, 0.1);
     z-index: 20;
 }
@@ -6314,7 +6314,7 @@ button.nav-tab.active img {
     position: relative;
     display: flex;
     flex-direction: column;
-    min-height: 80px;
+    height: 100%;
 }
 
 .grid-cell:last-child {
@@ -6371,19 +6371,20 @@ button.nav-tab.active img {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-    background: #fff;
+    background: linear-gradient(135deg, darkcyan, #20b2aa);
     border: 1px solid #e0e0e0;
-    width: 24px;
-    height: 24px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #008b8b;
     cursor: pointer;
     font-size: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 139, 139, 0.3);
 }
+
 
 .standard-row-grid.round-trip .grid-swap-btn {
     left: 24%;
@@ -6393,6 +6394,7 @@ button.nav-tab.active img {
 .grid-swap-btn:hover {
     background: #f0f8f8;
     transform: translate(-50%, -50%) scale(1.1);
+    color: darkcyan;
 }
 
 /* Add City Button Cell */
@@ -6586,5 +6588,9 @@ button.nav-tab.active img {
 
     .special-fares-section {
         justify-content: center;
+    }
+
+    .grid-cell.city-select.todest {
+        padding-left: 40px;
     }
 }
