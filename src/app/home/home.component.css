@@ -6598,3 +6598,8 @@ button.nav-tab.active img {
         padding-left: 40px;
     }
 }
+
+button {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+}

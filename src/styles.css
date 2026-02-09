@@ -333,7 +333,8 @@ a {
 
 input,
 textarea,
-select {
+select,
+button {
   font-size: 16px !important;
   touch-action: manipulation;
 }
