@@ -8,23 +8,34 @@
     z-index: 10000;
     display: flex;
     align-items: flex-end;
-    animation: fadeIn 0.12s ease-out;
+    pointer-events: none;
+    /* Allow clicks to pass through */
+    animation: fadeIn 0.15s ease-out;
     will-change: opacity;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 .custom-keypad {
     width: 100%;
-    background: #f8f9fa;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    padding: 12px 10px 16px;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 8px 16px 24px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
     max-width: 100%;
     margin: 0 auto;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    position: relative;
+    pointer-events: auto;
+    /* Block clicks on keypad itself */
+    transform: translateY(0);
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.keypad-handle {
+    width: 40px;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin: 4px auto 12px;
 }
 
 .keypad-row {
@@ -40,30 +51,23 @@
 
 .keypad-btn {
     flex: 1;
-    height: 40px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #111827;
+    height: 48px;
+    background: #fdfdfd;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #2d3748;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform 0.08s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        background-color 0.08s ease-out,
-        border-color 0.08s ease-out;
+    transition: all 0.1s ease;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-    min-width: 0;
-    padding: 0 4px;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: transform, background-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    touch-action: none;
 }
 
 .keypad-btn:active,
@@ -154,31 +158,13 @@
     }
 }
 
-@keyframes buttonPress {
-    0% {
-        transform: scale(1) translateZ(0);
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
     }
 
-    50% {
-        transform: scale(0.94) translateZ(0);
-    }
-
-    100% {
-        transform: scale(1) translateZ(0);
-    }
-}
-
-@keyframes buttonPressDone {
-    0% {
-        transform: scale(1) translateZ(0);
-    }
-
-    50% {
-        transform: scale(0.96) translateZ(0);
-    }
-
-    100% {
-        transform: scale(1) translateZ(0);
+    to {
+        transform: translateY(0);
     }
 }
 

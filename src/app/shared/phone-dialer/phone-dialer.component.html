@@ -1,6 +1,6 @@
-<!-- Custom Phone Number Keypad (Mobile Only) -->
-<div class="custom-keypad-overlay" *ngIf="isVisible" (click)="onOverlayClick()">
-        <div class="custom-keypad" (click)="onKeypadClick($event)">
+<div class="custom-keypad-overlay" *ngIf="isVisible">
+        <div class="custom-keypad" (pointerdown)="$event.stopPropagation()">
+                <div class="keypad-handle"></div>
                 <div class="keypad-row">
                         <button class="keypad-btn" (click)="onNumberClick('1', $event)"
                                 (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)"

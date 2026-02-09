@@ -24,6 +24,7 @@ import { FlightData } from '../interface/flight-data';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomCalendarComponent } from '../calendar/calendar.component';
+import { PhoneDialerComponent } from '../shared/phone-dialer/phone-dialer.component';
 import Swal from 'sweetalert2';
 
 interface City {
@@ -129,7 +130,7 @@ interface WordPressOffer {
 @Component({
   selector: 'app-travel-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomCalendarComponent],
+  imports: [CommonModule, FormsModule, CustomCalendarComponent, PhoneDialerComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -3241,34 +3242,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Prevent iOS double-tap zoom on keypad buttons while allowing rapid consecutive taps
   // CSS touch-action: manipulation handles most zoom prevention, these are fallback
-  onKeypadTouchStart(event: TouchEvent): void {
-    // Only prevent default for multi-touch (pinch zoom) - this is necessary
-    if (event.touches.length > 1) {
-      event.preventDefault();
-      return;
-    }
-    this.touchStartTime = Date.now();
-    this.touchStartTarget = event.target;
-  }
-
-  onKeypadTouchEnd(event: TouchEvent): void {
-    // Minimal overhead - no complex logic, just basic validation
-    const now = Date.now();
-    const timeSinceLastTouch = now - this.lastTouchTime;
-    const touchDuration = now - this.touchStartTime;
-
-    // Only prevent obvious accidental double-taps (< 100ms between taps on same button)
-    // Allow all rapid typing for fast input
-    if (event.target === this.lastTouchTarget &&
-      timeSinceLastTouch < 100 &&
-      touchDuration < 100) {
-      event.preventDefault();
-    }
-
-    // Update tracking
-    this.lastTouchTime = now;
-    this.lastTouchTarget = event.target;
-  }
 
   onKeypadBackspace(): void {
     if (!this.activePhoneInput) return;

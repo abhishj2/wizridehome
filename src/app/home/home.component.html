@@ -2203,48 +2203,7 @@
 
 
 <!-- Custom Phone Number Keypad (Mobile Only) -->
-<div class="custom-keypad-overlay" *ngIf="showCustomKeypad && isMobileView()" (click)="closeCustomKeypad()">
-    <div class="custom-keypad" (click)="$event.stopPropagation()">
-        <div class="keypad-row">
-            <button class="keypad-btn" (click)="onKeypadNumberClick('1')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">1</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('2')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">2</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('3')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">3</button>
-        </div>
-        <div class="keypad-row">
-            <button class="keypad-btn" (click)="onKeypadNumberClick('4')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">4</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('5')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">5</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('6')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">6</button>
-        </div>
-        <div class="keypad-row">
-            <button class="keypad-btn" (click)="onKeypadNumberClick('7')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">7</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('8')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">8</button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('9')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">9</button>
-        </div>
-        <div class="keypad-row">
-            <button class="keypad-btn keypad-btn-space"></button>
-            <button class="keypad-btn" (click)="onKeypadNumberClick('0')" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">0</button>
-            <button class="keypad-btn keypad-btn-backspace" (click)="onKeypadBackspace()"
-                (touchstart)="onKeypadTouchStart($event)" (touchend)="onKeypadTouchEnd($event)">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-                    <line x1="18" y1="9" x2="12" y2="15"></line>
-                    <line x1="12" y1="9" x2="18" y2="15"></line>
-                </svg>
-            </button>
-        </div>
-        <div class="keypad-row keypad-row-done">
-            <button class="keypad-btn-done" (click)="onKeypadDone()" (touchstart)="onKeypadTouchStart($event)"
-                (touchend)="onKeypadTouchEnd($event)">Done</button>
-        </div>
-    </div>
-</div>
+<app-phone-dialer [isVisible]="showCustomKeypad && isMobileView()" [currentValue]="phoneNumber" [maxLength]="10"
+    (numberClick)="onKeypadNumberClick($event)" (backspaceClick)="onKeypadBackspace()" (doneClick)="onKeypadDone()"
+    (closeDialer)="closeCustomKeypad()">
+</app-phone-dialer>

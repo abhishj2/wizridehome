@@ -1776,7 +1776,7 @@ body {
   left: 0;
   right: 0;
   background: #ffffff;
-  max-height: 90vh;
+  max-height: 100% !important;
   overflow-y: auto;
   z-index: 1001;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1950,7 +1950,6 @@ body {
   right: 0;
   background: #ffffff;
 
-  max-height: 85vh;
   overflow-y: auto;
   z-index: 1001;
   /* Just above navbar (1000) */
@@ -3695,7 +3694,7 @@ body {
     transform: translate(-50%, -50%);
     /* Ensure uniform border radius on all corners */
     bottom: auto;
-    top: 50%;
+    top: auto !important;
     max-height: 80vh;
     right: auto;
     animation: fadeIn 0.3s ease;
@@ -3722,7 +3721,7 @@ body {
     transform: translate(-50%, -50%);
     /* Ensure uniform border radius on all corners */
     bottom: auto;
-    top: 50%;
+    top: auto !important;
     max-height: 85vh;
     right: auto;
     animation: fadeIn 0.3s ease;
@@ -4704,7 +4703,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    top: auto;
+    top: 0;
     transform: none;
   }
 
@@ -8229,4 +8228,8 @@ div#oneway-section .route-info {
 
 .dflexi {
   display: flex;
+}
+
+::ng-deep .keypad-btn {
+  height: 36px !important;
 }

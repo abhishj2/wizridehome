@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, PLATFORM_ID, Inject, OnDestroy, HostListener } from '@angular/core';
+import { Component, EventEmitter, Output, Input, PLATFORM_ID, Inject, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -24,31 +24,37 @@ export class PhoneDialerComponent implements OnDestroy {
   private animationFrameId: number | null = null;
   private backspaceInterval: any = null;
   private backspaceDelayTimeout: any = null;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private el: ElementRef
+  ) { }
 
   ngOnDestroy(): void {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
     }
     this.stopBackspace();
+    this.isPointerDown = false;
+  }
 
+  @HostListener('document:pointerdown', ['$event'])
+  onDocumentClick(event: PointerEvent): void {
+    if (!this.isVisible) return;
+
+    // Check if the click was outside the component
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.closeDialer.emit();
+    }
   }
 
   @HostListener('document:touchmove', ['$event'])
   onDocumentTouchMove(event: TouchEvent): void {
-    // Prevent scrolling when interacting with keypad
+    // Prevent scrolling ONLY when interacting with keypad buttons
     if (this.isPointerDown && this.isVisible) {
       event.preventDefault();
     }
   }
 
-  onOverlayClick(): void {
-    this.closeDialer.emit();
-  }
-
-  onKeypadClick(event: Event): void {
-    event.stopPropagation();
-  }
 
   onNumberClick(number: string, event: Event): void {
     if (!this.canTriggerClick()) return;
@@ -67,13 +73,30 @@ export class PhoneDialerComponent implements OnDestroy {
     // First delete immediately
     this.onBackspace(event);
 
+    let count = 0;
     // Start continuous delete after small delay (like mobile keyboard)
     this.backspaceDelayTimeout = setTimeout(() => {
       this.backspaceInterval = setInterval(() => {
+        count++;
         this.backspaceClick.emit();
-        this.triggerHapticFeedback(3);
-      }, 80); // speed of continuous delete
+        this.triggerHapticFeedback(count < 8 ? 5 : 8);
+
+        // Accelerate after a few deletions
+        if (count === 8) {
+          this.recalculateBackspaceInterval();
+        }
+      }, 90); // initial speed of continuous delete
     }, 400); // long press delay
+  }
+
+  private recalculateBackspaceInterval(): void {
+    if (this.backspaceInterval) {
+      clearInterval(this.backspaceInterval);
+      this.backspaceInterval = setInterval(() => {
+        this.backspaceClick.emit();
+        this.triggerHapticFeedback(8);
+      }, 50); // Faster repeat!
+    }
   }
   stopBackspace(): void {
     this.isPointerDown = false;
@@ -111,28 +134,33 @@ export class PhoneDialerComponent implements OnDestroy {
   }
 
   onPointerDown(event: PointerEvent): void {
-    this.isPointerDown = true;
-    this.activeElement = event.target as HTMLElement;
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+      this.isPointerDown = true;
+      this.activeElement = event.target as HTMLElement;
 
-    if (this.activeElement.classList.contains('keypad-btn') ||
-      this.activeElement.classList.contains('keypad-btn-done')) {
-      this.activeElement.classList.add('active');
-    }
+      // Add active class immediately for visual feedback
+      if (this.activeElement.classList.contains('keypad-btn') ||
+        this.activeElement.classList.contains('keypad-btn-done')) {
+        this.activeElement.classList.add('active');
+      }
 
-    if (event.cancelable) {
-      event.preventDefault();
+      // Prevent default to avoid browser handling
+      if (event.cancelable) {
+        event.preventDefault();
+      }
     }
   }
 
-  onPointerUp(event?: PointerEvent): void {
-    this.isPointerDown = false;
+  onPointerUp(event: PointerEvent): void {
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+      this.isPointerDown = false;
 
-    if (this.activeElement) {
-      this.activeElement.classList.remove('active');
-      this.activeElement = null;
+      // Remove active class
+      if (this.activeElement) {
+        this.activeElement.classList.remove('active');
+        this.activeElement = null;
+      }
     }
-
-    this.stopBackspace(); // important
   }
 
   private canTriggerClick(): boolean {
