@@ -6150,4 +6150,27 @@ button.nav-tab.active img {
         gap: 20px !important;
 
     }
+
+    .special-fares-section {
+        display: flex !important;
+        align-items: center !important;
+        gap: 20px !important;
+        margin-top: 10px;
+    }
+
+    .special-fares-label {
+        margin-bottom: 0px !Important;
+
+    }
+
+    .special-fare-btn {
+        font-size: 12px !important;
+        padding: 5px 20px !important;
+        border-radius: 25px !important;
+
+    }
+
+    .special-fares-label {
+        font-size: 12px !important;
+    }
 }
