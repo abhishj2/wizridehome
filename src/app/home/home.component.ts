@@ -631,6 +631,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onMobileLocationInput(query: string): void {
     this.mobileSearchQuery = query;
+
+    if (!query.trim()) {
+      if (this.mobilePopupType === 'from' || this.mobilePopupType === 'to') {
+        this.showCitySuggestionsOnFocus(this.mobilePopupTarget);
+      } else {
+        this.showLocationSuggestionsOnFocus(this.mobilePopupTarget);
+      }
+      return;
+    }
+
     if (this.mobilePopupType === 'from' || this.mobilePopupType === 'to') {
       this.showCitySuggestions(query, this.mobilePopupTarget);
     } else {
