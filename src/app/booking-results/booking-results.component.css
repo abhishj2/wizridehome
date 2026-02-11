@@ -3355,7 +3355,7 @@ img {
   }
 
   .seat-modal-header p {
-    font-size: 11px;
+    font-size: 11px !important;
   }
 
   .seat-modal-body {
@@ -3489,7 +3489,7 @@ img {
     max-height: 50vh;
     padding: 0;
     margin: 10px 0;
-    min-height: 380px;
+    min-height: 360px;
   }
 
   .seat-item {
@@ -4583,7 +4583,7 @@ img.mobile-seat-icon {
   }
 
   .seat-selection-summary {
-    margin-top: 10px !important;
+    margin-top: 0px !important;
   }
 
   img.seat-watermark-img,
@@ -4610,5 +4610,14 @@ img.mobile-seat-icon {
 
   .seat-layout-card {
     margin: 0 !Important;
+  }
+}
+
+@media(max-width:767px) {
+  button.seat-modal-close {
+    height: 20px !important;
+    width: 20px !important;
+    top: 10px !important;
+    right: 10px !important;
   }
 }
