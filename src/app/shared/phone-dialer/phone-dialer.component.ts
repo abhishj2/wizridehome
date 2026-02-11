@@ -37,14 +37,11 @@ export class PhoneDialerComponent implements OnDestroy {
     this.isPointerDown = false;
   }
 
-  @HostListener('document:pointerdown', ['$event'])
-  onDocumentClick(event: PointerEvent): void {
+  onOverlayPointerDown(event: PointerEvent): void {
     if (!this.isVisible) return;
-
-    // Check if the click was outside the component
-    if (!this.el.nativeElement.contains(event.target)) {
-      this.closeDialer.emit();
-    }
+    // Overlay is only present when visible; keypad stops propagation
+    event.preventDefault();
+    this.closeDialer.emit();
   }
 
   @HostListener('document:touchmove', ['$event'])

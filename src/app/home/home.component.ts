@@ -227,6 +227,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // 3D Testimonial Carousel Properties
   @ViewChild('testimonialSwiper', { static: false }) testimonialSwiper!: ElementRef;
+  @ViewChild('mobileCountrySearchInput', { static: false }) mobileCountrySearchInput?: ElementRef<HTMLInputElement>;
   currentSlide = 0;
   totalSlides = 0;
   autoplayInterval: any = null;
@@ -444,6 +445,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Mobile popup methods
   openMobileLocationPopup(type: 'from' | 'to' | 'pickup' | 'dropoff'): void {
+    // If custom phone keypad is open, close it so it can't interfere with taps
+    this.closeCustomKeypad();
+
     // Prevent pickup/drop selection until from & to chosen
     if ((type === 'pickup' || type === 'dropoff')) {
       if (this.mobileTab === 'shared' && (!this.formValues.sharedPickup || !this.formValues.sharedDropoff)) {
@@ -577,8 +581,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openMobileCountryPopup(): void {
+    // Ensure only one popup is active at a time (prevents overlapping sliders on iOS)
+    this.closeCustomKeypad();
+    this.showMobileLocationPopup = false;
+    this.showMobileDatePicker = false;
+    this.showMobileTravelersPopup = false;
+
     this.showMobileCountryPopup = true;
     this.mobileCountrySearchQuery = '';
+
+    if (isPlatformBrowser(this.platformId)) {
+      // iOS Safari sometimes ignores immediate focus during animations
+      setTimeout(() => {
+        const el = this.mobileCountrySearchInput?.nativeElement;
+        if (!el) return;
+        try {
+          el.focus();
+        } catch { }
+      }, 250);
+    }
   }
 
   closeMobileCountryPopup(): void {
@@ -588,6 +609,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   selectMobileCountry(country: any): void {
     this.selectedCountryCode = country.code;
     this.closeMobileCountryPopup();
+  }
+
+  onMobileCountrySuggestionTouch(event: any, country: any): void {
+    // Prevent iOS from treating it as a scroll/ghost click
+    event.preventDefault();
+    event.stopPropagation();
+    this.selectMobileCountry(country);
   }
 
   getFilteredCountries(): any[] {
@@ -1280,6 +1308,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openMobileDatePicker(type: 'shared' | 'reserved' | 'flights'): void {
+    this.closeCustomKeypad();
     this.mobileDatePickerType = type;
     this.showMobileDatePicker = true;
 
@@ -1300,6 +1329,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openMobileReturnDatePicker(): void {
+    this.closeCustomKeypad();
     this.mobileDatePickerType = 'flights-return';
     this.showMobileDatePicker = true;
 
@@ -1319,6 +1349,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openMobileMultiCityModal(): void {
+    this.closeCustomKeypad();
     this.showMobileMultiCityModal = true;
   }
 

@@ -8,8 +8,11 @@
     z-index: 10000;
     display: flex;
     align-items: flex-end;
-    pointer-events: none;
-    /* Allow clicks to pass through */
+    pointer-events: auto;
+    /* Modal overlay should block background taps */
+    background: rgba(0, 0, 0, 0);
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
     animation: fadeIn 0.15s ease-out;
     will-change: opacity;
 }

@@ -1,4 +1,4 @@
-<div class="custom-keypad-overlay" *ngIf="isVisible">
+<div class="custom-keypad-overlay" *ngIf="isVisible" (pointerdown)="onOverlayPointerDown($event)">
         <div class="custom-keypad" (pointerdown)="$event.stopPropagation()">
                 <div class="keypad-handle"></div>
                 <div class="keypad-row">

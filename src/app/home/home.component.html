@@ -2191,37 +2191,39 @@
 
 
 <!-- Mobile Country Selection Sliding Popup -->
-<div class="mobile-location-popup" [class.active]="showMobileCountryPopup" (click)="closeMobileCountryPopup()">
-    <div class="mobile-location-popup-content" (click)="$event.stopPropagation()">
-        <div class="mobile-location-popup-header">
-            <button class="mobile-location-popup-back" (click)="closeMobileCountryPopup()"
+<div class="mobile-country-popup" [class.active]="showMobileCountryPopup">
+    <div class="mobile-country-popup-backdrop" (click)="closeMobileCountryPopup()" aria-hidden="true"></div>
+    <div class="mobile-country-popup-content" (click)="$event.stopPropagation()">
+        <div class="mobile-country-popup-header">
+            <button type="button" class="mobile-country-popup-back" (click)="closeMobileCountryPopup()"
                 aria-label="Country Popup Back">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h3>Select Country</h3>
-            <button class="mobile-location-popup-close" aria-label="Close Country Popup"
+            <button type="button" class="mobile-country-popup-close" aria-label="Close Country Popup"
                 (click)="closeMobileCountryPopup()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="mobile-location-popup-search">
-            <i class="fas fa-search"></i>
-            <input type="text" class="mobile-location-search-input" [(ngModel)]="mobileCountrySearchQuery"
-                placeholder="Search country or code">
+        <div class="mobile-country-popup-search">
+            <i class="fas fa-search mobile-country-search-icon" aria-hidden="true"></i>
+            <input #mobileCountrySearchInput type="text" class="mobile-country-search-input"
+                [(ngModel)]="mobileCountrySearchQuery" placeholder="Search country or code" inputmode="search"
+                autocomplete="off">
         </div>
 
-        <div class="mobile-location-popup-suggestions">
-            <div *ngFor="let country of getFilteredCountries()" class="mobile-location-suggestion"
-                (click)="selectMobileCountry(country)">
-                <div class="mobile-location-icon">
+        <div class="mobile-country-popup-suggestions">
+            <button type="button" *ngFor="let country of getFilteredCountries()" class="mobile-country-suggestion"
+                (click)="selectMobileCountry(country)" (touchend)="onMobileCountrySuggestionTouch($event, country)">
+                <div class="mobile-country-icon">
                     <img [src]="'https://flagcdn.com/w40/' + getFlagCode(country.code) + '.png'"
                         style="width: 24px; border-radius: 2px;" [alt]="country.name">
                 </div>
-                <div class="mobile-location-suggestion-content">
-                    <div class="mobile-location-city-country">{{ country.name }}</div>
+                <div class="mobile-country-suggestion-content">
+                    <div class="mobile-country-name">{{ country.name }}</div>
                 </div>
-                <div class="mobile-location-airport-code">{{ country.code }}</div>
-            </div>
+                <div class="mobile-country-code">{{ country.code }}</div>
+            </button>
         </div>
     </div>
 </div>
