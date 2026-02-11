@@ -2869,6 +2869,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Custom keypad methods
   openCustomKeypad(inputElement: HTMLInputElement, event?: Event): void {
     if (this.isMobileView()) {
+      // Prevent background scrolling
+      if (isPlatformBrowser(this.platformId)) {
+        document.body.style.overflow = 'hidden';
+      }
+
       // Prevent native keyboard from opening immediately
       if (event) {
         event.preventDefault();
@@ -3152,6 +3157,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeCustomKeypad(): void {
+    // Restore background scrolling
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
+
     // Remove custom cursor
     this.removeCustomCursor();
 
