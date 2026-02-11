@@ -5246,10 +5246,14 @@ button.nav-tab.active img {
 .mobile-date-picker-close {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 20px;
     color: #111827;
     cursor: pointer;
-    padding: 6px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
 /* Hide input wrapper and show calendar directly in mobile modal */
@@ -6539,4 +6543,34 @@ button {
 .mobile-travelers-popup.active,
 .mobile-multicity-overlay.active {
     pointer-events: auto !important;
+}
+
+/* Fix for mobile calendar close button visibility */
+@media (max-width: 768px) {
+    ::ng-deep .mobile-calendar-wrapper .custom-calendar-container {
+        width: 100% !important;
+        display: block !important;
+    }
+
+    ::ng-deep .mobile-calendar-wrapper .calendar-input-wrapper {
+        display: none !important;
+    }
+
+    ::ng-deep .mobile-calendar-wrapper .calendar-dropdown {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        z-index: 1 !important;
+        margin: 0 !important;
+        clip-path: none !important;
+        top: 0 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
 }

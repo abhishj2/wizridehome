@@ -1322,6 +1322,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mobileDatePickerType = type;
     this.showMobileDatePicker = true;
 
+    // Prevent background scrolling
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
+
     // Fetch calendar fares for flight departure
     if (type === 'flights') {
       const fromCity = this.flightRoutes[0]?.from;
@@ -1342,6 +1347,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.closeCustomKeypad();
     this.mobileDatePickerType = 'flights-return';
     this.showMobileDatePicker = true;
+
+    // Prevent background scrolling
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
 
     // Fetch calendar fares for flight return (reversed route)
     const fromCity = this.flightRoutes[0]?.from;
@@ -1397,6 +1407,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentMultiCityRouteIndex = routeIndex;
     this.mobileDatePickerType = `flights-multicity-${routeIndex}` as any;
     this.showMobileDatePicker = true;
+
+    // Prevent background scrolling
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
+
     // Close multi-city modal when opening date picker
     this.showMobileMultiCityModal = false;
   }
@@ -1442,6 +1458,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   closeMobileDatePicker(): void {
     this.showMobileDatePicker = false;
     this.mobileDatePickerType = null;
+
+    // Restore background scrolling
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
   }
 
   onMobileDateSelected(date: string, type?: 'shared' | 'reserved' | 'flights' | 'flights-return' | string): void {
