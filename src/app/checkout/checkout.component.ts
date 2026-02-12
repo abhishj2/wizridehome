@@ -224,6 +224,7 @@ export class CheckoutComponent implements OnInit {
   // Navbar hide on scroll (mobile)
   hideNavbarOnMobile = false;
   private lastScrollTop = 0;
+  isScrollingUp = false;
 
   constructor(
     private router: Router,
@@ -284,30 +285,13 @@ export class CheckoutComponent implements OnInit {
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.isHeaderSticky = scrollPosition > 50;
 
-    // Hide navbar on scroll down for mobile only
-    if (this.isMobileView()) {
-      const scrollingDown = scrollPosition > this.lastScrollTop;
-      const shouldHide = scrollingDown && scrollPosition > 50; // Hide when scrolling down past 50px
-
-      if (shouldHide !== this.hideNavbarOnMobile) {
-        this.hideNavbarOnMobile = shouldHide;
-
-        // Add or remove class from body
-        if (shouldHide) {
-          this.renderer.addClass(this.document.body, 'hide-navbar-mobile');
-        } else {
-          this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
-        }
-      }
-
-      this.lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition;
+    // Determine scroll direction
+    if (scrollPosition > this.lastScrollTop) {
+      this.isScrollingUp = false; // Scrolling down
     } else {
-      // Desktop: always show navbar
-      if (this.hideNavbarOnMobile) {
-        this.hideNavbarOnMobile = false;
-        this.renderer.removeClass(this.document.body, 'hide-navbar-mobile');
-      }
+      this.isScrollingUp = true; // Scrolling up
     }
+    this.lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition;
   }
 
   onSubmit(form?: NgForm, event?: Event) {

@@ -15,9 +15,24 @@ body.hide-navbar-mobile app-navbar {
 
 @media (max-width: 768px) {
 
+  /* Hide specific hiding logic since we removed the TS trigger, but clear transform just in case */
   :host.hide-navbar-mobile::ng-deep app-navbar,
   :host.hide-navbar-mobile~app-navbar {
-    transform: translateY(-100%);
+    transform: none;
+  }
+
+  /* Make navbar sticky on mobile */
+  :host ::ng-deep app-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  /* FORCE the inner mobile header to stay visible and sticky */
+  :host ::ng-deep .mobile-header-wrapper {
+    transform: none !important;
+    position: sticky !important;
+    top: 0 !important;
   }
 }
 
@@ -575,9 +590,18 @@ body {
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     overflow: hidden;
     position: sticky;
-    top: 0;
+    top: 58px;
     z-index: 100;
     transition: all 0.3s ease;
+  }
+
+  /* Dynamic sticky positioning based on scroll direction */
+  .mobile-booking-summary.scrolling-up {
+    top: 0 !important;
+  }
+
+  .mobile-booking-summary.scrolling-down {
+    top: 75px !important;
   }
 
   /* .booking-summary.sticky {

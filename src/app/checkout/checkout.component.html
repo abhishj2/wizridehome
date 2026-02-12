@@ -37,7 +37,8 @@
 </div>
 
 <!-- Booking Summary Band - Mobile Version -->
-<div class="booking-summary mobile-booking-summary" [class.sticky]="isHeaderSticky" *ngIf="bookingData">
+<div class="booking-summary mobile-booking-summary" [class.sticky]="isHeaderSticky" [class.scrolling-up]="isScrollingUp"
+  [class.scrolling-down]="!isScrollingUp" *ngIf="bookingData">
   <div class="container">
     <div class="summary-content">
       <div class="summary-info">
