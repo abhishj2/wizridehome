@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, HostListener, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -121,7 +121,8 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private apiService: ApiserviceService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private renderer: Renderer2
   ) { }
 
   @HostListener('window:scroll', ['$event'])
@@ -194,6 +195,19 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Clear localStorage when component is destroyed (optional)
     // localStorage.removeItem('bookingSearchParams');
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.removeStyle(document.body, 'overflow');
+    }
+  }
+
+  private updateBodyScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const isLocked = this.showModifyForm || this.showCarAdditionModal || this.showSeatPopup || this.timePickerVisible;
+    if (isLocked) {
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    } else {
+      this.renderer.removeStyle(document.body, 'overflow');
+    }
   }
 
   loadVehicleOptions() {
@@ -691,6 +705,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   modifySearch() {
     // Toggle modify form visibility
     this.showModifyForm = !this.showModifyForm;
+    this.updateBodyScroll();
 
     if (this.showModifyForm && this.searchParams) {
       // Initialize form with current search params
@@ -1003,6 +1018,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
     // Hide modify form
     this.showModifyForm = false;
+    this.updateBodyScroll();
 
     // Reload vehicle options
     this.loadVehicleOptions();
@@ -1010,6 +1026,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   cancelModifyForm() {
     this.showModifyForm = false;
+    this.updateBodyScroll();
     this.modifyFormSuggestions = {};
   }
 
@@ -1095,6 +1112,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   requestCarAddition() {
     this.showCarAdditionModal = true;
+    this.updateBodyScroll();
     // Pre-populate phone number from searchParams
     if (this.searchParams?.phoneNumber) {
       this.carAdditionFormData.contactNo = this.searchParams.phoneNumber;
@@ -1107,6 +1125,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   closeCarAdditionModal() {
     this.showCarAdditionModal = false;
+    this.updateBodyScroll();
     this.resetCarAdditionForm();
   }
 
@@ -1327,6 +1346,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
     console.log('Opening seat selection popup for vehicle:', vehicle.name);
     this.currentSelectedVehicle = vehicle;
     this.showSeatPopup = true;
+    this.updateBodyScroll();
     this.isSeatLoading = true;
 
     // Calculate price excluding GST (for shared cabs, remove 5% GST from API price)
@@ -1459,6 +1479,7 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
 
   closeSeatPopup() {
     this.showSeatPopup = false;
+    this.updateBodyScroll();
     this.selectedSeats = [];
     this.currentSelectedVehicle = null;
   }
@@ -1699,11 +1720,13 @@ export class BookingResultsComponent implements OnInit, OnDestroy {
   // Time Picker Methods
   openTimePicker() {
     this.timePickerVisible = true;
+    this.updateBodyScroll();
     this.initializeTimePicker();
   }
 
   closeTimePicker() {
     this.timePickerVisible = false;
+    this.updateBodyScroll();
   }
 
   initializeTimePicker() {
