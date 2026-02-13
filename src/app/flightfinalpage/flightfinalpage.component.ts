@@ -22,7 +22,12 @@ import { CustomCalendarComponent } from '../calendar/calendar.component';
 export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactMobileInput') contactMobileInput!: ElementRef<HTMLInputElement>;
 
-  showPhoneDialer = false;
+  private _showPhoneDialer = false;
+  get showPhoneDialer() { return this._showPhoneDialer; }
+  set showPhoneDialer(value: boolean) {
+    this._showPhoneDialer = value;
+    this.checkBodyScroll();
+  }
   activePhoneField: 'primary' | 'passenger' | null = null;
   // [Variable Declarations]
   fareQuote: any = [];
@@ -174,7 +179,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   isCompanyNameValid: boolean = true;
   isRegistrationValid: boolean = true;
   continueClicked = false;
-  showModal: boolean = false;
+  private _showModal: boolean = false;
+  get showModal() { return this._showModal; }
+  set showModal(value: boolean) {
+    this._showModal = value;
+    this.checkBodyScroll();
+  }
   selectedTab: 'cancel' | 'change' = 'cancel';
   activeTab: 'cancel' | 'reschedule' = 'cancel';
 
@@ -183,7 +193,12 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   gstMandatoryOnward: boolean = false;
   gstMandatoryReturn: boolean = false;
   selectedState: string = 'West Bengal';
-  showFareRuleModal: boolean = false;
+  private _showFareRuleModal: boolean = false;
+  get showFareRuleModal() { return this._showFareRuleModal; }
+  set showFareRuleModal(value: boolean) {
+    this._showFareRuleModal = value;
+    this.checkBodyScroll();
+  }
   fareRuleText: SafeHtml = '';
   fareRuleTextReturn: SafeHtml = '';
   bookingSubmitted: boolean = false;
@@ -192,26 +207,52 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   termsAccepted: boolean = false;
   servicesUnlocked: boolean = false;
   termsAgreed: boolean = false;
-  isAnyCalendarOpen: boolean = false;
+  private _isAnyCalendarOpen: boolean = false;
+  get isAnyCalendarOpen() { return this._isAnyCalendarOpen; }
+  set isAnyCalendarOpen(value: boolean) {
+    this._isAnyCalendarOpen = value;
+    this.checkBodyScroll();
+  }
 
   // Trip Type
   tripType: 'oneway' | 'roundtrip' | 'multicity' = 'oneway';
 
   // Modal States
-  showFareSummaryModal: boolean = false;
-  showAddBaggageModal: boolean = false;
-  showPolicyModal: boolean = false;
-  showGSTModal: boolean = false;
+  // Modal States
+  private _showFareSummaryModal: boolean = false;
+  get showFareSummaryModal() { return this._showFareSummaryModal; }
+  set showFareSummaryModal(value: boolean) { this._showFareSummaryModal = value; this.checkBodyScroll(); }
+
+  private _showAddBaggageModal: boolean = false;
+  get showAddBaggageModal() { return this._showAddBaggageModal; }
+  set showAddBaggageModal(value: boolean) { this._showAddBaggageModal = value; this.checkBodyScroll(); }
+
+  private _showPolicyModal: boolean = false;
+  get showPolicyModal() { return this._showPolicyModal; }
+  set showPolicyModal(value: boolean) { this._showPolicyModal = value; this.checkBodyScroll(); }
+
+  private _showGSTModal: boolean = false;
+  get showGSTModal() { return this._showGSTModal; }
+  set showGSTModal(value: boolean) { this._showGSTModal = value; this.checkBodyScroll(); }
+
   isGSTExpanded: boolean = false;
-  showMobileFareBreakdown: boolean = false;
+
+  private _showMobileFareBreakdown: boolean = false;
+  get showMobileFareBreakdown() { return this._showMobileFareBreakdown; }
+  set showMobileFareBreakdown(value: boolean) { this._showMobileFareBreakdown = value; this.checkBodyScroll(); }
 
   // Fare Summary Accordion States
   isBaseFareExpanded: boolean = false;
   isTaxesExpanded: boolean = false;
   isOtherServicesExpanded: boolean = false;
   isBaggageExpanded: boolean = false;
-  showPassengerModal: boolean = false;
-  showFareRules: boolean = false;
+  private _showPassengerModal: boolean = false;
+  get showPassengerModal() { return this._showPassengerModal; }
+  set showPassengerModal(value: boolean) { this._showPassengerModal = value; this.checkBodyScroll(); }
+
+  private _showFareRules: boolean = false;
+  get showFareRules() { return this._showFareRules; }
+  set showFareRules(value: boolean) { this._showFareRules = value; this.checkBodyScroll(); }
 
   // Tab States
   activeBaggageTab: 'onward' | 'return' = 'onward';
@@ -244,7 +285,9 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   currentPassengerIndex: number = 0;
   currentPassengerDetails: any = null;
   passengerValidationErrors: any = {};
-  showGenderDropdown: boolean = false; // Custom gender dropdown state
+  private _showGenderDropdown: boolean = false; // Custom gender dropdown state
+  get showGenderDropdown() { return this._showGenderDropdown; }
+  set showGenderDropdown(value: boolean) { this._showGenderDropdown = value; this.checkBodyScroll(); }
   get passengers() { return [...this.travellers, ...this.children, ...this.infants]; }
 
   // Desktop inline form expansion
@@ -289,8 +332,13 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
   ];
 
   // UI Toggles
-  baggageModalOpenOutbound: boolean = false;
-  baggageModalOpenReturn: boolean = false;
+  private _baggageModalOpenOutbound: boolean = false;
+  get baggageModalOpenOutbound() { return this._baggageModalOpenOutbound; }
+  set baggageModalOpenOutbound(value: boolean) { this._baggageModalOpenOutbound = value; this.checkBodyScroll(); }
+
+  private _baggageModalOpenReturn: boolean = false;
+  get baggageModalOpenReturn() { return this._baggageModalOpenReturn; }
+  set baggageModalOpenReturn(value: boolean) { this._baggageModalOpenReturn = value; this.checkBodyScroll(); }
   expanded = { base: false, taxes: false, services: false };
   activeServiceTab: 'seats' | 'meals' | 'services' = 'seats';
   activeJourneyTab: 'departure' | 'return' = 'departure';
@@ -325,6 +373,32 @@ export class FlightfinalpageComponent implements OnInit, AfterViewInit, OnDestro
           console.warn('Error executing testhidemenu:', e);
         }
       }
+    }
+  }
+
+  checkBodyScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const shouldLock =
+      this._showPhoneDialer ||
+      this._showFareSummaryModal ||
+      this._showAddBaggageModal ||
+      this._showPolicyModal ||
+      this._showGSTModal ||
+      this._showMobileFareBreakdown ||
+      this._showPassengerModal ||
+      this._showFareRules ||
+      this._showModal ||
+      this._showFareRuleModal ||
+      this._baggageModalOpenOutbound ||
+      this._baggageModalOpenReturn ||
+      this._showGenderDropdown ||
+      this._isAnyCalendarOpen;
+
+    if (shouldLock) {
+      this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
+    } else {
+      this.renderer.removeStyle(this.document.body, 'overflow');
     }
   }
 

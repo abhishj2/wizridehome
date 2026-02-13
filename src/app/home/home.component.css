@@ -6574,3 +6574,7 @@ button {
         visibility: visible !important;
     }
 }
+
+.wr-route-card a {
+    text-decoration: none;
+}
