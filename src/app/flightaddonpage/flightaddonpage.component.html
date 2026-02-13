@@ -603,18 +603,15 @@
                                     </div>
                                   </div>
                                   <div class="meal-quantity">
-                                    <button [disabled]="
-                                      getMealCount(i, meal.Code) === 0
-                                    " (click)="decrementMeal(i, meal)">
-                                      -
+                                    <button *ngIf="getMealCount(i, meal.Code) === 0" (click)="incrementMeal(i, meal)"
+                                      style="width: 80px; border-radius: 6px; font-weight: 600;">
+                                      Add
                                     </button>
-                                    <span>{{ getMealCount(i, meal.Code) }}</span>
-                                    <button [disabled]="
-                                      totalSelectedMeals(i) >=
-                                      totalAdults + totalChildren
-                                    " (click)="incrementMeal(i, meal)">
-                                      +
-                                    </button>
+                                    <ng-container *ngIf="getMealCount(i, meal.Code) > 0">
+                                      <button (click)="decrementMeal(i, meal)">-</button>
+                                      <span>{{ getMealCount(i, meal.Code) }}</span>
+                                      <button (click)="incrementMeal(i, meal)">+</button>
+                                    </ng-container>
                                   </div>
                                 </div>
                               </div>
@@ -669,18 +666,15 @@
 
                             <!-- Replace the meal-quantity div in the Others Tab Panel -->
                             <div class="meal-quantity">
-                              <button *ngIf="getServiceCount(service.Code, service) > 0"
-                                (click)="removeService(service)">
-                                −
+                              <button *ngIf="getServiceCount(service.Code, service) === 0" (click)="addService(service)"
+                                style="width: 80px; border-radius: 6px; font-weight: 600;">
+                                Add
                               </button>
-                              <!-- <span>{{
-                              getServiceCount(service.Code, service)
-                            }}</span> -->
-                              <button [disabled]="
-                                getServiceCount(service.Code, service) >= 1
-                              " (click)="addService(service)">
-                                +
-                              </button>
+                              <ng-container *ngIf="getServiceCount(service.Code, service) > 0">
+                                <button (click)="removeService(service)">-</button>
+                                <span>{{ getServiceCount(service.Code, service) }}</span>
+                                <button (click)="addService(service)">+</button>
+                              </ng-container>
                             </div>
                           </div>
                         </ng-container>
@@ -1155,18 +1149,15 @@
                                     </div>
                                   </div>
                                   <div class="meal-quantity">
-                                    <button [disabled]="
-                                      getMealCount(i, meal.Code) === 0
-                                    " (click)="decrementMeal(i, meal)">
-                                      -
+                                    <button *ngIf="getMealCount(i, meal.Code) === 0" (click)="incrementMeal(i, meal)"
+                                      style="width: 80px; border-radius: 6px; font-weight: 600;">
+                                      Add
                                     </button>
-                                    <span>{{ getMealCount(i, meal.Code) }}</span>
-                                    <button [disabled]="
-                                      totalSelectedMeals(i) >=
-                                      totalAdults + totalChildren
-                                    " (click)="incrementMeal(i, meal)">
-                                      +
-                                    </button>
+                                    <ng-container *ngIf="getMealCount(i, meal.Code) > 0">
+                                      <button (click)="decrementMeal(i, meal)">-</button>
+                                      <span>{{ getMealCount(i, meal.Code) }}</span>
+                                      <button (click)="incrementMeal(i, meal)">+</button>
+                                    </ng-container>
                                   </div>
                                 </div>
                               </div>
@@ -1222,18 +1213,15 @@
                             <!-- Inside the ng-container *ngFor="let service of services" -->
                             <!-- Replace the meal-quantity div in the Others Tab Panel -->
                             <div class="meal-quantity">
-                              <button *ngIf="getServiceCount(service.Code, service) > 0"
-                                (click)="removeService(service)">
-                                −
+                              <button *ngIf="getServiceCount(service.Code, service) === 0" (click)="addService(service)"
+                                style="width: 80px; border-radius: 6px; font-weight: 600;">
+                                Add
                               </button>
-                              <!-- <span>{{
-                              getServiceCount(service.Code, service)
-                            }}</span> -->
-                              <button [disabled]="
-                                getServiceCount(service.Code, service) >= 1
-                              " (click)="addService(service)">
-                                +
-                              </button>
+                              <ng-container *ngIf="getServiceCount(service.Code, service) > 0">
+                                <button (click)="removeService(service)">-</button>
+                                <span>{{ getServiceCount(service.Code, service) }}</span>
+                                <button (click)="addService(service)">+</button>
+                              </ng-container>
                               <!-- <div class="meal-quantity">
                             <button
                               *ngIf="getServiceCount(service.Code, service) > 0"

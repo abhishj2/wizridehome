@@ -531,9 +531,23 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
   incrementMeal(segmentIndex: number, meal: any): void {
     console.log(`incrementMeal in component: segmentIndex=${segmentIndex}, meal=`, meal);
     const isReturn = this.selectedJourneyTab === 'return';
-    // this.flightDataAddOnService.incrementMeal(segmentIndex, meal, isReturn);
-    // this.updateTotalPrice();
-    // this.prepareFareSummaryData();
+
+    // Check Total Limit first
+    const currentTotal = this.totalSelectedMeals(segmentIndex);
+    const limit = this.totalAdults + this.totalChildren; // Assuming meals are for occupied seats only
+
+    if (currentTotal >= limit) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Limit Reached',
+        html: `<span style="white-space: nowrap; overflow: hidden; display: block;">Max number of meal limits reached: ${limit}</span>`,
+        timer: 2000,
+        timerProgressBar: false,
+        showConfirmButton: false
+      });
+      return;
+    }
+
     // Restrict BBML (Baby Meal) to infants only
     if (meal.Code === 'BBML') {
       const infantCount = this.passengers.infants?.length || 0;
@@ -589,6 +603,23 @@ export class FlightaddonpageComponent implements OnInit, OnDestroy {
 
   addService(service: any): void {
     console.log(`addService in component: service=`, JSON.parse(JSON.stringify(service)));
+
+    // Check limit
+    const currentCount = this.getServiceCount(service.Code, service);
+    const limit = 1;
+
+    if (currentCount >= limit) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Limit Reached',
+        html: `<span style="white-space: nowrap; overflow: hidden; display: block;">Max number of limits reached: ${limit}</span>`,
+        timer: 2000,
+        timerProgressBar: false,
+        showConfirmButton: false
+      });
+      return;
+    }
+
     const isReturn = this.selectedJourneyTab === 'return' &&
       service.Origin === this.flightSegmentsReturn[0]?.originCode &&
       service.Destination === this.flightSegmentsReturn[this.flightSegmentsReturn.length - 1]?.destinationCode;
